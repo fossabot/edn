@@ -302,11 +302,12 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 									m_data);
 			}
 			// under section :
-			//EDN_DEBUG("  ==> (under section   ) k="<<k<<" start="<<m_HLDataPass1[k].beginStart<<" stop="<<m_HLDataPass1[k].endStop << "subSectionOfID=" << 99999999);
-			// TODO ...
+			//EDN_DEBUG("  ==> (under section   ) k="<<k<<" start="<<m_HLDataPass1[k].beginStart<<" stop="<<m_HLDataPass1[k].endStop << " subSectionOfID=" << 99999999);
+			// TODO : ...
 		}
 		if (endSearch == (int32_t)m_HLDataPass1.size() ){
-			if(		k < (int32_t)m_HLDataPass1.size()) {
+			//if(		k < (int32_t)m_HLDataPass1.size()) {
+			if (m_HLDataPass1.size() != 0) {
 				//EDN_DEBUG("  ==> (empty section 3 ) k="<<k<<" start="<<m_HLDataPass1[k-1].endStop<<" stop="<<HLStop );
 				m_Highlight->Parse2(m_HLDataPass1[k-1].endStop,
 									HLStop,
