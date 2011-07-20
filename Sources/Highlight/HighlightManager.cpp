@@ -66,15 +66,36 @@ bool HighlightManager::Exist(Edn::String &fileName)
 
 void HighlightManager::loadLanguages(void)
 {
-	Edn::String xmlFilename = "./data/lang_c.xml";
+	Edn::String homedir;
+#ifdef NDEBUG
+	homedir = getenv("HOME");
+	homedir += "/.edn/";
+#else
+	homedir = "./";
+#endif
+
+	Edn::String xmlFilename = homedir;
+	xmlFilename += "data/lang_c.xml";
 	Highlight *myHightline = new Highlight(xmlFilename);
 	listHighlight.push_back(myHightline);
 	
-	xmlFilename = "./data/lang_boo.xml";
+	xmlFilename = homedir;
+	xmlFilename += "data/lang_boo.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.push_back(myHightline);
 	
-	xmlFilename = "./data/lang_Makefile.xml";
+	xmlFilename = homedir;
+	xmlFilename += "data/lang_Makefile.xml";
+	myHightline = new Highlight(xmlFilename);
+	listHighlight.push_back(myHightline);
+	
+	xmlFilename = homedir;
+	xmlFilename += "data/lang_asm.xml";
+	myHightline = new Highlight(xmlFilename);
+	listHighlight.push_back(myHightline);
+	
+	xmlFilename = homedir;
+	xmlFilename += "data/lang_xml.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.push_back(myHightline);
 	

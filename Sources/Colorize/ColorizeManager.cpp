@@ -60,7 +60,7 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 	TiXmlElement* root = XmlDocument.FirstChildElement( "EdnColor" );
 	if (NULL == root )
 	{
-		EDN_ERROR(PFX"(l ?) main node not find: \"EdnColor\"");
+		EDN_ERROR(PFX"(l ?) main node not find: \"EdnColor\" in \"" << xmlFilename << "\"");
 		return;
 	}
 	else

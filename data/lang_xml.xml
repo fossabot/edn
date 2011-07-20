@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EdnLang version="0.1" lang="Assembleur">
+	<ext>.xml</ext>
+	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
+		<rule name="Comment">
+			<color>comment</color>
+			<start>&lt;!\-\-</start>
+			<end>\-\-&gt;</end>
+		</rule>
+	</pass1>
+	<pass2>
+	
+	</pass2>
+</EdnLang>
+
+<!--
+Parsing : to add : 
+	$ ==> End of line
+	^ ==> ???
+	
+	P1 Comment
+		\< !--
+		--\ >
+	P1 ignored section
+		\<!\[\s*IGNORE\s*\[
+		\]\]\>
+	P1 declaration
+		\<\?(?ixml)
+		\?\>
+	P1 doctype
+		(\<!(?idoctype))\s+(\<?(?!(?ixml))[\l_][\w:-]*\>?)
+		\>
+		error : \]
+	p1 processing instruction
+		\<\?\S+
+		\?\>
+	P1 cdata
+		\<!\[(?icdata)\[
+		\]\]\>
+	P1 element declaration
+		\<!ELEMENT
+		\>
+	P1 entity declaration
+		\<!ENTITY
+		\>
+	p1 notation
+		\<!NOTATION
+		\>
+	P1 attribute declaration
+		\<!ATTLIST
+		\>
+	P1 element
+		(\</?)((?!(?ixml))[\l_][\w:-]*)
+		/?\>
+	P1 entity
+		&((amp|lt|gt|quot|apos)|#x[\da-fA-F]*|[\l_]\w*);
+	P1 marked section
+		\<!\[\s*(?:INCLUDE|(%(?!(?ixml))[\l_][\w:-]*;))\s*\[|\]\]\>
+	P2 internal subset delims
+		[\[\]>]
+
+-->
+

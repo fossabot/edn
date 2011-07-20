@@ -27,7 +27,8 @@ doxygen/ALL/
 *.so
 *.pyc
 edn
-edn-stripped
+edn_debug
+edn_release
 
 ###################################
 # Packages #

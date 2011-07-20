@@ -52,7 +52,7 @@ Highlight::Highlight(Edn::String &xmlFilename)
 	// open the curent File
 	bool loadError = XmlDocument.LoadFile(xmlFilename.c_str());
 	if (false == loadError) {
-		EDN_ERROR( "can not load Hightlight XML: PARSING error: ");
+		EDN_ERROR( "can not load Hightlight XML: PARSING error: \"" << xmlFilename.c_str() << "\"");
 		return;
 	}
 	TiXmlElement* root = XmlDocument.FirstChildElement( "EdnLang" );

@@ -35,15 +35,20 @@ export CADRE_COTERS='	$(F_INVERSER)  $(F_NORMALE)								  $(F_INVERSER)  $(F_N
 ###############################################################################
 ### Compilateur base system                                                 ###
 ###############################################################################
-CXX=$(BIN_PREFIX)g++
-CC=$(BIN_PREFIX)gcc
-AR=$(BIN_PREFIX)ar
+CXX=g++
+CC=gcc
+AR=ar
+
+DEBUG:=1
 
 ###############################################################################
 ### Compilation Define                                                      ###
 ###############################################################################
-DEFINE= -DEDN_DEBUG_LEVEL=3
-
+ifeq ("$(DEBUG)", "0")
+    DEFINE= -DEDN_DEBUG_LEVEL=1 -DNDEBUG
+else
+    DEFINE= -DEDN_DEBUG_LEVEL=3
+endif
 
 GTKFLAGS= 
 ifeq ($(shell if `pkg-config --exists gtk+-3.0` ; then echo "yes"; else echo "no"; fi), yes)
@@ -86,13 +91,25 @@ LDFLAGS+= -Wl,--export-dynamic
 ###############################################################################
 ### Project Name                                                            ###
 ###############################################################################
-OUTPUT_NAME=edn
+PROG_NAME=edn
 
 ###############################################################################
 ### Basic Project description Files                                         ###
 ###############################################################################
 FILE_DIRECTORY=Sources
-OBJECT_DIRECTORY=Object
+OUTPUT_NAME_RELEASE=$(PROG_NAME)_release
+OUTPUT_NAME_DEBUG=$(PROG_NAME)_debug
+OBJECT_DIR=Object
+
+ifeq ("$(DEBUG)", "0")
+    OBJECT_DIRECTORY=$(OBJECT_DIR)/release
+    OUTPUT_NAME = $(OUTPUT_NAME_RELEASE)
+else
+    OBJECT_DIRECTORY=$(OBJECT_DIR)/debug
+    OUTPUT_NAME = $(OUTPUT_NAME_DEBUG)
+endif
+
+
 
 ###############################################################################
 ### Generique dependency                                                    ###
@@ -186,7 +203,7 @@ all: build
 
 -include $(OBJ:.o=.d) 
 
-build: .encadrer $(OUTPUT_NAME) $(MAKE_DEPENDENCE)
+build: .encadrer $(OUTPUT_NAME)
 
 
 .encadrer:
@@ -223,25 +240,26 @@ $(OBJECT_DIRECTORY)/%.o: $(FILE_DIRECTORY)/%.cpp $(MAKE_DEPENDENCE)
 	@#echo $(CXX)  $< -c -o $@  $(INCLUDE_DIRECTORY) $(CXXFLAGS) -MMD
 	@$(CXX)  $< -c -o $@  $(INCLUDE_DIRECTORY) $(CXXFLAGS) -MMD
 
-# build binary
-$(OUTPUT_NAME): $(OBJ)
-	@echo $(F_ROUGE)"          (bin) $@ & $@-stripped"$(F_NORMALE)
+# build binary Release Mode
+$(OUTPUT_NAME_RELEASE): $(OBJ) $(MAKE_DEPENDENCE)
+	@echo $(F_ROUGE)"          (bin) $@ "$(F_NORMALE)
 	@$(CXX) $(OBJ) $(LDFLAGS) -o $@
-	@cp $@ $@-stripped
-	@strip -s $@-stripped 
-	@#cp $@-stripped ~/.bin/$@
+	@cp $@ $(PROG_NAME)
 
+# build binary Debug Mode
+$(OUTPUT_NAME_DEBUG): $(OBJ) $(MAKE_DEPENDENCE)
+	@echo $(F_ROUGE)"          (bin) $@ "$(F_NORMALE)
+	@$(CXX) $(OBJ) $(LDFLAGS) -o $@
+	@cp $@ $(PROG_NAME)
 
 clean:
 	@echo $(CADRE_HAUT_BAS)
 	@echo '           CLEANING : $(F_VIOLET)$(OUTPUT_NAME)$(F_NORMALE)'$(CADRE_COTERS)
 	@echo $(CADRE_HAUT_BAS)
-	@echo Remove Folder : $(OBJECT_DIRECTORY)
-	@rm -rf $(OBJECT_DIRECTORY) 
-	@echo Remove File : $(OUTPUT_NAME)
-	@rm -f $(OUTPUT_NAME)
-	@echo Remove File : $(OUTPUT_NAME)-stripped 
-	@rm -f $(OUTPUT_NAME)-stripped 
+	@echo Remove Folder : $(OBJECT_DIR)
+	@rm -rf $(OBJECT_DIR) 
+	@echo Remove File : $(PROG_NAME) $(OUTPUT_NAME_DEBUG) $(OUTPUT_NAME_RELEASE)
+	@rm -f $(PROG_NAME) $(OUTPUT_NAME_DEBUG) $(OUTPUT_NAME_RELEASE)
 	@echo Remove File : pngToCpp
 	@rm -f pngToCpp
 	@echo Remove File : $(FILE_DIRECTORY)/GuiTools/myImage.*
@@ -254,4 +272,19 @@ clean:
 
 count:
 	wc -l Makefile `find $(FILE_DIRECTORY)/ -name "*.cpp"` `find $(FILE_DIRECTORY)/ -name "*.h"` 
+
+install: .encadrer $(OUTPUT_NAME_RELEASE)
+	@echo $(CADRE_HAUT_BAS)
+	@echo '           INSTALL : $(F_VIOLET)$(OUTPUT_NAME_RELEASE)=>$(PROG_NAME)$(F_NORMALE)'$(CADRE_COTERS)
+	@echo $(CADRE_HAUT_BAS)
+	@echo $(F_ROUGE)"          (stripped) $(OUTPUT_NAME_RELEASE) => $(PROG_NAME) "$(F_NORMALE)
+	@cp $(OUTPUT_NAME_RELEASE) $(PROG_NAME)
+	@strip -s $(PROG_NAME)
+	@echo $(F_VERT)"          (copy) $(PROG_NAME) ~/.bin/ "$(F_NORMALE)
+	@cp -vf $(PROG_NAME) ~/.bin/
+	@echo $(F_VERT)"          (data) data/* ==> ~/.edn/data/ "$(F_NORMALE)
+	@mkdir -p ~/.edn/data
+	@cp -vf data/*.xml ~/.edn/data
+
+
 

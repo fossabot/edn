@@ -79,7 +79,15 @@ int main (int argc, char *argv[])
 	// set color and other trucs...
 	ColorizeManager *myColorManager = NULL;
 	myColorManager = ColorizeManager::getInstance();
-	myColorManager->LoadFile("./data/color_black.xml");
+	Edn::String homedir;
+#ifdef NDEBUG
+	homedir = getenv("HOME");
+	homedir += "/.edn/";
+#else
+	homedir = "./";
+#endif
+	homedir += "data/color_black.xml";
+	myColorManager->LoadFile( homedir.c_str() );
 	myColorManager->DisplayListOfColor();
 	
 	HighlightManager *myHighlightManager = NULL;

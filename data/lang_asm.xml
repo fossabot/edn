@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EdnLang version="0.1" lang="Assembleur">
+	<ext>.s</ext>
+	<ext>.S</ext>
+	<ext>.asm</ext>
+	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
+		<rule name="my comment multiline doxygen">
+			<color>commentDoxygen</color>
+			<start>/\*\*</start>
+			<end>\*/</end>
+		</rule>
+		<rule name="my comment multiline">
+			<color>comment</color>
+			<start>/\*</start>
+			<end>\*/</end>
+		</rule>
+		<rule name="my if 0">
+			<color>preprocesseur</color>
+			<start>#[ \t]*if 0</start>
+			<end>#endif|#else</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+		<rule name="my preprocesseur">
+			<color>preprocesseur</color>
+			<start>#</start>
+			<end>\n</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+		<rule name="my comment doxygen">
+			<color>commentDoxygen</color>
+			<start>//!</start>
+			<end>\n</end>
+		</rule>
+		<rule name="my todo comment">
+			<color>SYNTAX_ERROR</color>
+			<start>//[ \t]*TODO[ \t]*:</start>
+			<end>\n</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+		<rule name="my comment">
+			<color>comment</color>
+			<start>//</start>
+			<end>\n</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+	</pass1>
+	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
+		<rule name="my keyword">
+			<color>keyword</color>
+			<start>\@smull|ldrsh|smlal|stmdb|mul|mla|umull|ldr|add|str|mov|subs|bgt|ldmia|stmia|ldmfd|cmp|sub|strd|stmfd|bne|bhi|ldrd|mvn\@</start>
+		</rule>
+		<rule name="register list">
+			<color>type</color>
+			<start>\@r(10|11|12|[0-9]?)|sp|lp|lr|pc\@</start>
+		</rule>
+	</pass2>
+</EdnLang>

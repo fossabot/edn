@@ -31,6 +31,7 @@
 			* matlab
 			* java script
 			* SQL
+			* Assembleur
 	- project : list of current files open
 	- gui : demander l'enregistrement avant de fermer (quand c'est nécessaire)
 	- gui : demande de création de nouveaux fichier ou quiter l'editeur ...
