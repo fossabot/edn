@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EdnLang version="0.1" lang="c">
+	<ext>Makefile</ext>
+	<ext>.mk</ext>
+	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
+		<rule name="my preprocesseur">
+			<color>preprocesseur</color>
+			<start>#</start>
+			<end>\n</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+	</pass1>
+	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
+		
+	</pass2>
+</EdnLang>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EdnProject version="0.1">
+	<folder link="../Sources/" ctags="true"/>
+	<folder link="../Data/"/>
+	<openFiles>
+		<file name="../Sources/Buffer/Line.cpp" line="156"/>
+	</openFiles>
+</EdnProject>
