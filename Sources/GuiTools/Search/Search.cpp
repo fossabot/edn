@@ -152,7 +152,7 @@ void Search::Display(void)
 			m_BtReplaceAndNext = gtk_button_new_with_label("Replace & Find");
 			gtk_container_add(GTK_CONTAINER (hbox), m_BtReplaceAndNext);
 			// Exit
-			m_BtQuit = gtk_button_new_with_label("Quit");
+			m_BtQuit = gtk_button_new_with_label("Close");
 			gtk_container_add(GTK_CONTAINER (hbox), m_BtQuit);
 			
 			// Connect signals :

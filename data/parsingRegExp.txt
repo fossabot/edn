@@ -1,0 +1,80 @@
+Makefile : 
+	$ ==> End of line
+	^ ==> ???
+	
+	
+
+	P1 Comment
+		#
+		$
+	P1 Assignement
+		^( *| [ \t]*)[A-Za-z0-9_+][^ \t]*[ \t]*(\+|:)?=
+		$
+	P1 Dependency Line
+		^( *| [ \t]*)(.DEFAULT|.DELETE_ON_ERROR|.EXPORT_ALL_VARIABLES.IGNORE|.INTERMEDIATE|.PHONY|.POSIX|.PRECIOUS|.SECONDARY|.SILENT|.SUFFIXES)*(([A-Za-z0-9./$(){} _@^<*?%+-]*(\\\n)){,8}[A-Za-z0-9./$(){} _@^<*?%+-]*)::?
+		$|;
+	P1 Macro
+		\$([A-Za-z0-9_]|\([^)]*\)|\{[^}]*})
+	P1 Internal Macro
+		\$([<@*?%]|\$@)
+	P1 Include
+		^( *| [ \t]*)include[ \t]
+	P1 Exports
+		^( *| [ \t]*)<export|unexport>[ \t]
+	P2 Conditionals
+		^( *| [ \t]*)<ifeq|ifneq>[ \t]
+	P2 Conditionals ifdefs
+		^( *| [ \t]*)<ifdef|ifndef>[ \t]
+	P2 Conditional Ends
+		^( *| [ \t]*)<else|endif>
+	P2 vpath
+		^( *| [ \t]*)<vpath>[ \t]
+	P2 define
+		^( *| [ \t]*)<define>[ \t]
+	P2 define Ends
+		^( *| [ \t]*)<endef>
+
+XML :
+	$ ==> End of line
+	^ ==> ???
+	
+	P1 Comment
+		\< !--
+		--\ >
+	P1 ignored section
+		\<!\[\s*IGNORE\s*\[
+		\]\]\>
+	P1 declaration
+		\<\?(?ixml)
+		\?\>
+	P1 doctype
+		(\<!(?idoctype))\s+(\<?(?!(?ixml))[\l_][\w:-]*\>?)
+		\>
+		error : \]
+	p1 processing instruction
+		\<\?\S+
+		\?\>
+	P1 cdata
+		\<!\[(?icdata)\[
+		\]\]\>
+	P1 element declaration
+		\<!ELEMENT
+		\>
+	P1 entity declaration
+		\<!ENTITY
+		\>
+	p1 notation
+		\<!NOTATION
+		\>
+	P1 attribute declaration
+		\<!ATTLIST
+		\>
+	P1 element
+		(\</?)((?!(?ixml))[\l_][\w:-]*)
+		/?\>
+	P1 entity
+		&((amp|lt|gt|quot|apos)|#x[\da-fA-F]*|[\l_]\w*);
+	P1 marked section
+		\<!\[\s*(?:INCLUDE|(%(?!(?ixml))[\l_][\w:-]*;))\s*\[|\]\]\>
+	P2 internal subset delims
+		[\[\]>]

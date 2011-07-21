@@ -9,53 +9,9 @@
 			<end>\n</end>
 			<EscapeChar>\</EscapeChar>
 		</rule>
-		<rule name="Assignement">
-			<color>preprocesseur</color>
-			<start>( *| [ \t]*)[A-Za-z0-9_+][^ \t]*[ \t]*(\+|:)?=</start>
-			<end>\n</end>
-			<EscapeChar>\</EscapeChar>
-		</rule>
-		Dependency Line
-		^( *| [ \t]*)(.DEFAULT|.DELETE_ON_ERROR|.EXPORT_ALL_VARIABLES.IGNORE|.INTERMEDIATE|.PHONY|.POSIX|.PRECIOUS|.SECONDARY|.SILENT|.SUFFIXES)*(([A-Za-z0-9./$(){} _@^<*?%+-]*(\\\n)){,8}[A-Za-z0-9./$(){} _@^<*?%+-]*)::?
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		
 	</pass2>
 </EdnLang>
 
-<!--
-Parsing : to add : 
-	$ ==> End of line
-	^ ==> ???
-	
-	P1 Comment
-		#
-		$
-	P1 Assignement
-		^( *| [ \t]*)[A-Za-z0-9_+][^ \t]*[ \t]*(\+|:)?=
-		$
-	P1 Dependency Line
-		^( *| [ \t]*)(.DEFAULT|.DELETE_ON_ERROR|.EXPORT_ALL_VARIABLES.IGNORE|.INTERMEDIATE|.PHONY|.POSIX|.PRECIOUS|.SECONDARY|.SILENT|.SUFFIXES)*(([A-Za-z0-9./$(){} _@^<*?%+-]*(\\\n)){,8}[A-Za-z0-9./$(){} _@^<*?%+-]*)::?
-		$|;
-	P1 Macro
-		\$([A-Za-z0-9_]|\([^)]*\)|\{[^}]*})
-	P1 Internal Macro
-		\$([<@*?%]|\$@)
-	P1 Include
-		^( *| [ \t]*)include[ \t]
-	P1 Exports
-		^( *| [ \t]*)<export|unexport>[ \t]
-	P2 Conditionals
-		^( *| [ \t]*)<ifeq|ifneq>[ \t]
-	P2 Conditionals ifdefs
-		^( *| [ \t]*)<ifdef|ifndef>[ \t]
-	P2 Conditional Ends
-		^( *| [ \t]*)<else|endif>
-	P2 vpath
-		^( *| [ \t]*)<vpath>[ \t]
-	P2 define
-		^( *| [ \t]*)<define>[ \t]
-	P2 define Ends
-		^( *| [ \t]*)<endef>
-
--->

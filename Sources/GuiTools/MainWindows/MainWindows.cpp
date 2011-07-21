@@ -48,7 +48,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	gtk_window_set_default_size(GTK_WINDOW(m_mainWindow), 800, 600);
 
 	// enable the close signal of the windows 
-	g_signal_connect(G_OBJECT(m_mainWindow), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+	//g_signal_connect(G_OBJECT(m_mainWindow), "destroy", G_CALLBACK(OnQuit), this);
 
 	// Create a vertical box for stacking the menu and editor widgets in.
 	GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
@@ -126,7 +126,11 @@ void MainWindows::OnMessage(int32_t id, int32_t dataID)
 	}
 }
 
-
+void MainWindows::OnQuit(GtkWidget *widget, gpointer data)
+{
+	EDN_INFO("quit requested");
+	gtk_main_quit();
+}
 
 
 #if 0
