@@ -1,7 +1,7 @@
 /**
  *******************************************************************************
  * @file MainWindows.cpp
- * @brief Editeur De N'ours : main Windows diplayer
+ * @brief Editeur De N'ours : main Windows diplayer (Sources)
  * @author Edouard DUPIN
  * @date 04/01/2011
  * @par Project
@@ -28,8 +28,6 @@
 #include "MainWindows.h"
 #include "CodeView.h"
 #include "ClipBoard.h"
-//#include "SearchData.h"
-//#include "MsgBroadcast.h"
 #include "BufferView.h"
 #include "AccelKey.h"
 
@@ -48,6 +46,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	gtk_window_set_default_size(GTK_WINDOW(m_mainWindow), 800, 600);
 
 	// enable the close signal of the windows 
+	g_signal_connect(G_OBJECT(m_mainWindow), "delete-event", G_CALLBACK(OnQuit), this);
 	//g_signal_connect(G_OBJECT(m_mainWindow), "destroy", G_CALLBACK(OnQuit), this);
 
 	// Create a vertical box for stacking the menu and editor widgets in.
@@ -123,13 +122,42 @@ void MainWindows::OnMessage(int32_t id, int32_t dataID)
 				}
 			}
 			break;
+		case EDN_MSG__QUIT:
+			OnQuit(m_mainWindow, this);
+			break;
 	}
 }
 
-void MainWindows::OnQuit(GtkWidget *widget, gpointer data)
+bool MainWindows::OnQuit(GtkWidget *widget, gpointer data)
 {
 	EDN_INFO("quit requested");
+	// dlg to confirm the quit event : 
+	GtkWidget *p_dialog = gtk_dialog_new_with_buttons("Exit",
+	                                                  GTK_WINDOW(widget),
+	                                                  GTK_DIALOG_MODAL,
+	                                                  GTK_STOCK_YES, GTK_RESPONSE_YES,
+	                                                  GTK_STOCK_NO, GTK_RESPONSE_NO,
+	                                                  NULL);
+	GtkWidget *p_label =  gtk_label_new ("Do you want exit Edn?");
+	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area( GTK_DIALOG(p_dialog) )), p_label, TRUE, TRUE, 0);
+	
+	gtk_widget_show(p_label);
+	
+	switch (gtk_dialog_run (GTK_DIALOG (p_dialog)))
+	{
+		case GTK_RESPONSE_YES:
+			gtk_widget_destroy (p_dialog);
+			
+			break;
+		case GTK_RESPONSE_NO:
+			gtk_widget_destroy (p_dialog);
+			// do not close the windows
+			return true;
+			break;
+	}
+	
 	gtk_main_quit();
+	return false;
 }
 
 

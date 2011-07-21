@@ -318,6 +318,23 @@ MenuBar::MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI)
 		tmp->AddGen("Copy 9",                "ctrl+9",       EDN_MSG__CURRENT_COPY,  true, 9);
 		tmp->AddGen("Paste 9",               "alt+9",        EDN_MSG__CURRENT_PASTE, true, 9);
 	m_listMenu.PushBack(tmp);
+	
+	tmp = new MenuBarMain("Help", m_mainWidget);
+		tmp->AddGen("help display",              NULL,           EDN_MSG__OPEN_CTAGS, false);
+		tmp->AddSeparator();
+		tmp->AddGen("About ...",                 NULL,       EDN_MSG__GUI_SHOW_ABOUT, true);
+	/*
+		tmp->AddGen("Gestion Ctags",                NULL);
+		tmp->AddGen("Add Ctags Folder",             NULL);
+		tmp->AddSeparator();
+		tmp->AddGen("Trouver la definition",        NULL);
+		tmp->AddGen("Trouver la declaration",       NULL);
+		tmp->AddGen("Retour...",                    NULL);
+		tmp->AddSeparator();
+		tmp->AddGen("Tout desactiver",              NULL);
+	*/
+	m_listMenu.PushBack(tmp);
+	
 }
 
 MenuBar::~MenuBar(void)
