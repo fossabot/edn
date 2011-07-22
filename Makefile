@@ -31,6 +31,11 @@ export F_GRIS=[37m
 export CADRE_HAUT_BAS='	$(F_INVERSER)                                                                    $(F_NORMALE)'
 export CADRE_COTERS='	$(F_INVERSER)  $(F_NORMALE)								  $(F_INVERSER)  $(F_NORMALE)'
 
+VERSION_TAG=$(shell git describe --tags)
+#$(info $(VERSION_TAG))
+
+VERSION_BUILD_TIME=$(shell date)
+#$(info $(VERSION_TAG))
 
 ###############################################################################
 ### Compilateur base system                                                 ###
@@ -45,10 +50,11 @@ DEBUG:=1
 ### Compilation Define                                                      ###
 ###############################################################################
 ifeq ("$(DEBUG)", "0")
-    DEFINE= -DEDN_DEBUG_LEVEL=1 -DNDEBUG
+    DEFINE= -DEDN_DEBUG_LEVEL=1 -DNDEBUG -DVERSION_TAG_NAME="\"$(VERSION_TAG)-debug\""
 else
-    DEFINE= -DEDN_DEBUG_LEVEL=3
+    DEFINE= -DEDN_DEBUG_LEVEL=3 -DVERSION_TAG_NAME="\"$(VERSION_TAG)-release\""
 endif
+DEFINE+= -DVERSION_BUILD_TIME="\"$(VERSION_BUILD_TIME)\""
 
 GTKFLAGS= 
 ifeq ($(shell if `pkg-config --exists gtk+-3.0` ; then echo "yes"; else echo "no"; fi), yes)
@@ -203,7 +209,7 @@ all: build
 
 -include $(OBJ:.o=.d) 
 
-build: .encadrer $(OUTPUT_NAME)
+build: .encadrer .versionFile $(OUTPUT_NAME)
 
 
 .encadrer:
@@ -221,6 +227,11 @@ build: .encadrer $(OUTPUT_NAME)
 
 FILE_IMAGES=	data/imagesSources/*.png
 
+
+.versionFile :
+	@rm $(OBJECT_DIRECTORY)/GuiTools/WindowsManager/WindowsManager.o
+
+
 # Tool used to create a binary version of every element png or other needed by the application
 pngToCpp: tools/pngToCpp/pngToCpp.c
 	@echo $(F_ROUGE)"          (bin) $@"$(F_NORMALE)
@@ -230,14 +241,12 @@ pngToCpp: tools/pngToCpp/pngToCpp.c
 # Generate basic 
 $(FILE_DIRECTORY)/GuiTools/myImage.cpp: $(FILE_IMAGES) $(MAKE_DEPENDENCE) pngToCpp
 	@echo $(F_BLUE)"          (.cpp)  *.png ==> $@"$(F_NORMALE)
-	@#echo ./pngToCpp $@ $(FILE_IMAGES)
 	@./pngToCpp $@ $(FILE_IMAGES)
 
 
 # build C++
 $(OBJECT_DIRECTORY)/%.o: $(FILE_DIRECTORY)/%.cpp $(MAKE_DEPENDENCE)
 	@echo $(F_VERT)"          (.o)  $<"$(F_NORMALE)
-	@#echo $(CXX)  $< -c -o $@  $(INCLUDE_DIRECTORY) $(CXXFLAGS) -MMD
 	@$(CXX)  $< -c -o $@  $(INCLUDE_DIRECTORY) $(CXXFLAGS) -MMD
 
 # build binary Release Mode
@@ -273,7 +282,7 @@ clean:
 count:
 	wc -l Makefile `find $(FILE_DIRECTORY)/ -name "*.cpp"` `find $(FILE_DIRECTORY)/ -name "*.h"` 
 
-install: .encadrer $(OUTPUT_NAME_RELEASE)
+install: .encadrer .versionFile $(OUTPUT_NAME_RELEASE)
 	@echo $(CADRE_HAUT_BAS)
 	@echo '           INSTALL : $(F_VIOLET)$(OUTPUT_NAME_RELEASE)=>$(PROG_NAME)$(F_NORMALE)'$(CADRE_COTERS)
 	@echo $(CADRE_HAUT_BAS)

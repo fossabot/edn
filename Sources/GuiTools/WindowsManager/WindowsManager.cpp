@@ -162,20 +162,35 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				                                                  GTK_STOCK_QUIT, GTK_RESPONSE_NO,
 				                                                  NULL);
 				GtkWidget *myContentArea = gtk_dialog_get_content_area( GTK_DIALOG(myDialog));
-				GtkWidget *myLabel =  gtk_label_new(
-				    "Name : Edn\n\n"
-				    "Version : v0.1.1\n\n"
-				    "Description : Editeur De N'ours, l'Editeur Desoxyribo-Nucleique\n"
-				    "              Source Code Editor\n\n" 
-				    "Copyright 2010 Edouard DUPIN, all right reserved\n"
-				    "This software is distributed in the hope that it will be useful, but WITHOUT\n"
-				    "ANY WARRANTY\n\n"
-				    "Licence summary : \n"
-				    "    You can modify and redistribute the sources code and binaries.\n"
-				    "    You can send me the bug-fix\n"
-				    "    You can not earn money with this Software (if the source extract from Edn\n"
-				    "        represent less than 50% of original Sources)\n"
-				    "Term of the licence in the file licence.txt");
+				GtkWidget *myLabel =  gtk_label_new("");
+				gtk_label_set_markup (GTK_LABEL (myLabel),
+				    "<b>Name :</b> Edn\n"
+				    "<b>Version :</b> " VERSION_TAG_NAME "\n"
+				    "<b>Build Time :</b> " VERSION_BUILD_TIME "\n\n"
+				    "<b>Description :</b> Editeur De N'ours, l'Editeur Desoxyribo-Nucleique\n"
+				    "    Source Code Editor\n\n" 
+				    "<b>Copyright 2010 Edouard DUPIN, all right reserved</b>\n\n"
+				    "<b>Terms of license : </b>\n"
+				    "This software is distributed in the hope that it will be useful, but \n"
+				    "WITHOUT ANY WARRANTY\n"
+				    "    <b>You can:</b>\n"
+				    "        * Redistribute the sources code and binaries.\n"
+				    "        * Modify the Sources code.\n"
+				    "        * Use a part of the sources (less than 50%) in an other software,\n"
+				    "          just write somewhere \"Edn is great\" visible by the user (on \n"
+				    "          your product or on your website with a link to my page).\n"
+				    "        * Redistribute the modification only if you want.\n"
+				    "        * Send me the bug-fix (it could be great).\n"
+				    "        * Pay me a beer or some other things.\n"
+				    "        Print the source code on WC paper ...\n"
+				    "    <b>You can NOT:</b>\n"
+				    "        * Earn money with this Software (But I can).\n"
+				    "        * Add malware in the Sources.\n"
+				    "        * Do something bad with the sources.\n"
+				    "        * Use it to travel in the space with a toaster.\n"
+				    "I reserve the right to change this licence. If it change the version of \n"
+				    "the copy you have keep its own license.\n\n"
+				    "<b>Sources : </b> git://github.com/HeeroYui/edn.git ");
 				gtk_box_pack_start(GTK_BOX(myContentArea), myLabel, TRUE, TRUE, 0);
 				
 				gtk_widget_show_all(myContentArea);

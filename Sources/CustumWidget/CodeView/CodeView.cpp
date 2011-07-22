@@ -358,7 +358,7 @@ gint CodeView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, gpo
 			EDN_INFO("mouse-event BT3 PRESS");
 		}
 	} else {
-		EDN_INFO("mouse-event BT? PRESS");
+		EDN_INFO("mouse-event BT" << event->type <<" PRESS");
 	}
 	return true;
 }
