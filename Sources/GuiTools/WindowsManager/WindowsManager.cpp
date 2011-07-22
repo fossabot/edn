@@ -156,23 +156,33 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 		case EDN_MSG__GUI_SHOW_ABOUT:
 			{
 				// dlg to confirm the quit event : 
-				GtkWidget *p_dialog = gtk_dialog_new_with_buttons("About",
+				GtkWidget *myDialog = gtk_dialog_new_with_buttons("About",
 				                                                  NULL,
 				                                                  GTK_DIALOG_MODAL,
-				                                                  GTK_STOCK_YES, GTK_RESPONSE_YES,
-				                                                  GTK_STOCK_NO, GTK_RESPONSE_NO,
+				                                                  GTK_STOCK_QUIT, GTK_RESPONSE_NO,
 				                                                  NULL);
-				GtkWidget *p_label =  gtk_label_new ("Do you want exit Edn?");
-				gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area( GTK_DIALOG(p_dialog) )), p_label, TRUE, TRUE, 0);
+				GtkWidget *myContentArea = gtk_dialog_get_content_area( GTK_DIALOG(myDialog));
+				GtkWidget *myLabel =  gtk_label_new(
+				    "Name : Edn\n\n"
+				    "Version : v0.1.1\n\n"
+				    "Description : Editeur De N'ours, l'Editeur Desoxyribo-Nucleique\n"
+				    "              Source Code Editor\n\n" 
+				    "Copyright 2010 Edouard DUPIN, all right reserved\n"
+				    "This software is distributed in the hope that it will be useful, but WITHOUT\n"
+				    "ANY WARRANTY\n\n"
+				    "Licence summary : \n"
+				    "    You can modify and redistribute the sources code and binaries.\n"
+				    "    You can send me the bug-fix\n"
+				    "    You can not earn money with this Software (if the source extract from Edn\n"
+				    "        represent less than 50% of original Sources)\n"
+				    "Term of the licence in the file licence.txt");
+				gtk_box_pack_start(GTK_BOX(myContentArea), myLabel, TRUE, TRUE, 0);
 				
-				gtk_widget_show(p_label);
-				int32_t result = gtk_dialog_run (GTK_DIALOG (p_dialog));
-				gtk_widget_destroy(p_dialog);
+				gtk_widget_show_all(myContentArea);
+				int32_t result = gtk_dialog_run (GTK_DIALOG (myDialog));
+				gtk_widget_destroy(myDialog);
 				switch (result)
 				{
-					case GTK_RESPONSE_YES:
-						gtk_main_quit();
-						break;
 					case GTK_RESPONSE_NO:
 						break;
 				}
