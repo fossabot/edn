@@ -33,6 +33,8 @@
 #include "BufferManager.h"
 #include "Display.h"
 #include "MsgBroadcast.h"
+#include "MenuContext.h"
+
 
 
 class BufferView : public MsgBroadcast
@@ -61,6 +63,7 @@ class BufferView : public MsgBroadcast
 		// récupération des proprieter général...
 		BufferManager *       m_bufferManager;
 		ColorizeManager *     m_colorManager;
+		MenuContext *         m_menuContext;
 		int32_t               m_shawableAreaX;
 		int32_t               m_shawableAreaY;
 		int32_t               m_selectedID;

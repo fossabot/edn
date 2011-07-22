@@ -166,6 +166,17 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
 	
 	cairo_scale(m_cairo, 1.0, 1.0);
 	
+	// http://cairographics.org/FAQ/#clear_a_surface
+	// http://gtk.developpez.com/faq/?page=gtkwidget#GTK_WIDGET_transparent
+	cairo_set_source_rgba(m_cairo, 0, 1, 1, 0.5);
+	cairo_set_operator(m_cairo, CAIRO_OPERATOR_SOURCE);
+	cairo_paint(m_cairo);
+	//cairo_fill(m_cairo);
+	//cairo_stroke (m_cairo);
+
+	
+	
+	
 }
 
 

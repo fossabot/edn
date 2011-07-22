@@ -41,6 +41,7 @@ BufferView::BufferView(void) : MsgBroadcast("Buffer View", EDN_CAT_GUI)
 	// Init link with the buffer Manager
 	m_bufferManager = BufferManager::getInstance();
 	m_colorManager = ColorizeManager::getInstance();
+	m_menuContext = MenuContext::getInstance();
 
 	m_widget = gtk_drawing_area_new();
 	gtk_widget_set_size_request( m_widget, 250, 100);
@@ -281,14 +282,27 @@ gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, g
 	}/* else if (event->button == 2) {
 		if (event->type == GDK_BUTTON_PRESS) {
 			EDN_INFO("mouse-event BT2 PRESS");
+			self->m_menuContext->Show(event->x, event->y, false);
 		}
-	} else if (event->button == 3) {
+	}*/ else if (event->button == 3) {
 		if (event->type == GDK_BUTTON_PRESS) {
 			EDN_INFO("mouse-event BT3 PRESS");
+			uint32_t fontHeight = Display::GetFontHeight();
+			int32_t selectBuf = self->m_bufferManager->WitchBuffer((event->y / fontHeight) + 1);
+			if ( 0 <= selectBuf) {
+				// TODO : Find a simple methode
+				int32_t windowsPosX, windowsPosY;
+				gtk_window_get_position(GTK_WINDOW(gtk_widget_get_toplevel(widget)), &windowsPosX, &windowsPosY);
+				//EDN_INFO("windowsPosX=" << windowsPosX << " windowsPosY=" << windowsPosY);
+				int32_t widgetPosX, widgetPosY;
+				gtk_widget_translate_coordinates(widget, gtk_widget_get_toplevel(widget), 0, 0, &widgetPosX, &widgetPosY);
+				//EDN_INFO("widgetPosX=" << widgetPosX << " widgetPosY=" << widgetPosY);
+				self->m_menuContext->Show(self->m_shawableAreaX+2+widgetPosX+windowsPosX, ((int32_t)(event->y / fontHeight)*fontHeight)+(fontHeight/2)+widgetPosY+windowsPosY, false);
+			}
 		}
 	} else {
-		//EDN_INFO("mouse-event BT? PRESS");
-	}*/
+		EDN_INFO("mouse-event BT? PRESS");
+	}
 	gtk_widget_queue_draw( widget );
 	return true;
 }

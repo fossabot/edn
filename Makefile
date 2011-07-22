@@ -172,7 +172,8 @@ CXXFILES+=		CustumWidget/BufferView/BufferView.cpp		\
 				GuiTools/MainWindows/MenuBar.cpp			\
 				GuiTools/MainWindows/ToolBar.cpp			\
 				GuiTools/Search/Search.cpp					\
-				GuiTools/Search/SearchData.cpp
+				GuiTools/Search/SearchData.cpp              \
+				GuiTools/MenuContext/MenuContext.cpp
 
 # Basic Interface :
 CXXFILES+=		Buffer/Buffer.cpp						\
@@ -229,7 +230,7 @@ FILE_IMAGES=	data/imagesSources/*.png
 
 
 .versionFile :
-	@rm $(OBJECT_DIRECTORY)/GuiTools/WindowsManager/WindowsManager.o
+	@rm -f $(OBJECT_DIRECTORY)/GuiTools/WindowsManager/WindowsManager.o
 
 
 # Tool used to create a binary version of every element png or other needed by the application

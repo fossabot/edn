@@ -121,6 +121,10 @@ typedef enum {
 		EDN_MSG__JUMP_BACK,
 	MSG_TO_CTAGS__STOP,
 
+	// DESTINATION : context popup ...
+	MSG_TO_CONTEXT__START,
+	MSG_TO_CONTEXT__STOP,
+
 
 }messageType_te;
 
@@ -132,6 +136,7 @@ typedef enum {
 	EDN_CAT_BUFFER_MANAGER,
 	EDN_CAT_GUI_MANAGER,
 	EDN_CAT_CTAGS,
+	EDN_CAT_MENU_CONTEXT,
 }messageCat_te;
 
 

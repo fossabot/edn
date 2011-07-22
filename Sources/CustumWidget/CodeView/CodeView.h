@@ -32,6 +32,7 @@
 #include "BufferManager.h"
 #include "Display.h"
 #include "MsgBroadcast.h"
+#include "MenuContext.h"
 
 class CodeView : public MsgBroadcast
 {
@@ -53,14 +54,15 @@ class CodeView : public MsgBroadcast
 
 	private:
 		// main windows widget : 
-		GtkWidget			* m_widget;
+		GtkWidget *         m_widget;
 		// récupération des proprieter général...
-		BufferManager		* m_bufferManager;
-		ColorizeManager		* m_colorManager;
-		int32_t				  m_shawableAreaX;
-		int32_t				  m_shawableAreaY;
-		int32_t				  m_bufferID;
-		bool				  m_buttunOneSelected;
+		BufferManager *     m_bufferManager;
+		ColorizeManager *   m_colorManager;
+		MenuContext *       m_menuContext;
+		int32_t             m_shawableAreaX;
+		int32_t             m_shawableAreaY;
+		int32_t             m_bufferID;
+		bool                m_buttunOneSelected;
 };
 #endif
 

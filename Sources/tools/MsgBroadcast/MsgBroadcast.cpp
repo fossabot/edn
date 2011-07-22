@@ -161,6 +161,8 @@ static char * GetMessageTypeChar(messageCat_te Id)
 			return (char*)"GUI_MANAGER";
 		case EDN_CAT_CTAGS:
 			return (char*)"C-TAGS_MANAGER";
+		case EDN_CAT_MENU_CONTEXT:
+			return (char*)"MENU CONTEXT";
 		default:
 			return (char*)"??";
 	}
@@ -198,6 +200,10 @@ void MsgBroadcastCore::SendMessage(MsgBroadcast * pointerOnSender, messageType_t
 	           && MSG_TO_CTAGS__STOP  >= id )
 	{
 		catDest = EDN_CAT_CTAGS;
+	} else if(    MSG_TO_CONTEXT__START <= id
+	           && MSG_TO_CONTEXT__STOP  >= id )
+	{
+		catDest = EDN_CAT_MENU_CONTEXT;
 	}
 	
 	myStructMessage.localMessageID = m_messageID++;
