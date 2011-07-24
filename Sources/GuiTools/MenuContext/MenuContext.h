@@ -45,6 +45,7 @@ class MenuContext: public Singleton<MenuContext>, public MsgBroadcast
 		void    OnMessage(int32_t id, int32_t dataID);
 		// sur : GTK+ callback :
 		static gboolean CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data);
+		static gboolean CB_displayDraw2( GtkWidget *widget, GdkEventExpose *event, gpointer data);
 		static gboolean CB_displayInit( GtkWidget *widget, gpointer data);
 		static gint     CB_focusGet( GtkWidget *widget, GdkEventFocus *event, gpointer data);
 		static gint     CB_focusLost( GtkWidget *widget, GdkEventFocus *event, gpointer data);

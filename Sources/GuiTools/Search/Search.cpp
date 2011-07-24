@@ -56,12 +56,18 @@ Search::~Search(void)
 	}
 }
 
-void Search::Display(void)
+void Search::Display(GtkWindow *parent)
 {
 	if(NULL == m_localDialog) {
 		m_localDialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+		// set dialog not resisable
 		gtk_window_set_resizable(GTK_WINDOW(m_localDialog), FALSE);
-		gtk_window_set_keep_above(GTK_WINDOW(m_localDialog), TRUE);
+		// set the windows alwais on top of every all system windows
+		//gtk_window_set_keep_above(GTK_WINDOW(m_localDialog), TRUE);
+		// Set the dialog on top of the selected windows
+		gtk_window_set_transient_for(GTK_WINDOW(m_localDialog), parent);
+		// set the dialog on the top right
+		gtk_window_set_gravity(GTK_WINDOW(m_localDialog), GDK_GRAVITY_NORTH_EAST);
 		
 		// select the program icone
 		//gtk_window_set_default_icon_name("Replace");

@@ -99,7 +99,8 @@ bool supports_alpha = false;
 
 void MenuContext::CB_ScreenChange(GtkWidget *widget, GdkScreen *old_screen, gpointer userdata)
 {
-  /* To check if the display supports alpha channels, get the colormap */
+/*
+  // To check if the display supports alpha channels, get the colormap 
   GdkScreen *screen = NULL;
   GdkColormap *colormap = NULL;
 
@@ -117,8 +118,9 @@ void MenuContext::CB_ScreenChange(GtkWidget *widget, GdkScreen *old_screen, gpoi
     supports_alpha = true;
   }
 
-  /* Now we have a colormap appropriate for the screen, use it */
+  /* Now we have a colormap appropriate for the screen, use it 
   gtk_widget_set_colormap (widget, colormap);
+  */
 }
 
 
@@ -129,7 +131,12 @@ static gboolean expose (GtkWidget *widget, GdkEventExpose *event, gpointer userd
   gint height;
   cairo_t *cr = NULL;
 
-  cr = gdk_cairo_create(widget->window);
+
+#	if USE_GTK_VERSION_3_0
+	cr = gdk_cairo_create(gtk_widget_get_window(widget));
+#	elif USE_GTK_VERSION_2_0
+	cr = gdk_cairo_create(widget->window);
+#	endif
   //if (supports_alpha)
   {
     // transparent
@@ -148,13 +155,13 @@ static gboolean expose (GtkWidget *widget, GdkEventExpose *event, gpointer userd
   cairo_paint (cr);
 
   /* draw a circle */
-  gtk_window_get_size (GTK_WINDOW (widget), &width, &height);
+  //gtk_window_get_size (GTK_WINDOW (widget), &width, &height);
 
-  cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
-  cairo_arc (cr, width / 2, height / 2,
-             (width < height ? width : height) / 2 - 8 , 0, 2 * 3.14);
-  cairo_fill (cr);
-  cairo_stroke (cr);
+  //cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
+  //cairo_arc (cr, width / 2, height / 2, (width < height ? width : height) / 2 - 8 , 0, 2 * 3.14);
+  //cairo_fill (cr);
+  //cairo_stroke (cr);
+  //cairo_paint (cr);
   
   cairo_destroy (cr);
   return FALSE;
@@ -170,13 +177,22 @@ void MenuContext::Show(int32_t x, int32_t y, bool top)
 		gtk_widget_destroy(m_dialog);
 		m_dialog = NULL;
 	}
-	//m_dialog = gtk_window_new(GTK_WINDOW_POPUP);
-	m_dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	
+	m_dialog = gtk_window_new(GTK_WINDOW_POPUP);
+	//m_dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	// Set the dialog on top of the selected windows
+	//gtk_window_set_transient_for(GTK_WINDOW(m_dialog), parent);
+	// unset the border of the windows
+	//gtk_window_set_decorated(GTK_WINDOW(m_dialog), FALSE);
 	
 	EDN_INFO("Set position X=" << x+2 << " Y=" << y+27);
-	gtk_widget_set_uposition(m_dialog, x+2, y+27);
 	
+#	if USE_GTK_VERSION_3_0
+	gtk_window_move(GTK_WINDOW(m_dialog), x+2, y+27);
+#	elif USE_GTK_VERSION_2_0
+	gtk_widget_set_uposition(m_dialog, x+2, y+27);
+#	endif
+	
+//#if 1
 	
 	/* Tell GTK+ that we want to draw the windows background ourself.
 	 * If we don't do this then GTK+ will clear the window to the
@@ -196,22 +212,22 @@ void MenuContext::Show(int32_t x, int32_t y, bool top)
 	 * applications between X servers, which might not support the
 	 * same features, so we need to check each time.
 	 */
-	g_signal_connect (G_OBJECT (m_dialog), "expose-event", G_CALLBACK (expose), NULL);
-	g_signal_connect (G_OBJECT (m_dialog), "screen-changed", G_CALLBACK (CB_ScreenChange), NULL);
+#	ifdef USE_GTK_VERSION_3_0
+	g_signal_connect(       G_OBJECT(m_dialog), "draw",					G_CALLBACK(expose),		this);
+#	elif defined( USE_GTK_VERSION_2_0 )
+	g_signal_connect(       G_OBJECT(m_dialog), "expose_event",			G_CALLBACK(expose),		this);
+#	endif
+	//g_signal_connect (G_OBJECT (m_dialog), "screen-changed", G_CALLBACK (CB_ScreenChange), NULL);
 
 	
 	
+	//gtk_window_set_opacity(GTK_WINDOW(m_dialog), 0.25);
 	
-	CB_ScreenChange(m_dialog, NULL, NULL);
+	//CB_ScreenChange(m_dialog, NULL, NULL);
 	
-#if 0
-	// Default size open windows
-	//gtk_window_set_default_size(GTK_WINDOW(m_dialog), 200, 300);
-	//gtk_window_set_position(GTK_WINDOW(m_dialog), GTK_WIN_POS_MOUSE);
-	EDN_INFO("Set position X=" << x+2 << " Y=" << y+27);
-	gtk_widget_set_uposition(m_dialog, x+2, y+27);
-	
-	gtk_window_set_opacity(GTK_WINDOW(m_dialog), 0.5);
+//#else
+
+	//gtk_window_set_opacity(GTK_WINDOW(m_dialog), 0.25);
 	
 
 
@@ -235,7 +251,7 @@ void MenuContext::Show(int32_t x, int32_t y, bool top)
 	// Create the menu bar.
 	//gtk_box_pack_start(	GTK_BOX (vbox), m_MenuBar.GetWidget(), FALSE, FALSE, 0);
 	m_widget = gtk_drawing_area_new();
-	gtk_window_set_opacity(GTK_WINDOW(m_widget), 0.5);
+	//gtk_window_set_opacity(GTK_WINDOW(m_widget), 0.8);
 	gtk_widget_set_size_request( m_widget, 250, 100);
 
 	gtk_widget_add_events(	m_widget, 
@@ -263,16 +279,16 @@ void MenuContext::Show(int32_t x, int32_t y, bool top)
 	// Display Event
 	g_signal_connect(       G_OBJECT(m_widget), "realize",				G_CALLBACK(CB_displayInit),      this);
 #	ifdef USE_GTK_VERSION_3_0
-	g_signal_connect(       G_OBJECT(m_widget), "draw",					G_CALLBACK(CB_displayDraw),		this);
+	g_signal_connect(       G_OBJECT(m_widget), "draw",					G_CALLBACK(CB_displayDraw2),		this);
 #	elif defined( USE_GTK_VERSION_2_0 )
-	g_signal_connect(       G_OBJECT(m_widget), "expose_event",			G_CALLBACK(CB_displayDraw),		this);
+	g_signal_connect(       G_OBJECT(m_widget), "expose_event",			G_CALLBACK(CB_displayDraw2),		this);
 #	endif
-	g_signal_connect (      G_OBJECT(m_widget), "screen-changed",       G_CALLBACK(CB_ScreenChange), NULL);
+	//g_signal_connect (      G_OBJECT(m_widget), "screen-changed",       G_CALLBACK(CB_ScreenChange), NULL);
 
 
 	gtk_container_add(GTK_CONTAINER(m_dialog), m_widget);
 
-#endif
+//#endif
 	// recursive version of gtk_widget_show
 	gtk_widget_show_all(m_dialog); 
 
@@ -350,6 +366,53 @@ gboolean MenuContext::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, 
 	}
 	return TRUE;
 
+}
+
+
+
+
+gboolean MenuContext::CB_displayDraw2( GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+	MenuContext * self = reinterpret_cast<MenuContext*>(data);
+
+  gint width;
+  gint height;
+  cairo_t *cr = NULL;
+
+
+#	if USE_GTK_VERSION_3_0
+	cr = gdk_cairo_create(gtk_widget_get_window(widget));
+#	elif USE_GTK_VERSION_2_0
+	cr = gdk_cairo_create(widget->window);
+#	endif
+  //if (supports_alpha)
+  {
+    // transparent
+    cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
+  }
+  /*
+  else
+  {
+    // opaque white
+    cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
+  }
+  */
+
+  /* draw the background */
+  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+  cairo_paint (cr);
+
+  /* draw a circle */
+  gtk_window_get_size (GTK_WINDOW (widget), &width, &height);
+
+  cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
+  cairo_arc (cr, width / 2, height / 2, (width < height ? width : height) / 2 - 8 , 0, 2 * 3.14);
+  cairo_fill (cr);
+  cairo_stroke (cr);
+  cairo_paint (cr);
+  
+  cairo_destroy (cr);
+  return FALSE;
 }
 
 

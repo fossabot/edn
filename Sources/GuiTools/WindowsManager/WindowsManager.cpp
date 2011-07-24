@@ -76,7 +76,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 			EDN_INFO("Request opening SEARCH");
 			{
 				Search *myInstance = Search::getInstance();
-				myInstance->Display();
+				myInstance->Display(GTK_WINDOW(m_mainWindow->GetWidget()));
 			}
 			break;
 		case EDN_MSG__GUI_SHOW_PREFERENCE:

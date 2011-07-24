@@ -49,8 +49,8 @@ class Colorize {
 		Edn::String GetName(void);
 		void SetFgColor(const char *myColor);
 		void SetBgColor(const char *myColor);
-		void ApplyFG(cairo_t * cr) { cairo_set_source_rgb(cr, m_colorFG.red, m_colorFG.green, m_colorFG.blue); };
-		void ApplyBG(cairo_t * cr) { cairo_set_source_rgb(cr, m_colorBG.red, m_colorBG.green, m_colorBG.blue); };
+		void ApplyFG(cairo_t * cr) { cairo_set_source_rgba(cr, m_colorFG.red, m_colorFG.green, m_colorFG.blue, 1); };
+		void ApplyBG(cairo_t * cr) { cairo_set_source_rgba(cr, m_colorBG.red, m_colorBG.green, m_colorBG.blue, 1); };
 		
 		color_ts & GetFG(void) { return m_colorFG; };
 		color_ts & GetBG(void) { return m_colorBG; };

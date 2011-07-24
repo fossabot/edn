@@ -43,7 +43,7 @@ class Search: public Singleton<Search>
 
 	public:
 		void Destroy(void);
-		void Display(void);
+		void Display(GtkWindow *parent);
 		void Hide(void);
 
 	private:
