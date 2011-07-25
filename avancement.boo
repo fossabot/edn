@@ -46,16 +46,16 @@
 	- Transformation de charset a la volé
 	- Charset par defaut
 	- Déction de charset (à mettre dans les todo de charset)
-	
+	- Faire les deplacement de EdnXXX dans le nameSpace Edn::XXX
 
 # Text Editor
 
-	- [1]   0% Indent group with Tabulation and shift+tabulation
-	- [1]   0% Basic smart indent : Recopy the start of the previous line when return (copy '\t' and ' ')
+	- [1]  90% Indent group with Tabulation and shift+tabulation
+	- [1] 100% Basic smart indent : Recopy the start of the previous line when return (copy '\t' and ' ')
 	- [1]   0% Replace Tab with space when press the key
 	- [1]   0% Request save user when quit the software
 	- [1]   0% Hide/Display scroll element when not usefull
-	- [1]   0% Regular expression search
+	- [1]  10% Regular expression search
 	- [1]  80% Colorisation syntaxique
 	- [1]  80% Copier / coller ==> probleme sur les caractères spéciaux comme ° é à ...
 	- [1]  10% Search 

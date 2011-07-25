@@ -53,7 +53,7 @@ void ClipBoard::Set(uint8_t clipboardID, EdnVectorBin<int8_t> &data)
 	if(clipboardID >= TOTAL_OF_CLICKBOARD) {
 		EDN_WARNING("request ClickBoard id error");
 	} else if(0 == data.Size()) {
-		EDN_WARNING("request a copy of nothing");
+		EDN_INFO("request a copy of nothing");
 	} else if (COPY_STD == clipboardID) {
 		GtkClipboard * clipboard = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
 		gtk_clipboard_set_text(clipboard, (const gchar*)&data[0], data.Size() );

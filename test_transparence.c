@@ -1,5 +1,6 @@
 
-// gcc test_transparence.c -o out `pkg-config --cflags --libs gtk+-3.0`
+// gcc test_transparence.c -o out `pkg-config --cflags --libs gtk+-3.0` -DUSE_GTK_VERSION_3_0
+// gcc test_transparence.c -o out `pkg-config --cflags --libs gtk+-2.0` -DUSE_GTK_VERSION_2_0
 
 // includes system, malloc, EXIT_SUCCESS
 #include <stdlib.h>
@@ -19,7 +20,9 @@ static gboolean expose(GtkWidget *widget, GdkEventExpose *event, gpointer user_d
 static void clicked(GtkWindow *win, GdkEventButton *event, gpointer user_data);
 
 
+#	if USE_GTK_VERSION_3_0
 const GdkRGBA color = { 1.0, 1.0, 0.0, 0.0};
+#endif
 
 int main(int argc, char **argv)
 {
@@ -33,9 +36,13 @@ int main(int argc, char **argv)
 
     gtk_widget_set_app_paintable(window, TRUE);
 
-    //g_signal_connect(G_OBJECT(window), "expose-event", G_CALLBACK(expose), NULL);
-    g_signal_connect(G_OBJECT(window), "draw", G_CALLBACK(expose), NULL);
+#	if USE_GTK_VERSION_3_0
+	g_signal_connect(G_OBJECT(window), "draw", G_CALLBACK(expose), NULL);
+#	elif USE_GTK_VERSION_2_0
+    g_signal_connect(G_OBJECT(window), "expose-event", G_CALLBACK(expose), NULL);
+#	endif
     g_signal_connect(G_OBJECT(window), "screen-changed", G_CALLBACK(screen_changed), NULL);
+#	if USE_GTK_VERSION_3_0
 	GtkStyleContext *context;
 	GdkRGBA rgba;
 	context = gtk_widget_get_style_context(window);
@@ -52,6 +59,7 @@ int main(int argc, char **argv)
 	                                     GTK_STATE_FLAG_NORMAL,// | GTK_STATE_FLAG_ACTIVE | GTK_STATE_FLAG_PRELIGHT | GTK_STATE_FLAG_SELECTED | GTK_STATE_FLAG_INSENSITIVE | GTK_STATE_FLAG_INCONSISTENT | GTK_STATE_FLAG_FOCUSED,
 	                                     &color);
 */
+#endif
     gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
     gtk_widget_add_events(window, GDK_BUTTON_PRESS_MASK);
     g_signal_connect(G_OBJECT(window), "button-press-event", G_CALLBACK(clicked), NULL);
@@ -71,13 +79,13 @@ int main(int argc, char **argv)
 }
 
 	
-gboolean supports_alpha = TRUE;
+gboolean supports_alpha = FALSE;
 static void screen_changed(GtkWidget *widget, GdkScreen *old_screen, gpointer userdata)
 {
     /* To check if the display supports alpha channels, get the colormap */
+#	ifdef USE_GTK_VERSION_2_0
+    GdkScreen *screen = gtk_widget_get_screen(widget);
     
-    //GdkScreen *screen = gtk_widget_get_screen(widget);
-    /*
     GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
 
     if (!colormap)
@@ -92,7 +100,8 @@ static void screen_changed(GtkWidget *widget, GdkScreen *old_screen, gpointer us
         supports_alpha = TRUE;
     }
 
-    gtk_widget_set_colormap(widget, colormap);*/
+    gtk_widget_set_colormap(widget, colormap);
+#endif
    /*
     gtk_widget_override_background_color(widget, 
 	                                     GTK_STATE_FLAG_NORMAL,// | GTK_STATE_FLAG_ACTIVE | GTK_STATE_FLAG_PRELIGHT | GTK_STATE_FLAG_SELECTED | GTK_STATE_FLAG_INSENSITIVE | GTK_STATE_FLAG_INCONSISTENT | GTK_STATE_FLAG_FOCUSED,
@@ -106,13 +115,11 @@ static void screen_changed(GtkWidget *widget, GdkScreen *old_screen, gpointer us
 static gboolean expose(GtkWidget *widget, GdkEventExpose *event, gpointer userdata)
 {
    return FALSE;
-//#	if USE_GTK_VERSION_3_0
+#	if USE_GTK_VERSION_3_0
 	cairo_t *cr = gdk_cairo_create(gtk_widget_get_window(widget));
-/*
 #	elif USE_GTK_VERSION_2_0
 	cairo_t *cr = gdk_cairo_create(widget->window);
 #	endif
-*/
     if (TRUE == supports_alpha)
         cairo_set_source_rgba (cr, 0.0, 0.0, 1.0, 0.3); /* transparent */
     else
@@ -132,3 +139,5 @@ static void clicked(GtkWindow *win, GdkEventButton *event, gpointer user_data)
     /* toggle window manager frames */
     gtk_window_set_decorated(win, !gtk_window_get_decorated(win));
 }
+
+

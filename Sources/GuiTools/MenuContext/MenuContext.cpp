@@ -95,33 +95,6 @@ void MenuContext::AddSpecificElem(Edn::String &text)
 {
 	
 }
-bool supports_alpha = false;
-
-void MenuContext::CB_ScreenChange(GtkWidget *widget, GdkScreen *old_screen, gpointer userdata)
-{
-/*
-  // To check if the display supports alpha channels, get the colormap 
-  GdkScreen *screen = NULL;
-  GdkColormap *colormap = NULL;
-
-  screen = gtk_widget_get_screen(widget);
-  colormap = gdk_screen_get_rgba_colormap (screen);
-  if (colormap == NULL)
-  {
-    EDN_WARNING("Your screen does not support alpha channels!\n");
-    colormap = gdk_screen_get_rgb_colormap(screen);
-    supports_alpha = false;
-  }
-  else
-  {
-    EDN_WARNING("Your screen supports alpha channels!\n");
-    supports_alpha = true;
-  }
-
-  /* Now we have a colormap appropriate for the screen, use it 
-  gtk_widget_set_colormap (widget, colormap);
-  */
-}
 
 
 /* This is called when we need to draw the windows contents */
@@ -192,40 +165,15 @@ void MenuContext::Show(int32_t x, int32_t y, bool top)
 	gtk_widget_set_uposition(m_dialog, x+2, y+27);
 #	endif
 	
-//#if 1
-	
-	/* Tell GTK+ that we want to draw the windows background ourself.
-	 * If we don't do this then GTK+ will clear the window to the
-	 * opaque theme default color, which isn't what we want.
-	 */
+#if 0
+	/* sdsfsdf */
 	gtk_widget_set_app_paintable (m_dialog, TRUE);
-	/* We need to handle two events ourself: "expose-event" and "screen-changed".
-	 *
-	 * The X server sends us an expose event when the window becomes
-	 * visible on screen. It means we need to draw the contents.  On a
-	 * composited desktop expose is normally only sent when the window
-	 * is put on the screen. On a non-composited desktop it can be
-	 * sent whenever the window is uncovered by another.
-	 *
-	 * The screen-changed event means the display to which we are
-	 * drawing changed. GTK+ supports migration of running
-	 * applications between X servers, which might not support the
-	 * same features, so we need to check each time.
-	 */
 #	ifdef USE_GTK_VERSION_3_0
 	g_signal_connect(       G_OBJECT(m_dialog), "draw",					G_CALLBACK(expose),		this);
 #	elif defined( USE_GTK_VERSION_2_0 )
 	g_signal_connect(       G_OBJECT(m_dialog), "expose_event",			G_CALLBACK(expose),		this);
 #	endif
-	//g_signal_connect (G_OBJECT (m_dialog), "screen-changed", G_CALLBACK (CB_ScreenChange), NULL);
-
-	
-	
-	//gtk_window_set_opacity(GTK_WINDOW(m_dialog), 0.25);
-	
-	//CB_ScreenChange(m_dialog, NULL, NULL);
-	
-//#else
+#endif
 
 	//gtk_window_set_opacity(GTK_WINDOW(m_dialog), 0.25);
 	
@@ -279,16 +227,13 @@ void MenuContext::Show(int32_t x, int32_t y, bool top)
 	// Display Event
 	g_signal_connect(       G_OBJECT(m_widget), "realize",				G_CALLBACK(CB_displayInit),      this);
 #	ifdef USE_GTK_VERSION_3_0
-	g_signal_connect(       G_OBJECT(m_widget), "draw",					G_CALLBACK(CB_displayDraw2),		this);
+	g_signal_connect(       G_OBJECT(m_widget), "draw",					G_CALLBACK(CB_displayDraw),		this);
 #	elif defined( USE_GTK_VERSION_2_0 )
-	g_signal_connect(       G_OBJECT(m_widget), "expose_event",			G_CALLBACK(CB_displayDraw2),		this);
+	g_signal_connect(       G_OBJECT(m_widget), "expose_event",			G_CALLBACK(CB_displayDraw),		this);
 #	endif
-	//g_signal_connect (      G_OBJECT(m_widget), "screen-changed",       G_CALLBACK(CB_ScreenChange), NULL);
-
 
 	gtk_container_add(GTK_CONTAINER(m_dialog), m_widget);
 
-//#endif
 	// recursive version of gtk_widget_show
 	gtk_widget_show_all(m_dialog); 
 
@@ -333,36 +278,25 @@ gboolean MenuContext::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, 
 	uint32_t fontHeight = Display::GetFontHeight();
 	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;
 	basicColor_te selectBG = COLOR_LIST_BG_1;
-	for (i=0; i < nbBufferOpen; i++) {
-		Edn::String name;
-		bool isModify;
-		if (self->m_bufferManager->Exist(i)) {
-			isModify = self->m_bufferManager->Get(i)->IsModify();
-			name = self->m_bufferManager->Get(i)->GetShortName();
-			char *tmpModify = (char*)" ";
-			if (true == isModify) {
-				tmpModify = (char*)"M";
-			}
-			char name2[1024] = "";
-			sprintf(name2, "[%2d](%s) %s", i, tmpModify, name.c_str() );
-			
-			if (true == isModify) {
-				selectFG = COLOR_LIST_TEXT_MODIFY;
-			} else {
-				selectFG = COLOR_LIST_TEXT_NORMAL;
-			}
-			if (lineID%2==0) {
-				selectBG = COLOR_LIST_BG_1;
-			} else {
-				selectBG = COLOR_LIST_BG_2;
-			}
-			EDN_INFO("color fg=" << selectFG << " bg="<<  selectBG);
-			//monDrawer.Rectangle(self->m_colorManager->Get(selectBG), 0, lineID*fontHeight, self->m_shawableSize.x, Display::GetFontHeight());
-			
-			monDrawer.Text(self->m_colorManager->Get(selectFG), 2, lineID*fontHeight, name2);
-			monDrawer.Flush();
-			lineID ++;
+	EdnVectorBin<Edn::String *> myData;
+	Edn::String * plop = new Edn::String("Save");
+	myData.PushBack(plop);
+	plop = new Edn::String("Show");
+	myData.PushBack(plop);
+	plop = new Edn::String("Close");
+	myData.PushBack(plop);
+	for (i=0; i < myData.Size(); i++) {
+		selectFG = COLOR_LIST_TEXT_NORMAL;
+		if (lineID%2==0) {
+			selectBG = COLOR_LIST_BG_1;
+		} else {
+			selectBG = COLOR_LIST_BG_2;
 		}
+		monDrawer.Rectangle(self->m_colorManager->Get(selectBG), 0, lineID*fontHeight, self->m_shawableSize.x, Display::GetFontHeight());
+		
+		monDrawer.Text(self->m_colorManager->Get(selectFG), 2, lineID*fontHeight, myData[i]->c_str());
+		monDrawer.Flush();
+		lineID ++;
 	}
 	return TRUE;
 
@@ -385,34 +319,24 @@ gboolean MenuContext::CB_displayDraw2( GtkWidget *widget, GdkEventExpose *event,
 #	elif USE_GTK_VERSION_2_0
 	cr = gdk_cairo_create(widget->window);
 #	endif
-  //if (supports_alpha)
-  {
-    // transparent
-    cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
-  }
-  /*
-  else
-  {
-    // opaque white
-    cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
-  }
-  */
+	// transparent
+	cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
 
-  /* draw the background */
-  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-  cairo_paint (cr);
+	/* draw the background */
+	cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+	cairo_paint (cr);
 
-  /* draw a circle */
-  gtk_window_get_size (GTK_WINDOW (widget), &width, &height);
-
-  cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
-  cairo_arc (cr, width / 2, height / 2, (width < height ? width : height) / 2 - 8 , 0, 2 * 3.14);
-  cairo_fill (cr);
-  cairo_stroke (cr);
-  cairo_paint (cr);
-  
-  cairo_destroy (cr);
-  return FALSE;
+	/* draw a circle */
+	gtk_window_get_size (GTK_WINDOW(widget), &width, &height);
+	
+	cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
+	cairo_arc (cr, width / 2, height / 2, (width < height ? width : height) / 2 - 8 , 0, 2 * 3.14);
+	cairo_fill (cr);
+	cairo_stroke (cr);
+	cairo_paint (cr);
+	
+	cairo_destroy (cr);
+	return FALSE;
 }
 
 
@@ -440,8 +364,6 @@ gboolean MenuContext::CB_displayInit( GtkWidget *widget, gpointer data)
 #	endif
 	EDN_INFO("Request a diplay of : " << size_x << "px * " << size_y << "px");
 
-	//Display::InitDisplayParam(self->m_displayParameters, widget, 700, 1200);
-
 	gtk_widget_queue_draw( widget );
 	return TRUE;
 }
@@ -451,7 +373,7 @@ gint MenuContext::CB_focusGet(	GtkWidget *widget, GdkEventFocus *event, gpointer
 	//MenuContext * self = reinterpret_cast<MenuContext*>(data);
 	
 #	ifdef USE_GTK_VERSION_2_0
-	GTK_WIDGET_SET_FLAGS (widget, GTK_HAS_FOCUS);
+	GTK_WIDGET_SET_FLAGS(widget, GTK_HAS_FOCUS);
 #	endif
 	EDN_INFO("Focus - In");
 	gtk_widget_queue_draw( widget );
@@ -463,7 +385,7 @@ gint MenuContext::CB_focusLost(	GtkWidget *widget, GdkEventFocus *event, gpointe
 	//MenuContext * self = reinterpret_cast<MenuContext*>(data);
 	
 #	ifdef USE_GTK_VERSION_2_0
-	GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
+	GTK_WIDGET_UNSET_FLAGS(widget, GTK_HAS_FOCUS);
 #	endif
 	EDN_INFO("Focus - out");
 	return FALSE;

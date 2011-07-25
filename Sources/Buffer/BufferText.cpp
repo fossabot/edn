@@ -1128,7 +1128,7 @@ void BufferText::AddChar(char * UTF8data)
 			// convert in the Good ISO format : 
 			char output_ISO;
 			convertUtf8ToIso(m_EdnBuf.GetCharsetType(), UTF8data, output_ISO);
-			printf(" insert : \"%s\"==> 0x%08x=%d ", UTF8data, (unsigned int)output_ISO, (int)output_ISO);
+			//printf(" insert : \"%s\"==> 0x%08x=%d ", UTF8data, (unsigned int)output_ISO, (int)output_ISO);
 			EdnVectorBin<int8_t> tmpVect;
 			tmpVect.PushBack(output_ISO);
 			if (false == haveSelectionActive) {
