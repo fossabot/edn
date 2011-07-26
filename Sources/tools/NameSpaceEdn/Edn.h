@@ -28,17 +28,8 @@
 #include "toolsMemory.h"
 #include "EdnVectorBin.h"
 
-#ifndef __EDN_H__
-#define __EDN_H__
 
-#define _IN_NAMESPACE_EDN_ (plop)
+#include "String.h"
 
-namespace Edn
-{
-	#include "String.h"
-	#include "File.h"
-}
+#include "File.h"
 
-#undef IN_NAMESPACE_EDN
-
-#endif

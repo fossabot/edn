@@ -1,6 +1,6 @@
 /**
  *******************************************************************************
- * @file EdnRegExp.h
+ * @file RegExp.h
  * @brief Editeur De N'ours : Regular expression annalyser (header)
  * @author Edouard DUPIN
  * @date 04/04/2011

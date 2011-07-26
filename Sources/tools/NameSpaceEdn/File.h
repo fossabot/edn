@@ -23,31 +23,32 @@
  *******************************************************************************
  */
 
+#ifndef __EDN__FILE_H__
+#define __EDN__FILE_H__
 
-#ifndef _IN_NAMESPACE_EDN_
-#	error This will be include only in "edn.h"
-#else 
-
-class File
+namespace Edn
 {
-	public:
-		            File(void) { m_lineNumberOpen=0; }
-		            File(Edn::String &filename, int32_t LineNumber = 0);
-		            File(Edn::String &filename, Edn::String &folder, int32_t lineNumber = 0);
-		            ~File(void);
-		Edn::String GetFolder(void);
-		Edn::String GetShortFilename(void);
-		Edn::String GetCompleateName(void);
-		int32_t     GetLineNumber(void);
-		
-		void        SetCompleateName(Edn::String &newFilename);
-		
-	private :
-		void        ExtranctAndName(Edn::String &inputString);
-		Edn::String m_folder;
-		Edn::String m_shortFilename;
-		int32_t     m_lineNumberOpen;
-};
+	class File
+	{
+		public:
+			            File(void) { m_lineNumberOpen=0; }
+			            File(Edn::String &filename, int32_t LineNumber = 0);
+			            File(Edn::String &filename, Edn::String &folder, int32_t lineNumber = 0);
+			            ~File(void);
+			Edn::String GetFolder(void);
+			Edn::String GetShortFilename(void);
+			Edn::String GetCompleateName(void);
+			int32_t     GetLineNumber(void);
+			
+			void        SetCompleateName(Edn::String &newFilename);
+			
+		private :
+			void        ExtranctAndName(Edn::String &inputString);
+			Edn::String m_folder;
+			Edn::String m_shortFilename;
+			int32_t     m_lineNumberOpen;
+	};
+}
 
 #endif
 

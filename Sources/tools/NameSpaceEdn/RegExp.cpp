@@ -1,6 +1,6 @@
 /**
  *******************************************************************************
- * @file EdnRegExp.cpp
+ * @file RegExp.cpp
  * @brief Editeur De N'ours : Regular expression annalyser (sources)
  * @author Edouard DUPIN
  * @date 04/04/2011
@@ -26,7 +26,7 @@
 #include "tools_debug.h"
 #include "tools_globals.h"
 #include "toolsMemory.h"
-#include "EdnRegExp.h"
+#include "RegExp.h"
 
 
 // internal define to permit to have all neeed system

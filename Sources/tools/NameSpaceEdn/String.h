@@ -22,11 +22,11 @@
  *
  *******************************************************************************
  */
+#ifndef __END__STRING_H__
+#define __END__STRING_H__
 
-#ifndef _IN_NAMESPACE_EDN_
-#	error This will be include only in "edn.h"
-#else 
-
+namespace Edn
+{
 	class String
 	{
 		public:
@@ -77,6 +77,7 @@
 	};
 
 	void TestUntaire_String(void);
+}
 
 #endif
 

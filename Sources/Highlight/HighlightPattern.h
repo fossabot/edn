@@ -29,7 +29,7 @@
 class HighlightPattern;
 
 #include "Edn.h"
-#include "EdnRegExp.h"
+#include "RegExp.h"
 #include "Colorize.h"
 #include "EdnVectorBin.h"
 #include "tinyxml.h"
@@ -71,8 +71,8 @@ class HighlightPattern {
 		Edn::String							m_paternName;				//!< Current style name (like "c++" or "c" or "script Bash")
 		Edn::String							m_colorName;				//!< Current color name
 		Colorize *							m_color;					//!< Link to the color manager
-		EdnRegExp *							m_regExpStart;				//!< Start of Regular expression
-		EdnRegExp *							m_regExpStop;				//!< Stop of Regular Expression
+		EdnRegExp *                       m_regExpStart;              //!< Start of Regular expression
+		EdnRegExp *                       m_regExpStop;               //!< Stop of Regular Expression
 		bool								m_haveStopPatern;			//!< Stop patern presence
 		bool								m_multiline;				//!< The patern is multiline
 		char								m_escapeChar;				//!< Escape char to prevent exeit of patern ....

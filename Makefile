@@ -159,9 +159,9 @@ CXXFILES+=		tools/AL/AL_Mutex.cpp					\
 				tools/MsgBroadcast/AccelKey.cpp			\
 				tools/charset/charsetTable.cpp			\
 				tools/charset/charset.cpp				\
-				tools/EdnRegExp/EdnRegExp.cpp			\
 				tools/NameSpaceEdn/File.cpp				\
-				tools/NameSpaceEdn/String.cpp
+				tools/NameSpaceEdn/String.cpp			\
+				tools/NameSpaceEdn/RegExp.cpp
 
 # Gui:
 CXXFILES+=		CustumWidget/BufferView/BufferView.cpp		\

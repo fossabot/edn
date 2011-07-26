@@ -29,6 +29,7 @@
 #include "BufferText.h"
 #include "toolsMemory.h"
 #include "Edn.h"
+#include "RegExp.h"
 
 #undef __class__
 #define __class__	"BufferText"
@@ -1145,7 +1146,6 @@ void BufferText::AddChar(char * UTF8data)
 	UpdateWindowsPosition();
 }
 
-#include "EdnRegExp.h"
 
 int32_t BufferText::FindLine(Edn::String &data)
 {
