@@ -230,12 +230,13 @@ gint BufferView::CB_focusGet(	GtkWidget *widget, GdkEventFocus *event, gpointer 
 
 gint BufferView::CB_focusLost(	GtkWidget *widget, GdkEventFocus *event, gpointer data)
 {
-	//BufferView * self = reinterpret_cast<BufferView*>(data);
+	BufferView * self = reinterpret_cast<BufferView*>(data);
 	
 #	ifdef USE_GTK_VERSION_2_0
 	GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
 #	endif
 	EDN_INFO("Focus - out");
+	self->m_menuContext->Hide();
 	return FALSE;
 }
 
@@ -253,14 +254,15 @@ gint BufferView::CB_keyboardEvent(	GtkWidget *widget, GdkEventKey *event, gpoint
 gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
 	BufferView * self = reinterpret_cast<BufferView*>(data);
-	
+	if (event->type != GDK_BUTTON_RELEASE) {
+		self->m_menuContext->Hide();
+	}
 	// get focus on the widget
 	gtk_widget_grab_focus(widget);
 	if (event->button == 1) {
-		/*
 		if (event->type == GDK_BUTTON_PRESS) {
 			EDN_INFO("mouse-event BT1  ==> One Clicked");
-		}else*/ if (event->type == GDK_2BUTTON_PRESS) {
+		}else if (event->type == GDK_2BUTTON_PRESS) {
 			//EDN_INFO("mouse-event BT1  ==> Double Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
 			uint32_t fontHeight = Display::GetFontHeight();
 			int32_t selectBuf = self->m_bufferManager->WitchBuffer((event->y / fontHeight) + 1);
@@ -279,12 +281,14 @@ gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, g
 		}else if (event->type == GDK_BUTTON_RELEASE) {
 			EDN_INFO("mouse-event BT1  ==> Realease");
 		}*/
-	}/* else if (event->button == 2) {
+	} else if (event->button == 2) {
+		/*
 		if (event->type == GDK_BUTTON_PRESS) {
 			EDN_INFO("mouse-event BT2 PRESS");
 			self->m_menuContext->Show(event->x, event->y, false);
 		}
-	}*/ else if (event->button == 3) {
+		*/
+	} else if (event->button == 3) {
 		if (event->type == GDK_BUTTON_PRESS) {
 			EDN_INFO("mouse-event BT3 PRESS");
 			uint32_t fontHeight = Display::GetFontHeight();
@@ -298,6 +302,8 @@ gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, g
 				gtk_widget_translate_coordinates(widget, gtk_widget_get_toplevel(widget), 0, 0, &widgetPosX, &widgetPosY);
 				//EDN_INFO("widgetPosX=" << widgetPosX << " widgetPosY=" << widgetPosY);
 				self->m_menuContext->Show(self->m_shawableAreaX+2+widgetPosX+windowsPosX, ((int32_t)(event->y / fontHeight)*fontHeight)+(fontHeight/2)+widgetPosY+windowsPosY, false);
+			} else {
+				self->m_menuContext->Hide();
 			}
 		}
 	} else {

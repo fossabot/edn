@@ -235,14 +235,19 @@ void MenuContext::Show(int32_t x, int32_t y, bool top)
 	gtk_container_add(GTK_CONTAINER(m_dialog), m_widget);
 
 	// recursive version of gtk_widget_show
-	gtk_widget_show_all(m_dialog); 
-
+	gtk_widget_show_all(m_dialog);
+	
+	// Set the Focus
+	gtk_widget_grab_focus(m_widget);
 
 }
 
 void MenuContext::Hide(void)
 {
-	
+	if(NULL != m_dialog) {
+		gtk_widget_destroy(m_dialog);
+		m_dialog = NULL;
+	}
 }
 
 
@@ -382,12 +387,13 @@ gint MenuContext::CB_focusGet(	GtkWidget *widget, GdkEventFocus *event, gpointer
 
 gint MenuContext::CB_focusLost(	GtkWidget *widget, GdkEventFocus *event, gpointer data)
 {
-	//MenuContext * self = reinterpret_cast<MenuContext*>(data);
+	MenuContext * self = reinterpret_cast<MenuContext*>(data);
 	
 #	ifdef USE_GTK_VERSION_2_0
 	GTK_WIDGET_UNSET_FLAGS(widget, GTK_HAS_FOCUS);
 #	endif
 	EDN_INFO("Focus - out");
+	self->Hide();
 	return FALSE;
 }
 
