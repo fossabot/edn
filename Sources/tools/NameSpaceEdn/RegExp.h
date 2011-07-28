@@ -25,13 +25,7 @@
 #ifndef __EDN_REG_EXP_H__
 #define __EDN_REG_EXP_H__
 
-class EdnRegExp;
-
-#include "EdnTree.h"
-#include "EdnBuf.h"
 #include "EdnVectorBin.h"
-#include "EdnVectorBuf.h"
-
 
 /*
 normal mode :
@@ -59,22 +53,142 @@ multiplicity :
 	{x,y} ==> {x, y}
 */
 
-class RegExpNode;
+
+// internal define to permit to have all neeed system
+#define OPCODE_PTHESE_IN		(-300)	/* ( */
+#define OPCODE_PTHESE_OUT		( 300)	/* ) */
+#define OPCODE_BRACKET_IN		(-301)	/* [ */
+#define OPCODE_BRACKET_OUT		( 301)	/* ] */
+#define OPCODE_BRACE_IN			(-302)	/* { */
+#define OPCODE_BRACE_OUT		( 302)	/* } */
+#define OPCODE_TO				(-305)	/* - */
+#define OPCODE_STAR				(-306)	/* * */
+#define OPCODE_DOT				(-307)	/* . */
+#define OPCODE_QUESTION			(-308)	/* ? */
+#define OPCODE_PLUS				(-309)	/* + */
+#define OPCODE_PIPE				(-310)	/* | */
+#define OPCODE_START_OF_LINE	(-311)	/* ^  this is also NOT, but not manage */
+#define OPCODE_END_OF_LINE		(-312)	/* $ */
+#define OPCODE_DIGIT			( 313)	/* \d */
+#define OPCODE_DIGIT_NOT		(-313)	/* \D */
+#define OPCODE_LETTER			( 314)	/* \l */
+#define OPCODE_LETTER_NOT		(-314)	/* \L */
+#define OPCODE_SPACE			( 315)	/* \s */
+#define OPCODE_SPACE_NOT		(-315)	/* \S */
+#define OPCODE_WORD				( 316)	/* \w */
+#define OPCODE_WORD_NOT			(-316)	/* \W */
+#define OPCODE_NO_CHAR			(-317)	/* \@ */
+
+typedef struct {
+	bool		haveBackSlash;
+	char		inputValue;
+	int16_t		newValue;
+}convertionTable_ts;
+
+extern const convertionTable_ts constConvertionTable;
+extern const int32_t constConvertionTableSize;
+
+void DisplayData(EdnVectorBin<char> &data);
+void DisplayElem(EdnVectorBin<int16_t> &data, int32_t start=0, int32_t stop=0x7FFFFFFF);
+char * levelSpace(int32_t level);
+int32_t GetLenOfPTheseElem(EdnVectorBin<int16_t> &data, int32_t startPos);
+int32_t GetLenOfPThese(EdnVectorBin<int16_t> &data, int32_t startPos);
+int32_t GetLenOfBracket(EdnVectorBin<int16_t> &data, int32_t startPos);
+int32_t GetLenOfBrace(EdnVectorBin<int16_t> &data, int32_t startPos);
+int32_t GetLenOfNormal(EdnVectorBin<int16_t> &data, int32_t startPos);
+bool ParseBrace(EdnVectorBin<int16_t> &data, int32_t &min, int32_t &max);
+
+
+#undef __class__
+#define __class__	"RegExpNode"
 
 /**
  *	@brief Node Elements for every-one
  */
-class RegExpNode{
+template<class CLASS_TYPE> class RegExpNode{
 	public :
-		                        RegExpNode(void);
-		virtual                 ~RegExpNode(void) { };
-		virtual int32_t         Generate(EdnVectorBin<int16_t> &data, int32_t startPos, int32_t nbElement);
-		virtual bool            Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		virtual void            Display(int32_t level);
-		void                    SetMult(int32_t min, int32_t max);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNode(void)
+		{
+			SetMult(1,1);
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		virtual ~RegExpNode(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		virtual int32_t Generate(EdnVectorBin<int16_t> &data, int32_t startPos, int32_t nbElement)
+		{
+			return 0;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		virtual bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		virtual void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@???@ {" << GetMultMin() << "," << GetMultMax() << "}  subdata="; DisplayElem(m_RegExpData););
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void SetMult(int32_t min, int32_t max)
+		{
+			m_multipleMin = edn_max(min, 0);
+			m_multipleMax = edn_max(max, 1);
+		}
 	protected:
-		int32_t                 GetMultMin(void) { return m_multipleMin; };
-		int32_t                 GetMultMax(void) { return m_multipleMax; };
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		int32_t GetMultMin(void)
+		{
+			return m_multipleMin;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		int32_t GetMultMax(void)
+		{
+			return m_multipleMax;
+		};
 	protected :
 		int32_t                 m_multipleMin;      //!< minimum repetition (included)
 		int32_t                 m_multipleMax;      //!< maximum repetition (included)
@@ -82,137 +196,974 @@ class RegExpNode{
 		EdnVectorBin<int16_t>   m_RegExpData;       //!< data to parse and compare in some case ...
 };
 
+#undef __class__
+#define __class__	"RegExpNodeValue"
 
-class RegExpNodePThese : public RegExpNode {
+template<class CLASS_TYPE> class RegExpNodeValue : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodePThese(void) { };
-		        ~RegExpNodePThese(void);
-		int32_t Generate(EdnVectorBin<int16_t> &data);
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
-	protected :
-		// SubNodes :
-		EdnVectorBin<RegExpNode*> m_subNode;
-		//int32_t						m_posPthese;		//!< position of the element is detected in the output element
-};
-
-class RegExpNodePTheseElem : public RegExpNode {
-	public :
-		        RegExpNodePTheseElem(void) { };
-		        ~RegExpNodePTheseElem(void);
-		int32_t Generate(EdnVectorBin<int16_t> &data);
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
-	protected :
-		// SubNodes :
-		EdnVectorBin<RegExpNode*> m_subNode;
-	private :
-		bool    SetMultiplicityOnLastNode(int32_t min, int32_t max);
-};
-
-
-class RegExpNodeValue : public RegExpNode {
-	public :
-		        RegExpNodeValue(void) { };
-		        ~RegExpNodeValue(void) { };
-		int32_t Generate(EdnVectorBin<int16_t> &data);
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeValue(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeValue(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		int32_t Generate(EdnVectorBin<int16_t> &data)
+		{
+			m_RegExpData = data;
+			//EDN_DEBUG("Request Parse \"Value\" data="; DisplayElem(m_RegExpData););
+			m_data.Clear();
+			for (int32_t i=0; i<m_RegExpData.Size(); i++) {
+				m_data.PushBack((char)m_RegExpData[i]);
+			}
+			return data.Size();
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : Value{" << m_multipleMin << "," << m_multipleMax << "}");
+			if (0==m_data.Size()) {
+				EDN_ERROR("No data inside type elemTypeValue");
+				return false;
+			}
+			//EDN_DEBUG("check element value : '" << m_data[0] << "'");
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind == true; j++) {
+				int32_t ofset = 0;
+				int32_t k;
+				for (k=0; findLen+k<lenMax && k < m_data.Size(); k++) {
+					if (m_data[k] != data[currentPos+findLen+k]) {
+						tmpFind=false;
+						break;
+					}
+					ofset++;
+				}
+				if (k != (int32_t)m_data.Size()) {
+					// parsing not ended ...
+					tmpFind=false;
+				}
+				// Update local ofset of data
+				if (true == tmpFind) {
+					findLen += ofset;
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@Value@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData); std::cout<< " data: "; DisplayData(m_data); );
+		};
 	protected :
 		// SubNodes :
 		EdnVectorBin<char> m_data;
 };
+#undef __class__
+#define __class__	"RegExpNodeBracket"
 
-class RegExpNodeBracket : public RegExpNode {
+template<class CLASS_TYPE> class RegExpNodeBracket : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeBracket(void) { };
-		        ~RegExpNodeBracket(void) { };
-		int32_t Generate(EdnVectorBin<int16_t> &data);
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeBracket(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeBracket(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		int32_t Generate(EdnVectorBin<int16_t> &data)
+		{
+			m_RegExpData = data;
+			//EDN_DEBUG("Request Parse [...] data="; DisplayElem(m_RegExpData););
+			m_data.Clear();
+			
+			char lastElement = 'a';
+			bool multipleElement = false;
+			//
+			for (int32_t k=0; k<m_RegExpData.Size(); k++) {
+				if (m_RegExpData[k] == OPCODE_TO && multipleElement == true) {
+					EDN_ERROR("Can not have 2 consecutive - in [...]");
+					return 0;
+				} else if (multipleElement == true) {
+					char j='\0';
+					for (j=lastElement+1; j <= (char)m_RegExpData[k]; j++) {
+						m_data.PushBack(j);
+					}
+					multipleElement = false;
+				} else if(m_RegExpData[k] == OPCODE_TO) {
+					multipleElement = true;
+				} else {
+					lastElement = (char)m_RegExpData[k];
+					m_data.PushBack(lastElement);
+				}
+			}
+			// check size ...
+			if (m_data.Size() == 0) {
+				EDN_ERROR("No data inside [...] ");
+				return 0;
+			}
+			return data.Size();
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : [...]{" << m_multipleMin << "," << m_multipleMax << "}");
+			if (0==m_data.Size()) {
+				EDN_ERROR("No data inside type elemTypeValue");
+				return false;
+			}
+			//EDN_DEBUG("one of element value List : "; DisplayData(element->m_data););
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+				int32_t i;
+				tmpFind=false;
+				for (i=0; i<m_data.Size(); i++) {
+					if (m_data[i] == data[currentPos+j]) {
+						findLen += 1;
+						tmpFind=true;
+						break;
+					}
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@[...]@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData); std::cout<< " data: "; DisplayData(m_data); );
+		};
 	protected :
 		// SubNodes :
 		EdnVectorBin<char> m_data;
 };
+#undef __class__
+#define __class__	"RegExpNodeDigit"
 
-class RegExpNodeDigit : public RegExpNode {
+template<class CLASS_TYPE> class RegExpNodeDigit : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeDigit(void) { };
-		        ~RegExpNodeDigit(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeDigit(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeDigit(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : Digit{" << m_multipleMin << "," << m_multipleMax << "} : "<< data[currentPos] << " lenMax=" << lenMax);
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+				char tmpVal = data[currentPos+j];
+				//EDN_DEBUG("compare : " << tmpVal);
+				if(		'0' <= tmpVal
+					&&	'9' >= tmpVal)
+				{
+					//EDN_DEBUG("find ++");
+					findLen += 1;
+				} else {
+					tmpFind=false;
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@Digit@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
-class RegExpNodeDigitNot : public RegExpNode {
+#undef __class__
+#define __class__	"RegExpNodeDigitNot"
+
+template<class CLASS_TYPE> class RegExpNodeDigitNot : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeDigitNot(void) { };
-		        ~RegExpNodeDigitNot(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		RegExpNodeDigitNot(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeDigitNot(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : DigitNot{" << m_multipleMin << "," << m_multipleMax << "}");
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+				char tmpVal = data[currentPos+j];
+				if(		'0' > tmpVal
+					||	'9' < tmpVal)
+				{
+					findLen += 1;
+				} else {
+					tmpFind=false;
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@DigitNot@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
-class RegExpNodeLetter : public RegExpNode {
+#undef __class__
+#define __class__	"RegExpNodeLetter"
+
+template<class CLASS_TYPE> class RegExpNodeLetter : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeLetter(void) { };
-		        ~RegExpNodeLetter(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeLetter(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeLetter(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : Letter{" << m_multipleMin << "," << m_multipleMax << "}");
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+				char tmpVal = data[currentPos+j];
+				if(		(		'a' <= tmpVal
+							&&	'z' >= tmpVal	)
+					||	(		'A' <= tmpVal
+							&&	'Z' >= tmpVal	))
+				{
+					findLen += 1;
+				} else {
+					tmpFind=false;
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@Letter@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
-class RegExpNodeLetterNot : public RegExpNode {
+#undef __class__
+#define __class__	"RegExpNodeLetterNot"
+
+template<class CLASS_TYPE> class RegExpNodeLetterNot : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeLetterNot(void) { };
-		        ~RegExpNodeLetterNot(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeLetterNot(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeLetterNot(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : LetterNot{" << m_multipleMin << "," << m_multipleMax << "}");
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+				char tmpVal = data[currentPos+j];
+				if(		(		'a' > tmpVal
+							&&	'Z' < tmpVal	)
+					||	'A' > tmpVal
+					||	'z' < tmpVal	)
+				{
+					findLen += 1;
+				} else {
+					tmpFind=false;
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@LetterNot@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
-class RegExpNodeWhiteSpace : public RegExpNode {
+#undef __class__
+#define __class__	"RegExpNodeWhiteSpace"
+
+template<class CLASS_TYPE> class RegExpNodeWhiteSpace : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeWhiteSpace(void) { };
-		        ~RegExpNodeWhiteSpace(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeWhiteSpace(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeWhiteSpace(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : Space{" << m_multipleMin << "," << m_multipleMax << "}");
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+				char tmpVal = data[currentPos+j];
+				if(		' '  == tmpVal
+					||	'\t' == tmpVal
+					||	'\n' == tmpVal
+					||	'\r' == tmpVal
+					||	'\f' == tmpVal
+					||	'\v' == tmpVal	)
+				{
+					findLen += 1;
+				} else {
+					tmpFind=false;
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@Space@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
-class RegExpNodeWhiteSpaceNot : public RegExpNode {
+#undef __class__
+#define __class__	"RegExpNodeWhiteSpaceNot"
+
+template<class CLASS_TYPE> class RegExpNodeWhiteSpaceNot : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeWhiteSpaceNot(void) { };
-		        ~RegExpNodeWhiteSpaceNot(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeWhiteSpaceNot(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeWhiteSpaceNot(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : SpaceNot{" << m_multipleMin << "," << m_multipleMax << "}");
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+				char tmpVal = data[currentPos+j];
+				if(		' '  != tmpVal
+					&&	'\t' != tmpVal
+					&&	'\n' != tmpVal
+					&&	'\r' != tmpVal
+					&&	'\f' != tmpVal
+					&&	'\v' != tmpVal	)
+				{
+					findLen += 1;
+				} else {
+					tmpFind=false;
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@SpaceNot@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
-class RegExpNodeWordChar : public RegExpNode {
+#undef __class__
+#define __class__	"RegExpNodeWordChar"
+
+template<class CLASS_TYPE> class RegExpNodeWordChar : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeWordChar(void) { };
-		        ~RegExpNodeWordChar(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeWordChar(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeWordChar(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : Word{" << m_multipleMin << "," << m_multipleMax << "}");
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+				char tmpVal = data[currentPos+j];
+				if(		(		'a' <= tmpVal
+							&&	'z' >= tmpVal	)
+					||	(		'A' <= tmpVal
+							&&	'Z' >= tmpVal	)
+					||	(		'0' <= tmpVal
+							&&	'9' >= tmpVal	))
+				{
+					findLen += 1;
+				} else {
+					tmpFind=false;
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@Word@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
-class RegExpNodeWordCharNot : public RegExpNode {
+#undef __class__
+#define __class__	"RegExpNodeWordCharNot"
+
+template<class CLASS_TYPE> class RegExpNodeWordCharNot : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeWordCharNot(void) { };
-		        ~RegExpNodeWordCharNot(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeWordCharNot(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeWordCharNot(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : WordNot{" << m_multipleMin << "," << m_multipleMax << "}");
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+				char tmpVal = data[currentPos+j];
+				if(		(		'A' > tmpVal
+							&&	'9' < tmpVal	)
+					||	(		'a' > tmpVal
+							&&	'Z' < tmpVal	)
+					||	'0' > tmpVal
+					||	'z' < tmpVal	)
+				{
+					findLen += 1;
+				} else {
+					tmpFind=false;
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@WordNot@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
-class RegExpNodeDot : public RegExpNode {
+#undef __class__
+#define __class__	"RegExpNodeDot"
+
+template<class CLASS_TYPE> class RegExpNodeDot : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeDot(void) { };
-		        ~RegExpNodeDot(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeDot(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeDot(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : '.'{" << m_multipleMin << "," << m_multipleMax << "}");
+			// equivalent a : [^\x00-\x08\x0A-\x1F\x7F]
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+				char tmpVal = data[currentPos+j];
+				if(		(		0x08 < tmpVal
+							&&	0x0A > tmpVal	)
+					||	(		0x1F < tmpVal
+							&&	0x7F > tmpVal	)
+					||	(		0x7F < tmpVal
+							&&	0xFF > tmpVal	))
+				{
+					findLen += 1;
+				} else {
+					tmpFind=false;
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@.@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
 
-class RegExpNodeSOL : public RegExpNode {
+#undef __class__
+#define __class__	"RegExpNodeSOL"
+
+template<class CLASS_TYPE> class RegExpNodeSOL : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeSOL(void) { };
-		        ~RegExpNodeSOL(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeSOL(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeSOL(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			EDN_INFO("Parse node : SOL{" << m_multipleMin << "," << m_multipleMax << "}");
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@SOL@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
 
-class RegExpNodeEOL : public RegExpNode {
+#undef __class__
+#define __class__	"RegExpNodeEOL"
+
+template<class CLASS_TYPE> class RegExpNodeEOL : public RegExpNode<CLASS_TYPE> {
 	public :
-		        RegExpNodeEOL(void) { };
-		        ~RegExpNodeEOL(void) { };
-		bool    Parse(EdnVectorBuf &data, int32_t currentPos, int32_t lenMax, int32_t &findLen);
-		void    Display(int32_t level);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodeEOL(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodeEOL(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			EDN_INFO("Parse node : EOL{" << m_multipleMin << "," << m_multipleMax << "}");
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@EOL@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+		};
 };
 
 typedef struct {
@@ -220,40 +1171,872 @@ typedef struct {
 	int32_t stop;
 }elementPos_ts;
 
+#undef __class__
+#define __class__	"RegExpNodePTheseElem"
+
+template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_TYPE> {
+	public :
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodePTheseElem(void)
+		{
+			
+		};
+		
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodePTheseElem(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		int32_t Generate(EdnVectorBin<int16_t> &data)
+		{
+			m_RegExpData = data;
+			//EDN_DEBUG("Request Parse (elem) data="; DisplayElem(m_RegExpData););
+		
+			int32_t pos = 0;
+			int32_t elementSize = 0;
+			EdnVectorBin<int16_t> tmpData;
+			while (pos < m_RegExpData.Size()) {
+				tmpData.Clear();
+				switch (m_RegExpData[pos])
+				{
+					case OPCODE_PTHESE_IN:
+						{
+							elementSize=GetLenOfPThese(m_RegExpData, pos);
+							for (int32_t k=pos+1; k<pos+elementSize+1; k++) {
+								tmpData.PushBack(m_RegExpData[k]);
+							}
+							RegExpNodePThese<CLASS_TYPE> * myElem = new RegExpNodePThese();
+							(void)myElem->Generate(tmpData);
+							// add to the subnode list : 
+							m_subNode.PushBack(myElem);
+							// move current position ...
+							pos += elementSize+1;
+						}
+						break;
+					case OPCODE_PTHESE_OUT:
+						EDN_ERROR("Impossible case :  ')' " << pos);
+						return false;
+				
+					case OPCODE_BRACKET_IN:
+						{
+							elementSize=GetLenOfBracket(m_RegExpData, pos);
+							for (int32_t k=pos+1; k<pos+elementSize+1; k++) {
+								tmpData.PushBack(m_RegExpData[k]);
+							}
+							RegExpNodeBracket<CLASS_TYPE> * myElem = new RegExpNodeBracket();
+							(void)myElem->Generate(tmpData);
+							// add to the subnode list : 
+							m_subNode.PushBack(myElem);
+							// move current position ...
+							pos += elementSize+1;
+						}
+						break;
+					case OPCODE_BRACKET_OUT:
+						EDN_ERROR("Impossible case :  ']' " << pos);
+						return false;
+				
+					case OPCODE_BRACE_IN:
+						{
+							elementSize=GetLenOfBrace(m_RegExpData, pos);
+							for (int32_t k=pos+1; k<pos+elementSize+1; k++) {
+								tmpData.PushBack(m_RegExpData[k]);
+							}
+							int32_t min = 0;
+							int32_t max = 0;
+							if (false == ParseBrace(tmpData, min, max)) {
+								return false;
+							}
+							SetMultiplicityOnLastNode(min, max);
+							pos += elementSize+1;
+						}
+						break;
+					case OPCODE_BRACE_OUT:
+						EDN_ERROR("Impossible case :  '}' " << pos);
+						return false;
+				
+					case OPCODE_TO:
+						EDN_ERROR("Impossible case :  '-' " << pos);
+						return false;
+				
+					case OPCODE_STAR:
+						SetMultiplicityOnLastNode(0, 0x7FFFFFFF);
+						break;
+				
+					case OPCODE_QUESTION:
+						SetMultiplicityOnLastNode(0, 1);
+						break;
+				
+					case OPCODE_PLUS:
+						SetMultiplicityOnLastNode(1, 0x7FFFFFFF);
+						break;
+				
+					case OPCODE_PIPE:
+						EDN_ERROR("Impossible case :  '|' " << pos);
+						return false;
+				
+					case OPCODE_DOT:
+						m_subNode.PushBack(new RegExpNodeDot());
+						break;
+				
+					case OPCODE_START_OF_LINE:
+						m_subNode.PushBack(new RegExpNodeSOL());
+						break;
+				
+					case OPCODE_END_OF_LINE:
+						m_subNode.PushBack(new RegExpNodeEOL());
+						break;
+				
+					case OPCODE_DIGIT:
+						m_subNode.PushBack(new RegExpNodeDigit());
+						break;
+				
+					case OPCODE_DIGIT_NOT:
+						m_subNode.PushBack(new RegExpNodeDigitNot());
+						break;
+				
+					case OPCODE_LETTER:
+						m_subNode.PushBack(new RegExpNodeLetter());
+						break;
+				
+					case OPCODE_LETTER_NOT:
+						m_subNode.PushBack(new RegExpNodeLetterNot());
+						break;
+				
+					case OPCODE_SPACE:
+						m_subNode.PushBack(new RegExpNodeWhiteSpace());
+						break;
+				
+					case OPCODE_SPACE_NOT:
+						m_subNode.PushBack(new RegExpNodeWhiteSpaceNot());
+						break;
+				
+					case OPCODE_WORD:
+						m_subNode.PushBack(new RegExpNodeWordChar());
+						break;
+				
+					case OPCODE_WORD_NOT:
+						m_subNode.PushBack(new RegExpNodeWordCharNot());
+						break;
+		
+					default:
+						{
+							elementSize=GetLenOfNormal(m_RegExpData, pos);
+							for (int32_t k=pos; k<pos+elementSize; k++) {
+								tmpData.PushBack(m_RegExpData[k]);
+							}
+							RegExpNodeValue * myElem = new RegExpNodeValue();
+							(void)myElem->Generate(tmpData);
+							// add to the subnode list : 
+							m_subNode.PushBack(myElem);
+							// move current position ...
+							pos += elementSize-1;
+						}
+						break;
+				}
+				pos++;
+			}
+			return data.Size();
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : (Elem){" << m_multipleMin << "," << m_multipleMax << "}");
+			// NOTE 1 : Must done only one time in EVERY case ...
+			// NOTE 2 : All element inside must be OK
+			if (0 == m_subNode.Size()) {
+				return false;
+			}
+			int32_t tmpCurrentPos = currentPos;
+			for (int32_t i=0; i<m_subNode.Size(); i++) {
+				int32_t tmpFindLen;
+				if (false == m_subNode[i]->Parse(data, tmpCurrentPos, lenMax, tmpFindLen)) {
+					findLen = 0;
+					return false;
+				} else {
+					tmpCurrentPos += tmpFindLen;
+				}
+			}
+			findLen = tmpCurrentPos - currentPos;
+			return true;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@(Elem)@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			for(int32_t i=0; i<m_subNode.Size(); i++) {
+				m_subNode[i]->Display(level+1);
+			}
+		};
+	protected :
+		// SubNodes :
+		EdnVectorBin<RegExpNode<CLASS_TYPE>*> m_subNode;
+	private :
+		/**
+		 * @brief Set the number of repeate time on a the last node in the list ...
+		 *
+		 * @param[in] min		Minimum of the multiplicity
+		 * @param[in] max		Maximum of the multiplicity
+		 *
+		 * @return true if we find the node, false otherwise
+		 *
+		 */
+		bool SetMultiplicityOnLastNode(int32_t min, int32_t max)
+		{
+			if (0==m_subNode.Size()) {
+				EDN_ERROR("Set multiplicity on an inexistant element ....");
+				return false;
+			}
+			RegExpNode * myNode = m_subNode[m_subNode.Size()-1];
+			if (NULL==myNode) {
+				EDN_ERROR("INTERNAL error ==> node not generated");
+				return false;
+			}
+			myNode->SetMult(min, max);
+			return true;
+		}
+};
+
+#undef __class__
+#define __class__	"RegExpNodePThese"
+
+template<class CLASS_TYPE> class RegExpNodePThese : public RegExpNode<CLASS_TYPE> {
+	public :
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		RegExpNodePThese(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~RegExpNodePThese(void)
+		{
+			
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		int32_t Generate(EdnVectorBin<int16_t> &data)
+		{
+			m_RegExpData = data;
+			//EDN_DEBUG("Request Parse (...) data="; DisplayElem(m_RegExpData););
+			//Find all the '|' in the string (and at the good level ...) 
+			int32_t pos = 0;
+			int32_t elementSize = GetLenOfPTheseElem(m_RegExpData, pos);
+			// generate all the "elemTypePTheseElem" of the Node
+			while (elementSize>0) {
+				// geerate output deta ...
+				EdnVectorBin<int16_t> tmpData;
+				for (int32_t k=pos; k<pos+elementSize; k++) {
+					tmpData.PushBack(m_RegExpData[k]);
+				}
+				RegExpNodePTheseElem<CLASS_TYPE> * myElem = new RegExpNodePTheseElem();
+				(void)myElem->Generate(tmpData);
+				// add to the subnode list : 
+				m_subNode.PushBack(myElem);
+				pos += elementSize+1;
+				//EDN_DEBUG("plop="; DisplayElem(data, pos, pos+1););
+				elementSize = GetLenOfPTheseElem(m_RegExpData, pos);
+				//EDN_DEBUG("find " << elementSize << " elements");
+			}
+			if (0 == pos && 0 == elementSize) {
+				EDN_ERROR("No data in the (...) element at " << pos);
+				return false;
+			}
+			return data.Size();
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
+		{
+			findLen = 0;
+			//EDN_INFO("Parse node : (...){" << m_multipleMin << "," << m_multipleMax << "}");
+			if (0 == m_subNode.Size()) {
+				return false;
+			}
+			bool tmpFind = true;
+			int32_t j;
+			for (j=0; j<m_multipleMax && tmpFind == true ; j++) {
+				tmpFind = false;
+				for (int32_t i=0; i<m_subNode.Size(); i++) {
+					int32_t tmpFindLen;
+					if (true == m_subNode[i]->Parse(data, currentPos+findLen, lenMax, tmpFindLen)) {
+						findLen += tmpFindLen;
+						tmpFind = true;
+					}
+				}
+			}
+			if(		j>=m_multipleMin
+				&&	j<=m_multipleMax
+				&&	findLen>0	)
+			{
+				//EDN_DEBUG("find " << findLen);
+				return true;
+			} else if( 0 == m_multipleMin ) {
+				//EDN_DEBUG("find size=0");
+				return true;
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(int32_t level)
+		{
+			if (-1 == level) {
+				EDN_INFO("regExp :"; DisplayElem(m_RegExpData););
+			} else {
+				EDN_INFO("Find NODE : " << levelSpace(level) << "@(...)@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+				for(int32_t i=0; i<m_subNode.Size(); i++) {
+					m_subNode[i]->Display(level+1);
+				}
+			}
+		};
+		
+	protected :
+		// SubNodes :
+		EdnVectorBin<RegExpNode<CLASS_TYPE>*> m_subNode;
+		//int32_t						m_posPthese;		//!< position of the element is detected in the output element
+};
+#undef __class__
+#define __class__	"EdnRegExp"
 
 // Regular expression manager
-class EdnRegExp {
+template<class CLASS_TYPE> class EdnRegExp {
 	// public API : 
 	public:
 		// create the regular expression
-		EdnRegExp(const char *exp);
-		EdnRegExp(Edn::String &exp);
-		EdnRegExp(void);
-		~EdnRegExp(void);
-		void		SetRegExp(const char *exp);
-		void		SetRegExp(Edn::String &exp);
-		Edn::String	GetRegExp(void) { return m_expressionRequested;};
-		bool		GetStatus(void)  { return m_isOk;};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		EdnRegExp(const char *exp)
+		{
+			m_isOk = false;
+			m_areaFind.start=0;
+			m_areaFind.stop=0;
+			m_notBeginWithChar = false;
+			m_notEndWithChar = false;
+			SetRegExp(exp);
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		EdnRegExp(Edn::String &exp)
+		{
+			m_isOk = false;
+			m_areaFind.start=0;
+			m_areaFind.stop=0;
+			m_notBeginWithChar = false;
+			m_notEndWithChar = false;
+			SetRegExp(exp);
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		EdnRegExp(void)
+		{
+			m_isOk = false;
+			m_areaFind.start=0;
+			m_areaFind.stop=0;
+			m_notBeginWithChar = false;
+			m_notEndWithChar = false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		~EdnRegExp(void)
+		{
+			// TODO : remove all under nodes...
+			m_isOk = false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void SetRegExp(const char *exp)
+		{
+			EDN_CHECK_INOUT(exp);
+			Edn::String expressionRequested = exp;
+			SetRegExp(expressionRequested);
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void SetRegExp(Edn::String &exp)
+		{
+			m_expressionRequested = expressionRequested;		// TODO : Must be deprecated ...
+			EdnVectorBin<int16_t> tmpExp;
+			
+			//EDN_DEBUG("Parse RegExp : " << expressionRequested.c_str() );
+			m_isOk = false;
+			m_areaFind.start=0;
+			m_areaFind.stop=0;
+			m_notBeginWithChar = false;
+			m_notEndWithChar = false;
+			
+			char * exp = expressionRequested.c_str();
+			int32_t regExpLen = strlen(exp);
+			// change in the regular Opcode ==> replace \x with the corect element ... x if needed
+			int32_t iii;
+			int32_t countBraceIn = 0;
+			int32_t countBraceOut = 0;
+			int32_t countPTheseIn = 0;
+			int32_t countPTheseOut = 0;
+			int32_t countBracketIn = 0;
+			int32_t countBracketOut = 0;
+			for (iii=0; iii<regExpLen; iii++) {
+				if ('\\' == exp[iii]) {
+					if(iii+1>=regExpLen) {
+						EDN_ERROR("Dangerous parse of the element pos " << iii << " \\ with nothing after");
+						// TODO : Generate Exeption ...
+						return;
+					}
+					int32_t j;
+					// Find the element in the list...
+					for (j=0; j<constConvertionTableSize; j++) {
+						if(		true == constConvertionTable[j].haveBackSlash 
+							&&	exp[iii+1] == constConvertionTable[j].inputValue)
+						{
+							tmpExp.PushBack(constConvertionTable[j].newValue);
+							break;
+						}
+					}
+					// check error : 
+					if (j==constConvertionTableSize) {
+						EDN_ERROR("Dangerous parse of the \\" << exp[iii+1] << " at element " << iii);
+						// TODO : Generate Exeption ...
+						return;
+					}
+					// less one char in the regular expression ...
+					iii++;
+				} else {
+					if ('(' == exp[iii]) {
+						countPTheseIn++;
+					} else if (')' == exp[iii]) {
+						countPTheseOut++;
+					} else if ('[' == exp[iii]) {
+						countBracketIn++;
+					} else if (']' == exp[iii]) {
+						countBracketOut++;
+					} else if ('{' == exp[iii]) {
+						countBraceIn++;
+					} else if ('}' == exp[iii]) {
+						countBraceOut++;
+					}
+					int32_t j;
+					// find the element in the list...
+					for (j=0; j<constConvertionTableSize; j++) {
+						if(		false == constConvertionTable[j].haveBackSlash 
+							&&	exp[iii] == constConvertionTable[j].inputValue)
+						{
+							tmpExp.PushBack(constConvertionTable[j].newValue);
+							break;
+						}
+					}
+					// not find : normal element
+					if (j==constConvertionTableSize) {
+						tmpExp.PushBack( ((int16_t)exp[iii]) & 0x00FF);
+					}
+				}
+			}
+			
+			// count the number of '(' and ')'
+			if (countPTheseIn != countPTheseOut ) {
+				EDN_ERROR("Error in the number of '('=" << countPTheseIn << " and ')'=" << countPTheseOut << " elements");
+				return;
+			}
+			// count the number of '{' and '}'
+			if (countBraceIn != countBraceOut ) {
+				EDN_ERROR("Error in the number of '{'=" << countBraceIn << " and '}'=" << countBraceOut << " elements");
+				return;
+			}
+			// count the number of '[' and ']'
+			if (countBracketIn != countBracketOut ) {
+				EDN_ERROR("Error in the number of '['=" << countBracketIn << " and ']'=" << countBracketOut << " elements");
+				return;
+			}
+			// need to check if all () [] and {} is well set ...
+			if (false == CheckGoodPosition(tmpExp) ) {
+				return;
+			}
+			
+			//EDN_DEBUG("Main element :"; DisplayElem(tmpExp, 0, tmpExp.Size()); );
+			if(		tmpExp.Size()>0
+				&&	OPCODE_NO_CHAR == tmpExp[0])
+			{
+				//EDN_DEBUG("=> must not begin with char");
+				m_notBeginWithChar = true;
+				// remove element
+				tmpExp.Erase(0);
+			}
+			if(		tmpExp.Size()>0
+				&&	OPCODE_NO_CHAR == tmpExp[tmpExp.Size()-1])
+			{
+				//EDN_DEBUG("=> must not end with char");
+				m_notEndWithChar = true;
+				// remove element
+				tmpExp.Erase(tmpExp.Size()-1);
+			}
+			
+			if (tmpExp.Size() != m_exprRootNode.Generate(tmpExp) ) {
+				return;
+			}
+			// TODO : optimize node here ...
+			
+			//Display();
+		
+			// all OK ... play again 
+			m_isOk = true;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		Edn::String	GetRegExp(void)
+		{
+			return m_expressionRequested;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool GetStatus(void)
+		{
+			return m_isOk;
+		};
 		// process the regular expression
-		bool	Process(	EdnVectorBuf			&SearchIn,
-							int32_t					startPos,
-							int32_t					endPos,
-							char					escapeChar=0);
-		int32_t	Start(void)	{ return m_areaFind.start; };
-		int32_t	Stop(void)	{ return m_areaFind.stop; };
-		void	Display(void);
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool Process( CLASS_TYPE   &SearchIn,
+		              int32_t      startPos,
+		              int32_t      endPos,
+		              char         escapeChar=0)
+		{
+			if (false == m_isOk) {
+				return false;
+			}
+			int32_t buflen = SearchIn.Size();
+			if (endPos > buflen) {
+				endPos = buflen;
+			}
+			if (startPos > endPos) {
+				return false;
+			}
+			int32_t i = 0;
+			for (i=startPos; i<endPos; i++) {
+				int32_t findLen=0;
+				int32_t maxlen = endPos-i;
+				if (true == m_notBeginWithChar) {
+					if (i>0) {
+						char tmpVal = SearchIn[i-1];
+						if(		(		'a' <= tmpVal
+									&&	'z' >= tmpVal	)
+							||	(		'A' <= tmpVal
+									&&	'Z' >= tmpVal	)
+							||	(		'0' <= tmpVal
+									&&	'9' >= tmpVal	)
+							||	(		'_' == tmpVal	)	)
+						{
+							// go on the next char ...
+							continue;
+						}
+					}
+				}
+				if (true == m_exprRootNode.Parse(SearchIn, i, maxlen, findLen)) {
+					if(		0!=escapeChar
+						&&	i>0)
+					{
+						if (escapeChar == (char)SearchIn[i-1]) {
+							//==> detected escape char ==> try find again ...
+							continue;
+						}
+					}
+					// Check end :
+					if (true == m_notEndWithChar) {
+						if (i+findLen < SearchIn.Size() ) {
+							char tmpVal = SearchIn[i+findLen];
+							if(		(		'a' <= tmpVal
+										&&	'z' >= tmpVal	)
+								||	(		'A' <= tmpVal
+										&&	'Z' >= tmpVal	)
+								||	(		'0' <= tmpVal
+										&&	'9' >= tmpVal	)
+								||	(		'_' == tmpVal	)	)
+							{
+								// go on the next char ...
+								continue;
+							}
+						}
+					}
+					m_areaFind.start = i;
+					m_areaFind.stop  = i + findLen;
+					/*
+					if (i == 812) {
+						std::cout << std::endl;
+						for(int32_t k=startPos; k<endPos; k++){
+							std::cout << SearchIn[k];
+						}
+						std::cout << std::endl;
+					}
+					EDN_DEBUG("Find RegExp at position : " << i << " startpos=" << startPos << " endPos=" << endPos << " with size :" << findLen << " type : "; );
+					m_exprRootNode.Display(-1);
+					EDN_DEBUG("---------------------------------------------------");
+					*/
+					return true;
+				}
+			}
+			return false;
+		};
+		
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		int32_t	Start(void)
+		{
+			return m_areaFind.start;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		int32_t	Stop(void)
+		{
+			return m_areaFind.stop;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		void Display(void)
+		{
+			m_exprRootNode.Display(0);
+		};
 	// internal parameters
 	private:
-		Edn::String					m_expressionRequested;	// TODO : Remove ...
-		elementPos_ts				m_areaFind;					//!< position around selection
-		RegExpNodePThese			m_exprRootNode;				//!< The tree where data is set
-		bool						m_isOk;						//!< Known if we can process with this regExp
-		bool						m_notBeginWithChar;			//!< The regular expression must not have previously a char [a-zA-Z0-9_]
-		bool						m_notEndWithChar;			//!< The regular expression must not have after the end a char [a-zA-Z0-9_]
+		Edn::String                     m_expressionRequested;      // TODO : Remove ...
+		elementPos_ts                   m_areaFind;                 //!< position around selection
+		RegExpNodePThese<CLASS_TYPE>    m_exprRootNode;             //!< The tree where data is set
+		bool                            m_isOk;                     //!< Known if we can process with this regExp
+		bool                            m_notBeginWithChar;         //!< The regular expression must not have previously a char [a-zA-Z0-9_]
+		bool                            m_notEndWithChar;           //!< The regular expression must not have after the end a char [a-zA-Z0-9_]
 	// internal access
 	private:
-		bool CheckGoodPosition(EdnVectorBin<int16_t> tmpExp, int32_t &pos);
-		bool CheckGoodPosition(EdnVectorBin<int16_t> tmpExp);
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool CheckGoodPosition(EdnVectorBin<int16_t> tmpExp, int32_t &pos)
+		{
+			int16_t curentCode = tmpExp[pos];
+			int16_t endCode = OPCODE_PTHESE_OUT;
+			char *input = (char*)"(...)";
+			if (OPCODE_BRACKET_IN == curentCode) {
+				endCode = OPCODE_BRACKET_OUT;
+				input = (char*)"[...]";
+			} else if (OPCODE_BRACE_IN == curentCode){
+				endCode = OPCODE_BRACE_OUT;
+				input = (char*)"{x,x}";
+			}
+			pos++;
+			if (pos >= (int32_t)tmpExp.Size()) {
+				EDN_ERROR("ended with: ( or { or [ ... not permited");
+				return false;
+			}
+			//EDN_DEBUG(" ==> Find ELEMENT : ([{");
+			// case dependent : 
+			if(		OPCODE_BRACKET_IN == curentCode
+				||	OPCODE_BRACE_IN == curentCode) {
+				while(pos< (int32_t)tmpExp.Size()) {
+					//EDN_DEBUG("check : " << tmpExp[pos]);
+					// if we find the end : 
+					if (endCode == tmpExp[pos]) {
+						return true;
+					} else {
+						// otherwise, we check the error in the element ...
+						char *find = NULL;
+						switch (tmpExp[pos])
+						{
+							case OPCODE_PTHESE_IN:		find = (char*)"(";			break;
+							case OPCODE_BRACKET_IN:		find = (char*)"[";			break;
+							case OPCODE_BRACE_IN:		find = (char*)"{";			break;
+							case OPCODE_PTHESE_OUT:		find = (char*)")";			break;
+							case OPCODE_BRACKET_OUT:	find = (char*)"]";			break;
+							case OPCODE_BRACE_OUT:		find = (char*)"}";			break;
+							case OPCODE_STAR:			find = (char*)"*";			break;
+							case OPCODE_DOT:			find = (char*)".";			break;
+							case OPCODE_QUESTION:		find = (char*)"?";			break;
+							case OPCODE_PLUS:			find = (char*)"+";			break;
+							case OPCODE_PIPE:			find = (char*)"|";			break;
+							case OPCODE_START_OF_LINE:	find = (char*)"^";			break;
+							case OPCODE_END_OF_LINE:	find = (char*)"$";			break;
+							case OPCODE_DIGIT:			find = (char*)"\\d";		break;
+							case OPCODE_DIGIT_NOT:		find = (char*)"\\D";		break;
+							case OPCODE_LETTER:			find = (char*)"\\l";		break;
+							case OPCODE_LETTER_NOT:		find = (char*)"\\L";		break;
+							case OPCODE_SPACE:			find = (char*)"\\s";		break;
+							case OPCODE_SPACE_NOT:		find = (char*)"\\S";		break;
+							case OPCODE_WORD:			find = (char*)"\\w";		break;
+							case OPCODE_WORD_NOT:		find = (char*)"\\W";		break;
+							case OPCODE_NO_CHAR:		find = (char*)"\\@";		break;
+							default:					break;
+						}
+						if (NULL != find) {
+							EDN_ERROR("can not have : '" << find << "' inside " << input << " element");
+							return false;
+						}
+					}
+					pos++;
+				}
+			} else {
+				while(pos< (int32_t)tmpExp.Size()) {
+					if (endCode == tmpExp[pos]) {
+						// find the last element
+						return true;
+					} else if (	OPCODE_BRACE_OUT	== tmpExp[pos]) {
+						EDN_ERROR("find } inside a (...) without start {");
+						return false;
+					} else if (	OPCODE_BRACKET_OUT	== tmpExp[pos]) {
+						EDN_ERROR("find ] inside a (...) without start [");
+						return false;
+					} else {
+						if(		OPCODE_PTHESE_IN	== tmpExp[pos]
+							||	OPCODE_BRACKET_IN	== tmpExp[pos]
+							||	OPCODE_BRACE_IN		== tmpExp[pos])
+						{
+							if (false==CheckGoodPosition(tmpExp, pos) ) {
+								return false;
+							}
+						}
+					}
+					pos++;
+				}
+			}
+			
+			// we did not find the cloder . ...
+			if (endCode == OPCODE_BRACKET_OUT) {
+				EDN_ERROR("Missing ']' at the end");
+			}
+			if (endCode == OPCODE_BRACE_OUT) {
+				EDN_ERROR("Missing '}' at the end");
+			}
+			if (endCode == OPCODE_PTHESE_OUT) {
+				EDN_ERROR("Missing ')' at the end");
+			}
+			return false;
+		};
+		
+		/**
+		 * @brief
+		 * @param[in,out] 
+		 * @return
+		 */
+		bool CheckGoodPosition(EdnVectorBin<int16_t> tmpExp)
+		{
+			int32_t pos = 0;
+			while (pos < (int32_t)tmpExp.Size()) {
+				//EDN_DEBUG("check : " << tmpExp[pos]);
+				if(		OPCODE_PTHESE_IN	== tmpExp[pos]
+					||	OPCODE_BRACKET_IN	== tmpExp[pos]
+					||	OPCODE_BRACE_IN		== tmpExp[pos])
+				{
+					// attention the i position change inside the finction...
+					if (false==CheckGoodPosition(tmpExp, pos) ) {
+						EDN_ERROR("Error at position : " << pos+1 );
+						return false;
+					} else {
+						//EDN_DEBUG(" <== Find ELEMENT : ]})");
+					}
+				} else if(OPCODE_PTHESE_OUT	== tmpExp[pos]) {
+					EDN_ERROR("can find ')' with no start : ')'");
+					return false;
+				} else if(OPCODE_BRACKET_OUT	== tmpExp[pos]) {
+					EDN_ERROR("can find ']' with no start : '['");
+					return false;
+				} else if(OPCODE_BRACE_OUT	== tmpExp[pos]) {
+					EDN_ERROR("can find '}' with no start : '{'");
+					return false;
+				}
+				pos++;
+			}
+			return true;
+		};
 
 
 };

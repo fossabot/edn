@@ -47,6 +47,7 @@
 	- Charset par defaut
 	- Déction de charset (à mettre dans les todo de charset)
 	- Faire les deplacement de EdnXXX dans le nameSpace Edn::XXX
+	- pb de sélection quand la ligne est pleine et la première ligne sélectionné...
 
 # Text Editor
 
