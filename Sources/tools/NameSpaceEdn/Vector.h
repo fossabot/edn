@@ -1,7 +1,7 @@
 /**
  *******************************************************************************
- * @file EdnEdnVector.h
- * @brief Editeur De N'ours : Basic EdnVector (template)
+ * @file Vector.h
+ * @brief Editeur De N'ours : Basic Edn::Vector (template)
  * @author Edouard DUPIN
  * @date 07/04/2011
  * @par Project
@@ -26,7 +26,7 @@
 #define __EDN_EdnVector_H__
 
 #undef __class__
-#define __class__	"EdnEdnVector"
+#define __class__	"Edn::Vector"
 
 /**
  * @brief EdnVector classes ...
@@ -62,7 +62,10 @@
  *         ----------                                                               
  *
  */
-template<class T, int32_t INC=0> class EdnVector:
+namespace Edn
+{
+
+template<class T, int32_t INC=0> class Vector:
 {
 	public:
 		class Iterator:
@@ -70,24 +73,24 @@ template<class T, int32_t INC=0> class EdnVector:
 			// Private data : 
 			private:
 				int32_t			  m_current;		// curent Id on the vector
-				EdnVector<T>	* m_EdnVector;		// Pointer on the curent element of the vector
+				Edn::Vector<T>	* m_Vector;		// Pointer on the curent element of the vector
 			public:
 				/**
-				 * @brief Basic itarator constructor with no link with an EdnVector
+				 * @brief Basic itarator constructor with no link with an Vector
 				 */
 				Iterator():
 					m_current(-1),
-					m_EdnVector(NULL)
+					m_Vector(NULL)
 				{
 					// nothing to do ...
 				}
 				/**
-				 * @brief Recopy constructor on a specific EdnVector.
+				 * @brief Recopy constructor on a specific Vector.
 				 * @param[in] otherIterator		The Iterator that might be copy
 				 */
 				Iterator(const Iterator & otherIterator):
 					m_current(otherIterator.m_current),
-					m_EdnVector(otherIterator.m_EdnVector)
+					m_Vector(otherIterator.m_Vector)
 				{
 					// nothing to do ...
 				}
@@ -99,7 +102,7 @@ template<class T, int32_t INC=0> class EdnVector:
 				Iterator& operator=(const Iterator & otherIterator)
 				{
 					m_current = otherIterator.m_current;
-					m_EdnVector = otherIterator.m_EdnVector;
+					m_Vector = otherIterator.m_Vector;
 					return *this;
 				}
 				/**
@@ -108,11 +111,11 @@ template<class T, int32_t INC=0> class EdnVector:
 				~Iterator()
 				{
 					m_current = -1;
-					m_EdnVector = NULL;
+					m_Vector = NULL;
 				}
 				/**
 				 * @brief basic boolean cast
-				 * @return true if the element is present in the EdnVector size
+				 * @return true if the element is present in the Vector size
 				 */
 				operator bool ()
 				{
@@ -493,5 +496,11 @@ private:
 		}
 	}
 };
+
+}
+
 #undef __class__
 #define __class__	NULL
+
+#endif
+

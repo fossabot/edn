@@ -26,6 +26,7 @@
 
 #include "tools_debug.h"
 #include "toolsMemory.h"
+#include "Vector.h"
 #include "VectorType.h"
 
 

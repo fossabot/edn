@@ -644,3 +644,4 @@ template<typename MY_TYPE=int32_t> class VectorType
 #define __class__	NULL
 
 #endif
+
