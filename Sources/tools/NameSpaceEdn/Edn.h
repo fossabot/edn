@@ -26,7 +26,7 @@
 
 #include "tools_debug.h"
 #include "toolsMemory.h"
-#include "EdnVectorBin.h"
+#include "VectorType.h"
 
 
 #include "String.h"

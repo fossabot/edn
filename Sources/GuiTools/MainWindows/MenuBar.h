@@ -26,7 +26,7 @@
 #include "tools_debug.h"
 #include "tools_globals.h"
 #include "MsgBroadcast.h"
-#include "EdnVectorBin.h"
+#include "VectorType.h"
 #include "AccelKey.h"
 
 #ifndef __MENU_BAR_H__
@@ -46,7 +46,7 @@ class MenuBar: public MsgBroadcast
 	private:
 		GtkWidget *                     m_mainWidget;
 		GtkAccelGroup *                 m_accelGroup;
-		EdnVectorBin<MenuBarMain*>      m_listMenu;
+		Edn::VectorType<MenuBarMain*>   m_listMenu;
 };
 
 

@@ -92,7 +92,7 @@ const int32_t constConvertionTableSize = sizeof(constConvertionTable) / sizeof(c
  * @return ---
  *
  */
-void DisplayData(EdnVectorBin<char> &data)
+void DisplayData(Edn::VectorType<char> &data)
 {
 	int32_t i;
 	for (i=0; i<(int32_t)data.Size() ; i++) {
@@ -110,7 +110,7 @@ void DisplayData(EdnVectorBin<char> &data)
  * @return ---
  *
  */
-void DisplayElem(EdnVectorBin<int16_t> &data, int32_t start, int32_t stop)
+void DisplayElem(Edn::VectorType<int16_t> &data, int32_t start, int32_t stop)
 {
 	int32_t i;
 	std::cout<< COLOR_NORMAL;
@@ -180,7 +180,7 @@ char * levelSpace(int32_t level)
  * @return ---
  *
  */
-int32_t GetLenOfPTheseElem(EdnVectorBin<int16_t> &data, int32_t startPos)
+int32_t GetLenOfPTheseElem(Edn::VectorType<int16_t> &data, int32_t startPos)
 {
 	int32_t pos = startPos;
 	int32_t nbOpen = 0;
@@ -229,7 +229,7 @@ int32_t GetLenOfPTheseElem(EdnVectorBin<int16_t> &data, int32_t startPos)
  * @return ---
  *
  */
-int32_t GetLenOfPThese(EdnVectorBin<int16_t> &data, int32_t startPos)
+int32_t GetLenOfPThese(Edn::VectorType<int16_t> &data, int32_t startPos)
 {
 	int32_t pos = startPos;
 	int32_t nbOpen = 0;
@@ -282,7 +282,7 @@ int32_t GetLenOfPThese(EdnVectorBin<int16_t> &data, int32_t startPos)
  * @return ---
  *
  */
-int32_t GetLenOfBracket(EdnVectorBin<int16_t> &data, int32_t startPos)
+int32_t GetLenOfBracket(Edn::VectorType<int16_t> &data, int32_t startPos)
 {
 	int32_t pos = startPos;
 	// special case of the (...) or | ==> we search '|' or ')'
@@ -326,7 +326,7 @@ int32_t GetLenOfBracket(EdnVectorBin<int16_t> &data, int32_t startPos)
  * @return ---
  *
  */
-int32_t GetLenOfBrace(EdnVectorBin<int16_t> &data, int32_t startPos)
+int32_t GetLenOfBrace(Edn::VectorType<int16_t> &data, int32_t startPos)
 {
 	int32_t pos = startPos;
 	// special case of the (...) or | ==> we search '|' or ')'
@@ -370,7 +370,7 @@ int32_t GetLenOfBrace(EdnVectorBin<int16_t> &data, int32_t startPos)
  * @return ---
  *
  */
-int32_t GetLenOfNormal(EdnVectorBin<int16_t> &data, int32_t startPos)
+int32_t GetLenOfNormal(Edn::VectorType<int16_t> &data, int32_t startPos)
 {
 	int32_t pos = startPos;
 
@@ -427,7 +427,7 @@ int32_t GetLenOfNormal(EdnVectorBin<int16_t> &data, int32_t startPos)
  * @return ---
  *
  */
-bool ParseBrace(EdnVectorBin<int16_t> &data, int32_t &min, int32_t &max)
+bool ParseBrace(Edn::VectorType<int16_t> &data, int32_t &min, int32_t &max)
 {
 	//EDN_INFO("parse {...} in "; DisplayElem(data); );
 	int32_t k=0;

@@ -227,7 +227,7 @@ int8_t& EdnVectorBuf::Get(int32_t pos)
  * @return ---
  * 
  */
-void EdnVectorBuf::Get(int32_t pos, int32_t nbElement, EdnVectorBin<int8_t> &tmpBuffer)
+void EdnVectorBuf::Get(int32_t pos, int32_t nbElement, Edn::VectorType<int8_t> &tmpBuffer)
 {
 	tmpBuffer.Clear();
 	if (pos < m_gapStart) {
@@ -399,7 +399,7 @@ void EdnVectorBuf::Insert(int32_t pos, const int8_t& item)
  * @return ---
  * 
  */
-void EdnVectorBuf::Insert(int32_t pos, EdnVectorBin<int8_t>& items)
+void EdnVectorBuf::Insert(int32_t pos, Edn::VectorType<int8_t>& items)
 {
 	if(		pos > Size()
 		||	pos < 0 ) {
@@ -455,7 +455,7 @@ void EdnVectorBuf::Replace(int32_t pos, const int8_t& item)
  * @return ---
  * 
  */
-void EdnVectorBuf::Replace(int32_t pos, int32_t nbRemoveElement, EdnVectorBin<int8_t>& items)
+void EdnVectorBuf::Replace(int32_t pos, int32_t nbRemoveElement, Edn::VectorType<int8_t>& items)
 {
 	if(		pos > Size()
 		||	pos < 0 ) {
@@ -652,7 +652,7 @@ void TestEdnVectorBuf(void)
 	myBufferTmp.Display();
 	plop='m';
 	
-	EdnVectorBin<int8_t> items;
+	Edn::VectorType<int8_t> items;
 	items.PushBack('i');
 	items.PushBack('j');
 	items.PushBack('k');

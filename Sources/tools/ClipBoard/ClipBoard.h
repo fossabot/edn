@@ -27,7 +27,7 @@
 #define __CLIP_BOARD_H__
 
 	#include "tools_debug.h"
-	#include "EdnVectorBin.h"
+	#include "VectorType.h"
 
 	#define TOTAL_OF_CLICKBOARD			(11)
 	#define COPY_MIDDLE_BUTTON			(10)
@@ -36,8 +36,8 @@
 	namespace ClipBoard
 	{
 		void	Init(void);
-		void	Set(uint8_t clipboardID, EdnVectorBin<int8_t> &data);
-		void	Get(uint8_t clipboardID, EdnVectorBin<int8_t> &data);
+		void	Set(uint8_t clipboardID, Edn::VectorType<int8_t> &data);
+		void	Get(uint8_t clipboardID, Edn::VectorType<int8_t> &data);
 	}
 
 #endif

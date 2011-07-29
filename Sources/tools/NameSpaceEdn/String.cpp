@@ -205,7 +205,7 @@ const Edn::String& Edn::String::operator= (const char * inputData)
  * @return 
  *
  */
-const Edn::String& Edn::String::operator= (EdnVectorBin<int8_t> inputData)
+const Edn::String& Edn::String::operator= (Edn::VectorType<int8_t> inputData)
 {
 	m_data = inputData;
 	if (m_data.Size()>0) {
@@ -569,9 +569,9 @@ Edn::String Edn::String::Extract(int32_t posStart, int32_t posEnd)
  * @return The desired vector with data
  *
  */
-EdnVectorBin<int8_t> Edn::String::GetVector(void)
+Edn::VectorType<int8_t> Edn::String::GetVector(void)
 {
-	EdnVectorBin<int8_t> out = m_data;
+	Edn::VectorType<int8_t> out = m_data;
 	out.PopBack();
 	return out;
 }
@@ -630,7 +630,7 @@ void Edn::TestUntaire_String(void)
 	EDN_INFO("phase : " << iddd++ << " : \"" << s1.c_str() << "\"");
 	s1 = "test direct 44";
 	EDN_INFO("phase : " << iddd++ << " : \"" << s1.c_str() << "\"");
-	EdnVectorBin<int8_t> vb1;
+	Edn::VectorType<int8_t> vb1;
 	vb1.PushBack('v');
 	vb1.PushBack('b');
 	vb1.PushBack('1');

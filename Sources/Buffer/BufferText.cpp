@@ -1047,7 +1047,7 @@ void BufferText::AddChar(char * UTF8data)
 	if (1==size) {
 		if (UTF8data[0] == 0x09) {
 			if (false == haveSelectionActive) {
-				EdnVectorBin<int8_t> tmpVect;
+				Edn::VectorType<int8_t> tmpVect;
 				tmpVect.PushBack(0x09);
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
 				SetInsertPosition(m_cursorPos+1, true);
@@ -1060,7 +1060,7 @@ void BufferText::AddChar(char * UTF8data)
 			}
 			actionDone = true;
 		} else if (UTF8data[0] == '\n') {
-			EdnVectorBin<int8_t> tmpVect;
+			Edn::VectorType<int8_t> tmpVect;
 			tmpVect.PushBack('\n');
 			// if Auto indent Enable ==> we get the start of the previous line and add it to tne new one
 			if (true == globals::IsSetAutoIndent() ) {
@@ -1115,7 +1115,7 @@ void BufferText::AddChar(char * UTF8data)
 	
 	if (false == actionDone) {
 		if (true == m_EdnBuf.GetUTF8Mode()) {
-			EdnVectorBin<int8_t> tmpVect;
+			Edn::VectorType<int8_t> tmpVect;
 			int32_t localOfset = strlen(UTF8data);
 			tmpVect.PushBack((int8_t*)UTF8data, localOfset);
 			if (false == haveSelectionActive) {
@@ -1130,7 +1130,7 @@ void BufferText::AddChar(char * UTF8data)
 			char output_ISO;
 			convertUtf8ToIso(m_EdnBuf.GetCharsetType(), UTF8data, output_ISO);
 			//printf(" insert : \"%s\"==> 0x%08x=%d ", UTF8data, (unsigned int)output_ISO, (int)output_ISO);
-			EdnVectorBin<int8_t> tmpVect;
+			Edn::VectorType<int8_t> tmpVect;
 			tmpVect.PushBack(output_ISO);
 			if (false == haveSelectionActive) {
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
@@ -1154,7 +1154,7 @@ int32_t BufferText::FindLine(Edn::String &data)
 		return 0;
 	}
 	EDN_INFO("Search data line : \"" << data.c_str() << "\"");
-	EdnVectorBin<int8_t> mVectSearch;
+	Edn::VectorType<int8_t> mVectSearch;
 	mVectSearch = data.GetVector();
 	//EDN_INFO("search data Forward : startSearchPos=" << startSearchPos );
 	int32_t foundPos;
@@ -1197,7 +1197,7 @@ void BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool w
 		EDN_WARNING("no search data");
 		return;
 	}
-	EdnVectorBin<int8_t> mVectSearch;
+	Edn::VectorType<int8_t> mVectSearch;
 	mVectSearch = data.GetVector();
 	if (false == back) {
 		//EDN_INFO("search data Forward : startSearchPos=" << startSearchPos );
@@ -1289,7 +1289,7 @@ void BufferText::Replace(Edn::String &data)
  */
 void BufferText::Copy(int8_t clipboardID)
 {
-	EdnVectorBin<int8_t> mVect;
+	Edn::VectorType<int8_t> mVect;
 	// get the curent selected data
 	if (true == m_EdnBuf.SelectHasSelection(SELECTION_PRIMARY) ) {
 		m_EdnBuf.GetSelectionText(SELECTION_PRIMARY, mVect);
@@ -1338,7 +1338,7 @@ void BufferText::Cut(int8_t clipboardID)
  */
 void BufferText::Paste(int8_t clipboardID)
 {
-	EdnVectorBin<int8_t> mVect;
+	Edn::VectorType<int8_t> mVect;
 	// copy data from the click board : 
 	ClipBoard::Get(clipboardID, mVect);
 	

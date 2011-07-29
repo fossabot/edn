@@ -82,21 +82,21 @@ class EdnBuf {
 		// destructer
 		~EdnBuf(void);
 		// public function :
-		void    GetAll(                 EdnVectorBin<int8_t> &text);
-		void    SetAll(                 EdnVectorBin<int8_t> &text);
-		void    GetRange(               int32_t start, int32_t end, EdnVectorBin<int8_t> &output);
+		void    GetAll(                 Edn::VectorType<int8_t> &text);
+		void    SetAll(                 Edn::VectorType<int8_t> &text);
+		void    GetRange(               int32_t start, int32_t end, Edn::VectorType<int8_t> &output);
 		bool    DumpIn(                 FILE *myFile);
 		bool    DumpFrom(               FILE *myFile);
 		// replace with operator [] ...
 		int8_t  operator[] (int32_t);
-		void    Insert(                 int32_t pos, EdnVectorBin<int8_t> &insertText);
-		void    Replace(                int32_t start, int32_t end, EdnVectorBin<int8_t> &insertText);
+		void    Insert(                 int32_t pos, Edn::VectorType<int8_t> &insertText);
+		void    Replace(                int32_t start, int32_t end, Edn::VectorType<int8_t> &insertText);
 		void    Remove(                 int32_t start, int32_t end);
 		int32_t Indent(                 selectionType_te select);
 		int32_t UnIndent(               selectionType_te select);
 		
 		
-		void    GetLineText(            int32_t pos, EdnVectorBin<int8_t> &text);
+		void    GetLineText(            int32_t pos, Edn::VectorType<int8_t> &text);
 		int32_t StartOfLine(            int32_t pos);
 		int32_t EndOfLine(              int32_t pos);
 		
@@ -107,12 +107,12 @@ class EdnBuf {
 		int32_t CountForwardDispChars(  int32_t lineStartPos, int32_t nChars);
 		int32_t CountLines(             int32_t startPos, int32_t endPos);
 		int32_t CountLines(             void);
-		int32_t CountLines(             EdnVectorBin<int8_t> &data);
+		int32_t CountLines(             Edn::VectorType<int8_t> &data);
 		int32_t CountForwardNLines(     int32_t startPos, int32_t nLines);
 		int32_t CountBackwardNLines(    int32_t startPos, int32_t nLines);
 		
-		bool    SearchForward(          int32_t startPos, EdnVectorBin<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive = true);
-		bool    SearchBackward(         int32_t startPos, EdnVectorBin<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive = true);
+		bool    SearchForward(          int32_t startPos, Edn::VectorType<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive = true);
+		bool    SearchBackward(         int32_t startPos, Edn::VectorType<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive = true);
 		bool    SearchForward(          int32_t startPos, char searchChar, int32_t *foundPos);
 		bool    SearchBackward(         int32_t startPos, char searchChar, int32_t *foundPos);
 		bool    SelectAround(           int32_t startPos, int32_t &beginPos, int32_t &endPos);
@@ -130,9 +130,9 @@ class EdnBuf {
 		void	Unselect(				selectionType_te select);
 		void	RectSelect(				selectionType_te select, int32_t start, int32_t end, int32_t rectStart, int32_t rectEnd);
 		bool	GetSelectionPos(		selectionType_te select, int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd);
-		void	GetSelectionText(		selectionType_te select, EdnVectorBin<int8_t> &text);
+		void	GetSelectionText(		selectionType_te select, Edn::VectorType<int8_t> &text);
 		void	RemoveSelected(			selectionType_te select);
-		void	ReplaceSelected(		selectionType_te select, EdnVectorBin<int8_t> &text);
+		void	ReplaceSelected(		selectionType_te select, Edn::VectorType<int8_t> &text);
 	private:
 		// current selection of the buffer
 		selection m_selectionList[SELECTION_SIZE];		//!< Selection area of the buffer
@@ -148,8 +148,8 @@ class EdnBuf {
 	private:
 		bool							m_isUndoProcessing;
 		bool							m_isRedoProcessing;
-		EdnVectorBin<EdnBufHistory*>	m_historyUndo;
-		EdnVectorBin<EdnBufHistory*>	m_historyRedo;
+		Edn::VectorType<EdnBufHistory*>	m_historyUndo;
+		Edn::VectorType<EdnBufHistory*>	m_historyRedo;
 
 	// -----------------------------------------
 	// hightlight section : 
@@ -201,10 +201,10 @@ class EdnBuf {
 		void	removeSelected(					selection &sel);
 		void	replaceSelected(				selection &sel, const char *text);
 
-		void	eventModification(				int32_t pos, int32_t nInserted, EdnVectorBin<int8_t> &deletedText);
+		void	eventModification(				int32_t pos, int32_t nInserted, Edn::VectorType<int8_t> &deletedText);
 
 
-		int32_t insert(							int32_t pos, EdnVectorBin<int8_t> &insertText);
+		int32_t insert(							int32_t pos, Edn::VectorType<int8_t> &insertText);
 		
 		bool	charMatch(						char first, char second, bool caseSensitive = true);
 };

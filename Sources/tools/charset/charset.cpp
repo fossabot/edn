@@ -101,14 +101,14 @@ void convertUnicodeToIso(charset_te inputCharset, int32_t input_Unicode, char & 
 }
 
 
-int32_t convertIsoToUnicode(charset_te inputCharset, EdnVectorBin<char>& input_ISO, EdnVectorBin<int32_t>& output_Unicode)
+int32_t convertIsoToUnicode(charset_te inputCharset, Edn::VectorType<char>& input_ISO, Edn::VectorType<int32_t>& output_Unicode)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
 }
 
 
-int32_t convertUnicodeToIso(charset_te inputCharset, EdnVectorBin<int32_t>& input_Unicode, EdnVectorBin<char>&    output_ISO)
+int32_t convertUnicodeToIso(charset_te inputCharset, Edn::VectorType<int32_t>& input_Unicode, Edn::VectorType<char>&    output_ISO)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
@@ -204,14 +204,14 @@ void convertUtf8ToUnicode(char * input_UTF8, int32_t &output_Unicode)
 }
 
 
-int32_t convertUnicodeToUtf8(EdnVectorBin<int32_t>& input_Unicode, EdnVectorBin<char>& output_UTF8)
+int32_t convertUnicodeToUtf8(Edn::VectorType<int32_t>& input_Unicode, Edn::VectorType<char>& output_UTF8)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
 }
 
 
-int32_t convertUtf8ToUnicode(EdnVectorBin<char>& input_UTF8, EdnVectorBin<int32_t>& output_Unicode)
+int32_t convertUtf8ToUnicode(Edn::VectorType<char>& input_UTF8, Edn::VectorType<int32_t>& output_Unicode)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
@@ -239,14 +239,14 @@ void convertUtf8ToIso(charset_te inputCharset,  char * input_UTF8, char & output
 }
 
 
-int32_t convertIsoToUtf8(charset_te inputCharset, EdnVectorBin<char>& input_ISO, EdnVectorBin<char>& output_UTF8)
+int32_t convertIsoToUtf8(charset_te inputCharset, Edn::VectorType<char>& input_ISO, Edn::VectorType<char>& output_UTF8)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
 }
 
 
-int32_t convertUtf8ToIso(charset_te inputCharset, EdnVectorBin<char>& input_UTF8, EdnVectorBin<char>& output_ISO)
+int32_t convertUtf8ToIso(charset_te inputCharset, Edn::VectorType<char>& input_UTF8, Edn::VectorType<char>& output_ISO)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;

@@ -56,7 +56,7 @@ class CTagsManager: public Singleton<CTagsManager>, public MsgBroadcast
 		// history system
 		void                       AddToHistory(int32_t bufferID);
 		int32_t                    m_historyPos;
-		EdnVectorBin<Edn::File*>   m_historyList;
+		Edn::VectorType<Edn::File*>   m_historyList;
 };
 
 #endif

@@ -189,7 +189,7 @@ class MenuBarMain
 		GtkWidget *       m_parent;
 		GtkWidget *       m_menu;
 		GtkWidget *       m_menuListe;
-		EdnVectorBin<messageData_ts*>    m_message;
+		Edn::VectorType<messageData_ts*>    m_message;
 };
 
 #undef __class__

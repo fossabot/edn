@@ -45,17 +45,16 @@ namespace Edn
 			
 			const Edn::String& operator= (const Edn::String &ednS );	// assigment
 			const Edn::String& operator= (const char * inputData);
-			const Edn::String& operator= (EdnVectorBin<int8_t> inputData);
-			bool operator== (const Edn::String& ednS) const;			// == operator
-			bool operator== (const char * inputData) const;
-			bool operator!= (const Edn::String& ednS) const;			// != operator
-			bool operator!= (const char * inputData) const;
+			const Edn::String& operator= (Edn::VectorType<int8_t> inputData);
+			bool  operator== (const Edn::String& ednS) const;			// == operator
+			bool  operator== (const char * inputData) const;
+			bool  operator!= (const Edn::String& ednS) const;			// != operator
+			bool  operator!= (const char * inputData) const;
 			const Edn::String& operator+= (const Edn::String &ednS);	// += operator
 			const Edn::String& operator+= (const char * inputData);
 			Edn::String operator+ (const Edn::String &ednS);			// + operator
 			Edn::String operator+ (const char * inputData);
 			//operator const char *()
-	
 	
 			bool          IsEmpty(void) const;
 			int32_t       Size(void) const;
@@ -64,7 +63,7 @@ namespace Edn
 			void          Remove(int32_t currentID, int32_t len);
 			void          Clear(void);
 	
-			EdnVectorBin<int8_t>    GetVector(void);
+			Edn::VectorType<int8_t> GetVector(void);
 			char *                  c_str(void) { return (char*)&m_data[0]; };
 	
 			// Sting operation :
@@ -73,7 +72,7 @@ namespace Edn
 			Edn::String   Extract(int32_t posStart=0, int32_t posEnd=0x7FFFFFFF);
 	
 		private :
-			EdnVectorBin<int8_t> m_data;
+			Edn::VectorType<int8_t> m_data;
 	};
 
 	void TestUntaire_String(void);

@@ -283,7 +283,7 @@ gboolean MenuContext::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, 
 	uint32_t fontHeight = Display::GetFontHeight();
 	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;
 	basicColor_te selectBG = COLOR_LIST_BG_1;
-	EdnVectorBin<Edn::String *> myData;
+	Edn::VectorType<Edn::String *> myData;
 	Edn::String * plop = new Edn::String("Save");
 	myData.PushBack(plop);
 	plop = new Edn::String("Show");

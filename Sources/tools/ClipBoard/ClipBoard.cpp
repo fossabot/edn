@@ -35,7 +35,7 @@ note: la copy dans le :
    [1..9] : copy interne
        10 : bouton du milieux
 */
-static EdnVectorBin<int8_t> mesCopy[TOTAL_OF_CLICKBOARD];
+static Edn::VectorType<int8_t> mesCopy[TOTAL_OF_CLICKBOARD];
 
 
 void ClipBoard::Init(void)
@@ -47,7 +47,7 @@ void ClipBoard::Init(void)
 }
 
 
-void ClipBoard::Set(uint8_t clipboardID, EdnVectorBin<int8_t> &data)
+void ClipBoard::Set(uint8_t clipboardID, Edn::VectorType<int8_t> &data)
 {
 	// check if ID is correct
 	if(clipboardID >= TOTAL_OF_CLICKBOARD) {
@@ -66,7 +66,7 @@ void ClipBoard::Set(uint8_t clipboardID, EdnVectorBin<int8_t> &data)
 }
 
 
-void ClipBoard::Get(uint8_t clipboardID, EdnVectorBin<int8_t> &data)
+void ClipBoard::Get(uint8_t clipboardID, Edn::VectorType<int8_t> &data)
 {
 	if(clipboardID >= TOTAL_OF_CLICKBOARD) {
 		EDN_WARNING("request ClickBoard id error");

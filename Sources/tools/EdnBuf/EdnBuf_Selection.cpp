@@ -136,7 +136,7 @@ bool EdnBuf::GetSelectionPos(selectionType_te select, int32_t &start, int32_t &e
  * @return ---
  * 
  */
-void EdnBuf::GetSelectionText(selectionType_te select, EdnVectorBin<int8_t> &text)
+void EdnBuf::GetSelectionText(selectionType_te select, Edn::VectorType<int8_t> &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;
@@ -198,7 +198,7 @@ void EdnBuf::RemoveSelected(selectionType_te select)
  * @return ---
  * 
  */
-void EdnBuf::ReplaceSelected(selectionType_te select, EdnVectorBin<int8_t> &text)
+void EdnBuf::ReplaceSelected(selectionType_te select, Edn::VectorType<int8_t> &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;

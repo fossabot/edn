@@ -2,14 +2,14 @@
 #include "tools_debug.h"
 #include "tools_globals.h"
 
-#include "EdnVectorBin.h"
+#include "VectorType.h"
 
 void TestTemplate(void)
 {
 	
 	EDN_WARNING("Start Template Test ...");
-	EdnVectorBin<int32_t> plop;
-	EdnVectorBin<int8_t> plop2;
+	Edn::VectorType<int32_t> plop;
+	Edn::VectorType<int8_t> plop2;
 	
 	plop.PushBack(15365);
 	plop.PushBack(1);

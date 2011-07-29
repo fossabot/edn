@@ -25,7 +25,7 @@
 #ifndef __EDN_REG_EXP_H__
 #define __EDN_REG_EXP_H__
 
-#include "EdnVectorBin.h"
+#include "VectorType.h"
 #include "Edn.h"
 
 /*
@@ -89,15 +89,15 @@ typedef struct {
 extern const convertionTable_ts constConvertionTable[];
 extern const int32_t constConvertionTableSize;
 
-void DisplayData(EdnVectorBin<char> &data);
-void DisplayElem(EdnVectorBin<int16_t> &data, int32_t start=0, int32_t stop=0x7FFFFFFF);
+void DisplayData(Edn::VectorType<char> &data);
+void DisplayElem(Edn::VectorType<int16_t> &data, int32_t start=0, int32_t stop=0x7FFFFFFF);
 char * levelSpace(int32_t level);
-int32_t GetLenOfPTheseElem(EdnVectorBin<int16_t> &data, int32_t startPos);
-int32_t GetLenOfPThese(EdnVectorBin<int16_t> &data, int32_t startPos);
-int32_t GetLenOfBracket(EdnVectorBin<int16_t> &data, int32_t startPos);
-int32_t GetLenOfBrace(EdnVectorBin<int16_t> &data, int32_t startPos);
-int32_t GetLenOfNormal(EdnVectorBin<int16_t> &data, int32_t startPos);
-bool ParseBrace(EdnVectorBin<int16_t> &data, int32_t &min, int32_t &max);
+int32_t GetLenOfPTheseElem(Edn::VectorType<int16_t> &data, int32_t startPos);
+int32_t GetLenOfPThese(Edn::VectorType<int16_t> &data, int32_t startPos);
+int32_t GetLenOfBracket(Edn::VectorType<int16_t> &data, int32_t startPos);
+int32_t GetLenOfBrace(Edn::VectorType<int16_t> &data, int32_t startPos);
+int32_t GetLenOfNormal(Edn::VectorType<int16_t> &data, int32_t startPos);
+bool ParseBrace(Edn::VectorType<int16_t> &data, int32_t &min, int32_t &max);
 
 
 #undef __class__
@@ -134,7 +134,7 @@ template<class CLASS_TYPE> class RegExpNode{
 		 * @param[in,out] 
 		 * @return
 		 */
-		virtual int32_t Generate(EdnVectorBin<int16_t> &data, int32_t startPos, int32_t nbElement)
+		virtual int32_t Generate(Edn::VectorType<int16_t> &data, int32_t startPos, int32_t nbElement)
 		{
 			return 0;
 		};
@@ -194,7 +194,7 @@ template<class CLASS_TYPE> class RegExpNode{
 		int32_t                 m_multipleMin;      //!< minimum repetition (included)
 		int32_t                 m_multipleMax;      //!< maximum repetition (included)
 		// Data Section ... (can have no data...)
-		EdnVectorBin<int16_t>   m_RegExpData;       //!< data to parse and compare in some case ...
+		Edn::VectorType<int16_t>   m_RegExpData;       //!< data to parse and compare in some case ...
 };
 
 #undef __class__
@@ -228,7 +228,7 @@ template<class CLASS_TYPE> class RegExpNodeValue : public RegExpNode<CLASS_TYPE>
 		 * @param[in,out] 
 		 * @return
 		 */
-		int32_t Generate(EdnVectorBin<int16_t> &data)
+		int32_t Generate(Edn::VectorType<int16_t> &data)
 		{
 			RegExpNode<CLASS_TYPE>::m_RegExpData = data;
 			//EDN_DEBUG("Request Parse \"Value\" data="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
@@ -298,7 +298,7 @@ template<class CLASS_TYPE> class RegExpNodeValue : public RegExpNode<CLASS_TYPE>
 		};
 	protected :
 		// SubNodes :
-		EdnVectorBin<char> m_data;
+		Edn::VectorType<char> m_data;
 };
 #undef __class__
 #define __class__	"RegExpNodeBracket"
@@ -331,7 +331,7 @@ template<class CLASS_TYPE> class RegExpNodeBracket : public RegExpNode<CLASS_TYP
 		 * @param[in,out] 
 		 * @return
 		 */
-		int32_t Generate(EdnVectorBin<int16_t> &data)
+		int32_t Generate(Edn::VectorType<int16_t> &data)
 		{
 			RegExpNode<CLASS_TYPE>::m_RegExpData = data;
 			//EDN_DEBUG("Request Parse [...] data="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
@@ -416,7 +416,7 @@ template<class CLASS_TYPE> class RegExpNodeBracket : public RegExpNode<CLASS_TYP
 		};
 	protected :
 		// SubNodes :
-		EdnVectorBin<char> m_data;
+		Edn::VectorType<char> m_data;
 };
 #undef __class__
 #define __class__	"RegExpNodeDigit"
@@ -1206,14 +1206,14 @@ template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_
 		 * @param[in,out] 
 		 * @return
 		 */
-		int32_t Generate(EdnVectorBin<int16_t> &data)
+		int32_t Generate(Edn::VectorType<int16_t> &data)
 		{
 			RegExpNode<CLASS_TYPE>::m_RegExpData = data;
 			//EDN_DEBUG("Request Parse (elem) data="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		
 			int32_t pos = 0;
 			int32_t elementSize = 0;
-			EdnVectorBin<int16_t> tmpData;
+			Edn::VectorType<int16_t> tmpData;
 			while (pos < RegExpNode<CLASS_TYPE>::m_RegExpData.Size()) {
 				tmpData.Clear();
 				switch (RegExpNode<CLASS_TYPE>::m_RegExpData[pos])
@@ -1399,7 +1399,7 @@ template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_
 		};
 	protected :
 		// SubNodes :
-		EdnVectorBin<RegExpNode<CLASS_TYPE>*> m_subNode;
+		Edn::VectorType<RegExpNode<CLASS_TYPE>*> m_subNode;
 	private :
 		/**
 		 * @brief Set the number of repeate time on a the last node in the list ...
@@ -1456,7 +1456,7 @@ template<class CLASS_TYPE> class RegExpNodePThese : public RegExpNode<CLASS_TYPE
 		 * @param[in,out] 
 		 * @return
 		 */
-		int32_t Generate(EdnVectorBin<int16_t> &data)
+		int32_t Generate(Edn::VectorType<int16_t> &data)
 		{
 			RegExpNode<CLASS_TYPE>::m_RegExpData = data;
 			//EDN_DEBUG("Request Parse (...) data="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
@@ -1466,7 +1466,7 @@ template<class CLASS_TYPE> class RegExpNodePThese : public RegExpNode<CLASS_TYPE
 			// generate all the "elemTypePTheseElem" of the Node
 			while (elementSize>0) {
 				// geerate output deta ...
-				EdnVectorBin<int16_t> tmpData;
+				Edn::VectorType<int16_t> tmpData;
 				for (int32_t k=pos; k<pos+elementSize; k++) {
 					tmpData.PushBack(RegExpNode<CLASS_TYPE>::m_RegExpData[k]);
 				}
@@ -1542,7 +1542,7 @@ template<class CLASS_TYPE> class RegExpNodePThese : public RegExpNode<CLASS_TYPE
 		
 	protected :
 		// SubNodes :
-		EdnVectorBin<RegExpNode<CLASS_TYPE>*> m_subNode;
+		Edn::VectorType<RegExpNode<CLASS_TYPE>*> m_subNode;
 		//int32_t						m_posPthese;		//!< position of the element is detected in the output element
 };
 #undef __class__
@@ -1629,7 +1629,7 @@ template<class CLASS_TYPE> class EdnRegExp {
 		void SetRegExp(Edn::String &expressionRequested)
 		{
 			m_expressionRequested = expressionRequested;		// TODO : Must be deprecated ...
-			EdnVectorBin<int16_t> tmpExp;
+			Edn::VectorType<int16_t> tmpExp;
 			
 			//EDN_DEBUG("Parse RegExp : " << expressionRequested.c_str() );
 			m_isOk = false;
@@ -1905,7 +1905,7 @@ template<class CLASS_TYPE> class EdnRegExp {
 		 * @param[in,out] 
 		 * @return
 		 */
-		bool CheckGoodPosition(EdnVectorBin<int16_t> tmpExp, int32_t &pos)
+		bool CheckGoodPosition(Edn::VectorType<int16_t> tmpExp, int32_t &pos)
 		{
 			int16_t curentCode = tmpExp[pos];
 			int16_t endCode = OPCODE_PTHESE_OUT;
@@ -2010,7 +2010,7 @@ template<class CLASS_TYPE> class EdnRegExp {
 		 * @param[in,out] 
 		 * @return
 		 */
-		bool CheckGoodPosition(EdnVectorBin<int16_t> tmpExp)
+		bool CheckGoodPosition(Edn::VectorType<int16_t> tmpExp)
 		{
 			int32_t pos = 0;
 			while (pos < (int32_t)tmpExp.Size()) {

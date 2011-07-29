@@ -188,9 +188,9 @@ class MsgBroadcastCore: public Singleton<MsgBroadcastCore>
 		void RmReceiver(MsgBroadcast * pointerOnReceiver);
 
 	private:
-		EdnVectorBin<MsgBroadcast*>         m_listMessage;
+		Edn::VectorType<MsgBroadcast*>         m_listMessage;
 		uint32_t                            m_messageID;
-		EdnVectorBin<messageElement_ts>     m_listOfMessage;
+		Edn::VectorType<messageElement_ts>     m_listOfMessage;
 };
 
 

@@ -171,7 +171,7 @@ void CTagsManager::AddToHistory(int32_t bufferID)
 void CTagsManager::JumpTo(void)
 {
 	if (NULL != m_ctagFile) {
-		EdnVectorBin<int8_t> data;
+		Edn::VectorType<int8_t> data;
 		// get the middle button of the clipboard ==> represent the current selection ...
 		ClipBoard::Get(COPY_MIDDLE_BUTTON, data);
 		if (data.Size() == 0) {

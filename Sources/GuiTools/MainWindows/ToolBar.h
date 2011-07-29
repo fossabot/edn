@@ -42,7 +42,7 @@ class ToolBar: public MsgBroadcast
 		void AddSeparator(void);
 		void Add(const char * title, const char * labelHelp, messageType_te id = EDN_MSG__NONE, bool enable = false);
 		GtkWidget *                      m_mainWidget;
-		EdnVectorBin<messageData_ts*>    m_message;
+		Edn::VectorType<messageData_ts*>    m_message;
 };
 
 

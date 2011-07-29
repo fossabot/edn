@@ -1,7 +1,7 @@
 /**
  *******************************************************************************
- * @file EdnEdnVectorBin.h
- * @brief Editeur De N'ours : Basic EdnVectorBin for direct data insertion (template)
+ * @file VectorType.h
+ * @brief Editeur De N'ours : Basic VectorType for direct data insertion (template)
  * @author Edouard DUPIN
  * @date 07/04/2011
  * @par Project
@@ -29,10 +29,10 @@
 #include "toolsMemory.h"
 
 #undef __class__
-#define __class__	"EdnEdnVectorBin"
+#define __class__	"Edn::VectorType"
 
 /**
- * @brief EdnVectorBin classes ...
+ * @brief VectorType classes ...
  *
  * @tparam[in] SIZE Size of the current element.
  *
@@ -65,22 +65,26 @@
  *              ----------------------------------------
  *
  */
-template<typename MY_TYPE=int32_t> class EdnVectorBin
+
+namespace Edn
+{
+
+template<typename MY_TYPE=int32_t> class VectorType
 {
 	public:
 		class Iterator
 		{
-			// Private data : 
+			// Private data :
 			private:
-				int32_t						  m_current;		// curent Id on the vector
-				EdnVectorBin<MY_TYPE>		* m_EdnVectorBin;	// Pointer on the curent element of the vectorBin
+				int32_t                     m_current;          //!< curent Id on the vector
+				VectorType<MY_TYPE> *       m_VectorType;       //!< Pointer on the curent element of the vectorBin
 			public:
 				/**
 				 * @brief Basic itarator constructor with no link with an EdnVector
 				 */
 				Iterator():
 					m_current(-1),
-					m_EdnVectorBin(NULL)
+					m_VectorType(NULL)
 				{
 					// nothing to do ...
 				}
@@ -90,7 +94,7 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 				 */
 				Iterator(const Iterator & otherIterator):
 					m_current(otherIterator.m_current),
-					m_EdnVectorBin(otherIterator.m_EdnVectorBin)
+					m_VectorType(otherIterator.m_VectorType)
 				{
 					// nothing to do ...
 				}
@@ -102,7 +106,7 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 				Iterator& operator=(const Iterator & otherIterator)
 				{
 					m_current = otherIterator.m_current;
-					m_EdnVectorBin = otherIterator.m_EdnVectorBin;
+					m_VectorType = otherIterator.m_VectorType;
 					return *this;
 				}
 				/**
@@ -111,7 +115,7 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 				~Iterator()
 				{
 					m_current = -1;
-					m_EdnVectorBin = NULL;
+					m_VectorType = NULL;
 				}
 				/**
 				 * @brief basic boolean cast
@@ -120,7 +124,7 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 				operator bool ()
 				{
 					if(		0 <= m_current
-						&&	m_current < m_EdnVectorBin->Size() )
+						&&	m_current < m_VectorType->Size() )
 					{
 						return true;
 					} else {
@@ -133,8 +137,8 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 				 */
 				Iterator& operator++ ()
 				{
-					if(		NULL != m_EdnVectorBin
-						&&	m_current < m_EdnVectorBin->Size() )
+					if(		NULL != m_VectorType
+						&&	m_current < m_VectorType->Size() )
 					{
 						m_current++;
 					}
@@ -177,8 +181,8 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 				 */
 				MY_TYPE & operator-> () const
 				{
-					EDN_CHECK_INOUT(m_current >= 0 && m_current < m_EdnVectorBin->Size());
-					return &m_EdnVectorBin->Get(m_current);
+					EDN_CHECK_INOUT(m_current >= 0 && m_current < m_VectorType->Size());
+					return &m_VectorType->Get(m_current);
 				}
 				/**
 				 * @brief Get reference on the current Element
@@ -186,8 +190,8 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 				 */
 				MY_TYPE & operator* () const
 				{
-					EDN_CHECK_INOUT(m_current >= 0 && m_current < m_EdnVectorBin->Size());
-					return m_EdnVectorBin->Get(m_current);
+					EDN_CHECK_INOUT(m_current >= 0 && m_current < m_VectorType->Size());
+					return m_VectorType->Get(m_current);
 				}
 			private:
 				/**
@@ -198,26 +202,26 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 				 * @return ---
 				 *
 				 */
-				Iterator(EdnVectorBin<MY_TYPE> * Evb, int32_t pos):
+				Iterator(VectorType<MY_TYPE> * Evb, int32_t pos):
 					m_current(pos),
-					m_EdnVectorBin(Evb)
+					m_VectorType(Evb)
 				{
 					// nothing to do ...
 				}
-				friend class EdnVectorBin;
+				friend class VectorType;
 		};
 
 	private:
-		MY_TYPE		* m_data;		//!< pointer on the curetn table of Data
-		int32_t		  m_size;		//!< nb Element in the buffer
-		int32_t		  m_allocated;	//!< Current allocated size
-		int32_t		  m_increment;	//!< methode of increment
+		MY_TYPE *   m_data;         //!< pointer on the curetn table of Data
+		int32_t     m_size;         //!< nb Element in the buffer
+		int32_t     m_allocated;    //!< Current allocated size
+		int32_t     m_increment;    //!< methode of increment
 	public:
 		/**
 		 * @brief Create an empty vector
 		 * @param[in] count		Minimum request size of the Buffer
 		 */
-		EdnVectorBin(int32_t count = 0):
+		VectorType(int32_t count = 0):
 			m_data(NULL),
 			m_size(0),
 			m_allocated(0),
@@ -230,12 +234,12 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 		 * @brief Re-copy constructor (copy all needed data)
 		 * @param[in] Evb	Vector that might be copy
 		 */
-		EdnVectorBin(const EdnVectorBin<MY_TYPE> & Evb)
+		VectorType(const Edn::VectorType<MY_TYPE> & Evb)
 		{
 			m_allocated = Evb.m_allocated;
-			m_size = Evb.m_size;
+			m_size      = Evb.m_size;
 			m_increment = Evb.m_increment;
-			m_data = NULL;
+			m_data      = NULL;
 			//EDN_DEBUG("USE Specific vector allocator ... Evb.m_size=" << Evb.m_size << " Evb.m_increment=" << Evb.m_increment);
 			// allocate all same data
 			EDN_MALLOC(m_data, m_allocated, MY_TYPE);
@@ -247,7 +251,7 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 		/**
 		 * @brief Destructor of the current Class
 		 */
-		~EdnVectorBin()
+		~VectorType()
 		{
 			if (NULL!=m_data) {
 				EDN_FREE(m_data);
@@ -263,7 +267,7 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 		 * @param[in] Evb	Vector that might be copy
 		 * @return reference on the curent re-copy vector
 		 */
-		EdnVectorBin& operator=(const EdnVectorBin<MY_TYPE> & Evb)
+		VectorType& operator=(const Edn::VectorType<MY_TYPE> & Evb)
 		{
 			//EDN_DEBUG("USE RECOPY vector ... Evb.m_size=" << Evb.m_size << " Evb.m_increment=" << Evb.m_increment);
 			if( this != &Evb ) // avoid copy to itself
@@ -290,7 +294,7 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 		 * @brief Add at the Last position of the Vector
 		 * @param[in] item	Element to add at the end of vector
 		 */
-		EdnVectorBin& operator+= (const EdnVectorBin<MY_TYPE> & Evb)	// += operator
+		VectorType& operator+= (const Edn::VectorType<MY_TYPE> & Evb)	// += operator
 		{
 			int32_t nbElememt = Evb.Size();
 			int32_t idx = m_size;
@@ -502,9 +506,9 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 		 * @param[in] posEnd End position to extract data
 		 * @return the extracted vector
 		 */
-		EdnVectorBin Extract(int32_t posStart = 0, int32_t posEnd=0x7FFFFFFF)
+		VectorType Extract(int32_t posStart = 0, int32_t posEnd=0x7FFFFFFF)
 		{
-			EdnVectorBin<MY_TYPE> out;
+			VectorType<MY_TYPE> out;
 			if (posStart < 0) {
 				posStart = 0;
 			} else if (posStart >= Size() ) {
@@ -633,8 +637,8 @@ template<typename MY_TYPE=int32_t> class EdnVectorBin
 			// set the new allocation size
 			m_allocated = requestSize;
 		}
-
 };
+}
 
 #undef __class__
 #define __class__	NULL

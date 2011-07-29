@@ -27,7 +27,7 @@
 #define __EDN_VECTOR_BUF_H__
 
 #include "toolsMemory.h"
-#include "EdnVectorBin.h"
+#include "VectorType.h"
 
 #undef __class__
 #define __class__	"EdnVectorBuf"
@@ -272,14 +272,14 @@ class EdnVectorBuf
 		EdnVectorBuf &					operator=(	const EdnVectorBuf & Evb);
 		int8_t							operator[] (int32_t pos);
 		int8_t &						Get(		int32_t pos);
-		void							Get(		int32_t pos, int32_t nbElement, EdnVectorBin<int8_t> &tmpBuffer);
+		void							Get(		int32_t pos, int32_t nbElement, Edn::VectorType<int8_t> &tmpBuffer);
 		// insert functions
 		void							PushBack(	const int8_t& item);
 		void							Insert(		int32_t pos, const int8_t& item);
-		void							Insert(		int32_t pos, EdnVectorBin<int8_t>& items);
+		void							Insert(		int32_t pos, Edn::VectorType<int8_t>& items);
 		// Remove and insert functions
 		void							Replace(	int32_t pos, const int8_t& item);
-		void							Replace(	int32_t pos, int32_t nbRemoveElement, EdnVectorBin<int8_t>& items);
+		void							Replace(	int32_t pos, int32_t nbRemoveElement, Edn::VectorType<int8_t>& items);
 		// Revove fonctions
 		void							Remove(		int32_t pos, int32_t nbRemoveElement = 1);
 		void							PopBack(	void);

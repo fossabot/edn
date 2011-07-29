@@ -33,7 +33,7 @@ class HighlightPattern;
 #include "Edn.h"
 #include "RegExp.h"
 #include "Colorize.h"
-#include "EdnVectorBin.h"
+#include "VectorType.h"
 #include "tinyxml.h"
 #include "EdnVectorBuf.h"
 
@@ -79,8 +79,8 @@ class HighlightPattern {
 		bool                                m_haveStopPatern;           //!< Stop patern presence
 		bool                                m_multiline;                //!< The patern is multiline
 		char                                m_escapeChar;               //!< Escape char to prevent exeit of patern ....
-		EdnVectorBin<HighlightPattern *>    m_subPatern;                //!< Under patern of this one
-//		EdnVectorBin<HighlightPattern *>    m_subColor;                 //!< Under Color in the start RegExp ...
+		Edn::VectorType<HighlightPattern *>    m_subPatern;                //!< Under patern of this one
+//		Edn::VectorType<HighlightPattern *>    m_subColor;                 //!< Under Color in the start RegExp ...
 };
 
 #endif

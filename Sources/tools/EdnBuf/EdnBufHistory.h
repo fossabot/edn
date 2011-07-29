@@ -27,22 +27,22 @@
 #define __EDN_BUFFER_HISTORY_H__
 
 
-#include "EdnVectorBin.h"
+#include "VectorType.h"
 
 class EdnBufHistory{
 	public:
 					 EdnBufHistory(void);
-					 EdnBufHistory(int32_t pos, int32_t nInserted, EdnVectorBin<int8_t> &deletedText);
+					 EdnBufHistory(int32_t pos, int32_t nInserted, Edn::VectorType<int8_t> &deletedText);
 					~EdnBufHistory(void);
-		void		 Set(int32_t pos, int32_t nInserted, EdnVectorBin<int8_t> &deletedText);
+		void		 Set(int32_t pos, int32_t nInserted, Edn::VectorType<int8_t> &deletedText);
 		int32_t		 getPos(void);
 		int32_t		 getnbDeleted(void);
 		int32_t		 getnbInserted(void);
-		void		 getData(EdnVectorBin<int8_t> &deletedText);
+		void		 getData(Edn::VectorType<int8_t> &deletedText);
 	private:
 		int32_t m_pos;
 		int32_t m_nInserted;
-		EdnVectorBin<int8_t> m_deletedText;
+		Edn::VectorType<int8_t> m_deletedText;
 };
 
 #endif
