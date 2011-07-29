@@ -22,7 +22,9 @@
  *
  *******************************************************************************
  */
- 
+
+#include "Highlight.h"
+
 #ifndef __HIGHLIGHT_PATTERN_H__
 #define __HIGHLIGHT_PATTERN_H__
 
@@ -33,6 +35,7 @@ class HighlightPattern;
 #include "Colorize.h"
 #include "EdnVectorBin.h"
 #include "tinyxml.h"
+#include "EdnVectorBuf.h"
 
 typedef enum {
 	HLP_FIND_ERROR,
@@ -67,17 +70,17 @@ class HighlightPattern {
 		void			ParseRules(TiXmlNode *child, int32_t level);
 
 	private:
-		int32_t								m_level;					//!< Level of the pattern ==> this is to overwrite next pattern when we create an higher ....
-		Edn::String							m_paternName;				//!< Current style name (like "c++" or "c" or "script Bash")
-		Edn::String							m_colorName;				//!< Current color name
-		Colorize *							m_color;					//!< Link to the color manager
-		EdnRegExp *                       m_regExpStart;              //!< Start of Regular expression
-		EdnRegExp *                       m_regExpStop;               //!< Stop of Regular Expression
-		bool								m_haveStopPatern;			//!< Stop patern presence
-		bool								m_multiline;				//!< The patern is multiline
-		char								m_escapeChar;				//!< Escape char to prevent exeit of patern ....
-		EdnVectorBin<HighlightPattern *>	m_subPatern;				//!< Under patern of this one
-//		EdnVectorBin<HighlightPattern *>	m_subColor;					//!< Under Color in the start RegExp ...
+		int32_t                             m_level;                    //!< Level of the pattern ==> this is to overwrite next pattern when we create an higher ....
+		Edn::String                         m_paternName;               //!< Current style name (like "c++" or "c" or "script Bash")
+		Edn::String                         m_colorName;                //!< Current color name
+		Colorize *                          m_color;                    //!< Link to the color manager
+		EdnRegExp<EdnVectorBuf> *           m_regExpStart;              //!< Start of Regular expression
+		EdnRegExp<EdnVectorBuf> *           m_regExpStop;               //!< Stop of Regular Expression
+		bool                                m_haveStopPatern;           //!< Stop patern presence
+		bool                                m_multiline;                //!< The patern is multiline
+		char                                m_escapeChar;               //!< Escape char to prevent exeit of patern ....
+		EdnVectorBin<HighlightPattern *>    m_subPatern;                //!< Under patern of this one
+//		EdnVectorBin<HighlightPattern *>    m_subColor;                 //!< Under Color in the start RegExp ...
 };
 
 #endif

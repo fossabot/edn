@@ -39,8 +39,8 @@ HighlightPattern::HighlightPattern(void)
 	m_multiline = false;
 	ColorizeManager *myColorManager = ColorizeManager::getInstance();
 	m_color = myColorManager->Get("normal");
-	m_regExpStart = new EdnRegExp();
-	m_regExpStop = new EdnRegExp();
+	m_regExpStart = new EdnRegExp<EdnVectorBuf>();
+	m_regExpStop = new EdnRegExp<EdnVectorBuf>();
 	m_escapeChar = 0;
 }
 

@@ -61,11 +61,11 @@ class Highlight {
 		void Parse2(int32_t start, int32_t stop, std::vector<colorInformation_ts> &metaData, EdnVectorBuf &buffer, int32_t elementID=0);
 
 	private:
-		void							ParseRules(TiXmlNode *child, std::vector<HighlightPattern*> &mListPatern, int32_t level);
-		Edn::String						m_styleName;			//!< curent style name (like "c++" or "c" or "script Bash")
-		std::vector<Edn::String>		m_listExtentions;		//!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
-		std::vector<HighlightPattern*>	m_listHighlightPass1;	//!< List of ALL hightlight modules (pass 1 ==> when we load and wride data on the buffer)
-		std::vector<HighlightPattern*>	m_listHighlightPass2;	//!< List of ALL hightlight modules (pass 2 ==> When we display the buffer( only the display area (100 lines)) )
+		void                            ParseRules(TiXmlNode *child, std::vector<HighlightPattern*> &mListPatern, int32_t level);
+		Edn::String                     m_styleName;               //!< curent style name (like "c++" or "c" or "script Bash")
+		std::vector<Edn::String>        m_listExtentions;          //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
+		std::vector<HighlightPattern*>  m_listHighlightPass1;      //!< List of ALL hightlight modules (pass 1 ==> when we load and wride data on the buffer)
+		std::vector<HighlightPattern*>  m_listHighlightPass2;      //!< List of ALL hightlight modules (pass 2 ==> When we display the buffer( only the display area (100 lines)) )
 };
 
 

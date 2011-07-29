@@ -26,6 +26,7 @@
 #define __EDN_REG_EXP_H__
 
 #include "EdnVectorBin.h"
+#include "Edn.h"
 
 /*
 normal mode :
@@ -85,7 +86,7 @@ typedef struct {
 	int16_t		newValue;
 }convertionTable_ts;
 
-extern const convertionTable_ts constConvertionTable;
+extern const convertionTable_ts constConvertionTable[];
 extern const int32_t constConvertionTableSize;
 
 void DisplayData(EdnVectorBin<char> &data);
@@ -229,11 +230,11 @@ template<class CLASS_TYPE> class RegExpNodeValue : public RegExpNode<CLASS_TYPE>
 		 */
 		int32_t Generate(EdnVectorBin<int16_t> &data)
 		{
-			m_RegExpData = data;
-			//EDN_DEBUG("Request Parse \"Value\" data="; DisplayElem(m_RegExpData););
+			RegExpNode<CLASS_TYPE>::m_RegExpData = data;
+			//EDN_DEBUG("Request Parse \"Value\" data="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 			m_data.Clear();
-			for (int32_t i=0; i<m_RegExpData.Size(); i++) {
-				m_data.PushBack((char)m_RegExpData[i]);
+			for (int32_t i=0; i<RegExpNode<CLASS_TYPE>::m_RegExpData.Size(); i++) {
+				m_data.PushBack((char)RegExpNode<CLASS_TYPE>::m_RegExpData[i]);
 			}
 			return data.Size();
 		};
@@ -246,7 +247,7 @@ template<class CLASS_TYPE> class RegExpNodeValue : public RegExpNode<CLASS_TYPE>
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : Value{" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : Value{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			if (0==m_data.Size()) {
 				EDN_ERROR("No data inside type elemTypeValue");
 				return false;
@@ -254,7 +255,7 @@ template<class CLASS_TYPE> class RegExpNodeValue : public RegExpNode<CLASS_TYPE>
 			//EDN_DEBUG("check element value : '" << m_data[0] << "'");
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind == true; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind == true; j++) {
 				int32_t ofset = 0;
 				int32_t k;
 				for (k=0; findLen+k<lenMax && k < m_data.Size(); k++) {
@@ -273,13 +274,13 @@ template<class CLASS_TYPE> class RegExpNodeValue : public RegExpNode<CLASS_TYPE>
 					findLen += ofset;
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -293,7 +294,7 @@ template<class CLASS_TYPE> class RegExpNodeValue : public RegExpNode<CLASS_TYPE>
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@Value@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData); std::cout<< " data: "; DisplayData(m_data); );
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@Value@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData); std::cout<< " data: "; DisplayData(m_data); );
 		};
 	protected :
 		// SubNodes :
@@ -332,27 +333,27 @@ template<class CLASS_TYPE> class RegExpNodeBracket : public RegExpNode<CLASS_TYP
 		 */
 		int32_t Generate(EdnVectorBin<int16_t> &data)
 		{
-			m_RegExpData = data;
-			//EDN_DEBUG("Request Parse [...] data="; DisplayElem(m_RegExpData););
+			RegExpNode<CLASS_TYPE>::m_RegExpData = data;
+			//EDN_DEBUG("Request Parse [...] data="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 			m_data.Clear();
 			
 			char lastElement = 'a';
 			bool multipleElement = false;
 			//
-			for (int32_t k=0; k<m_RegExpData.Size(); k++) {
-				if (m_RegExpData[k] == OPCODE_TO && multipleElement == true) {
+			for (int32_t k=0; k<RegExpNode<CLASS_TYPE>::m_RegExpData.Size(); k++) {
+				if (RegExpNode<CLASS_TYPE>::m_RegExpData[k] == OPCODE_TO && multipleElement == true) {
 					EDN_ERROR("Can not have 2 consecutive - in [...]");
 					return 0;
 				} else if (multipleElement == true) {
 					char j='\0';
-					for (j=lastElement+1; j <= (char)m_RegExpData[k]; j++) {
+					for (j=lastElement+1; j <= (char)RegExpNode<CLASS_TYPE>::m_RegExpData[k]; j++) {
 						m_data.PushBack(j);
 					}
 					multipleElement = false;
-				} else if(m_RegExpData[k] == OPCODE_TO) {
+				} else if(RegExpNode<CLASS_TYPE>::m_RegExpData[k] == OPCODE_TO) {
 					multipleElement = true;
 				} else {
-					lastElement = (char)m_RegExpData[k];
+					lastElement = (char)RegExpNode<CLASS_TYPE>::m_RegExpData[k];
 					m_data.PushBack(lastElement);
 				}
 			}
@@ -372,7 +373,7 @@ template<class CLASS_TYPE> class RegExpNodeBracket : public RegExpNode<CLASS_TYP
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : [...]{" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : [...]{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			if (0==m_data.Size()) {
 				EDN_ERROR("No data inside type elemTypeValue");
 				return false;
@@ -380,7 +381,7 @@ template<class CLASS_TYPE> class RegExpNodeBracket : public RegExpNode<CLASS_TYP
 			//EDN_DEBUG("one of element value List : "; DisplayData(element->m_data););
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind ==true && j < lenMax; j++) {
 				int32_t i;
 				tmpFind=false;
 				for (i=0; i<m_data.Size(); i++) {
@@ -391,13 +392,13 @@ template<class CLASS_TYPE> class RegExpNodeBracket : public RegExpNode<CLASS_TYP
 					}
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -411,7 +412,7 @@ template<class CLASS_TYPE> class RegExpNodeBracket : public RegExpNode<CLASS_TYP
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@[...]@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData); std::cout<< " data: "; DisplayData(m_data); );
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@[...]@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData); std::cout<< " data: "; DisplayData(m_data); );
 		};
 	protected :
 		// SubNodes :
@@ -450,10 +451,10 @@ template<class CLASS_TYPE> class RegExpNodeDigit : public RegExpNode<CLASS_TYPE>
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : Digit{" << m_multipleMin << "," << m_multipleMax << "} : "<< data[currentPos] << " lenMax=" << lenMax);
+			//EDN_INFO("Parse node : Digit{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "} : "<< data[currentPos] << " lenMax=" << lenMax);
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind ==true && j < lenMax; j++) {
 				char tmpVal = data[currentPos+j];
 				//EDN_DEBUG("compare : " << tmpVal);
 				if(		'0' <= tmpVal
@@ -465,13 +466,13 @@ template<class CLASS_TYPE> class RegExpNodeDigit : public RegExpNode<CLASS_TYPE>
 					tmpFind=false;
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -485,7 +486,7 @@ template<class CLASS_TYPE> class RegExpNodeDigit : public RegExpNode<CLASS_TYPE>
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@Digit@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@Digit@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 #undef __class__
@@ -516,10 +517,10 @@ template<class CLASS_TYPE> class RegExpNodeDigitNot : public RegExpNode<CLASS_TY
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : DigitNot{" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : DigitNot{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind ==true && j < lenMax; j++) {
 				char tmpVal = data[currentPos+j];
 				if(		'0' > tmpVal
 					||	'9' < tmpVal)
@@ -529,13 +530,13 @@ template<class CLASS_TYPE> class RegExpNodeDigitNot : public RegExpNode<CLASS_TY
 					tmpFind=false;
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -549,7 +550,7 @@ template<class CLASS_TYPE> class RegExpNodeDigitNot : public RegExpNode<CLASS_TY
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@DigitNot@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@DigitNot@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 #undef __class__
@@ -586,10 +587,10 @@ template<class CLASS_TYPE> class RegExpNodeLetter : public RegExpNode<CLASS_TYPE
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : Letter{" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : Letter{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind ==true && j < lenMax; j++) {
 				char tmpVal = data[currentPos+j];
 				if(		(		'a' <= tmpVal
 							&&	'z' >= tmpVal	)
@@ -601,13 +602,13 @@ template<class CLASS_TYPE> class RegExpNodeLetter : public RegExpNode<CLASS_TYPE
 					tmpFind=false;
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -621,7 +622,7 @@ template<class CLASS_TYPE> class RegExpNodeLetter : public RegExpNode<CLASS_TYPE
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@Letter@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@Letter@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 #undef __class__
@@ -658,10 +659,10 @@ template<class CLASS_TYPE> class RegExpNodeLetterNot : public RegExpNode<CLASS_T
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : LetterNot{" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : LetterNot{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind ==true && j < lenMax; j++) {
 				char tmpVal = data[currentPos+j];
 				if(		(		'a' > tmpVal
 							&&	'Z' < tmpVal	)
@@ -673,13 +674,13 @@ template<class CLASS_TYPE> class RegExpNodeLetterNot : public RegExpNode<CLASS_T
 					tmpFind=false;
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -693,7 +694,7 @@ template<class CLASS_TYPE> class RegExpNodeLetterNot : public RegExpNode<CLASS_T
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@LetterNot@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@LetterNot@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 #undef __class__
@@ -733,7 +734,7 @@ template<class CLASS_TYPE> class RegExpNodeWhiteSpace : public RegExpNode<CLASS_
 			//EDN_INFO("Parse node : Space{" << m_multipleMin << "," << m_multipleMax << "}");
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind ==true && j < lenMax; j++) {
 				char tmpVal = data[currentPos+j];
 				if(		' '  == tmpVal
 					||	'\t' == tmpVal
@@ -747,13 +748,13 @@ template<class CLASS_TYPE> class RegExpNodeWhiteSpace : public RegExpNode<CLASS_
 					tmpFind=false;
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -767,7 +768,7 @@ template<class CLASS_TYPE> class RegExpNodeWhiteSpace : public RegExpNode<CLASS_
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@Space@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@Space@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 #undef __class__
@@ -804,10 +805,10 @@ template<class CLASS_TYPE> class RegExpNodeWhiteSpaceNot : public RegExpNode<CLA
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : SpaceNot{" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : SpaceNot{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind ==true && j < lenMax; j++) {
 				char tmpVal = data[currentPos+j];
 				if(		' '  != tmpVal
 					&&	'\t' != tmpVal
@@ -821,13 +822,13 @@ template<class CLASS_TYPE> class RegExpNodeWhiteSpaceNot : public RegExpNode<CLA
 					tmpFind=false;
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -841,7 +842,7 @@ template<class CLASS_TYPE> class RegExpNodeWhiteSpaceNot : public RegExpNode<CLA
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@SpaceNot@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@SpaceNot@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 #undef __class__
@@ -878,10 +879,10 @@ template<class CLASS_TYPE> class RegExpNodeWordChar : public RegExpNode<CLASS_TY
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : Word{" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : Word{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind ==true && j < lenMax; j++) {
 				char tmpVal = data[currentPos+j];
 				if(		(		'a' <= tmpVal
 							&&	'z' >= tmpVal	)
@@ -895,13 +896,13 @@ template<class CLASS_TYPE> class RegExpNodeWordChar : public RegExpNode<CLASS_TY
 					tmpFind=false;
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -915,7 +916,7 @@ template<class CLASS_TYPE> class RegExpNodeWordChar : public RegExpNode<CLASS_TY
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@Word@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@Word@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 #undef __class__
@@ -952,10 +953,10 @@ template<class CLASS_TYPE> class RegExpNodeWordCharNot : public RegExpNode<CLASS
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : WordNot{" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : WordNot{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind ==true && j < lenMax; j++) {
 				char tmpVal = data[currentPos+j];
 				if(		(		'A' > tmpVal
 							&&	'9' < tmpVal	)
@@ -969,13 +970,13 @@ template<class CLASS_TYPE> class RegExpNodeWordCharNot : public RegExpNode<CLASS
 					tmpFind=false;
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -989,7 +990,7 @@ template<class CLASS_TYPE> class RegExpNodeWordCharNot : public RegExpNode<CLASS
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@WordNot@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@WordNot@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 #undef __class__
@@ -1026,11 +1027,11 @@ template<class CLASS_TYPE> class RegExpNodeDot : public RegExpNode<CLASS_TYPE> {
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : '.'{" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : '.'{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			// equivalent a : [^\x00-\x08\x0A-\x1F\x7F]
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind ==true && j < lenMax; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind ==true && j < lenMax; j++) {
 				char tmpVal = data[currentPos+j];
 				if(		(		0x08 < tmpVal
 							&&	0x0A > tmpVal	)
@@ -1044,13 +1045,13 @@ template<class CLASS_TYPE> class RegExpNodeDot : public RegExpNode<CLASS_TYPE> {
 					tmpFind=false;
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -1064,7 +1065,7 @@ template<class CLASS_TYPE> class RegExpNodeDot : public RegExpNode<CLASS_TYPE> {
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@.@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@.@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 
@@ -1102,7 +1103,7 @@ template<class CLASS_TYPE> class RegExpNodeSOL : public RegExpNode<CLASS_TYPE> {
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			EDN_INFO("Parse node : SOL{" << m_multipleMin << "," << m_multipleMax << "}");
+			EDN_INFO("Parse node : SOL{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			return false;
 		};
 		
@@ -1113,7 +1114,7 @@ template<class CLASS_TYPE> class RegExpNodeSOL : public RegExpNode<CLASS_TYPE> {
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@SOL@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@SOL@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 
@@ -1151,7 +1152,7 @@ template<class CLASS_TYPE> class RegExpNodeEOL : public RegExpNode<CLASS_TYPE> {
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			EDN_INFO("Parse node : EOL{" << m_multipleMin << "," << m_multipleMax << "}");
+			EDN_INFO("Parse node : EOL{" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			return false;
 		};
 		
@@ -1162,7 +1163,7 @@ template<class CLASS_TYPE> class RegExpNodeEOL : public RegExpNode<CLASS_TYPE> {
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@EOL@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@EOL@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		};
 };
 
@@ -1173,6 +1174,8 @@ typedef struct {
 
 #undef __class__
 #define __class__	"RegExpNodePTheseElem"
+
+template<class CLASS_TYPE> class RegExpNodePThese;
 
 template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_TYPE> {
 	public :
@@ -1205,23 +1208,23 @@ template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_
 		 */
 		int32_t Generate(EdnVectorBin<int16_t> &data)
 		{
-			m_RegExpData = data;
-			//EDN_DEBUG("Request Parse (elem) data="; DisplayElem(m_RegExpData););
+			RegExpNode<CLASS_TYPE>::m_RegExpData = data;
+			//EDN_DEBUG("Request Parse (elem) data="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 		
 			int32_t pos = 0;
 			int32_t elementSize = 0;
 			EdnVectorBin<int16_t> tmpData;
-			while (pos < m_RegExpData.Size()) {
+			while (pos < RegExpNode<CLASS_TYPE>::m_RegExpData.Size()) {
 				tmpData.Clear();
-				switch (m_RegExpData[pos])
+				switch (RegExpNode<CLASS_TYPE>::m_RegExpData[pos])
 				{
 					case OPCODE_PTHESE_IN:
 						{
-							elementSize=GetLenOfPThese(m_RegExpData, pos);
+							elementSize=GetLenOfPThese(RegExpNode<CLASS_TYPE>::m_RegExpData, pos);
 							for (int32_t k=pos+1; k<pos+elementSize+1; k++) {
-								tmpData.PushBack(m_RegExpData[k]);
+								tmpData.PushBack(RegExpNode<CLASS_TYPE>::m_RegExpData[k]);
 							}
-							RegExpNodePThese<CLASS_TYPE> * myElem = new RegExpNodePThese();
+							RegExpNodePThese<CLASS_TYPE> * myElem = new RegExpNodePThese<CLASS_TYPE>();
 							(void)myElem->Generate(tmpData);
 							// add to the subnode list : 
 							m_subNode.PushBack(myElem);
@@ -1235,11 +1238,11 @@ template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_
 				
 					case OPCODE_BRACKET_IN:
 						{
-							elementSize=GetLenOfBracket(m_RegExpData, pos);
+							elementSize=GetLenOfBracket(RegExpNode<CLASS_TYPE>::m_RegExpData, pos);
 							for (int32_t k=pos+1; k<pos+elementSize+1; k++) {
-								tmpData.PushBack(m_RegExpData[k]);
+								tmpData.PushBack(RegExpNode<CLASS_TYPE>::m_RegExpData[k]);
 							}
-							RegExpNodeBracket<CLASS_TYPE> * myElem = new RegExpNodeBracket();
+							RegExpNodeBracket<CLASS_TYPE> * myElem = new RegExpNodeBracket<CLASS_TYPE>();
 							(void)myElem->Generate(tmpData);
 							// add to the subnode list : 
 							m_subNode.PushBack(myElem);
@@ -1253,9 +1256,9 @@ template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_
 				
 					case OPCODE_BRACE_IN:
 						{
-							elementSize=GetLenOfBrace(m_RegExpData, pos);
+							elementSize=GetLenOfBrace(RegExpNode<CLASS_TYPE>::m_RegExpData, pos);
 							for (int32_t k=pos+1; k<pos+elementSize+1; k++) {
-								tmpData.PushBack(m_RegExpData[k]);
+								tmpData.PushBack(RegExpNode<CLASS_TYPE>::m_RegExpData[k]);
 							}
 							int32_t min = 0;
 							int32_t max = 0;
@@ -1291,56 +1294,56 @@ template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_
 						return false;
 				
 					case OPCODE_DOT:
-						m_subNode.PushBack(new RegExpNodeDot());
+						m_subNode.PushBack(new RegExpNodeDot<CLASS_TYPE>());
 						break;
 				
 					case OPCODE_START_OF_LINE:
-						m_subNode.PushBack(new RegExpNodeSOL());
+						m_subNode.PushBack(new RegExpNodeSOL<CLASS_TYPE>());
 						break;
 				
 					case OPCODE_END_OF_LINE:
-						m_subNode.PushBack(new RegExpNodeEOL());
+						m_subNode.PushBack(new RegExpNodeEOL<CLASS_TYPE>());
 						break;
 				
 					case OPCODE_DIGIT:
-						m_subNode.PushBack(new RegExpNodeDigit());
+						m_subNode.PushBack(new RegExpNodeDigit<CLASS_TYPE>());
 						break;
 				
 					case OPCODE_DIGIT_NOT:
-						m_subNode.PushBack(new RegExpNodeDigitNot());
+						m_subNode.PushBack(new RegExpNodeDigitNot<CLASS_TYPE>());
 						break;
 				
 					case OPCODE_LETTER:
-						m_subNode.PushBack(new RegExpNodeLetter());
+						m_subNode.PushBack(new RegExpNodeLetter<CLASS_TYPE>());
 						break;
 				
 					case OPCODE_LETTER_NOT:
-						m_subNode.PushBack(new RegExpNodeLetterNot());
+						m_subNode.PushBack(new RegExpNodeLetterNot<CLASS_TYPE>());
 						break;
 				
 					case OPCODE_SPACE:
-						m_subNode.PushBack(new RegExpNodeWhiteSpace());
+						m_subNode.PushBack(new RegExpNodeWhiteSpace<CLASS_TYPE>());
 						break;
 				
 					case OPCODE_SPACE_NOT:
-						m_subNode.PushBack(new RegExpNodeWhiteSpaceNot());
+						m_subNode.PushBack(new RegExpNodeWhiteSpaceNot<CLASS_TYPE>());
 						break;
 				
 					case OPCODE_WORD:
-						m_subNode.PushBack(new RegExpNodeWordChar());
+						m_subNode.PushBack(new RegExpNodeWordChar<CLASS_TYPE>());
 						break;
 				
 					case OPCODE_WORD_NOT:
-						m_subNode.PushBack(new RegExpNodeWordCharNot());
+						m_subNode.PushBack(new RegExpNodeWordCharNot<CLASS_TYPE>());
 						break;
 		
 					default:
 						{
-							elementSize=GetLenOfNormal(m_RegExpData, pos);
+							elementSize=GetLenOfNormal(RegExpNode<CLASS_TYPE>::m_RegExpData, pos);
 							for (int32_t k=pos; k<pos+elementSize; k++) {
-								tmpData.PushBack(m_RegExpData[k]);
+								tmpData.PushBack(RegExpNode<CLASS_TYPE>::m_RegExpData[k]);
 							}
-							RegExpNodeValue * myElem = new RegExpNodeValue();
+							RegExpNodeValue<CLASS_TYPE> * myElem = new RegExpNodeValue<CLASS_TYPE>();
 							(void)myElem->Generate(tmpData);
 							// add to the subnode list : 
 							m_subNode.PushBack(myElem);
@@ -1362,7 +1365,7 @@ template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : (Elem){" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : (Elem){" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			// NOTE 1 : Must done only one time in EVERY case ...
 			// NOTE 2 : All element inside must be OK
 			if (0 == m_subNode.Size()) {
@@ -1389,7 +1392,7 @@ template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_
 		 */
 		void Display(int32_t level)
 		{
-			EDN_INFO("Find NODE : " << levelSpace(level) << "@(Elem)@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+			EDN_INFO("Find NODE : " << levelSpace(level) << "@(Elem)@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 			for(int32_t i=0; i<m_subNode.Size(); i++) {
 				m_subNode[i]->Display(level+1);
 			}
@@ -1413,7 +1416,7 @@ template<class CLASS_TYPE> class RegExpNodePTheseElem : public RegExpNode<CLASS_
 				EDN_ERROR("Set multiplicity on an inexistant element ....");
 				return false;
 			}
-			RegExpNode * myNode = m_subNode[m_subNode.Size()-1];
+			RegExpNode<CLASS_TYPE> * myNode = m_subNode[m_subNode.Size()-1];
 			if (NULL==myNode) {
 				EDN_ERROR("INTERNAL error ==> node not generated");
 				return false;
@@ -1455,25 +1458,25 @@ template<class CLASS_TYPE> class RegExpNodePThese : public RegExpNode<CLASS_TYPE
 		 */
 		int32_t Generate(EdnVectorBin<int16_t> &data)
 		{
-			m_RegExpData = data;
-			//EDN_DEBUG("Request Parse (...) data="; DisplayElem(m_RegExpData););
+			RegExpNode<CLASS_TYPE>::m_RegExpData = data;
+			//EDN_DEBUG("Request Parse (...) data="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 			//Find all the '|' in the string (and at the good level ...) 
 			int32_t pos = 0;
-			int32_t elementSize = GetLenOfPTheseElem(m_RegExpData, pos);
+			int32_t elementSize = GetLenOfPTheseElem(RegExpNode<CLASS_TYPE>::m_RegExpData, pos);
 			// generate all the "elemTypePTheseElem" of the Node
 			while (elementSize>0) {
 				// geerate output deta ...
 				EdnVectorBin<int16_t> tmpData;
 				for (int32_t k=pos; k<pos+elementSize; k++) {
-					tmpData.PushBack(m_RegExpData[k]);
+					tmpData.PushBack(RegExpNode<CLASS_TYPE>::m_RegExpData[k]);
 				}
-				RegExpNodePTheseElem<CLASS_TYPE> * myElem = new RegExpNodePTheseElem();
+				RegExpNodePTheseElem<CLASS_TYPE> * myElem = new RegExpNodePTheseElem<CLASS_TYPE>();
 				(void)myElem->Generate(tmpData);
 				// add to the subnode list : 
 				m_subNode.PushBack(myElem);
 				pos += elementSize+1;
 				//EDN_DEBUG("plop="; DisplayElem(data, pos, pos+1););
-				elementSize = GetLenOfPTheseElem(m_RegExpData, pos);
+				elementSize = GetLenOfPTheseElem(RegExpNode<CLASS_TYPE>::m_RegExpData, pos);
 				//EDN_DEBUG("find " << elementSize << " elements");
 			}
 			if (0 == pos && 0 == elementSize) {
@@ -1491,13 +1494,13 @@ template<class CLASS_TYPE> class RegExpNodePThese : public RegExpNode<CLASS_TYPE
 		bool Parse(CLASS_TYPE &data, int32_t currentPos, int32_t lenMax, int32_t &findLen)
 		{
 			findLen = 0;
-			//EDN_INFO("Parse node : (...){" << m_multipleMin << "," << m_multipleMax << "}");
+			//EDN_INFO("Parse node : (...){" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}");
 			if (0 == m_subNode.Size()) {
 				return false;
 			}
 			bool tmpFind = true;
 			int32_t j;
-			for (j=0; j<m_multipleMax && tmpFind == true ; j++) {
+			for (j=0; j<RegExpNode<CLASS_TYPE>::m_multipleMax && tmpFind == true ; j++) {
 				tmpFind = false;
 				for (int32_t i=0; i<m_subNode.Size(); i++) {
 					int32_t tmpFindLen;
@@ -1507,13 +1510,13 @@ template<class CLASS_TYPE> class RegExpNodePThese : public RegExpNode<CLASS_TYPE
 					}
 				}
 			}
-			if(		j>=m_multipleMin
-				&&	j<=m_multipleMax
+			if(		j>=RegExpNode<CLASS_TYPE>::m_multipleMin
+				&&	j<=RegExpNode<CLASS_TYPE>::m_multipleMax
 				&&	findLen>0	)
 			{
 				//EDN_DEBUG("find " << findLen);
 				return true;
-			} else if( 0 == m_multipleMin ) {
+			} else if( 0 == RegExpNode<CLASS_TYPE>::m_multipleMin ) {
 				//EDN_DEBUG("find size=0");
 				return true;
 			}
@@ -1528,9 +1531,9 @@ template<class CLASS_TYPE> class RegExpNodePThese : public RegExpNode<CLASS_TYPE
 		void Display(int32_t level)
 		{
 			if (-1 == level) {
-				EDN_INFO("regExp :"; DisplayElem(m_RegExpData););
+				EDN_INFO("regExp :"; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 			} else {
-				EDN_INFO("Find NODE : " << levelSpace(level) << "@(...)@ {" << m_multipleMin << "," << m_multipleMax << "}  subdata="; DisplayElem(m_RegExpData););
+				EDN_INFO("Find NODE : " << levelSpace(level) << "@(...)@ {" << RegExpNode<CLASS_TYPE>::m_multipleMin << "," << RegExpNode<CLASS_TYPE>::m_multipleMax << "}  subdata="; DisplayElem(RegExpNode<CLASS_TYPE>::m_RegExpData););
 				for(int32_t i=0; i<m_subNode.Size(); i++) {
 					m_subNode[i]->Display(level+1);
 				}
@@ -1623,7 +1626,7 @@ template<class CLASS_TYPE> class EdnRegExp {
 		 * @param[in,out] 
 		 * @return
 		 */
-		void SetRegExp(Edn::String &exp)
+		void SetRegExp(Edn::String &expressionRequested)
 		{
 			m_expressionRequested = expressionRequested;		// TODO : Must be deprecated ...
 			EdnVectorBin<int16_t> tmpExp;
