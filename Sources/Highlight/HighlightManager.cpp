@@ -99,6 +99,11 @@ void HighlightManager::loadLanguages(void)
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.push_back(myHightline);
 	
+	xmlFilename = homedir;
+	xmlFilename += "data/lang_php.xml";
+	myHightline = new Highlight(xmlFilename);
+	listHighlight.push_back(myHightline);
+	
 	myHightline->Display();
 }
 
