@@ -65,10 +65,10 @@
 namespace Edn
 {
 
-template<class T, int32_t INC=0> class Vector:
+template<class T, int32_t INC=0> class Vector
 {
 	public:
-		class Iterator:
+		class Iterator
 		{
 			// Private data : 
 			private:
@@ -207,13 +207,13 @@ template<class T, int32_t INC=0> class Vector:
 				 * @return ---
 				 *
 				 */
-				Iterator(EdnVector<T> * EdnVector, int pos):
+				Iterator(Edn::Vector<T> * myVector, int pos):
 					m_current(pos),
-					m_EdnVector(EdnVector)
+					m_Vector(myVector)
 				{
 					// nothing to do ...
 				}
-				friend class EdnVector;
+				friend class Edn::Vector<T>;
 		};
 
 	/**
@@ -224,7 +224,7 @@ template<class T, int32_t INC=0> class Vector:
 	 * @return ---
 	 *
 	 */
-	EdnVector(int count = 0):
+	Vector(int count = 0):
 		m_data(NULL),
 		m_count(0),
 		m_size(0)
@@ -240,15 +240,15 @@ template<class T, int32_t INC=0> class Vector:
 	 * @return ---
 	 *
 	 */
-	EdnVector(const EdnVector<T> & EdnVector):
-		m_size(EdnVector.m_size),
-		m_count(EdnVector.m_count),
+	Vector(const Edn::Vector<T> & myVector):
+		m_size(myVector.m_size),
+		m_count(myVector.m_count),
 		m_data(NULL)
 	{
 		int32_t i;
 		EDN_MALLOC_CAST(m_data, m_size, T, reinterpret_cast<T*>);
 		for(i=0; i<m_count; i++) {
-			new (&m_data[i]) T(EdnVector[i]);
+			new (&m_data[i]) T(myVector[i]);
 		}
 	}
 	
@@ -260,7 +260,7 @@ template<class T, int32_t INC=0> class Vector:
 	 * @return ---
 	 *
 	 */
-	~EdnVector()
+	~Vector()
 	{
 		Destroy();
 	}
@@ -273,7 +273,7 @@ template<class T, int32_t INC=0> class Vector:
 	 * @return ---
 	 *
 	 */
-	EdnVector& operator=(const EdnVector<T> & EdnVector)
+	Vector& operator=(const Edn::Vector<T> & EdnVector)
 	{
 		int32_t i;
 		this->~EdnVector(); 

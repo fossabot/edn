@@ -26,7 +26,7 @@
 
 #include "tools_debug.h"
 #include "toolsMemory.h"
-#include "Vector.h"
+//#include "Vector.h"   // TODO : Set the vector of edn enable
 #include "VectorType.h"
 
 
