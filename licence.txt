@@ -21,7 +21,6 @@ You can NOT:
 	- Add malware in the Sources.
 	- Do something bad with the sources.
 	- Use it to travel in the space with a toaster.
-	- Write Java sources code with this software.
 
-I reserve the right to change this licence. If it change the version of the copy you have keep its own license
+I reserve the right to change this license. If it change the version of the copy you have keep its own license
 

@@ -18,7 +18,6 @@
 
 # action a faire (ordonner) :
 	- sys : la methode de close est mauvaise...
-	- gui : Goto line (need only the gui)
 	- ctags : Back simple et multiple
 	- ctags : Multiple files
 	- sys : search complet, replace complet
