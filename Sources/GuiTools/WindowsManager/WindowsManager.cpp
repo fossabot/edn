@@ -156,7 +156,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 		case EDN_MSG__GUI_SHOW_ABOUT:
 			{
 				// dlg to confirm the quit event : 
-				GtkWidget *myDialog = gtk_dialog_new_with_buttons("About",
+				GtkWidget *myDialog = gtk_dialog_new_with_buttons("Goto Line",
 				                                                  NULL,
 				                                                  GTK_DIALOG_MODAL,
 				                                                  GTK_STOCK_QUIT, GTK_RESPONSE_NO,
@@ -203,6 +203,44 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				}
 			}
 			break;
-			
+		case EDN_MSG__GUI_SHOW_GOTO_LINE:
+			{
+				// dlg to confirm the quit event : 
+				GtkWidget *myDialog = gtk_dialog_new_with_buttons("About",
+				                                                  GTK_WINDOW(m_mainWindow->GetWidget()),
+				                                                  GTK_DIALOG_MODAL,
+				                                                  "Jump", GTK_RESPONSE_YES,
+				                                                  GTK_STOCK_QUIT, GTK_RESPONSE_NO,
+				                                                  NULL);
+				// Set over main windows
+				gtk_window_set_transient_for(GTK_WINDOW(myDialog), GTK_WINDOW(m_mainWindow->GetWidget()));
+				// add writting area
+				GtkWidget *myContentArea = gtk_dialog_get_content_area( GTK_DIALOG(myDialog));
+				GtkWidget *myEntry =  gtk_entry_new();
+				gtk_box_pack_start(GTK_BOX(myContentArea), myEntry, TRUE, TRUE, 0);
+				// Display it
+				gtk_widget_show_all(myContentArea);
+				int32_t result = gtk_dialog_run (GTK_DIALOG (myDialog));
+				// Get data from the gtk entry
+				const char *myData = gtk_entry_get_text(GTK_ENTRY(myEntry));
+				if (NULL != myData) {
+					int32_t lineID=0;
+					if (1==sscanf(myData, "%d",&lineID)) {
+						EDN_DEBUG("find in : \"" << myData << "\" = " << lineID);
+						if(GTK_RESPONSE_YES == result) {
+							SendMessage(EDN_MSG__CURRENT_GOTO_LINE, lineID-1);
+						}
+					} else {
+						if (GTK_RESPONSE_YES == result) {
+							EDN_WARNING("find in : \"" << myData << "\" line Number is not correct ");
+						}
+					}
+				} else {
+					EDN_DEBUG("no line Writen ...");
+				}
+				// Remove dialogue
+				gtk_widget_destroy(myDialog);
+			}
+			break;
 	}
 }

@@ -224,6 +224,8 @@ MenuBar::MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI)
 		tmp->AddSeparator();
 		tmp->AddGen(GTK_STOCK_SELECT_ALL,          "ctrl+a",       EDN_MSG__CURRENT_SELECT_ALL, true);
 		tmp->AddGen("Unselect",                    "ctrl+shift+a", EDN_MSG__CURRENT_UN_SELECT, true);
+		tmp->AddSeparator();
+		tmp->AddGen("Goto Line number ...",        "ctrl+l",       EDN_MSG__GUI_SHOW_GOTO_LINE, true);
 //		tmp->AddSeparator();
 //		tmp->AddGen(GTK_STOCK_PREFERENCES,         NULL,           EDN_MSG__GUI_SHOW_PREFERENCE, true);
 	m_listMenu.PushBack(tmp);
