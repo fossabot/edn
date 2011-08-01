@@ -290,11 +290,11 @@ install: .encadrer .versionFile $(OUTPUT_NAME_RELEASE)
 	@echo $(F_ROUGE)"          (stripped) $(OUTPUT_NAME_RELEASE) => $(PROG_NAME) "$(F_NORMALE)
 	@cp $(OUTPUT_NAME_RELEASE) $(PROG_NAME)
 	@strip -s $(PROG_NAME)
-	@echo $(F_VERT)"          (copy) $(PROG_NAME) ~/.bin/ "$(F_NORMALE)
-	@cp -vf $(PROG_NAME) ~/.bin/
-	@echo $(F_VERT)"          (data) data/* ==> ~/.edn/data/ "$(F_NORMALE)
-	@mkdir -p ~/.edn/data
-	@cp -vf data/*.xml ~/.edn/data
+	@echo $(F_VERT)"          (copy) $(PROG_NAME) /usr/bin/ "$(F_NORMALE)
+	@cp -vf $(PROG_NAME) /usr/bin/
+	@echo $(F_VERT)"          (data) data/* ==> /usr/share/edn/ "$(F_NORMALE)
+	@mkdir -p /usr/share/edn/
+	@cp -vf data/*.xml /usr/share/edn/
 
 
 

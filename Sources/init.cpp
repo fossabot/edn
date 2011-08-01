@@ -80,13 +80,13 @@ int main (int argc, char *argv[])
 	ColorizeManager *myColorManager = NULL;
 	myColorManager = ColorizeManager::getInstance();
 	Edn::String homedir;
+	//homedir = getenv("HOME");
 #ifdef NDEBUG
-	homedir = getenv("HOME");
-	homedir += "/.edn/";
+	homedir = "/usr/share/edn/";
 #else
-	homedir = "./";
+	homedir = "./data/";
 #endif
-	homedir += "data/color_black.xml";
+	homedir += "color_black.xml";
 	myColorManager->LoadFile( homedir.c_str() );
 	myColorManager->DisplayListOfColor();
 	

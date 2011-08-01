@@ -68,39 +68,38 @@ void HighlightManager::loadLanguages(void)
 {
 	Edn::String homedir;
 #ifdef NDEBUG
-	homedir = getenv("HOME");
-	homedir += "/.edn/";
+	homedir = "/usr/share/edn/";
 #else
-	homedir = "./";
+	homedir = "./data/";
 #endif
 
 	Edn::String xmlFilename = homedir;
-	xmlFilename += "data/lang_c.xml";
+	xmlFilename += "lang_c.xml";
 	Highlight *myHightline = new Highlight(xmlFilename);
 	listHighlight.push_back(myHightline);
 	
 	xmlFilename = homedir;
-	xmlFilename += "data/lang_boo.xml";
+	xmlFilename += "lang_boo.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.push_back(myHightline);
 	
 	xmlFilename = homedir;
-	xmlFilename += "data/lang_Makefile.xml";
+	xmlFilename += "lang_Makefile.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.push_back(myHightline);
 	
 	xmlFilename = homedir;
-	xmlFilename += "data/lang_asm.xml";
+	xmlFilename += "lang_asm.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.push_back(myHightline);
 	
 	xmlFilename = homedir;
-	xmlFilename += "data/lang_xml.xml";
+	xmlFilename += "lang_xml.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.push_back(myHightline);
 	
 	xmlFilename = homedir;
-	xmlFilename += "data/lang_php.xml";
+	xmlFilename += "lang_php.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.push_back(myHightline);
 	
