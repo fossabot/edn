@@ -99,10 +99,8 @@ void CTagsManager::OnMessage(int32_t id, int32_t dataID)
 			{
 				GtkWidget *dialog = gtk_file_chooser_dialog_new( "Open Exuberant Ctags File", NULL,
 				                                                 GTK_FILE_CHOOSER_ACTION_OPEN,
-				                                                 GTK_STOCK_CANCEL, // button text
-				                                                 GTK_RESPONSE_CANCEL, // response id
-				                                                 GTK_STOCK_OPEN, // button text
-				                                                 GTK_RESPONSE_ACCEPT, // response id
+				                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+				                                                 GTK_STOCK_OPEN,   GTK_RESPONSE_ACCEPT,
 				                                                 NULL); // end button/response list
 				if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 				{
@@ -167,9 +165,108 @@ void CTagsManager::AddToHistory(int32_t bufferID)
 	
 }
 
+enum
+{
+	CTAGS_COL_FILE = 0,
+	CTAGS_COL_REGEXP,
+	CTAGS_NUM_COLS
+};
+
+static GtkTreeModel * create_and_fill_model(void)
+{
+	GtkListStore *   store;
+	GtkTreeIter      iter;
+	
+	store = gtk_list_store_new(CTAGS_NUM_COLS, G_TYPE_STRING, G_TYPE_STRING);
+	
+	// Append a row and fill in some data
+	gtk_list_store_append(store, &iter);
+	gtk_list_store_set(store, &iter,
+	                   CTAGS_COL_FILE, "file1.c",
+	                   CTAGS_COL_REGEXP, "void function1(void);",
+	                   -1);
+	
+	gtk_list_store_append(store, &iter);
+	gtk_list_store_set(store, &iter,
+	                   CTAGS_COL_FILE, "file2.c",
+	                   CTAGS_COL_REGEXP, "void function2(void);",
+	                   -1);
+	
+	gtk_list_store_append(store, &iter);
+	gtk_list_store_set(store, &iter,
+	                   CTAGS_COL_FILE, "file3.c",
+	                   CTAGS_COL_REGEXP, "void function3(void);",
+	                   -1);
+	
+	return GTK_TREE_MODEL(store);
+}
+
+static GtkWidget * create_view_and_model(void)
+{
+	GtkCellRenderer *   renderer;
+	GtkTreeModel *      model;
+	GtkWidget *         view;
+	
+	view = gtk_tree_view_new();
+	
+	// Column 1
+	renderer = gtk_cell_renderer_text_new();
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW (view),
+	                                            -1,
+	                                            "File",
+	                                            renderer,
+	                                            "text", CTAGS_COL_FILE,
+	                                            NULL);
+	
+	// Column 2
+	renderer = gtk_cell_renderer_text_new();
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW (view),
+	                                            -1,
+	                                            "Regular Expression",
+	                                            renderer,
+	                                            "text", CTAGS_COL_REGEXP,
+	                                            NULL);
+	
+	model = create_and_fill_model();
+	
+	gtk_tree_view_set_model(GTK_TREE_VIEW (view), model);
+	
+	g_object_unref(model);
+	
+	return view;
+}
+
+
+
+
+
+void CTagsManager::MultipleJump(void)
+{
+	// dlg to confirm the quit event : 
+	GtkWidget *myDialog = gtk_dialog_new_with_buttons("C-Tags jump...",
+	                                                  NULL,
+	                                                  GTK_DIALOG_MODAL,
+	                                                  "Jump", GTK_RESPONSE_YES,
+	                                                  GTK_STOCK_QUIT, GTK_RESPONSE_NO,
+	                                                  NULL);
+	// Set over main windows
+	//gtk_window_set_transient_for(GTK_WINDOW(myDialog), GTK_WINDOW(m_mainWindow->GetWidget()));
+	// add writting area
+	GtkWidget *myContentArea = gtk_dialog_get_content_area( GTK_DIALOG(myDialog));
+	GtkWidget *listView = create_view_and_model ();
+	gtk_box_pack_start(GTK_BOX(myContentArea), listView, TRUE, TRUE, 0);
+	// Display it
+	gtk_widget_show_all(myContentArea);
+	int32_t result = gtk_dialog_run (GTK_DIALOG (myDialog));
+	// Get data from the gtk entry
+	
+	// Remove dialogue
+	gtk_widget_destroy(myDialog);
+}
 
 void CTagsManager::JumpTo(void)
 {
+	MultipleJump();
 	if (NULL != m_ctagFile) {
 		Edn::VectorType<int8_t> data;
 		// get the middle button of the clipboard ==> represent the current selection ...

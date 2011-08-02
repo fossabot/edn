@@ -156,7 +156,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 		case EDN_MSG__GUI_SHOW_ABOUT:
 			{
 				// dlg to confirm the quit event : 
-				GtkWidget *myDialog = gtk_dialog_new_with_buttons("Goto Line",
+				GtkWidget *myDialog = gtk_dialog_new_with_buttons("About",
 				                                                  NULL,
 				                                                  GTK_DIALOG_MODAL,
 				                                                  GTK_STOCK_QUIT, GTK_RESPONSE_NO,
@@ -206,7 +206,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 		case EDN_MSG__GUI_SHOW_GOTO_LINE:
 			{
 				// dlg to confirm the quit event : 
-				GtkWidget *myDialog = gtk_dialog_new_with_buttons("About",
+				GtkWidget *myDialog = gtk_dialog_new_with_buttons("Goto Line",
 				                                                  GTK_WINDOW(m_mainWindow->GetWidget()),
 				                                                  GTK_DIALOG_MODAL,
 				                                                  "Jump", GTK_RESPONSE_YES,

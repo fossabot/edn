@@ -47,6 +47,7 @@ class CTagsManager: public Singleton<CTagsManager>, public MsgBroadcast
 	private:
 		int32_t                    m_currentSelectedID;
 		void                       LoadTagFile(void);
+		void                       MultipleJump(void);
 		void                       JumpTo(void);
 		void                       PrintTag(const tagEntry *entry);
 		Edn::String                GetFolder(Edn::String &inputString);

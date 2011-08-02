@@ -28,11 +28,14 @@
 #include "tools_globals.h"
 #include "Edn.h"
 
+#define MAX_FILE_NAME      (10240)
+
 Edn::File::File(Edn::String &filename, int32_t LineNumber)
 {
 	m_lineNumberOpen = 0;
 	SetCompleateName(filename);
 }
+
 
 Edn::File::File(Edn::String &filename, Edn::String &folder, int32_t lineNumber)
 {
@@ -105,7 +108,17 @@ Edn::String Edn::File::GetCompleateName(void)
 
 void Edn::File::SetCompleateName(Edn::String &newFilename)
 {
-	
+	char buf[MAX_FILE_NAME];
+	memset(buf, 0, MAX_FILE_NAME);
+	char * ok;
+	// Get the real Path of the current File
+	ok = realpath(newFilename.c_str(), buf);
+	if (!ok) {
+		EDN_ERROR("Can not find real name of \"" << newFilename.c_str() << "\"");
+	} else {
+		EDN_DEBUG("file : \"" << newFilename.c_str() << "\" done:\"" << buf << "\" ");
+		
+	}
 }
 
 int32_t Edn::File::GetLineNumber(void)

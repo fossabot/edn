@@ -117,6 +117,7 @@ int main (int argc, char *argv[])
 			myfile+="/";
 		}
 		myfile+=(char *)argv[i];
+
 		if (false == myBufferManager->Exist(myfile) ) {
 			int32_t idBuffOpened = myBufferManager->Open(myfile);
 			if (1==i) {
