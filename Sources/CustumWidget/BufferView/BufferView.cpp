@@ -289,13 +289,12 @@ void BufferView::ViewPopupMenu(GtkWidget *parrent, GdkEventButton *event, int32_
 		if (true == m_bufferManager->Get(m_contectMenuSelectID)->HaveName()) {
 			if (true == m_bufferManager->Get(m_contectMenuSelectID)->IsModify()) {
 				menuitem = gtk_menu_item_new_with_label("Save");
-				g_signal_connect(G_OBJECT(menuitem),     "activate",     G_CALLBACK(OnPopupEventSave),     this);
 			} else {
 				menuitem = gtk_menu_item_new_with_label("Force Save");
-				g_signal_connect(G_OBJECT(menuitem),     "activate",     G_CALLBACK(OnPopupEventSave),     this);
 			}
+			g_signal_connect(G_OBJECT(menuitem),     "activate",     G_CALLBACK(OnPopupEventSave),     this);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 		}
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 		menuitem = gtk_menu_item_new_with_label("Save As ...");
 		g_signal_connect(    G_OBJECT(menuitem),     "activate",     G_CALLBACK(OnPopupEventSaveAs),   this);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
@@ -360,18 +359,6 @@ gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, g
 			int32_t selectBuf = self->m_bufferManager->WitchBuffer((event->y / fontHeight) + 1);
 			if ( 0 <= selectBuf) {
 				self->ViewPopupMenu(widget, event, selectBuf);
-				/* old methode ==> must not be remove ==> create to generate better menu...
-				// TODO : Find a simple methode
-				int32_t windowsPosX, windowsPosY;
-				gtk_window_get_position(GTK_WINDOW(gtk_widget_get_toplevel(widget)), &windowsPosX, &windowsPosY);
-				//EDN_INFO("windowsPosX=" << windowsPosX << " windowsPosY=" << windowsPosY);
-				int32_t widgetPosX, widgetPosY;
-				gtk_widget_translate_coordinates(widget, gtk_widget_get_toplevel(widget), 0, 0, &widgetPosX, &widgetPosY);
-				//EDN_INFO("widgetPosX=" << widgetPosX << " widgetPosY=" << widgetPosY);
-				self->m_menuContext->Show(self->m_shawableAreaX+2+widgetPosX+windowsPosX, ((int32_t)(event->y / fontHeight)*fontHeight)+(fontHeight/2)+widgetPosY+windowsPosY, false);
-				*/
-			} else {
-				//self->m_menuContext->Hide();
 			}
 		}
 	} else {
