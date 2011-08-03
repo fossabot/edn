@@ -111,13 +111,32 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 	char buf[MAX_FILE_NAME];
 	memset(buf, 0, MAX_FILE_NAME);
 	char * ok;
-	// Get the real Path of the current File
-	ok = realpath(newFilename.c_str(), buf);
-	if (!ok) {
-		EDN_ERROR("Can not find real name of \"" << newFilename.c_str() << "\"");
+	Edn::String destFilename;
+	if (newFilename.Size() == 0) {
+		destFilename = "no-name";
 	} else {
-		EDN_DEBUG("file : \"" << newFilename.c_str() << "\" done:\"" << buf << "\" ");
-		
+		destFilename = newFilename;
+	}
+	if ('/' != *destFilename.c_str()) {
+		// Get the command came from the running of the program : 
+		char cCurrentPath[FILENAME_MAX];
+		if (!getcwd(cCurrentPath, FILENAME_MAX)) {
+			return;
+		}
+		cCurrentPath[FILENAME_MAX - 1] = '\0';
+		Edn::String tmpFilename = destFilename;
+		destFilename = cCurrentPath;
+		destFilename += '/';
+		destFilename += tmpFilename;
+	} 
+	
+	// Get the real Path of the current File
+	ok = realpath(destFilename.c_str(), buf);
+	if (!ok) {
+		EDN_ERROR("Can not find real name of \"" << destFilename.c_str() << "\"");
+	} else {
+		EDN_DEBUG("file : \"" << destFilename.c_str() << "\" done:\"" << buf << "\" ");
+		// TODO : try again with no name
 	}
 }
 

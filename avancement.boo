@@ -17,7 +17,8 @@
 		- Project manager phase 1
 
 # action a faire (ordonner) :
-	- sys : la methode de close est mauvaise...
+	- HL : Parsing caracter/caractère et plus section par section ...
+	- sys : real filename ...
 	- ctags : Back simple et multiple
 	- ctags : Multiple files
 	- sys : search complet, replace complet
@@ -36,7 +37,6 @@
 	- gui : ascenceur quand nécessaire
 	- gui : Demander la création de nouveaux fichier quand il n'existe pas (a l'ouverture en ligne de commande)
 	- Catch Shift+TAB
-	- Correction du bug de display quand on vas vers la fin, et mise en place d'un display qui met toujours le meme temps
 	- Correction du bug des entré bizard tel que les chapot et les guillemets
 	- gui : Parameters : et en autre la taille de la police ... et voir pour la récupérer sur le system... et ce serait cool...
 	- PB de copier coller sur les éà ...
