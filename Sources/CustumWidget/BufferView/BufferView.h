@@ -55,9 +55,14 @@ class BufferView : public MsgBroadcast
 		static gint		CB_mouseMotionEvent( GtkWidget *widget, GdkEventMotion *event, gpointer data);
 		static void		CB_EventOnBufferManager(gpointer data);
 
+		static void     OnPopupEventShow(GtkWidget *menuitem, gpointer data);
+		static void     OnPopupEventClose(GtkWidget *menuitem, gpointer data);
+		static void     OnPopupEventSave(GtkWidget *menuitem, gpointer data);
+		static void     OnPopupEventSaveAs(GtkWidget *menuitem, gpointer data);
 	
 	
 	private:
+		void        ViewPopupMenu(GtkWidget *parrent, GdkEventButton *event, int32_t BufferID);
 		// main windows widget : 
 		GtkWidget *           m_widget;
 		// récupération des proprieter général...
@@ -67,6 +72,7 @@ class BufferView : public MsgBroadcast
 		int32_t               m_shawableAreaX;
 		int32_t               m_shawableAreaY;
 		int32_t               m_selectedID;
+		int32_t               m_contectMenuSelectID;
 };
 
 

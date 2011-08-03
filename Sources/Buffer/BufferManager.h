@@ -31,8 +31,6 @@
 #include "BufferEmpty.h"
 #include "Singleton.h"
 #include "MsgBroadcast.h"
-#include <vector>
-#include <string>
 
 class BufferManager: public Singleton<BufferManager>, public MsgBroadcast
 {
@@ -65,7 +63,7 @@ class BufferManager: public Singleton<BufferManager>, public MsgBroadcast
 
 	private:
 		
-		std::vector<Buffer*> listBuffer;						//!< element List of the char Elements
+		Edn::VectorType<Buffer*> listBuffer;						//!< element List of the char Elements
 		
 		void	RemoveAll(void);						//!< remove all buffer
 		int32_t m_idSelected;

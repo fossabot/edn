@@ -105,11 +105,7 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
 			break;
 		case EDN_MSG__CURRENT_SAVE:
-			if (m_bufferManager->Get(m_bufferID)->HaveName() == false) {
-				SendMessage(EDN_MSG__GUI_SHOW_SAVE_AS, m_bufferID);
-			} else {
-				m_bufferManager->Get(m_bufferID)->Save();
-			}
+			SendMessage(EDN_MSG__BUFF_ID_SAVE, m_bufferID);
 			break;
 		case EDN_MSG__CURRENT_SAVE_AS:
 			SendMessage(EDN_MSG__GUI_SHOW_SAVE_AS, m_bufferID);
@@ -165,9 +161,7 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 		case EDN_MSG__CURRENT_REPLACE_ALL:
 			break;
 		case EDN_MSG__CURRENT_CLOSE:
-			m_bufferManager->Remove(m_bufferID);
-			m_bufferID = -1;
-			SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
+			SendMessage(EDN_MSG__BUFF_ID_CLOSE, m_bufferID);
 			break;
 		case EDN_MSG__CURRENT_UNDO:
 			m_bufferManager->Get(m_bufferID)->Undo();

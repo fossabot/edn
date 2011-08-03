@@ -188,7 +188,7 @@ gboolean BufferView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, g
 
 
 
-// sur : Ã©mis lors du premier affichage de la GtkDrawingArea
+// sur : émis lors du premier affichage de la GtkDrawingArea
 gboolean BufferView::CB_displayInit( GtkWidget *widget, gpointer data)
 {
 	BufferView * self = reinterpret_cast<BufferView*>(data);
@@ -245,10 +245,75 @@ gint BufferView::CB_keyboardEvent(	GtkWidget *widget, GdkEventKey *event, gpoint
 	//BufferView * self = reinterpret_cast<BufferView*>(data);
 	
 	if(event->type == GDK_KEY_PRESS) {
-		gtk_widget_queue_draw( widget );
+	gtk_widget_queue_draw( widget );
 	}
 	return true;
 }
+
+
+void BufferView::OnPopupEventShow(GtkWidget *menuitem, gpointer data)
+{
+	BufferView * self = reinterpret_cast<BufferView*>(data);
+	self->SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, self->m_contectMenuSelectID);
+}
+
+void BufferView::OnPopupEventClose(GtkWidget *menuitem, gpointer data)
+{
+	BufferView * self = reinterpret_cast<BufferView*>(data);
+	self->SendMessage(EDN_MSG__BUFF_ID_CLOSE, self->m_contectMenuSelectID);
+}
+
+void BufferView::OnPopupEventSave(GtkWidget *menuitem, gpointer data)
+{
+	BufferView * self = reinterpret_cast<BufferView*>(data);
+	self->SendMessage(EDN_MSG__BUFF_ID_SAVE, self->m_contectMenuSelectID);
+}
+
+void BufferView::OnPopupEventSaveAs(GtkWidget *menuitem, gpointer data)
+{
+	BufferView * self = reinterpret_cast<BufferView*>(data);
+	self->SendMessage(EDN_MSG__GUI_SHOW_SAVE_AS, self->m_contectMenuSelectID);
+}
+
+
+void BufferView::ViewPopupMenu(GtkWidget *parrent, GdkEventButton *event, int32_t BufferID)
+{
+	// Save the slected buffer
+	m_contectMenuSelectID = BufferID;
+	if (m_bufferManager->Exist(m_contectMenuSelectID)) {
+		GtkWidget *menu, *menuitem;
+		menu = gtk_menu_new();
+		menuitem = gtk_menu_item_new_with_label("Show");
+		g_signal_connect(    G_OBJECT(menuitem),     "activate",     G_CALLBACK(OnPopupEventShow),     this);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+		if (true == m_bufferManager->Get(m_contectMenuSelectID)->HaveName()) {
+			if (true == m_bufferManager->Get(m_contectMenuSelectID)->IsModify()) {
+				menuitem = gtk_menu_item_new_with_label("Save");
+				g_signal_connect(G_OBJECT(menuitem),     "activate",     G_CALLBACK(OnPopupEventSave),     this);
+			} else {
+				menuitem = gtk_menu_item_new_with_label("Force Save");
+				g_signal_connect(G_OBJECT(menuitem),     "activate",     G_CALLBACK(OnPopupEventSave),     this);
+			}
+		}
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+		menuitem = gtk_menu_item_new_with_label("Save As ...");
+		g_signal_connect(    G_OBJECT(menuitem),     "activate",     G_CALLBACK(OnPopupEventSaveAs),   this);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+		menuitem = gtk_menu_item_new_with_label("Close");
+		g_signal_connect(    G_OBJECT(menuitem),     "activate",     G_CALLBACK(OnPopupEventClose),    this);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+		gtk_widget_show_all(menu);
+		// Note: event can be NULL here when called from view_onPopupMenu; 
+		// gdk_event_get_time() accepts a NULL argument
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,
+		               (event != NULL) ? event->button : 0,
+		               gdk_event_get_time((GdkEvent*)event));
+	} else {
+		EDN_ERROR("Buffer does not Exist !!! " << m_contectMenuSelectID);
+	}
+}
+
+
 
 
 gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, gpointer data)
@@ -294,6 +359,8 @@ gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, g
 			uint32_t fontHeight = Display::GetFontHeight();
 			int32_t selectBuf = self->m_bufferManager->WitchBuffer((event->y / fontHeight) + 1);
 			if ( 0 <= selectBuf) {
+				self->ViewPopupMenu(widget, event, selectBuf);
+				/* old methode ==> must not be remove ==> create to generate better menu...
 				// TODO : Find a simple methode
 				int32_t windowsPosX, windowsPosY;
 				gtk_window_get_position(GTK_WINDOW(gtk_widget_get_toplevel(widget)), &windowsPosX, &windowsPosY);
@@ -302,8 +369,9 @@ gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, g
 				gtk_widget_translate_coordinates(widget, gtk_widget_get_toplevel(widget), 0, 0, &widgetPosX, &widgetPosY);
 				//EDN_INFO("widgetPosX=" << widgetPosX << " widgetPosY=" << widgetPosY);
 				self->m_menuContext->Show(self->m_shawableAreaX+2+widgetPosX+windowsPosX, ((int32_t)(event->y / fontHeight)*fontHeight)+(fontHeight/2)+widgetPosY+windowsPosY, false);
+				*/
 			} else {
-				self->m_menuContext->Hide();
+				//self->m_menuContext->Hide();
 			}
 		}
 	} else {

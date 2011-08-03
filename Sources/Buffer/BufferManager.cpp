@@ -62,8 +62,8 @@ BufferManager::~BufferManager(void)
 	EDN_INFO("~BufferManager::RemoveAll();");
 	RemoveAll();
 	// clear The list of Buffer
-	EDN_INFO("~BufferManager::listBuffer.clear();");
-	listBuffer.clear();
+	EDN_INFO("~BufferManager::listBuffer.Clear();");
+	listBuffer.Clear();
 	EDN_INFO("~BufferManager::delete(BufferNotExiste);");
 	delete(BufferNotExiste);
 }
@@ -73,11 +73,57 @@ void BufferManager::OnMessage(int32_t id, int32_t dataID)
 {
 	switch (id)
 	{
+		case EDN_MSG__BUFFER_CHANGE_CURRENT:
+			m_idSelected = dataID;
+			break;
 		case EDN_MSG__NEW:
 			{
 				int32_t newOne = Create();
 				if (-1 != newOne) {
 					SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, newOne);
+				}
+			}
+			break;
+		case EDN_MSG__BUFF_ID_CLOSE:
+			// Check buffer existence
+			if(true == Exist(dataID)) {
+				// Get the new display buffer 
+				if (m_idSelected == dataID) {
+					// Try previous buffer
+					int32_t destBuffer = -1;
+					for(int32_t ii=dataID-1; ii >= 0; ii--) {
+						if (true == Exist(ii) ) {
+							destBuffer = ii;
+							break;
+						}
+					}
+					//EDN_DEBUG("new buffer selected : ?? " << destBuffer);
+					// try next buffer
+					if (-1 == destBuffer) {
+						for(int32_t ii=dataID+1; ii < listBuffer.Size(); ii++) {
+							if (true == Exist(ii) ) {
+								destBuffer = ii;
+								break;
+							}
+						}
+					}
+					//EDN_DEBUG("new buffer selected : ?? " << destBuffer);
+					// set it to the currect display
+					SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, destBuffer);
+				}
+				//EDN_DEBUG("Remove : " << dataID);
+				// Remove requested buffer
+				Remove(dataID);
+			}
+			break;
+		case EDN_MSG__BUFF_ID_SAVE:
+			// Check buffer existence
+			if(true == Exist(dataID)) {
+				// If no name ==> request a Gui display ...
+				if (Get(dataID)->HaveName() == false) {
+					SendMessage(EDN_MSG__GUI_SHOW_SAVE_AS, dataID);
+				} else {
+					Get(dataID)->Save();
 				}
 			}
 			break;
@@ -101,7 +147,7 @@ void BufferManager::OnMessage(int32_t id, int32_t dataID)
 void BufferManager::RemoveAll(void)
 {
 	int32_t i;
-	for (i=0; i<(int32_t)listBuffer.size(); i++) {
+	for (i=0; i<listBuffer.Size(); i++) {
 		Remove(i);
 	}
 	SendMessage(EDN_MSG__BUFFER_REMOVE_ALL);
@@ -122,8 +168,8 @@ int32_t	BufferManager::Create(void)
 	// allocate a new Buffer
 	Buffer *myBuffer = new BufferText();
 	// Add at the list of element
-	listBuffer.push_back(myBuffer);
-	int32_t basicID = (int32_t)listBuffer.size() - 1;
+	listBuffer.PushBack(myBuffer);
+	int32_t basicID = listBuffer.Size() - 1;
 	SendMessage(EDN_MSG__BUFFER_ADD, basicID);
 	return basicID;
 }
@@ -144,8 +190,8 @@ int32_t BufferManager::Open(Edn::String &filename)
 	// allocate a new Buffer
 	Buffer *myBuffer = new BufferText(filename);
 	// Add at the list of element
-	listBuffer.push_back(myBuffer);
-	int32_t basicID = (int32_t)listBuffer.size() - 1;
+	listBuffer.PushBack(myBuffer);
+	int32_t basicID = listBuffer.Size() - 1;
 	SendMessage(EDN_MSG__BUFFER_ADD, basicID);
 	return basicID;
 }
@@ -159,7 +205,7 @@ Buffer * BufferManager::Get(int32_t BufferID)
 		return BufferNotExiste;
 	}
 	// check if the Buffer existed
-	if (BufferID < (int32_t)listBuffer.size()) {
+	if (BufferID < listBuffer.Size()) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[BufferID]) {
 			return listBuffer[BufferID];
@@ -167,7 +213,7 @@ Buffer * BufferManager::Get(int32_t BufferID)
 			EDN_ERROR("non existing Buffer " << BufferID);
 		}
 	} else {
-		EDN_ERROR("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.size());
+		EDN_ERROR("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.Size());
 	}
 	return BufferNotExiste;
 }
@@ -179,7 +225,7 @@ bool BufferManager::Exist(int32_t BufferID)
 		return false;
 	}
 	// check if the Buffer existed
-	if (BufferID < (int32_t)listBuffer.size()) {
+	if (BufferID < listBuffer.Size()) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[BufferID]) {
 			return true;
@@ -193,7 +239,7 @@ int32_t BufferManager::GetId(Edn::String &filename)
 {
 	int32_t iii;
 	// check if the Buffer existed
-	for (iii=0; iii < (int32_t)listBuffer.size(); iii++) {
+	for (iii=0; iii < listBuffer.Size(); iii++) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[iii]) {
 			if ( listBuffer[iii]->GetName() == filename) {
@@ -216,7 +262,7 @@ bool BufferManager::Exist(Edn::String &filename)
 // return the number of buffer (open in the past) if 5 buffer open and 4 close ==> return 5
 uint32_t BufferManager::Size(void)
 {
-	return listBuffer.size();
+	return listBuffer.Size();
 }
 
 
@@ -234,7 +280,7 @@ bool BufferManager::Remove(int32_t BufferID)
 		return false;
 	}
 	// check if the Buffer existed
-	if (BufferID < (int32_t)listBuffer.size()) {
+	if (BufferID < listBuffer.Size()) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[BufferID]) {
 			// TODO : Check if it saved...
@@ -253,7 +299,7 @@ bool BufferManager::Remove(int32_t BufferID)
 			return false;
 		}
 	} else {
-		EDN_INFO("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.size());
+		EDN_INFO("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.Size());
 		return false;
 	}
 }
@@ -269,7 +315,7 @@ bool BufferManager::Remove(int32_t BufferID)
 int32_t BufferManager::WitchBuffer(int32_t iEmeElement)
 {
 	int32_t i;
-	for (i=0; i<(int32_t)listBuffer.size(); i++) {
+	for (i=0; i<listBuffer.Size(); i++) {
 		if (NULL != listBuffer[i]) {
 			iEmeElement--;
 			// find the element : 
