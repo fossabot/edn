@@ -52,41 +52,6 @@ Edn::File::~File(void)
 	// nothing to do ...
 }
 
-void Edn::File::ExtranctAndName(Edn::String &inputString)
-{
-	m_folder = "";
-	m_shortFilename = "";
-	
-	for (int32_t iii=inputString.Size()-1; iii >= 0 ; iii--) {
-		/*
-		if (inputString[iii] != '/') {
-			m_shortFilename.Insert(0, inputString[iii]);
-		} else {
-			break;
-		}
-		*/
-	}
-	
-
-
-/*
-	char tmpVal[4096];
-	strncpy(tmpVal, inputString.c_str(), 4096);
-	tmpVal[4096-1] = '\0';
-	char *ptr = strrchr(tmpVal, '/');
-	if (NULL == ptr) {
-		ptr = strrchr(tmpVal, '\\');
-	}
-	Edn::String out = "./";
-	if (NULL != ptr) {
-		*ptr = '\0';
-		out = tmpVal;
-		out+= '/';
-	}
-	return out;
-*/
-}
-
 
 Edn::String Edn::File::GetFolder(void)
 {
@@ -106,11 +71,28 @@ Edn::String Edn::File::GetCompleateName(void)
 	out += m_shortFilename;
 }
 
+const Edn::File& Edn::File::operator= (const Edn::File &ednF )
+{
+	if( this != &ednF ) // avoid copy to itself
+	{
+		m_folder = ednF.m_folder;
+		m_shortFilename = ednF.m_shortFilename;
+		m_lineNumberOpen = ednF.m_lineNumberOpen;
+	}
+	return *this;
+}
+
+
 void Edn::File::SetCompleateName(Edn::String &newFilename)
 {
 	char buf[MAX_FILE_NAME];
 	memset(buf, 0, MAX_FILE_NAME);
 	char * ok;
+	// Reset ALL DATA : 
+	m_folder = "";
+	m_shortFilename = "";
+	m_lineNumberOpen = 0;
+	
 	Edn::String destFilename;
 	if (newFilename.Size() == 0) {
 		destFilename = "no-name";
@@ -128,19 +110,49 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 		destFilename = cCurrentPath;
 		destFilename += '/';
 		destFilename += tmpFilename;
-	} 
+	}
 	
 	// Get the real Path of the current File
 	ok = realpath(destFilename.c_str(), buf);
 	if (!ok) {
-		EDN_ERROR("Can not find real name of \"" << destFilename.c_str() << "\"");
+		int32_t lastPos = destFilename.FindBack('/');
+		if (-1 != lastPos) {
+			// Get the FileName
+			Edn::String tmpFilename = destFilename.Extract(lastPos+1);
+			destFilename.Remove(lastPos, destFilename.Size() - lastPos);
+			//EDN_DEBUG("try to find :\"" << destFilename.c_str() << "\" / \"" << tmpFilename.c_str() << "\" ");
+			ok = realpath(destFilename.c_str(), buf);
+			if (!ok) {
+				EDN_ERROR("Can not find real Path name of \"" << destFilename.c_str() << "\"");
+				m_shortFilename = tmpFilename;
+				m_folder        = destFilename;
+			} else {
+				// ALL is OK ...
+				m_shortFilename = tmpFilename;
+				m_folder        = destFilename;
+			}
+		} else {
+			EDN_WARNING("file : \"" << destFilename.c_str() << "\" ==> No data???");
+			// Basic ERROR ...
+			m_shortFilename = destFilename;
+		}
 	} else {
-		EDN_DEBUG("file : \"" << destFilename.c_str() << "\" done:\"" << buf << "\" ");
-		// TODO : try again with no name
+		destFilename = buf;
+		int32_t lastPos = destFilename.FindBack('/');
+		if (-1 != lastPos) {
+			m_shortFilename = destFilename.Extract(lastPos+1);
+			m_folder        = destFilename.Extract(0, lastPos);
+		} else {
+			// Basic ERROR ...
+			EDN_WARNING("file : \"" << destFilename.c_str() << "\" ==> No data???");
+			m_shortFilename = destFilename;
+		}
 	}
+	EDN_DEBUG("Set FileName :\"" << m_folder.c_str() << "\" / \"" << m_shortFilename.c_str() << "\" ");
 }
 
 int32_t Edn::File::GetLineNumber(void)
 {
 	return m_lineNumberOpen;
 }
+

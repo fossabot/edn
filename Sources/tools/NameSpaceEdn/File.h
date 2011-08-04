@@ -40,10 +40,10 @@ namespace Edn
 			Edn::String GetCompleateName(void);
 			int32_t     GetLineNumber(void);
 			
+			const Edn::File& operator= (const Edn::File &ednF );
 			void        SetCompleateName(Edn::String &newFilename);
 			
 		private :
-			void        ExtranctAndName(Edn::String &inputString);
 			Edn::String m_folder;
 			Edn::String m_shortFilename;
 			int32_t     m_lineNumberOpen;

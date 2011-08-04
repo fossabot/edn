@@ -147,17 +147,17 @@ gboolean BufferView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, g
 	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;
 	basicColor_te selectBG = COLOR_LIST_BG_1;
 	for (i=0; i < nbBufferOpen; i++) {
-		Edn::String name;
+		Edn::File name;
 		bool isModify;
 		if (self->m_bufferManager->Exist(i)) {
 			isModify = self->m_bufferManager->Get(i)->IsModify();
-			name = self->m_bufferManager->Get(i)->GetShortName();
+			name = self->m_bufferManager->Get(i)->GetFileName();
 			char *tmpModify = (char*)" ";
 			if (true == isModify) {
 				tmpModify = (char*)"M";
 			}
 			char name2[1024] = "";
-			sprintf(name2, "[%2d](%s) %s", i, tmpModify, name.c_str() );
+			sprintf(name2, "[%2d](%s) %s", i, tmpModify, name.GetShortFilename().c_str() );
 			
 			if (true == isModify) {
 				selectFG = COLOR_LIST_TEXT_MODIFY;

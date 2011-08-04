@@ -159,9 +159,7 @@ void CTagsManager::AddToHistory(int32_t bufferID)
 	}
 	// add the current element
 	BufferManager *myBufferManager = BufferManager::getInstance();
-	Edn::String currentFilename = myBufferManager->Get(bufferID)->GetName();
-	int32_t currentLineId = 0;
-	Edn::File * currentFile = new Edn::File(currentFilename);
+	Edn::File currentFilename = myBufferManager->Get(bufferID)->GetFileName();
 	
 }
 

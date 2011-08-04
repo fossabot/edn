@@ -44,7 +44,7 @@ Buffer::Buffer()
 	m_fileModify = true;
 	m_haveName = false;
 	Edn::String mString = "No-Name";
-	m_fileName.SetCompleateName(mString);
+	SetFileName(mString);
 }
 
 /**
@@ -58,8 +58,7 @@ Buffer::Buffer()
 Buffer::Buffer(Edn::String &newFileName)
 {
 	m_fileModify = false;
-	m_haveName = true;
-	m_fileName.SetCompleateName(newFileName);
+	SetFileName(newFileName);
 }
 
 /**
@@ -93,85 +92,6 @@ void Buffer::SetModify(bool status)
 		m_fileModify = status;
 		GeneralSendMessage(EDN_MSG__BUFFER_CHANGE_MODIFY);
 	}
-}
-
-
-Edn::File Buffer::GetFileName(void)
-{
-	return m_fileName;
-}
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-Edn::String Buffer::GetName(void)
-{
-	// nothing to do
-	return m_fileName.GetCompleateName();
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-Edn::String Buffer::GetShortName(void)
-{
-
-	// nothing to do
-	return m_fileName.GetShortFilename();
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-Edn::String Buffer::GetFolder(void)
-{
-
-	// nothing to do
-	return m_fileName.GetFolder();
-}
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-bool Buffer::HaveName(void)
-{
-	// nothing to do
-	return true;
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void Buffer::SetName(Edn::String &newName)
-{
-	// nothing to do
 }
 
 /**

@@ -47,13 +47,30 @@ class Buffer {
 		                  Buffer(void);
 		                  Buffer(Edn::String &filename);
 		virtual          ~Buffer(void);
-		Edn::File         GetFileName(void);
-		virtual Edn::String GetName(void);
-		virtual Edn::String GetShortName(void);
-		virtual Edn::String GetFolder(void);
-		virtual void      SetName(Edn::String &newName);
+		
+		Edn::File         GetFileName(void)
+		{
+			return m_fileName;
+		};
+		
+		void              SetFileName(Edn::File &newName)
+		{
+			m_fileName = newName;
+			m_haveName = true;
+		};
+		
+		void              SetFileName(Edn::String &newName)
+		{
+			m_fileName.SetCompleateName(newName);
+			m_haveName = true;
+		};
+		
+		bool              HaveName(void)
+		{
+			return m_haveName;
+		}
+		
 		virtual void      Save(void);
-		virtual bool      HaveName(void);
 				bool      IsModify(void);
 	protected:
 				void      SetModify(bool status);

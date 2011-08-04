@@ -242,7 +242,7 @@ int32_t BufferManager::GetId(Edn::String &filename)
 	for (iii=0; iii < listBuffer.Size(); iii++) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[iii]) {
-			if ( listBuffer[iii]->GetName() == filename) {
+			if ( listBuffer[iii]->GetFileName().GetCompleateName() == filename) {
 				return iii;
 			}
 		}

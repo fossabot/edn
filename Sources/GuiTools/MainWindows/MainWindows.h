@@ -53,7 +53,8 @@ class MainWindows: public Singleton<MainWindows>, public MsgBroadcast
 		static bool     OnQuit(GtkWidget *widget, gpointer data);
 	
 	private:
-		void            SetTitle(Edn::String &fileName, bool isModify);
+		void            SetTitle(Edn::File &fileName, bool isModify);
+		void            SetNoTitle(void);
 		// main windows widget : 
 		GtkWidget *     m_mainWindow;
 		BufferView      m_BufferView;

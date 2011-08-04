@@ -101,9 +101,9 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				if(    -1   != m_currentBufferID
 				    && true == myBufferManager->Exist(m_currentBufferID) )
 				{
-					Edn::String fileFolder = myBufferManager->Get(m_currentBufferID)->GetFolder();
-					gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER(dialog), fileFolder.c_str());
-					//gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(dialog), "Untitled document");
+					Edn::File fileName = myBufferManager->Get(m_currentBufferID)->GetFileName();
+					gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), fileName.GetFolder().c_str());
+					gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), fileName.GetShortFilename().c_str());
 				}
 				if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 				{
@@ -132,7 +132,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				}
 				Buffer *myBuffer = BufferManager::getInstance()->Get(idSelected);
 				Edn::String tmpString = "Save as file : ";
-				tmpString += myBuffer->GetShortName().c_str();
+				tmpString += myBuffer->GetFileName().GetShortFilename().c_str();
 				GtkWidget *dialog = gtk_file_chooser_dialog_new( tmpString.c_str(), NULL,
 				                                                 GTK_FILE_CHOOSER_ACTION_SAVE,
 				                                                 GTK_STOCK_CANCEL, // button text
@@ -145,7 +145,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 					Edn::String myfilename;
 					myfilename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (dialog));
 					
-					myBuffer->SetName(myfilename);
+					myBuffer->SetFileName(myfilename);
 					myBuffer->Save();
 					
 					SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idSelected);

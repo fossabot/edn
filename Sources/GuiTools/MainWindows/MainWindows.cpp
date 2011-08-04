@@ -93,14 +93,22 @@ MainWindows::~MainWindows(void)
 }
 
 
-void MainWindows::SetTitle(Edn::String &fileName, bool isModify)
+void MainWindows::SetTitle(Edn::File &fileName, bool isModify)
 {
 	Edn::String tmp = "";
-	if (fileName != "") {
-		tmp += fileName;
+	if (fileName.GetShortFilename() != "") {
+		tmp += fileName.GetShortFilename();
+		tmp += " - ";
+		tmp += fileName.GetFolder();
 		tmp += " - ";
 	}
 	tmp += "Edn";
+	gtk_window_set_title(GTK_WINDOW(m_mainWindow), tmp.c_str());
+}
+
+void MainWindows::SetNoTitle(void)
+{
+	Edn::String tmp = "Edn";
 	gtk_window_set_title(GTK_WINDOW(m_mainWindow), tmp.c_str());
 }
 
@@ -112,12 +120,11 @@ void MainWindows::OnMessage(int32_t id, int32_t dataID)
 			// change Title :
 			// TODO : String error when remove the error with -1;
 			if (-1 == dataID) {
-				Edn::String plop = "";
-				SetTitle(plop, false );
+				SetNoTitle();
 			} else {
 				Buffer *mybuf = BufferManager::getInstance()->Get(dataID);
 				if (NULL != mybuf) {
-					Edn::String plop = mybuf->GetName();
+					Edn::File plop = mybuf->GetFileName();
 					SetTitle(plop, mybuf->IsModify() );
 				}
 			}
