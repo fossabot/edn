@@ -41,9 +41,11 @@
  */
 Buffer::Buffer()
 {
+	static int32_t fileBasicID = 0;
 	m_fileModify = true;
 	m_haveName = false;
-	Edn::String mString = "No-Name";
+	Edn::String mString = "Untitle - ";
+	mString += fileBasicID++;
 	SetFileName(mString);
 }
 
@@ -55,10 +57,10 @@ Buffer::Buffer()
  * @return ---
  *
  */
-Buffer::Buffer(Edn::String &newFileName)
+Buffer::Buffer(Edn::File &newName)
 {
 	m_fileModify = false;
-	SetFileName(newFileName);
+	SetFileName(newName);
 }
 
 /**

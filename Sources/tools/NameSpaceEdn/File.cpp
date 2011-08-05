@@ -32,8 +32,16 @@
 
 Edn::File::File(Edn::String &filename, int32_t LineNumber)
 {
-	m_lineNumberOpen = 0;
+	m_lineNumberOpen = LineNumber;
 	SetCompleateName(filename);
+}
+
+
+Edn::File::File(const char  *filename, int32_t LineNumber)
+{
+	Edn::String tmpString = filename;
+	m_lineNumberOpen = LineNumber;
+	SetCompleateName(tmpString);
 }
 
 
@@ -46,29 +54,29 @@ Edn::File::File(Edn::String &filename, Edn::String &folder, int32_t lineNumber)
 	m_lineNumberOpen = lineNumber;
 }
 
-
 Edn::File::~File(void)
 {
 	// nothing to do ...
 }
 
 
-Edn::String Edn::File::GetFolder(void)
+Edn::String Edn::File::GetFolder(void) const
 {
 	return m_folder;
 }
 
-Edn::String Edn::File::GetShortFilename(void)
+Edn::String Edn::File::GetShortFilename(void) const
 {
 	return m_shortFilename;
 }
 
-Edn::String Edn::File::GetCompleateName(void)
+Edn::String Edn::File::GetCompleateName(void) const
 {
 	Edn::String out;
 	out  = m_folder;
 	out += '/';
 	out += m_shortFilename;
+	return out;
 }
 
 const Edn::File& Edn::File::operator= (const Edn::File &ednF )
@@ -83,6 +91,41 @@ const Edn::File& Edn::File::operator= (const Edn::File &ednF )
 }
 
 
+/**
+ * @brief 
+ *
+ * @param[in,out] 
+ *
+ * @return 
+ *
+ */
+bool Edn::File::operator== (const Edn::File &ednF) const
+{
+	if( this != &ednF ) {
+		if (ednF.GetCompleateName() == GetCompleateName() ) {
+			return true;
+		} else {
+			return false;
+		}
+		return true;
+	}
+	return true;
+}
+
+/**
+ * @brief 
+ *
+ * @param[in,out] 
+ *
+ * @return 
+ *
+ */
+bool Edn::File::operator!= (const Edn::File &ednF) const
+{
+	return !(*this == ednF);
+}
+
+
 void Edn::File::SetCompleateName(Edn::String &newFilename)
 {
 	char buf[MAX_FILE_NAME];
@@ -92,13 +135,14 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 	m_folder = "";
 	m_shortFilename = "";
 	m_lineNumberOpen = 0;
-	
+	//EDN_DEBUG("1 :Set Name : " << newFilename.c_str() );
 	Edn::String destFilename;
 	if (newFilename.Size() == 0) {
 		destFilename = "no-name";
 	} else {
 		destFilename = newFilename;
 	}
+	//EDN_DEBUG("2 : Get file Name : " << destFilename.c_str() );
 	if ('/' != *destFilename.c_str()) {
 		// Get the command came from the running of the program : 
 		char cCurrentPath[FILENAME_MAX];
@@ -111,6 +155,7 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 		destFilename += '/';
 		destFilename += tmpFilename;
 	}
+	//EDN_DEBUG("3 : Get file Name : " << destFilename.c_str() );
 	
 	// Get the real Path of the current File
 	ok = realpath(destFilename.c_str(), buf);

@@ -45,7 +45,7 @@ typedef struct{
 class Buffer {
 	public:
 		                  Buffer(void);
-		                  Buffer(Edn::String &filename);
+		                  Buffer(Edn::File &newName);
 		virtual          ~Buffer(void);
 		
 		Edn::File         GetFileName(void)
@@ -105,9 +105,10 @@ class Buffer {
 		virtual void      JumpAtLine(int32_t newLine);
 		
 	protected:
-		bool              m_fileModify;
-		Edn::File         m_fileName;
-		bool              m_haveName;                   //!< to know if the file have a name or NOT
+		bool              m_fileModify;           //!< 
+		// naming
+		Edn::File         m_fileName;             //!< filename of the curent buffer
+		bool              m_haveName;             //!< to know if the file have a name or NOT
 };
 
 

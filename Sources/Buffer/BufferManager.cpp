@@ -185,10 +185,11 @@ int32_t	BufferManager::Create(void)
  * @todo : check if this file is not curently open and return the old ID
  *
  */
-int32_t BufferManager::Open(Edn::String &filename)
+int32_t BufferManager::Open(Edn::File &myFile)
 {
+	// TODO : Check here if the file is already open ==> and display it if needed
 	// allocate a new Buffer
-	Buffer *myBuffer = new BufferText(filename);
+	Buffer *myBuffer = new BufferText(myFile);
 	// Add at the list of element
 	listBuffer.PushBack(myBuffer);
 	int32_t basicID = listBuffer.Size() - 1;
@@ -235,27 +236,28 @@ bool BufferManager::Exist(int32_t BufferID)
 }
 
 
-int32_t BufferManager::GetId(Edn::String &filename)
+bool BufferManager::Exist(Edn::File &myFile )
+{
+	if (-1 == GetId(myFile)) {
+		return false;
+	}
+	return true;
+}
+
+
+int32_t BufferManager::GetId(Edn::File &myFile)
 {
 	int32_t iii;
 	// check if the Buffer existed
 	for (iii=0; iii < listBuffer.Size(); iii++) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[iii]) {
-			if ( listBuffer[iii]->GetFileName().GetCompleateName() == filename) {
+			if ( listBuffer[iii]->GetFileName() == myFile) {
 				return iii;
 			}
 		}
 	}
 	return -1;
-}
-
-bool BufferManager::Exist(Edn::String &filename)
-{
-	if (-1 == GetId(filename)) {
-		return false;
-	}
-	return true;
 }
 
 

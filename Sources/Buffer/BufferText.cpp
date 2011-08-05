@@ -50,16 +50,10 @@ const uint32_t nbLineAllocatedInBase = 300;
  */
 void BufferText::BasicInit(void)
 {
-	static int32_t fileBasicID = 0;
 	NeedToCleanEndPage = true;
 	// set the first element that is displayed
 	m_displayStartBufferPos = 0;
-	// set basic filename : 
-	filename = "Untitled ";
-	filename += fileBasicID;
-	// no name ...
-	haveName = false;
-	fileBasicID++;
+	
 	// set the number of the lineNumber;
 	nbColoneForLineNumber = 1;
 	// init the link with the buffer manager
@@ -104,16 +98,14 @@ BufferText::BufferText()
  * @return ---
  *
  */
-BufferText::BufferText(Edn::String &newFileName)
+BufferText::BufferText(Edn::File &fileName) : Buffer(fileName)
 {
 	BasicInit();
-	EDN_INFO("Add Data from file(" << newFileName.c_str() << ")");
+	EDN_INFO("Add Data from file(" << GetFileName().GetCompleateName().c_str() << ")");
 	FILE * myFile = NULL;
-	// set the filename : 
-	SetName(newFileName);
 	// try to open the file. if not existed, new file
 	
-	myFile = fopen(newFileName.c_str(), "r");
+	myFile = fopen(fileName.GetCompleateName().c_str(), "r");
 	if (NULL != myFile) {
 		m_EdnBuf.DumpFrom(myFile);
 		// close the input file
@@ -121,7 +113,7 @@ BufferText::BufferText(Edn::String &newFileName)
 		SetModify(false);
 	} else {
 		// fichier inexistant... creation d'un nouveaux
-		EDN_WARNING("No File ==> created a new one(" << newFileName.c_str() << ")");
+		EDN_WARNING("No File ==> created a new one(" << GetFileName().GetCompleateName().c_str() << ")");
 		SetModify(true);
 	}
 	UpdateWindowsPosition();
@@ -139,9 +131,9 @@ BufferText::BufferText(Edn::String &newFileName)
  */
 void BufferText::Save(void)
 {
-	EDN_INFO("Save File : \"" <<  filename.c_str() << "\"" );
+	EDN_INFO("Save File : \"" <<  GetFileName().GetCompleateName().c_str() << "\"" );
 	FILE * myFile = NULL;
-	myFile = fopen(filename.c_str(), "w");
+	myFile = fopen(GetFileName().GetCompleateName().c_str(), "w");
 	if (NULL != myFile) {
 		m_EdnBuf.DumpIn(myFile);
 		fclose(myFile);
@@ -184,104 +176,6 @@ void BufferText::SelectionCheckMode(void)
 	} else {
 	}
 	*/
-}
-
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-Edn::String BufferText::GetName(void)
-{
-	return filename;
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-Edn::String BufferText::GetShortName(void)
-{
-	char *ptr = strrchr(filename.c_str(), '/');
-	if (NULL == ptr) {
-		ptr = strrchr(filename.c_str(), '\\');
-	}
-	Edn::String out = filename;
-	if (NULL != ptr) {
-		out = ptr+1;
-	}
-	return out;
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-Edn::String BufferText::GetFolder(void)
-{
-	char tmpVal[4096];
-	strncpy(tmpVal, filename.c_str(), 4096);
-	tmpVal[4096-1] = '\0';
-	char *ptr = strrchr(tmpVal, '/');
-	if (NULL == ptr) {
-		ptr = strrchr(tmpVal, '\\');
-	}
-	Edn::String out = "./";
-	if (NULL != ptr) {
-		*ptr = '\0';
-		out = tmpVal;
-	}
-	return out;
-}
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-bool BufferText::HaveName(void)
-{
-	return haveName;
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void BufferText::SetName(Edn::String &newName)
-{
-	filename = newName;
-	haveName = true;
-	// Find HL system
-	if (true == HighlightManager::getInstance()->Exist(newName)) {
-		Highlight * myHL = HighlightManager::getInstance()->Get(newName);
-		// Set the new HL
-		if (NULL != myHL) {
-			m_EdnBuf.SetHLSystem(myHL);
-		}
-	}
-	
 }
 
 

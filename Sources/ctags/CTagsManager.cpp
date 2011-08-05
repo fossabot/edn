@@ -280,15 +280,16 @@ void CTagsManager::JumpTo(void)
 			BufferManager *myBufferManager = BufferManager::getInstance();
 			Edn::String destinationFilename = m_tagFolderBase;
 			destinationFilename += entry.file;
-			EDN_INFO(" OPEN the TAG file Destination : " << destinationFilename.c_str() );
-			if (false == myBufferManager->Exist(destinationFilename) ) {
+			Edn::File myfile = destinationFilename;
+			EDN_INFO(" OPEN the TAG file Destination : " << myfile.GetCompleateName().c_str() );
+			if (false == myBufferManager->Exist(myfile) ) {
 				// need to open the file : 
-				int32_t openID = myBufferManager->Open(destinationFilename);
+				int32_t openID = myBufferManager->Open(myfile);
 				SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, openID);
 			} else {
-				SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, myBufferManager->GetId(destinationFilename));
+				SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, myBufferManager->GetId(myfile));
 			}
-			int32_t localId = myBufferManager->GetId(destinationFilename);
+			int32_t localId = myBufferManager->GetId(myfile);
 			Edn::String pattern = entry.address.pattern;
 			EDN_DEBUG("try to find line with : \"" << pattern.c_str() << "\"" );
 			if (pattern.Size() > 4) {

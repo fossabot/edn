@@ -255,24 +255,28 @@ void BufferView::OnPopupEventShow(GtkWidget *menuitem, gpointer data)
 {
 	BufferView * self = reinterpret_cast<BufferView*>(data);
 	self->SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, self->m_contectMenuSelectID);
+	self->m_contectMenuSelectID = -1;
 }
 
 void BufferView::OnPopupEventClose(GtkWidget *menuitem, gpointer data)
 {
 	BufferView * self = reinterpret_cast<BufferView*>(data);
 	self->SendMessage(EDN_MSG__BUFF_ID_CLOSE, self->m_contectMenuSelectID);
+	self->m_contectMenuSelectID = -1;
 }
 
 void BufferView::OnPopupEventSave(GtkWidget *menuitem, gpointer data)
 {
 	BufferView * self = reinterpret_cast<BufferView*>(data);
 	self->SendMessage(EDN_MSG__BUFF_ID_SAVE, self->m_contectMenuSelectID);
+	self->m_contectMenuSelectID = -1;
 }
 
 void BufferView::OnPopupEventSaveAs(GtkWidget *menuitem, gpointer data)
 {
 	BufferView * self = reinterpret_cast<BufferView*>(data);
 	self->SendMessage(EDN_MSG__GUI_SHOW_SAVE_AS, self->m_contectMenuSelectID);
+	self->m_contectMenuSelectID = -1;
 }
 
 

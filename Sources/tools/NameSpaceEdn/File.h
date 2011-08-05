@@ -33,14 +33,17 @@ namespace Edn
 		public:
 			            File(void) { m_lineNumberOpen=0; }
 			            File(Edn::String &filename, int32_t LineNumber = 0);
+			            File(const char  *filename, int32_t LineNumber = 0);
 			            File(Edn::String &filename, Edn::String &folder, int32_t lineNumber = 0);
 			            ~File(void);
-			Edn::String GetFolder(void);
-			Edn::String GetShortFilename(void);
-			Edn::String GetCompleateName(void);
+			Edn::String GetFolder(void) const;
+			Edn::String GetShortFilename(void) const;
+			Edn::String GetCompleateName(void) const;
 			int32_t     GetLineNumber(void);
 			
-			const Edn::File& operator= (const Edn::File &ednF );
+			const Edn::File& operator=  (const Edn::File &ednF );
+			bool             operator== (const Edn::File &ednF ) const;
+			bool             operator!= (const Edn::File &ednF ) const;
 			void        SetCompleateName(Edn::String &newFilename);
 			
 		private :

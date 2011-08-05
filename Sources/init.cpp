@@ -110,13 +110,7 @@ int main (int argc, char *argv[])
 	EDN_INFO("show list of files : ");
 	for( int32_t i=1 ; i<argc; i++) {
 		EDN_INFO("need load file : \"" << argv[i] << "\"" );
-		Edn::String myfile = "";
-		// Special case for the root file origin
-		if ('/' != argv[i][0]) {
-			myfile+=cCurrentPath;
-			myfile+="/";
-		}
-		myfile+=(char *)argv[i];
+		Edn::File myfile = (char *)argv[i];
 
 		if (false == myBufferManager->Exist(myfile) ) {
 			int32_t idBuffOpened = myBufferManager->Open(myfile);

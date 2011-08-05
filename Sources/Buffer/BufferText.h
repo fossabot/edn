@@ -41,14 +41,9 @@ typedef enum {
 class BufferText : public Buffer {
 	public:
 		          BufferText(void);
-		          BufferText(Edn::String &filename);
+		          BufferText(Edn::File &fileName);
 		virtual  ~BufferText(void);
-		Edn::String GetName(void);
-		Edn::String GetShortName(void);
-		Edn::String GetFolder(void);
-		void      SetName(Edn::String &newName);
 		void      Save(void);
-		bool      HaveName(void);
 		
 		void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		void      SetLineDisplay(uint32_t lineNumber);
@@ -80,9 +75,6 @@ class BufferText : public Buffer {
 		void      SetCharset(charset_te newCharset);
 
 	private:
-		// naming
-		Edn::String               filename;                   //!< filename of the curent buffer
-		bool                    haveName;                   //!< to know if the file have a name or NOT
 		// Display
 		bool                    NeedToCleanEndPage;         //!< if true, the end of the page need to be clean (arrive after a remove line)
 		uint32_t                nbColoneForLineNumber;      //!< number of colome used to display the line Number

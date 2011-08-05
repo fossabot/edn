@@ -25,6 +25,8 @@
 #ifndef __END__STRING_H__
 #define __END__STRING_H__
 
+#include <iostream>
+
 namespace Edn
 {
 	class String
@@ -55,6 +57,7 @@ namespace Edn
 			Edn::String operator+ (const Edn::String &ednS);			// + operator
 			Edn::String operator+ (const char * inputData);
 			//operator const char *()
+			//friend std::ostream& operator <<( std::ostream &os,const Edn::String &obj);
 	
 			bool          IsEmpty(void) const;
 			int32_t       Size(void) const;
@@ -77,6 +80,16 @@ namespace Edn
 
 	void TestUntaire_String(void);
 }
+
+
+/*
+std::ostream& operator <<(std::ostream &os, const Edn::String &obj)
+{
+	os << obj.c_str();
+	return os;
+}
+*/
+
 
 #endif
 
