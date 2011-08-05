@@ -68,7 +68,10 @@ void Search::Display(GtkWindow *parent)
 		gtk_window_set_transient_for(GTK_WINDOW(m_localDialog), parent);
 		// set the dialog on the top right
 		gtk_window_set_gravity(GTK_WINDOW(m_localDialog), GDK_GRAVITY_NORTH_EAST);
-		
+		// Remove the dialogue from the task bar
+		gtk_window_set_skip_taskbar_hint(GTK_WINDOW(m_localDialog), TRUE);
+		// this element did not apear in the miniature of the windows
+		gtk_window_set_skip_pager_hint(GTK_WINDOW(m_localDialog), TRUE);
 		// select the program icone
 		//gtk_window_set_default_icon_name("Replace");
 		
