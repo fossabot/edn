@@ -28,8 +28,13 @@
 
 
 #undef __class__
-#define __class__	"EdnString"
+#define __class__	"Edn::String"
 
+std::ostream& Edn::operator <<(std::ostream &os, const Edn::String &obj)
+{
+	os << (char*)&obj.m_data[0];
+	return os;
+}
 
 /**
  * @brief 
@@ -595,57 +600,57 @@ void Edn::TestUntaire_String(void)
 	
 	int32_t iddd = 0;
 	Edn::String * monString = new Edn::String();
-	EDN_INFO("phase : " << iddd++ << " : \"" << monString->c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << monString << "\"");
 	delete(monString);
 	
 	monString = new Edn::String("test de direct data");
-	EDN_INFO("phase : " << iddd++ << " : \"" << monString->c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << monString << "\"");
 	delete(monString);
 	
 	monString = new Edn::String("test de direct data", 7);
-	EDN_INFO("phase : " << iddd++ << " : \"" << monString->c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << monString << "\"");
 	delete(monString);
 	
 	int32_t testId = -6789;
 	monString = new Edn::String(testId);
-	EDN_INFO("phase : " << iddd++ << " : \"" << monString->c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << monString << "\"");
 	delete(monString);
 	
 	uint32_t testId2 = 12345;
 	monString = new Edn::String((unsigned int)testId2);
-	EDN_INFO("phase : " << iddd++ << " : \"" << monString->c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << monString << "\"");
 	delete(monString);
 	
 	Edn::String plop = "otherString";
 	monString = new Edn::String(plop);
-	EDN_INFO("phase : " << iddd++ << " : \"" << monString->c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << monString << "\"");
 	delete(monString);
 	
 	
 	Edn::String s1 = "test de base ...";
 	s1 += s1;
-	EDN_INFO("phase : " << iddd++ << " : \"" << s1.c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << s1 << "\"");
 	s1 += " plop 2 ";
-	EDN_INFO("phase : " << iddd++ << " : \"" << s1.c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << s1 << "\"");
 	s1 += plop;
-	EDN_INFO("phase : " << iddd++ << " : \"" << s1.c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << s1 << "\"");
 	s1 = plop;
-	EDN_INFO("phase : " << iddd++ << " : \"" << s1.c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << s1 << "\"");
 	s1 = "test direct 44";
-	EDN_INFO("phase : " << iddd++ << " : \"" << s1.c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << s1 << "\"");
 	Edn::VectorType<int8_t> vb1;
 	vb1.PushBack('v');
 	vb1.PushBack('b');
 	vb1.PushBack('1');
 	s1 = vb1;
-	EDN_INFO("phase : " << iddd++ << " : \"" << s1.c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << s1 << "\"");
 	vb1.Clear();
 	vb1.PushBack('v');
 	vb1.PushBack('b');
 	vb1.PushBack('2');
 	vb1.PushBack('\0');
 	s1 = vb1;
-	EDN_INFO("phase : " << iddd++ << " : \"" << s1.c_str() << "\"");
+	EDN_INFO("phase : " << iddd++ << " : \"" << s1 << "\"");
 	
 	if (s1 == "vb2") {
 		EDN_INFO("phase : " << iddd++ << " : == OK");

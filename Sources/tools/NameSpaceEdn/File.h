@@ -40,17 +40,21 @@ namespace Edn
 			Edn::String GetShortFilename(void) const;
 			Edn::String GetCompleateName(void) const;
 			int32_t     GetLineNumber(void);
+			void        SetCompleateName(Edn::String &newFilename);
 			
 			const Edn::File& operator=  (const Edn::File &ednF );
 			bool             operator== (const Edn::File &ednF ) const;
 			bool             operator!= (const Edn::File &ednF ) const;
-			void        SetCompleateName(Edn::String &newFilename);
+			friend std::ostream& operator <<( std::ostream &os,const Edn::File &obj);
 			
 		private :
 			Edn::String m_folder;
 			Edn::String m_shortFilename;
 			int32_t     m_lineNumberOpen;
 	};
+	
+	std::ostream& operator <<(std::ostream &os, const Edn::File &obj);
+	
 }
 
 #endif

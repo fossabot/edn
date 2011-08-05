@@ -101,7 +101,7 @@ BufferText::BufferText()
 BufferText::BufferText(Edn::File &fileName) : Buffer(fileName)
 {
 	BasicInit();
-	EDN_INFO("Add Data from file(" << GetFileName().GetCompleateName().c_str() << ")");
+	EDN_INFO("Add Data from file(" << GetFileName() << ")");
 	FILE * myFile = NULL;
 	// try to open the file. if not existed, new file
 	
@@ -113,7 +113,7 @@ BufferText::BufferText(Edn::File &fileName) : Buffer(fileName)
 		SetModify(false);
 	} else {
 		// fichier inexistant... creation d'un nouveaux
-		EDN_WARNING("No File ==> created a new one(" << GetFileName().GetCompleateName().c_str() << ")");
+		EDN_WARNING("No File ==> created a new one(" << GetFileName() << ")");
 		SetModify(true);
 	}
 	UpdateWindowsPosition();
@@ -131,7 +131,7 @@ BufferText::BufferText(Edn::File &fileName) : Buffer(fileName)
  */
 void BufferText::Save(void)
 {
-	EDN_INFO("Save File : \"" <<  GetFileName().GetCompleateName().c_str() << "\"" );
+	EDN_INFO("Save File : \"" <<  GetFileName() << "\"" );
 	FILE * myFile = NULL;
 	myFile = fopen(GetFileName().GetCompleateName().c_str(), "w");
 	if (NULL != myFile) {
@@ -1047,7 +1047,7 @@ int32_t BufferText::FindLine(Edn::String &data)
 		EDN_WARNING("no search data");
 		return 0;
 	}
-	EDN_INFO("Search data line : \"" << data.c_str() << "\"");
+	EDN_INFO("Search data line : \"" << data << "\"");
 	Edn::VectorType<int8_t> mVectSearch;
 	mVectSearch = data.GetVector();
 	//EDN_INFO("search data Forward : startSearchPos=" << startSearchPos );
@@ -1072,7 +1072,7 @@ void BufferText::JumpAtLine(int32_t newLine)
 
 void BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
 {
-	EDN_INFO("Search data : \"" << data.c_str() << "\"");
+	EDN_INFO("Search data : \"" << data << "\"");
 	
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;

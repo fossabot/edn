@@ -30,6 +30,18 @@
 
 #define MAX_FILE_NAME      (10240)
 
+#undef __class__
+#define __class__	"Edn::File"
+
+
+std::ostream& Edn::operator <<(std::ostream &os, const Edn::File &obj)
+{
+	os << obj.m_folder;
+	os << "/";
+	os << obj.m_shortFilename;
+	return os;
+}
+
 Edn::File::File(Edn::String &filename, int32_t LineNumber)
 {
 	m_lineNumberOpen = LineNumber;
@@ -135,14 +147,14 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 	m_folder = "";
 	m_shortFilename = "";
 	m_lineNumberOpen = 0;
-	//EDN_DEBUG("1 :Set Name : " << newFilename.c_str() );
+	EDN_DEBUG("1 :Set Name : " << newFilename );
 	Edn::String destFilename;
 	if (newFilename.Size() == 0) {
 		destFilename = "no-name";
 	} else {
 		destFilename = newFilename;
 	}
-	//EDN_DEBUG("2 : Get file Name : " << destFilename.c_str() );
+	//EDN_DEBUG("2 : Get file Name : " << destFilename );
 	if ('/' != *destFilename.c_str()) {
 		// Get the command came from the running of the program : 
 		char cCurrentPath[FILENAME_MAX];
@@ -155,7 +167,7 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 		destFilename += '/';
 		destFilename += tmpFilename;
 	}
-	//EDN_DEBUG("3 : Get file Name : " << destFilename.c_str() );
+	//EDN_DEBUG("3 : Get file Name : " << destFilename );
 	
 	// Get the real Path of the current File
 	ok = realpath(destFilename.c_str(), buf);
@@ -165,10 +177,10 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 			// Get the FileName
 			Edn::String tmpFilename = destFilename.Extract(lastPos+1);
 			destFilename.Remove(lastPos, destFilename.Size() - lastPos);
-			//EDN_DEBUG("try to find :\"" << destFilename.c_str() << "\" / \"" << tmpFilename.c_str() << "\" ");
+			//EDN_DEBUG("try to find :\"" << destFilename << "\" / \"" << tmpFilename << "\" ");
 			ok = realpath(destFilename.c_str(), buf);
 			if (!ok) {
-				EDN_ERROR("Can not find real Path name of \"" << destFilename.c_str() << "\"");
+				EDN_ERROR("Can not find real Path name of \"" << destFilename << "\"");
 				m_shortFilename = tmpFilename;
 				m_folder        = destFilename;
 			} else {
@@ -177,7 +189,7 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 				m_folder        = destFilename;
 			}
 		} else {
-			EDN_WARNING("file : \"" << destFilename.c_str() << "\" ==> No data???");
+			EDN_WARNING("file : \"" << destFilename << "\" ==> No data???");
 			// Basic ERROR ...
 			m_shortFilename = destFilename;
 		}
@@ -189,11 +201,11 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 			m_folder        = destFilename.Extract(0, lastPos);
 		} else {
 			// Basic ERROR ...
-			EDN_WARNING("file : \"" << destFilename.c_str() << "\" ==> No data???");
+			EDN_WARNING("file : \"" << destFilename << "\" ==> No data???");
 			m_shortFilename = destFilename;
 		}
 	}
-	EDN_DEBUG("Set FileName :\"" << m_folder.c_str() << "\" / \"" << m_shortFilename.c_str() << "\" ");
+	EDN_DEBUG("Set FileName :\"" << m_folder << "\" / \"" << m_shortFilename << "\" ");
 }
 
 int32_t Edn::File::GetLineNumber(void)

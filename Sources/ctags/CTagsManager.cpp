@@ -139,7 +139,7 @@ void CTagsManager::LoadTagFile(void)
 		return;
 	}
 	// load (open) the tag file : 
-	EDN_INFO("try to open tag file : " << m_tagFilename.c_str());
+	EDN_INFO("try to open tag file : " << m_tagFilename);
 	m_ctagFile = tagsOpen(m_tagFilename.c_str(), &info);
 	if (NULL != m_ctagFile) {
 		EDN_INFO("open exuberant Ctags file is OK ...");
@@ -281,7 +281,7 @@ void CTagsManager::JumpTo(void)
 			Edn::String destinationFilename = m_tagFolderBase;
 			destinationFilename += entry.file;
 			Edn::File myfile = destinationFilename;
-			EDN_INFO(" OPEN the TAG file Destination : " << myfile.GetCompleateName().c_str() );
+			EDN_INFO(" OPEN the TAG file Destination : " << myfile );
 			if (false == myBufferManager->Exist(myfile) ) {
 				// need to open the file : 
 				int32_t openID = myBufferManager->Open(myfile);
@@ -291,13 +291,13 @@ void CTagsManager::JumpTo(void)
 			}
 			int32_t localId = myBufferManager->GetId(myfile);
 			Edn::String pattern = entry.address.pattern;
-			EDN_DEBUG("try to find line with : \"" << pattern.c_str() << "\"" );
+			EDN_DEBUG("try to find line with : \"" << pattern << "\"" );
 			if (pattern.Size() > 4) {
 				pattern.Remove(0,2);
 				pattern.Remove(pattern.Size()-1,2);
 			}
 			// TODO : remove '\' char when needed ...
-			EDN_DEBUG("try to find line with : \"" << pattern.c_str() << "\"" );
+			EDN_DEBUG("try to find line with : \"" << pattern << "\"" );
 			int32_t destLine = myBufferManager->Get(localId)->FindLine(pattern);
 			SendMessage(EDN_MSG__CURRENT_GOTO_LINE, destLine);
 			/*
