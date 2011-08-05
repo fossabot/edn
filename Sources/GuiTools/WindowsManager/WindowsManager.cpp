@@ -98,6 +98,8 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				                                                 GTK_STOCK_OPEN, // button text
 				                                                 GTK_RESPONSE_ACCEPT, // response id
 				                                                 NULL); // end button/response list
+				// this element did not apear in the miniature of the windows
+				gtk_window_set_skip_pager_hint(GTK_WINDOW(dialog), TRUE);
 				if(    -1   != m_currentBufferID
 				    && true == myBufferManager->Exist(m_currentBufferID) )
 				{
@@ -140,6 +142,8 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				                                                 GTK_STOCK_SAVE, // button text
 				                                                 GTK_RESPONSE_ACCEPT, // response id
 				                                                 NULL); // end button/response list
+				// this element did not apear in the miniature of the windows
+				gtk_window_set_skip_pager_hint(GTK_WINDOW(dialog), TRUE);
 				if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 				{
 					Edn::String myfilename;
@@ -161,6 +165,8 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				                                                  GTK_DIALOG_MODAL,
 				                                                  GTK_STOCK_QUIT, GTK_RESPONSE_NO,
 				                                                  NULL);
+				// this element did not apear in the miniature of the windows
+				gtk_window_set_skip_pager_hint(GTK_WINDOW(myDialog), TRUE);
 				GtkWidget *myContentArea = gtk_dialog_get_content_area( GTK_DIALOG(myDialog));
 				GtkWidget *myLabel =  gtk_label_new("");
 				gtk_label_set_markup (GTK_LABEL (myLabel),
@@ -212,6 +218,8 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				                                                  "Jump", GTK_RESPONSE_YES,
 				                                                  GTK_STOCK_QUIT, GTK_RESPONSE_NO,
 				                                                  NULL);
+				// this element did not apear in the miniature of the windows
+				gtk_window_set_skip_pager_hint(GTK_WINDOW(myDialog), TRUE);
 				// Set over main windows
 				gtk_window_set_transient_for(GTK_WINDOW(myDialog), GTK_WINDOW(m_mainWindow->GetWidget()));
 				// add writting area
