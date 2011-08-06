@@ -34,8 +34,11 @@ export CADRE_COTERS='	$(F_INVERSER)  $(F_NORMALE)								  $(F_INVERSER)  $(F_N
 VERSION_TAG=$(shell git describe --tags)
 #$(info $(VERSION_TAG))
 
+VERSION_TAG_SHORT=$(shell git describe --tags --abbrev=0)
+#$(info $(VERSION_TAG_SHORT))
+
 VERSION_BUILD_TIME=$(shell date)
-#$(info $(VERSION_TAG))
+#$(info $(VERSION_BUILD_TIME))
 
 ###############################################################################
 ### Compilateur base system                                                 ###
@@ -296,5 +299,37 @@ install: .encadrer .versionFile $(OUTPUT_NAME_RELEASE)
 	@mkdir -p /usr/share/edn/
 	@cp -vf data/*.xml /usr/share/edn/
 
+
+# http://alp.developpez.com/tutoriels/debian/creer-paquet/
+package: .encadrer
+	@echo 'Create Folders ...'
+	@mkdir -p package/$(PROG_NAME)/DEBIAN/
+	@mkdir -p package/$(PROG_NAME)/usr/bin/
+	@mkdir -p package/$(PROG_NAME)/usr/share/doc/
+	@mkdir -p package/$(PROG_NAME)/usr/share/edn/
+	# Create the control file
+	@echo "Package: "$(PROG_NAME) > package/$(PROG_NAME)/DEBIAN/control
+	@echo "Version: "$(VERSION_TAG_SHORT) >> package/$(PROG_NAME)/DEBIAN/control
+	@echo "Section: Development,Editors" >> package/$(PROG_NAME)/DEBIAN/control
+	@echo "Priority: optional" >>package/$(PROG_NAME)/DEBIAN/control
+	@echo "Architecture: all" >> package/$(PROG_NAME)/DEBIAN/control
+	@echo "Depends: bash" >> package/$(PROG_NAME)/DEBIAN/control
+	@echo "Maintainer: Mr DUPIN Edouard <yui.heero@gmail.com>" >> package/$(PROG_NAME)/DEBIAN/control
+	@echo "Description: Text editor for sources code with ctags management" >> package/$(PROG_NAME)/DEBIAN/control
+	@echo "" >> package/$(PROG_NAME)/DEBIAN/control
+	# Create the PostRm
+	@echo "#!/bin/bash" > package/$(PROG_NAME)/DEBIAN/postrm
+	@echo "rm ~/."$(PROG_NAME) >> package/$(PROG_NAME)/DEBIAN/postrm
+	@echo "" >> package/$(PROG_NAME)/DEBIAN/postrm
+	# Enable Execution in script
+	@chmod 755 package/$(PROG_NAME)/DEBIAN/post*
+	@#chmod 755 package/$(PROG_NAME)/DEBIAN/pre*
+	# copy licence and information : 
+	@cp README package/$(PROG_NAME)/usr/share/doc/README
+	@cp licence.txt package/$(PROG_NAME)/usr/share/doc/copyright
+	@echo "First generation in progress" >> package/$(PROG_NAME)/usr/share/doc/changelog
+	@cp -vf $(PROG_NAME) package/$(PROG_NAME)/usr/bin/
+	@cp -vf data/*.xml package/$(PROG_NAME)/usr/share/edn/
+	@cd package; dpkg-deb --build $(PROG_NAME)
 
 
