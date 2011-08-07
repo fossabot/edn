@@ -65,7 +65,8 @@ class HighlightPattern {
 		
 		bool			IsEnable(void);
 		void			Display(void);
-		resultFind_te	Find(int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer);
+		resultFind_te   Find(          int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer);
+		resultFind_te   FindOneElement(int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer);
 		Colorize *		GetColor(void) { return m_color; };
 		void			ParseRules(TiXmlNode *child, int32_t level);
 
@@ -79,8 +80,8 @@ class HighlightPattern {
 		bool                                m_haveStopPatern;           //!< Stop patern presence
 		bool                                m_multiline;                //!< The patern is multiline
 		char                                m_escapeChar;               //!< Escape char to prevent exeit of patern ....
-		Edn::VectorType<HighlightPattern *>    m_subPatern;                //!< Under patern of this one
-//		Edn::VectorType<HighlightPattern *>    m_subColor;                 //!< Under Color in the start RegExp ...
+		Edn::VectorType<HighlightPattern *> m_subPatern;                //!< Under patern of this one
+//		Edn::VectorType<HighlightPattern *> m_subColor;                 //!< Under Color in the start RegExp ...
 };
 
 #endif

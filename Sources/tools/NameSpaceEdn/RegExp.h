@@ -1801,13 +1801,13 @@ template<class CLASS_TYPE> class EdnRegExp {
 				if (true == m_notBeginWithChar) {
 					if (i>0) {
 						char tmpVal = SearchIn[i-1];
-						if(		(		'a' <= tmpVal
-									&&	'z' >= tmpVal	)
-							||	(		'A' <= tmpVal
-									&&	'Z' >= tmpVal	)
-							||	(		'0' <= tmpVal
-									&&	'9' >= tmpVal	)
-							||	(		'_' == tmpVal	)	)
+						if(    (    'a' <= tmpVal
+						         && 'z' >= tmpVal )
+						    || (    'A' <= tmpVal
+						         && 'Z' >= tmpVal )
+						    || (    '0' <= tmpVal
+						         && '9' >= tmpVal )
+						    || (    '_' == tmpVal ) )
 						{
 							// go on the next char ...
 							continue;
@@ -1827,13 +1827,13 @@ template<class CLASS_TYPE> class EdnRegExp {
 					if (true == m_notEndWithChar) {
 						if (i+findLen < SearchIn.Size() ) {
 							char tmpVal = SearchIn[i+findLen];
-							if(		(		'a' <= tmpVal
-										&&	'z' >= tmpVal	)
-								||	(		'A' <= tmpVal
-										&&	'Z' >= tmpVal	)
-								||	(		'0' <= tmpVal
-										&&	'9' >= tmpVal	)
-								||	(		'_' == tmpVal	)	)
+							if(    (    'a' <= tmpVal
+							         && 'z' >= tmpVal )
+							    || (    'A' <= tmpVal
+							         && 'Z' >= tmpVal )
+							    || (    '0' <= tmpVal
+							         && '9' >= tmpVal )
+							    || (    '_' == tmpVal ) )
 							{
 								// go on the next char ...
 								continue;
@@ -1856,6 +1856,72 @@ template<class CLASS_TYPE> class EdnRegExp {
 					*/
 					return true;
 				}
+			}
+			return false;
+		};
+		
+		bool ProcessOneElement( CLASS_TYPE   &SearchIn,
+		                        int32_t      startPos,
+		                        int32_t      endPos,
+		                        char         escapeChar=0)
+		{
+			if (false == m_isOk) {
+				return false;
+			}
+			int32_t buflen = SearchIn.Size();
+			if (endPos > buflen) {
+				endPos = buflen;
+			}
+			if (startPos > endPos) {
+				return false;
+			}
+			int32_t findLen=0;
+			int32_t maxlen = endPos-startPos;
+			if (true == m_notBeginWithChar) {
+				if (startPos>0) {
+					char tmpVal = SearchIn[startPos-1];
+					if(    (    'a' <= tmpVal
+					         && 'z' >= tmpVal )
+					    || (    'A' <= tmpVal
+					         && 'Z' >= tmpVal )
+					    || (    '0' <= tmpVal
+					         && '9' >= tmpVal )
+					    || (    '_' == tmpVal ) )
+					{
+						// go on the next char ...
+						continue;
+					}
+				}
+			}
+			if (true == m_exprRootNode.Parse(SearchIn, startPos, maxlen, findLen)) {
+				if(		0!=escapeChar
+					&&	startPos>0)
+				{
+					if (escapeChar == (char)SearchIn[startPos-1]) {
+						//==> detected escape char ==> try find again ...
+						continue;
+					}
+				}
+				// Check end :
+				if (true == m_notEndWithChar) {
+					if (i+findLen < SearchIn.Size() ) {
+						char tmpVal = SearchIn[startPos+findLen];
+						if(    (    'a' <= tmpVal
+						         && 'z' >= tmpVal )
+						    || (    'A' <= tmpVal
+						         && 'Z' >= tmpVal )
+						    || (    '0' <= tmpVal
+						         && '9' >= tmpVal )
+						    || (    '_' == tmpVal ) )
+						{
+							// go on the next char ...
+							continue;
+						}
+					}
+				}
+				m_areaFind.start = startPos;
+				m_areaFind.stop  = startPos + findLen;
+				return true;
 			}
 			return false;
 		};
