@@ -55,7 +55,7 @@ class Highlight {
 		Highlight(Edn::String &xmlFilename);
 		~Highlight(void);
 		bool HasExtention(Edn::String &ext);
-		bool FileNameCompatible(Edn::String &fileName);
+		bool FileNameCompatible(Edn::File &fileName);
 		void Display(void);
 		void Parse( int32_t start, int32_t stop, std::vector<colorInformation_ts> &metaData, int32_t &addingPos, EdnVectorBuf &buffer, int32_t elementID=0);
 		void Parse2(int32_t start, int32_t stop, std::vector<colorInformation_ts> &metaData, EdnVectorBuf &buffer, int32_t elementID=0);

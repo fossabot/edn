@@ -57,12 +57,14 @@ class Buffer {
 		{
 			m_fileName = newName;
 			m_haveName = true;
+			NameChange();
 		};
 		
 		void              SetFileName(Edn::String &newName)
 		{
 			m_fileName.SetCompleateName(newName);
 			m_haveName = true;
+			NameChange();
 		};
 		
 		bool              HaveName(void)
@@ -74,6 +76,7 @@ class Buffer {
 				bool      IsModify(void);
 	protected:
 				void      SetModify(bool status);
+		virtual void      NameChange(void) { /*EDN_DEBUG("check name change ==> no HL change possible");*/};
 	public:
 		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		virtual void      SetLineDisplay(uint32_t lineNumber);

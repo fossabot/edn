@@ -39,6 +39,8 @@ namespace Edn
 			Edn::String GetFolder(void) const;
 			Edn::String GetShortFilename(void) const;
 			Edn::String GetCompleateName(void) const;
+			bool        HasExtention(void);
+			Edn::String GetExtention(void);
 			int32_t     GetLineNumber(void);
 			void        SetCompleateName(Edn::String &newFilename);
 			

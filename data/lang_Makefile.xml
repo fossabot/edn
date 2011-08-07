@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="c">
 	<ext>Makefile</ext>
-	<ext>.mk</ext>
+	<ext>*.mk</ext>
+	<ext>*.global</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>

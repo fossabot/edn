@@ -73,6 +73,8 @@ class BufferText : public Buffer {
 		void      Undo(void);
 		void      Redo(void);
 		void      SetCharset(charset_te newCharset);
+	protected:
+		void      NameChange(void);
 
 	private:
 		// Display

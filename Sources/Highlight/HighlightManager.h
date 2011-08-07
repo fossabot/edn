@@ -45,8 +45,8 @@ class HighlightManager: public Singleton<HighlightManager>
 
 	public:
 		void loadLanguages(void);
-		Highlight	* Get(Edn::String &fileName);
-		bool		  Exist(Edn::String &fileName);
+		Highlight	* Get(Edn::File &fileName);
+		bool		  Exist(Edn::File &fileName);
 
 	private:
 		std::vector<Highlight*> listHighlight;		//!< List of ALL hightlight modules

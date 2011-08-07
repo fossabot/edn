@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="c">
-	<ext>.php</ext>
-	<ext>.php3</ext>
-	<ext>.php4</ext>
-	<ext>.phtml</ext>
+	<ext>*.php</ext>
+	<ext>*.php3</ext>
+	<ext>*.php4</ext>
+	<ext>*.phtml</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline">
 			<color>comment</color>

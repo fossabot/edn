@@ -98,10 +98,10 @@ bool HighlightPattern::IsEnable(void)
 void HighlightPattern::Display(void)
 {
 	/*
-	EDN_INFO("patern : \"" << m_paternName.c_str() << "\" level=" << m_level );
-	EDN_INFO(" ==> colorName \"" << m_colorName.c_str() << "\"");
-	EDN_INFO(" ==> regExpStart \"" << m_regExpStart->GetRegExp().c_str() << "\"");
-	EDN_INFO(" ==> regExpStop \"" << m_regExpStop->GetRegExp().c_str() << "\"");
+	EDN_INFO("patern : \"" << m_paternName << "\" level=" << m_level );
+	EDN_INFO(" ==> colorName \"" << m_colorName << "\"");
+	EDN_INFO(" ==> regExpStart \"" << m_regExpStart->GetRegExp() << "\"");
+	EDN_INFO(" ==> regExpStop \"" << m_regExpStop->GetRegExp() << "\"");
 	if (true == m_haveStopPatern) {
 		EDN_INFO(" ==> stop pattern: YES");
 	} else {
@@ -115,7 +115,7 @@ void HighlightPattern::Display(void)
 	*/
 	// Display all elements
 	for (int32_t i=0; i< m_subPatern.Size(); i++) {
-		EDN_INFO("        " << i << " SubPattern : " << m_subPatern[i]->GetName().c_str() );
+		EDN_INFO("        " << i << " SubPattern : " << m_subPatern[i]->GetName() );
 		m_subPatern[i]->Display();
 	}
 }

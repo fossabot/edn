@@ -41,7 +41,7 @@ HighlightManager::~HighlightManager(void)
 }
 
 
-Highlight *HighlightManager::Get(Edn::String &fileName)
+Highlight *HighlightManager::Get(Edn::File &fileName)
 {
 	uint32_t i;
 	for (i=0; i<listHighlight.size(); i++) {
@@ -52,13 +52,10 @@ Highlight *HighlightManager::Get(Edn::String &fileName)
 	return NULL;
 }
 
-bool HighlightManager::Exist(Edn::String &fileName)
+bool HighlightManager::Exist(Edn::File &fileName)
 {
-	uint32_t i;
-	for (i=0; i<listHighlight.size(); i++) {
-		if (true == listHighlight[i]->FileNameCompatible(fileName) ) {
-			return true;
-		}
+	if (NULL != Get(fileName) ) {
+		return true;
 	}
 	return false;
 }

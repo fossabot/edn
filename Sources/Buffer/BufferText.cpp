@@ -82,6 +82,29 @@ void BufferText::BasicInit(void)
  * @return ---
  *
  */
+void BufferText::NameChange(void)
+{
+	// Find HL system
+	//EDN_DEBUG("check name change");
+	if (true == HighlightManager::getInstance()->Exist(m_fileName)) {
+		Highlight * myHL = HighlightManager::getInstance()->Get(m_fileName);
+		// Set the new HL
+		if (NULL != myHL) {
+			m_EdnBuf.SetHLSystem(myHL);
+		}
+	}
+	
+}
+
+
+/**
+ * @brief
+ *
+ * @param[in,out] ---
+ *
+ * @return ---
+ *
+ */
 BufferText::BufferText()
 {
 	BasicInit();
@@ -101,6 +124,7 @@ BufferText::BufferText()
 BufferText::BufferText(Edn::File &fileName) : Buffer(fileName)
 {
 	BasicInit();
+	NameChange();
 	EDN_INFO("Add Data from file(" << GetFileName() << ")");
 	FILE * myFile = NULL;
 	// try to open the file. if not existed, new file

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="c">
-	<ext>.c</ext>
-	<ext>.cpp</ext>
-	<ext>.h</ext>
-	<ext>.hpp</ext>
+	<ext>*.c</ext>
+	<ext>*.cpp</ext>
+	<ext>*.h</ext>
+	<ext>*.hpp</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline doxygen">
 			<color>commentDoxygen</color>

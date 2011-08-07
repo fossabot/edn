@@ -213,3 +213,31 @@ int32_t Edn::File::GetLineNumber(void)
 	return m_lineNumberOpen;
 }
 
+
+bool Edn::File::HasExtention(void)
+{
+	int32_t lastPos = m_shortFilename.FindBack('.');
+	if(    -1 != lastPos                       // not find the .
+	    && 0  != lastPos                       // Find a . at the fist position .jdlskjdfklj ==> hiden file
+	    && m_shortFilename.Size() != lastPos ) // Remove file ended with .
+	{
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+Edn::String Edn::File::GetExtention(void)
+{
+	Edn::String tmpExt = "";
+	int32_t lastPos = m_shortFilename.FindBack('.');
+	if(    -1 != lastPos                       // not find the .
+	    && 0  != lastPos                       // Find a . at the fist position .jdlskjdfklj ==> hiden file
+	    && m_shortFilename.Size() != lastPos ) // Remove file ended with .
+	{
+		// Get the FileName
+		tmpExt = m_shortFilename.Extract(lastPos+1);
+	}
+	return tmpExt;
+}

@@ -52,7 +52,7 @@ Highlight::Highlight(Edn::String &xmlFilename)
 	// open the curent File
 	bool loadError = XmlDocument.LoadFile(xmlFilename.c_str());
 	if (false == loadError) {
-		EDN_ERROR( "can not load Hightlight XML: PARSING error: \"" << xmlFilename.c_str() << "\"");
+		EDN_ERROR( "can not load Hightlight XML: PARSING error: \"" << xmlFilename << "\"");
 		return;
 	}
 	TiXmlElement* root = XmlDocument.FirstChildElement( "EdnLang" );
@@ -134,24 +134,17 @@ bool Highlight::HasExtention(Edn::String &ext)
 	return false;
 }
 
-bool Highlight::FileNameCompatible(Edn::String &fileName)
+bool Highlight::FileNameCompatible(Edn::File &fileName)
 {
 	uint32_t i;
-	int32_t posCopy = fileName.FindBack('/');
-	Edn::String shortFilename;
-	if (-1 != posCopy) {
-		shortFilename = fileName.Extract(posCopy+1);
-	} else {
-		shortFilename = fileName;
-	}
-	posCopy = shortFilename.FindBack('.');
 	Edn::String extention;
-	if (-1 != posCopy) {
-		extention = shortFilename.Extract(posCopy);
+	if (true == fileName.HasExtention() ) {
+		extention = "*.";
+		extention += fileName.GetExtention();
 	} else {
-		extention = shortFilename;
+		extention = fileName.GetShortFilename();
 	}
-	EDN_DEBUG(" try to find : in \"" << fileName.c_str() << "\"  shortfilename\"" << shortFilename.c_str() << "\"  extention:\"" << extention.c_str() << "\" ");
+	EDN_DEBUG(" try to find : in \"" << fileName << "\" extention:\"" << extention << "\" ");
 
 	for (i=0; i<m_listExtentions.size(); i++) {
 		if (extention == m_listExtentions[i] ) {
@@ -167,16 +160,16 @@ void Highlight::Display(void)
 	uint32_t i;
 	EDN_INFO("List of ALL Highlight : ");
 	for (i=0; i< m_listExtentions.size(); i++) {
-		EDN_INFO("        Extention : " << i << " : " << m_listExtentions[i].c_str() );
+		EDN_INFO("        Extention : " << i << " : " << m_listExtentions[i] );
 	}
 	// Display all elements
 	for (i=0; i< m_listHighlightPass1.size(); i++) {
-		EDN_INFO("        " << i << " Pass 1 : " << m_listHighlightPass1[i]->GetName().c_str() );
+		EDN_INFO("        " << i << " Pass 1 : " << m_listHighlightPass1[i]->GetName() );
 		//m_listHighlightPass1[i]->Display();
 	}
 	// Display all elements
 	for (i=0; i< m_listHighlightPass2.size(); i++) {
-		EDN_INFO("        " << i << " Pass 2 : " << m_listHighlightPass2[i]->GetName().c_str() );
+		EDN_INFO("        " << i << " Pass 2 : " << m_listHighlightPass2[i]->GetName() );
 		//m_listHighlightPass2[i]->Display();
 	}
 }
