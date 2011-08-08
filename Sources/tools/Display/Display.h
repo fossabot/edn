@@ -26,11 +26,9 @@
 #ifndef __TOOLS_DISPLAY_H__
 #define __TOOLS_DISPLAY_H__
 
-	#include "tools_debug.h"
-	#include "Colorize.h"
-	#include "ColorizeManager.h"
-	#include <string>
-	#include <vector>
+#include "tools_debug.h"
+#include "Colorize.h"
+#include "ColorizeManager.h"
 
 
 /**

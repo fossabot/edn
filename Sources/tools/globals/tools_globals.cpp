@@ -26,14 +26,11 @@
 #include "tools_globals.h"
 #include "ColorizeManager.h"
 #include "MsgBroadcast.h"
-#include <string>
 
 #undef __class__
 #define __class__	"globals"
 
-// Variables privé du namespace
 
-static std::string curentFileName = "???";
 
 
 erreurCode_te globals::init(void)
@@ -197,39 +194,6 @@ void globals::ToggleInsert(void)
 bool globals::IsSetInsert(void)
 {
 	return insertIsSet;
-}
-
-
-
-
-/*
- * Basic GUI system : 
- *
- *
- *
- *
- */
-
-
-
-void globals::DisplaySystemString(std::vector<int32_t> &data)
-{
-	// Display the copyed data ... 
-	uint32_t i;
-	EDN_INFO("Display Data : ");
-	printf(" ========================================================\n");
-	for(i=0; i<data.size(); i++) {
-#		ifdef USE_GTK_VERSION_2_0
-		if (GDK_Return == data[i]) {
-#       elif USE_GTK_VERSION_3_0
-		if (GDK_KEY_Return == data[i]) {
-#       endif
-			printf("\n = ");
-		} else {
-			printf("%c", (char)data[i]);
-		}
-	}
-	printf("\n ========================================================\n");
 }
 
 

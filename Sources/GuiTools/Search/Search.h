@@ -28,8 +28,6 @@
 
 #include "tools_debug.h"
 #include "Singleton.h"
-#include <string>
-#include <vector>
 
 
 class Search: public Singleton<Search>

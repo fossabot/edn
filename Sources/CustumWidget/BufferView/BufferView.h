@@ -26,8 +26,6 @@
 #define __BUFFER_VIEW_H__
 
 #include "tools_debug.h"
-#include <vector>
-#include <string>
 #include "Singleton.h"
 #include "CodeView.h"
 #include "BufferManager.h"

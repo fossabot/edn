@@ -49,13 +49,13 @@ end   ***************                          *************
                                                                                                     
 */
 typedef struct {
-	bool selected;			//!< True if the selection is active
-	bool rectangular;		//!< True if the selection is rectangular
-	bool zeroWidth;			//!< Width 0 selections aren't "real" selections, but they can be useful when creating rectangular selections from the keyboard.
-	int32_t start;			//!< Pos. of start of selection, or if rectangular start of line containing it.
-	int32_t end;			//!< Pos. of end of selection, or if rectangular end of line containing it.
-	int32_t rectStart;		//!< Indent of left edge of rect. selection
-	int32_t rectEnd;		//!< Indent of right edge of rect. selection
+	bool selected;          //!< True if the selection is active
+	bool rectangular;       //!< True if the selection is rectangular
+	bool zeroWidth;         //!< Width 0 selections aren't "real" selections, but they can be useful when creating rectangular selections from the keyboard.
+	int32_t start;          //!< Pos. of start of selection, or if rectangular start of line containing it.
+	int32_t end;            //!< Pos. of end of selection, or if rectangular end of line containing it.
+	int32_t rectStart;      //!< Indent of left edge of rect. selection
+	int32_t rectEnd;        //!< Indent of right edge of rect. selection
 } selection;
 
 typedef enum{
@@ -67,10 +67,10 @@ typedef enum{
 
 
 typedef struct {
-	std::vector<colorInformation_ts>    HLData;
-	int32_t                             idSequence;
-	int32_t                             posHLPass1;
-	int32_t                             posHLPass2;
+	Edn::VectorType<colorInformation_ts>    HLData;
+	int32_t                                 idSequence;
+	int32_t                                 posHLPass1;
+	int32_t                                 posHLPass2;
 }displayHLData_ts;
 
 
@@ -125,54 +125,54 @@ class EdnBuf {
 	// selection remember...
 	// -----------------------------------------
 	public:
-		bool	SelectHasSelection(		selectionType_te select);
-		void	Select(					selectionType_te select, int32_t start, int32_t end);
-		void	Unselect(				selectionType_te select);
-		void	RectSelect(				selectionType_te select, int32_t start, int32_t end, int32_t rectStart, int32_t rectEnd);
-		bool	GetSelectionPos(		selectionType_te select, int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd);
-		void	GetSelectionText(		selectionType_te select, Edn::VectorType<int8_t> &text);
-		void	RemoveSelected(			selectionType_te select);
-		void	ReplaceSelected(		selectionType_te select, Edn::VectorType<int8_t> &text);
+		bool        SelectHasSelection(     selectionType_te select);
+		void        Select(                 selectionType_te select, int32_t start, int32_t end);
+		void        Unselect(               selectionType_te select);
+		void        RectSelect(             selectionType_te select, int32_t start, int32_t end, int32_t rectStart, int32_t rectEnd);
+		bool        GetSelectionPos(        selectionType_te select, int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd);
+		void        GetSelectionText(       selectionType_te select, Edn::VectorType<int8_t> &text);
+		void        RemoveSelected(         selectionType_te select);
+		void        ReplaceSelected(        selectionType_te select, Edn::VectorType<int8_t> &text);
 	private:
 		// current selection of the buffer
-		selection m_selectionList[SELECTION_SIZE];		//!< Selection area of the buffer
-		void	UpdateSelection(		selectionType_te select, int32_t pos, int32_t nDeleted, int32_t nInserted);
-		void	UpdateSelections(		int32_t pos, int32_t nDeleted, int32_t nInserted);
+		selection   m_selectionList[SELECTION_SIZE];    //!< Selection area of the buffer
+		void        UpdateSelection(        selectionType_te select, int32_t pos, int32_t nDeleted, int32_t nInserted);
+		void        UpdateSelections(       int32_t pos, int32_t nDeleted, int32_t nInserted);
 
 	// -----------------------------------------
 	// History section : 
 	// -----------------------------------------
 	public:
-		int32_t	Undo(					void);
-		int32_t	Redo(					void);
+		int32_t                                 Undo(void);
+		int32_t                                 Redo(void);
 	private:
-		bool							m_isUndoProcessing;
-		bool							m_isRedoProcessing;
-		Edn::VectorType<EdnBufHistory*>	m_historyUndo;
-		Edn::VectorType<EdnBufHistory*>	m_historyRedo;
+		bool                                    m_isUndoProcessing;
+		bool                                    m_isRedoProcessing;
+		Edn::VectorType<EdnBufHistory*>         m_historyUndo;
+		Edn::VectorType<EdnBufHistory*>         m_historyRedo;
 
 	// -----------------------------------------
 	// hightlight section : 
 	// -----------------------------------------
 	private:
-		Highlight *							m_Highlight;					//!< internal link with the Highlight system
-		std::vector<colorInformation_ts>	m_HLDataPass1;					//!< colorisation position in the current buffer pass 1
-		int32_t								m_HLDataSequence;				//!< position of the start of line requested by the screen viewer
-		void								RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdded);
-		void								GenerateHighLightAt(int32_t pos, int32_t endPos, int32_t addinPos=0);
-		void								CleanHighLight(void);
-		void								FindMainHighLightPosition(int32_t startPos, int32_t endPos, int32_t &startId, int32_t &stopId, bool backPreviousNotEnded);
+		Highlight *                             m_Highlight;         //!< internal link with the Highlight system
+		Edn::VectorType<colorInformation_ts>    m_HLDataPass1;       //!< colorisation position in the current buffer pass 1
+		int32_t                                 m_HLDataSequence;    //!< position of the start of line requested by the screen viewer
+		void                                    RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdded);
+		void                                    GenerateHighLightAt(int32_t pos, int32_t endPos, int32_t addinPos=0);
+		void                                    CleanHighLight(void);
+		void                                    FindMainHighLightPosition(int32_t startPos, int32_t endPos, int32_t &startId, int32_t &stopId, bool backPreviousNotEnded);
 	public:
-		void                                SetHLSystem(  Highlight * newHLSystem);
-		void								HightlightGenerateLines(displayHLData_ts & MData, int32_t startPos, int32_t nbLines);
-		colorInformation_ts *				GetElementColorAtPosition(displayHLData_ts & MData, int32_t pos);
+		void                                    SetHLSystem(  Highlight * newHLSystem);
+		void                                    HightlightGenerateLines(displayHLData_ts & MData, int32_t startPos, int32_t nbLines);
+		colorInformation_ts *                   GetElementColorAtPosition(displayHLData_ts & MData, int32_t pos);
 	private:
-		colorInformation_ts *				GetElementColorAtPosition(int32_t pos, int32_t &starPos);
+		colorInformation_ts *                   GetElementColorAtPosition(int32_t pos, int32_t &starPos);
 
 	private:
-		EdnVectorBuf						m_data;			//!< buffer of the data in the mode int8_t
-		void								CountNumberOfLines(void);
-		int32_t								m_nbLine;		//!< Number of line in the biffer
+		EdnVectorBuf                            m_data;                     //!< buffer of the data in the mode int8_t
+		void                                    CountNumberOfLines(void);
+		int32_t                                 m_nbLine;                   //!< Number of line in the biffer
 
 	// -----------------------------------------
 	// Display property and charset ...
@@ -186,27 +186,27 @@ class EdnBuf {
 		void        SetUTF8Mode(bool newOne)          { m_isUtf8 = newOne; m_charsetType=EDN_CHARSET_UTF8; };
 	private:
 		// Special mode of the buffer :
-		bool		m_isUtf8;								//!< true if we are in UTF8 mode ==> if true the size of a char is 0, otherwise .. 1->4 ( TODO : not now)
-		charset_te	m_charsetType;							//!< if UTF8 mode is at false : the charset type of the buffer
+		bool        m_isUtf8;           //!< true if we are in UTF8 mode ==> if true the size of a char is 0, otherwise .. 1->4 ( TODO : not now)
+		charset_te  m_charsetType;      //!< if UTF8 mode is at false : the charset type of the buffer
 		// Local Tabulation policies
-		int32_t		m_tabDist;								//!< equiv. number of characters in a tab
-		bool		m_useTabs;								//!< True if buffer routines are allowed to use tabs for padding in rectangular operations
+		int32_t     m_tabDist;          //!< equiv. number of characters in a tab
+		bool        m_useTabs;          //!< True if buffer routines are allowed to use tabs for padding in rectangular operations
 	
 	// -----------------------------------------
 	// Local function : 
 	// -----------------------------------------
 	private:
-		void	findRectSelBoundariesForCopy(	int32_t lineStartPos, int32_t rectStart, int32_t rectEnd, int32_t *selStart, int32_t *selEnd);
-		char	*getSelectionText(				selection &sel);
-		void	removeSelected(					selection &sel);
-		void	replaceSelected(				selection &sel, const char *text);
+		void    findRectSelBoundariesForCopy(   int32_t lineStartPos, int32_t rectStart, int32_t rectEnd, int32_t *selStart, int32_t *selEnd);
+		char *  getSelectionText(               selection &sel);
+		void    removeSelected(                 selection &sel);
+		void    replaceSelected(                selection &sel, const char *text);
 
-		void	eventModification(				int32_t pos, int32_t nInserted, Edn::VectorType<int8_t> &deletedText);
+		void    eventModification(              int32_t pos, int32_t nInserted, Edn::VectorType<int8_t> &deletedText);
 
 
-		int32_t insert(							int32_t pos, Edn::VectorType<int8_t> &insertText);
+		int32_t insert(                         int32_t pos, Edn::VectorType<int8_t> &insertText);
 		
-		bool	charMatch(						char first, char second, bool caseSensitive = true);
+		bool    charMatch(                      char first, char second, bool caseSensitive = true);
 };
 
 #endif

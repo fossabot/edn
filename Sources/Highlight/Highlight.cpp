@@ -33,14 +33,14 @@
 #define __class__	"Highlight"
 
 
-void Highlight::ParseRules(TiXmlNode *child, std::vector<HighlightPattern*> &mListPatern, int32_t level)
+void Highlight::ParseRules(TiXmlNode *child, Edn::VectorType<HighlightPattern*> &mListPatern, int32_t level)
 {
 	// Create the patern ...
 	HighlightPattern *myPattern = new HighlightPattern();
 	// parse under Element
 	myPattern->ParseRules(child, level);
 	// add element in the list
-	mListPatern.push_back(myPattern);
+	mListPatern.PushBack(myPattern);
 }
 
 
@@ -72,8 +72,8 @@ Highlight::Highlight(Edn::String &xmlFilename)
 			const char *myData = child->ToElement()->GetText();
 			if (NULL != myData) {
 				//EDN_INFO(PFX"(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
-				Edn::String myEdnData = myData;
-				m_listExtentions.push_back(myEdnData);
+				Edn::String * myEdnData = new Edn::String(myData);
+				m_listExtentions.PushBack(myEdnData);
 			}
 		} else if (!strcmp(child->Value(), "pass1")) {
 			// Get sub Nodes ...
@@ -113,21 +113,34 @@ Highlight::Highlight(Edn::String &xmlFilename)
 
 Highlight::~Highlight(void)
 {
-	uint32_t i;
+	int32_t i;
 	// clean all Element
-	for (i=0; i< m_listHighlightPass1.size(); i++) {
-		delete(m_listHighlightPass1[i]);
+	for (i=0; i< m_listHighlightPass1.Size(); i++) {
+		if (NULL != m_listHighlightPass1[i]) {
+			delete(m_listHighlightPass1[i]);
+			m_listHighlightPass1[i] = NULL;
+		}
 	}
 	// clear the compleate list
-	m_listHighlightPass1.clear();
+	m_listHighlightPass1.Clear();
+
+	// clean all Element
+	for (i=0; i< m_listExtentions.Size(); i++) {
+		if (NULL != m_listExtentions[i]) {
+			delete(m_listExtentions[i]);
+			m_listExtentions[i] = NULL;
+		}
+	}
+	// clear the compleate list
+	m_listExtentions.Clear();
 }
 
 
 bool Highlight::HasExtention(Edn::String &ext)
 {
-	uint32_t i;
-	for (i=0; i<m_listExtentions.size(); i++) {
-		if (ext == m_listExtentions[i] ) {
+	int32_t i;
+	for (i=0; i<m_listExtentions.Size(); i++) {
+		if (ext == *m_listExtentions[i] ) {
 			return true;
 		}
 	}
@@ -136,7 +149,7 @@ bool Highlight::HasExtention(Edn::String &ext)
 
 bool Highlight::FileNameCompatible(Edn::File &fileName)
 {
-	uint32_t i;
+	int32_t i;
 	Edn::String extention;
 	if (true == fileName.HasExtention() ) {
 		extention = "*.";
@@ -146,8 +159,8 @@ bool Highlight::FileNameCompatible(Edn::File &fileName)
 	}
 	EDN_DEBUG(" try to find : in \"" << fileName << "\" extention:\"" << extention << "\" ");
 
-	for (i=0; i<m_listExtentions.size(); i++) {
-		if (extention == m_listExtentions[i] ) {
+	for (i=0; i<m_listExtentions.Size(); i++) {
+		if (extention == *m_listExtentions[i] ) {
 			return true;
 		}
 	}
@@ -157,18 +170,18 @@ bool Highlight::FileNameCompatible(Edn::File &fileName)
 
 void Highlight::Display(void)
 {
-	uint32_t i;
+	int32_t i;
 	EDN_INFO("List of ALL Highlight : ");
-	for (i=0; i< m_listExtentions.size(); i++) {
-		EDN_INFO("        Extention : " << i << " : " << m_listExtentions[i] );
+	for (i=0; i< m_listExtentions.Size(); i++) {
+		EDN_INFO("        Extention : " << i << " : " << *m_listExtentions[i] );
 	}
 	// Display all elements
-	for (i=0; i< m_listHighlightPass1.size(); i++) {
+	for (i=0; i< m_listHighlightPass1.Size(); i++) {
 		EDN_INFO("        " << i << " Pass 1 : " << m_listHighlightPass1[i]->GetName() );
 		//m_listHighlightPass1[i]->Display();
 	}
 	// Display all elements
-	for (i=0; i< m_listHighlightPass2.size(); i++) {
+	for (i=0; i< m_listHighlightPass2.Size(); i++) {
 		EDN_INFO("        " << i << " Pass 2 : " << m_listHighlightPass2[i]->GetName() );
 		//m_listHighlightPass2[i]->Display();
 	}
@@ -178,14 +191,14 @@ void Highlight::Display(void)
 // TODO : Celui qui appelle suprime des element pour rien ... Enfin c'est pas tr\Uffffffffgrave... Il suffirait juste de suprimer celuis d'avant si il n'est pas terminer...
 void Highlight::Parse(int32_t start,
                       int32_t stop,
-                      std::vector<colorInformation_ts> &metaData,
+                      Edn::VectorType<colorInformation_ts> &metaData,
                       int32_t addingPos,
                       EdnVectorBuf &buffer)
 {
 	if (0 > addingPos) {
 		addingPos = 0;
 	}
-	//EDN_DEBUG("Parse element 0 => " << m_listHighlightPass1.size() << " ==> position search: (" << start << "," << stop << ")" );
+	//EDN_DEBUG("Parse element 0 => " << m_listHighlightPass1.Size() << " ==> position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;
 	int32_t elementStop = stop;
 	colorInformation_ts resultat;
@@ -193,7 +206,7 @@ void Highlight::Parse(int32_t start,
 		//EDN_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have
 		int32_t jjj;
-		for (jjj=0; jjj<m_listHighlightPass1.size(); jjj++){
+		for (jjj=0; jjj<m_listHighlightPass1.Size(); jjj++){
 			resultFind_te ret = HLP_FIND_OK;
 			//EDN_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.Size() << ")" );
 			// Stop the search to the end (to get the end of the pattern)
@@ -202,12 +215,12 @@ void Highlight::Parse(int32_t start,
 				//EDN_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
 				// Remove element in the current List where the current Element have a end inside the next...
 				int32_t kkk=addingPos;
-				while(kkk < (int32_t)metaData.size() ) {
+				while(kkk < metaData.Size() ) {
 					if (metaData[kkk].beginStart <= resultat.endStop) {
 						// Remove element
-						metaData.erase(metaData.begin()+kkk, metaData.begin()+kkk+1);
+						metaData.Erase(kkk, kkk+1);
 						// Increase the end of search
-						if (kkk < (int32_t)metaData.size()) {
+						if (kkk < metaData.Size()) {
 							// just befor the end of the next element
 							elementStop = metaData[kkk].beginStart-1;
 						} else {
@@ -220,7 +233,7 @@ void Highlight::Parse(int32_t start,
 					}
 				}
 				// Add curent element in the list ...
-				metaData.insert(metaData.begin() + addingPos, resultat);
+				metaData.Insert(addingPos, resultat);
 				//EDN_DEBUG("INSERT at "<< addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
 				// Update the current research starting element: (Set position at the end of the current element
 				elementStart = resultat.endStop-1;
@@ -242,10 +255,9 @@ void Highlight::Parse(int32_t start,
  */
 void Highlight::Parse2(int32_t start,
                        int32_t stop,
-                       std::vector<colorInformation_ts> &metaData,
+                       Edn::VectorType<colorInformation_ts> &metaData,
                        EdnVectorBuf &buffer)
 {
-	int32_t elementID = 0;
 	//EDN_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << " ==> position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;
 	int32_t elementStop = stop;
@@ -254,7 +266,7 @@ void Highlight::Parse2(int32_t start,
 		//EDN_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have
 		int32_t jjj;
-		for (jjj=0; jjj<m_listHighlightPass2.size(); jjj++){
+		for (jjj=0; jjj<m_listHighlightPass2.Size(); jjj++){
 			resultFind_te ret = HLP_FIND_OK;
 			//EDN_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.Size() << ")" );
 			// Stop the search to the end (to get the end of the pattern)
@@ -262,7 +274,7 @@ void Highlight::Parse2(int32_t start,
 			if (HLP_FIND_ERROR != ret) {
 				//EDN_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
 				// Add curent element in the list ...
-				metaData.push_back(resultat);
+				metaData.PushBack(resultat);
 				elementStart = resultat.endStop;
 				// Exit current cycle
 				break;

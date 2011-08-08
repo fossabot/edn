@@ -37,8 +37,17 @@ ColorizeManager::ColorizeManager(void)
 ColorizeManager::~ColorizeManager(void)
 {
 	delete(errorColor);
-	// TODO : delete all color previously
-	listMyColor.clear();
+
+	uint32_t i;
+	// clean all Element
+	for (i=0; i< listMyColor.Size(); i++) {
+		if (NULL != listMyColor[i]) {
+			delete(listMyColor[i]);
+			listMyColor[i] = NULL;
+		}
+	}
+	// clear the compleate list
+	listMyColor.Clear();
 }
 
 
@@ -181,7 +190,7 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 								myNewColor->SetItalic(true);
 							}
 						}
-						listMyColor.push_back(myNewColor);
+						listMyColor.PushBack(myNewColor);
 					} else {
 						EDN_ERROR(PFX"(l "<<pNode->Row()<<") node not suported : \""<<pNode->Value()<<"\" must be [color]");
 					}
@@ -199,7 +208,7 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 Colorize *ColorizeManager::Get(const char *colorName)
 {
 	uint32_t i;
-	for (i=0; i<listMyColor.size(); i++) {
+	for (i=0; i<listMyColor.Size(); i++) {
 		Edn::String elementName = listMyColor[i]->GetName();
 		if (elementName == colorName) {
 			return listMyColor[i];
@@ -228,7 +237,7 @@ color_ts & ColorizeManager::Get(basicColor_te myColor)
 bool ColorizeManager::Exist(const char *colorName)
 {
 	uint32_t i;
-	for (i=0; i<listMyColor.size(); i++) {
+	for (i=0; i<listMyColor.Size(); i++) {
 		Edn::String elementName = listMyColor[i]->GetName();
 		if (elementName == colorName) {
 			return true;
@@ -245,7 +254,7 @@ void ColorizeManager::DisplayListOfColor(void)
 {
 	uint32_t i;
 	EDN_INFO(PFX"List of ALL COLOR : ");
-	for (i=0; i<listMyColor.size(); i++) {
+	for (i=0; i<listMyColor.Size(); i++) {
 		//Edn::String elementName = listMyColor[i]->GetName();
 		//EDN_INFO(i << " : \"" <<  elementName.c_str() << "\"" );
 		listMyColor[i]->Display(i);

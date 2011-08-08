@@ -28,8 +28,7 @@
 
 #include "tools_debug.h"
 #include "Singleton.h"
-#include <string>
-#include <vector>
+
 
 
 class MainAreaView: public Singleton<MainAreaView>

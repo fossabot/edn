@@ -29,8 +29,6 @@
 class HighlightManager;
 
 #include "Singleton.h"
-#include <vector>
-#include <string>
 #include "Highlight.h"
 
 
@@ -49,7 +47,7 @@ class HighlightManager: public Singleton<HighlightManager>
 		bool		  Exist(Edn::File &fileName);
 
 	private:
-		std::vector<Highlight*> listHighlight;		//!< List of ALL hightlight modules
+		Edn::VectorType<Highlight*> listHighlight;		//!< List of ALL hightlight modules
 };
 
 #endif

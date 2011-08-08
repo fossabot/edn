@@ -35,7 +35,7 @@ void EdnBuf::SetHLSystem(Highlight * newHLSystem)
 {
 	if (m_Highlight != newHLSystem) {
 		m_Highlight = newHLSystem;
-		m_HLDataPass1.clear();
+		m_HLDataPass1.Clear();
 		RegenerateHighLightAt(0, 0, m_data.Size());
 	}
 }
@@ -67,7 +67,7 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 	int32_t startId;
 	int32_t stopId;
 	// clean data if needed
-	if (0 != m_HLDataPass1.size()) {
+	if (0 != m_HLDataPass1.Size()) {
 		// find element previous
 		FindMainHighLightPosition(pos, posEnd, startId, stopId, true);
 
@@ -75,19 +75,19 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 		if(		-1 == startId
 			&&	-1 == stopId)
 		{
-			m_HLDataPass1.clear();
+			m_HLDataPass1.Clear();
 		} else if(-1 == startId) {
 			if (0 == stopId){
-				m_HLDataPass1.erase(m_HLDataPass1.begin());
+				m_HLDataPass1.Erase(0);
 			} else {
-				m_HLDataPass1.erase(m_HLDataPass1.begin(),m_HLDataPass1.begin()+stopId);
+				m_HLDataPass1.Erase(0,stopId);
 			}
 		} else if(-1 == stopId) {
-			m_HLDataPass1.erase(m_HLDataPass1.begin()+startId+1,m_HLDataPass1.end());
+			m_HLDataPass1.Erase(startId+1, m_HLDataPass1.Size());
 		} else {
-			m_HLDataPass1.erase(m_HLDataPass1.begin()+startId+1,m_HLDataPass1.begin()+stopId);
+			m_HLDataPass1.Erase(startId+1, stopId);
 		}
-		EDN_DEBUG("new size=" << (int32_t)m_HLDataPass1.size()-1);
+		EDN_DEBUG("new size=" << (int32_t)m_HLDataPass1.Size()-1);
 		// update position after the range position : 
 		int32_t elemStart;
 		if(-1 == startId) {
@@ -95,7 +95,7 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 		} else {
 			elemStart = startId+1;
 		}
-		for (i=elemStart; i< (int32_t)m_HLDataPass1.size(); i++) {
+		for (i=elemStart; i< (int32_t)m_HLDataPass1.Size(); i++) {
 			//EDN_DEBUG("move element=" << i);
 			m_HLDataPass1[i].beginStart += nbAdded - nbDeleted;
 			m_HLDataPass1[i].beginStop  += nbAdded - nbDeleted;
@@ -113,7 +113,7 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 			GenerateHighLightAt(0, m_HLDataPass1[0].beginStart, 0);
 		} else if(-1 == stopId) {
 			//EDN_DEBUG("*******  Regenerate STOP");
-			GenerateHighLightAt(m_HLDataPass1[m_HLDataPass1.size() -1].endStop, m_data.Size(), m_HLDataPass1.size());
+			GenerateHighLightAt(m_HLDataPass1[m_HLDataPass1.Size() -1].endStop, m_data.Size(), m_HLDataPass1.Size());
 		} else {
 			//EDN_DEBUG("*******  Regenerate RANGE");
 			GenerateHighLightAt(m_HLDataPass1[startId].endStop, m_HLDataPass1[startId+1].beginStart, startId+1);
@@ -123,7 +123,7 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 		//GenerateHighLightAt(pos, nbAdded);
 		GenerateHighLightAt(0, m_data.Size());
 	}
-	for (i=0; i< (int32_t)m_HLDataPass1.size(); i++) {
+	for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
 		Edn::String ploppp;
 		if (NULL != m_HLDataPass1[i].patern ) {
 			ploppp = ((HighlightPattern*)m_HLDataPass1[i].patern)->GetName();
@@ -177,7 +177,7 @@ void EdnBuf::FindMainHighLightPosition(int32_t startPos, int32_t endPos, int32_t
 			      S=-1      ***************        E                                  
 	*/
 	int32_t i;
-	for (i=0; i< (int32_t)m_HLDataPass1.size(); i++) {
+	for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
 		if (m_HLDataPass1[i].endStop > startPos) {
 			break;
 		}
@@ -198,7 +198,7 @@ void EdnBuf::FindMainHighLightPosition(int32_t startPos, int32_t endPos, int32_t
 	} else {
 		elemStart = startId+1;
 	}
-	for (i=elemStart; i< (int32_t)m_HLDataPass1.size(); i++) {
+	for (i=elemStart; i< (int32_t)m_HLDataPass1.Size(); i++) {
 		if (m_HLDataPass1[i].beginStart > endPos)
 		{
 			stopId = i;
@@ -206,13 +206,13 @@ void EdnBuf::FindMainHighLightPosition(int32_t startPos, int32_t endPos, int32_t
 		}
 	}
 	/*
-	if (-1 != startId && startId < (int32_t)m_HLDataPass1.size()) {
-		EDN_DEBUG("==> BEGIN : start="<<m_HLDataPass1[startId].beginStart<<", stop="<<m_HLDataPass1[startId].endStop<<" id=" << startId << "/" << (int32_t)m_HLDataPass1.size()-1);
+	if (-1 != startId && startId < (int32_t)m_HLDataPass1.Size()) {
+		EDN_DEBUG("==> BEGIN : start="<<m_HLDataPass1[startId].beginStart<<", stop="<<m_HLDataPass1[startId].endStop<<" id=" << startId << "/" << (int32_t)m_HLDataPass1.Size()-1);
 	} else {
 		EDN_DEBUG("==> BEGIN : start=???, stop=??? id=" << startId);
 	}
-	if (-1 != stopId && stopId < (int32_t)m_HLDataPass1.size()) {
-		EDN_DEBUG("==> END   : start="<<m_HLDataPass1[stopId].beginStart<<", stop="<<m_HLDataPass1[stopId].endStop<<" id=" << stopId<< "/" << (int32_t)m_HLDataPass1.size()-1);
+	if (-1 != stopId && stopId < (int32_t)m_HLDataPass1.Size()) {
+		EDN_DEBUG("==> END   : start="<<m_HLDataPass1[stopId].beginStart<<", stop="<<m_HLDataPass1[stopId].endStop<<" id=" << stopId<< "/" << (int32_t)m_HLDataPass1.Size()-1);
 	} else {
 		EDN_DEBUG("==> END   : start=???, stop=??? id=" << stopId);
 	}
@@ -228,7 +228,7 @@ void EdnBuf::GenerateHighLightAt(int32_t pos, int32_t endPos, int32_t addinPos)
 		return;
 	}
 	//EDN_DEBUG("area : ("<<pos<<","<<endPos<<") insert at : " << addinPos);
-	m_Highlight->ParseOneElement(pos, endPos, m_HLDataPass1, addinPos, m_data);
+	m_Highlight->Parse(pos, endPos, m_HLDataPass1, addinPos, m_data);
 }
 
 
@@ -236,7 +236,7 @@ void EdnBuf::GenerateHighLightAt(int32_t pos, int32_t endPos, int32_t addinPos)
 void EdnBuf::CleanHighLight(void)
 {
 	// Remove all element in the list...
-	m_HLDataPass1.clear();
+	m_HLDataPass1.Clear();
 }
 
 
@@ -244,7 +244,7 @@ colorInformation_ts *EdnBuf::GetElementColorAtPosition(int32_t pos, int32_t &sta
 {
 	int32_t i;
 	int32_t start = edn_max(0, starPos-1);
-	for (i=start; i<(int32_t)m_HLDataPass1.size(); i++) {
+	for (i=start; i<(int32_t)m_HLDataPass1.Size(); i++) {
 		starPos = i;
 		if(		m_HLDataPass1[i].beginStart <= pos
 			&&	m_HLDataPass1[i].endStop    > pos)
@@ -272,7 +272,7 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 		g_get_current_time(&timeStart);
 		MData.idSequence = m_HLDataSequence;
 		HLStart = StartOfLine(HLStart);
-		MData.HLData.clear();
+		MData.HLData.Clear();
 		int32_t HLStop = CountForwardNLines(HLStart, nbLines);
 		int32_t startId, stopId;
 		// find element previous
@@ -282,7 +282,7 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 		//EDN_DEBUG("List of section between : "<< startId << " & " << stopId);
 		int32_t endSearch = stopId+1;
 		if (-1 == stopId) {
-			endSearch = m_HLDataPass1.size();
+			endSearch = m_HLDataPass1.Size();
 		}
 		for (k=edn_max(startId, 0); k<endSearch; k++) {
 			// empty section :
@@ -305,9 +305,9 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 			//EDN_DEBUG("  ==> (under section   ) k="<<k<<" start="<<m_HLDataPass1[k].beginStart<<" stop="<<m_HLDataPass1[k].endStop << " subSectionOfID=" << 99999999);
 			// TODO : ...
 		}
-		if (endSearch == (int32_t)m_HLDataPass1.size() ){
-			//if(		k < (int32_t)m_HLDataPass1.size()) {
-			if (m_HLDataPass1.size() != 0) {
+		if (endSearch == (int32_t)m_HLDataPass1.Size() ){
+			//if(		k < (int32_t)m_HLDataPass1.Size()) {
+			if (m_HLDataPass1.Size() != 0) {
 				//EDN_DEBUG("  ==> (empty section 3 ) k="<<k<<" start="<<m_HLDataPass1[k-1].endStop<<" stop="<<HLStop );
 				m_Highlight->Parse2(m_HLDataPass1[k-1].endStop,
 									HLStop,
@@ -334,7 +334,7 @@ colorInformation_ts * EdnBuf::GetElementColorAtPosition(displayHLData_ts & MData
 {
 	int32_t i;
 	int32_t start = edn_max(0, MData.posHLPass2-1);
-	for (i=start; i<(int32_t)MData.HLData.size(); i++) {
+	for (i=start; i<(int32_t)MData.HLData.Size(); i++) {
 		MData.posHLPass2 = i;
 		if(		MData.HLData[i].beginStart <= pos
 			&&	MData.HLData[i].endStop    > pos)

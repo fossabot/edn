@@ -26,8 +26,6 @@
 #ifndef __BUFFER_TEXT_H__
 #define __BUFFER_TEXT_H__
 
-#include <vector>
-#include <string>
 #include "ColorizeManager.h"
 #include "Buffer.h"
 #include "EdnBuf.h"

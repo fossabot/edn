@@ -37,14 +37,23 @@ HighlightManager::HighlightManager(void)
 
 HighlightManager::~HighlightManager(void)
 {
-	listHighlight.clear();
+	uint32_t i;
+	// clean all Element
+	for (i=0; i< listHighlight.Size(); i++) {
+		if (NULL != listHighlight[i]) {
+			delete(listHighlight[i]);
+			listHighlight[i] = NULL;
+		}
+	}
+	// clear the compleate list
+	listHighlight.Clear();
 }
 
 
 Highlight *HighlightManager::Get(Edn::File &fileName)
 {
 	uint32_t i;
-	for (i=0; i<listHighlight.size(); i++) {
+	for (i=0; i<listHighlight.Size(); i++) {
 		if (true == listHighlight[i]->FileNameCompatible(fileName) ) {
 			return listHighlight[i];
 		}
@@ -73,32 +82,32 @@ void HighlightManager::loadLanguages(void)
 	Edn::String xmlFilename = homedir;
 	xmlFilename += "lang_c.xml";
 	Highlight *myHightline = new Highlight(xmlFilename);
-	listHighlight.push_back(myHightline);
+	listHighlight.PushBack(myHightline);
 	
 	xmlFilename = homedir;
 	xmlFilename += "lang_boo.xml";
 	myHightline = new Highlight(xmlFilename);
-	listHighlight.push_back(myHightline);
+	listHighlight.PushBack(myHightline);
 	
 	xmlFilename = homedir;
 	xmlFilename += "lang_Makefile.xml";
 	myHightline = new Highlight(xmlFilename);
-	listHighlight.push_back(myHightline);
+	listHighlight.PushBack(myHightline);
 	
 	xmlFilename = homedir;
 	xmlFilename += "lang_asm.xml";
 	myHightline = new Highlight(xmlFilename);
-	listHighlight.push_back(myHightline);
+	listHighlight.PushBack(myHightline);
 	
 	xmlFilename = homedir;
 	xmlFilename += "lang_xml.xml";
 	myHightline = new Highlight(xmlFilename);
-	listHighlight.push_back(myHightline);
+	listHighlight.PushBack(myHightline);
 	
 	xmlFilename = homedir;
 	xmlFilename += "lang_php.xml";
 	myHightline = new Highlight(xmlFilename);
-	listHighlight.push_back(myHightline);
+	listHighlight.PushBack(myHightline);
 	
 	myHightline->Display();
 }

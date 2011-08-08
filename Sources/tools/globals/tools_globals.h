@@ -27,14 +27,12 @@
 #define __TOOLS_GLOBALS_H__
 
 #include "tools_debug.h"
-#include <string>
-#include <vector>
 
 namespace globals
 {
-	erreurCode_te	init(void);
-	int32_t			getNbColoneBorder(void);
-	int32_t			getNbLineBorder(void);
+	erreurCode_te   init(void);
+	int32_t         getNbColoneBorder(void);
+	int32_t         getNbLineBorder(void);
 
 	bool    IsSetDisplayEndOfLine(void);
 	void    SetDisplayEndOfLine(bool newVal);
@@ -45,25 +43,24 @@ namespace globals
 	bool    IsSetAutoIndent(void);
 	void    SetAutoIndent(bool newVal);
 
-	void			init2(void);
+	void    init2(void);
 
-	void	SetShift(void);
-	void	UnSetShift(void);
-	bool	IsSetShift(void);
-	void	SetAlt(void);
-	void	UnSetAlt(void);
-	bool	IsSetAlt(void);
-	void	SetCtrl(void);
-	void	UnSetCtrl(void);
-	bool	IsSetCtrl(void);
-	void	SetPomme(void);
-	void	UnSetPomme(void);
-	bool	IsSetPomme(void);
-	void	SetInsert(void);
-	void	UnSetInsert(void);
-	void	ToggleInsert(void);
-	bool	IsSetInsert(void);
-	void	DisplaySystemString(std::vector<int32_t> &data);
+	void    SetShift(void);
+	void    UnSetShift(void);
+	bool    IsSetShift(void);
+	void    SetAlt(void);
+	void    UnSetAlt(void);
+	bool    IsSetAlt(void);
+	void    SetCtrl(void);
+	void    UnSetCtrl(void);
+	bool    IsSetCtrl(void);
+	void    SetPomme(void);
+	void    UnSetPomme(void);
+	bool    IsSetPomme(void);
+	void    SetInsert(void);
+	void    UnSetInsert(void);
+	void    ToggleInsert(void);
+	bool    IsSetInsert(void);
 }
 
 #endif

@@ -27,9 +27,8 @@
 #define __COLORIZE_MANAGER_H__
 
 #include "Singleton.h"
-#include <vector>
-#include <string>
 #include "Colorize.h"
+#include "Edn.h"
 
 typedef enum {
 	// BASIC color for codeViewer
@@ -59,19 +58,19 @@ class ColorizeManager: public Singleton<ColorizeManager>
 		ColorizeManager(void);
 		~ColorizeManager(void);
 	public:
-		void		  LoadFile(Edn::String &xmlFilename);
-		void		  LoadFile(const char * xmlFilename);
-		Colorize	* Get(const char *colorName);
-		Colorize	* Get(Edn::String &colorName);
-		color_ts	& Get(basicColor_te myColor);
-		bool		  Exist(Edn::String &colorName);
-		bool		  Exist(const char *colorName);
-		void		  DisplayListOfColor(void);
+		void        LoadFile(Edn::String &xmlFilename);
+		void        LoadFile(const char * xmlFilename);
+		Colorize *  Get(const char *colorName);
+		Colorize *  Get(Edn::String &colorName);
+		color_ts &  Get(basicColor_te myColor);
+		bool        Exist(Edn::String &colorName);
+		bool        Exist(const char *colorName);
+		void        DisplayListOfColor(void);
 
 	private:
-		std::vector<Colorize*>	listMyColor;		//!< List of ALL Color
-		Colorize*				errorColor;
-		color_ts				basicColors[COLOR_NUMBER_MAX];
+		Edn::VectorType<Colorize*>  listMyColor;		//!< List of ALL Color
+		Colorize *                  errorColor;
+		color_ts                    basicColors[COLOR_NUMBER_MAX];
 };
 
 #endif
