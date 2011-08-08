@@ -246,7 +246,6 @@ void DrawerManager::Text(color_ts & SelectColorFg, color_ts & SelectColorBg, int
 	cairo_set_font_face(m_cairo, Display::GetFont(false, false));
 	int32_t letterHeight = Display::GetFontHeight();
 	int32_t letterWidth = Display::GetFontWidth();
-	int32_t stringLen = strUtf8Len(myText);
 	DirectRectangle(SelectColorBg, x, y, letterWidth*strlen(myText), letterHeight);
 	cairo_fill(m_cairo);
 	cairo_move_to(m_cairo, x, y+letterHeight-4);

@@ -257,7 +257,7 @@ void CTagsManager::MultipleJump(void)
 	gtk_widget_show_all(myContentArea);
 	int32_t result = gtk_dialog_run (GTK_DIALOG (myDialog));
 	// Get data from the gtk entry
-	
+	result = 0; // remove warning
 	// Remove dialogue
 	gtk_widget_destroy(myDialog);
 }

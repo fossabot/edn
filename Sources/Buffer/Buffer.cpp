@@ -282,6 +282,7 @@ void Buffer::Replace(Edn::String &data)
 int32_t Buffer::FindLine(Edn::String &data)
 {
 	// nothing to do
+	return 0;
 }
 
 void Buffer::JumpAtLine(int32_t newLine)

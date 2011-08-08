@@ -41,7 +41,6 @@ BufferView::BufferView(void) : MsgBroadcast("Buffer View", EDN_CAT_GUI)
 	// Init link with the buffer Manager
 	m_bufferManager = BufferManager::getInstance();
 	m_colorManager = ColorizeManager::getInstance();
-	m_menuContext = MenuContext::getInstance();
 
 	m_widget = gtk_drawing_area_new();
 	gtk_widget_set_size_request( m_widget, 250, 100);
@@ -230,13 +229,12 @@ gint BufferView::CB_focusGet(	GtkWidget *widget, GdkEventFocus *event, gpointer 
 
 gint BufferView::CB_focusLost(	GtkWidget *widget, GdkEventFocus *event, gpointer data)
 {
-	BufferView * self = reinterpret_cast<BufferView*>(data);
+	//BufferView * self = reinterpret_cast<BufferView*>(data);
 	
 #	ifdef USE_GTK_VERSION_2_0
 	GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
 #	endif
 	EDN_INFO("Focus - out");
-	self->m_menuContext->Hide();
 	return FALSE;
 }
 
@@ -245,7 +243,7 @@ gint BufferView::CB_keyboardEvent(	GtkWidget *widget, GdkEventKey *event, gpoint
 	//BufferView * self = reinterpret_cast<BufferView*>(data);
 	
 	if(event->type == GDK_KEY_PRESS) {
-	gtk_widget_queue_draw( widget );
+		gtk_widget_queue_draw( widget );
 	}
 	return true;
 }
@@ -322,9 +320,6 @@ void BufferView::ViewPopupMenu(GtkWidget *parrent, GdkEventButton *event, int32_
 gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
 	BufferView * self = reinterpret_cast<BufferView*>(data);
-	if (event->type != GDK_BUTTON_RELEASE) {
-		self->m_menuContext->Hide();
-	}
 	// get focus on the widget
 	gtk_widget_grab_focus(widget);
 	if (event->button == 1) {

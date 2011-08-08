@@ -38,7 +38,7 @@ ColorizeManager::~ColorizeManager(void)
 {
 	delete(errorColor);
 
-	uint32_t i;
+	int32_t i;
 	// clean all Element
 	for (i=0; i< listMyColor.Size(); i++) {
 		if (NULL != listMyColor[i]) {
@@ -207,7 +207,7 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 
 Colorize *ColorizeManager::Get(const char *colorName)
 {
-	uint32_t i;
+	int32_t i;
 	for (i=0; i<listMyColor.Size(); i++) {
 		Edn::String elementName = listMyColor[i]->GetName();
 		if (elementName == colorName) {
@@ -236,7 +236,7 @@ color_ts & ColorizeManager::Get(basicColor_te myColor)
 
 bool ColorizeManager::Exist(const char *colorName)
 {
-	uint32_t i;
+	int32_t i;
 	for (i=0; i<listMyColor.Size(); i++) {
 		Edn::String elementName = listMyColor[i]->GetName();
 		if (elementName == colorName) {
@@ -252,7 +252,7 @@ bool ColorizeManager::Exist(Edn::String &colorName)
 
 void ColorizeManager::DisplayListOfColor(void)
 {
-	uint32_t i;
+	int32_t i;
 	EDN_INFO(PFX"List of ALL COLOR : ");
 	for (i=0; i<listMyColor.Size(); i++) {
 		//Edn::String elementName = listMyColor[i]->GetName();

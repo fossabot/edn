@@ -301,6 +301,7 @@ void Utf8_SizeElement(const char * data, int32_t lenMax , uint8_t &size, bool &b
 	}
 }
 
+#if 0 // Remove for the moment ...
 /**
  * @brief Get the number of element of the previous UTF8 char (in the curent Buffer) 
  *
@@ -349,7 +350,7 @@ static void Utf8_SizePreviousElement(const char * data, int32_t lenMax, uint8_t 
 		size = 1;
 	}
 }
-
+#endif
 
 /**
  * @brief 

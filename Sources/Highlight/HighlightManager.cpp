@@ -37,7 +37,7 @@ HighlightManager::HighlightManager(void)
 
 HighlightManager::~HighlightManager(void)
 {
-	uint32_t i;
+	int32_t i;
 	// clean all Element
 	for (i=0; i< listHighlight.Size(); i++) {
 		if (NULL != listHighlight[i]) {
@@ -52,7 +52,7 @@ HighlightManager::~HighlightManager(void)
 
 Highlight *HighlightManager::Get(Edn::File &fileName)
 {
-	uint32_t i;
+	int32_t i;
 	for (i=0; i<listHighlight.Size(); i++) {
 		if (true == listHighlight[i]->FileNameCompatible(fileName) ) {
 			return listHighlight[i];

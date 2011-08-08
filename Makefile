@@ -175,8 +175,7 @@ CXXFILES+=		CustumWidget/BufferView/BufferView.cpp		\
 				GuiTools/MainWindows/MenuBar.cpp			\
 				GuiTools/MainWindows/ToolBar.cpp			\
 				GuiTools/Search/Search.cpp					\
-				GuiTools/Search/SearchData.cpp              \
-				GuiTools/MenuContext/MenuContext.cpp
+				GuiTools/Search/SearchData.cpp
 
 # Basic Interface :
 CXXFILES+=		Buffer/Buffer.cpp						\

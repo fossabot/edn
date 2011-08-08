@@ -46,7 +46,6 @@ CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
 	// Init link with the buffer Manager
 	m_bufferManager = BufferManager::getInstance();
 	m_colorManager = ColorizeManager::getInstance();
-	m_menuContext = MenuContext::getInstance();
 
 	m_widget = gtk_drawing_area_new();
 	gtk_widget_set_size_request( m_widget, 200, 100);
