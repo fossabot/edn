@@ -175,90 +175,66 @@ void Highlight::Display(void)
 }
 
 
+// TODO : Celui qui appelle suprime des element pour rien ... Enfin c'est pas tr\Uffffffffgrave... Il suffirait juste de suprimer celuis d'avant si il n'est pas terminer...
 void Highlight::Parse(int32_t start,
                       int32_t stop,
                       std::vector<colorInformation_ts> &metaData,
-                      int32_t &addingPos,
-                      EdnVectorBuf &buffer,
-                      int32_t elementID)
+                      int32_t addingPos,
+                      EdnVectorBuf &buffer)
 {
 	if (0 > addingPos) {
 		addingPos = 0;
 	}
-	/*int32_t emptyId = -1;
-	for (i=0; i< (int32_t)metaData.size(); i++) {
-		
-	}*/
-	//EDN_DEBUG("Parse element " << elementID << " / " << m_listHighlightPass1.size() << " ==> position search: (" << start << "," << stop << ")" );
-	if (elementID >= (int32_t)m_listHighlightPass1.size() ){
-		//EDN_DEBUG("Return at " << elementID << " / " << m_listHighlightPass1.size() );
-		return;
-	}
+	//EDN_DEBUG("Parse element 0 => " << m_listHighlightPass1.size() << " ==> position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;
 	int32_t elementStop = stop;
-	resultFind_te ret = HLP_FIND_OK;
 	colorInformation_ts resultat;
-	while (HLP_FIND_ERROR != ret && elementStart<elementStop) {
-		ret = m_listHighlightPass1[elementID]->Find(elementStart, elementStop, resultat, buffer);
-		if (HLP_FIND_ERROR != ret) {
-			//EDN_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
-			// Add curent element in the list ...
-			if (HLP_FIND_OK_NO_END == ret) {
-				// find if we have a next element with th save Pointer and not higher the this one
-				int32_t findNextElement = -1;
-				int32_t i;
-				int32_t curentLevel = ((HighlightPattern*)resultat.patern)->GetLevel();
-				for (i=addingPos; i< (int32_t)metaData.size(); i++) {
-					if (curentLevel > ((HighlightPattern*)metaData[i].patern)->GetLevel() ) {
-						//EDN_DEBUG("    -> Find upper element at "<< i );
-						break;
-					} else if (curentLevel < ((HighlightPattern*)metaData[i].patern)->GetLevel() ) {
-						findNextElement = i;
-						//EDN_DEBUG("    -> Find under element at "<< i );
-					}
-					if (metaData[i].patern == resultat.patern)
-					{
-						findNextElement = i;
-						//EDN_DEBUG("    -> Find a same element at "<< i );
-						break;
-					}
-				}
-
-				if (-1 != findNextElement) {
-					// if not find a end, we need to search the end of this one and parse all data inside...
-					int32_t newEnd   = buffer.Size();
-					if (findNextElement >= (int32_t)metaData.size()-1) {
-						// Remove old element : 
-						//EDN_DEBUG("        --> Remove : " << addingPos << "==>" << (int32_t)metaData.size() << " (end)" );
-						metaData.erase(metaData.begin()+addingPos,metaData.end());
+	while (elementStart<elementStop) {
+		//EDN_DEBUG("Parse element in the buffer id=" << elementStart);
+		//try to fond the HL in ALL of we have
+		int32_t jjj;
+		for (jjj=0; jjj<m_listHighlightPass1.size(); jjj++){
+			resultFind_te ret = HLP_FIND_OK;
+			//EDN_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.Size() << ")" );
+			// Stop the search to the end (to get the end of the pattern)
+			ret = m_listHighlightPass1[jjj]->Find(elementStart, buffer.Size(), resultat, buffer);
+			if (HLP_FIND_ERROR != ret) {
+				//EDN_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
+				// Remove element in the current List where the current Element have a end inside the next...
+				int32_t kkk=addingPos;
+				while(kkk < (int32_t)metaData.size() ) {
+					if (metaData[kkk].beginStart <= resultat.endStop) {
+						// Remove element
+						metaData.erase(metaData.begin()+kkk, metaData.begin()+kkk+1);
+						// Increase the end of search
+						if (kkk < (int32_t)metaData.size()) {
+							// just befor the end of the next element
+							elementStop = metaData[kkk].beginStart-1;
+						} else {
+							// end of the buffer
+							elementStop = buffer.Size();
+						}
 					} else {
-						// Remove old element : 
-						//EDN_DEBUG("        --> Remove : " << addingPos << "==>" << findNextElement+1 );
-						metaData.erase(metaData.begin()+addingPos,metaData.begin()+findNextElement+1);
-						newEnd   = metaData[addingPos].beginStart-1;
+						// Not find ==> exit the cycle : 
+						break;
 					}
-					// Regenerate a local parsing : in a higher range of text
-					Parse(elementStart, edn_max(newEnd, stop), metaData, addingPos, buffer, elementID);
-					// Break the curent process, beacause we reparse the data in all range...
-					return;
-				} else {
-					//EDN_DEBUG("        --> No element removed " );
-					metaData.insert(metaData.begin() + addingPos, resultat);
-					//EDN_DEBUG("INSERT at "<< addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
 				}
-			} else {
+				// Add curent element in the list ...
 				metaData.insert(metaData.begin() + addingPos, resultat);
 				//EDN_DEBUG("INSERT at "<< addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
+				// Update the current research starting element: (Set position at the end of the current element
+				elementStart = resultat.endStop-1;
+				// increment the position of insertion:
+				addingPos++;
+				// We find a pattern ==> Stop search for the current element
+				break;
 			}
-			// parse the under element : 
-			Parse(elementStart, resultat.beginStart-1, metaData, addingPos, buffer, elementID+1);
-			addingPos++;
-			elementStart = resultat.endStop;
 		}
+		// Go to the next element (and search again ...).
+		elementStart++;
 	}
-	// parse the under element : 
-	Parse(elementStart, elementStop, metaData, addingPos, buffer, elementID+1);
 }
+
 
 /**
  * @brief second pass of the hightlight
@@ -267,122 +243,33 @@ void Highlight::Parse(int32_t start,
 void Highlight::Parse2(int32_t start,
                        int32_t stop,
                        std::vector<colorInformation_ts> &metaData,
-                       EdnVectorBuf &buffer,
-                       int32_t elementID)
+                       EdnVectorBuf &buffer)
 {
-	if (elementID >= (int32_t)m_listHighlightPass2.size() ){
-		return;
-	}
+	int32_t elementID = 0;
+	//EDN_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << " ==> position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;
 	int32_t elementStop = stop;
-	resultFind_te ret = HLP_FIND_OK;
 	colorInformation_ts resultat;
-	while (HLP_FIND_ERROR != ret && elementStart<elementStop) {
-		if (m_listHighlightPass2[elementID]!=NULL) {
-			ret = m_listHighlightPass2[elementID]->Find(elementStart, elementStop, resultat, buffer);
-		} else {
-			ret = HLP_FIND_ERROR;
-		}
-		if (HLP_FIND_ERROR != ret) {
-			//EDN_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
-			// parse the under element :
-			Parse2(elementStart, resultat.beginStart, metaData, buffer, elementID+1);
-			// Add curent element in the list ...
-			metaData.push_back(resultat);
-			elementStart = resultat.endStop;
-		}
-	}
-	// parse the under element :
-	Parse2(elementStart, elementStop, metaData, buffer, elementID+1);
-}
-
-
-void Highlight::ParseOneElement(int32_t start,
-                                int32_t stop,
-                                std::vector<colorInformation_ts> &metaData,
-                                int32_t &addingPos,
-                                EdnVectorBuf &buffer,
-                                int32_t elementID)
-{
-	if (0 > addingPos) {
-		addingPos = 0;
-	}
-	/*int32_t emptyId = -1;
-	for (i=0; i< (int32_t)metaData.size(); i++) {
-		
-	}*/
-	//EDN_DEBUG("Parse element " << elementID << " / " << m_listHighlightPass1.size() << " ==> position search: (" << start << "," << stop << ")" );
-	if (elementID >= (int32_t)m_listHighlightPass1.size() ){
-		//EDN_DEBUG("Return at " << elementID << " / " << m_listHighlightPass1.size() );
-		return;
-	}
-	int32_t elementStart = start;
-	int32_t elementStop = stop;
-	resultFind_te ret = HLP_FIND_OK;
-	colorInformation_ts resultat;
-	while (HLP_FIND_ERROR != ret && elementStart<elementStop) {
-		/*
-		Algo : faire un boucle incrémentant le start, et ne pas mettre de contrainet pour le stop
-		par contre quand on a un stop on doit faire un controle sur la présence d'element avant le end qu'il vas faloir detruire...
-		*/
-	}
-		ret = m_listHighlightPass1[elementID]->Find(elementStart, elementStop, resultat, buffer);
-		if (HLP_FIND_ERROR != ret) {
-			//EDN_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
-			// Add curent element in the list ...
-			if (HLP_FIND_OK_NO_END == ret) {
-				// find if we have a next element with th save Pointer and not higher the this one
-				int32_t findNextElement = -1;
-				int32_t i;
-				int32_t curentLevel = ((HighlightPattern*)resultat.patern)->GetLevel();
-				for (i=addingPos; i< (int32_t)metaData.size(); i++) {
-					if (curentLevel > ((HighlightPattern*)metaData[i].patern)->GetLevel() ) {
-						//EDN_DEBUG("    -> Find upper element at "<< i );
-						break;
-					} else if (curentLevel < ((HighlightPattern*)metaData[i].patern)->GetLevel() ) {
-						findNextElement = i;
-						//EDN_DEBUG("    -> Find under element at "<< i );
-					}
-					if (metaData[i].patern == resultat.patern)
-					{
-						findNextElement = i;
-						//EDN_DEBUG("    -> Find a same element at "<< i );
-						break;
-					}
-				}
-
-				if (-1 != findNextElement) {
-					// if not find a end, we need to search the end of this one and parse all data inside...
-					int32_t newEnd   = buffer.Size();
-					if (findNextElement >= (int32_t)metaData.size()-1) {
-						// Remove old element : 
-						//EDN_DEBUG("        --> Remove : " << addingPos << "==>" << (int32_t)metaData.size() << " (end)" );
-						metaData.erase(metaData.begin()+addingPos,metaData.end());
-					} else {
-						// Remove old element : 
-						//EDN_DEBUG("        --> Remove : " << addingPos << "==>" << findNextElement+1 );
-						metaData.erase(metaData.begin()+addingPos,metaData.begin()+findNextElement+1);
-						newEnd   = metaData[addingPos].beginStart-1;
-					}
-					// Regenerate a local parsing : in a higher range of text
-					Parse(elementStart, edn_max(newEnd, stop), metaData, addingPos, buffer, elementID);
-					// Break the curent process, beacause we reparse the data in all range...
-					return;
-				} else {
-					//EDN_DEBUG("        --> No element removed " );
-					metaData.insert(metaData.begin() + addingPos, resultat);
-					//EDN_DEBUG("INSERT at "<< addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
-				}
-			} else {
-				metaData.insert(metaData.begin() + addingPos, resultat);
-				//EDN_DEBUG("INSERT at "<< addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
+	while (elementStart<elementStop) {
+		//EDN_DEBUG("Parse element in the buffer id=" << elementStart);
+		//try to fond the HL in ALL of we have
+		int32_t jjj;
+		for (jjj=0; jjj<m_listHighlightPass2.size(); jjj++){
+			resultFind_te ret = HLP_FIND_OK;
+			//EDN_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.Size() << ")" );
+			// Stop the search to the end (to get the end of the pattern)
+			ret = m_listHighlightPass2[jjj]->Find(elementStart, elementStop, resultat, buffer);
+			if (HLP_FIND_ERROR != ret) {
+				//EDN_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
+				// Add curent element in the list ...
+				metaData.push_back(resultat);
+				elementStart = resultat.endStop;
+				// Exit current cycle
+				break;
 			}
-			// parse the under element : 
-			Parse(elementStart, resultat.beginStart-1, metaData, addingPos, buffer, elementID+1);
-			addingPos++;
-			elementStart = resultat.endStop;
 		}
+		// Go to the next element (and search again ...).
+		elementStart++;
 	}
-	// parse the under element : 
-	Parse(elementStart, elementStop, metaData, addingPos, buffer, elementID+1);
 }
+

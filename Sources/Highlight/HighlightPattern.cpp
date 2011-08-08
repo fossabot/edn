@@ -190,46 +190,7 @@ void HighlightPattern::ParseRules(TiXmlNode *child, int32_t level)
 	}
 }
 
-resultFind_te HighlightPattern::Find(int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer)
-{
-	//EDN_DEBUG(" try to find the element");
-	resultat.beginStart = -1;
-	resultat.beginStop = -1;
-	resultat.endStart = -1;
-	resultat.endStop = -1;
-	resultat.notEnded = false;
-	resultat.patern = this;
-	
-	// when we have only one element : 
-	if (false == m_haveStopPatern) {
-		if (true == m_regExpStart->Process(buffer, start, stop)) {
-			resultat.beginStart = m_regExpStart->Start();
-			resultat.beginStop  = m_regExpStart->Stop();
-			resultat.endStart = m_regExpStart->Start();
-			resultat.endStop  = m_regExpStart->Stop();
-			return HLP_FIND_OK;
-		}
-		//EDN_DEBUG("NOT find hightlightpatern ...");
-	} else {
-		// try while we find the first element
-		if (true == m_regExpStart->Process(buffer, start, stop, m_escapeChar)) {
-			resultat.beginStart = m_regExpStart->Start();
-			resultat.beginStop  = m_regExpStart->Stop();
-			if (true == m_regExpStop->Process(buffer, resultat.beginStop, stop, m_escapeChar)) {
-				resultat.endStart = m_regExpStop->Start();
-				resultat.endStop  = m_regExpStop->Stop();
-				return HLP_FIND_OK;
-			} else {
-				resultat.endStart = stop+1;
-				resultat.endStop = stop+1;
-				resultat.notEnded = true;
-				return HLP_FIND_OK_NO_END;
-			}
-		}
-		//EDN_DEBUG("NOT find start hightlightpatern ...");
-	}
-	return HLP_FIND_ERROR;
-}
+
 /**
  * @brief Find Element only in the specify start characters and find the end with the range done
  *
@@ -242,7 +203,7 @@ resultFind_te HighlightPattern::Find(int32_t start, int32_t stop, colorInformati
  * @return HLP_FIND_OK_NO_END Xe find a partial pattern (missing end)
  * @return HLP_FIND_ERROR Not find the pattern
  */
-resultFind_te HighlightPattern::FindOneElement(int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer)
+resultFind_te HighlightPattern::Find(int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer)
 {
 	//EDN_DEBUG(" try to find the element");
 	resultat.beginStart = -1;

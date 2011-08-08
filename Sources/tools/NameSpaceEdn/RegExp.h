@@ -1889,7 +1889,7 @@ template<class CLASS_TYPE> class EdnRegExp {
 					    || (    '_' == tmpVal ) )
 					{
 						// go on the next char ...
-						continue;
+						return false;
 					}
 				}
 			}
@@ -1899,12 +1899,12 @@ template<class CLASS_TYPE> class EdnRegExp {
 				{
 					if (escapeChar == (char)SearchIn[startPos-1]) {
 						//==> detected escape char ==> try find again ...
-						continue;
+						return false;
 					}
 				}
 				// Check end :
 				if (true == m_notEndWithChar) {
-					if (i+findLen < SearchIn.Size() ) {
+					if (startPos+findLen < SearchIn.Size() ) {
 						char tmpVal = SearchIn[startPos+findLen];
 						if(    (    'a' <= tmpVal
 						         && 'z' >= tmpVal )
@@ -1915,7 +1915,7 @@ template<class CLASS_TYPE> class EdnRegExp {
 						    || (    '_' == tmpVal ) )
 						{
 							// go on the next char ...
-							continue;
+							return false;
 						}
 					}
 				}

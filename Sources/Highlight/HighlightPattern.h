@@ -65,8 +65,7 @@ class HighlightPattern {
 		
 		bool			IsEnable(void);
 		void			Display(void);
-		resultFind_te   Find(          int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer);
-		resultFind_te   FindOneElement(int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer);
+		resultFind_te   Find(int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer);
 		Colorize *		GetColor(void) { return m_color; };
 		void			ParseRules(TiXmlNode *child, int32_t level);
 

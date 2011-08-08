@@ -228,7 +228,7 @@ void EdnBuf::GenerateHighLightAt(int32_t pos, int32_t endPos, int32_t addinPos)
 		return;
 	}
 	//EDN_DEBUG("area : ("<<pos<<","<<endPos<<") insert at : " << addinPos);
-	m_Highlight->Parse(pos, endPos, m_HLDataPass1, addinPos, m_data);
+	m_Highlight->ParseOneElement(pos, endPos, m_HLDataPass1, addinPos, m_data);
 }
 
 
