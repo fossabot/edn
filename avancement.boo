@@ -17,7 +17,6 @@
 		- Project manager phase 1
 
 # action a faire (ordonner) :
-	- HL : Parsing caracter/caractère et plus section par section ...
 	- ctags : Back simple et multiple
 	- ctags : Multiple files
 	- sys : search complet, replace complet

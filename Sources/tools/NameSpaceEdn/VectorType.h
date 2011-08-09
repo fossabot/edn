@@ -36,8 +36,6 @@
  *
  * @tparam[in] SIZE Size of the current element.
  *
- * @todo : Need to add : popBack / Assign / Insert / Erase / Swap / Clear
- *
  *              m_data
  *               <------------ m_dataSize ------------>
  *              ----------------------------------------

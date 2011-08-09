@@ -186,9 +186,10 @@ void Highlight::Display(void)
 		//m_listHighlightPass2[i]->Display();
 	}
 }
+// 13h 46min 22s | (l=  214) Highlight::Parse                     | [II] Find Pattern in the Buffer : (2457,2479)
 
 
-// TODO : Celui qui appelle suprime des element pour rien ... Enfin c'est pas tr\Uffffffffgrave... Il suffirait juste de suprimer celuis d'avant si il n'est pas terminer...
+// TODO : Celui qui appelle suprime des element pour rien ... Enfin c'est pas trègrave... Il suffirait juste de suprimer celuis d'avant si il n'est pas terminer...
 void Highlight::Parse(int32_t start,
                       int32_t stop,
                       Edn::VectorType<colorInformation_ts> &metaData,
@@ -205,8 +206,7 @@ void Highlight::Parse(int32_t start,
 	while (elementStart<elementStop) {
 		//EDN_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have
-		int32_t jjj;
-		for (jjj=0; jjj<m_listHighlightPass1.Size(); jjj++){
+		for (int32_t jjj=0; jjj<m_listHighlightPass1.Size(); jjj++){
 			resultFind_te ret = HLP_FIND_OK;
 			//EDN_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.Size() << ")" );
 			// Stop the search to the end (to get the end of the pattern)
@@ -218,6 +218,7 @@ void Highlight::Parse(int32_t start,
 				while(kkk < metaData.Size() ) {
 					if (metaData[kkk].beginStart <= resultat.endStop) {
 						// Remove element
+						//EDN_INFO("Erase element=" << kkk);
 						metaData.Erase(kkk, kkk+1);
 						// Increase the end of search
 						if (kkk < metaData.Size()) {

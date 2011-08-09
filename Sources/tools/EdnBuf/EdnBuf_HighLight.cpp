@@ -60,8 +60,17 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 		return;
 	}
 	// normal case
-	EDN_INFO("(pos="<<pos<<", nbDeleted="<<nbDeleted<<", nbAdded=" << nbAdded << "\");");
+	//EDN_INFO("(pos="<<pos<<", nbDeleted="<<nbDeleted<<", nbAdded=" << nbAdded << "\");");
 	int32_t i;
+	/*
+	for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
+		Edn::String ploppp;
+		if (NULL != m_HLDataPass1[i].patern ) {
+			ploppp = ((HighlightPattern*)m_HLDataPass1[i].patern)->GetName();
+		}
+		EDN_DEBUG("HighLight (previous) element id=" << i << " S=" << m_HLDataPass1[i].beginStart << " E=" << m_HLDataPass1[i].endStop << " patern name=" << ploppp );
+	}
+	*/
 	int32_t posEnd = pos + nbDeleted;
 	// search position of the old element to reparse IT...
 	int32_t startId;
@@ -79,15 +88,29 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 		} else if(-1 == startId) {
 			if (0 == stopId){
 				m_HLDataPass1.Erase(0);
+				//EDN_DEBUG("1 * Erase 0");
 			} else {
 				m_HLDataPass1.Erase(0,stopId);
+				//EDN_DEBUG("2 * Erase 0->" << stopId);
 			}
 		} else if(-1 == stopId) {
-			m_HLDataPass1.Erase(startId+1, m_HLDataPass1.Size());
+			//EDN_DEBUG("3 * Erase " << startId+1 << "-> end");
+			m_HLDataPass1.Erase(startId+1, m_HLDataPass1.Size() - startId);
+			stopId = -1;
 		} else {
-			m_HLDataPass1.Erase(startId+1, stopId);
+			//EDN_DEBUG("4 * Erase " << startId+1 << "->" << stopId);
+			m_HLDataPass1.Erase(startId+1, stopId - startId);
 		}
-		EDN_DEBUG("new size=" << (int32_t)m_HLDataPass1.Size()-1);
+		//EDN_DEBUG("new size=" << (int32_t)m_HLDataPass1.Size()-1);
+		/*
+				for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
+					Edn::String ploppp;
+					if (NULL != m_HLDataPass1[i].patern ) {
+						ploppp = ((HighlightPattern*)m_HLDataPass1[i].patern)->GetName();
+					}
+					EDN_DEBUG("HighLight (Middle) element id=" << i << " S=" << m_HLDataPass1[i].beginStart << " E=" << m_HLDataPass1[i].endStop << " patern name=" << ploppp );
+				}
+		*/
 		// update position after the range position : 
 		int32_t elemStart;
 		if(-1 == startId) {
@@ -123,13 +146,15 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 		//GenerateHighLightAt(pos, nbAdded);
 		GenerateHighLightAt(0, m_data.Size());
 	}
+	/*
 	for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
 		Edn::String ploppp;
 		if (NULL != m_HLDataPass1[i].patern ) {
 			ploppp = ((HighlightPattern*)m_HLDataPass1[i].patern)->GetName();
 		}
-		//EDN_DEBUG("HighLight element id=" << i << " S=" << m_HLDataPass1[i].beginStart << " E=" << m_HLDataPass1[i].endStop << " patern name=" << ploppp.c_str() );
+		EDN_DEBUG("HighLight (end) element id=" << i << " S=" << m_HLDataPass1[i].beginStart << " E=" << m_HLDataPass1[i].endStop << " patern name=" << ploppp );
 	}
+	*/
 	GTimeVal timeStop;
 	g_get_current_time(&timeStop);
 	EDN_DEBUG("HL General = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
