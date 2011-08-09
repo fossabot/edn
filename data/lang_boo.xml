@@ -2,8 +2,6 @@
 <EdnLang version="0.1" lang="c">
 	<ext>*.boo</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
-	</pass1>
-	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="comment ##">
 			<color>SYNTAX_ERROR</color>
 			<start>##</start>
@@ -13,6 +11,50 @@
 			<color>comment</color>
 			<start>#</start>
 			<end>\n</end>
+		</rule>
+		<rule name="notes ... ">
+			<color>preprocesseur</color>
+			<start>(NOTE|TODO) : </start>
+			<end>\n</end>
+		</rule>
+		<rule name="doubleQuteText">
+			<color>doubleQuoteText</color>
+			<start>"</start>
+			<end>"</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+		<rule name="simpleQuteText">
+			<color>doubleQuoteText</color>
+			<start>\@'</start>
+			<end>'</end>
+			<!--<EscapeChar>\</EscapeChar>-->
+		</rule>
+	</pass1>
+	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
+
+		<rule name="pourcentage OK">
+			<color>TestResultOK</color>
+			<start>100%</start>
+		</rule>
+		<rule name="pourcentage">
+			<color>number</color>
+			<start>[0-9]*%</start>
+		</rule>
+		<rule name="Résultat OK">
+			<color>TestResultOK</color>
+			<start>\[( )*(OK|Ok|ok)( )*\]</start>
+		</rule>
+		<rule name="resultat en erreur">
+			<color>TestResultERROR</color>
+			<start>\[(ERREUR|Erreur|erreur)\]</start>
+		</rule>
+		<rule name="resultat vide">
+			<color>number</color>
+			<start>\[( )*\]</start>
+		</rule>
+		<rule name="notes ... ">
+			<color>macro</color>
+			<start>==&gt;</start>
 		</rule>
 	</pass2>
 </EdnLang>

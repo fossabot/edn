@@ -34,6 +34,8 @@
 		<color name="macro" 				FG="#6c09c8" bold="yes"/>
 		<color name="SYNTAX_ERROR"  		FG="#000000" BG="#FF0000" bold="yes"/>
 		<color name="functionName"  		FG="#24d1e0" bold="yes"/>
+		<color name="TestResultOK"			FG="#000000" BG="#00FF00" bold="yes"/>
+		<color name="TestResultERROR"		FG="#000000" BG="#FF0000" bold="yes"/>
 	</syntax>
 </EdnColor>
 

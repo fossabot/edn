@@ -7,9 +7,28 @@
 			<start>&lt;!\-\-</start>
 			<end>\-\-&gt;</end>
 		</rule>
+		<rule name="doubleQuteText">
+			<color>doubleQuoteText</color>
+			<start>"</start>
+			<end>"</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+		<rule name="simpleQuteText">
+			<color>doubleQuoteText</color>
+			<start>\@'</start>
+			<end>'</end>
+			<!--<EscapeChar>\</EscapeChar>-->
+		</rule>
 	</pass1>
 	<pass2>
-	
+		<rule name="special Balise">
+			<color>error</color>
+			<start>&lt;\?\w*|\?&gt;</start>
+		</rule>
+		<rule name="normale Balise">
+			<color>boolean</color>
+			<start>&lt;/\w*|&lt;\w*|/&gt;|&gt;</start>
+		</rule>
 	</pass2>
 </EdnLang>
 

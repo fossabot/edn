@@ -1,5 +1,3 @@
-/* pour voir les appels system*/
-
 # For the first realease :
 	* Systèmes : 
 		- Affichage ligne par ligne
@@ -17,12 +15,12 @@
 		- Project manager phase 1
 
 # action a faire (ordonner) :
+	- HL : encore un problème sur le dernier parsing....
 	- ctags : Back simple et multiple
 	- ctags : Multiple files
-	- sys : search complet, replace complet
+	- sys : search complet, replace complet and replace ALL ...
 	- gui : ordonner les fichier ouvert par nom ...
 	- sys : Mise en place des colorisation de base pour le 
-			* xml
 			* makefiles
 			* script bash
 			* python
@@ -41,9 +39,10 @@
 	- Charset UTF-8 et iso 8859-15 correcte
 	- Transformation de charset a la volé
 	- Charset par defaut
-	- Déction de charset (à mettre dans les todo de charset)
+	- Déction de charset (à mettre dans les todo de charset) ==> regarder les librairies open sources
 	- Faire les deplacement de EdnXXX dans le nameSpace Edn::XXX
 	- pb de sélection quand la ligne est pleine et la première ligne sélectionné...
+	- Edn::VectorType : Rewrite the erase fuction to support start => stop and Erase len methode ...
 
 # Text Editor
 
