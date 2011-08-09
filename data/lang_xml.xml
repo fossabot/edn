@@ -16,7 +16,7 @@
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
 			<start>\@'</start>
-			<end>'</end>
+			<end>('|\n)</end>
 			<!--<EscapeChar>\</EscapeChar>-->
 		</rule>
 	</pass1>
@@ -26,7 +26,7 @@
 			<start>&lt;\?\w*|\?&gt;</start>
 		</rule>
 		<rule name="normale Balise">
-			<color>boolean</color>
+			<color>functionName</color>
 			<start>&lt;/\w*|&lt;\w*|/&gt;|&gt;</start>
 		</rule>
 	</pass2>

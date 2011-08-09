@@ -15,7 +15,8 @@
 		- Project manager phase 1
 
 # action a faire (ordonner) :
-	- HL : encore un problème sur le dernier parsing....
+	- SEARCH : get selected text in the search windows
+	- SEARCH : Select the search windows when call crtl+F
 	- ctags : Back simple et multiple
 	- ctags : Multiple files
 	- sys : search complet, replace complet and replace ALL ...

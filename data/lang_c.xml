@@ -111,7 +111,7 @@
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>
-			<start>==|&lt;=|&gt;=|!=|&lt;|&gt;|&amp;&amp;|\{|\}|</start>
+			<start>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</start>
 		</rule>
         <!-- With all elementes : 
 		<rule name="BIG LETTER">

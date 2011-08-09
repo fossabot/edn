@@ -40,7 +40,7 @@ void EdnBuf::SetHLSystem(Highlight * newHLSystem)
 	}
 }
 
-
+// TODO : Check this fuction it have too many conditionnal inside ==> can do a better algo
 void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdded)
 {
 	GTimeVal timeStart;
@@ -98,8 +98,12 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 			m_HLDataPass1.Erase(startId+1, m_HLDataPass1.Size() - startId);
 			stopId = -1;
 		} else {
-			//EDN_DEBUG("4 * Erase " << startId+1 << "->" << stopId);
+			int32_t currentSize = m_HLDataPass1.Size();
+			//EDN_DEBUG("4 * Erase " << startId+1 << "->" << stopId << " in " << currentSize << " elements" );
 			m_HLDataPass1.Erase(startId+1, stopId - startId);
+			if (stopId == currentSize-1) {
+				stopId = -1;
+			}
 		}
 		//EDN_DEBUG("new size=" << (int32_t)m_HLDataPass1.Size()-1);
 		/*
@@ -143,7 +147,6 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 		}
 	} else {
 		// Parse the new element ...
-		//GenerateHighLightAt(pos, nbAdded);
 		GenerateHighLightAt(0, m_data.Size());
 	}
 	/*
