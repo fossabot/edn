@@ -26,6 +26,8 @@
 #ifndef __EDN__FILE_H__
 #define __EDN__FILE_H__
 
+#define MAX_FILE_NAME      (10240)
+
 namespace Edn
 {
 	class File

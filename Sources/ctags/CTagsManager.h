@@ -32,6 +32,14 @@
 #include "readtags.h"
 #include "Edn.h"
 
+#define MAX_REG_EXP_SEARCH	(1024)
+
+typedef struct{
+	char    filename[MAX_FILE_NAME];
+	char    RegExp[MAX_REG_EXP_SEARCH];
+	int32_t lineID;
+} TagListFind_ts;
+
 
 class CTagsManager: public Singleton<CTagsManager>, public MsgBroadcast
 {
@@ -47,9 +55,9 @@ class CTagsManager: public Singleton<CTagsManager>, public MsgBroadcast
 	private:
 		int32_t                    m_currentSelectedID;
 		void                       LoadTagFile(void);
-		void                       MultipleJump(void);
+		int32_t                    MultipleJump(void);
 		void                       JumpTo(void);
-		void                       PrintTag(const tagEntry *entry);
+		void                       PrintTag(const tagEntry *entry, bool small);
 		Edn::String                GetFolder(Edn::String &inputString);
 		Edn::String                m_tagFolderBase;
 		Edn::String                m_tagFilename;
@@ -58,6 +66,12 @@ class CTagsManager: public Singleton<CTagsManager>, public MsgBroadcast
 		void                       AddToHistory(int32_t bufferID);
 		int32_t                    m_historyPos;
 		Edn::VectorType<Edn::File*>   m_historyList;
+		Edn::VectorType<TagListFind_ts> m_currentList;
+		void                       JumpAtID(int32_t selectID);
+		GtkTreeModel *             CreateAndFillModel(void);
+		GtkWidget *                CreateViewAndModel(void);
+		
+		// TMP Val :
 };
 
 #endif

@@ -160,56 +160,45 @@ void CTagsManager::AddToHistory(int32_t bufferID)
 	// add the current element
 	BufferManager *myBufferManager = BufferManager::getInstance();
 	Edn::File currentFilename = myBufferManager->Get(bufferID)->GetFileName();
-	
 }
 
 enum
 {
 	CTAGS_COL_FILE = 0,
-	CTAGS_COL_REGEXP,
+	CTAGS_COL_LINE_NUMBER,
 	CTAGS_NUM_COLS
 };
 
-static GtkTreeModel * create_and_fill_model(void)
+GtkTreeModel * CTagsManager::CreateAndFillModel(void)
 {
 	GtkListStore *   store;
 	GtkTreeIter      iter;
 	
-	store = gtk_list_store_new(CTAGS_NUM_COLS, G_TYPE_STRING, G_TYPE_STRING);
+	store = gtk_list_store_new(CTAGS_NUM_COLS, G_TYPE_STRING, G_TYPE_UINT);
 	
 	// Append a row and fill in some data
-	gtk_list_store_append(store, &iter);
-	gtk_list_store_set(store, &iter,
-	                   CTAGS_COL_FILE, "file1.c",
-	                   CTAGS_COL_REGEXP, "void function1(void);",
-	                   -1);
-	
-	gtk_list_store_append(store, &iter);
-	gtk_list_store_set(store, &iter,
-	                   CTAGS_COL_FILE, "file2.c",
-	                   CTAGS_COL_REGEXP, "void function2(void);",
-	                   -1);
-	
-	gtk_list_store_append(store, &iter);
-	gtk_list_store_set(store, &iter,
-	                   CTAGS_COL_FILE, "file3.c",
-	                   CTAGS_COL_REGEXP, "void function3(void);",
-	                   -1);
+	for (int32_t iii=0; iii<m_currentList.Size() ; iii++) {
+		gtk_list_store_append(store, &iter);
+		gtk_list_store_set(store, &iter,
+		                   CTAGS_COL_FILE, m_currentList[iii].filename,
+		                   CTAGS_COL_LINE_NUMBER, m_currentList[iii].lineID,
+		                   -1);
+	}
 	
 	return GTK_TREE_MODEL(store);
 }
 
-static GtkWidget * create_view_and_model(void)
+GtkWidget * CTagsManager::CreateViewAndModel(void)
 {
-	GtkCellRenderer *   renderer;
-	GtkTreeModel *      model;
-	GtkWidget *         view;
 	
+		GtkCellRenderer *   renderer;
+		GtkTreeModel *      model;
+		GtkWidget *         view;
 	view = gtk_tree_view_new();
 	
 	// Column 1
 	renderer = gtk_cell_renderer_text_new();
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW (view),
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view),
 	                                            -1,
 	                                            "File",
 	                                            renderer,
@@ -218,14 +207,14 @@ static GtkWidget * create_view_and_model(void)
 	
 	// Column 2
 	renderer = gtk_cell_renderer_text_new();
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW (view),
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view),
 	                                            -1,
-	                                            "Regular Expression",
+	                                            "lineNumber",
 	                                            renderer,
-	                                            "text", CTAGS_COL_REGEXP,
+	                                            "text", CTAGS_COL_LINE_NUMBER,
 	                                            NULL);
 	
-	model = create_and_fill_model();
+	model = CreateAndFillModel();
 	
 	gtk_tree_view_set_model(GTK_TREE_VIEW (view), model);
 	
@@ -238,7 +227,7 @@ static GtkWidget * create_view_and_model(void)
 
 
 
-void CTagsManager::MultipleJump(void)
+int32_t CTagsManager::MultipleJump(void)
 {
 	// dlg to confirm the quit event : 
 	GtkWidget *myDialog = gtk_dialog_new_with_buttons("C-Tags jump...",
@@ -251,20 +240,65 @@ void CTagsManager::MultipleJump(void)
 	//gtk_window_set_transient_for(GTK_WINDOW(myDialog), GTK_WINDOW(m_mainWindow->GetWidget()));
 	// add writting area
 	GtkWidget *myContentArea = gtk_dialog_get_content_area( GTK_DIALOG(myDialog));
-	GtkWidget *listView = create_view_and_model ();
+	GtkWidget *listView = CreateViewAndModel();
 	gtk_box_pack_start(GTK_BOX(myContentArea), listView, TRUE, TRUE, 0);
 	// Display it
 	gtk_widget_show_all(myContentArea);
-	int32_t result = gtk_dialog_run (GTK_DIALOG (myDialog));
+	int32_t result = gtk_dialog_run(GTK_DIALOG(myDialog));
 	// Get data from the gtk entry
 	result = 0; // remove warning
+	
+	//GtkTreeIter *myIter;
+	//gtk_tree_selection_get_selected(selection, &model, myIter);
+
+	
+	
 	// Remove dialogue
 	gtk_widget_destroy(myDialog);
+	return 0;
 }
+/*
+void BufferView::OnCtagsEventList(GtkWidget *menuitem, gpointer data)
+{
+	//BufferView * self = reinterpret_cast<BufferView*>(data);
+	//self->SendMessage(EDN_MSG__GUI_SHOW_SAVE_AS, self->m_contectMenuSelectID);
+	//self->m_contectMenuSelectID = -1;
+}
+*/
+
+
+void CTagsManager::JumpAtID(int32_t selectID)
+{
+	BufferManager *myBufferManager = BufferManager::getInstance();
+	Edn::File myFile = m_currentList[0].filename;
+	EDN_INFO(" OPEN the TAG file Destination : " << myFile );
+	if (false == myBufferManager->Exist(myFile) ) {
+		// need to open the file : 
+		int32_t openID = myBufferManager->Open(myFile);
+		SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, openID);
+	} else {
+		SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, myBufferManager->GetId(myFile));
+	}
+	/*
+	int32_t localId = myBufferManager->GetId(myFile);
+	Edn::String pattern = entry.address.pattern;
+	EDN_DEBUG("try to find line with : \"" << pattern << "\"" );
+	if (pattern.Size() > 4) {
+		pattern.Remove(0,2);
+		pattern.Remove(pattern.Size()-1,2);
+	}
+	// TODO : remove '\' char when needed ...
+	EDN_DEBUG("try to find line with : \"" << pattern << "\"" );
+	int32_t destLine = myBufferManager->Get(localId)->FindLine(pattern);
+	SendMessage(EDN_MSG__CURRENT_GOTO_LINE, destLine);
+	*/
+	SendMessage(EDN_MSG__CURRENT_GOTO_LINE, m_currentList[0].lineID);
+}
+
 
 void CTagsManager::JumpTo(void)
 {
-	MultipleJump();
+	m_currentList.Clear();
 	if (NULL != m_ctagFile) {
 		Edn::VectorType<int8_t> data;
 		// get the middle button of the clipboard ==> represent the current selection ...
@@ -276,33 +310,37 @@ void CTagsManager::JumpTo(void)
 		data.PushBack('\0');
 		EDN_INFO("try to find the tag : " << (const char *)&data[0]);
 		if (tagsFind (m_ctagFile, &entry, (const char *)&data[0], 0) == TagSuccess) {
-			//EDN_INFO("find the tag");
-			BufferManager *myBufferManager = BufferManager::getInstance();
-			Edn::String destinationFilename = m_tagFolderBase;
-			destinationFilename += entry.file;
-			Edn::File myfile = destinationFilename;
-			EDN_INFO(" OPEN the TAG file Destination : " << myfile );
-			if (false == myBufferManager->Exist(myfile) ) {
-				// need to open the file : 
-				int32_t openID = myBufferManager->Open(myfile);
-				SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, openID);
-			} else {
-				SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, myBufferManager->GetId(myfile));
-			}
-			int32_t localId = myBufferManager->GetId(myfile);
-			Edn::String pattern = entry.address.pattern;
-			EDN_DEBUG("try to find line with : \"" << pattern << "\"" );
-			if (pattern.Size() > 4) {
-				pattern.Remove(0,2);
-				pattern.Remove(pattern.Size()-1,2);
-			}
-			// TODO : remove '\' char when needed ...
-			EDN_DEBUG("try to find line with : \"" << pattern << "\"" );
-			int32_t destLine = myBufferManager->Get(localId)->FindLine(pattern);
-			SendMessage(EDN_MSG__CURRENT_GOTO_LINE, destLine);
-			/*
+			tagEntry entrySave = entry;
+			int32_t numberOfTags = 0;
+			
+			// For all tags : Save in an internal Structure :
 			do {
-				PrintTag (&entry);
+				Edn::String destinationFilename = m_tagFolderBase;
+				destinationFilename += entry.file;
+				Edn::File myfile = destinationFilename;
+				TagListFind_ts myStruct;
+				strncpy(myStruct.filename, myfile.GetCompleateName().c_str(), MAX_FILE_NAME);
+				myStruct.filename[MAX_FILE_NAME-1] = '\0';
+				strncpy(myStruct.RegExp, entry.address.pattern, MAX_REG_EXP_SEARCH);
+				myStruct.RegExp[MAX_REG_EXP_SEARCH-1] = '\0';
+				myStruct.lineID = entry.address.lineNumber;
+				// at at the corect position
+				m_currentList.PushBack(myStruct);
+				PrintTag(&entry, true);
+			} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
+			
+			
+			if (1==m_currentList.Size() ) {
+				JumpAtID(0);
+				
+			} else {
+				// Open a choice windows...
+				int32_t SelectID = MultipleJump();
+			}
+			/*
+			// Display all the element : 
+			do {
+				PrintTag(&entry, true);
 			} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
 			*/
 		} else {
@@ -311,21 +349,26 @@ void CTagsManager::JumpTo(void)
 	}
 }
 
-void CTagsManager::PrintTag (const tagEntry *entry)
+void CTagsManager::PrintTag (const tagEntry *entry, bool small)
 {
-	int i;
-	EDN_INFO("find Tag file : name=\"" << entry->name << "\" in file=\"" << entry->file 
-	<< "\" pattern=\"" <<entry->address.pattern 
-	<< "\" at line="<<entry->address.lineNumber);
-	
-	EDN_INFO("Extention field : ");
-	if (entry->kind != NULL  &&  entry->kind [0] != '\0') {
-		EDN_INFO("        kind : " << entry->kind);
-	}
-	if (entry->fileScope) {
-		EDN_INFO("        file : ");
-	}
-	for (i = 0  ;  i < entry->fields.count  ;  ++i) {
-		EDN_INFO("               " << entry->fields.list[i].key << ":" << entry->fields.list[i].value );
+	if (small==true) {
+		EDN_INFO("find Tag file : name=\"" << entry->name << "\" in file=\"" << entry->file 
+			<< "\" at line="<< entry->address.lineNumber);
+	} else {
+		int i;
+		EDN_INFO("find Tag file : name=\"" << entry->name << "\" in file=\"" << entry->file 
+			<< "\" pattern=\"" <<entry->address.pattern 
+			<< "\" at line="<<entry->address.lineNumber);
+		
+		EDN_INFO("Extention field : ");
+		if (entry->kind != NULL  &&  entry->kind [0] != '\0') {
+			EDN_INFO("        kind : " << entry->kind);
+		}
+		if (entry->fileScope) {
+			EDN_INFO("        file : ");
+		}
+		for (i = 0  ;  i < entry->fields.count  ;  ++i) {
+			EDN_INFO("               " << entry->fields.list[i].key << ":" << entry->fields.list[i].value );
+		}
 	}
 }

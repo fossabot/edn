@@ -28,7 +28,6 @@
 #include "tools_globals.h"
 #include "Edn.h"
 
-#define MAX_FILE_NAME      (10240)
 
 #undef __class__
 #define __class__	"Edn::File"
@@ -154,7 +153,7 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 	} else {
 		destFilename = newFilename;
 	}
-	//EDN_DEBUG("2 : Get file Name : " << destFilename );
+	EDN_DEBUG("2 : Get file Name : " << destFilename );
 	if ('/' != *destFilename.c_str()) {
 		// Get the command came from the running of the program : 
 		char cCurrentPath[FILENAME_MAX];
@@ -167,7 +166,7 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 		destFilename += '/';
 		destFilename += tmpFilename;
 	}
-	//EDN_DEBUG("3 : Get file Name : " << destFilename );
+	EDN_DEBUG("3 : Get file Name : " << destFilename );
 	
 	// Get the real Path of the current File
 	ok = realpath(destFilename.c_str(), buf);
@@ -177,7 +176,7 @@ void Edn::File::SetCompleateName(Edn::String &newFilename)
 			// Get the FileName
 			Edn::String tmpFilename = destFilename.Extract(lastPos+1);
 			destFilename.Remove(lastPos, destFilename.Size() - lastPos);
-			//EDN_DEBUG("try to find :\"" << destFilename << "\" / \"" << tmpFilename << "\" ");
+			EDN_DEBUG("try to find :\"" << destFilename << "\" / \"" << tmpFilename << "\" ");
 			ok = realpath(destFilename.c_str(), buf);
 			if (!ok) {
 				EDN_ERROR("Can not find real Path name of \"" << destFilename << "\"");
