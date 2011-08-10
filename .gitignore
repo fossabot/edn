@@ -26,6 +26,7 @@ doxygen/ALL/
 *.o
 *.so
 *.pyc
+tags
 edn
 out
 edn_debug
