@@ -109,6 +109,11 @@ void HighlightManager::loadLanguages(void)
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	
-	myHightline->Display();
+	xmlFilename = homedir;
+	xmlFilename += "lang_bash.xml";
+	myHightline = new Highlight(xmlFilename);
+	listHighlight.PushBack(myHightline);
+	
+	//myHightline->Display();
 }
 

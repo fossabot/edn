@@ -25,10 +25,6 @@
 	* 0.2.X :
 		- gui : Demander la création de nouveaux fichier quand il n'existe pas (a l'ouverture en ligne de commande)
 		- sys : Mise en place des colorisation de base pour le 
-				* makefiles
-				* script bash
-				* python
-				* matlab
 				* java script
 				* SQL
 		- gui : ascenceur quand nécessaire
