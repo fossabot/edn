@@ -72,11 +72,11 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 		// TreeView :
 		gtk_box_pack_start(GTK_BOX(hbox), m_BufferView.GetMainWidget(), FALSE, TRUE, 1);
 
-		// Tex displayer : 
+		// Text displayer : 
 		gtk_box_pack_start(	GTK_BOX (hbox), m_CodeView.GetMainWidget(), TRUE, TRUE, 0);
 
 	// Create the status bar
-	gtk_box_pack_end(GTK_BOX(vbox), m_StatusBar.GetWidget(), FALSE, FALSE, 0);
+	//gtk_box_pack_end(GTK_BOX(vbox), m_StatusBar.GetWidget(), FALSE, FALSE, 0);
 
 	// recursive version of gtk_widget_show
 	gtk_widget_show_all(m_mainWindow); 

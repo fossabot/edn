@@ -68,10 +68,14 @@ class CTagsManager: public Singleton<CTagsManager>, public MsgBroadcast
 		Edn::VectorType<Edn::File*>   m_historyList;
 		Edn::VectorType<TagListFind_ts> m_currentList;
 		void                       JumpAtID(int32_t selectID);
-		GtkTreeModel *             CreateAndFillModel(void);
 		GtkWidget *                CreateViewAndModel(void);
-		
-		// TMP Val :
+		static void cb_row (GtkTreeView *p_treeview,
+                    GtkTreePath * p_path,
+                    GtkTreeViewColumn * p_column,
+                    gpointer p_data);
+		// save data in the list : 
+		GtkListStore *   m_listStore;
+		GtkWidget *      m_Dialog;
 };
 
 #endif

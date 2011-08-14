@@ -169,31 +169,49 @@ enum
 	CTAGS_NUM_COLS
 };
 
-GtkTreeModel * CTagsManager::CreateAndFillModel(void)
+void CTagsManager::cb_row (GtkTreeView *p_treeview,
+                    GtkTreePath * p_path,
+                    GtkTreeViewColumn * p_column,
+                    gpointer data)
 {
-	GtkListStore *   store;
-	GtkTreeIter      iter;
+	EDN_DEBUG("event");
+	CTagsManager * self = reinterpret_cast<CTagsManager*>(data);
 	
-	store = gtk_list_store_new(CTAGS_NUM_COLS, G_TYPE_STRING, G_TYPE_UINT);
+	gchar * p_file=NULL;
+	gint lineNumber;
+	GtkTreeIter iter;
 	
-	// Append a row and fill in some data
-	for (int32_t iii=0; iii<m_currentList.Size() ; iii++) {
-		gtk_list_store_append(store, &iter);
-		gtk_list_store_set(store, &iter,
-		                   CTAGS_COL_FILE, m_currentList[iii].filename,
-		                   CTAGS_COL_LINE_NUMBER, m_currentList[iii].lineID,
-		                   -1);
+	
+	if (gtk_tree_model_get_iter( GTK_TREE_MODEL(self->m_listStore), &iter, p_path))
+	{
+		gtk_tree_model_get( GTK_TREE_MODEL(self->m_listStore),
+		                    &iter,
+		                    CTAGS_COL_FILE, &p_file,
+		                    CTAGS_COL_LINE_NUMBER, &lineNumber,
+		                    -1 );
+		EDN_DEBUG("find : " << p_file << ":" << lineNumber);
+		for (int32_t iii = 0; iii < self->m_currentList.Size() ; iii++) {
+			if(    self->m_currentList[iii].lineID == lineNumber
+			    && strcmp(self->m_currentList[iii].filename, p_file)==0)
+			{
+				g_object_unref( GTK_TREE_MODEL(self->m_listStore));
+				// Remove dialogue
+				gtk_widget_destroy(self->m_Dialog);
+				// Jump ...
+				self->JumpAtID(iii);
+				return;
+			}
+		}
 	}
-	
-	return GTK_TREE_MODEL(store);
 }
+
+
 
 GtkWidget * CTagsManager::CreateViewAndModel(void)
 {
 	
-		GtkCellRenderer *   renderer;
-		GtkTreeModel *      model;
-		GtkWidget *         view;
+	GtkCellRenderer *   renderer;
+	GtkWidget *         view;
 	view = gtk_tree_view_new();
 	
 	// Column 1
@@ -214,11 +232,21 @@ GtkWidget * CTagsManager::CreateViewAndModel(void)
 	                                            "text", CTAGS_COL_LINE_NUMBER,
 	                                            NULL);
 	
-	model = CreateAndFillModel();
+	// Set data in the list : 
+	GtkTreeIter      iter;
+	m_listStore = gtk_list_store_new(CTAGS_NUM_COLS, G_TYPE_STRING, G_TYPE_UINT);
+	// Append a row and fill in some data
+	for (int32_t iii=0; iii<m_currentList.Size() ; iii++) {
+		gtk_list_store_append(m_listStore, &iter);
+		gtk_list_store_set(m_listStore, &iter,
+		                   CTAGS_COL_FILE, m_currentList[iii].filename,
+		                   CTAGS_COL_LINE_NUMBER, m_currentList[iii].lineID,
+		                   -1);
+	}
 	
-	gtk_tree_view_set_model(GTK_TREE_VIEW (view), model);
-	
-	g_object_unref(model);
+	gtk_tree_view_set_model( GTK_TREE_VIEW(view), GTK_TREE_MODEL(m_listStore) );
+	g_signal_connect( G_OBJECT(view), "row-activated", G_CALLBACK(cb_row), /*(gpointer)p_model*/ this );
+	//g_object_unref(GTK_TREE_MODEL(m_listStore));
 	
 	return view;
 }
@@ -230,31 +258,34 @@ GtkWidget * CTagsManager::CreateViewAndModel(void)
 int32_t CTagsManager::MultipleJump(void)
 {
 	// dlg to confirm the quit event : 
-	GtkWidget *myDialog = gtk_dialog_new_with_buttons("C-Tags jump...",
-	                                                  NULL,
-	                                                  GTK_DIALOG_MODAL,
-	                                                  "Jump", GTK_RESPONSE_YES,
-	                                                  GTK_STOCK_QUIT, GTK_RESPONSE_NO,
-	                                                  NULL);
+	m_Dialog = gtk_dialog_new_with_buttons("C-Tags jump...",
+	                                       NULL,
+	                                       GTK_DIALOG_MODAL,
+	                                       //"Jump", GTK_RESPONSE_YES,
+	                                       GTK_STOCK_QUIT, GTK_RESPONSE_NO,
+	                                       NULL);
 	// Set over main windows
 	//gtk_window_set_transient_for(GTK_WINDOW(myDialog), GTK_WINDOW(m_mainWindow->GetWidget()));
 	// add writting area
-	GtkWidget *myContentArea = gtk_dialog_get_content_area( GTK_DIALOG(myDialog));
+	GtkWidget *myContentArea = gtk_dialog_get_content_area( GTK_DIALOG(m_Dialog));
 	GtkWidget *listView = CreateViewAndModel();
 	gtk_box_pack_start(GTK_BOX(myContentArea), listView, TRUE, TRUE, 0);
 	// Display it
 	gtk_widget_show_all(myContentArea);
-	int32_t result = gtk_dialog_run(GTK_DIALOG(myDialog));
+	int32_t result = gtk_dialog_run(GTK_DIALOG(m_Dialog));
 	// Get data from the gtk entry
-	result = 0; // remove warning
-	
+	if (result == GTK_RESPONSE_NO) {
+		g_object_unref(GTK_TREE_MODEL(m_listStore));
+		// Remove dialogue
+		gtk_widget_destroy(m_Dialog);
+	}
 	//GtkTreeIter *myIter;
 	//gtk_tree_selection_get_selected(selection, &model, myIter);
 
 	
 	
 	// Remove dialogue
-	gtk_widget_destroy(myDialog);
+	//gtk_widget_destroy(myDialog);
 	return 0;
 }
 /*
@@ -270,7 +301,7 @@ void BufferView::OnCtagsEventList(GtkWidget *menuitem, gpointer data)
 void CTagsManager::JumpAtID(int32_t selectID)
 {
 	BufferManager *myBufferManager = BufferManager::getInstance();
-	Edn::File myFile = m_currentList[0].filename;
+	Edn::File myFile = m_currentList[selectID].filename;
 	EDN_INFO(" OPEN the TAG file Destination : " << myFile );
 	if (false == myBufferManager->Exist(myFile) ) {
 		// need to open the file : 
@@ -292,7 +323,7 @@ void CTagsManager::JumpAtID(int32_t selectID)
 	int32_t destLine = myBufferManager->Get(localId)->FindLine(pattern);
 	SendMessage(EDN_MSG__CURRENT_GOTO_LINE, destLine);
 	*/
-	SendMessage(EDN_MSG__CURRENT_GOTO_LINE, m_currentList[0].lineID);
+	SendMessage(EDN_MSG__CURRENT_GOTO_LINE, m_currentList[selectID].lineID - 1);
 }
 
 
