@@ -276,7 +276,7 @@ void Highlight::Parse2(int32_t start,
 				//EDN_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
 				// Add curent element in the list ...
 				metaData.PushBack(resultat);
-				elementStart = resultat.endStop;
+				elementStart = resultat.endStop-1;
 				// Exit current cycle
 				break;
 			}

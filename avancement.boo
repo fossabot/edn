@@ -17,7 +17,6 @@
 # action a faire (ordonner par révision) :
 	* 0.1.X :
 		- ctags : Back simple et multiple
-		- ctags : Multiple files
 		- sys : search complet, replace complet and replace ALL ...
 		- gui : demander l'enregistrement avant de fermer (quand c'est nécessaire)
 		- Faire les deplacement de EdnXXX dans le nameSpace Edn::XXX

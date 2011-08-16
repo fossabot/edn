@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EdnLang version="0.1" lang="c">
+<EdnLang version="0.1" lang="php: pretty home page">
 	<ext>*.php</ext>
 	<ext>*.php3</ext>
 	<ext>*.php4</ext>

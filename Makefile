@@ -221,11 +221,10 @@ build: .encadrer .versionFile $(OUTPUT_NAME)
 	@echo '           DEBUT DE COMPILATION DU PROGRAMME :'$(CADRE_COTERS)
 	@echo '             Repertoire Sources : $(FILE_DIRECTORY)/'$(CADRE_COTERS)
 	@echo '             Repertoire object  : $(OBJECT_DIRECTORY)/'$(CADRE_COTERS)
-	@echo '             Binaire de sortie  : $(F_VIOLET)$(OUTPUT_NAME) / $(OUTPUT_NAME)-stripped$(F_NORMALE)'$(CADRE_COTERS)
+	@echo '             Binaire de sortie  : $(F_VIOLET)$(OUTPUT_NAME) $(F_NORMALE)'$(CADRE_COTERS)
 	@echo $(CADRE_COTERS)
 	@echo $(CADRE_HAUT_BAS)
 	@mkdir -p $(addprefix $(OBJECT_DIRECTORY)/, $(LISTE_MODULES))
-	@mkdir -p ~/.bin
 
 
 FILE_IMAGES=	data/imagesSources/*.png
