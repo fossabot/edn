@@ -155,8 +155,7 @@ CXXFILES+=		tools/EdnTemplate/EdnVectorBuf.cpp		\
 				
 
 # Tools internal:
-CXXFILES+=		tools/AL/AL_Mutex.cpp					\
-				tools/Display/Display.cpp				\
+CXXFILES+=		tools/Display/Display.cpp				\
 				tools/ClipBoard/ClipBoard.cpp			\
 				tools/MsgBroadcast/MsgBroadcast.cpp		\
 				tools/MsgBroadcast/AccelKey.cpp			\
@@ -296,6 +295,8 @@ install: .encadrer .versionFile $(OUTPUT_NAME_RELEASE)
 	@echo $(F_VERT)"          (data) data/* ==> /usr/share/edn/ "$(F_NORMALE)
 	@mkdir -p /usr/share/edn/
 	@cp -vf data/*.xml /usr/share/edn/
+	@mkdir -p /usr/share/edn/images/
+	@cp -vf data/imagesSources/icone.png /usr/share/edn/images/
 
 
 # http://alp.developpez.com/tutoriels/debian/creer-paquet/
