@@ -66,8 +66,6 @@ int main (int argc, char *argv[])
 	ClipBoard::Init();
 	Display::Init();
 	
-	//MainWindows *window = MainWindows::getInstance();
-	
 	
 	// init ALL Singleton :
 	(void)MsgBroadcastCore::getInstance();

@@ -40,8 +40,20 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	m_mainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 	// select the program icone
-	gtk_window_set_default_icon_name("text-editor");
+	GError *err = NULL;
+	Edn::String iconeFile;
+#ifdef NDEBUG
+	iconeFile = "/usr/share/edn/images/icone.png";
+#else
+	iconeFile = "./data/data/imagesSources/icone.png";
+#endif
 
+	GdkPixbuf * icone = gdk_pixbuf_new_from_file(iconeFile.c_str(), &err);
+	if (err != NULL) {
+		gtk_window_set_default_icon_name("text-editor");
+	} else {
+		gtk_window_set_icon(GTK_WINDOW(m_mainWindow), icone);
+	}
 	// Default size open windows
 	gtk_window_set_default_size(GTK_WINDOW(m_mainWindow), 800, 600);
 

@@ -204,12 +204,12 @@ MenuBar::MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI)
 		tmp->AddGen(GTK_STOCK_NEW,                 "ctrl+n",       EDN_MSG__NEW, true);
 		tmp->AddGen(GTK_STOCK_OPEN,                "ctrl+o",       EDN_MSG__GUI_SHOW_OPEN_FILE, true);
 		tmp->AddSeparator();
-		tmp->AddGen("Close file",                  NULL,           EDN_MSG__CURRENT_CLOSE, true);
+		tmp->AddGen("Close file",                  "ctrl+q",       EDN_MSG__CURRENT_CLOSE, true);
 		tmp->AddSeparator();
 		tmp->AddGen(GTK_STOCK_SAVE,                "ctrl+s",       EDN_MSG__CURRENT_SAVE, true);
 		tmp->AddGen(GTK_STOCK_SAVE_AS,             "ctrl+shift+s", EDN_MSG__CURRENT_SAVE_AS, true);
 		tmp->AddSeparator();
-		tmp->AddGen(GTK_STOCK_QUIT,                "ctrl+q",       EDN_MSG__QUIT, true);
+		tmp->AddGen(GTK_STOCK_QUIT,                "ctrl+shift+q", EDN_MSG__QUIT, true);
 	m_listMenu.PushBack(tmp);
 	
 	tmp = new MenuBarMain("_Edit", m_mainWidget);
@@ -220,7 +220,7 @@ MenuBar::MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI)
 		tmp->AddGen(GTK_STOCK_COPY,                "ctrl+c",       EDN_MSG__CURRENT_COPY, true, COPY_STD);
 		tmp->AddGen(GTK_STOCK_PASTE,               "ctrl+v",       EDN_MSG__CURRENT_PASTE, true, COPY_STD);
 //		tmp->AddGen(GTK_STOCK_DELETE,              NULL);
-		tmp->AddGen("Remove line",                 "ctrl+d",       EDN_MSG__CURRENT_REMOVE_LINE, true);
+		tmp->AddGen("Remove line",                 "ctrl+w",       EDN_MSG__CURRENT_REMOVE_LINE, true);
 		tmp->AddSeparator();
 		tmp->AddGen(GTK_STOCK_SELECT_ALL,          "ctrl+a",       EDN_MSG__CURRENT_SELECT_ALL, true);
 		tmp->AddGen("Unselect",                    "ctrl+shift+a", EDN_MSG__CURRENT_UN_SELECT, true);
@@ -260,8 +260,8 @@ MenuBar::MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI)
 		tmp->AddGen("load Ctags file",              NULL,           EDN_MSG__OPEN_CTAGS, true);
 		tmp->AddGen("re-load Ctags file",           NULL,           EDN_MSG__RELOAD_CTAGS, true);
 		tmp->AddSeparator();
-		tmp->AddGen("Find Definition",              "ctrl+u",       EDN_MSG__JUMP_TO_CURRENT_SELECTION, true);
-		tmp->AddGen("Back previous",                "ctrl+y",       EDN_MSG__JUMP_BACK, true);
+		tmp->AddGen("Find Definition",              "ctrl+d",       EDN_MSG__JUMP_TO_CURRENT_SELECTION, true);
+		tmp->AddGen("Back previous",                "ctrl+shift+d", EDN_MSG__JUMP_BACK, true);
 	/*
 		tmp->AddGen("Gestion Ctags",                NULL);
 		tmp->AddGen("Add Ctags Folder",             NULL);
