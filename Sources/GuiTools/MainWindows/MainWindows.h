@@ -51,6 +51,7 @@ class MainWindows: public Singleton<MainWindows>, public MsgBroadcast
 		GtkWidget *     GetWidget(void) { return m_mainWindow;};
 		void            OnMessage(int32_t id, int32_t dataID);
 		static bool     OnQuit(GtkWidget *widget, gpointer data);
+		static gboolean OnStateChange(GtkWidget *widget, GdkEvent* event, gpointer data);
 	
 	private:
 		void            SetTitle(Edn::File &fileName, bool isModify);

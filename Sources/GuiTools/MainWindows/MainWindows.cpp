@@ -59,6 +59,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 
 	// enable the close signal of the windows 
 	g_signal_connect(G_OBJECT(m_mainWindow), "delete-event", G_CALLBACK(OnQuit), this);
+	g_signal_connect(G_OBJECT(m_mainWindow), "window-state-event", G_CALLBACK(OnStateChange), this);
 	//g_signal_connect(G_OBJECT(m_mainWindow), "destroy", G_CALLBACK(OnQuit), this);
 
 	// Create a vertical box for stacking the menu and editor widgets in.
@@ -103,6 +104,7 @@ MainWindows::~MainWindows(void)
 	}
 	*/
 }
+
 
 
 void MainWindows::SetTitle(Edn::File &fileName, bool isModify)
@@ -179,6 +181,25 @@ bool MainWindows::OnQuit(GtkWidget *widget, gpointer data)
 	return false;
 }
 
+
+gboolean MainWindows::OnStateChange(GtkWidget *widget, GdkEvent* event, gpointer data)
+{
+	MainWindows * self = reinterpret_cast<MainWindows*>(data);
+	EDN_WARNING("State change");
+	EDN_INFO(" change state mask : " << event->window_state.changed_mask);
+	EDN_INFO(" change state new val : " << event->window_state.new_window_state);
+	if (event->window_state.changed_mask == GDK_WINDOW_STATE_MAXIMIZED) {
+		EDN_INFO("   ==> Maximisation change...");
+		if (event->window_state.new_window_state == GDK_WINDOW_STATE_MAXIMIZED) {
+			EDN_INFO("       ==> ENABLE");
+			gtk_window_set_decorated(GTK_WINDOW(self->m_mainWindow), FALSE);
+		} else {
+			EDN_INFO("       ==> DISABLE");
+			gtk_window_set_decorated(GTK_WINDOW(self->m_mainWindow), TRUE);
+			
+		}
+	}
+}
 
 #if 0
 
