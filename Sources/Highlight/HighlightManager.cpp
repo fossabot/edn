@@ -30,7 +30,7 @@
 #undef __class__
 #define __class__	"HighlightManager"
 
-HighlightManager::HighlightManager(void)
+HighlightManager::HighlightManager(void) : MsgBroadcast("Hight-light Manager", EDN_CAT_HL)
 {
 
 }
@@ -49,6 +49,21 @@ HighlightManager::~HighlightManager(void)
 	listHighlight.Clear();
 }
 
+
+void HighlightManager::OnMessage(int32_t id, int32_t dataID)
+{
+	switch (id)
+	{
+		case EDN_MSG__COLOR_HAS_CHANGE:
+			EDN_INFO("UPDATE the color pointer on the HL");
+			for (int32_t i=0; i<listHighlight.Size(); i++) {
+				if (NULL != listHighlight[i]) {
+					listHighlight[i]->ReloadColor();
+				}
+			}
+			break;
+	}
+}
 
 Highlight *HighlightManager::Get(Edn::File &fileName)
 {

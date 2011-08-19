@@ -135,6 +135,20 @@ Highlight::~Highlight(void)
 	m_listExtentions.Clear();
 }
 
+void Highlight::ReloadColor(void)
+{
+	int32_t i;
+	for (i=0; i< m_listHighlightPass1.Size(); i++) {
+		if (NULL != m_listHighlightPass1[i]) {
+			m_listHighlightPass1[i]->ReloadColor();
+		}
+	}
+	for (i=0; i< m_listHighlightPass2.Size(); i++) {
+		if (NULL != m_listHighlightPass2[i]) {
+			m_listHighlightPass2[i]->ReloadColor();
+		}
+	}
+}
 
 bool Highlight::HasExtention(Edn::String &ext)
 {

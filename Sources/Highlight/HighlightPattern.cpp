@@ -87,6 +87,13 @@ bool HighlightPattern::IsEnable(void)
 	return true;
 }
 
+
+void HighlightPattern::ReloadColor(void)
+{
+	ColorizeManager *myColorManager = ColorizeManager::getInstance();
+	m_color = myColorManager->Get(m_colorName);
+}
+
 /**
  * @brief
  *

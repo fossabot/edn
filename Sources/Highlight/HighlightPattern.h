@@ -51,23 +51,25 @@ class HighlightPattern {
 		HighlightPattern(void);
 		~HighlightPattern(void);
 		
-		void			SetName(Edn::String &name) { m_paternName = name;};
-		Edn::String		GetName(void) { return m_paternName;};
+		void            SetName(Edn::String &name) { m_paternName = name;};
+		Edn::String     GetName(void) { return m_paternName;};
 		
-		void			SetPaternStart(Edn::String &regExp);
-		void			SetPaternStop(Edn::String &regExp);
-		void			SetColor(Edn::String &colorName);
-		void			SetEscapeChar(Edn::String &EscapeChar);
-		void			SetMultiline(bool enable) { m_multiline = enable; };
+		void            SetPaternStart(Edn::String &regExp);
+		void            SetPaternStop(Edn::String &regExp);
+		void            SetColor(Edn::String &colorName);
+		void            SetEscapeChar(Edn::String &EscapeChar);
+		void            SetMultiline(bool enable) { m_multiline = enable; };
 		
-		void			SetLevel(int32_t newLevel) { m_level = newLevel; };
-		int32_t			GetLevel(void) { return m_level; };
+		void            SetLevel(int32_t newLevel) { m_level = newLevel; };
+		int32_t         GetLevel(void) { return m_level; };
 		
-		bool			IsEnable(void);
-		void			Display(void);
+		bool            IsEnable(void);
+		void            Display(void);
 		resultFind_te   Find(int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer);
-		Colorize *		GetColor(void) { return m_color; };
-		void			ParseRules(TiXmlNode *child, int32_t level);
+		Colorize *      GetColor(void) { return m_color; };
+		void            ParseRules(TiXmlNode *child, int32_t level);
+		
+		void            ReloadColor(void);
 
 	private:
 		int32_t                             m_level;                    //!< Level of the pattern ==> this is to overwrite next pattern when we create an higher ....

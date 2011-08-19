@@ -36,7 +36,7 @@ const char * MSG_TogleAutoIndent     = "Request a Togle of Auto Indent";
 const char * MSG_SetCharsetIso559_1  = "Set ISO 5589-1";
 const char * MSG_SetCharsetIso559_15 = "Set ISO 5589-15";
 const char * MSG_SetCharsetUTF8      = "Set UTF 8";
-#define MSG_LINK(data)	
+#define MSG_LINK(data)
 
 
 static void CB_menuGenerique(GtkMenuItem *menu_item, gpointer data)
@@ -230,15 +230,6 @@ MenuBar::MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI)
 //		tmp->AddGen(GTK_STOCK_PREFERENCES,         NULL,           EDN_MSG__GUI_SHOW_PREFERENCE, true);
 	m_listMenu.PushBack(tmp);
 	
-	tmp = new MenuBarMain("Display", m_mainWidget);
-		tmp->AddInternal("Show space & tabs",                    NULL, MSG_TogleDisplayChar, true);
-		tmp->AddInternal("Show end of lines",                    NULL, MSG_TogleDisplayEOL, true);
-		tmp->AddInternal("Audo Indent",                          NULL, MSG_TogleAutoIndent, true);
-		tmp->AddInternal("Set charset Occidental (ISO-8859-1)",  NULL, MSG_SetCharsetIso559_1, true);
-		tmp->AddInternal("Set charset Occidental (ISO-8859-15)", NULL, MSG_SetCharsetIso559_15, true);
-		tmp->AddInternal("Set charset Internationnal (UTF 8)",   NULL, MSG_SetCharsetUTF8, true);
-	m_listMenu.PushBack(tmp);
-	
 	tmp = new MenuBarMain("_Search", m_mainWidget);
 		tmp->AddGen(GTK_STOCK_FIND,                 "ctrl+f",       EDN_MSG__GUI_SHOW_SEARCH, true);
 		tmp->AddGen(GTK_STOCK_FIND_AND_REPLACE,     "ctrl+r",       EDN_MSG__GUI_SHOW_REPLACE, true);
@@ -251,6 +242,18 @@ MenuBar::MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI)
 //		tmp->AddGen("Suprimer colorisation",        NULL);
 //		tmp->AddSeparator();
 //		tmp->AddGen("Goto Line",                    "ctrl+l",       EDN_MSG__CURRENT_GOTO_LINE, true);
+	m_listMenu.PushBack(tmp);
+	
+	tmp = new MenuBarMain("Display", m_mainWidget);
+		tmp->AddInternal("Show space & tabs",                    NULL, MSG_TogleDisplayChar, true);
+		tmp->AddInternal("Show end of lines",                    NULL, MSG_TogleDisplayEOL, true);
+		tmp->AddInternal("Audo Indent",                          NULL, MSG_TogleAutoIndent, true);
+		tmp->AddSeparator();
+		tmp->AddInternal("Set charset Occidental (ISO-8859-1)",  NULL, MSG_SetCharsetIso559_1, true);
+		tmp->AddInternal("Set charset Occidental (ISO-8859-15)", NULL, MSG_SetCharsetIso559_15, true);
+		tmp->AddInternal("Set charset Internationnal (UTF 8)",   NULL, MSG_SetCharsetUTF8, true);
+		tmp->AddSeparator();
+		tmp->AddGen(     "Reload Color File",                    NULL, EDN_MSG__RELOAD_COLOR_FILE, true);
 	m_listMenu.PushBack(tmp);
 	/*
 	tmp = new MenuBarMain("Project", m_mainWidget);

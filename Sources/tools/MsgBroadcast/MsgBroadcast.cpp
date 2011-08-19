@@ -132,11 +132,17 @@ static char * GetMessageChar(messageType_te Id)
 		MACRO_DISPLAY_MSG(EDN_MSG__REFRESH_DISPLAY)
 		MACRO_DISPLAY_MSG(EDN_MSG__CURRENT_SET_CHARSET)
 	
-		// Ctags MESSAGE : 
+		// Ctags MESSAGE :
 		MACRO_DISPLAY_MSG(EDN_MSG__OPEN_CTAGS)
 		MACRO_DISPLAY_MSG(EDN_MSG__RELOAD_CTAGS)
 		MACRO_DISPLAY_MSG(EDN_MSG__JUMP_TO_CURRENT_SELECTION)
 		MACRO_DISPLAY_MSG(EDN_MSG__JUMP_BACK)
+	
+		// HL message :
+		MACRO_DISPLAY_MSG(EDN_MSG__COLOR_HAS_CHANGE)
+	
+		// Color message :
+		MACRO_DISPLAY_MSG(EDN_MSG__RELOAD_COLOR_FILE)
 	
 		default:
 			return (char*)"??";
@@ -163,6 +169,10 @@ static char * GetMessageTypeChar(messageCat_te Id)
 			return (char*)"C-TAGS_MANAGER";
 		case EDN_CAT_MENU_CONTEXT:
 			return (char*)"MENU CONTEXT";
+		case EDN_CAT_HL:
+			return (char*)"HIGHT-LIGHT";
+		case EDN_CAT_COLOR:
+			return (char*)"COLOR";
 		default:
 			return (char*)"??";
 	}
@@ -204,6 +214,14 @@ void MsgBroadcastCore::SendMessage(MsgBroadcast * pointerOnSender, messageType_t
 	           && MSG_TO_CONTEXT__STOP  >= id )
 	{
 		catDest = EDN_CAT_MENU_CONTEXT;
+	} else if(    MSG_TO_HL__START <= id
+	           && MSG_TO_HL__STOP  >= id )
+	{
+		catDest = EDN_CAT_HL;
+	} else if(    MSG_TO_COLOR__START <= id
+	           && MSG_TO_COLOR__STOP  >= id )
+	{
+		catDest = EDN_CAT_COLOR;
 	}
 	
 	myStructMessage.localMessageID = m_messageID++;

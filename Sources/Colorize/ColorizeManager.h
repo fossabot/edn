@@ -28,6 +28,7 @@
 
 #include "Singleton.h"
 #include "Colorize.h"
+#include "MsgBroadcast.h"
 #include "Edn.h"
 
 typedef enum {
@@ -49,7 +50,7 @@ typedef enum {
 
 
 
-class ColorizeManager: public Singleton<ColorizeManager>
+class ColorizeManager: public Singleton<ColorizeManager>, public MsgBroadcast
 {
 	friend class Singleton<ColorizeManager>;
 	// specific for sigleton system...
@@ -57,6 +58,8 @@ class ColorizeManager: public Singleton<ColorizeManager>
 		// Constructeur
 		ColorizeManager(void);
 		~ColorizeManager(void);
+	public:
+		void    OnMessage(int32_t id, int32_t dataID);
 	public:
 		void        LoadFile(Edn::String &xmlFilename);
 		void        LoadFile(const char * xmlFilename);
@@ -68,6 +71,7 @@ class ColorizeManager: public Singleton<ColorizeManager>
 		void        DisplayListOfColor(void);
 
 	private:
+		Edn::String                 m_fileColor;
 		Edn::VectorType<Colorize*>  listMyColor;		//!< List of ALL Color
 		Colorize *                  errorColor;
 		color_ts                    basicColors[COLOR_NUMBER_MAX];

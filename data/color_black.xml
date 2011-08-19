@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnColor version="0.1">
 	<gui> <!-- Doivent tous y ètre de prférence ... global system acces -->
+		<color name="CODE_basicBackgroung"		val="#151515"/>
 		<color name="CODE_space" 				val="#333333"/>
 		<color name="CODE_tabulation"			val="#444444"/>
-		<color name="CODE_basicBackgroung"		val="#151515"/>
 		<color name="CODE_cursor"				val="#eadd05"/>
 		<color name="CODE_lineNumber"			val="#fff725"/>
 		<!-- Buffer list property -->
@@ -16,7 +16,6 @@
 	<syntax>
 		<color name="normal"				FG="#EEEEEE"/>
 		<color name="SelectedText"			FG="#AAAAAA" BG="#225a09"/>
-		<color name="SelectedNoText"		             BG="#124a00"/>
 		<color name="error"					FG="#FF0000"/>
 		<color name="doubleQuoteText"		FG="#00fF00"/>
 

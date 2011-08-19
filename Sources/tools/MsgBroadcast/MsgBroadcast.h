@@ -125,6 +125,16 @@ typedef enum {
 	MSG_TO_CONTEXT__START,
 	MSG_TO_CONTEXT__STOP,
 
+	// DESTINATION : highlight system ...
+	MSG_TO_HL__START,
+		EDN_MSG__COLOR_HAS_CHANGE,
+	MSG_TO_HL__STOP,
+
+	// DESTINATION : Color System ...
+	MSG_TO_COLOR__START,
+		EDN_MSG__RELOAD_COLOR_FILE,
+	MSG_TO_COLOR__STOP,
+
 
 }messageType_te;
 
@@ -137,6 +147,8 @@ typedef enum {
 	EDN_CAT_GUI_MANAGER,
 	EDN_CAT_CTAGS,
 	EDN_CAT_MENU_CONTEXT,
+	EDN_CAT_HL,
+	EDN_CAT_COLOR,
 }messageCat_te;
 
 

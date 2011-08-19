@@ -138,6 +138,9 @@ gboolean BufferView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, g
 	EDN_INFO("Request a display of : " << self->m_shawableAreaX << "px * "<<  self->m_shawableAreaY<<"px");
 	DrawerManager monDrawer(widget, self->m_shawableAreaX, self->m_shawableAreaY);
 	
+	// clean buffer
+	monDrawer.Clean(self->m_colorManager->Get(COLOR_LIST_BG_1));
+	
 	// get the number of buffer open
 	int32_t nbBufferOpen = self->m_bufferManager->Size();
 	int32_t i;

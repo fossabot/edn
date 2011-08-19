@@ -29,10 +29,11 @@
 class HighlightManager;
 
 #include "Singleton.h"
+#include "MsgBroadcast.h"
 #include "Highlight.h"
 
 
-class HighlightManager: public Singleton<HighlightManager>
+class HighlightManager: public Singleton<HighlightManager>, public MsgBroadcast
 {
 	friend class Singleton<HighlightManager>;
 	// specific for sigleton system...
@@ -41,6 +42,8 @@ class HighlightManager: public Singleton<HighlightManager>
 		HighlightManager(void);
 		~HighlightManager(void);
 
+	public:
+		void    OnMessage(int32_t id, int32_t dataID);
 	public:
 		void loadLanguages(void);
 		Highlight	* Get(Edn::File &fileName);

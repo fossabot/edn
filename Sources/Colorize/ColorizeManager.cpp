@@ -30,7 +30,7 @@
 #define PFX	"ColorizeManager "
 
 
-ColorizeManager::ColorizeManager(void)
+ColorizeManager::ColorizeManager(void) : MsgBroadcast("Colorize Manager", EDN_CAT_COLOR)
 {
 }
 
@@ -51,6 +51,33 @@ ColorizeManager::~ColorizeManager(void)
 }
 
 
+void ColorizeManager::OnMessage(int32_t id, int32_t dataID)
+{
+	switch (id)
+	{
+		case EDN_MSG__RELOAD_COLOR_FILE:
+			{
+				// Remove all current color
+				int32_t i;
+				// clean all Element
+				for (i=0; i< listMyColor.Size(); i++) {
+					if (NULL != listMyColor[i]) {
+						delete(listMyColor[i]);
+						listMyColor[i] = NULL;
+					}
+				}
+				// clear the compleate list
+				listMyColor.Clear();
+				// Reaload File
+				// TODO : Check this : 
+				Edn::String plop = m_fileColor;
+				LoadFile(plop.c_str());
+			}
+			break;
+	}
+}
+
+
 void ColorizeManager::LoadFile(Edn::String &xmlFilename)
 {
 	LoadFile(xmlFilename.c_str());
@@ -58,6 +85,8 @@ void ColorizeManager::LoadFile(Edn::String &xmlFilename)
 
 void ColorizeManager::LoadFile(const char * xmlFilename)
 {
+	m_fileColor = xmlFilename;
+	EDN_DEBUG("open file (COLOR) \"" << xmlFilename << "\" ? = \"" << m_fileColor << "\"");
 	errorColor = new Colorize();
 	errorColor->SetBgColor("#000000");
 	errorColor->SetFgColor("#FFFFFF");
@@ -203,6 +232,7 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 			pNode = pNode->NextSibling();
 		}
 	}
+	SendMessage(EDN_MSG__COLOR_HAS_CHANGE);
 }
 
 Colorize *ColorizeManager::Get(const char *colorName)

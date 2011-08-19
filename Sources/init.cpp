@@ -84,7 +84,8 @@ int main (int argc, char *argv[])
 #else
 	homedir = "./data/";
 #endif
-	homedir += "color_black.xml";
+	//homedir += "color_black.xml";
+	homedir += "color_white.xml";
 	myColorManager->LoadFile( homedir.c_str() );
 	myColorManager->DisplayListOfColor();
 	

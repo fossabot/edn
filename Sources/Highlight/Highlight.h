@@ -56,6 +56,7 @@ class Highlight {
 		bool HasExtention(Edn::String &ext);
 		bool FileNameCompatible(Edn::File &fileName);
 		void Display(void);
+		void ReloadColor(void);
 		void Parse(int32_t start,
 		           int32_t stop,
 		           Edn::VectorType<colorInformation_ts> &metaData,

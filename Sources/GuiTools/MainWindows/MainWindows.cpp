@@ -45,7 +45,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 #ifdef NDEBUG
 	iconeFile = "/usr/share/edn/images/icone.png";
 #else
-	iconeFile = "./data/data/imagesSources/icone.png";
+	iconeFile = "./data/imagesSources/icone.png";
 #endif
 
 	GdkPixbuf * icone = gdk_pixbuf_new_from_file(iconeFile.c_str(), &err);
@@ -61,7 +61,10 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	g_signal_connect(G_OBJECT(m_mainWindow), "delete-event", G_CALLBACK(OnQuit), this);
 	g_signal_connect(G_OBJECT(m_mainWindow), "window-state-event", G_CALLBACK(OnStateChange), this);
 	//g_signal_connect(G_OBJECT(m_mainWindow), "destroy", G_CALLBACK(OnQuit), this);
-
+	
+	// remove decoration
+	//gtk_window_set_decorated(GTK_WINDOW(m_mainWindow), FALSE);
+	
 	// Create a vertical box for stacking the menu and editor widgets in.
 	GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(m_mainWindow), vbox);
@@ -70,8 +73,19 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	AccelKey::getInstance()->LinkCommonAccel(GTK_WINDOW(m_mainWindow));
 
 	// Create the menu bar.
+#if 0
 	gtk_box_pack_start(	GTK_BOX (vbox), m_MenuBar.GetWidget(), FALSE, FALSE, 0);
-
+#else
+	GtkWidget *hboxMenu = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start(	GTK_BOX (vbox), hboxMenu, FALSE, FALSE, 0);
+	// Add Exit boutton
+	
+	// add the real menu bar
+	gtk_box_pack_start(	GTK_BOX (hboxMenu), m_MenuBar.GetWidget(), FALSE, FALSE, 0);
+	
+	// Add title
+	
+#endif
 	// **********************************************************
 	// *                Horizontal ELEMENTS :                   *
 	// **********************************************************
@@ -80,7 +94,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 		gtk_container_add(GTK_CONTAINER (vbox), hbox);
 		// create the toolbar :
 #		if USE_GTK_VERSION_2_0
-		gtk_box_pack_start(GTK_BOX(hbox), m_ToolBar.GetWidget(), FALSE, FALSE, 0);
+		//gtk_box_pack_start(GTK_BOX(hbox), m_ToolBar.GetWidget(), FALSE, FALSE, 0);
 #		endif
 		// TreeView :
 		gtk_box_pack_start(GTK_BOX(hbox), m_BufferView.GetMainWidget(), FALSE, TRUE, 1);
