@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EdnColor version="0.1">
+	<gui> <!-- Doivent tous y ètre de prférence ... global system acces -->
+		<color name="CODE_basicBackgroung"		val="#d9d7d7"/>
+		<color name="CODE_space" 				val="#b7b6b6"/>
+		<color name="CODE_tabulation"			val="#a7a5a5"/>
+		<color name="CODE_cursor"				val="#2a00ff"/>
+		<color name="CODE_lineNumber"			val="#1a00a0"/>
+		<!-- Buffer list property -->
+		<color name="LIST_backgroung1"			val="#d9d7d7"/>
+		<color name="LIST_backgroung2"			val="#b7b6b6"/>
+		<color name="LIST_backgroungSelected"	val="#3da3f9"/>
+		<color name="LIST_textNormal"			val="#000000"/>
+		<color name="LIST_textModify"			val="#FF0000"/>
+	</gui>
+	<syntax>
+		<color name="normal"				FG="#000000"/>
+		<color name="SelectedText"			FG="#292929" BG="#009ce7"/>
+		<color name="error"					FG="#FF0000"/>
+		<color name="doubleQuoteText"		FG="#008e00"/>
+
+		<!-- hightline description : -->
+		<color name="type"					FG="#376d0a" bold="yes"/>
+		<color name="storageKeyword"		FG="#466cb4"/>
+		<color name="number"				FG="#007b00"/>
+		<color name="systemFunction"		FG="#acaa00"/>
+		<color name="commonDefine"			FG="#3c850b"/>
+		<color name="boolean"				FG="#1633a3"/>
+		<color name="preprocesseur"			FG="#ac0000"/>
+		<color name="comment"				FG="#b704b5" italic="yes"/>
+		<color name="commentDoxygen"		FG="#bf3e00" bold="yes" italic="yes"/>
+		<color name="keyword"				FG="#215eb8" bold="yes"/>
+		<color name="macro" 				FG="#571793" bold="yes"/>
+		<color name="SYNTAX_ERROR"  		FG="#000000" BG="#c20000" bold="yes"/>
+		<color name="functionName"  		FG="#09857e" bold="yes"/>
+		<color name="TestResultOK"			FG="#000000" BG="#009c00" bold="yes"/>
+		<color name="TestResultERROR"		FG="#000000" BG="#c20000" bold="yes"/>
+	</syntax>
+</EdnColor>
+

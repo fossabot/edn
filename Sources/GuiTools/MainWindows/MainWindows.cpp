@@ -79,6 +79,24 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	GtkWidget *hboxMenu = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start(	GTK_BOX (vbox), hboxMenu, FALSE, FALSE, 0);
 	// Add Exit boutton
+	Edn::String ExitIconeFile;
+#ifdef NDEBUG
+	ExitIconeFile = "/usr/share/edn/images/delete-24px.png";
+#else
+	ExitIconeFile = "./data/imagesSources/delete-24px.png";
+#endif
+	// TODO : find a good way to chenge the size of an image
+	GtkWidget *myImageQuit = gtk_image_new_from_file(ExitIconeFile.c_str());
+	GtkIconSize mySize = GTK_ICON_SIZE_SMALL_TOOLBAR;
+	//EDN_DEBUG(" plop : " << mySize);
+	//gtk_image_get_icon_set( GTK_IMAGE(myImageQuit), NULL, &mySize);
+	//EDN_DEBUG(" plop : " << mySize);
+	GtkWidget *event_box = gtk_event_box_new();
+	gtk_container_add(GTK_CONTAINER(event_box),myImageQuit);
+	gtk_widget_add_events(event_box,GDK_BUTTON_PRESS_MASK);
+	g_signal_connect(G_OBJECT(event_box), "button_press_event", G_CALLBACK(OnQuit), this);
+	
+	gtk_box_pack_start(	GTK_BOX(hboxMenu), event_box, FALSE, FALSE, 0);
 	
 	// add the real menu bar
 	gtk_box_pack_start(	GTK_BOX (hboxMenu), m_MenuBar.GetWidget(), FALSE, FALSE, 0);
