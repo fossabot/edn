@@ -192,15 +192,15 @@ void Search::Display(GtkWindow *parent)
 		} else {
 			gtk_widget_set_sensitive(m_CkMatchCase, true);
 		}
-		
-		Edn::String myDataString;
-		SearchData::GetSearch(myDataString);
+		// Remove data form the search
+		Edn::String myDataString = "";
+		SearchData::SetSearch(myDataString);
 		gtk_entry_set_text(GTK_ENTRY(m_searchEntry), myDataString.c_str());
-		if (0 == strlen(myDataString.c_str())) {
+		//if (0 == strlen(myDataString.c_str())) {
 			m_haveSearchData = false;
-		} else {
-			m_haveSearchData = true;
-		}
+		//} else {
+		//	m_haveSearchData = true;
+		//}
 		
 		SearchData::GetReplace(myDataString);
 		gtk_entry_set_text(GTK_ENTRY(m_replaceEntry), myDataString.c_str());
@@ -219,6 +219,10 @@ void Search::Display(GtkWindow *parent)
 			gtk_widget_set_sensitive(m_BtReplace, m_haveReplaceData);
 			gtk_widget_set_sensitive(m_BtReplaceAndNext, m_haveReplaceData);
 		}
+		
+		// set focus on a specific widget :
+		gtk_window_set_focus(parent, m_searchEntry);
+		
 		
 		// display the dialogue box
 		gtk_widget_show_all(m_localDialog);

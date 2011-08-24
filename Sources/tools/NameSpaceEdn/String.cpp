@@ -584,6 +584,8 @@ Edn::VectorType<int8_t> Edn::String::GetVector(void)
 	return out;
 }
 
+
+
 /**
  * @brief Unitary test for the string system
  *

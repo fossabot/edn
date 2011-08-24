@@ -18,15 +18,15 @@
 //#include "tools_debug.h"
 #include "tools_globals.h"
 #include "EdnBuf.h"
-
+Edn
 	m_isUndoProcessing = false;
 	m_isRedoProcessing = false;
-	
+	Edn 
 	// Load highlight system : 
 	HighlightManager *myHighlightManager = HighlightManager::getInstance();
 	EdnString plop = ".c";
 	m_Highlight = myHighlightManager->Get(plop);
 	//m_Highlight = NULL;
-	m_nbLine = 1;
+	m_nbLine = 1;Edn
 	m_HLDataSequence = 0;
 

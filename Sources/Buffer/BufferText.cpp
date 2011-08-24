@@ -1202,9 +1202,9 @@ void BufferText::Replace(Edn::String &data)
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	if (true == haveSelectionActive) {
 		// Replace Data : 
-		// TODO : Reset this : ... m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, data.GetDirectPointer());//, strlen(data.GetDirectPointer()));
-		// TODO : Reset this : ... SetInsertPosition(SelectionStart + strlen(data.GetDirectPointer()));
-		
+		Edn::VectorType<int8_t> myData = data.GetVector();
+		m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, myData);
+		SetInsertPosition(SelectionStart + myData.Size());
 	}
 	SetModify(true);
 }

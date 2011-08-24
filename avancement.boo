@@ -16,12 +16,10 @@
 
 # action a faire (ordonner par révision) :
 	* 0.1.X :
-		- ctags : Back simple et multiple
-		- sys : search complet, replace complet and replace ALL ...
 		- gui : demander l'enregistrement avant de fermer (quand c'est nécessaire)
-		- Faire les deplacement de EdnXXX dans le nameSpace Edn::XXX
 		- Edn::VectorType : Rewrite the erase fuction to support start => stop and Erase len methode ...
 	* 0.2.X :
+		- gui : Mise en place d'un display ligne par ligne
 		- gui : Demander la création de nouveaux fichier quand il n'existe pas (a l'ouverture en ligne de commande)
 		- sys : Mise en place des colorisation de base pour le 
 				* java script
@@ -44,6 +42,7 @@
 	* 0.5.X :
 		- project : list of current files open
 		- gui : Parameters : et en autre la taille de la police ... et voir pour la récupérer sur le system... et ce serait cool...
+		- sys : replace ALL
 
 # Text Editor
 
