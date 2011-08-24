@@ -212,6 +212,10 @@ int32_t Edn::File::GetLineNumber(void)
 	return m_lineNumberOpen;
 }
 
+void Edn::File::SetLineNumber(int32_t newline)
+{
+	m_lineNumberOpen = newline;
+}
 
 bool Edn::File::HasExtention(void)
 {

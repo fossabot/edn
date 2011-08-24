@@ -229,8 +229,6 @@ void BufferText::SetLineDisplay(uint32_t lineNumber)
 
 }
 
-
-
 void BufferText::DrawLineNumber(DrawerManager &drawer,char *myPrint,  int32_t lineNumber, int32_t positionY)
 {
 	char tmpLineNumber[50];
@@ -1093,6 +1091,21 @@ void BufferText::JumpAtLine(int32_t newLine)
 	SetInsertPosition(positionLine);
 	UpdateWindowsPosition(true);
 }
+
+/**
+ * @brief Get the current line (to know where to jump)
+ *
+ * @param ---
+ *
+ * @return Return the current line number
+ *
+ */
+int32_t BufferText::GetCurrentLine(void)
+{
+	return m_EdnBuf.CountLines(0, m_cursorPos);
+}
+
+
 
 void BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
 {

@@ -65,6 +65,8 @@ class BufferText : public Buffer {
 		void      Replace(Edn::String &data);
 		int32_t   FindLine(Edn::String &data);
 		void      JumpAtLine(int32_t newLine);
+		int32_t   GetCurrentLine(void);
+		
 		void      RemoveLine(void);
 		void      SelectAll(void);
 		void      SelectNone(void);

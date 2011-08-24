@@ -44,6 +44,7 @@ namespace Edn
 			bool        HasExtention(void);
 			Edn::String GetExtention(void);
 			int32_t     GetLineNumber(void);
+			void        SetLineNumber(int32_t newline);
 			void        SetCompleateName(Edn::String &newFilename);
 			
 			const Edn::File& operator=  (const Edn::File &ednF );

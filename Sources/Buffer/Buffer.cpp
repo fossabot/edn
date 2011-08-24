@@ -137,7 +137,6 @@ void Buffer::SetLineDisplay(uint32_t lineNumber)
 	// nothing to do
 }
 
-
 /**
  * @brief
  *
@@ -289,6 +288,21 @@ void Buffer::JumpAtLine(int32_t newLine)
 {
 	// nothing to do
 }
+
+
+/**
+ * @brief Get the current line (to know where to jump)
+ *
+ * @param ---
+ *
+ * @return Return the current line number
+ *
+ */
+int32_t Buffer::GetCurrentLine(void)
+{
+	return 0;
+}
+
 
 /**
  * @brief request a copy of the selection in the named clipBoard ID

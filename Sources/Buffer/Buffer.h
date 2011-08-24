@@ -106,6 +106,7 @@ class Buffer {
 		virtual void      Replace(Edn::String &data);
 		virtual int32_t   FindLine(Edn::String &data);
 		virtual void      JumpAtLine(int32_t newLine);
+		virtual int32_t   GetCurrentLine(void);
 		
 	protected:
 		bool              m_fileModify;           //!< 

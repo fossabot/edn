@@ -119,7 +119,22 @@ void CTagsManager::OnMessage(int32_t id, int32_t dataID)
 			JumpTo();
 			break;
 		case EDN_MSG__JUMP_BACK:
-			EDN_INFO("TODO .... jump back");
+			if (m_historyList.Size() > 0) {
+				BufferManager *myBufferManager = BufferManager::getInstance();
+				int32_t id = m_historyList.Size()-1;
+				if (false == myBufferManager->Exist(*m_historyList[id]) ) {
+					// need to open the file : 
+					int32_t openID = myBufferManager->Open(*m_historyList[id]);
+					SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, openID);
+				} else {
+					SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, myBufferManager->GetId(*m_historyList[id]));
+				}
+				SendMessage(EDN_MSG__CURRENT_GOTO_LINE, m_historyList[id]->GetLineNumber());
+				// Remove element ....
+				delete(m_historyList[id]);
+				m_historyList[id]=NULL;
+				m_historyList.PopBack();
+			}
 			break;
 			
 	}
@@ -169,10 +184,10 @@ enum
 	CTAGS_NUM_COLS
 };
 
-void CTagsManager::cb_row (GtkTreeView *p_treeview,
-                    GtkTreePath * p_path,
-                    GtkTreeViewColumn * p_column,
-                    gpointer data)
+void CTagsManager::cb_row(GtkTreeView *p_treeview,
+                          GtkTreePath * p_path,
+                          GtkTreeViewColumn * p_column,
+                          gpointer data)
 {
 	EDN_DEBUG("event");
 	CTagsManager * self = reinterpret_cast<CTagsManager*>(data);
@@ -302,6 +317,15 @@ void CTagsManager::JumpAtID(int32_t selectID)
 {
 	BufferManager *myBufferManager = BufferManager::getInstance();
 	Edn::File myFile = m_currentList[selectID].filename;
+	EDN_INFO("save curent filename and position : ");
+	int32_t currentSelected = myBufferManager->GetSelected();
+	Buffer* tmpBuf = myBufferManager->Get(currentSelected);
+	if (NULL != tmpBuf) {
+		Edn::File * bufferFilename = new Edn::File();
+		*bufferFilename = tmpBuf->GetFileName();
+		bufferFilename->SetLineNumber(tmpBuf->GetCurrentLine());
+		m_historyList.PushBack(bufferFilename);
+	}
 	EDN_INFO(" OPEN the TAG file Destination : " << myFile );
 	if (false == myBufferManager->Exist(myFile) ) {
 		// need to open the file : 
