@@ -196,11 +196,11 @@ void Search::Display(GtkWindow *parent)
 		Edn::String myDataString = "";
 		SearchData::SetSearch(myDataString);
 		gtk_entry_set_text(GTK_ENTRY(m_searchEntry), myDataString.c_str());
-		//if (0 == strlen(myDataString.c_str())) {
+		if (0 == strlen(myDataString.c_str())) {
 			m_haveSearchData = false;
-		//} else {
-		//	m_haveSearchData = true;
-		//}
+		} else {
+			m_haveSearchData = true;
+		}
 		
 		SearchData::GetReplace(myDataString);
 		gtk_entry_set_text(GTK_ENTRY(m_replaceEntry), myDataString.c_str());
@@ -212,17 +212,14 @@ void Search::Display(GtkWindow *parent)
 		
 		gtk_widget_set_sensitive(m_BtPrevious, m_haveSearchData);
 		gtk_widget_set_sensitive(m_BtNext, m_haveSearchData);
-		if (false == m_haveSearchData) {
-			gtk_widget_set_sensitive(m_BtReplace, false);
-			gtk_widget_set_sensitive(m_BtReplaceAndNext, false);
-		} else {
-			gtk_widget_set_sensitive(m_BtReplace, m_haveReplaceData);
-			gtk_widget_set_sensitive(m_BtReplaceAndNext, m_haveReplaceData);
-		}
+		// basic no search data
+		gtk_widget_set_sensitive(m_BtReplace, false);
+		gtk_widget_set_sensitive(m_BtReplaceAndNext, false);
+		
 		
 		// set focus on a specific widget :
-		gtk_window_set_focus(parent, m_searchEntry);
-		
+		//gtk_window_set_focus(parent, m_searchEntry);
+		gtk_widget_grab_focus(m_searchEntry);
 		
 		// display the dialogue box
 		gtk_widget_show_all(m_localDialog);
@@ -331,8 +328,8 @@ void Search::OnEntrySearchChange(GtkWidget *widget, gpointer data)
 			gtk_widget_set_sensitive(self->m_BtReplace, false);
 			gtk_widget_set_sensitive(self->m_BtReplaceAndNext, false);
 		} else {
-			gtk_widget_set_sensitive(self->m_BtReplace, self->m_haveReplaceData);
-			gtk_widget_set_sensitive(self->m_BtReplaceAndNext, self->m_haveReplaceData);
+			gtk_widget_set_sensitive(self->m_BtReplace, true);
+			gtk_widget_set_sensitive(self->m_BtReplaceAndNext, true);
 		}
 	}
 }
@@ -351,7 +348,12 @@ void Search::OnEntryReplaceChange(GtkWidget *widget, gpointer data)
 		} else {
 			self->m_haveReplaceData = true;
 		}
-		gtk_widget_set_sensitive(self->m_BtReplace, self->m_haveReplaceData);
-		gtk_widget_set_sensitive(self->m_BtReplaceAndNext, self->m_haveReplaceData);
+		if (false == self->m_haveSearchData) {
+			gtk_widget_set_sensitive(self->m_BtReplace, false);
+			gtk_widget_set_sensitive(self->m_BtReplaceAndNext, false);
+		} else {
+			gtk_widget_set_sensitive(self->m_BtReplace, true);
+			gtk_widget_set_sensitive(self->m_BtReplaceAndNext, true);
+		}
 	}
 }
