@@ -18,7 +18,7 @@
 		<color name="SelectedText"			FG="#AAAAAA" BG="#225a09"/>
 		<color name="error"					FG="#FF0000"/>
 		<color name="doubleQuoteText"		FG="#00fF00"/>
-
+ 
 		<!-- hightline description : -->
 		<color name="type"					FG="#56bf10" bold="yes"/>
 		<color name="storageKeyword"		FG="#5c8fed"/>

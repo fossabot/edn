@@ -1,6 +1,6 @@
 /**
  *******************************************************************************
- * @file ColoriseManager.h
+ * @file ColorizeManager.h
  * @brief Editeur De N'ours : Colorising Manager (header)
  * @author Edouard DUPIN
  * @date 14/12/2010

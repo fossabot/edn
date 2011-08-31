@@ -1,6 +1,6 @@
 /**
  *******************************************************************************
- * @file ColoriseManager.cpp
+ * @file ColorizeManager.cpp
  * @brief Editeur De N'ours : Colorising Manager
  * @author Edouard DUPIN
  * @date 14/12/2010
@@ -57,19 +57,8 @@ void ColorizeManager::OnMessage(int32_t id, int32_t dataID)
 	{
 		case EDN_MSG__RELOAD_COLOR_FILE:
 			{
-				// Remove all current color
-				int32_t i;
-				// clean all Element
-				for (i=0; i< listMyColor.Size(); i++) {
-					if (NULL != listMyColor[i]) {
-						delete(listMyColor[i]);
-						listMyColor[i] = NULL;
-					}
-				}
-				// clear the compleate list
-				listMyColor.Clear();
 				// Reaload File
-				// TODO : Check this : 
+				// TODO : Check this : Pb in the recopy Edn::String element
 				Edn::String plop = m_fileColor;
 				LoadFile(plop.c_str());
 			}
@@ -85,6 +74,18 @@ void ColorizeManager::LoadFile(Edn::String &xmlFilename)
 
 void ColorizeManager::LoadFile(const char * xmlFilename)
 {
+	// Remove all old color : 
+	int32_t i;
+	// clean all Element
+	for (i=0; i< listMyColor.Size(); i++) {
+		if (NULL != listMyColor[i]) {
+			delete(listMyColor[i]);
+			listMyColor[i] = NULL;
+		}
+	}
+	// clear the compleate list
+	listMyColor.Clear();
+
 	m_fileColor = xmlFilename;
 	EDN_DEBUG("open file (COLOR) \"" << xmlFilename << "\" ? = \"" << m_fileColor << "\"");
 	errorColor = new Colorize();
@@ -96,22 +97,17 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 	// open the curent File
 	XmlDocument.LoadFile(xmlFilename);
 	TiXmlElement* root = XmlDocument.FirstChildElement( "EdnColor" );
-	if (NULL == root )
-	{
+	if (NULL == root ) {
 		EDN_ERROR(PFX"(l ?) main node not find: \"EdnColor\" in \"" << xmlFilename << "\"");
 		return;
-	}
-	else
-	{
+	} else {
 		TiXmlNode * pNode = root->FirstChild();
-		while(NULL != pNode)
-		{
+		while(NULL != pNode) {
 			if (pNode->Type()==TiXmlNode::TINYXML_COMMENT) {
 				// nothing to do, just proceed to next step
 			} else if (!strcmp(pNode->Value(), "gui")) {
 				TiXmlNode * pGuiNode = pNode->FirstChild();
-				while(NULL != pGuiNode)
-				{
+				while(NULL != pGuiNode) {
 					if (pGuiNode->Type()==TiXmlNode::TINYXML_COMMENT) {
 						// nothing to do, just proceed to next step
 					} else if (!strcmp(pGuiNode->Value(), "color")) {
@@ -233,6 +229,7 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 		}
 	}
 	SendMessage(EDN_MSG__COLOR_HAS_CHANGE);
+	SendMessage(EDN_MSG__USER_DISPLAY_CHANGE);
 }
 
 Colorize *ColorizeManager::Get(const char *colorName)

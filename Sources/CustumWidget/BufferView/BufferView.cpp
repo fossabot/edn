@@ -100,6 +100,10 @@ void BufferView::OnMessage(int32_t id, int32_t dataID)
 			// change Title :
 			gtk_widget_queue_draw(m_widget);
 			break;
+		case EDN_MSG__USER_DISPLAY_CHANGE:
+			// Redraw all the display ...
+			gtk_widget_queue_draw(m_widget);
+			break;
 	}
 }
 

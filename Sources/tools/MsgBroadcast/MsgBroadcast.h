@@ -41,6 +41,7 @@ typedef enum {
 	// Programm is Quitting... close all if needed ...
 	EDN_MSG__QUIT,
 	EDN_MSG__BUFFER_CHANGE_CURRENT,  // set the new current BUFFER ...
+	EDN_MSG__USER_DISPLAY_CHANGE,    // User change the display ==> need to reload all the display depending on color internal
 	
 	// DESTINATION : GUI_MANAGER
 	MSG_TO_GUI_MANAGER__START,

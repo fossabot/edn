@@ -28,6 +28,7 @@
 #include "MenuBar.h"
 #include "ClipBoard.h"
 #include "charset.h"
+#include "ColorizeManager.h"
 
 #define MENU_MSG
 const char * MSG_TogleDisplayChar    = "Request a Togle of char displaying";
@@ -36,6 +37,8 @@ const char * MSG_TogleAutoIndent     = "Request a Togle of Auto Indent";
 const char * MSG_SetCharsetIso559_1  = "Set ISO 5589-1";
 const char * MSG_SetCharsetIso559_15 = "Set ISO 5589-15";
 const char * MSG_SetCharsetUTF8      = "Set UTF 8";
+const char * MSG_LoadColorBlack      = "Load Color Black";
+const char * MSG_LoadColorWhite      = "Load Color White";
 #define MSG_LINK(data)
 
 
@@ -74,6 +77,26 @@ static void CB_menuInternal(GtkMenuItem *menu_item, gpointer data)
 		GeneralSendMessage(EDN_MSG__CURRENT_SET_CHARSET, EDN_CHARSET_ISO_8859_15);
 	} else if (myPointer == MSG_SetCharsetUTF8) {
 		GeneralSendMessage(EDN_MSG__CURRENT_SET_CHARSET, EDN_CHARSET_UTF8);
+	} else if (myPointer == MSG_LoadColorWhite) {
+		ColorizeManager * myColorSystem = ColorizeManager::getInstance();
+		Edn::String homedir;
+#		ifdef NDEBUG
+			homedir = "/usr/share/edn/";
+#		else
+			homedir = "./data/";
+#		endif
+		homedir += "color_white.xml";
+		myColorSystem->LoadFile(homedir);
+	} else if (myPointer == MSG_LoadColorBlack) {
+		ColorizeManager * myColorSystem = ColorizeManager::getInstance();
+		Edn::String homedir;
+#		ifdef NDEBUG
+			homedir = "/usr/share/edn/";
+#		else
+			homedir = "./data/";
+#		endif
+		homedir += "color_black.xml";
+		myColorSystem->LoadFile(homedir);
 	}
 }
 
@@ -254,6 +277,9 @@ MenuBar::MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI)
 		tmp->AddInternal("Set charset Internationnal (UTF 8)",   NULL, MSG_SetCharsetUTF8, true);
 		tmp->AddSeparator();
 		tmp->AddGen(     "Reload Color File",                    NULL, EDN_MSG__RELOAD_COLOR_FILE, true);
+		tmp->AddSeparator();
+		tmp->AddInternal("Set Color Black",                      NULL, MSG_LoadColorBlack, true);
+		tmp->AddInternal("Set Color White",                      NULL, MSG_LoadColorWhite, true);
 	m_listMenu.PushBack(tmp);
 	/*
 	tmp = new MenuBarMain("Project", m_mainWidget);

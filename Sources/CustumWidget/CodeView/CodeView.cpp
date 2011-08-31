@@ -179,6 +179,9 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 		case EDN_MSG__CURRENT_SET_CHARSET:
 			m_bufferManager->Get(m_bufferID)->SetCharset((charset_te)dataID);
 			break;
+		case EDN_MSG__USER_DISPLAY_CHANGE:
+			// Redraw all the display ... Done under ...
+			break;
 	}
 	// Force redraw of the widget
 	gtk_widget_queue_draw(m_widget);
