@@ -217,7 +217,7 @@ bool MainWindows::OnQuit(GtkWidget *widget, gpointer data)
 gboolean MainWindows::OnStateChange(GtkWidget *widget, GdkEvent* event, gpointer data)
 {
 	MainWindows * self = reinterpret_cast<MainWindows*>(data);
-	EDN_WARNING("State change");
+	EDN_DEBUG("State change");
 	EDN_INFO(" change state mask : " << event->window_state.changed_mask);
 	EDN_INFO(" change state new val : " << event->window_state.new_window_state);
 	if (event->window_state.changed_mask == GDK_WINDOW_STATE_MAXIMIZED) {
