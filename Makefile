@@ -294,9 +294,11 @@ install: .encadrer .versionFile $(OUTPUT_NAME_RELEASE)
 	@cp -vf $(PROG_NAME) /usr/bin/
 	@echo $(F_VERT)"          (data) data/* ==> /usr/share/edn/ "$(F_NORMALE)
 	@mkdir -p /usr/share/edn/
+	@rm -rf /usr/share/edn/*
 	@cp -vf data/*.xml /usr/share/edn/
 	@mkdir -p /usr/share/edn/images/
 	@cp -vf data/imagesSources/icone.png /usr/share/edn/images/
+	@cp -vf data/imagesSources/delete-24px.png /usr/share/edn/images/
 
 
 # http://alp.developpez.com/tutoriels/debian/creer-paquet/
