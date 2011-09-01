@@ -187,6 +187,11 @@ class MenuBarMain
 			m_message.PushBack(message);
 			// create ITEM
 			GtkWidget *tmpWidget = gtk_image_menu_item_new_from_stock( title, AccelKey::getInstance()->GetAccel() );
+			GdkColor color;
+			gdk_color_parse ("red", &color);
+			gtk_widget_modify_fg(tmpWidget, GTK_STATE_NORMAL, &color);
+			gtk_widget_modify_bg(tmpWidget, GTK_STATE_NORMAL, &color);
+			gtk_widget_modify_text(tmpWidget, GTK_STATE_NORMAL, &color);
 			// set grisage : 
 			gtk_widget_set_sensitive(tmpWidget, enable);
 			// add to the menu : 

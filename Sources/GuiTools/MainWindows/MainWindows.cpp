@@ -85,7 +85,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 #else
 	ExitIconeFile = "./data/imagesSources/delete-24px.png";
 #endif
-	// TODO : find a good way to chenge the size of an image
+	// TODO : find a good way to change the size of an image
 	GtkWidget *myImageQuit = gtk_image_new_from_file(ExitIconeFile.c_str());
 	GtkIconSize mySize = GTK_ICON_SIZE_SMALL_TOOLBAR;
 	//EDN_DEBUG(" plop : " << mySize);
@@ -100,7 +100,21 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	
 	// add the real menu bar
 	gtk_box_pack_start(	GTK_BOX (hboxMenu), m_MenuBar.GetWidget(), FALSE, FALSE, 0);
-	
+	GdkColor color;
+	GtkStateType tmpppppp = GTK_STATE_NORMAL;
+	//GtkStateType tmpppppp = GTK_STATE_ACTIVE;
+	//GtkStateType tmpppppp = GTK_STATE_PRELIGHT;
+	//GtkStateType tmpppppp = GTK_STATE_SELECTED;
+	//GtkStateType tmpppppp = GTK_STATE_INSENSITIVE;
+	//gdk_color_parse ("green", &color);
+	//gtk_widget_modify_fg(m_MenuBar.GetWidget(), tmpppppp, &color);
+	//gdk_color_parse ("blue", &color);
+	//gtk_widget_modify_bg(m_MenuBar.GetWidget(), tmpppppp, &color);
+	gdk_color_parse ("red", &color);
+	gtk_widget_modify_text(m_MenuBar.GetWidget(), tmpppppp, &color);
+	//gdk_color_parse ("orange", &color);
+	gtk_widget_modify_base(m_MenuBar.GetWidget(), tmpppppp, &color);
+
 	// Add title
 	
 #endif
