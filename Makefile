@@ -53,9 +53,9 @@ DEBUG:=1
 ### Compilation Define                                                      ###
 ###############################################################################
 ifeq ("$(DEBUG)", "0")
-    DEFINE= -DEDN_DEBUG_LEVEL=1 -DNDEBUG -DVERSION_TAG_NAME="\"$(VERSION_TAG)-debug\""
+    DEFINE= -DEDN_DEBUG_LEVEL=1 -DNDEBUG -DVERSION_TAG_NAME="\"$(VERSION_TAG)-release\""
 else
-    DEFINE= -DEDN_DEBUG_LEVEL=3 -DVERSION_TAG_NAME="\"$(VERSION_TAG)-release\""
+    DEFINE= -DEDN_DEBUG_LEVEL=3 -DVERSION_TAG_NAME="\"$(VERSION_TAG)-debug\""
 endif
 DEFINE+= -DVERSION_BUILD_TIME="\"$(VERSION_BUILD_TIME)\""
 

@@ -155,54 +155,40 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 			break;
 		case EDN_MSG__GUI_SHOW_ABOUT:
 			{
-				// dlg to confirm the quit event : 
-				GtkWidget *myDialog = gtk_dialog_new_with_buttons("About",
-				                                                  NULL,
-				                                                  GTK_DIALOG_MODAL,
-				                                                  GTK_STOCK_QUIT, GTK_RESPONSE_NO,
-				                                                  NULL);
-				// this element did not apear in the miniature of the windows
-				gtk_window_set_skip_pager_hint(GTK_WINDOW(myDialog), TRUE);
-				GtkWidget *myContentArea = gtk_dialog_get_content_area( GTK_DIALOG(myDialog));
-				GtkWidget *myLabel =  gtk_label_new("");
-				gtk_label_set_markup (GTK_LABEL (myLabel),
-				    "<b>Name :</b> Edn\n"
-				    "<b>Version :</b> " VERSION_TAG_NAME "\n"
-				    "<b>Build Time :</b> " VERSION_BUILD_TIME "\n\n"
-				    "<b>Description :</b> Editeur De N'ours, l'Editeur Desoxyribo-Nucleique\n"
-				    "    Source Code Editor\n\n" 
-				    "<b>Copyright 2010 Edouard DUPIN, all right reserved</b>\n\n"
-				    "<b>Terms of license : </b>\n"
-				    "This software is distributed in the hope that it will be useful, but \n"
-				    "WITHOUT ANY WARRANTY\n"
-				    "    <b>You can:</b>\n"
-				    "        * Redistribute the sources code and binaries.\n"
-				    "        * Modify the Sources code.\n"
-				    "        * Use a part of the sources (less than 50%) in an other software,\n"
-				    "          just write somewhere \"Edn is great\" visible by the user (on \n"
-				    "          your product or on your website with a link to my page).\n"
-				    "        * Redistribute the modification only if you want.\n"
-				    "        * Send me the bug-fix (it could be great).\n"
-				    "        * Pay me a beer or some other things.\n"
-				    "        Print the source code on WC paper ...\n"
-				    "    <b>You can NOT:</b>\n"
-				    "        * Earn money with this Software (But I can).\n"
-				    "        * Add malware in the Sources.\n"
-				    "        * Do something bad with the sources.\n"
-				    "        * Use it to travel in the space with a toaster.\n"
-				    "I reserve the right to change this licence. If it change the version of \n"
-				    "the copy you have keep its own license.\n\n"
-				    "<b>Sources : </b> git://github.com/HeeroYui/edn.git ");
-				gtk_box_pack_start(GTK_BOX(myContentArea), myLabel, TRUE, TRUE, 0);
-				
-				gtk_widget_show_all(myContentArea);
-				int32_t result = gtk_dialog_run (GTK_DIALOG (myDialog));
+				GtkWidget  *myDialog = gtk_about_dialog_new();
+				gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(myDialog), "Edn");
+				gtk_about_dialog_set_version(     GTK_ABOUT_DIALOG(myDialog), VERSION_TAG_NAME);
+				gtk_about_dialog_set_comments(    GTK_ABOUT_DIALOG(myDialog), "Editeur De N'ours\n"
+				                                                              "L'Editeur Desoxyribo-Nucleique.\n"
+				                                                              "Source Code Editor\n"
+				                                                              "Build Time : " VERSION_BUILD_TIME);
+				gtk_about_dialog_set_copyright(   GTK_ABOUT_DIALOG(myDialog), "Copyright 2010 Edouard DUPIN, all right reserved");
+				gtk_about_dialog_set_license(     GTK_ABOUT_DIALOG(myDialog), "This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY\n\n"
+				                                                              "You can:\n"
+				                                                              "    * Redistribute the sources code and binaries.\n"
+				                                                              "    * Modify the Sources code.\n"
+				                                                              "    * Use a part of the sources (less than 50%) in an other software, just write somewhere \"Edn is great\" visible by the user (on your product or on your website with a link to my page).\n"
+				                                                              "    * Redistribute the modification only if you want.\n"
+				                                                              "    * Send me the bug-fix (it could be great).\n"
+				                                                              "    * Pay me a beer or some other things.\n"
+				                                                              "    * Print the source code on WC paper ...\n\n"
+				                                                              "You can NOT:\n"
+				                                                              "    * Earn money with this Software (But I can).\n"
+				                                                              "    * Add malware in the Sources.\n"
+				                                                              "    * Do something bad with the sources.\n"
+				                                                              "    * Use it to travel in the space with a toaster.\n\n"
+				                                                              "I reserve the right to change this licence. If it change the version of the copy you have keep its own license.");
+				gtk_about_dialog_set_wrap_license(GTK_ABOUT_DIALOG(myDialog), true);
+#				if USE_GTK_VERSION_3_0
+				gtk_about_dialog_set_license_type(GTK_ABOUT_DIALOG(myDialog), GTK_LICENSE_CUSTOM);
+#				endif
+				gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(myDialog), "http://HeeroYui.github.com/edn");
+				gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(myDialog), "Edn on github");
+				const char * listAutor[] = {"Edouard DUPIN", NULL};
+				gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(myDialog), listAutor);
+				// Display About
+				gtk_dialog_run(GTK_DIALOG(myDialog));
 				gtk_widget_destroy(myDialog);
-				switch (result)
-				{
-					case GTK_RESPONSE_NO:
-						break;
-				}
 			}
 			break;
 		case EDN_MSG__GUI_SHOW_GOTO_LINE:
