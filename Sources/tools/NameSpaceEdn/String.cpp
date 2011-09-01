@@ -471,7 +471,7 @@ void Edn::String::Remove(int32_t currentID, int32_t len)
 		return;
 	}
 	// TODO : check the size of the data
-	m_data.Erase(currentID, len);
+	m_data.EraseLen(currentID, len);
 }
 
 

@@ -170,7 +170,7 @@ void CTagsManager::AddToHistory(int32_t bufferID)
 		for(int32_t iii= m_historyPos; iii < m_historyList.Size(); iii++) {
 			delete(m_historyList[iii]);
 		}
-		m_historyList.Erase(m_historyPos, m_historyList.Size() - m_historyPos);
+		m_historyList.EraseLen(m_historyPos, m_historyList.Size() - m_historyPos);
 	}
 	// add the current element
 	BufferManager *myBufferManager = BufferManager::getInstance();

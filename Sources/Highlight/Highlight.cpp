@@ -233,7 +233,7 @@ void Highlight::Parse(int32_t start,
 					if (metaData[kkk].beginStart <= resultat.endStop) {
 						// Remove element
 						//EDN_INFO("Erase element=" << kkk);
-						metaData.Erase(kkk, kkk+1);
+						metaData.EraseLen(kkk, kkk+1);
 						// Increase the end of search
 						if (kkk < metaData.Size()) {
 							// just befor the end of the next element

@@ -15,19 +15,21 @@
 		- Project manager phase 1
 
 # action a faire (ordonner par révision) :
-	* 0.1.X :
-		- Edn::VectorType : Rewrite the erase fuction to support start => stop and Erase len methode ...
 	* 0.2.X :
+		- gui : Amelioration du full-screen et du display de base (sans l'entete de la fenetre)
 		- gui : Mise en place d'un display ligne par ligne
+		- gui : ascenceur quand nécessaire
 		- gui : Demander la création de nouveaux fichier quand il n'existe pas (a l'ouverture en ligne de commande)
 		- sys : Mise en place des colorisation de base pour le 
 				* java script
 				* SQL
-		- gui : ascenceur quand nécessaire
 		- Catch Shift+TAB
 		- Correction du bug des entré bizard tel que les chapot et les guillemets
 		- pb de sélection quand la ligne est pleine et la première ligne séctionnée.
 		- PB de copier coller sur les éàè ...
+		- PB sur le caplock et les caractère multiples type chapot ...
+		- PB du entrer sur le kaypad qui fait un <CR> ==> ajouter la fonction shift+enter qui cree un <CR>
+		- catch F[1-12] ==> for user function
 	* 0.3.X :
 		- Charset UTF-8 et iso 8859-15 correcte
 		- Transformation de charset a la volée

@@ -474,7 +474,33 @@ template<typename MY_TYPE=int32_t> class VectorType
 		}
 
 		/**
-		 * @brief Remove one element
+		 * @brief Remove N elements
+		 *
+		 * @param[in] pos Position to remove the data
+		 * @param[in] posEnd Last position number
+		 *
+		 * @return ---
+		 *
+		 */
+		void Erase(int32_t pos, int32_t posEnd)
+		{
+			if (pos>m_size) {
+				EDN_ERROR(" can not Erase Element at this position : " << pos << " > " << m_size);
+				return;
+			}
+			if (posEnd>m_size) {
+				posEnd = m_size;
+			}
+			int32_t nbElement = m_size - pos;
+			int32_t tmpSize = m_size;
+			// move curent data
+			memmove((m_data + pos), (m_data + pos + nbElement), (tmpSize - (pos+nbElement))*sizeof(MY_TYPE) );
+			// Request resize of the current buffer
+			Resize(m_size-nbElement);
+		}
+
+		/**
+		 * @brief Remove N element
 		 *
 		 * @param[in] pos Position to remove the data
 		 * @param[in] nbElement number of element to remove
@@ -482,10 +508,10 @@ template<typename MY_TYPE=int32_t> class VectorType
 		 * @return ---
 		 *
 		 */
-		void Erase(int32_t pos, int32_t nbElement)
+		void EraseLen(int32_t pos, int32_t nbElement)
 		{
 			if (pos>m_size) {
-				EDN_ERROR(" can not Erase Element at this position : " << pos << " > " << m_size);
+				EDN_ERROR(" can not Erase Len Element at this position : " << pos << " > " << m_size);
 				return;
 			}
 			if (pos+nbElement>m_size) {

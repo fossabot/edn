@@ -90,17 +90,17 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 				m_HLDataPass1.Erase(0);
 				//EDN_DEBUG("1 * Erase 0");
 			} else {
-				m_HLDataPass1.Erase(0,stopId);
+				m_HLDataPass1.EraseLen(0,stopId);
 				//EDN_DEBUG("2 * Erase 0->" << stopId);
 			}
 		} else if(-1 == stopId) {
 			//EDN_DEBUG("3 * Erase " << startId+1 << "-> end");
-			m_HLDataPass1.Erase(startId+1, m_HLDataPass1.Size() - startId);
+			m_HLDataPass1.EraseLen(startId+1, m_HLDataPass1.Size() - startId);
 			stopId = -1;
 		} else {
 			int32_t currentSize = m_HLDataPass1.Size();
 			//EDN_DEBUG("4 * Erase " << startId+1 << "->" << stopId << " in " << currentSize << " elements" );
-			m_HLDataPass1.Erase(startId+1, stopId - startId);
+			m_HLDataPass1.EraseLen(startId+1, stopId - startId);
 			if (stopId == currentSize-1) {
 				stopId = -1;
 			}
