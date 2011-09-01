@@ -47,6 +47,7 @@ Buffer::Buffer()
 	Edn::String mString = "Untitle - ";
 	mString += fileBasicID++;
 	SetFileName(mString);
+	m_haveName = false;
 }
 
 /**

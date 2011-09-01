@@ -93,10 +93,8 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				
 				GtkWidget *dialog = gtk_file_chooser_dialog_new( "Open File", NULL,
 				                                                 GTK_FILE_CHOOSER_ACTION_OPEN,
-				                                                 GTK_STOCK_CANCEL, // button text
-				                                                 GTK_RESPONSE_CANCEL, // response id
-				                                                 GTK_STOCK_OPEN, // button text
-				                                                 GTK_RESPONSE_ACCEPT, // response id
+				                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+				                                                 GTK_STOCK_OPEN,   GTK_RESPONSE_ACCEPT,
 				                                                 NULL); // end button/response list
 				// this element did not apear in the miniature of the windows
 				gtk_window_set_skip_pager_hint(GTK_WINDOW(dialog), TRUE);
@@ -137,10 +135,8 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				tmpString += myBuffer->GetFileName().GetShortFilename().c_str();
 				GtkWidget *dialog = gtk_file_chooser_dialog_new( tmpString.c_str(), NULL,
 				                                                 GTK_FILE_CHOOSER_ACTION_SAVE,
-				                                                 GTK_STOCK_CANCEL, // button text
-				                                                 GTK_RESPONSE_CANCEL, // response id
-				                                                 GTK_STOCK_SAVE, // button text
-				                                                 GTK_RESPONSE_ACCEPT, // response id
+				                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+				                                                 GTK_STOCK_SAVE,   GTK_RESPONSE_ACCEPT,
 				                                                 NULL); // end button/response list
 				// this element did not apear in the miniature of the windows
 				gtk_window_set_skip_pager_hint(GTK_WINDOW(dialog), TRUE);
@@ -262,13 +258,67 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				                                                  NULL);
 				GtkWidget *p_label =  gtk_label_new ("Do you want exit Edn ?");
 				gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area( GTK_DIALOG(p_dialog) )), p_label, TRUE, TRUE, 0);
-				
 				gtk_widget_show(p_label);
 				
 				switch (gtk_dialog_run (GTK_DIALOG (p_dialog)))
 				{
 					case GTK_RESPONSE_YES:
 						gtk_widget_destroy (p_dialog);
+						p_dialog = NULL;
+						{
+							BufferManager * myBufferMng = BufferManager::getInstance();
+							for (int32_t iii=0 ; iii<myBufferMng->Size() ; iii++) {
+								if (true==myBufferMng->Exist(iii) ) {
+									Buffer * myBuffer = myBufferMng->Get(iii);
+									if (NULL != myBuffer) {
+										if (true == myBuffer->IsModify()) {
+											if (true == myBuffer->HaveName()) {
+												p_dialog = gtk_dialog_new_with_buttons("Save Before Exit",
+												                                       GTK_WINDOW(m_mainWindow->GetWidget()),
+												                                       GTK_DIALOG_MODAL,
+												                                       GTK_STOCK_SAVE,    GTK_RESPONSE_YES,
+												                                       GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
+												                                       GTK_STOCK_NO,      GTK_RESPONSE_NO,
+												                                       GTK_STOCK_CANCEL,  GTK_RESPONSE_CANCEL,
+												                                       NULL);
+											} else {
+												p_dialog = gtk_dialog_new_with_buttons("Save Before Exit",
+												                                       GTK_WINDOW(m_mainWindow->GetWidget()),
+												                                       GTK_DIALOG_MODAL,
+												                                       GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
+												                                       GTK_STOCK_NO,      GTK_RESPONSE_NO,
+												                                       GTK_STOCK_CANCEL,  GTK_RESPONSE_CANCEL,
+												                                       NULL);
+											}
+											char tmpName[1024];
+											sprintf(tmpName, "Save file \"%s\" ?", myBuffer->GetFileName().GetCompleateName().c_str());
+											p_label = gtk_label_new(tmpName);
+											gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area( GTK_DIALOG(p_dialog) )), p_label, TRUE, TRUE, 0);
+											gtk_widget_show(p_label);
+											
+											switch (gtk_dialog_run (GTK_DIALOG (p_dialog)))
+											{
+												case GTK_RESPONSE_YES:
+													myBuffer->Save();
+													break;
+												case GTK_RESPONSE_ACCEPT:
+													OnMessage(EDN_MSG__GUI_SHOW_SAVE_AS, iii);
+													break;
+												case GTK_RESPONSE_NO:
+													// nothing to do ...
+													break;
+												case GTK_RESPONSE_CANCEL:
+													gtk_widget_destroy (p_dialog);
+													return;
+													break;
+											}
+											gtk_widget_destroy (p_dialog);
+											p_dialog = NULL;
+										}
+									}
+								}
+							}
+						}
 						gtk_main_quit();
 						break;
 					case GTK_RESPONSE_NO:

@@ -16,7 +16,6 @@
 
 # action a faire (ordonner par révision) :
 	* 0.1.X :
-		- gui : demander l'enregistrement avant de fermer (quand c'est nécessaire)
 		- Edn::VectorType : Rewrite the erase fuction to support start => stop and Erase len methode ...
 	* 0.2.X :
 		- gui : Mise en place d'un display ligne par ligne

@@ -51,7 +51,7 @@ class BufferManager: public Singleton<BufferManager>, public MsgBroadcast
 		int32_t		Open(Edn::File &myFile);
 		int32_t     GetSelected(void) { return m_idSelected;};
 		void        SetSelected(int32_t id) {m_idSelected = id;};
-		Buffer		* Get(int32_t BufferID);
+		Buffer *    Get(int32_t BufferID);
 		bool		Exist(int32_t BufferID);
 		bool		Exist(Edn::File &myFile);
 		int32_t		GetId(Edn::File &myFile);
