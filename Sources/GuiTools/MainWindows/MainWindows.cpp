@@ -175,42 +175,15 @@ void MainWindows::OnMessage(int32_t id, int32_t dataID)
 				}
 			}
 			break;
-		case EDN_MSG__QUIT:
-			OnQuit(m_mainWindow, this);
-			break;
 	}
 }
 
 bool MainWindows::OnQuit(GtkWidget *widget, gpointer data)
 {
-	EDN_INFO("quit requested");
-	// dlg to confirm the quit event : 
-	GtkWidget *p_dialog = gtk_dialog_new_with_buttons("Exit",
-	                                                  GTK_WINDOW(widget),
-	                                                  GTK_DIALOG_MODAL,
-	                                                  GTK_STOCK_YES, GTK_RESPONSE_YES,
-	                                                  GTK_STOCK_NO, GTK_RESPONSE_NO,
-	                                                  NULL);
-	GtkWidget *p_label =  gtk_label_new ("Do you want exit Edn?");
-	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area( GTK_DIALOG(p_dialog) )), p_label, TRUE, TRUE, 0);
-	
-	gtk_widget_show(p_label);
-	
-	switch (gtk_dialog_run (GTK_DIALOG (p_dialog)))
-	{
-		case GTK_RESPONSE_YES:
-			gtk_widget_destroy (p_dialog);
-			
-			break;
-		case GTK_RESPONSE_NO:
-			gtk_widget_destroy (p_dialog);
-			// do not close the windows
-			return true;
-			break;
-	}
-	
-	gtk_main_quit();
-	return false;
+	//MainWindows * self = reinterpret_cast<MainWindows*>(data);
+	GeneralSendMessage(EDN_MSG__GUI_SHOW_EXIT_CONFIRMATION);
+	// Close is not managed here ...
+	return true;
 }
 
 
@@ -232,31 +205,6 @@ gboolean MainWindows::OnStateChange(GtkWidget *widget, GdkEvent* event, gpointer
 		}
 	}
 }
-
-#if 0
-
-void MainWindows::OnMenuAbout(wxCommandEvent & WXUNUSED(event))
-{
-	//EDN_INFO("MainWindows::OnMenuAbout (event)");
-	wxAboutDialogInfo info;
-	info.SetName(wxT("edn"));
-	info.SetVersion(wxT("0.1.0 pre-Beta"));
-	info.SetDescription(wxT("Editeur De N'ours, l'Editeur Desoxyribo-Nucleique\n"
-							"Source Code Editor"));
-	info.SetCopyright(wxT(	"Copyright 2010 Edouard DUPIN, all right reserved\n"
-							"This software is distributed in the hope that it will be useful, but WITHOUT\n"
-							"ANY WARRANTY\n\n"
-							"Licence summary : \n"
-							"   You can modify and redistribute the sources code and binaries.\n"
-							"   You can send me the bug-fix\n"
-							"   You can not earn money with this Software (if the source extract from Edn\n"
-							"       represent less than 50% of original Sources)\n"
-							"Term of the licence in in the file licence.txt"));
-	wxAboutBox(info);
-
-}
-
-#endif
 
 
 

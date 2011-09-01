@@ -232,7 +232,7 @@ MenuBar::MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI)
 		tmp->AddGen(GTK_STOCK_SAVE,                "ctrl+s",       EDN_MSG__CURRENT_SAVE, true);
 		tmp->AddGen(GTK_STOCK_SAVE_AS,             "ctrl+shift+s", EDN_MSG__CURRENT_SAVE_AS, true);
 		tmp->AddSeparator();
-		tmp->AddGen(GTK_STOCK_QUIT,                "ctrl+shift+q", EDN_MSG__QUIT, true);
+		tmp->AddGen(GTK_STOCK_QUIT,                "ctrl+shift+q", EDN_MSG__GUI_SHOW_EXIT_CONFIRMATION, true);
 	m_listMenu.PushBack(tmp);
 	
 	tmp = new MenuBarMain("_Edit", m_mainWidget);

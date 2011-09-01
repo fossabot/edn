@@ -38,8 +38,6 @@
 // the ID we'll use to identify our event
 typedef enum {
 	EDN_MSG__NONE = 0,
-	// Programm is Quitting... close all if needed ...
-	EDN_MSG__QUIT,
 	EDN_MSG__BUFFER_CHANGE_CURRENT,  // set the new current BUFFER ...
 	EDN_MSG__USER_DISPLAY_CHANGE,    // User change the display ==> need to reload all the display depending on color internal
 	
@@ -54,6 +52,7 @@ typedef enum {
 		EDN_MSG__GUI_SHOW_SAVE_AS,
 		EDN_MSG__GUI_SHOW_GOTO_LINE,
 		EDN_MSG__GUI_SHOW_ABOUT,
+		EDN_MSG__GUI_SHOW_EXIT_CONFIRMATION,
 	MSG_TO_GUI_MANAGER__STOP,
 	
 	// DESTINATION : GUI
@@ -202,7 +201,7 @@ class MsgBroadcastCore: public Singleton<MsgBroadcastCore>
 
 	private:
 		Edn::VectorType<MsgBroadcast*>         m_listMessage;
-		uint32_t                            m_messageID;
+		uint32_t                               m_messageID;
 		Edn::VectorType<messageElement_ts>     m_listOfMessage;
 };
 

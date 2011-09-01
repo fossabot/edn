@@ -250,5 +250,35 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				gtk_widget_destroy(myDialog);
 			}
 			break;
+		case EDN_MSG__GUI_SHOW_EXIT_CONFIRMATION:
+			{
+				EDN_INFO("quit requested");
+				// dlg to confirm the quit event : 
+				GtkWidget *p_dialog = gtk_dialog_new_with_buttons("Exit",
+				                                                  GTK_WINDOW(m_mainWindow->GetWidget()),
+				                                                  GTK_DIALOG_MODAL,
+				                                                  GTK_STOCK_YES, GTK_RESPONSE_YES,
+				                                                  GTK_STOCK_NO, GTK_RESPONSE_NO,
+				                                                  NULL);
+				GtkWidget *p_label =  gtk_label_new ("Do you want exit Edn ?");
+				gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area( GTK_DIALOG(p_dialog) )), p_label, TRUE, TRUE, 0);
+				
+				gtk_widget_show(p_label);
+				
+				switch (gtk_dialog_run (GTK_DIALOG (p_dialog)))
+				{
+					case GTK_RESPONSE_YES:
+						gtk_widget_destroy (p_dialog);
+						gtk_main_quit();
+						break;
+					case GTK_RESPONSE_NO:
+						gtk_widget_destroy (p_dialog);
+						break;
+				}
+				
+				
+			}
+			break;
+	
 	}
 }
