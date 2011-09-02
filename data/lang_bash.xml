@@ -30,7 +30,7 @@
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<start>\@for|done|do|while|in|if|then|else|fi\@</start>
+			<start>\@for|done|do|while|in|if|elif|then|else|fi\@</start>
 		</rule>
 		<rule name="my Variable">
 			<color>keyword</color>
