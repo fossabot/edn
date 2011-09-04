@@ -968,7 +968,7 @@ void BufferText::AddChar(char * UTF8data)
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
 				SetInsertPosition(m_cursorPos+1, true);
 			} else {
-				if (true == globals::IsSetCtrl() ) {
+				if (true == globals::IsSetShift() ) {
 					m_cursorPos = m_EdnBuf.UnIndent(SELECTION_PRIMARY);
 				} else {
 					m_cursorPos = m_EdnBuf.Indent(SELECTION_PRIMARY);

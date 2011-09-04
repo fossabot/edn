@@ -593,6 +593,8 @@ void ConvertInput(GdkEventKey *event, char* Utf8Out, bool &controlKey, bool &mov
 #       elif USE_GTK_VERSION_2_0
 		case GDK_KP_Tab:
 #		endif
+		// shift + TAB ... same as a tab here ...
+		case 0xfe20: //GDK_ISO_Left_Tab
 		case 65289:
 			key = (int32_t)'\t';
 			break;

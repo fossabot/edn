@@ -7,9 +7,9 @@
 	- sys : Mise en place des colorisation de base pour le
 			* java script
 			* SQL
-	- sys : Catch Shift+TAB
 	- sys : replace TAB with space when Tab is pressed
 	- sys : Catch F[1-12] ==> for user personal event
+	- sys : replace when TAB pressed and the selection did not selent more than one element
 	- BUG : Correction du bug des entré bizard tel que les chapot et les guillemets
 	- BUG : de sélection quand la ligne est pleine et la première ligne séctionnée.
 	- BUG : de copier coller sur les éàè ...
@@ -69,4 +69,4 @@
 
 # note utiles : 
 http://majutsushi.github.com/tagbar/		==> je devrais regarder ca pour savoir ce que je peux faire avec du ctags
-CTags : Set the parsing methode : "ctags -R --fields=+n Sources/"
+CTags : Set the parsing methode : "ctags -R --fields=+n Sources/ /usr/include/gtk-3.0/"
