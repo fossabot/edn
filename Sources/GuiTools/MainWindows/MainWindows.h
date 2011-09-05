@@ -58,6 +58,7 @@ class MainWindows: public Singleton<MainWindows>, public MsgBroadcast
 		void            SetNoTitle(void);
 		// main windows widget : 
 		GtkWidget *     m_mainWindow;
+		GtkWidget *     m_internalTitleLabel;
 		BufferView      m_BufferView;
 		CodeView        m_CodeView;
 		MenuBar         m_MenuBar;

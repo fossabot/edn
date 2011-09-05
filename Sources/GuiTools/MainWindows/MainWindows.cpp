@@ -116,7 +116,8 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	gtk_widget_modify_base(m_MenuBar.GetWidget(), tmpppppp, &color);
 
 	// Add title
-	
+	m_internalTitleLabel = gtk_label_new("Edn");
+	gtk_box_pack_start(	GTK_BOX (hboxMenu), m_internalTitleLabel, FALSE, FALSE, 0);
 #endif
 	// **********************************************************
 	// *                Horizontal ELEMENTS :                   *
@@ -164,12 +165,20 @@ void MainWindows::SetTitle(Edn::File &fileName, bool isModify)
 	}
 	tmp += "Edn";
 	gtk_window_set_title(GTK_WINDOW(m_mainWindow), tmp.c_str());
+	if (fileName.GetShortFilename() != "") {
+		tmp = fileName.GetFolder();
+	} else {
+		tmp = "Edn";
+	}
+	gtk_label_set_text(GTK_LABEL(m_internalTitleLabel), tmp.c_str());
+	
 }
 
 void MainWindows::SetNoTitle(void)
 {
 	Edn::String tmp = "Edn";
 	gtk_window_set_title(GTK_WINDOW(m_mainWindow), tmp.c_str());
+	gtk_label_set_text(GTK_LABEL(m_internalTitleLabel), tmp.c_str());
 }
 
 void MainWindows::OnMessage(int32_t id, int32_t dataID)
