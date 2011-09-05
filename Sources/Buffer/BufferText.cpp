@@ -977,24 +977,28 @@ void BufferText::AddChar(char * UTF8data)
 			actionDone = true;
 		} else if (UTF8data[0] == '\n') {
 			Edn::VectorType<int8_t> tmpVect;
-			tmpVect.PushBack('\n');
-			// if Auto indent Enable ==> we get the start of the previous line and add it to tne new one
-			if (true == globals::IsSetAutoIndent() ) {
-				int32_t l_lineStart;
-				// Get the begin of the line or the begin of the line befor selection
-				if (false == haveSelectionActive) {
-					l_lineStart = m_EdnBuf.StartOfLine(m_cursorPos);
-				} else {
-					l_lineStart = m_EdnBuf.StartOfLine(SelectionStart);
-				}
-				// add same characters in the temporar buffer
-				for (int32_t kk=l_lineStart; kk<m_cursorPos; kk++) {
-					if (' ' == m_EdnBuf[kk]) {
-						tmpVect.PushBack(' ');
-					} else if('\t' == m_EdnBuf[kk]) {
-						tmpVect.PushBack('\t');
+			if (true == globals::IsSetShift()) {
+				tmpVect.PushBack('\r');
+			} else {
+				tmpVect.PushBack('\n');
+				// if Auto indent Enable ==> we get the start of the previous line and add it to tne new one
+				if (true == globals::IsSetAutoIndent() ) {
+					int32_t l_lineStart;
+					// Get the begin of the line or the begin of the line befor selection
+					if (false == haveSelectionActive) {
+						l_lineStart = m_EdnBuf.StartOfLine(m_cursorPos);
 					} else {
-						break;
+						l_lineStart = m_EdnBuf.StartOfLine(SelectionStart);
+					}
+					// add same characters in the temporar buffer
+					for (int32_t kk=l_lineStart; kk<m_cursorPos; kk++) {
+						if (' ' == m_EdnBuf[kk]) {
+							tmpVect.PushBack(' ');
+						} else if('\t' == m_EdnBuf[kk]) {
+							tmpVect.PushBack('\t');
+						} else {
+							break;
+						}
 					}
 				}
 			}

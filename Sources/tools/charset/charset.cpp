@@ -600,13 +600,11 @@ void ConvertInput(GdkEventKey *event, char* Utf8Out, bool &controlKey, bool &mov
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_KP_Enter:
-			key = GDK_KEY_Return;
-			break;
 #       elif USE_GTK_VERSION_2_0
 		case GDK_KP_Enter:
-			key = GDK_Return;
-			break;
 #		endif
+			key = '\n';
+			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_KP_F1:
 		case GDK_KEY_F1:
@@ -1040,17 +1038,125 @@ void ConvertInput(GdkEventKey *event, char* Utf8Out, bool &controlKey, bool &mov
 #		endif
 			key = 0x08;
 			break;
+
+#		ifdef USE_GTK_VERSION_3_0
+		case GDK_KEY_dead_grave:
+		case GDK_KEY_dead_acute:
+		case GDK_KEY_dead_circumflex:
+		case GDK_KEY_dead_tilde:
+		case GDK_KEY_dead_macron:
+		case GDK_KEY_dead_breve:
+		case GDK_KEY_dead_abovedot:
+		case GDK_KEY_dead_diaeresis:
+		case GDK_KEY_dead_abovering:
+		case GDK_KEY_dead_doubleacute:
+		case GDK_KEY_dead_caron:
+		case GDK_KEY_dead_cedilla:
+		case GDK_KEY_dead_ogonek:
+		case GDK_KEY_dead_iota:
+		case GDK_KEY_dead_voiced_sound:
+		case GDK_KEY_dead_semivoiced_sound:
+		case GDK_KEY_dead_belowdot:
+		case GDK_KEY_dead_hook:
+		case GDK_KEY_dead_horn:
+		case GDK_KEY_dead_stroke:
+		case GDK_KEY_dead_abovecomma:
+		case GDK_KEY_dead_abovereversedcomma:
+		case GDK_KEY_dead_doublegrave:
+		case GDK_KEY_dead_belowring:
+		case GDK_KEY_dead_belowmacron:
+		case GDK_KEY_dead_belowcircumflex:
+		case GDK_KEY_dead_belowtilde:
+		case GDK_KEY_dead_belowbreve:
+		case GDK_KEY_dead_belowdiaeresis:
+		case GDK_KEY_dead_invertedbreve:
+		case GDK_KEY_dead_belowcomma:
+		case GDK_KEY_dead_currency:
+		case GDK_KEY_dead_a:
+		case GDK_KEY_dead_A:
+		case GDK_KEY_dead_e:
+		case GDK_KEY_dead_E:
+		case GDK_KEY_dead_i:
+		case GDK_KEY_dead_I:
+		case GDK_KEY_dead_o:
+		case GDK_KEY_dead_O:
+		case GDK_KEY_dead_u:
+		case GDK_KEY_dead_U:
+		case GDK_KEY_dead_small_schwa:
+		case GDK_KEY_dead_capital_schwa:
+#       elif USE_GTK_VERSION_2_0
+		case GDK_dead_grave:
+		case GDK_dead_acute:
+		case GDK_dead_circumflex:
+			key = '^';
+			break;
+		case GDK_dead_tilde:
+		case GDK_dead_macron:
+		case GDK_dead_breve:
+		case GDK_dead_abovedot:
+		case GDK_dead_diaeresis:
+		case GDK_dead_abovering:
+		case GDK_dead_doubleacute:
+		case GDK_dead_caron:
+		case GDK_dead_cedilla:
+		case GDK_dead_ogonek:
+		case GDK_dead_iota:
+		case GDK_dead_voiced_sound:
+		case GDK_dead_semivoiced_sound:
+		case GDK_dead_belowdot:
+		case GDK_dead_hook:
+		case GDK_dead_horn:
+		case GDK_dead_stroke:
+		case GDK_dead_abovecomma:
+		case GDK_dead_abovereversedcomma:
+		case GDK_dead_doublegrave:
+		case GDK_dead_belowring:
+		case GDK_dead_belowmacron:
+		case GDK_dead_belowcircumflex:
+		case GDK_dead_belowtilde:
+		case GDK_dead_belowbreve:
+		case GDK_dead_belowdiaeresis:
+		case GDK_dead_invertedbreve:
+		case GDK_dead_belowcomma:
+		case GDK_dead_currency:
+			key = '?';
+			break;
+		case GDK_dead_a:
+			EDN_INFO("dead a");
+			//key = 'a';
+			break;
+		case GDK_dead_A:
+		case GDK_dead_e:
+		case GDK_dead_E:
+		case GDK_dead_i:
+		case GDK_dead_I:
+		case GDK_dead_o:
+		case GDK_dead_O:
+		case GDK_dead_u:
+		case GDK_dead_U:
+		case GDK_dead_small_schwa:
+		case GDK_dead_capital_schwa:
+#		endif
+			key = '?';
+			break;
+		case GDK_Caps_Lock:
+			controlKey = true;
+			break;
 		default:
 			break;
 	}
 	// Transform in unicode the input : 
+	//EDN_INFO("key : " << key);
 	int32_t unichar = gdk_keyval_to_unicode(key);
+	//EDN_INFO("unichar : " << unichar);
 	if (unichar == 0) {
 		Utf8Out[0] = (char)key;
 		Utf8Out[1] = '\0';
+		//EDN_INFO("NON UTF8 : " << Utf8Out);
 	} else {
 		// Generate UTF8 form UniCode
 		convertUnicodeToUtf8(unichar, Utf8Out);
+		//EDN_INFO("UTF8 : " << Utf8Out);
 		#if 0
 		printf(" convertUnicodeToUtf8 : \"0x%08x\" ==> unichar=%d %s\n", key, unichar, Utf8Out);
 		for (int32_t uu=0; uu < strlen(Utf8Out); uu++) {
