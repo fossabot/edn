@@ -61,17 +61,10 @@ static cairo_font_face_t	* m_cairoFont[2][2] = {{NULL, NULL},{ NULL, NULL}};
 static cairo_font_face_t	* m_cairoFont[2][2] = {{NULL, NULL},{ NULL, NULL}};
 void Display::Init(void)
 {
-	/*
-	charWidth = gdk_char_width(myFont[FONT_ITALIC_YES][FONT_BOLD_NO], 'Z');
-	EDN_INFO("Font Width = %d", charWidth);
-	charHeignt = gdk_char_height(myFont[FONT_ITALIC_YES][FONT_BOLD_NO], 'Z');
-	EDN_INFO("Font Height = %d", charHeignt);
-	*/
-	
-	m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_NO]		= cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-	m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_NO]		= cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_NORMAL);
-	m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_YES]		= cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
-	m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_YES]		= cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_BOLD);
+	m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_NO]    = cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+	m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_NO]   = cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_NORMAL);
+	m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_YES]   = cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+	m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_YES]  = cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_BOLD);
 	if ( NULL == m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_NO]) {
 		EDN_ASSERT(FALSE, "basic font ERROR");
 	}
@@ -96,10 +89,10 @@ void Display::Init(void)
 void Display::UnInit(void)
 {
 	// clean the builder...
-	free(m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_NO]);
-	free(m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_NO]);
-	free(m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_YES]);
-	free(m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_YES]);
+	cairo_font_face_destroy(m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_NO]);
+	cairo_font_face_destroy(m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_NO]);
+	cairo_font_face_destroy(m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_YES]);
+	cairo_font_face_destroy(m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_YES]);
 }
 
 
@@ -289,7 +282,7 @@ void DrawerManager::SpaceText(color_ts & SelectColor, int32_t x, int32_t y,int32
 void DrawerManager::Flush(void)
 {
 	if (true == m_haveWork) {
-		//EDN_WARNING("flush : \"" << m_dataToDisplay << "\"");
+		//EDN_WARNING("flush : \"" << m_dataToDisplay << "\"" << " bold=" << m_selectColor->GetBold() << " italic=" << m_selectColor->GetItalic());
 		m_haveWork = false;
 
 		cairo_set_font_face(m_cairo, Display::GetFont(m_selectColor->GetBold(), m_selectColor->GetItalic()));
