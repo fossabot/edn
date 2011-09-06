@@ -339,25 +339,8 @@ gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, g
 			//EDN_INFO(" plop %d / %d = %d ==> %d", (uint32_t)event->y, fontHeight, ((uint32_t)event->y / fontHeight), selectBuf);
 			if ( 0 <= selectBuf) {
 				self->SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, selectBuf);
-				/*
-				MainWindows *window = MainWindows::getInstance();
-				EDN_INFO(" Event on Buffer " << selectBuf);
-				// set the new seected Buffer
-				window->SetSelected(selectBuf);
-				*/
 			}
-		}/* else if (event->type == GDK_3BUTTON_PRESS) {
-			EDN_INFO("mouse-event BT1  ==> Triple Clicked");
-		}else if (event->type == GDK_BUTTON_RELEASE) {
-			EDN_INFO("mouse-event BT1  ==> Realease");
-		}*/
-	} else if (event->button == 2) {
-		/*
-		if (event->type == GDK_BUTTON_PRESS) {
-			EDN_INFO("mouse-event BT2 PRESS");
-			self->m_menuContext->Show(event->x, event->y, false);
 		}
-		*/
 	} else if (event->button == 3) {
 		if (event->type == GDK_BUTTON_PRESS) {
 			EDN_INFO("mouse-event BT3 PRESS");
@@ -368,7 +351,8 @@ gint BufferView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, g
 			}
 		}
 	} else {
-		EDN_INFO("mouse-event BT? PRESS");
+		// not usefull to redraw
+		return true;
 	}
 	gtk_widget_queue_draw( widget );
 	return true;

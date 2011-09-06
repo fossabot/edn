@@ -968,10 +968,20 @@ void BufferText::AddChar(char * UTF8data)
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
 				SetInsertPosition(m_cursorPos+1, true);
 			} else {
-				if (true == globals::IsSetShift() ) {
-					m_cursorPos = m_EdnBuf.UnIndent(SELECTION_PRIMARY);
+				// Indent depend of the multiline in the selection ...
+				// count the number of line : 
+				int32_t nbSelectedLines = m_EdnBuf.CountLines(SelectionStart, SelectionEnd);
+				if (0 == nbSelectedLines) {
+					Edn::VectorType<int8_t> tmpVect;
+					tmpVect.PushBack(0x09);
+					m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
+					SetInsertPosition(SelectionStart+tmpVect.Size(), true);
 				} else {
-					m_cursorPos = m_EdnBuf.Indent(SELECTION_PRIMARY);
+					if (true == globals::IsSetShift() ) {
+						m_cursorPos = m_EdnBuf.UnIndent(SELECTION_PRIMARY);
+					} else {
+						m_cursorPos = m_EdnBuf.Indent(SELECTION_PRIMARY);
+					}
 				}
 			}
 			actionDone = true;

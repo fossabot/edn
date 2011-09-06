@@ -9,11 +9,10 @@
 			* SQL
 	- sys : replace TAB with space when Tab is pressed
 	- sys : Catch F[1-12] ==> for user personal event
-	- sys : replace when TAB pressed and the selection did not select more than one Line
 	- BUG : Correction du bug des entré bizard tel que les chapot et les guillemets
 	- BUG : de sélection quand la ligne est pleine et la première ligne séctionnée.
 	- BUG : de copier coller sur les éàè ...
-	- BUG : sur le caplock et les caractère multiples type chapot ...
+	- BUG : les caractère multiples type chapot ...
 	- BUG : italique non généré
 * 0.3.X :
 	- SEARCH : get selected text in the search windows
