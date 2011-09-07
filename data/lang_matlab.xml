@@ -28,7 +28,7 @@
 		</rule>
 		<rule name="global inclusion">
 			<color>preprocesseur</color>
-			<start>global </start>
+			<start>global( |\t)+</start>
 			<end>\n</end>
 			<EscapeChar>\</EscapeChar>
 		</rule>

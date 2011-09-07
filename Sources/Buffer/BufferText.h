@@ -78,23 +78,22 @@ class BufferText : public Buffer {
 
 	private:
 		// Display
-		bool                    NeedToCleanEndPage;         //!< if true, the end of the page need to be clean (arrive after a remove line)
-		uint32_t                nbColoneForLineNumber;      //!< number of colome used to display the line Number
-		ColorizeManager *       myColorManager;             //!< for the background color : 
-		
+		bool                    NeedToCleanEndPage;             //!< if true, the end of the page need to be clean (arrive after a remove line)
+		ColorizeManager *       myColorManager;                 //!< for the background color : 
+		int32_t                 m_nbColoneForLineNumber;        //!< number of colomn use for linenumber display
 		
 		// Direct buffer IO
-		EdnBuf                  m_EdnBuf;                   //!< buffer associated on this displayer
-		position_ts             m_displayStart;             //!< position where the display is starting
-		position_ts             m_displaySize;              //!< number of char displayable in the screan
-		int32_t                 m_displayStartBufferPos;    //!< position where the buffer start
+		EdnBuf                  m_EdnBuf;                       //!< buffer associated on this displayer
+		position_ts             m_displayStart;                 //!< position where the display is starting
+		position_ts             m_displaySize;                  //!< number of char displayable in the screan
+		int32_t                 m_displayStartBufferPos;        //!< position where the buffer start
 		// Cursor :
-		int32_t                 m_cursorPos;                //!< position in the buffer of the cursor
-		int32_t                 m_cursorPreferredCol;       //!< colomn of the last up and down ...
-		bool                    m_cursorOn;                 //!< the blink of the cursor ...
-		cursorDisplayMode_te    m_cursorMode;               //!< type of cursor Selected
+		int32_t                 m_cursorPos;                    //!< position in the buffer of the cursor
+		int32_t                 m_cursorPreferredCol;           //!< colomn of the last up and down ...
+		bool                    m_cursorOn;                     //!< the blink of the cursor ...
+		cursorDisplayMode_te    m_cursorMode;                   //!< type of cursor Selected
 		
-		displayHLData_ts        m_displayLocalSyntax;       //!< for the display of the local elements (display HL mode)
+		displayHLData_ts        m_displayLocalSyntax;           //!< for the display of the local elements (display HL mode)
 		
 		// internal function
 		void     BasicInit(void);
@@ -114,7 +113,9 @@ class BufferText : public Buffer {
 		
 		void     GetMousePosition(int32_t width, int32_t height, int32_t &x, int32_t &y);
 		void     MoveUpDown(int32_t ofset);
-		void     DrawLineNumber(DrawerManager &drawer,char *myPrint,  int32_t lineNumber, int32_t positionY);
+		void     DrawLineNumber(DrawerManager &drawer, int32_t lineNumber);
+		void     UpdatePointerNumber(void);
+		void     DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos);
 
 };
 

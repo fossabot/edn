@@ -37,8 +37,10 @@
 
 const uint32_t nbLineAllocatedInBase = 300;
 
-
-
+extern "C"
+{
+	const char * g_pointerForTheDisplayLine[] = {"%1d", "%2d","%3d","%4d","%5d","%6d","%7d","%8d","%9d","%d"};
+}
 
 /**
  * @brief
@@ -55,7 +57,7 @@ void BufferText::BasicInit(void)
 	m_displayStartBufferPos = 0;
 	
 	// set the number of the lineNumber;
-	nbColoneForLineNumber = 1;
+	m_nbColoneForLineNumber = 1;
 	// init the link with the buffer manager
 	myColorManager = ColorizeManager::getInstance();
 	// Init Selection mode : 
@@ -229,11 +231,69 @@ void BufferText::SetLineDisplay(uint32_t lineNumber)
 
 }
 
-void BufferText::DrawLineNumber(DrawerManager &drawer,char *myPrint,  int32_t lineNumber, int32_t positionY)
+void BufferText::DrawLineNumber(DrawerManager &drawer, int32_t lineNumber)
 {
+	int32_t letterHeight = Display::GetFontHeight();
+	int32_t positionY = letterHeight * (lineNumber - m_displayStart.y - 1);
 	char tmpLineNumber[50];
-	sprintf(tmpLineNumber, myPrint, lineNumber);
+	sprintf(tmpLineNumber, g_pointerForTheDisplayLine[m_nbColoneForLineNumber-1], lineNumber);
 	drawer.Text(myColorManager->Get(COLOR_CODE_LINE_NUMBER), 1, positionY, tmpLineNumber);
+}
+
+/**
+ * @brief Update internal data of the pointer to display
+ *
+ * @param[in,out] ---
+ *
+ * @return ---
+ *
+ */
+void BufferText::UpdatePointerNumber(void)
+{
+	// get the number of line in the buffer
+	int32_t maxNumberLine = m_EdnBuf.NumberOfLines();
+	//int32_t maxNumberLine = 2096;
+	if (10 > maxNumberLine) {				m_nbColoneForLineNumber = 1;
+	} else if (100 > maxNumberLine) {		m_nbColoneForLineNumber = 2;
+	} else if (1000 > maxNumberLine) {		m_nbColoneForLineNumber = 3;
+	} else if (10000 > maxNumberLine) {		m_nbColoneForLineNumber = 4;
+	} else if (100000 > maxNumberLine) {	m_nbColoneForLineNumber = 5;
+	} else if (1000000 > maxNumberLine) {	m_nbColoneForLineNumber = 6;
+	} else if (1000000 > maxNumberLine) {	m_nbColoneForLineNumber = 7;
+	} else if (10000000 > maxNumberLine) {	m_nbColoneForLineNumber = 8;
+	} else if (100000000 > maxNumberLine) {	m_nbColoneForLineNumber = 9;
+	} else {								m_nbColoneForLineNumber = 10;
+	}
+}
+
+
+/**
+ * @brief Display a single line
+ *
+ * @param[in,out] ---
+ *
+ * @return ---
+ *
+ */
+void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos)
+{
+	DrawLineNumber(drawer, lineNumber);
+	
+	int32_t letterHeight = Display::GetFontHeight();
+	int32_t letterWidth = Display::GetFontWidth();
+	int32_t positionY = letterHeight * (lineNumber - m_displayStart.y - 1);
+	
+	int32_t idX = 0;
+	int32_t pixelX = m_nbColoneForLineNumber*letterWidth + 3;
+	Colorize *  myColor           = myColorManager->Get("normal");
+	for (int32_t iii=startPos; iii<endPos; ) {
+		uint32_t currentChar;
+		char     displayChar[MAX_EXP_CHAR_LEN];
+		int32_t  displaywidth = m_EdnBuf.GetExpandedChar(iii, idX, displayChar, currentChar);
+		drawer.Text(myColor, pixelX ,positionY, displayChar);
+		idX++;
+		pixelX += displaywidth * letterWidth;
+	}
 }
 
 
@@ -249,8 +309,10 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 {
 	int32_t letterHeight = Display::GetFontHeight();
 	int32_t letterWidth = Display::GetFontWidth();
+	// Update the total of line to display in the buffer
+	UpdatePointerNumber();
 	// update the number of element that can be displayed
-	m_displaySize.x = (drawer.GetWidth()/letterWidth) + 1 - nbColoneForLineNumber;;
+	m_displaySize.x = (drawer.GetWidth()/letterWidth) + 1 - m_nbColoneForLineNumber;
 	m_displaySize.y = (drawer.GetHeight()/letterHeight) + 1;
 	EDN_INFO("main DIPLAY " << m_displaySize.x << " char * " << m_displaySize.y << " char");
 	
@@ -259,23 +321,6 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 	int32_t selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
 	
 	colorInformation_ts * HLColor = NULL;
-	
-	//displayLineNumber(drawer);
-	// get the number of line in the buffer
-	int32_t maxNumberLine = m_EdnBuf.NumberOfLines();
-	//int32_t maxNumberLine = 2096;
-	char *myPrint = NULL;
-	if (10 > maxNumberLine) {				nbColoneForLineNumber = 1;	myPrint = (char *)"%1d";
-	} else if (100 > maxNumberLine) {		nbColoneForLineNumber = 2;	myPrint = (char *)"%2d";
-	} else if (1000 > maxNumberLine) {		nbColoneForLineNumber = 3;	myPrint = (char *)"%3d";
-	} else if (10000 > maxNumberLine) {		nbColoneForLineNumber = 4;	myPrint = (char *)"%4d";
-	} else if (100000 > maxNumberLine) {	nbColoneForLineNumber = 5;	myPrint = (char *)"%5d";
-	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 6;	myPrint = (char *)"%6d";
-	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 7;	myPrint = (char *)"%7d";
-	} else if (10000000 > maxNumberLine) {	nbColoneForLineNumber = 8;	myPrint = (char *)"%8d";
-	} else if (100000000 > maxNumberLine) {	nbColoneForLineNumber = 9;	myPrint = (char *)"%9d";
-	} else {								nbColoneForLineNumber = 10;	myPrint = (char *)"%d";
-	}
 	
 	uint32_t y = 0;
 	int32_t iii, new_i;
@@ -290,19 +335,33 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 
 
 	int mylen = m_EdnBuf.Size();
-	int32_t x_base=nbColoneForLineNumber*letterWidth + 3;
+	int32_t x_base=m_nbColoneForLineNumber*letterWidth + 3;
 	uint32_t xx = 0;
 	int32_t idX = 0;
 	drawer.Clean(myColorManager->Get(COLOR_CODE_BASIC_BG));
 	int displayLines = 0;
 	// Regenerate the colorizing if necessary ...
-	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, m_displayStartBufferPos, m_displaySize.y);
+	//m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, m_displayStartBufferPos, m_displaySize.y);
 	GTimeVal timeStart;
 	g_get_current_time(&timeStart);
 
-	// draw the lineNumber : 
+	int32_t lineStartPos=m_displayStartBufferPos;
+	int32_t lineEndPos=-1;
+#if 1
+	int32_t lineIdStart = m_displayStart.y + 1;
+	int32_t lineIdEnd = m_displayStart.y + m_displaySize.y;
+	EDN_DEBUG("lineIdStart=" << lineIdStart << " lineIdEnd=" << lineIdEnd );
+	for (iii=lineIdStart; iii<lineIdEnd ; iii++) {
+		lineEndPos = m_EdnBuf.EndOfLine(lineStartPos);
+		DrawLine(drawer, iii, lineStartPos, lineEndPos);
+		lineStartPos = lineEndPos+1;
+		if (lineStartPos >= m_EdnBuf.Size()+1) {
+			break;
+		}
+	}
+#else
 	int32_t currentLineID = m_displayStart.y+1;
-	DrawLineNumber(drawer, myPrint, currentLineID, y);
+	DrawLineNumber(drawer, currentLineID);
 	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
 		//EDN_INFO("diplay element=" << iii);
 		int32_t pixelX = xx*letterWidth + x_base;
@@ -405,7 +464,7 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 			y += letterHeight;
 			displayLines++;
 			currentLineID++;
-			DrawLineNumber(drawer, myPrint, currentLineID, y);
+			DrawLineNumber(drawer, currentLineID);
 		}
 	}
 	// special case : the cursor is at the end of the buffer...
@@ -418,6 +477,7 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 			m_cursorOn = true;
 		}
 	}
+#endif
 	drawer.Flush();
 	
 	GTimeVal timeStop;
@@ -431,7 +491,7 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 
 void BufferText::GetMousePosition(int32_t width, int32_t height, int32_t &x, int32_t &y)
 {
-	x = (width - 3) / Display::GetFontWidth() - nbColoneForLineNumber;
+	x = (width - 3) / Display::GetFontWidth() - m_nbColoneForLineNumber;
 	y = height / Display::GetFontHeight();
 	if (x < 0) {
 		x = 0;
