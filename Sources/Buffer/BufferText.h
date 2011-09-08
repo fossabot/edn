@@ -146,7 +146,7 @@ class BufferText : public Buffer {
 		void     MoveUpDown(int32_t ofset);
 		void     DrawLineNumber(DrawerManager &drawer, int32_t lineNumber);
 		void     UpdatePointerNumber(void);
-		void     DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos);
+		void     DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos, int32_t selStartPos, int32_t selEndPos);
 
 };
 

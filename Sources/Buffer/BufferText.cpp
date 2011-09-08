@@ -278,7 +278,7 @@ void BufferText::UpdatePointerNumber(void)
  * @return ---
  *
  */
-void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos)
+void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos, int32_t selStartPos, int32_t selEndPos)
 {
 	DrawLineNumber(drawer, lineNumber);
 	
@@ -289,13 +289,16 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 	int32_t idX = 0;
 	int32_t pixelX = m_nbColoneForLineNumber*letterWidth + 3;
 
-	Colorize *  myColorNormal     = myColorManager->Get("normal");
-	Colorize *  myColorSelected   = myColorManager->Get("SelectedText");
+	Colorize * myColorNormal     = myColorManager->Get("normal");
+	Colorize * myColorSelected   = myColorManager->Get("SelectedText");
 	Colorize * selectColor = NULL;
+	
+	bool selHave = selStartPos == -1 ? false : true;
 	
 	for (int32_t iii=startPos; iii<endPos; ) {
 		uint32_t currentChar;
 		char     displayChar[MAX_EXP_CHAR_LEN];
+		int32_t savePositionForCursor = iii;
 		int32_t  displaywidth = m_EdnBuf.GetExpandedChar(iii, idX, displayChar, currentChar);
 		selectColor = myColorNormal;
 		//kwow size to display
@@ -331,51 +334,54 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 			{
 				//selectColor = myColorSelected;
 				//SpaceText(color_ts & SelectColor, int32_t x, int32_t y,int32_t nbChar)
-/*
 				if(	true == selHave
-					&&	selStart <= iii
-					&&	selEnd   > iii)
+					&&	selStartPos <= iii
+					&&	selEndPos   > iii)
 				{
 					drawer.SpaceText(myColorSelected->GetBG(), pixelX ,positionY , 1);
 				} else if (true == selectColor->HaveBg()) {
 					drawer.SpaceText(selectColor->GetBG(), pixelX ,positionY , 1);
-				} else 
-*/
-				{
+				} else {
 					drawer.SpaceText(myColorManager->Get(COLOR_CODE_SPACE), pixelX ,positionY , 1);
 				}
 			} else if(		'\t' == currentChar
 						&&	true == globals::IsSetDisplaySpaceChar() )
 			{
-/*
 				if(	true == selHave
-					&&	selStart <= iii
-					&&	selEnd   > iii)
+					&&	selStartPos <= iii
+					&&	selEndPos   > iii)
 				{
 					drawer.SpaceText(myColorSelected->GetBG(), pixelX ,positionY , strlen(tmpDisplayOfset));
 				} else if (true == selectColor->HaveBg()) {
 					drawer.SpaceText(selectColor->GetBG(), pixelX ,positionY , strlen(tmpDisplayOfset));
-				} else
-*/
-				{
+				} else {
 					drawer.SpaceText(myColorManager->Get(COLOR_CODE_TAB), pixelX ,positionY , strlen(tmpDisplayOfset));
 				}
 			} else {
-/*
 				if(	true == selHave
-					&&	selStart <= iii
-					&&	selEnd   > iii)
+					&&	selStartPos <= iii
+					&&	selEndPos   > iii)
 				{
 					selectColor = myColorSelected;
 				}
 				if (currentChar <= 0x7F) {
 					drawer.Text(selectColor, pixelX ,positionY, tmpDisplayOfset);
-				} else 
-*/
-				{
+				} else {
 					drawer.Text(selectColor, pixelX ,positionY, displayChar);
 				}
 			}
+		}
+		// display cursor : 
+		if (m_cursorPos == savePositionForCursor) {
+			// display the cursor:
+			if (true == m_cursorOn) {
+				drawer.Cursor(pixelX, positionY+letterHeight);
+				//m_cursorOn = false;
+			} else {
+				m_cursorOn = true;
+			}
+		}
+		if (true==inTheScreen) {
 			pixelX += widthToDisplay*letterWidth;
 		}
 		idX += displaywidth;
@@ -409,8 +415,11 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 	
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
-	int32_t selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
-	
+	bool selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
+	if (false == selHave){
+		selStart = -1;
+		selEnd = -1;
+	}
 	colorInformation_ts * HLColor = NULL;
 	
 	uint32_t y = 0;
@@ -444,7 +453,7 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 	EDN_DEBUG("lineIdStart=" << lineIdStart << " lineIdEnd=" << lineIdEnd );
 	for (iii=lineIdStart; iii<lineIdEnd ; iii++) {
 		lineEndPos = m_EdnBuf.EndOfLine(lineStartPos);
-		DrawLine(drawer, iii, lineStartPos, lineEndPos);
+		DrawLine(drawer, iii, lineStartPos, lineEndPos, selStart+1, selEnd+1);
 		lineStartPos = lineEndPos+1;
 		if (lineStartPos >= m_EdnBuf.Size()+1) {
 			break;
