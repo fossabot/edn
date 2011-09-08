@@ -296,8 +296,8 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 		return;
 	}
 	if (MData.idSequence != m_HLDataSequence) {
-		GTimeVal timeStart;
-		g_get_current_time(&timeStart);
+		//GTimeVal timeStart;
+		//g_get_current_time(&timeStart);
 		MData.idSequence = m_HLDataSequence;
 		HLStart = StartOfLine(HLStart);
 		MData.HLData.Clear();
@@ -350,9 +350,9 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 			}
 		}
 		
-		GTimeVal timeStop;
-		g_get_current_time(&timeStop);
-		EDN_DEBUG("Display reAnnalyse = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
+		//GTimeVal timeStop;
+		//g_get_current_time(&timeStop);
+		//EDN_DEBUG("Display reAnnalyse = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
 	}
 
 }

@@ -292,12 +292,19 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 	Colorize * myColorNormal     = myColorManager->Get("normal");
 	Colorize * myColorSelected   = myColorManager->Get("SelectedText");
 	Colorize * selectColor = NULL;
+	colorInformation_ts * HLColor = NULL;
+	
+	// Regenerate the colorizing if necessary ...
+	displayHLData_ts  myDisplayLocalSyntax;
+	m_EdnBuf.HightlightGenerateLines(myDisplayLocalSyntax, startPos, 1);
+	
 	
 	bool selHave = selStartPos == -1 ? false : true;
-	
-	for (int32_t iii=startPos; iii<endPos; ) {
+	char displayChar[MAX_EXP_CHAR_LEN];
+	memset(displayChar, 0, sizeof(char)*MAX_EXP_CHAR_LEN);
+	int32_t iii;
+	for (iii=startPos; iii<endPos; ) {
 		uint32_t currentChar;
-		char     displayChar[MAX_EXP_CHAR_LEN];
 		int32_t savePositionForCursor = iii;
 		int32_t  displaywidth = m_EdnBuf.GetExpandedChar(iii, idX, displayChar, currentChar);
 		selectColor = myColorNormal;
@@ -320,14 +327,12 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 			inTheScreen = false;
 		}
 		if (true==inTheScreen) {
-/*
-			HLColor = m_EdnBuf.GetElementColorAtPosition(m_displayLocalSyntax, iii);
+			HLColor = m_EdnBuf.GetElementColorAtPosition(myDisplayLocalSyntax, savePositionForCursor);
 			if (NULL != HLColor) {
 				if (NULL != HLColor->patern) {
 					selectColor = HLColor->patern->GetColor();
 				}
 			}
-*/
 			// If user want to display space char : overwrite curent color
 			if(		' ' == currentChar
 				&&	true == globals::IsSetDisplaySpaceChar() )
@@ -385,11 +390,16 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 			pixelX += widthToDisplay*letterWidth;
 		}
 		idX += displaywidth;
-		/*
-		drawer.Text(selectColor, pixelX ,positionY, displayChar);
-		idX++;
-		pixelX += displaywidth * letterWidth;
-		*/
+	}
+	// special case : the cursor is at the end of the buffer...
+	if (m_cursorPos == iii) {
+		// display the cursor:
+		if (true == m_cursorOn) {
+			drawer.Cursor(pixelX, positionY+letterHeight);
+			//m_cursorOn = false;
+		} else {
+			m_cursorOn = true;
+		}
 	}
 }
 
@@ -420,38 +430,17 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 		selStart = -1;
 		selEnd = -1;
 	}
-	colorInformation_ts * HLColor = NULL;
-	
-	uint32_t y = 0;
-	int32_t iii, new_i;
-	// Get color : 
-	Colorize *  myColor           = myColorManager->Get("normal");
-	Colorize *  myColorSel        = myColorManager->Get("SelectedText");
-	color_ts &  myColorSpace      = myColorManager->Get(COLOR_CODE_SPACE);
-	color_ts &  myColorTab        = myColorManager->Get(COLOR_CODE_TAB);
-	Colorize *  selectColor       = NULL;
-	char displayChar[MAX_EXP_CHAR_LEN];
-	memset(displayChar, 0, sizeof(char)*MAX_EXP_CHAR_LEN);
 
-
-	int mylen = m_EdnBuf.Size();
-	int32_t x_base=m_nbColoneForLineNumber*letterWidth + 3;
-	uint32_t xx = 0;
-	int32_t idX = 0;
 	drawer.Clean(myColorManager->Get(COLOR_CODE_BASIC_BG));
-	int displayLines = 0;
-	// Regenerate the colorizing if necessary ...
-	//m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, m_displayStartBufferPos, m_displaySize.y);
 	GTimeVal timeStart;
 	g_get_current_time(&timeStart);
 
 	int32_t lineStartPos=m_displayStartBufferPos;
 	int32_t lineEndPos=-1;
-#if 1
 	int32_t lineIdStart = m_displayStart.y + 1;
 	int32_t lineIdEnd = m_displayStart.y + m_displaySize.y;
 	EDN_DEBUG("lineIdStart=" << lineIdStart << " lineIdEnd=" << lineIdEnd );
-	for (iii=lineIdStart; iii<lineIdEnd ; iii++) {
+	for (int32_t iii=lineIdStart; iii<lineIdEnd ; iii++) {
 		lineEndPos = m_EdnBuf.EndOfLine(lineStartPos);
 		DrawLine(drawer, iii, lineStartPos, lineEndPos, selStart+1, selEnd+1);
 		lineStartPos = lineEndPos+1;
@@ -459,125 +448,6 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 			break;
 		}
 	}
-#else
-	int32_t currentLineID = m_displayStart.y+1;
-	DrawLineNumber(drawer, currentLineID);
-	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
-		//EDN_INFO("diplay element=" << iii);
-		int32_t pixelX = xx*letterWidth + x_base;
-		int displaywidth;
-		uint32_t currentChar = '\0';
-		new_i = iii;
-		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
-		//EDN_INFO("diplay element=" << new_i);
-		if (currentChar!='\n') {
-			selectColor = myColor;
-			//kwow size to display
-			int32_t widthToDisplay;
-			char * tmpDisplayOfset;
-			bool inTheScreen = true;
-			if (m_displayStart.x <= idX) {
-				// Normal display
-				tmpDisplayOfset = displayChar;
-				widthToDisplay = displaywidth;
-			} else if (m_displayStart.x < idX + displaywidth) {
-				// special case of partial display : 
-				widthToDisplay = idX + displaywidth - m_displayStart.x;
-				tmpDisplayOfset = displayChar + (displaywidth-widthToDisplay);
-			} else {
-				// Out of range ...
-				widthToDisplay = displaywidth;
-				tmpDisplayOfset = displayChar;
-				inTheScreen = false;
-			}
-			if (true==inTheScreen) {
-				HLColor = m_EdnBuf.GetElementColorAtPosition(m_displayLocalSyntax, iii);
-				if (NULL != HLColor) {
-					if (NULL != HLColor->patern) {
-						selectColor = HLColor->patern->GetColor();
-					}
-				}
-
-				// If user want to display space char : overwrite curent color
-				if(		' ' == currentChar
-					&&	true == globals::IsSetDisplaySpaceChar() )
-				{
-					//selectColor = myColorSel;
-					//SpaceText(color_ts & SelectColor, int32_t x, int32_t y,int32_t nbChar)
-
-					if(	true == selHave
-						&&	selStart <= iii
-						&&	selEnd   > iii)
-					{
-						drawer.SpaceText(myColorSel->GetBG(), pixelX ,y , 1);
-					} else if (true == selectColor->HaveBg()) {
-						drawer.SpaceText(selectColor->GetBG(), pixelX ,y , 1);
-					} else {
-						drawer.SpaceText(myColorSpace, pixelX ,y , 1);
-					}
-				} else if(		'\t' == currentChar
-							&&	true == globals::IsSetDisplaySpaceChar() )
-				{
-					if(	true == selHave
-						&&	selStart <= iii
-						&&	selEnd   > iii)
-					{
-						drawer.SpaceText(myColorSel->GetBG(), pixelX ,y , strlen(tmpDisplayOfset));
-					} else if (true == selectColor->HaveBg()) {
-						drawer.SpaceText(selectColor->GetBG(), pixelX ,y , strlen(tmpDisplayOfset));
-					} else  {
-						drawer.SpaceText(myColorTab, pixelX ,y , strlen(tmpDisplayOfset));
-					}
-				} else {
-					if(	true == selHave
-						&&	selStart <= iii
-						&&	selEnd   > iii)
-					{
-						selectColor = myColorSel;
-					}
-					if (currentChar <= 0x7F) {
-						drawer.Text(selectColor, pixelX ,y, tmpDisplayOfset);
-					} else {
-						drawer.Text(selectColor, pixelX ,y, displayChar);
-					}
-				}
-				xx+=widthToDisplay;
-			}
-			idX += displaywidth;
-		}
-		// display cursor : 
-		if (m_cursorPos == iii) {
-			// display the cursor:
-			if (true == m_cursorOn) {
-				drawer.Cursor(pixelX, y+letterHeight);
-				//m_cursorOn = false;
-			} else {
-				m_cursorOn = true;
-			}
-		}
-		// move to next line ...
-		if (currentChar=='\n') {
-			drawer.EndOfLine(pixelX, y+letterHeight);
-			drawer.Flush();
-			xx = 0;
-			idX =0;
-			y += letterHeight;
-			displayLines++;
-			currentLineID++;
-			DrawLineNumber(drawer, currentLineID);
-		}
-	}
-	// special case : the cursor is at the end of the buffer...
-	if (m_cursorPos == iii) {
-		// display the cursor:
-		if (true == m_cursorOn) {
-			drawer.Cursor(xx*letterWidth + x_base, y+letterHeight);
-			m_cursorOn = false;
-		} else {
-			m_cursorOn = true;
-		}
-	}
-#endif
 	drawer.Flush();
 	
 	GTimeVal timeStop;
