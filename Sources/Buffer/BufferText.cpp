@@ -231,6 +231,9 @@ void BufferText::SetLineDisplay(uint32_t lineNumber)
 
 }
 
+
+
+
 void BufferText::DrawLineNumber(DrawerManager &drawer, int32_t lineNumber)
 {
 	int32_t letterHeight = Display::GetFontHeight();
@@ -285,14 +288,102 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 	
 	int32_t idX = 0;
 	int32_t pixelX = m_nbColoneForLineNumber*letterWidth + 3;
-	Colorize *  myColor           = myColorManager->Get("normal");
+
+	Colorize *  myColorNormal     = myColorManager->Get("normal");
+	Colorize *  myColorSelected   = myColorManager->Get("SelectedText");
+	Colorize * selectColor = NULL;
+	
 	for (int32_t iii=startPos; iii<endPos; ) {
 		uint32_t currentChar;
 		char     displayChar[MAX_EXP_CHAR_LEN];
 		int32_t  displaywidth = m_EdnBuf.GetExpandedChar(iii, idX, displayChar, currentChar);
-		drawer.Text(myColor, pixelX ,positionY, displayChar);
+		selectColor = myColorNormal;
+		//kwow size to display
+		int32_t widthToDisplay;
+		char * tmpDisplayOfset;
+		bool inTheScreen = true;
+		if (m_displayStart.x <= idX) {
+			// Normal display
+			tmpDisplayOfset = displayChar;
+			widthToDisplay = displaywidth;
+		} else if (m_displayStart.x < idX + displaywidth) {
+			// special case of partial display : 
+			widthToDisplay = idX + displaywidth - m_displayStart.x;
+			tmpDisplayOfset = displayChar + (displaywidth-widthToDisplay);
+		} else {
+			// Out of range ...
+			widthToDisplay = displaywidth;
+			tmpDisplayOfset = displayChar;
+			inTheScreen = false;
+		}
+		if (true==inTheScreen) {
+/*
+			HLColor = m_EdnBuf.GetElementColorAtPosition(m_displayLocalSyntax, iii);
+			if (NULL != HLColor) {
+				if (NULL != HLColor->patern) {
+					selectColor = HLColor->patern->GetColor();
+				}
+			}
+*/
+			// If user want to display space char : overwrite curent color
+			if(		' ' == currentChar
+				&&	true == globals::IsSetDisplaySpaceChar() )
+			{
+				//selectColor = myColorSelected;
+				//SpaceText(color_ts & SelectColor, int32_t x, int32_t y,int32_t nbChar)
+/*
+				if(	true == selHave
+					&&	selStart <= iii
+					&&	selEnd   > iii)
+				{
+					drawer.SpaceText(myColorSelected->GetBG(), pixelX ,positionY , 1);
+				} else if (true == selectColor->HaveBg()) {
+					drawer.SpaceText(selectColor->GetBG(), pixelX ,positionY , 1);
+				} else 
+*/
+				{
+					drawer.SpaceText(myColorManager->Get(COLOR_CODE_SPACE), pixelX ,positionY , 1);
+				}
+			} else if(		'\t' == currentChar
+						&&	true == globals::IsSetDisplaySpaceChar() )
+			{
+/*
+				if(	true == selHave
+					&&	selStart <= iii
+					&&	selEnd   > iii)
+				{
+					drawer.SpaceText(myColorSelected->GetBG(), pixelX ,positionY , strlen(tmpDisplayOfset));
+				} else if (true == selectColor->HaveBg()) {
+					drawer.SpaceText(selectColor->GetBG(), pixelX ,positionY , strlen(tmpDisplayOfset));
+				} else
+*/
+				{
+					drawer.SpaceText(myColorManager->Get(COLOR_CODE_TAB), pixelX ,positionY , strlen(tmpDisplayOfset));
+				}
+			} else {
+/*
+				if(	true == selHave
+					&&	selStart <= iii
+					&&	selEnd   > iii)
+				{
+					selectColor = myColorSelected;
+				}
+				if (currentChar <= 0x7F) {
+					drawer.Text(selectColor, pixelX ,positionY, tmpDisplayOfset);
+				} else 
+*/
+				{
+					drawer.Text(selectColor, pixelX ,positionY, displayChar);
+				}
+			}
+			pixelX += widthToDisplay*letterWidth;
+		}
+		idX += displaywidth;
+		/*
+		drawer.Text(selectColor, pixelX ,positionY, displayChar);
 		idX++;
 		pixelX += displaywidth * letterWidth;
+		*/
 	}
 }
 

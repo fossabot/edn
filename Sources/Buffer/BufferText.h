@@ -35,6 +35,37 @@ typedef enum {
 	CURSOR_DISPLAY_MODE_INSERT,
 	CURSOR_DISPLAY_MODE_NOT_FOCUS,
 } cursorDisplayMode_te;
+#if 0
+class colorPalette {
+	private :
+		ColorizeManager * m_colorManager;
+
+	public :
+	color_ts &  colorSpace;
+	color_ts &  colorTab;
+	color_ts &  colorLineNumber;
+	
+	Colorize *  colorNormal;
+	Colorize *  colorSel;
+	Colorize *  colorCurrent;
+	public :
+		colorPalette(void):
+			m_colorManager(ColorizeManager::getInstance()),
+			colorSpace(m_colorManager->Get(COLOR_CODE_SPACE)),
+			colorTab(m_colorManager->Get(COLOR_CODE_TAB)),
+			colorLineNumber(m_colorManager->Get(COLOR_CODE_LINE_NUMBER)),
+		{
+			/*
+			ColorizeManager * m_colorManager = ColorizeManager::getInstance();
+			colorSpace      = m_colorManager->Get(COLOR_CODE_SPACE);
+			colorTab        = m_colorManager->Get(COLOR_CODE_TAB);
+			colorLineNumber = m_colorManager->Get(COLOR_CODE_LINE_NUMBER);
+			*/
+			colorNormal     = m_colorManager->Get("normal");
+			colorSel        = m_colorManager->Get("SelectedText");
+		}
+} colorPalette_ts;
+#endif
 
 class BufferText : public Buffer {
 	public:
