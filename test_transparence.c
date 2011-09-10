@@ -20,7 +20,7 @@ static gboolean expose(GtkWidget *widget, GdkEventExpose *event, gpointer user_d
 static void clicked(GtkWindow *win, GdkEventButton *event, gpointer user_data);
 
 
-#	if USE_GTK_VERSION_3_0
+#if USE_GTK_VERSION_3_0
 const GdkRGBA color = { 1.0, 1.0, 0.0, 0.0};
 #endif
 

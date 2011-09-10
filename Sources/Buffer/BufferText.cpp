@@ -280,8 +280,6 @@ void BufferText::UpdatePointerNumber(void)
  */
 void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos, int32_t selStartPos, int32_t selEndPos)
 {
-	DrawLineNumber(drawer, lineNumber);
-	
 	int32_t letterHeight = Display::GetFontHeight();
 	int32_t letterWidth = Display::GetFontWidth();
 	int32_t positionY = letterHeight * (lineNumber - m_displayStart.y - 1);
@@ -298,6 +296,10 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 	displayHLData_ts  myDisplayLocalSyntax;
 	m_EdnBuf.HightlightGenerateLines(myDisplayLocalSyntax, startPos, 1);
 	
+	// clean the current Line
+	drawer.Rectangle(myColorManager->Get(COLOR_CODE_BASIC_BG), 0, positionY, drawer.GetWidth(), letterHeight);
+	
+	DrawLineNumber(drawer, lineNumber);
 	
 	bool selHave = selStartPos == -1 ? false : true;
 	char displayChar[MAX_EXP_CHAR_LEN];
@@ -431,7 +433,7 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 		selEnd = -1;
 	}
 
-	drawer.Clean(myColorManager->Get(COLOR_CODE_BASIC_BG));
+	//drawer.Clean(myColorManager->Get(COLOR_CODE_BASIC_BG));
 	GTimeVal timeStart;
 	g_get_current_time(&timeStart);
 
@@ -440,19 +442,25 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 	int32_t lineIdStart = m_displayStart.y + 1;
 	int32_t lineIdEnd = m_displayStart.y + m_displaySize.y;
 	EDN_DEBUG("lineIdStart=" << lineIdStart << " lineIdEnd=" << lineIdEnd );
-	for (int32_t iii=lineIdStart; iii<lineIdEnd ; iii++) {
+	int32_t iii;
+	for (iii=lineIdStart; iii<lineIdEnd+1 ; iii++) {
 		lineEndPos = m_EdnBuf.EndOfLine(lineStartPos);
 		DrawLine(drawer, iii, lineStartPos, lineEndPos, selStart+1, selEnd+1);
 		lineStartPos = lineEndPos+1;
 		if (lineStartPos >= m_EdnBuf.Size()+1) {
+			iii++;
 			break;
 		}
 	}
 	drawer.Flush();
-	
+	// Need to clean the end of windows (sometimes)...
+	if (iii<lineIdEnd+1) {
+		int32_t positionY = letterHeight * (iii - m_displayStart.y - 1);
+		drawer.Rectangle(myColorManager->Get(COLOR_CODE_BASIC_BG), 0, positionY, drawer.GetWidth(), letterHeight*(lineIdEnd+1-iii) );
+	}
 	GTimeVal timeStop;
 	g_get_current_time(&timeStop);
-	EDN_DEBUG("Display Generation = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
+	EDN_DEBUG("Display Generation = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
 
 	return ERR_NONE;
 }
