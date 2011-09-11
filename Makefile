@@ -178,6 +178,7 @@ CXXFILES+=		CustumWidget/BufferView/BufferView.cpp		\
 
 # Basic Interface :
 CXXFILES+=		Buffer/Buffer.cpp						\
+				Buffer/BufferAnchor.cpp					\
 				Buffer/BufferText.cpp					\
 				Buffer/BufferEmpty.cpp					\
 				Buffer/BufferManager.cpp				\

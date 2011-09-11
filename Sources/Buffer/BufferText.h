@@ -35,37 +35,7 @@ typedef enum {
 	CURSOR_DISPLAY_MODE_INSERT,
 	CURSOR_DISPLAY_MODE_NOT_FOCUS,
 } cursorDisplayMode_te;
-#if 0
-class colorPalette {
-	private :
-		ColorizeManager * m_colorManager;
 
-	public :
-	color_ts &  colorSpace;
-	color_ts &  colorTab;
-	color_ts &  colorLineNumber;
-	
-	Colorize *  colorNormal;
-	Colorize *  colorSel;
-	Colorize *  colorCurrent;
-	public :
-		colorPalette(void):
-			m_colorManager(ColorizeManager::getInstance()),
-			colorSpace(m_colorManager->Get(COLOR_CODE_SPACE)),
-			colorTab(m_colorManager->Get(COLOR_CODE_TAB)),
-			colorLineNumber(m_colorManager->Get(COLOR_CODE_LINE_NUMBER)),
-		{
-			/*
-			ColorizeManager * m_colorManager = ColorizeManager::getInstance();
-			colorSpace      = m_colorManager->Get(COLOR_CODE_SPACE);
-			colorTab        = m_colorManager->Get(COLOR_CODE_TAB);
-			colorLineNumber = m_colorManager->Get(COLOR_CODE_LINE_NUMBER);
-			*/
-			colorNormal     = m_colorManager->Get("normal");
-			colorSel        = m_colorManager->Get("SelectedText");
-		}
-} colorPalette_ts;
-#endif
 
 class BufferText : public Buffer {
 	public:
@@ -78,7 +48,6 @@ class BufferText : public Buffer {
 		void      SetLineDisplay(uint32_t lineNumber);
 		
 		int32_t   Display(DrawerManager &drawer);
-		void      ForceReDraw(bool allElement);
 		void      AddChar(char * UTF8data);
 		void      cursorMove(int32_t gtkKey);
 		void      MouseSelectFromCursorTo(int32_t width, int32_t height);
@@ -107,24 +76,31 @@ class BufferText : public Buffer {
 	protected:
 		void      NameChange(void);
 
+	// anchor section
+	public:
+		void      AnchorAdd(int32_t anchorID);
+		void      AnchorRm(int32_t anchorID);
+		
+	private:
+		Edn::VectorType<BufferAnchor *> m_AnchorList;              //!< list of all line anchor in the current buffer
+
 	private:
 		// Display
-		bool                    NeedToCleanEndPage;             //!< if true, the end of the page need to be clean (arrive after a remove line)
 		ColorizeManager *       myColorManager;                 //!< for the background color : 
 		int32_t                 m_nbColoneForLineNumber;        //!< number of colomn use for linenumber display
 		
 		// Direct buffer IO
 		EdnBuf                  m_EdnBuf;                       //!< buffer associated on this displayer
+		
 		position_ts             m_displayStart;                 //!< position where the display is starting
 		position_ts             m_displaySize;                  //!< number of char displayable in the screan
 		int32_t                 m_displayStartBufferPos;        //!< position where the buffer start
+		
 		// Cursor :
 		int32_t                 m_cursorPos;                    //!< position in the buffer of the cursor
 		int32_t                 m_cursorPreferredCol;           //!< colomn of the last up and down ...
 		bool                    m_cursorOn;                     //!< the blink of the cursor ...
 		cursorDisplayMode_te    m_cursorMode;                   //!< type of cursor Selected
-		
-		displayHLData_ts        m_displayLocalSyntax;           //!< for the display of the local elements (display HL mode)
 		
 		// internal function
 		void     BasicInit(void);
@@ -147,6 +123,7 @@ class BufferText : public Buffer {
 		void     DrawLineNumber(DrawerManager &drawer, int32_t lineNumber);
 		void     UpdatePointerNumber(void);
 		void     DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos, int32_t selStartPos, int32_t selEndPos);
+		//void     DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos, int32_t selStartPos, int32_t selEndPos);
 
 };
 

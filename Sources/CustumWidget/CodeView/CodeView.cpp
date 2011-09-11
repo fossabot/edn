@@ -99,7 +99,6 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 		case EDN_MSG__CURRENT_CHANGE_BUFFER_ID:
 			//EDN_INFO("Select a new Buffer ... " << dataID);
 			m_bufferID = dataID;
-			m_bufferManager->Get(m_bufferID)->ForceReDraw(true);
 			// request the dispplay of the curent Editor
 			SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
 			break;
@@ -197,6 +196,7 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 #	ifdef USE_GTK_VERSION_3_0
 	GtkAllocation allocation;
 	gtk_widget_get_allocation(widget, &allocation);
+	EDN_INFO("GTK+ request a diplay of : "<< allocation.width <<"px * "<< allocation.height <<"px");
 	bool needRedrawAll = false;
 	if (self->m_shawableAreaX != allocation.width) {
 		needRedrawAll = true;
@@ -207,6 +207,7 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 		self->m_shawableAreaY = allocation.height;
 	}
 #	elif defined( USE_GTK_VERSION_2_0)
+	EDN_INFO("GTK+ request a diplay of : "<< widget->allocation.width <<"px * "<< widget->allocation.height <<"px");
 	bool needRedrawAll = false;
 	if (self->m_shawableAreaX != widget->allocation.width) {
 		needRedrawAll = true;
@@ -217,26 +218,15 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 		self->m_shawableAreaY = widget->allocation.height;
 	}
 #	endif
-	if (true == needRedrawAll) {
-		//updateScrollElement();
-		self->m_bufferManager->Get(self->m_bufferID)->ForceReDraw(true);
-	}
-	EDN_INFO("Request a display of : " << self->m_shawableAreaX << "px * "<<  self->m_shawableAreaY<<"px");
-	/*
-	EDN_INFO("widget width=%d", widget->allocation.width);
-	EDN_INFO("widget height=%d", widget->allocation.height);
-	*/
+	EDN_INFO("Edn request a display of : " << self->m_shawableAreaX << "px * "<<  self->m_shawableAreaY<<"px");
 
-	//EDN_INFO("BufferView Display");
 	// Get the color Manager :
 	ColorizeManager *myColorManager = NULL;
 	myColorManager = ColorizeManager::getInstance();
 	
-	//(void)m_bufferManager->Get(m_bufferID)->Display(m_displayParameters, m_shawableAreaX, m_shawableAreaY);
 	DrawerManager monDrawer(widget, self->m_shawableAreaX, self->m_shawableAreaY);
 	//EDN_INFO("Display buffer ID = " << m_bufferID);
 	(void)self->m_bufferManager->Get(self->m_bufferID)->Display(monDrawer);
-//	EDN_WARNING("Must display here ... ");
 	return TRUE;
 }
 
@@ -250,22 +240,15 @@ gboolean CodeView::CB_displayInit( GtkWidget *widget, gpointer data)
 #	ifdef USE_GTK_VERSION_3_0
 	GtkAllocation allocation;
 	gtk_widget_get_allocation(widget, &allocation);
-	int32_t size_x = allocation.width;
-	int32_t size_y = allocation.height;
-	
+	EDN_INFO("GTK+ request a diplay of : "<< allocation.width <<"px * "<< allocation.height <<"px");
 	self->m_shawableAreaX = allocation.width;
 	self->m_shawableAreaY = allocation.height;
 #	elif defined( USE_GTK_VERSION_2_0)
-	int32_t size_x = widget->allocation.width;
-	int32_t size_y = widget->allocation.height;
-	
+	EDN_INFO("GTK+ request a diplay of : "<< widget->allocation.width <<"px * "<< widget->allocation.height <<"px");
 	self->m_shawableAreaX = widget->allocation.width;
 	self->m_shawableAreaY = widget->allocation.height;
 #	endif
-	EDN_INFO("Request a diplay of : "<< size_x <<"px * "<< size_y <<"px");
-
 	gtk_widget_queue_draw( widget );
-
 	return TRUE;
 }
 

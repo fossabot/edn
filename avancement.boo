@@ -1,7 +1,7 @@
 # action a faire (ordonner par révision) :
 * 0.2.X :
 	- gui : Amelioration du full-screen et du display de base (sans l'entete de la fenetre)
-	- gui : Mise en place d'un display ligne par ligne
+	- gui : display partielle de la fenetre
 	- gui : ascenceur quand nécessaire
 	- gui : Demander la création de nouveaux fichier quand il n'existe pas (a l'ouverture en ligne de commande)
 	- sys : Mise en place des colorisation de base pour le

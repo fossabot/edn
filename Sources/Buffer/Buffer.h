@@ -30,7 +30,7 @@
 #include "Display.h"
 #include "charset.h"
 #include "Edn.h"
-
+#include "BufferAnchor.h"
 
 typedef struct{
 	uint32_t nbTotalLine;				//!< Number of line in the buffer
@@ -82,7 +82,6 @@ class Buffer {
 		virtual void      SetLineDisplay(uint32_t lineNumber);
 		
 		virtual int32_t   Display(DrawerManager &drawer);
-		virtual void      ForceReDraw(bool allElement);
 		virtual void      AddChar(char * UTF8data);
 		virtual void      cursorMove(int32_t gtkKey);
 		virtual void      MouseSelectFromCursorTo(int32_t width, int32_t height);

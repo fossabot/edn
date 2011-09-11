@@ -52,7 +52,6 @@ extern "C"
  */
 void BufferText::BasicInit(void)
 {
-	NeedToCleanEndPage = true;
 	// set the first element that is displayed
 	m_displayStartBufferPos = 0;
 	
@@ -72,7 +71,6 @@ void BufferText::BasicInit(void)
 	m_displayStart.y = 0;
 	m_displaySize.x = 200;
 	m_displaySize.y = 20;
-	m_displayLocalSyntax.idSequence = -1;
 }
 
 
@@ -660,7 +658,6 @@ void BufferText::ScrollUp(void)
  */
 void BufferText::MoveUpDown(int32_t ofset)
 {
-	m_displayLocalSyntax.idSequence = -1;
 	if (ofset >= 0) {
 		int32_t nbLine = m_EdnBuf.NumberOfLines();
 		if (m_displayStart.y+ofset+3 > nbLine) {
@@ -682,21 +679,6 @@ void BufferText::MoveUpDown(int32_t ofset)
 	
 }
 
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void BufferText::ForceReDraw(bool allElement)
-{
-	NeedToCleanEndPage = true;
-	//m_displayLocalSyntax.idSequence = -1;
-}
 
 void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 {

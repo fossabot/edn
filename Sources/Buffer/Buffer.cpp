@@ -235,7 +235,6 @@ void Buffer::ScrollUp(void)
 	// nothing to do
 }
 
-
 /**
  * @brief
  *
@@ -244,13 +243,6 @@ void Buffer::ScrollUp(void)
  * @return ---
  *
  */
-void Buffer::ForceReDraw(bool allElement)
-{
-	// nothing to do
-}
-
-
-
 void Buffer::cursorMove(int32_t gtkKey)
 {
 	// nothing to do
