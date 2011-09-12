@@ -141,7 +141,6 @@ BufferText::BufferText(Edn::File &fileName) : Buffer(fileName)
 		SetModify(true);
 	}
 	UpdateWindowsPosition();
-	ForceReDraw(true);
 }
 
 
@@ -268,19 +267,11 @@ void BufferText::UpdatePointerNumber(void)
 }
 
 
-/**
- * @brief Display a single line
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos, int32_t selStartPos, int32_t selEndPos)
+void BufferText::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_ts &displayStart, position_ts &displaySize)
 {
 	int32_t letterHeight = Display::GetFontHeight();
 	int32_t letterWidth = Display::GetFontWidth();
-	int32_t positionY = letterHeight * (lineNumber - m_displayStart.y - 1);
+	int32_t positionY = letterHeight * (anchor.m_lineNumber - displayStart.y - 1);
 	
 	int32_t idX = 0;
 	int32_t pixelX = m_nbColoneForLineNumber*letterWidth + 3;
@@ -292,18 +283,18 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 	
 	// Regenerate the colorizing if necessary ...
 	displayHLData_ts  myDisplayLocalSyntax;
-	m_EdnBuf.HightlightGenerateLines(myDisplayLocalSyntax, startPos, 1);
+	m_EdnBuf.HightlightOneLine(myDisplayLocalSyntax, anchor.m_posStart, anchor.m_posStop);
 	
 	// clean the current Line
 	drawer.Rectangle(myColorManager->Get(COLOR_CODE_BASIC_BG), 0, positionY, drawer.GetWidth(), letterHeight);
 	
-	DrawLineNumber(drawer, lineNumber);
+	DrawLineNumber(drawer, anchor.m_lineNumber);
 	
-	bool selHave = selStartPos == -1 ? false : true;
+	bool selHave = anchor.m_selectionPosStart == -1 ? false : true;
 	char displayChar[MAX_EXP_CHAR_LEN];
 	memset(displayChar, 0, sizeof(char)*MAX_EXP_CHAR_LEN);
 	int32_t iii;
-	for (iii=startPos; iii<endPos; ) {
+	for (iii=anchor.m_posStart; iii<anchor.m_posStop; ) {
 		uint32_t currentChar;
 		int32_t savePositionForCursor = iii;
 		int32_t  displaywidth = m_EdnBuf.GetExpandedChar(iii, idX, displayChar, currentChar);
@@ -312,13 +303,13 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 		int32_t widthToDisplay;
 		char * tmpDisplayOfset;
 		bool inTheScreen = true;
-		if (m_displayStart.x <= idX) {
+		if (displayStart.x <= idX) {
 			// Normal display
 			tmpDisplayOfset = displayChar;
 			widthToDisplay = displaywidth;
-		} else if (m_displayStart.x < idX + displaywidth) {
+		} else if (displayStart.x < idX + displaywidth) {
 			// special case of partial display : 
-			widthToDisplay = idX + displaywidth - m_displayStart.x;
+			widthToDisplay = idX + displaywidth - displayStart.x;
 			tmpDisplayOfset = displayChar + (displaywidth-widthToDisplay);
 		} else {
 			// Out of range ...
@@ -340,8 +331,8 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 				//selectColor = myColorSelected;
 				//SpaceText(color_ts & SelectColor, int32_t x, int32_t y,int32_t nbChar)
 				if(	true == selHave
-					&&	selStartPos <= iii
-					&&	selEndPos   > iii)
+					&&	anchor.m_selectionPosStart <= iii
+					&&	anchor.m_selectionPosStop   > iii)
 				{
 					drawer.SpaceText(myColorSelected->GetBG(), pixelX ,positionY , 1);
 				} else if (true == selectColor->HaveBg()) {
@@ -353,8 +344,8 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 						&&	true == globals::IsSetDisplaySpaceChar() )
 			{
 				if(	true == selHave
-					&&	selStartPos <= iii
-					&&	selEndPos   > iii)
+					&&	anchor.m_selectionPosStart <= iii
+					&&	anchor.m_selectionPosStop   > iii)
 				{
 					drawer.SpaceText(myColorSelected->GetBG(), pixelX ,positionY , strlen(tmpDisplayOfset));
 				} else if (true == selectColor->HaveBg()) {
@@ -364,8 +355,8 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 				}
 			} else {
 				if(	true == selHave
-					&&	selStartPos <= iii
-					&&	selEndPos   > iii)
+					&&	anchor.m_selectionPosStart <= iii
+					&&	anchor.m_selectionPosStop   > iii)
 				{
 					selectColor = myColorSelected;
 				}
@@ -402,67 +393,6 @@ void BufferText::DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t sta
 		}
 	}
 }
-
-
-/**
- * @brief Display the curent buffer with all the probematic imposed by the xharset and the user contraint.
- *
- * @param[in,out] drawer the basic user drawer of EDN.
- *
- * @return 
- *
- */
-int32_t	BufferText::Display(DrawerManager &drawer)
-{
-	int32_t letterHeight = Display::GetFontHeight();
-	int32_t letterWidth = Display::GetFontWidth();
-	// Update the total of line to display in the buffer
-	UpdatePointerNumber();
-	// update the number of element that can be displayed
-	m_displaySize.x = (drawer.GetWidth()/letterWidth) + 1 - m_nbColoneForLineNumber;
-	m_displaySize.y = (drawer.GetHeight()/letterHeight) + 1;
-	EDN_INFO("main DIPLAY " << m_displaySize.x << " char * " << m_displaySize.y << " char");
-	
-	int32_t selStart, selEnd, selRectStart, selRectEnd;
-	bool selIsRect;
-	bool selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
-	if (false == selHave){
-		selStart = -1;
-		selEnd = -1;
-	}
-
-	//drawer.Clean(myColorManager->Get(COLOR_CODE_BASIC_BG));
-	GTimeVal timeStart;
-	g_get_current_time(&timeStart);
-
-	int32_t lineStartPos=m_displayStartBufferPos;
-	int32_t lineEndPos=-1;
-	int32_t lineIdStart = m_displayStart.y + 1;
-	int32_t lineIdEnd = m_displayStart.y + m_displaySize.y;
-	EDN_DEBUG("lineIdStart=" << lineIdStart << " lineIdEnd=" << lineIdEnd );
-	int32_t iii;
-	for (iii=lineIdStart; iii<lineIdEnd+1 ; iii++) {
-		lineEndPos = m_EdnBuf.EndOfLine(lineStartPos);
-		DrawLine(drawer, iii, lineStartPos, lineEndPos, selStart+1, selEnd+1);
-		lineStartPos = lineEndPos+1;
-		if (lineStartPos >= m_EdnBuf.Size()+1) {
-			iii++;
-			break;
-		}
-	}
-	drawer.Flush();
-	// Need to clean the end of windows (sometimes)...
-	if (iii<lineIdEnd+1) {
-		int32_t positionY = letterHeight * (iii - m_displayStart.y - 1);
-		drawer.Rectangle(myColorManager->Get(COLOR_CODE_BASIC_BG), 0, positionY, drawer.GetWidth(), letterHeight*(lineIdEnd+1-iii) );
-	}
-	GTimeVal timeStop;
-	g_get_current_time(&timeStop);
-	EDN_DEBUG("Display Generation = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
-
-	return ERR_NONE;
-}
-
 
 
 void BufferText::GetMousePosition(int32_t width, int32_t height, int32_t &x, int32_t &y)
@@ -508,7 +438,6 @@ void BufferText::MouseEvent(int32_t width, int32_t height)
 		}
 		m_EdnBuf.Unselect(SELECTION_PRIMARY);
 
-		ForceReDraw(true);
 		UpdateWindowsPosition();
 	}
 }
@@ -558,7 +487,6 @@ void BufferText::MouseSelectFromCursorTo(int32_t width, int32_t height)
 			m_EdnBuf.Select(SELECTION_PRIMARY, selStart, m_cursorPos);
 		}
 	}
-	ForceReDraw(true);
 	UpdateWindowsPosition();
 }
 
@@ -578,7 +506,6 @@ void BufferText::MouseEventDouble(void)
 	if (true == m_EdnBuf.SelectAround(m_cursorPos, beginPos, endPos)) {
 		m_EdnBuf.Select(SELECTION_PRIMARY, beginPos, endPos);
 		m_cursorPos = endPos;
-		ForceReDraw(true);
 	}
 	// no else
 }
@@ -595,7 +522,6 @@ void BufferText::MouseEventTriple(void)
 {
 	m_EdnBuf.Select(SELECTION_PRIMARY, m_EdnBuf.StartOfLine(m_cursorPos), m_EdnBuf.EndOfLine(m_cursorPos));
 	m_cursorPos = m_EdnBuf.EndOfLine(m_cursorPos);
-	ForceReDraw(true);
 }
 
 void BufferText::RemoveLine(void)
@@ -611,13 +537,11 @@ void BufferText::SelectAll(void)
 {
 	m_EdnBuf.Select(SELECTION_PRIMARY, 0, m_EdnBuf.Size());
 	m_cursorPos = m_EdnBuf.Size();
-	ForceReDraw(true);
 }
 
 void BufferText::SelectNone(void)
 {
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
-	ForceReDraw(true);
 }
 
 /**
@@ -922,11 +846,9 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 			m_displayStart.y = cursorPosition.y - globals::getNbLineBorder();
 			if (m_displayStart.y < 0) {
 				m_displayStart.y = 0;
-				ForceReDraw(true);
 			}
 		} else if (m_displayStart.y + m_displaySize.y <= (int32_t)cursorPosition.y + globals::getNbLineBorder() ) {
 			m_displayStart.y = cursorPosition.y - m_displaySize.y + globals::getNbLineBorder() + 1;
-			ForceReDraw(true);
 		}
 		// Display position (X mode):
 		//EDN_INFO("cursorPosition X : " << cursorPosition.y << " windows " << m_displayStart.y << "=>" << m_displayStart.x + m_displaySize.x);
@@ -934,11 +856,9 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 			m_displayStart.x = cursorPosition.x - globals::getNbColoneBorder();
 			if (m_displayStart.x < 0) {
 				m_displayStart.x = 0;
-				ForceReDraw(true);
 			}
 		} else if (m_displayStart.x + m_displaySize.x <= cursorPosition.x + globals::getNbColoneBorder() ) {
 			m_displayStart.x = cursorPosition.x - m_displaySize.x + globals::getNbColoneBorder() + 1;
-			ForceReDraw(true);
 		}
 		
 		//update the buffer position ID : 
@@ -957,7 +877,6 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 		m_displayStart.y = edn_max(m_displayStart.y, 0);
 		
 		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
-		ForceReDraw(true);
 		//EDN_DEBUG(" display start : " << m_displayStart.x << "x" << m_displayStart.y);
 		//EDN_DEBUG(" -------------------------------------------------");
 	}
@@ -972,8 +891,9 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
  * @return ---
  *
  */
-void BufferText::AddChar(char * UTF8data)
+position_ts BufferText::AddChar(char * UTF8data)
 {
+	position_ts tmp = {0,0};
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
@@ -1117,8 +1037,9 @@ int32_t BufferText::FindLine(Edn::String &data)
 	}
 }
 
-void BufferText::JumpAtLine(int32_t newLine)
+position_ts BufferText::JumpAtLine(int32_t newLine)
 {
+	position_ts tmp = {0,0};
 	int32_t positionLine = m_EdnBuf.CountForwardNLines(0, newLine);
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
 	EDN_DEBUG("jump at the line : " << newLine );
@@ -1141,8 +1062,9 @@ int32_t BufferText::GetCurrentLine(void)
 
 
 
-void BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
+position_ts BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
 {
+	position_ts tmp = {0,0};
 	EDN_INFO("Search data : \"" << data << "\"");
 	
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
@@ -1229,8 +1151,9 @@ void BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool w
 }
 
 
-void BufferText::Replace(Edn::String &data)
+position_ts BufferText::Replace(Edn::String &data)
 {
+	position_ts tmp = {0,0};
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
@@ -1272,8 +1195,9 @@ void BufferText::Copy(int8_t clipboardID)
  * @return ---
  *
  */
-void BufferText::Cut(int8_t clipboardID)
+position_ts BufferText::Cut(int8_t clipboardID)
 {
+	position_ts tmp = {0,0};
 
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
@@ -1288,7 +1212,6 @@ void BufferText::Cut(int8_t clipboardID)
 		m_cursorPos = SelectionStart;
 	}
 	UpdateWindowsPosition();
-	ForceReDraw(true);
 	SetModify(true);
 }
 
@@ -1301,8 +1224,9 @@ void BufferText::Cut(int8_t clipboardID)
  * @return ---
  *
  */
-void BufferText::Paste(int8_t clipboardID)
+position_ts BufferText::Paste(int8_t clipboardID)
 {
+	position_ts tmp = {0,0};
 	Edn::VectorType<int8_t> mVect;
 	// copy data from the click board : 
 	ClipBoard::Get(clipboardID, mVect);
@@ -1322,29 +1246,28 @@ void BufferText::Paste(int8_t clipboardID)
 	}
 	
 	UpdateWindowsPosition();
-	ForceReDraw(true);
 	SetModify(true);
 }
 
 
-void BufferText::Undo(void)
+position_ts BufferText::Undo(void)
 {
+	position_ts tmp = {0,0};
 	int32_t newPos = m_EdnBuf.Undo();
 	if (newPos >= 0) {
 		SetInsertPosition(newPos, true);
 		UpdateWindowsPosition();
-		ForceReDraw(true);
 		SetModify(true);
 	}
 }
 
-void BufferText::Redo(void)
+position_ts BufferText::Redo(void)
 {
+	position_ts tmp = {0,0};
 	int32_t newPos = m_EdnBuf.Redo();
 	if (newPos >= 0) {
 		SetInsertPosition(newPos, true);
 		UpdateWindowsPosition();
-		ForceReDraw(true);
 		SetModify(true);
 	}
 }
@@ -1353,6 +1276,51 @@ void BufferText::Redo(void)
 void BufferText::SetCharset(charset_te newCharset)
 {
 	m_EdnBuf.SetCharsetType(newCharset);
-	ForceReDraw(true);
 }
 
+
+bool BufferText::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor, position_ts &size, int32_t sizePixelX, int32_t sizePixelY)
+{
+	int32_t localID = AnchorRealId(anchorID);
+	if (localID >=0) {
+		// update internal sise of the width of lineID
+		UpdatePointerNumber();
+		// Updata uper size of display
+		size.x = sizePixelX / Display::GetFontWidth();
+		size.y = sizePixelY / Display::GetFontHeight();
+		anchor.m_nbIterationMax = size.y;
+		// update to buffer position
+		anchor.m_lineNumber = m_AnchorList[localID].m_lineId;
+		anchor.m_posStart = m_AnchorList[localID].m_bufferPos;
+		if (anchor.m_posStart >= m_EdnBuf.Size()+1) {
+			return false;
+		}
+		anchor.m_posStop = m_EdnBuf.EndOfLine(anchor.m_posStart);
+		// Update selection current
+		int32_t selStart, selEnd, selRectStart, selRectEnd;
+		bool selIsRect;
+		bool selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
+		if (false == selHave){
+			anchor.m_selectionPosStart = -1;
+			anchor.m_selectionPosStop = -1;
+		} else {
+			anchor.m_selectionPosStart = selStart;
+			anchor.m_selectionPosStop = selEnd;
+		}
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+bool BufferText::AnchorNext(bufferAnchor_ts & anchor)
+{
+	anchor.m_lineNumber++;
+	anchor.m_posStart = anchor.m_posStop+1;
+	if (anchor.m_posStart >= m_EdnBuf.Size()+1) {
+		return false;
+	}
+	anchor.m_posStop = m_EdnBuf.EndOfLine(anchor.m_posStart);
+	return true;
+}

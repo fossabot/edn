@@ -67,32 +67,56 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
-int32_t	BufferEmpty::Display(DrawerManager &drawer)
+void BufferEmpty::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_ts &displayStart, position_ts &displaySize)
 {
-
+	EDN_DEBUG("Request draw : " << anchor.m_lineNumber);
 	ColorizeManager * myColorManager = ColorizeManager::getInstance();
 	// Get color : 
 	Colorize	*myColor = NULL;
-	// Clean Buffer
-	drawer.Clean(myColorManager->Get(COLOR_CODE_BASIC_BG) );
-	
-	myColor = myColorManager->Get("normal");
-	// Draw the 2 comments Lines :
-	drawer.Text(myColor, 20,20, "edn - Editeur De N'ours, l'Editeur Desoxyribo-Nucleique");
-	//drawer.Flush();
-	myColor = myColorManager->Get("commentDoxygen");
-	drawer.Text(myColor, 20,25 + Display::GetFontHeight(), "No Buffer Availlable to display");
-	drawer.Flush();
-	/*
-	myColor = myColorManager->Get(("SelectedText"));
-	drawer.Cursor(20, 50);
-	drawer.EndOfLine(20, 70);
-	drawer.Tabulation(myColor, 20, 90, 5);
-	drawer.UTF8UnknownElement(myColor, 20, 120, 3, false);
-	drawer.Flush();
-	*/
-	return ERR_NONE;
+	if (anchor.m_lineNumber == 0) {
+		// Clean Buffer
+		drawer.Clean(myColorManager->Get(COLOR_CODE_BASIC_BG) );
+		myColor = myColorManager->Get("normal");
+		drawer.Text(myColor, 20,20, "edn - Editeur De N'ours, l'Editeur Desoxyribo-Nucleique");
+	}
+	if (anchor.m_lineNumber == 1) {
+		myColor = myColorManager->Get("commentDoxygen");
+		drawer.Text(myColor, 20,25 + Display::GetFontHeight(), "No Buffer Availlable to display");
+	}
+	return;
 }
 
 
+
+
+bool BufferEmpty::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor, position_ts &size, int32_t sizePixelX, int32_t sizePixelY)
+{
+	int32_t localID = AnchorRealId(anchorID);
+	if (localID >=0) {
+		EDN_DEBUG("Request anchor");
+		size.x = sizePixelX / Display::GetFontWidth();
+		size.y = sizePixelY / Display::GetFontHeight();
+		anchor.m_nbIterationMax = 2;
+		anchor.m_lineNumber = m_AnchorList[localID].m_lineId;
+		anchor.m_posStart = -1;
+		anchor.m_posStop = -1;
+		anchor.m_selectionPosStart = -1;
+		anchor.m_selectionPosStop = -1;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+bool BufferEmpty::AnchorNext(bufferAnchor_ts & anchor)
+{
+	anchor.m_lineNumber++;
+	EDN_DEBUG("Anchor Next : " << anchor.m_lineNumber);
+	anchor.m_nbIterationMax--;
+	if (anchor.m_nbIterationMax<=0) {
+		return false;
+	}
+	return true;
+}
 

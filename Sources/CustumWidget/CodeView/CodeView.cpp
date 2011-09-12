@@ -38,14 +38,18 @@
 
 CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
 {
-	m_bufferID = -1;
-	m_buttunOneSelected = false;
-	m_shawableAreaX = 0;
-	m_shawableAreaY = 0;
-
 	// Init link with the buffer Manager
 	m_bufferManager = BufferManager::getInstance();
 	m_colorManager = ColorizeManager::getInstance();
+
+	static int32_t staticIntLocal = 100;
+	m_displayUniqueId = staticIntLocal++;
+
+	m_bufferID = -1;
+	m_bufferManager->Get(m_bufferID)->AnchorAdd(m_displayUniqueId);
+	m_buttunOneSelected = false;
+	m_shawableAreaX = 0;
+	m_shawableAreaY = 0;
 
 	m_widget = gtk_drawing_area_new();
 	gtk_widget_set_size_request( m_widget, 200, 100);
@@ -98,7 +102,9 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 	{
 		case EDN_MSG__CURRENT_CHANGE_BUFFER_ID:
 			//EDN_INFO("Select a new Buffer ... " << dataID);
+			m_bufferManager->Get(m_bufferID)->AnchorRm(m_displayUniqueId);
 			m_bufferID = dataID;
+			m_bufferManager->Get(m_bufferID)->AnchorAdd(m_displayUniqueId);
 			// request the dispplay of the curent Editor
 			SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
 			break;
@@ -187,6 +193,7 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 }
 
 
+//#define COUNT_TIME plop
 
 gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
@@ -225,13 +232,35 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 	myColorManager = ColorizeManager::getInstance();
 	
 	DrawerManager monDrawer(widget, self->m_shawableAreaX, self->m_shawableAreaY);
-	//EDN_INFO("Display buffer ID = " << m_bufferID);
-	(void)self->m_bufferManager->Get(self->m_bufferID)->Display(monDrawer);
+	Buffer * tmpBuf = self->m_bufferManager->Get(self->m_bufferID);
+
+	#ifdef COUNT_TIME
+		GTimeVal timeStart;
+		g_get_current_time(&timeStart);
+	#endif
+	bufferAnchor_ts anchor;
+	
+	bool enableToWrite = tmpBuf->AnchorGet(self->m_displayUniqueId, anchor, self->m_displaySize, self->m_shawableAreaX, self->m_shawableAreaY);
+	while (true == enableToWrite) {
+		tmpBuf->DrawLine(monDrawer, anchor, self->m_displayStart, self->m_displaySize);
+		enableToWrite = tmpBuf->AnchorNext(anchor);
+	}
+	monDrawer.Flush();
+	
+	// Need to clean the end of windows (sometimes)...
+	/*
+	if (iii<lineIdEnd+1) {
+		int32_t positionY = letterHeight * (iii - m_displayStart.y - 1);
+		drawer.Rectangle(myColorManager->Get(COLOR_CODE_BASIC_BG), 0, positionY, drawer.GetWidth(), letterHeight*(lineIdEnd+1-iii) );
+	}
+	*/
+	#ifdef COUNT_TIME
+		GTimeVal timeStop;
+		g_get_current_time(&timeStop);
+		EDN_DEBUG("Display Generation = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
+	#endif
 	return TRUE;
 }
-
-
-
 
 // sur : émis lors du premier affichage de la GtkDrawingArea
 gboolean CodeView::CB_displayInit( GtkWidget *widget, gpointer data)

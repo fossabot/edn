@@ -39,50 +39,45 @@ typedef enum {
 
 class BufferText : public Buffer {
 	public:
-		          BufferText(void);
-		          BufferText(Edn::File &fileName);
-		virtual  ~BufferText(void);
-		void      Save(void);
+		            BufferText(void);
+		            BufferText(Edn::File &fileName);
+		virtual    ~BufferText(void);
+		void        Save(void);
 		
-		void      GetInfo(infoStatBuffer_ts &infoToUpdate);
-		void      SetLineDisplay(uint32_t lineNumber);
+		void        GetInfo(infoStatBuffer_ts &infoToUpdate);
+		void        SetLineDisplay(uint32_t lineNumber);
 		
-		int32_t   Display(DrawerManager &drawer);
-		void      AddChar(char * UTF8data);
-		void      cursorMove(int32_t gtkKey);
-		void      MouseSelectFromCursorTo(int32_t width, int32_t height);
-		void      MouseEvent(int32_t width, int32_t height);
-		void      MouseEventDouble(void);
-		void      MouseEventTriple(void);
-		void      ScrollDown(void);
-		void      ScrollUp(void);
+		void        DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_ts &displayStart, position_ts &displaySize);
+		position_ts AddChar(char * UTF8data);
+		position_ts cursorMove(int32_t gtkKey);
+		position_ts MouseSelectFromCursorTo(int32_t width, int32_t height);
+		position_ts MouseEvent(int32_t width, int32_t height);
+		position_ts MouseEventDouble(void);
+		position_ts MouseEventTriple(void);
+		void        ScrollDown(void);
+		void        ScrollUp(void);
 
-		void      Copy(int8_t clipboardID);
-		void      Cut(int8_t clipboardID);
-		void      Paste(int8_t clipboardID);
+		void        Copy(int8_t clipboardID);
+		position_ts Cut(int8_t clipboardID);
+		position_ts Paste(int8_t clipboardID);
 
-		void      Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
-		void      Replace(Edn::String &data);
-		int32_t   FindLine(Edn::String &data);
-		void      JumpAtLine(int32_t newLine);
-		int32_t   GetCurrentLine(void);
+		position_ts Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
+		position_ts Replace(Edn::String &data);
+		int32_t     FindLine(Edn::String &data);
+		position_ts JumpAtLine(int32_t newLine);
+		int32_t     GetCurrentLine(void);
 		
-		void      RemoveLine(void);
-		void      SelectAll(void);
-		void      SelectNone(void);
-		void      Undo(void);
-		void      Redo(void);
-		void      SetCharset(charset_te newCharset);
+		position_ts RemoveLine(void);
+		position_ts SelectAll(void);
+		position_ts SelectNone(void);
+		position_ts Undo(void);
+		position_ts Redo(void);
+		void        SetCharset(charset_te newCharset);
+
+		bool        AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor, position_ts &size, int32_t sizePixelX, int32_t sizePixelY);
+		bool        AnchorNext(bufferAnchor_ts & anchor);
 	protected:
-		void      NameChange(void);
-
-	// anchor section
-	public:
-		void      AnchorAdd(int32_t anchorID);
-		void      AnchorRm(int32_t anchorID);
-		
-	private:
-		Edn::VectorType<BufferAnchor *> m_AnchorList;              //!< list of all line anchor in the current buffer
+		void        NameChange(void);
 
 	private:
 		// Display
@@ -92,9 +87,9 @@ class BufferText : public Buffer {
 		// Direct buffer IO
 		EdnBuf                  m_EdnBuf;                       //!< buffer associated on this displayer
 		
-		position_ts             m_displayStart;                 //!< position where the display is starting
-		position_ts             m_displaySize;                  //!< number of char displayable in the screan
-		int32_t                 m_displayStartBufferPos;        //!< position where the buffer start
+		//position_ts             m_displayStart;                 //!< position where the display is starting
+		//position_ts             m_displaySize;                  //!< number of char displayable in the screan
+		//int32_t                 m_displayStartBufferPos;        //!< position where the buffer start
 		
 		// Cursor :
 		int32_t                 m_cursorPos;                    //!< position in the buffer of the cursor
@@ -122,8 +117,7 @@ class BufferText : public Buffer {
 		void     MoveUpDown(int32_t ofset);
 		void     DrawLineNumber(DrawerManager &drawer, int32_t lineNumber);
 		void     UpdatePointerNumber(void);
-		void     DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos, int32_t selStartPos, int32_t selEndPos);
-		//void     DrawLine(DrawerManager &drawer, int32_t lineNumber, int32_t startPos, int32_t endPos, int32_t selStartPos, int32_t selEndPos);
+
 
 };
 

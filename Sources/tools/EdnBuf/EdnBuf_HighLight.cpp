@@ -286,6 +286,71 @@ colorInformation_ts *EdnBuf::GetElementColorAtPosition(int32_t pos, int32_t &sta
 	return NULL;
 }
 
+//#define COUNT_TIME plop
+
+void EdnBuf::HightlightOneLine(displayHLData_ts & MData, int32_t HLStart, int32_t HLStop)
+{
+	MData.posHLPass1 = 0;
+	MData.posHLPass2 = 0;
+	if (NULL == m_Highlight) {
+		return;
+	}
+	#ifdef COUNT_TIME
+		GTimeVal timeStart;
+		g_get_current_time(&timeStart);
+	#endif
+	int32_t startId, stopId;
+	// find element previous
+	FindMainHighLightPosition(HLStart, HLStop, startId, stopId, true);
+
+	int32_t k;
+	//EDN_DEBUG("List of section between : "<< startId << " & " << stopId);
+	int32_t endSearch = stopId+1;
+	if (-1 == stopId) {
+		endSearch = m_HLDataPass1.Size();
+	}
+	for (k=edn_max(startId, 0); k<endSearch; k++) {
+		// empty section :
+		if (0==k) {
+			if (HLStart < m_HLDataPass1[k].beginStart) {
+				//EDN_DEBUG("  ==> (empty section 1 ) k="<<k<<" start="<<HLStart<<" stop="<<m_HLDataPass1[k].beginStart );
+				m_Highlight->Parse2(HLStart,
+									m_HLDataPass1[k].beginStart,
+									MData.HLData,
+									m_data);
+			} // else : nothing to do ...
+		} else {
+			//EDN_DEBUG("  ==> (empty section 2 ) k="<<k<<" start="<<m_HLDataPass1[k-1].endStop<<" stop="<<m_HLDataPass1[k].beginStart );
+			m_Highlight->Parse2(m_HLDataPass1[k-1].endStop,
+								m_HLDataPass1[k].beginStart,
+								MData.HLData,
+								m_data);
+		}
+		// under section :
+		//EDN_DEBUG("  ==> (under section   ) k="<<k<<" start="<<m_HLDataPass1[k].beginStart<<" stop="<<m_HLDataPass1[k].endStop << " subSectionOfID=" << 99999999);
+		// TODO : ...
+	}
+	if (endSearch == (int32_t)m_HLDataPass1.Size() ){
+		if (m_HLDataPass1.Size() != 0) {
+			//EDN_DEBUG("  ==> (empty section 3 ) k="<<k<<" start="<<m_HLDataPass1[k-1].endStop<<" stop="<<HLStop );
+			m_Highlight->Parse2(m_HLDataPass1[k-1].endStop,
+								HLStop,
+								MData.HLData,
+								m_data);
+		} else {
+			//EDN_DEBUG("  ==> (empty section 4 ) k="<<k<<" start=0 stop="<<HLStop );
+			m_Highlight->Parse2(0,
+								HLStop,
+								MData.HLData,
+								m_data);
+		}
+	}
+	#ifdef COUNT_TIME
+		GTimeVal timeStop;
+		g_get_current_time(&timeStop);
+		EDN_DEBUG("Display reAnnalyse = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
+	#endif
+}
 
 
 void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, int32_t nbLines)
@@ -296,8 +361,8 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 		return;
 	}
 	if (MData.idSequence != m_HLDataSequence) {
-		//GTimeVal timeStart;
-		//g_get_current_time(&timeStart);
+		GTimeVal timeStart;
+		g_get_current_time(&timeStart);
 		MData.idSequence = m_HLDataSequence;
 		HLStart = StartOfLine(HLStart);
 		MData.HLData.Clear();
@@ -350,11 +415,10 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 			}
 		}
 		
-		//GTimeVal timeStop;
-		//g_get_current_time(&timeStop);
-		//EDN_DEBUG("Display reAnnalyse = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
+		GTimeVal timeStop;
+		g_get_current_time(&timeStop);
+		EDN_DEBUG("Display reAnnalyse = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
 	}
-
 }
 
 

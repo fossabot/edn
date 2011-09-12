@@ -30,16 +30,34 @@
 #include "Display.h"
 #include "charset.h"
 #include "Edn.h"
-#include "BufferAnchor.h"
+//#include "BufferAnchor.h"
 
-typedef struct{
-	uint32_t nbTotalLine;				//!< Number of line in the buffer
-	uint32_t nbTotalColomn;				//!< Number of line in the buffer
-	uint32_t startLineDisplay;			//!< First line display.
-	uint32_t startColomnDisplay;		//!< First Colomn displayed
-	uint32_t diplayableColomn;			//!< NB colomn that can be displayed
-	uint32_t diplayableLine;			//!< NB Line that can be displayed
-}infoStatBuffer_ts;
+extern "C"
+{
+	typedef struct{
+		uint32_t nbTotalLine;				//!< Number of line in the buffer
+		uint32_t nbTotalColomn;				//!< Number of line in the buffer
+		uint32_t startLineDisplay;			//!< First line display.
+		uint32_t startColomnDisplay;		//!< First Colomn displayed
+		uint32_t diplayableColomn;			//!< NB colomn that can be displayed
+		uint32_t diplayableLine;			//!< NB Line that can be displayed
+	}infoStatBuffer_ts;
+	
+	typedef struct {
+		int32_t      m_idAnchor;
+		int32_t      m_lineId;
+		int32_t      m_bufferPos;
+	} bufferAnchorReference_ts;
+	
+	typedef struct {
+		int32_t      m_lineNumber;
+		int32_t      m_nbIterationMax;
+		int32_t      m_posStart;
+		int32_t      m_posStop;
+		int32_t      m_selectionPosStart;
+		int32_t      m_selectionPosStop;
+	} bufferAnchor_ts;
+}
 
 
 class Buffer {
@@ -81,30 +99,33 @@ class Buffer {
 		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		virtual void      SetLineDisplay(uint32_t lineNumber);
 		
-		virtual int32_t   Display(DrawerManager &drawer);
-		virtual void      AddChar(char * UTF8data);
-		virtual void      cursorMove(int32_t gtkKey);
-		virtual void      MouseSelectFromCursorTo(int32_t width, int32_t height);
-		virtual void      MouseEvent(int32_t width, int32_t height);
-		virtual void      MouseEventDouble(void);
-		virtual void      MouseEventTriple(void);
-		virtual void      ScrollDown(void);
-		virtual void      ScrollUp(void);
-		virtual void      RemoveLine(void);
-		virtual void      SelectAll(void);
-		virtual void      SelectNone(void);
-		virtual void      Undo(void);
-		virtual void      Redo(void);
-		virtual void      SetCharset(charset_te newCharset) {};
+		virtual void        DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_ts &displayStart, position_ts &displaySize);
+		// return the new cursor position ...
+		virtual position_ts AddChar(char * UTF8data);
+		virtual position_ts cursorMove(int32_t gtkKey);
+		virtual position_ts MouseSelectFromCursorTo(int32_t width, int32_t height);
+		virtual position_ts MouseEvent(int32_t width, int32_t height);
+		virtual position_ts MouseEventDouble(void);
+		virtual position_ts MouseEventTriple(void);
+		virtual position_ts RemoveLine(void);
+		virtual position_ts SelectAll(void);
+		virtual position_ts SelectNone(void);
+		virtual position_ts Undo(void);
+		virtual position_ts Redo(void);
+		
+		virtual void        SetCharset(charset_te newCharset) {};
+		
+		virtual void        ScrollDown(void); // must be deprecated
+		virtual void        ScrollUp(void);   // must be deprecated
 
 		//virtual void	SelectAll(void);
-		virtual void      Copy(int8_t clipboardID);
-		virtual void      Cut(int8_t clipboardID);
-		virtual void      Paste(int8_t clipboardID);
-		virtual void      Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
-		virtual void      Replace(Edn::String &data);
+		virtual void        Copy(int8_t clipboardID);
+		virtual position_ts Cut(int8_t clipboardID);
+		virtual position_ts Paste(int8_t clipboardID);
+		virtual position_ts Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
+		virtual position_ts Replace(Edn::String &data);
 		virtual int32_t   FindLine(Edn::String &data);
-		virtual void      JumpAtLine(int32_t newLine);
+		virtual position_ts JumpAtLine(int32_t newLine);
 		virtual int32_t   GetCurrentLine(void);
 		
 	protected:
@@ -112,6 +133,18 @@ class Buffer {
 		// naming
 		Edn::File         m_fileName;             //!< filename of the curent buffer
 		bool              m_haveName;             //!< to know if the file have a name or NOT
+
+	// anchor section
+	public:
+		void              AnchorAdd(int32_t anchorID);
+		void              AnchorRm(int32_t anchorID);
+		virtual bool      AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor, position_ts &size, int32_t sizePixelX, int32_t sizePixelY);
+		virtual bool      AnchorNext(bufferAnchor_ts & anchor);
+		
+	protected:
+		int32_t           AnchorRealId(int32_t anchorID);
+		Edn::VectorType<bufferAnchorReference_ts> m_AnchorList;              //!< list of all line anchor in the current buffer
+
 };
 
 

@@ -164,7 +164,8 @@ class EdnBuf {
 		void                                    FindMainHighLightPosition(int32_t startPos, int32_t endPos, int32_t &startId, int32_t &stopId, bool backPreviousNotEnded);
 	public:
 		void                                    SetHLSystem(  Highlight * newHLSystem);
-		void                                    HightlightGenerateLines(displayHLData_ts & MData, int32_t startPos, int32_t nbLines);
+		void                                    HightlightOneLine(displayHLData_ts & MData, int32_t HLStart, int32_t HLStop);
+		void                                    HightlightGenerateLines(displayHLData_ts & MData, int32_t startPos, int32_t nbLines); // TODO : deprecated ...
 		colorInformation_ts *                   GetElementColorAtPosition(displayHLData_ts & MData, int32_t pos);
 	private:
 		colorInformation_ts *                   GetElementColorAtPosition(int32_t pos, int32_t &starPos);

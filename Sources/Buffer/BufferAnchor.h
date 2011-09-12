@@ -38,8 +38,8 @@ class BufferAnchor
 		~BufferAnchor(void);
 		MoveAnchor(int32_t offsetLine);
 		//BufModification(...);
-		DisplayUpdateFirstLine(void);
-		DisplayUpdateNextLine(void);
+		bool DisplayUpdateFirstLine(void);
+		bool DisplayUpdateNextLine(void);
 	private :
 		int32_t      m_lineId;
 		int32_t      m_bufferPos;

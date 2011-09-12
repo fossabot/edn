@@ -48,6 +48,12 @@ Buffer::Buffer()
 	mString += fileBasicID++;
 	SetFileName(mString);
 	m_haveName = false;
+	// Set basic anchor
+	bufferAnchorReference_ts tmpAnchor;
+	tmpAnchor.m_idAnchor = -1;
+	tmpAnchor.m_lineId = 0;
+	tmpAnchor.m_bufferPos = 0;
+	m_AnchorList .PushBack(tmpAnchor);
 }
 
 /**
@@ -62,6 +68,12 @@ Buffer::Buffer(Edn::File &newName)
 {
 	m_fileModify = false;
 	SetFileName(newName);
+	// Set basic anchor
+	bufferAnchorReference_ts tmpAnchor;
+	tmpAnchor.m_idAnchor = -1;
+	tmpAnchor.m_lineId = 0;
+	tmpAnchor.m_bufferPos = 0;
+	m_AnchorList .PushBack(tmpAnchor);
 }
 
 /**
@@ -146,10 +158,11 @@ void Buffer::SetLineDisplay(uint32_t lineNumber)
  * @return ---
  *
  */
-int32_t	Buffer::Display(DrawerManager &drawer)
+void Buffer::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_ts &displayStart, position_ts &displaySize)
 {
-	return ERR_NONE;
+	return;
 }
+
 
 /**
  * @brief
@@ -161,9 +174,10 @@ int32_t	Buffer::Display(DrawerManager &drawer)
  * @todo : Set the move up and DOWN...
  *
  */
-void Buffer::MouseSelectFromCursorTo(int32_t width, int32_t height)
+position_ts Buffer::MouseSelectFromCursorTo(int32_t width, int32_t height)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
 
@@ -176,9 +190,10 @@ void Buffer::MouseSelectFromCursorTo(int32_t width, int32_t height)
  * @return ---
  *
  */
-void Buffer::MouseEvent(int32_t width, int32_t height)
+position_ts Buffer::MouseEvent(int32_t width, int32_t height)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
 /**
@@ -189,9 +204,10 @@ void Buffer::MouseEvent(int32_t width, int32_t height)
  * @return ---
  *
  */
-void Buffer::MouseEventDouble(void)
+position_ts Buffer::MouseEventDouble(void)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
 /**
@@ -202,9 +218,10 @@ void Buffer::MouseEventDouble(void)
  * @return ---
  *
  */
-void Buffer::MouseEventTriple(void)
+position_ts Buffer::MouseEventTriple(void)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
 
@@ -243,9 +260,10 @@ void Buffer::ScrollUp(void)
  * @return ---
  *
  */
-void Buffer::cursorMove(int32_t gtkKey)
+position_ts Buffer::cursorMove(int32_t gtkKey)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
 /**
@@ -256,19 +274,22 @@ void Buffer::cursorMove(int32_t gtkKey)
  * @return ---
  *
  */
-void Buffer::AddChar(char * UTF8data)
+position_ts Buffer::AddChar(char * UTF8data)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
-void Buffer::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
+position_ts Buffer::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
-void Buffer::Replace(Edn::String &data)
+position_ts Buffer::Replace(Edn::String &data)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
 int32_t Buffer::FindLine(Edn::String &data)
@@ -277,9 +298,10 @@ int32_t Buffer::FindLine(Edn::String &data)
 	return 0;
 }
 
-void Buffer::JumpAtLine(int32_t newLine)
+position_ts Buffer::JumpAtLine(int32_t newLine)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
 
@@ -319,9 +341,10 @@ void Buffer::Copy(int8_t clipboardID)
  * @return ---
  *
  */
-void Buffer::Cut(int8_t clipboardID)
+position_ts Buffer::Cut(int8_t clipboardID)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
 
@@ -333,33 +356,98 @@ void Buffer::Cut(int8_t clipboardID)
  * @return ---
  *
  */
-void Buffer::Paste(int8_t clipboardID)
+position_ts Buffer::Paste(int8_t clipboardID)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
-void Buffer::RemoveLine(void)
+position_ts Buffer::RemoveLine(void)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
-void Buffer::SelectAll(void)
+position_ts Buffer::SelectAll(void)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
-void Buffer::SelectNone(void)
+position_ts Buffer::SelectNone(void)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
-void Buffer::Undo(void)
+position_ts Buffer::Undo(void)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
-void Buffer::Redo(void)
+position_ts Buffer::Redo(void)
 {
-	// nothing to do
+	position_ts tmp = {0,0};
+	return tmp;
 }
 
+
+void Buffer::AnchorAdd(int32_t anchorID)
+{
+	int32_t localID = AnchorRealId(anchorID);
+	if (localID >=0) {
+		EDN_ERROR("AnchorID="<< anchorID << " already exist !!!");
+	} else {
+		bufferAnchorReference_ts tmpAnchor = m_AnchorList[0];
+		tmpAnchor.m_idAnchor = anchorID;
+		m_AnchorList.PushBack(tmpAnchor);
+		EDN_DEBUG("AnchorID="<< anchorID << " ==> Added");
+	}
+}
+
+
+void Buffer::AnchorRm(int32_t anchorID)
+{
+	if (anchorID == -1) {
+		EDN_ERROR("AnchorID="<< anchorID << " Can not remove this one !!!");
+		return;
+	}
+	int32_t localID = AnchorRealId(anchorID);
+	if (localID >=0) {
+		if (m_AnchorList.Size() == 2) {
+			m_AnchorList[0] = m_AnchorList[1];
+		}
+		m_AnchorList.Erase(localID);
+		EDN_DEBUG("AnchorID="<< anchorID << " ==> Remove");
+	} else {
+		EDN_ERROR("AnchorID="<< anchorID << " does not exist !!!");
+	}
+}
+
+
+bool Buffer::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor, position_ts &size, int32_t sizePixelX, int32_t sizePixelY)
+{
+	EDN_ERROR("AnchorID="<< anchorID << " Main buffer ==> can not manage Anchor (type buffer specific)");
+	return false;
+}
+
+
+bool Buffer::AnchorNext(bufferAnchor_ts & anchor)
+{
+	EDN_ERROR("AnchorID=?? Main buffer ==> can not manage Anchor (type buffer specific)");
+	return false;
+}
+
+
+int32_t Buffer::AnchorRealId(int32_t anchorID)
+{
+	//EDN_DEBUG("Get real ID : " << anchorID << " in the anchor list size()=" << m_AnchorList.Size());
+	for(int32_t iii=0; iii < m_AnchorList.Size(); iii++) {
+		//EDN_DEBUG("check if equal : " << m_AnchorList[iii].m_idAnchor << " id=" << iii);
+		if (m_AnchorList[iii].m_idAnchor == anchorID) {
+			return iii;
+		}
+	}
+	return -1;
+}
