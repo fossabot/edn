@@ -165,8 +165,11 @@ void MainWindows::SetTitle(Edn::File &fileName, bool isModify)
 	}
 	tmp += "Edn";
 	gtk_window_set_title(GTK_WINDOW(m_mainWindow), tmp.c_str());
+	tmp = "  ";
 	if (fileName.GetShortFilename() != "") {
 		tmp = fileName.GetFolder();
+		tmp += "/";
+		tmp += fileName.GetShortFilename();
 	} else {
 		tmp = "Edn";
 	}
