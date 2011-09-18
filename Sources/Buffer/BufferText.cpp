@@ -52,9 +52,6 @@ extern "C"
  */
 void BufferText::BasicInit(void)
 {
-	// set the first element that is displayed
-	m_displayStartBufferPos = 0;
-	
 	// set the number of the lineNumber;
 	m_nbColoneForLineNumber = 1;
 	// init the link with the buffer manager
@@ -66,11 +63,9 @@ void BufferText::BasicInit(void)
 	m_cursorPos = 0;
 	m_cursorPreferredCol = -1;
 	m_cursorOn = true;
-	//m_cursorMode = CURSOR_DISPLAY_MODE_NORMAL;
-	m_displayStart.x = 0;
-	m_displayStart.y = 0;
-	m_displaySize.x = 200;
-	m_displaySize.y = 20;
+	
+	m_lineWidth = Display::GetFontWidth();
+	m_lineHeight = Display::GetFontHeight();
 }
 
 
@@ -231,10 +226,9 @@ void BufferText::SetLineDisplay(uint32_t lineNumber)
 
 
 
-void BufferText::DrawLineNumber(DrawerManager &drawer, int32_t lineNumber)
+void BufferText::DrawLineNumber(DrawerManager &drawer, int32_t lineNumber, int32_t positionY)
 {
 	int32_t letterHeight = Display::GetFontHeight();
-	int32_t positionY = letterHeight * (lineNumber - m_displayStart.y - 1);
 	char tmpLineNumber[50];
 	sprintf(tmpLineNumber, g_pointerForTheDisplayLine[m_nbColoneForLineNumber-1], lineNumber);
 	drawer.Text(myColorManager->Get(COLOR_CODE_LINE_NUMBER), 1, positionY, tmpLineNumber);
@@ -267,12 +261,16 @@ void BufferText::UpdatePointerNumber(void)
 }
 
 
-void BufferText::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_ts &displayStart, position_ts &displaySize)
+void BufferText::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor)
 {
+	// TODO : Avec ca ca ne peux pas marcher...
+	position_ts displayStart;
+	position_ts displaySize;
+
 	int32_t letterHeight = Display::GetFontHeight();
 	int32_t letterWidth = Display::GetFontWidth();
 	int32_t positionY = letterHeight * (anchor.m_lineNumber - displayStart.y - 1);
-	
+
 	int32_t idX = 0;
 	int32_t pixelX = m_nbColoneForLineNumber*letterWidth + 3;
 
@@ -288,7 +286,7 @@ void BufferText::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, positi
 	// clean the current Line
 	drawer.Rectangle(myColorManager->Get(COLOR_CODE_BASIC_BG), 0, positionY, drawer.GetWidth(), letterHeight);
 	
-	DrawLineNumber(drawer, anchor.m_lineNumber);
+	DrawLineNumber(drawer, anchor.m_lineNumber, positionY);
 	
 	bool selHave = anchor.m_selectionPosStart == -1 ? false : true;
 	char displayChar[MAX_EXP_CHAR_LEN];
@@ -402,8 +400,9 @@ void BufferText::GetMousePosition(int32_t width, int32_t height, int32_t &x, int
 	if (x < 0) {
 		x = 0;
 	}
-	x += m_displayStart.x;
-	y += m_displayStart.y;
+// TODO : REWORK
+	//x += m_displayStart.x;
+	//y += m_displayStart.y;
 	//EDN_DEBUG("BufferText::GetMousePosition(" << width << "," << height << "); ==> (" << x << "," << y << ")" );
 }
 
@@ -582,6 +581,8 @@ void BufferText::ScrollUp(void)
  */
 void BufferText::MoveUpDown(int32_t ofset)
 {
+	// TODO : REWORK
+	/*
 	if (ofset >= 0) {
 		int32_t nbLine = m_EdnBuf.NumberOfLines();
 		if (m_displayStart.y+ofset+3 > nbLine) {
@@ -600,7 +601,7 @@ void BufferText::MoveUpDown(int32_t ofset)
 			m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
 		}
 	}
-	
+	*/
 }
 
 
@@ -786,7 +787,8 @@ void BufferText::cursorMove(int32_t gtkKey)
 		case GDK_Page_Up:
 #		endif
 			//EDN_INFO("keyEvent : <PAGE-UP>");
-			TextDMoveUp(m_displaySize.x);
+			// TODO : REWORK
+			//TextDMoveUp(m_displaySize.x);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Page_Down:
@@ -794,7 +796,8 @@ void BufferText::cursorMove(int32_t gtkKey)
 		case GDK_Page_Down:
 #		endif
 			//EDN_INFO("keyEvent : <PAGE-DOWN>");
-			TextDMoveDown(m_displaySize.x);
+			// TODO : REWORK
+			//TextDMoveDown(m_displaySize.x);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Begin:
@@ -833,6 +836,8 @@ void BufferText::cursorMove(int32_t gtkKey)
  */
 void BufferText::UpdateWindowsPosition(bool centerPage)
 {
+	// TODO : REWORK
+	/*
 	if (centerPage == false) {
 		// Display position (Y mode):
 		//EDN_INFO("BufferText::UpdateWindowsPosition() m_displayStart(" << m_displayStart.x << "," << m_displayStart.y << ") m_displaySize(" << m_displaySize.x << "," <<m_displaySize.y << ")");
@@ -875,11 +880,11 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 		//EDN_DEBUG(" display size : " << m_displaySize.y);
 		m_displayStart.y = cursorPosition.y - m_displaySize.y/2;
 		m_displayStart.y = edn_max(m_displayStart.y, 0);
-		
 		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
 		//EDN_DEBUG(" display start : " << m_displayStart.x << "x" << m_displayStart.y);
 		//EDN_DEBUG(" -------------------------------------------------");
 	}
+	*/
 }
 
 
@@ -891,9 +896,8 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
  * @return ---
  *
  */
-position_ts BufferText::AddChar(char * UTF8data)
+void BufferText::AddChar(char * UTF8data)
 {
-	position_ts tmp = {0,0};
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
@@ -1037,9 +1041,8 @@ int32_t BufferText::FindLine(Edn::String &data)
 	}
 }
 
-position_ts BufferText::JumpAtLine(int32_t newLine)
+void BufferText::JumpAtLine(int32_t newLine)
 {
-	position_ts tmp = {0,0};
 	int32_t positionLine = m_EdnBuf.CountForwardNLines(0, newLine);
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
 	EDN_DEBUG("jump at the line : " << newLine );
@@ -1062,9 +1065,8 @@ int32_t BufferText::GetCurrentLine(void)
 
 
 
-position_ts BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
+void BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
 {
-	position_ts tmp = {0,0};
 	EDN_INFO("Search data : \"" << data << "\"");
 	
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
@@ -1151,9 +1153,8 @@ position_ts BufferText::Search(Edn::String &data, bool back, bool caseSensitive,
 }
 
 
-position_ts BufferText::Replace(Edn::String &data)
+void BufferText::Replace(Edn::String &data)
 {
-	position_ts tmp = {0,0};
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
@@ -1195,10 +1196,8 @@ void BufferText::Copy(int8_t clipboardID)
  * @return ---
  *
  */
-position_ts BufferText::Cut(int8_t clipboardID)
+void BufferText::Cut(int8_t clipboardID)
 {
-	position_ts tmp = {0,0};
-
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
@@ -1224,9 +1223,8 @@ position_ts BufferText::Cut(int8_t clipboardID)
  * @return ---
  *
  */
-position_ts BufferText::Paste(int8_t clipboardID)
+void BufferText::Paste(int8_t clipboardID)
 {
-	position_ts tmp = {0,0};
 	Edn::VectorType<int8_t> mVect;
 	// copy data from the click board : 
 	ClipBoard::Get(clipboardID, mVect);
@@ -1250,9 +1248,8 @@ position_ts BufferText::Paste(int8_t clipboardID)
 }
 
 
-position_ts BufferText::Undo(void)
+void BufferText::Undo(void)
 {
-	position_ts tmp = {0,0};
 	int32_t newPos = m_EdnBuf.Undo();
 	if (newPos >= 0) {
 		SetInsertPosition(newPos, true);
@@ -1261,9 +1258,8 @@ position_ts BufferText::Undo(void)
 	}
 }
 
-position_ts BufferText::Redo(void)
+void BufferText::Redo(void)
 {
-	position_ts tmp = {0,0};
 	int32_t newPos = m_EdnBuf.Redo();
 	if (newPos >= 0) {
 		SetInsertPosition(newPos, true);
@@ -1279,16 +1275,19 @@ void BufferText::SetCharset(charset_te newCharset)
 }
 
 
-bool BufferText::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor, position_ts &size, int32_t sizePixelX, int32_t sizePixelY)
+bool BufferText::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor)
 {
 	int32_t localID = AnchorRealId(anchorID);
 	if (localID >=0) {
 		// update internal sise of the width of lineID
 		UpdatePointerNumber();
 		// Updata uper size of display
-		size.x = sizePixelX / Display::GetFontWidth();
-		size.y = sizePixelY / Display::GetFontHeight();
-		anchor.m_nbIterationMax = size.y;
+		anchor.m_displaySize.x = m_AnchorList[localID].m_displaySize.x;
+		anchor.m_displaySize.y = m_AnchorList[localID].m_displaySize.y;
+		anchor.m_displayStart.x = m_AnchorList[localID].m_displayStart.x;
+		anchor.m_displayStart.y = m_AnchorList[localID].m_displayStart.y;
+		// TODO : Test de display non complet...
+		anchor.m_nbIterationMax = anchor.m_displaySize.y - 4;
 		// update to buffer position
 		anchor.m_lineNumber = m_AnchorList[localID].m_lineId;
 		anchor.m_posStart = m_AnchorList[localID].m_bufferPos;

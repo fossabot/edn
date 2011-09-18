@@ -42,7 +42,8 @@
  */
 BufferEmpty::BufferEmpty()
 {
-
+	m_lineWidth = Display::GetFontWidth();
+	m_lineHeight = Display::GetFontHeight();
 }
 
 /**
@@ -67,7 +68,7 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
-void BufferEmpty::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_ts &displayStart, position_ts &displaySize)
+void BufferEmpty::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor)
 {
 	EDN_DEBUG("Request draw : " << anchor.m_lineNumber);
 	ColorizeManager * myColorManager = ColorizeManager::getInstance();
@@ -89,13 +90,15 @@ void BufferEmpty::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, posit
 
 
 
-bool BufferEmpty::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor, position_ts &size, int32_t sizePixelX, int32_t sizePixelY)
+bool BufferEmpty::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor)
 {
 	int32_t localID = AnchorRealId(anchorID);
 	if (localID >=0) {
 		EDN_DEBUG("Request anchor");
-		size.x = sizePixelX / Display::GetFontWidth();
-		size.y = sizePixelY / Display::GetFontHeight();
+		anchor.m_displaySize.x = m_AnchorList[localID].m_displaySize.x;
+		anchor.m_displaySize.y = m_AnchorList[localID].m_displaySize.y;
+		anchor.m_displayStart.x = m_AnchorList[localID].m_displayStart.x;
+		anchor.m_displayStart.y = m_AnchorList[localID].m_displayStart.y;
 		anchor.m_nbIterationMax = 2;
 		anchor.m_lineNumber = m_AnchorList[localID].m_lineId;
 		anchor.m_posStart = -1;

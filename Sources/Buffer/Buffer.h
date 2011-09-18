@@ -44,18 +44,23 @@ extern "C"
 	}infoStatBuffer_ts;
 	
 	typedef struct {
-		int32_t      m_idAnchor;
-		int32_t      m_lineId;
-		int32_t      m_bufferPos;
+		int32_t      m_idAnchor;     //!< reference id of the anchor (real id of the upper displayer of CodeView)
+		bool         m_curent;       //!< set at true if the anchor is a reference with the curent display
+		int32_t      m_lineId;       //!< first line ID to display
+		int32_t      m_bufferPos;    //!< position of the first lineId
+		position_ts  m_displayStart; //!< start display position
+		position_ts  m_displaySize;  //!< size of the curent display
 	} bufferAnchorReference_ts;
 	
 	typedef struct {
-		int32_t      m_lineNumber;
-		int32_t      m_nbIterationMax;
-		int32_t      m_posStart;
-		int32_t      m_posStop;
-		int32_t      m_selectionPosStart;
-		int32_t      m_selectionPosStop;
+		position_ts  m_displayStart;       //!< start display position
+		position_ts  m_displaySize;        //!< size of the curent display
+		int32_t      m_lineNumber;         //!< current line-number id
+		int32_t      m_nbIterationMax;     //!< number of cycle needed to end the dispalay
+		int32_t      m_posStart;           //!< position of the start of the line
+		int32_t      m_posStop;            //!< position of the end of the line
+		int32_t      m_selectionPosStart;  //!< position of the selection start
+		int32_t      m_selectionPosStop;   //!< position of the selection stop
 	} bufferAnchor_ts;
 }
 
@@ -99,19 +104,19 @@ class Buffer {
 		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		virtual void      SetLineDisplay(uint32_t lineNumber);
 		
-		virtual void        DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_ts &displayStart, position_ts &displaySize);
+		virtual void        DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor);
 		// return the new cursor position ...
-		virtual position_ts AddChar(char * UTF8data);
-		virtual position_ts cursorMove(int32_t gtkKey);
-		virtual position_ts MouseSelectFromCursorTo(int32_t width, int32_t height);
-		virtual position_ts MouseEvent(int32_t width, int32_t height);
-		virtual position_ts MouseEventDouble(void);
-		virtual position_ts MouseEventTriple(void);
-		virtual position_ts RemoveLine(void);
-		virtual position_ts SelectAll(void);
-		virtual position_ts SelectNone(void);
-		virtual position_ts Undo(void);
-		virtual position_ts Redo(void);
+		virtual void        AddChar(char * UTF8data);
+		virtual void        cursorMove(int32_t gtkKey);
+		virtual void        MouseSelectFromCursorTo(int32_t width, int32_t height);
+		virtual void        MouseEvent(int32_t width, int32_t height);
+		virtual void        MouseEventDouble(void);
+		virtual void        MouseEventTriple(void);
+		virtual void        RemoveLine(void);
+		virtual void        SelectAll(void);
+		virtual void        SelectNone(void);
+		virtual void        Undo(void);
+		virtual void        Redo(void);
 		
 		virtual void        SetCharset(charset_te newCharset) {};
 		
@@ -120,12 +125,12 @@ class Buffer {
 
 		//virtual void	SelectAll(void);
 		virtual void        Copy(int8_t clipboardID);
-		virtual position_ts Cut(int8_t clipboardID);
-		virtual position_ts Paste(int8_t clipboardID);
-		virtual position_ts Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
-		virtual position_ts Replace(Edn::String &data);
+		virtual void        Cut(int8_t clipboardID);
+		virtual void        Paste(int8_t clipboardID);
+		virtual void        Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
+		virtual void        Replace(Edn::String &data);
 		virtual int32_t   FindLine(Edn::String &data);
-		virtual position_ts JumpAtLine(int32_t newLine);
+		virtual void        JumpAtLine(int32_t newLine);
 		virtual int32_t   GetCurrentLine(void);
 		
 	protected:
@@ -138,10 +143,14 @@ class Buffer {
 	public:
 		void              AnchorAdd(int32_t anchorID);
 		void              AnchorRm(int32_t anchorID);
-		virtual bool      AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor, position_ts &size, int32_t sizePixelX, int32_t sizePixelY);
+		virtual bool      AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor);
 		virtual bool      AnchorNext(bufferAnchor_ts & anchor);
+		void              AnchorSetSize(int32_t anchorID, int32_t sizePixelX, int32_t sizePixelY);
+		void              AnchorSetStartOffset(int32_t anchorID, int32_t offsetX, int32_t offsetY);
 		
 	protected:
+		int32_t           m_lineWidth;
+		int32_t           m_lineHeight;
 		int32_t           AnchorRealId(int32_t anchorID);
 		Edn::VectorType<bufferAnchorReference_ts> m_AnchorList;              //!< list of all line anchor in the current buffer
 

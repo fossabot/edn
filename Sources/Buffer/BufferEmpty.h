@@ -32,8 +32,8 @@ class BufferEmpty : public Buffer {
 	public:
 		BufferEmpty(void);
 		virtual ~BufferEmpty(void);
-		void    DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_ts &displayStart, position_ts &displaySize);
-		bool    AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor, position_ts &size, int32_t sizePixelX, int32_t sizePixelY);
+		void    DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor);
+		bool    AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor);
 		bool    AnchorNext(bufferAnchor_ts & anchor);
 		
 };

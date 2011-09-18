@@ -240,9 +240,10 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 	#endif
 	bufferAnchor_ts anchor;
 	
-	bool enableToWrite = tmpBuf->AnchorGet(self->m_displayUniqueId, anchor, self->m_displaySize, self->m_shawableAreaX, self->m_shawableAreaY);
+	tmpBuf->AnchorSetSize(self->m_displayUniqueId, self->m_shawableAreaX, self->m_shawableAreaY);
+	bool enableToWrite = tmpBuf->AnchorGet(self->m_displayUniqueId, anchor);
 	while (true == enableToWrite) {
-		tmpBuf->DrawLine(monDrawer, anchor, self->m_displayStart, self->m_displaySize);
+		tmpBuf->DrawLine(monDrawer, anchor);
 		enableToWrite = tmpBuf->AnchorNext(anchor);
 	}
 	monDrawer.Flush();

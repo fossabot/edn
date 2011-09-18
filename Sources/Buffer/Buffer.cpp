@@ -53,7 +53,10 @@ Buffer::Buffer()
 	tmpAnchor.m_idAnchor = -1;
 	tmpAnchor.m_lineId = 0;
 	tmpAnchor.m_bufferPos = 0;
-	m_AnchorList .PushBack(tmpAnchor);
+	m_AnchorList.PushBack(tmpAnchor);
+	
+	m_lineWidth = 10;
+	m_lineHeight = 10;
 }
 
 /**
@@ -158,7 +161,7 @@ void Buffer::SetLineDisplay(uint32_t lineNumber)
  * @return ---
  *
  */
-void Buffer::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_ts &displayStart, position_ts &displaySize)
+void Buffer::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor)
 {
 	return;
 }
@@ -174,10 +177,9 @@ void Buffer::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor, position_t
  * @todo : Set the move up and DOWN...
  *
  */
-position_ts Buffer::MouseSelectFromCursorTo(int32_t width, int32_t height)
+void Buffer::MouseSelectFromCursorTo(int32_t width, int32_t height)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
 
@@ -190,10 +192,9 @@ position_ts Buffer::MouseSelectFromCursorTo(int32_t width, int32_t height)
  * @return ---
  *
  */
-position_ts Buffer::MouseEvent(int32_t width, int32_t height)
+void Buffer::MouseEvent(int32_t width, int32_t height)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
 /**
@@ -204,10 +205,9 @@ position_ts Buffer::MouseEvent(int32_t width, int32_t height)
  * @return ---
  *
  */
-position_ts Buffer::MouseEventDouble(void)
+void Buffer::MouseEventDouble(void)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
 /**
@@ -218,10 +218,9 @@ position_ts Buffer::MouseEventDouble(void)
  * @return ---
  *
  */
-position_ts Buffer::MouseEventTriple(void)
+void Buffer::MouseEventTriple(void)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
 
@@ -260,10 +259,9 @@ void Buffer::ScrollUp(void)
  * @return ---
  *
  */
-position_ts Buffer::cursorMove(int32_t gtkKey)
+void Buffer::cursorMove(int32_t gtkKey)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
 /**
@@ -274,22 +272,19 @@ position_ts Buffer::cursorMove(int32_t gtkKey)
  * @return ---
  *
  */
-position_ts Buffer::AddChar(char * UTF8data)
+void Buffer::AddChar(char * UTF8data)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
-position_ts Buffer::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
+void Buffer::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
-position_ts Buffer::Replace(Edn::String &data)
+void Buffer::Replace(Edn::String &data)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
 int32_t Buffer::FindLine(Edn::String &data)
@@ -298,10 +293,9 @@ int32_t Buffer::FindLine(Edn::String &data)
 	return 0;
 }
 
-position_ts Buffer::JumpAtLine(int32_t newLine)
+void Buffer::JumpAtLine(int32_t newLine)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
 
@@ -341,10 +335,9 @@ void Buffer::Copy(int8_t clipboardID)
  * @return ---
  *
  */
-position_ts Buffer::Cut(int8_t clipboardID)
+void Buffer::Cut(int8_t clipboardID)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
 
@@ -356,40 +349,34 @@ position_ts Buffer::Cut(int8_t clipboardID)
  * @return ---
  *
  */
-position_ts Buffer::Paste(int8_t clipboardID)
+void Buffer::Paste(int8_t clipboardID)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
-position_ts Buffer::RemoveLine(void)
+void Buffer::RemoveLine(void)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do;
 }
 
-position_ts Buffer::SelectAll(void)
+void Buffer::SelectAll(void)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
-position_ts Buffer::SelectNone(void)
+void Buffer::SelectNone(void)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
-position_ts Buffer::Undo(void)
+void Buffer::Undo(void)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
-position_ts Buffer::Redo(void)
+void Buffer::Redo(void)
 {
-	position_ts tmp = {0,0};
-	return tmp;
+	// nothing to do
 }
 
 
@@ -426,7 +413,7 @@ void Buffer::AnchorRm(int32_t anchorID)
 }
 
 
-bool Buffer::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor, position_ts &size, int32_t sizePixelX, int32_t sizePixelY)
+bool Buffer::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor)
 {
 	EDN_ERROR("AnchorID="<< anchorID << " Main buffer ==> can not manage Anchor (type buffer specific)");
 	return false;
@@ -437,6 +424,32 @@ bool Buffer::AnchorNext(bufferAnchor_ts & anchor)
 {
 	EDN_ERROR("AnchorID=?? Main buffer ==> can not manage Anchor (type buffer specific)");
 	return false;
+}
+
+
+void Buffer::AnchorSetSize(int32_t anchorID, int32_t sizePixelX, int32_t sizePixelY)
+{
+	int32_t localID = AnchorRealId(anchorID);
+	if (localID >=0) {
+		m_AnchorList[localID].m_displaySize.x = sizePixelX / m_lineWidth;
+		m_AnchorList[localID].m_displaySize.y = sizePixelY / m_lineHeight;
+	}
+}
+
+
+void Buffer::AnchorSetStartOffset(int32_t anchorID, int32_t offsetX, int32_t offsetY)
+{
+	int32_t localID = AnchorRealId(anchorID);
+	if (localID >=0) {
+		m_AnchorList[localID].m_displayStart.x += offsetX;
+		if (0<m_AnchorList[localID].m_displayStart.x) {
+			m_AnchorList[localID].m_displayStart.x = 0;
+		}
+		m_AnchorList[localID].m_displayStart.y += offsetY;
+		if (0<m_AnchorList[localID].m_displayStart.y) {
+			m_AnchorList[localID].m_displayStart.y = 0;
+		}
+	}
 }
 
 
