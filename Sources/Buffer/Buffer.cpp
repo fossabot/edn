@@ -41,6 +41,8 @@
  */
 Buffer::Buffer()
 {
+	static int32_t bufID = 0;
+	m_uniqueID = bufID++;
 	static int32_t fileBasicID = 0;
 	m_fileModify = true;
 	m_haveName = false;
@@ -50,6 +52,10 @@ Buffer::Buffer()
 	m_haveName = false;
 	// Set basic anchor
 	bufferAnchorReference_ts tmpAnchor;
+	tmpAnchor.m_displaySize.x = 0;
+	tmpAnchor.m_displaySize.y = 0;
+	tmpAnchor.m_displayStart.x = 0;
+	tmpAnchor.m_curent = true;
 	tmpAnchor.m_idAnchor = -1;
 	tmpAnchor.m_lineId = 0;
 	tmpAnchor.m_bufferPos = 0;
@@ -73,6 +79,10 @@ Buffer::Buffer(Edn::File &newName)
 	SetFileName(newName);
 	// Set basic anchor
 	bufferAnchorReference_ts tmpAnchor;
+	tmpAnchor.m_displaySize.x = 0;
+	tmpAnchor.m_displaySize.y = 0;
+	tmpAnchor.m_displayStart.x = 0;
+	tmpAnchor.m_curent = true;
 	tmpAnchor.m_idAnchor = -1;
 	tmpAnchor.m_lineId = 0;
 	tmpAnchor.m_bufferPos = 0;
@@ -384,12 +394,13 @@ void Buffer::AnchorAdd(int32_t anchorID)
 {
 	int32_t localID = AnchorRealId(anchorID);
 	if (localID >=0) {
-		EDN_ERROR("AnchorID="<< anchorID << " already exist !!!");
+		EDN_ERROR("[" << m_uniqueID << "] AnchorID="<< anchorID << " already exist !!!");
 	} else {
 		bufferAnchorReference_ts tmpAnchor = m_AnchorList[0];
+		m_AnchorList[0].m_curent = false;
 		tmpAnchor.m_idAnchor = anchorID;
 		m_AnchorList.PushBack(tmpAnchor);
-		EDN_DEBUG("AnchorID="<< anchorID << " ==> Added");
+		EDN_DEBUG("[" << m_uniqueID << "] AnchorID="<< anchorID << " ==> Added");
 	}
 }
 
@@ -397,7 +408,7 @@ void Buffer::AnchorAdd(int32_t anchorID)
 void Buffer::AnchorRm(int32_t anchorID)
 {
 	if (anchorID == -1) {
-		EDN_ERROR("AnchorID="<< anchorID << " Can not remove this one !!!");
+		EDN_ERROR("[" << m_uniqueID << "] AnchorID="<< anchorID << " Can not remove this one !!!");
 		return;
 	}
 	int32_t localID = AnchorRealId(anchorID);
@@ -406,23 +417,23 @@ void Buffer::AnchorRm(int32_t anchorID)
 			m_AnchorList[0] = m_AnchorList[1];
 		}
 		m_AnchorList.Erase(localID);
-		EDN_DEBUG("AnchorID="<< anchorID << " ==> Remove");
+		EDN_DEBUG("[" << m_uniqueID << "] AnchorID="<< anchorID << " ==> Remove");
 	} else {
-		EDN_ERROR("AnchorID="<< anchorID << " does not exist !!!");
+		EDN_ERROR("[" << m_uniqueID << "] AnchorID="<< anchorID << " does not exist !!!");
 	}
 }
 
 
 bool Buffer::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor)
 {
-	EDN_ERROR("AnchorID="<< anchorID << " Main buffer ==> can not manage Anchor (type buffer specific)");
+	EDN_ERROR("[" << m_uniqueID << "] AnchorID="<< anchorID << " Main buffer ==> can not manage Anchor (type buffer specific)");
 	return false;
 }
 
 
 bool Buffer::AnchorNext(bufferAnchor_ts & anchor)
 {
-	EDN_ERROR("AnchorID=?? Main buffer ==> can not manage Anchor (type buffer specific)");
+	EDN_ERROR("[" << m_uniqueID << "] AnchorID=?? Main buffer ==> can not manage Anchor (type buffer specific)");
 	return false;
 }
 

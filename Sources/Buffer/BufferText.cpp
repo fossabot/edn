@@ -263,13 +263,10 @@ void BufferText::UpdatePointerNumber(void)
 
 void BufferText::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor)
 {
-	// TODO : Avec ca ca ne peux pas marcher...
-	position_ts displayStart;
-	position_ts displaySize;
 
 	int32_t letterHeight = Display::GetFontHeight();
 	int32_t letterWidth = Display::GetFontWidth();
-	int32_t positionY = letterHeight * (anchor.m_lineNumber - displayStart.y - 1);
+	int32_t positionY = letterHeight * (anchor.m_lineNumber - anchor.m_displayStart.y - 1);
 
 	int32_t idX = 0;
 	int32_t pixelX = m_nbColoneForLineNumber*letterWidth + 3;
@@ -301,13 +298,13 @@ void BufferText::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor)
 		int32_t widthToDisplay;
 		char * tmpDisplayOfset;
 		bool inTheScreen = true;
-		if (displayStart.x <= idX) {
+		if (anchor.m_displayStart.x <= idX) {
 			// Normal display
 			tmpDisplayOfset = displayChar;
 			widthToDisplay = displaywidth;
-		} else if (displayStart.x < idX + displaywidth) {
+		} else if (anchor.m_displayStart.x < idX + displaywidth) {
 			// special case of partial display : 
-			widthToDisplay = idX + displaywidth - displayStart.x;
+			widthToDisplay = idX + displaywidth - anchor.m_displayStart.x;
 			tmpDisplayOfset = displayChar + (displaywidth-widthToDisplay);
 		} else {
 			// Out of range ...
@@ -581,27 +578,31 @@ void BufferText::ScrollUp(void)
  */
 void BufferText::MoveUpDown(int32_t ofset)
 {
-	// TODO : REWORK
-	/*
-	if (ofset >= 0) {
-		int32_t nbLine = m_EdnBuf.NumberOfLines();
-		if (m_displayStart.y+ofset+3 > nbLine) {
-			m_displayStart.y = nbLine-3;
-		} else {
-			m_displayStart.y += ofset;
-		}
-		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
-	} else {
-		ofset *= -1;
-		if (m_displayStart.y < ofset) {
-			m_displayStart.y = 0;
-			m_displayStartBufferPos = 0;
-		} else {
-			m_displayStart.y -= ofset;
-			m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
+	for (int32_t iii=0; iii < m_AnchorList.Size() ; iii++) {
+		if (true == m_AnchorList[iii].m_curent) {
+			if (ofset >= 0) {
+				int32_t nbLine = m_EdnBuf.NumberOfLines();
+				if (m_AnchorList[iii].m_displayStart.y+ofset+3 > nbLine) {
+					m_AnchorList[iii].m_displayStart.y = nbLine-3;
+				} else {
+					m_AnchorList[iii].m_displayStart.y += ofset;
+				}
+				m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
+				m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
+			} else {
+				ofset *= -1;
+				if (m_AnchorList[iii].m_displayStart.y < ofset) {
+					m_AnchorList[iii].m_displayStart.y = 0;
+					m_AnchorList[iii].m_bufferPos = 0;
+					m_AnchorList[iii].m_lineId = 0;
+				} else {
+					m_AnchorList[iii].m_displayStart.y -= ofset;
+					m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
+					m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
+				}
+			}
 		}
 	}
-	*/
 }
 
 
@@ -788,7 +789,7 @@ void BufferText::cursorMove(int32_t gtkKey)
 #		endif
 			//EDN_INFO("keyEvent : <PAGE-UP>");
 			// TODO : REWORK
-			//TextDMoveUp(m_displaySize.x);
+			TextDMoveUp(m_AnchorList[1].m_displaySize.x);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Page_Down:
@@ -797,7 +798,7 @@ void BufferText::cursorMove(int32_t gtkKey)
 #		endif
 			//EDN_INFO("keyEvent : <PAGE-DOWN>");
 			// TODO : REWORK
-			//TextDMoveDown(m_displaySize.x);
+			TextDMoveDown(m_AnchorList[1].m_displaySize.x);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Begin:
@@ -836,55 +837,56 @@ void BufferText::cursorMove(int32_t gtkKey)
  */
 void BufferText::UpdateWindowsPosition(bool centerPage)
 {
-	// TODO : REWORK
-	/*
-	if (centerPage == false) {
-		// Display position (Y mode):
-		//EDN_INFO("BufferText::UpdateWindowsPosition() m_displayStart(" << m_displayStart.x << "," << m_displayStart.y << ") m_displaySize(" << m_displaySize.x << "," <<m_displaySize.y << ")");
-		position_ts cursorPosition;
-		cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
-		int32_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
-		cursorPosition.x = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
-		//EDN_INFO("BufferText::UpdateWindowsPosition() curent cursor position : (" << cursorPosition.x << "," << cursorPosition.y << ")");
-		
-		if (m_displayStart.y > (int32_t)cursorPosition.y - globals::getNbLineBorder() ) {
-			m_displayStart.y = cursorPosition.y - globals::getNbLineBorder();
-			if (m_displayStart.y < 0) {
-				m_displayStart.y = 0;
+	for (int32_t iii=0; iii < m_AnchorList.Size() ; iii++) {
+		if (centerPage == false) {
+			// Display position (Y mode):
+			//EDN_INFO(" m_displayStart(" << m_displayStart.x << "," << m_displayStart.y << ") m_displaySize(" << m_displaySize.x << "," <<m_displaySize.y << ")");
+			position_ts cursorPosition;
+			cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
+			int32_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
+			cursorPosition.x = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
+			//EDN_INFO(" curent cursor position : (" << cursorPosition.x << "," << cursorPosition.y << ")");
+			
+			if (m_AnchorList[iii].m_displayStart.y > (int32_t)cursorPosition.y - globals::getNbLineBorder() ) {
+				m_AnchorList[iii].m_displayStart.y = cursorPosition.y - globals::getNbLineBorder();
+				if (m_AnchorList[iii].m_displayStart.y < 0) {
+					m_AnchorList[iii].m_displayStart.y = 0;
+				}
+			} else if (m_AnchorList[iii].m_displayStart.y + m_AnchorList[iii].m_displaySize.y <= (int32_t)cursorPosition.y + globals::getNbLineBorder() ) {
+				m_AnchorList[iii].m_displayStart.y = cursorPosition.y - m_AnchorList[iii].m_displaySize.y + globals::getNbLineBorder() + 1;
 			}
-		} else if (m_displayStart.y + m_displaySize.y <= (int32_t)cursorPosition.y + globals::getNbLineBorder() ) {
-			m_displayStart.y = cursorPosition.y - m_displaySize.y + globals::getNbLineBorder() + 1;
-		}
-		// Display position (X mode):
-		//EDN_INFO("cursorPosition X : " << cursorPosition.y << " windows " << m_displayStart.y << "=>" << m_displayStart.x + m_displaySize.x);
-		if (m_displayStart.x > cursorPosition.x - globals::getNbColoneBorder() ) {
-			m_displayStart.x = cursorPosition.x - globals::getNbColoneBorder();
-			if (m_displayStart.x < 0) {
-				m_displayStart.x = 0;
+			// Display position (X mode):
+			//EDN_INFO("cursorPosition X : " << cursorPosition.y << " windows " << m_displayStart.y << "=>" << m_displayStart.x + m_displaySize.x);
+			if (m_AnchorList[iii].m_displayStart.x > cursorPosition.x - globals::getNbColoneBorder() ) {
+				m_AnchorList[iii].m_displayStart.x = cursorPosition.x - globals::getNbColoneBorder();
+				if (m_AnchorList[iii].m_displayStart.x < 0) {
+					m_AnchorList[iii].m_displayStart.x = 0;
+				}
+			} else if (m_AnchorList[iii].m_displayStart.x + m_AnchorList[iii].m_displaySize.x <= cursorPosition.x + globals::getNbColoneBorder() ) {
+				m_AnchorList[iii].m_displayStart.x = cursorPosition.x - m_AnchorList[iii].m_displaySize.x + globals::getNbColoneBorder() + 1;
 			}
-		} else if (m_displayStart.x + m_displaySize.x <= cursorPosition.x + globals::getNbColoneBorder() ) {
-			m_displayStart.x = cursorPosition.x - m_displaySize.x + globals::getNbColoneBorder() + 1;
+			
+			//update the buffer position ID : 
+			m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
+			m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
+		} else {
+			// center the line at the middle of the screen :
+			position_ts cursorPosition;
+			//EDN_DEBUG(" -------------------------------------------------");
+			cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
+			//EDN_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << cursorPosition.y);
+			cursorPosition.x = 0;
+			
+			m_AnchorList[iii].m_displayStart.x = 0;
+			//EDN_DEBUG(" display size : " << m_displaySize.y);
+			m_AnchorList[iii].m_displayStart.y = cursorPosition.y - m_AnchorList[iii].m_displaySize.y/2;
+			m_AnchorList[iii].m_displayStart.y = edn_max(m_AnchorList[iii].m_displayStart.y, 0);
+			m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
+			m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
+			//EDN_DEBUG(" display start : " << m_displayStart.x << "x" << m_displayStart.y);
+			//EDN_DEBUG(" -------------------------------------------------");
 		}
-		
-		//update the buffer position ID : 
-		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
-	} else {
-		// center the line at the middle of the screen :
-		position_ts cursorPosition;
-		//EDN_DEBUG(" -------------------------------------------------");
-		cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
-		//EDN_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << cursorPosition.y);
-		cursorPosition.x = 0;
-		
-		m_displayStart.x = 0;
-		//EDN_DEBUG(" display size : " << m_displaySize.y);
-		m_displayStart.y = cursorPosition.y - m_displaySize.y/2;
-		m_displayStart.y = edn_max(m_displayStart.y, 0);
-		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
-		//EDN_DEBUG(" display start : " << m_displayStart.x << "x" << m_displayStart.y);
-		//EDN_DEBUG(" -------------------------------------------------");
 	}
-	*/
 }
 
 
@@ -1286,10 +1288,9 @@ bool BufferText::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor)
 		anchor.m_displaySize.y = m_AnchorList[localID].m_displaySize.y;
 		anchor.m_displayStart.x = m_AnchorList[localID].m_displayStart.x;
 		anchor.m_displayStart.y = m_AnchorList[localID].m_displayStart.y;
-		// TODO : Test de display non complet...
-		anchor.m_nbIterationMax = anchor.m_displaySize.y - 4;
+		anchor.m_nbIterationMax = anchor.m_displaySize.y;
 		// update to buffer position
-		anchor.m_lineNumber = m_AnchorList[localID].m_lineId;
+		anchor.m_lineNumber = m_AnchorList[localID].m_lineId +1;
 		anchor.m_posStart = m_AnchorList[localID].m_bufferPos;
 		if (anchor.m_posStart >= m_EdnBuf.Size()+1) {
 			return false;
@@ -1306,6 +1307,7 @@ bool BufferText::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor)
 			anchor.m_selectionPosStart = selStart;
 			anchor.m_selectionPosStop = selEnd;
 		}
+		EDN_DEBUG("Request display : line=" << anchor.m_lineNumber << " (" << anchor.m_posStart << "," << anchor.m_posStop << ")");
 		return true;
 	} else {
 		return false;
@@ -1321,5 +1323,9 @@ bool BufferText::AnchorNext(bufferAnchor_ts & anchor)
 		return false;
 	}
 	anchor.m_posStop = m_EdnBuf.EndOfLine(anchor.m_posStart);
+	anchor.m_nbIterationMax--;
+	if (anchor.m_nbIterationMax<0) {
+		return false;
+	}
 	return true;
 }

@@ -30,7 +30,6 @@
 #include "Display.h"
 #include "charset.h"
 #include "Edn.h"
-//#include "BufferAnchor.h"
 
 extern "C"
 {
@@ -104,33 +103,33 @@ class Buffer {
 		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		virtual void      SetLineDisplay(uint32_t lineNumber);
 		
-		virtual void        DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor);
+		virtual void      DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor);
 		// return the new cursor position ...
-		virtual void        AddChar(char * UTF8data);
-		virtual void        cursorMove(int32_t gtkKey);
-		virtual void        MouseSelectFromCursorTo(int32_t width, int32_t height);
-		virtual void        MouseEvent(int32_t width, int32_t height);
-		virtual void        MouseEventDouble(void);
-		virtual void        MouseEventTriple(void);
-		virtual void        RemoveLine(void);
-		virtual void        SelectAll(void);
-		virtual void        SelectNone(void);
-		virtual void        Undo(void);
-		virtual void        Redo(void);
+		virtual void      AddChar(char * UTF8data);
+		virtual void      cursorMove(int32_t gtkKey);
+		virtual void      MouseSelectFromCursorTo(int32_t width, int32_t height);
+		virtual void      MouseEvent(int32_t width, int32_t height);
+		virtual void      MouseEventDouble(void);
+		virtual void      MouseEventTriple(void);
+		virtual void      RemoveLine(void);
+		virtual void      SelectAll(void);
+		virtual void      SelectNone(void);
+		virtual void      Undo(void);
+		virtual void      Redo(void);
 		
-		virtual void        SetCharset(charset_te newCharset) {};
+		virtual void      SetCharset(charset_te newCharset) {};
 		
-		virtual void        ScrollDown(void); // must be deprecated
-		virtual void        ScrollUp(void);   // must be deprecated
+		virtual void      ScrollDown(void); // must be deprecated
+		virtual void      ScrollUp(void);   // must be deprecated
 
 		//virtual void	SelectAll(void);
-		virtual void        Copy(int8_t clipboardID);
-		virtual void        Cut(int8_t clipboardID);
-		virtual void        Paste(int8_t clipboardID);
-		virtual void        Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
-		virtual void        Replace(Edn::String &data);
+		virtual void      Copy(int8_t clipboardID);
+		virtual void      Cut(int8_t clipboardID);
+		virtual void      Paste(int8_t clipboardID);
+		virtual void      Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
+		virtual void      Replace(Edn::String &data);
 		virtual int32_t   FindLine(Edn::String &data);
-		virtual void        JumpAtLine(int32_t newLine);
+		virtual void      JumpAtLine(int32_t newLine);
 		virtual int32_t   GetCurrentLine(void);
 		
 	protected:
@@ -153,6 +152,7 @@ class Buffer {
 		int32_t           m_lineHeight;
 		int32_t           AnchorRealId(int32_t anchorID);
 		Edn::VectorType<bufferAnchorReference_ts> m_AnchorList;              //!< list of all line anchor in the current buffer
+		int32_t           m_uniqueID;
 
 };
 

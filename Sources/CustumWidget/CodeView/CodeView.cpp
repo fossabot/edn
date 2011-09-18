@@ -193,7 +193,7 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 }
 
 
-//#define COUNT_TIME plop
+#define COUNT_TIME plop
 
 gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
