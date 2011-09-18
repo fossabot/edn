@@ -475,3 +475,13 @@ int32_t Buffer::AnchorRealId(int32_t anchorID)
 	}
 	return -1;
 }
+
+int32_t Buffer::AnchorCurrentId(void)
+{
+	for(int32_t iii=0; iii < m_AnchorList.Size(); iii++) {
+		if (m_AnchorList[iii].m_curent == true) {
+			return iii;
+		}
+	}
+	return 0;
+}

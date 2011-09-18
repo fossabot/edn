@@ -151,6 +151,7 @@ class Buffer {
 		int32_t           m_lineWidth;
 		int32_t           m_lineHeight;
 		int32_t           AnchorRealId(int32_t anchorID);
+		int32_t           AnchorCurrentId(void);
 		Edn::VectorType<bufferAnchorReference_ts> m_AnchorList;              //!< list of all line anchor in the current buffer
 		int32_t           m_uniqueID;
 

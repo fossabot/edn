@@ -397,9 +397,8 @@ void BufferText::GetMousePosition(int32_t width, int32_t height, int32_t &x, int
 	if (x < 0) {
 		x = 0;
 	}
-// TODO : REWORK
-	//x += m_displayStart.x;
-	//y += m_displayStart.y;
+	x += m_AnchorList[AnchorCurrentId()].m_displayStart.x;
+	y += m_AnchorList[AnchorCurrentId()].m_displayStart.y;
 	//EDN_DEBUG("BufferText::GetMousePosition(" << width << "," << height << "); ==> (" << x << "," << y << ")" );
 }
 
@@ -578,29 +577,26 @@ void BufferText::ScrollUp(void)
  */
 void BufferText::MoveUpDown(int32_t ofset)
 {
-	for (int32_t iii=0; iii < m_AnchorList.Size() ; iii++) {
-		if (true == m_AnchorList[iii].m_curent) {
-			if (ofset >= 0) {
-				int32_t nbLine = m_EdnBuf.NumberOfLines();
-				if (m_AnchorList[iii].m_displayStart.y+ofset+3 > nbLine) {
-					m_AnchorList[iii].m_displayStart.y = nbLine-3;
-				} else {
-					m_AnchorList[iii].m_displayStart.y += ofset;
-				}
-				m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
-				m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
-			} else {
-				ofset *= -1;
-				if (m_AnchorList[iii].m_displayStart.y < ofset) {
-					m_AnchorList[iii].m_displayStart.y = 0;
-					m_AnchorList[iii].m_bufferPos = 0;
-					m_AnchorList[iii].m_lineId = 0;
-				} else {
-					m_AnchorList[iii].m_displayStart.y -= ofset;
-					m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
-					m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
-				}
-			}
+	int32_t iii=AnchorCurrentId();
+	if (ofset >= 0) {
+		int32_t nbLine = m_EdnBuf.NumberOfLines();
+		if (m_AnchorList[iii].m_displayStart.y+ofset+3 > nbLine) {
+			m_AnchorList[iii].m_displayStart.y = nbLine-3;
+		} else {
+			m_AnchorList[iii].m_displayStart.y += ofset;
+		}
+		m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
+		m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
+	} else {
+		ofset *= -1;
+		if (m_AnchorList[iii].m_displayStart.y < ofset) {
+			m_AnchorList[iii].m_displayStart.y = 0;
+			m_AnchorList[iii].m_bufferPos = 0;
+			m_AnchorList[iii].m_lineId = 0;
+		} else {
+			m_AnchorList[iii].m_displayStart.y -= ofset;
+			m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
+			m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
 		}
 	}
 }
@@ -788,8 +784,7 @@ void BufferText::cursorMove(int32_t gtkKey)
 		case GDK_Page_Up:
 #		endif
 			//EDN_INFO("keyEvent : <PAGE-UP>");
-			// TODO : REWORK
-			TextDMoveUp(m_AnchorList[1].m_displaySize.x);
+			TextDMoveUp(m_AnchorList[AnchorCurrentId()].m_displaySize.x);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Page_Down:
@@ -797,8 +792,7 @@ void BufferText::cursorMove(int32_t gtkKey)
 		case GDK_Page_Down:
 #		endif
 			//EDN_INFO("keyEvent : <PAGE-DOWN>");
-			// TODO : REWORK
-			TextDMoveDown(m_AnchorList[1].m_displaySize.x);
+			TextDMoveDown(m_AnchorList[AnchorCurrentId()].m_displaySize.x);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Begin:
@@ -1304,10 +1298,11 @@ bool BufferText::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor)
 			anchor.m_selectionPosStart = -1;
 			anchor.m_selectionPosStop = -1;
 		} else {
-			anchor.m_selectionPosStart = selStart;
-			anchor.m_selectionPosStop = selEnd;
+			anchor.m_selectionPosStart = selStart+1;
+			anchor.m_selectionPosStop = selEnd+1;
 		}
 		EDN_DEBUG("Request display : line=" << anchor.m_lineNumber << " (" << anchor.m_posStart << "," << anchor.m_posStop << ")");
+		EDN_DEBUG("     ==> select : (" << anchor.m_selectionPosStart << "," << anchor.m_selectionPosStop << ")");
 		return true;
 	} else {
 		return false;

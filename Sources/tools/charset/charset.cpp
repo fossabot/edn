@@ -422,7 +422,11 @@ static uint32_t Utf8_GetValue(UTF8Element_ts &Element)
 int32_t strUtf8Len(const char *input_UTF8)
 {
 	int32_t count = 0;
-	int32_t size = strlen(input_UTF8);
+	int32_t sizeInput = strlen(input_UTF8);
+	int32_t size = sizeInput;
+	if (size>20) {
+		EDN_DEBUG("check SIZE...");
+	}
 	uint8_t tmpSize;
 	bool baseValid;
 	while (size > 0) {

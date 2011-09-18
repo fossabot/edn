@@ -159,6 +159,8 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
 	
 	cairo_scale(m_cairo, 1.0, 1.0);
 	
+	m_nbElement = 0;
+	
 	// http://cairographics.org/FAQ/#clear_a_surface
 	// http://gtk.developpez.com/faq/?page=gtkwidget#GTK_WIDGET_transparent
 	//cairo_set_source_rgba(m_cairo, 1, 1, 1, 0);
@@ -289,9 +291,8 @@ void DrawerManager::Flush(void)
 		int32_t letterHeight = Display::GetFontHeight();
 		if (true == m_selectColor->HaveBg() ) {
 			int32_t letterWidth = Display::GetFontWidth();
-			int32_t stringLen = m_nbElement;
 			// generate Clean BG:
-			DirectRectangle(m_selectColor, m_pos.x, m_pos.y, letterWidth*stringLen, letterHeight);
+			DirectRectangle(m_selectColor, m_pos.x, m_pos.y, letterWidth*m_nbElement, letterHeight);
 		}
 		cairo_move_to(m_cairo, m_pos.x, m_pos.y+letterHeight-4);
 		m_selectColor->ApplyFG(m_cairo);
@@ -350,9 +351,10 @@ void DrawerManager::DirectRectangle(Colorize *SelectColor, int32_t x, int32_t y,
 	// flush
 	cairo_fill(m_cairo);
 }
+
+
 void DrawerManager::DirectRectangle(color_ts &SelectColor, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-
 	cairo_set_source_rgb(m_cairo, SelectColor.red, SelectColor.green, SelectColor.blue);
 	// set postion
 	cairo_rectangle(m_cairo, x, y, width, height);
