@@ -189,7 +189,10 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			break;
 	}
 	// Force redraw of the widget
-	gtk_widget_queue_draw(m_widget);
+//	gtk_widget_queue_draw(m_widget);
+
+	gtk_widget_queue_draw_area(m_widget, 0, 0, m_shawableAreaX, m_shawableAreaY);
+	
 }
 
 
