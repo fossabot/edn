@@ -63,7 +63,7 @@ void BufferText::BasicInit(void)
 	m_cursorPos = 0;
 	m_cursorPreferredCol = -1;
 	m_cursorOn = true;
-	
+	// set at the sustem buffer internal
 	m_lineWidth = Display::GetFontWidth();
 	m_lineHeight = Display::GetFontHeight();
 }
@@ -784,7 +784,7 @@ void BufferText::cursorMove(int32_t gtkKey)
 		case GDK_Page_Up:
 #		endif
 			//EDN_INFO("keyEvent : <PAGE-UP>");
-			TextDMoveUp(m_AnchorList[AnchorCurrentId()].m_displaySize.x);
+			TextDMoveUp(m_AnchorList[AnchorCurrentId()].m_displaySize.y);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Page_Down:
@@ -792,7 +792,7 @@ void BufferText::cursorMove(int32_t gtkKey)
 		case GDK_Page_Down:
 #		endif
 			//EDN_INFO("keyEvent : <PAGE-DOWN>");
-			TextDMoveDown(m_AnchorList[AnchorCurrentId()].m_displaySize.x);
+			TextDMoveDown(m_AnchorList[AnchorCurrentId()].m_displaySize.y);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Begin:
