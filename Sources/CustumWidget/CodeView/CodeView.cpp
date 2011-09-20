@@ -54,34 +54,37 @@ CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
 	m_widget = gtk_drawing_area_new();
 	gtk_widget_set_size_request( m_widget, 200, 100);
 
-	gtk_widget_add_events(	m_widget, 
-								GDK_KEY_PRESS_MASK
-							|	GDK_BUTTON_PRESS_MASK
-							|	GDK_BUTTON_RELEASE_MASK
-							|	GDK_POINTER_MOTION_MASK
-							|	GDK_POINTER_MOTION_HINT_MASK);
+	gtk_widget_add_events( m_widget,
+	                          GDK_KEY_PRESS_MASK
+	                        | GDK_BUTTON_PRESS_MASK
+	                        | GDK_BUTTON_RELEASE_MASK
+	                        | GDK_POINTER_MOTION_MASK
+	                        | GDK_POINTER_MOTION_HINT_MASK);
 #	ifdef USE_GTK_VERSION_3_0
 	g_object_set(m_widget,"can-focus", TRUE, NULL);
 #	elif defined( USE_GTK_VERSION_2_0 )
 	GTK_WIDGET_SET_FLAGS(m_widget, GTK_CAN_FOCUS);
 #	endif
+	// Remove double-buffering ==> in the current case we can not get the previous display...
+	gtk_widget_set_double_buffered(m_widget, false);
+	
 	// Focus Event
-	g_signal_connect(		G_OBJECT(m_widget), "focus_in_event",		G_CALLBACK(CB_focusGet),		 this);
-	g_signal_connect(		G_OBJECT(m_widget), "focus_out_event",		G_CALLBACK(CB_focusLost),		 this);
+	g_signal_connect(       G_OBJECT(m_widget), "focus_in_event",       G_CALLBACK(CB_focusGet),         this);
+	g_signal_connect(       G_OBJECT(m_widget), "focus_out_event",      G_CALLBACK(CB_focusLost),        this);
 	// Keyboard Event
-	g_signal_connect_after(	G_OBJECT(m_widget), "key_press_event",		G_CALLBACK(CB_keyboardEvent),	 this);
-	g_signal_connect_after(	G_OBJECT(m_widget), "key_release_event",	G_CALLBACK(CB_keyboardEvent),	 this);
+	g_signal_connect_after( G_OBJECT(m_widget), "key_press_event",      G_CALLBACK(CB_keyboardEvent),    this);
+	g_signal_connect_after( G_OBJECT(m_widget), "key_release_event",    G_CALLBACK(CB_keyboardEvent),    this);
 	// Mouse Event
-	g_signal_connect(		G_OBJECT(m_widget), "button_press_event",	G_CALLBACK(CB_mouseButtonEvent), this);
-	g_signal_connect(		G_OBJECT(m_widget), "button_release_event",	G_CALLBACK(CB_mouseButtonEvent), this);
-	g_signal_connect(		G_OBJECT(m_widget), "motion_notify_event",	G_CALLBACK(CB_mouseMotionEvent), this);
-	g_signal_connect(		G_OBJECT(m_widget), "scroll-event",			G_CALLBACK(CB_mouseScrollEvent), this);
+	g_signal_connect(       G_OBJECT(m_widget), "button_press_event",   G_CALLBACK(CB_mouseButtonEvent), this);
+	g_signal_connect(       G_OBJECT(m_widget), "button_release_event", G_CALLBACK(CB_mouseButtonEvent), this);
+	g_signal_connect(       G_OBJECT(m_widget), "motion_notify_event",  G_CALLBACK(CB_mouseMotionEvent), this);
+	g_signal_connect(       G_OBJECT(m_widget), "scroll-event",         G_CALLBACK(CB_mouseScrollEvent), this);
 	// Display Event
-	g_signal_connect(		G_OBJECT(m_widget), "realize",				G_CALLBACK(CB_displayInit), 	 this);
+	g_signal_connect(       G_OBJECT(m_widget), "realize",              G_CALLBACK(CB_displayInit),      this);
 #	ifdef USE_GTK_VERSION_3_0
-	g_signal_connect(		G_OBJECT(m_widget), "draw",					G_CALLBACK(CB_displayDraw),		this);
+	g_signal_connect(       G_OBJECT(m_widget), "draw",                 G_CALLBACK(CB_displayDraw),      this);
 #	elif defined( USE_GTK_VERSION_2_0 )
-	g_signal_connect(		G_OBJECT(m_widget), "expose_event",			G_CALLBACK(CB_displayDraw),		this);
+	g_signal_connect(       G_OBJECT(m_widget), "expose_event",         G_CALLBACK(CB_displayDraw),      this);
 #	endif
 }
 
@@ -189,8 +192,6 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			break;
 	}
 	// Force redraw of the widget
-//	gtk_widget_queue_draw(m_widget);
-
 	gtk_widget_queue_draw_area(m_widget, 0, 0, m_shawableAreaX, m_shawableAreaY);
 	
 }
@@ -237,6 +238,12 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 	DrawerManager monDrawer(widget, self->m_shawableAreaX, self->m_shawableAreaY);
 	Buffer * tmpBuf = self->m_bufferManager->Get(self->m_bufferID);
 
+	// set cursor : 
+	/*
+	GdkCursor plop;
+	plop.GSEAL = GDK_PENCIL;
+	gdk_window_set_cursor(gtk_widget_get_window(self->m_widget), &plop);
+	*/
 	#ifdef COUNT_TIME
 		GTimeVal timeStart;
 		g_get_current_time(&timeStart);

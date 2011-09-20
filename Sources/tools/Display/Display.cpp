@@ -127,6 +127,7 @@ cairo_font_face_t * Display::GetFont(bool bold, bool italic)
 #undef __class__
 #define __class__	"DrawerManager"
 
+#define megaplop  mlkjmlk
 /**
  * @brief DrawerManager constructor : generate a memoryDC where we can draw everything...
  *
@@ -141,25 +142,66 @@ cairo_font_face_t * Display::GetFont(bool bold, bool italic)
  */
 DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
 {
-
 	m_size.x = x;
 	m_size.y = y;
 	m_haveWork = false;
-	// Create the Cairo Element
 #   if USE_GTK_VERSION_3_0
-	m_cairo = gdk_cairo_create(gtk_widget_get_window(widget));
+	m_windows = gtk_widget_get_window(widget);
 #   elif USE_GTK_VERSION_2_0
-	m_cairo = gdk_cairo_create(widget->window);
+	m_windows = widget->window;
 #   endif
-	//cairo_translate(m_cairo, 0, 7);
-	cairo_set_source_rgb(m_cairo, 0, 0, 0);
+
+#ifdef megaplop
+	m_cairoWindows = gdk_cairo_create(m_windows);
+	
+	// create internal surface :
+	m_imageSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, x, y);
+	m_cairo = cairo_create(m_imageSurface);
+	
+	// copy current windows :
+	cairo_surface_t * drawable_surface = cairo_get_target(m_cairoWindows);
+	cairo_set_source_surface(m_cairo, drawable_surface, 0, 0);
 	cairo_paint(m_cairo);
+
+
+// for Test only : this remove slowly the old line that is not rewritten
+	cairo_set_source_rgb(m_cairo, 0, 0, 0);
+	cairo_set_source_rgba(m_cairo, 1, 1, 1, 0.3);
+	cairo_paint(m_cairo);
+	
 	cairo_set_font_size(m_cairo, POLICE_SIZE);
 	m_dataToDisplay[0] = '\0';
 	
 	cairo_scale(m_cairo, 1.0, 1.0);
+	cairo_scale(m_cairoWindows, 1.0, 1.0);
 	
+#else
+
+	// start painting : we not use the automatic double buffered for internal optimisation, then we nee to work with this :
+
+	/*
+	GdkRectangle myRect = {0, 0, 300, 300};
+	gdk_window_begin_paint_rect(m_windows, &myRect);
+	*/
+	
+	// Create the Cairo Element
+	m_cairo = gdk_cairo_create(m_windows);
+	//cairo_translate(m_cairo, 0, 7);
+	// for Test only : this remove slowly the old line that is not rewritten
+	cairo_set_source_rgb(m_cairo, 0, 0, 0);
+	cairo_set_source_rgba(m_cairo, 1, 1, 1, 0.3);
+	cairo_paint(m_cairo);
+	
+	cairo_set_font_size(m_cairo, POLICE_SIZE);
+	m_dataToDisplay[0] = '\0';
+	
+	cairo_scale(m_cairo, 1.0, 1.0);
+
+#endif
+
 	m_nbElement = 0;
+	
+	
 	
 	// http://cairographics.org/FAQ/#clear_a_surface
 	// http://gtk.developpez.com/faq/?page=gtkwidget#GTK_WIDGET_transparent
@@ -168,10 +210,6 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
 	//cairo_paint(m_cairo);
 	//cairo_fill(m_cairo);
 	//cairo_stroke (m_cairo);
-
-	
-	
-	
 }
 
 
@@ -187,7 +225,16 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
  */
 DrawerManager::~DrawerManager()
 {
+#ifdef megaplop
+	cairo_set_source_surface(m_cairoWindows, m_imageSurface, 0, 0);
+	cairo_paint(m_cairoWindows);
 	cairo_destroy(m_cairo);
+	cairo_destroy(m_cairoWindows);
+#else
+	// fill the diplayed buffer ...
+	//gdk_window_end_paint(m_windows);
+	cairo_destroy(m_cairo);
+#endif
 }
 
 
@@ -432,6 +479,7 @@ void DrawerManager::Cursor(int32_t x, int32_t y)
 		cairo_rel_line_to(m_cairo, 0, -letterHeight);
 	}
 	cairo_stroke(m_cairo);
+	//cairo_set_fill_rule(m_cairo, CAIRO_FILL_RULE_EVEN_ODD);
 	cairo_fill(m_cairo);
 }
 

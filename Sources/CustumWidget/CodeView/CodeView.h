@@ -54,6 +54,7 @@ class CodeView : public MsgBroadcast
 	private:
 		// main windows widget : 
 		GtkWidget *         m_widget;
+		DrawerManager *     m_Drawer;
 		int32_t             m_displayUniqueId;
 		//position_ts         m_displayStart;                 //!< position where the display is starting
 		//position_ts         m_displaySize;                  //!< number of char displayable in the screan
