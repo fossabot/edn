@@ -57,6 +57,8 @@ BufferView::BufferView(void) : MsgBroadcast("Buffer View", EDN_CAT_GUI)
 #	elif defined( USE_GTK_VERSION_2_0 )
 	GTK_WIDGET_SET_FLAGS(m_widget, GTK_CAN_FOCUS);
 #	endif
+	// Remove double-buffering ==> in the current case we can not get the previous display...
+	gtk_widget_set_double_buffered(m_widget, false);
 	// Focus Event
 	g_signal_connect(		G_OBJECT(m_widget), "focus_in_event",		G_CALLBACK(CB_focusGet),         this);
 	g_signal_connect(		G_OBJECT(m_widget), "focus_out_event",		G_CALLBACK(CB_focusLost),        this);
