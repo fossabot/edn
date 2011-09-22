@@ -36,6 +36,9 @@ int main(int argc, char **argv)
 
     gtk_widget_set_app_paintable(window, TRUE);
 
+	// Remove double-buffering ==> in the current case we can not get the previous display...
+	gtk_widget_set_double_buffered(window, FALSE);
+	
 #	if USE_GTK_VERSION_3_0
 	g_signal_connect(G_OBJECT(window), "draw", G_CALLBACK(expose), NULL);
 #	elif USE_GTK_VERSION_2_0
@@ -60,17 +63,17 @@ int main(int argc, char **argv)
 	                                     &color);
 */
 #endif
-    gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
-    gtk_widget_add_events(window, GDK_BUTTON_PRESS_MASK);
-    g_signal_connect(G_OBJECT(window), "button-press-event", G_CALLBACK(clicked), NULL);
+    //gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
+    //gtk_widget_add_events(window, GDK_BUTTON_PRESS_MASK);
+   /* //g_signal_connect(G_OBJECT(window), "button-press-event", G_CALLBACK(clicked), NULL);
 
     GtkWidget* fixed_container = gtk_fixed_new();
     gtk_container_add(GTK_CONTAINER(window), fixed_container);
     GtkWidget* button = gtk_button_new_with_label("button1");
     gtk_widget_set_size_request(button, 100, 100);
     gtk_container_add(GTK_CONTAINER(fixed_container), button);
-
-    screen_changed(window, NULL, NULL);
+*/
+    //screen_changed(window, NULL, NULL);
 
     gtk_widget_show_all(window);
     gtk_main();
@@ -114,20 +117,36 @@ static void screen_changed(GtkWidget *widget, GdkScreen *old_screen, gpointer us
 
 static gboolean expose(GtkWidget *widget, GdkEventExpose *event, gpointer userdata)
 {
-   return FALSE;
-#	if USE_GTK_VERSION_3_0
-	cairo_t *cr = gdk_cairo_create(gtk_widget_get_window(widget));
-#	elif USE_GTK_VERSION_2_0
-	cairo_t *cr = gdk_cairo_create(widget->window);
-#	endif
-    if (TRUE == supports_alpha)
-        cairo_set_source_rgba (cr, 0.0, 0.0, 1.0, 0.3); /* transparent */
-    else
-        cairo_set_source_rgb (cr, 1.0, 0.0, 0.0); /* opaque white */
 
-    /* draw the background */
-    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-    cairo_paint (cr);
+	//return FALSE;
+	GdkWindow * m_windows = NULL;
+#   if USE_GTK_VERSION_3_0
+	m_windows = gtk_widget_get_window(widget);
+#   elif USE_GTK_VERSION_2_0
+	m_windows = widget->window;
+#   endif
+	gtk_widget_shape_combine_mask(widget, NULL, 0, 0);
+	cairo_t *cr = gdk_cairo_create(m_windows);
+	
+	
+	
+	//if (TRUE == supports_alpha) {
+		cairo_set_source_rgba (cr, 0.0, 0.0, 1.0, 0.2); // transparent
+	/*} else {
+		cairo_set_source_rgb (cr, 1.0, 0.0, 0.0); // opaque white 
+	}*/
+	/* draw the background */
+	cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+	cairo_paint (cr);
+	
+    /* draw a circle */
+    int width, height;
+    gtk_window_get_size(GTK_WINDOW(widget), &width, &height);
+
+    cairo_set_source_rgba(cr, 1, 0.2, 0.2, 0.6);
+    cairo_arc(cr, width / 2, height / 2, (width < height ? width : height) / 2 - 8 , 0, 2 * 3.14);
+    cairo_fill(cr);
+    cairo_stroke(cr);
 
     cairo_destroy(cr);
 

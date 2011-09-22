@@ -86,8 +86,6 @@ class DrawerManager {
 		position_ts     m_size;                                 //!< Total size
 		cairo_t *       m_cairo;                                //!< Cairo Layout pointer
 		GdkWindow *     m_windows;                              //!< remember the current widget ==> for some internal problems
-		cairo_t *       m_cairoWindows;                         //!< Cairo context
-		cairo_surface_t *m_imageSurface;
 };
 
 
