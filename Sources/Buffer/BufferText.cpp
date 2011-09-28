@@ -86,7 +86,6 @@ void BufferText::NameChange(void)
 			m_EdnBuf.SetHLSystem(myHL);
 		}
 	}
-	
 }
 
 
@@ -183,7 +182,7 @@ BufferText::~BufferText(void)
  */
 void BufferText::GetInfo(infoStatBuffer_ts &infoToUpdate)
 {
-
+	EDN_WARNING("TODO ...");
 }
 
 /**
@@ -196,7 +195,7 @@ void BufferText::GetInfo(infoStatBuffer_ts &infoToUpdate)
  */
 void BufferText::SetLineDisplay(uint32_t lineNumber)
 {
-
+	EDN_WARNING("TODO ...");
 }
 
 
@@ -515,6 +514,8 @@ void BufferText::SelectNone(void)
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
 }
 
+#define SCROLL_NB_LINE (3)
+
 /**
  * @brief
  *
@@ -525,7 +526,8 @@ void BufferText::SelectNone(void)
  */
 void BufferText::ScrollDown(void)
 {
-	MoveUpDown(3);
+	
+	MoveUpDown(SCROLL_NB_LINE);
 }
 
 
@@ -539,7 +541,7 @@ void BufferText::ScrollDown(void)
  */
 void BufferText::ScrollUp(void)
 {
-	MoveUpDown(-3);
+	MoveUpDown(-1 * SCROLL_NB_LINE);
 }
 
 
@@ -558,7 +560,9 @@ void BufferText::MoveUpDown(int32_t ofset)
 		int32_t nbLine = m_EdnBuf.NumberOfLines();
 		if (m_AnchorList[iii].m_displayStart.y+ofset+3 > nbLine) {
 			m_AnchorList[iii].m_displayStart.y = nbLine-3;
+			AnchorForceRedrawOffsef(m_AnchorList[iii].m_displayStart.y-(nbLine-3));
 		} else {
+			AnchorForceRedrawOffsef(ofset);
 			m_AnchorList[iii].m_displayStart.y += ofset;
 		}
 		m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
@@ -566,10 +570,12 @@ void BufferText::MoveUpDown(int32_t ofset)
 	} else {
 		ofset *= -1;
 		if (m_AnchorList[iii].m_displayStart.y < ofset) {
+			AnchorForceRedrawOffsef(-1 * m_AnchorList[iii].m_displayStart.y);
 			m_AnchorList[iii].m_displayStart.y = 0;
 			m_AnchorList[iii].m_bufferPos = 0;
 			m_AnchorList[iii].m_lineId = 0;
 		} else {
+			AnchorForceRedrawOffsef(-1 * ofset);
 			m_AnchorList[iii].m_displayStart.y -= ofset;
 			m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
 			m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
@@ -703,6 +709,7 @@ bool BufferText::TextDMoveDown(int32_t offset)
  */
 void BufferText::cursorMove(int32_t gtkKey)
 {
+	int32_t tmplineID;
 	bool needUpdatePosition = true;
 	switch(gtkKey) {
 #		ifdef USE_GTK_VERSION_3_0
@@ -714,6 +721,8 @@ void BufferText::cursorMove(int32_t gtkKey)
 			if (m_cursorPos > 0) {
 				SetInsertPosition(m_cursorPos - 1); 
 			}
+			tmplineID = m_EdnBuf.CountLines(0, m_cursorPos);
+			AnchorForceRedrawLine(tmplineID);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Right:
@@ -724,6 +733,8 @@ void BufferText::cursorMove(int32_t gtkKey)
 			if (m_cursorPos < m_EdnBuf.Size() ) {
 				SetInsertPosition(m_cursorPos + 1);
 			}
+			tmplineID = m_EdnBuf.CountLines(0, m_cursorPos);
+			AnchorForceRedrawLine(tmplineID);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Up:
@@ -731,7 +742,10 @@ void BufferText::cursorMove(int32_t gtkKey)
 		case GDK_Up:
 #		endif
 			//EDN_INFO("keyEvent : <UP>");
+			tmplineID = m_EdnBuf.CountLines(0, m_cursorPos);
+			AnchorForceRedrawLine(tmplineID);
 			TextDMoveUp(1);
+			AnchorForceRedrawLine(tmplineID-1);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Down:
@@ -740,7 +754,10 @@ void BufferText::cursorMove(int32_t gtkKey)
 #		endif
 			//EDN_INFO("keyEvent : <DOWN>");
 			// check if we have enought line ...
+			tmplineID = m_EdnBuf.CountLines(0, m_cursorPos);
+			AnchorForceRedrawLine(tmplineID);
 			TextDMoveDown(1);
+			AnchorForceRedrawLine(tmplineID+1);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Page_Up:
@@ -975,7 +992,8 @@ void BufferText::AddChar(char * UTF8data)
 			}
 		}
 	}
-
+	int32_t tmplineID = m_EdnBuf.CountLines(0, m_cursorPos);
+	AnchorForceRedrawLine(tmplineID);
 	SetModify(true);
 	UpdateWindowsPosition();
 }
@@ -1248,7 +1266,7 @@ bool BufferText::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor)
 		anchor.m_displayStart.y = m_AnchorList[localID].m_displayStart.y;
 		anchor.m_nbIterationMax = anchor.m_displaySize.y;
 		// update to buffer position
-		anchor.m_lineNumber = m_AnchorList[localID].m_lineId +1;
+		anchor.m_lineNumber = m_AnchorList[localID].m_lineId+1;
 		anchor.m_posStart = m_AnchorList[localID].m_bufferPos;
 		if (anchor.m_posStart >= m_EdnBuf.Size()+1) {
 			return false;
@@ -1265,6 +1283,17 @@ bool BufferText::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor)
 			anchor.m_selectionPosStart = selStart+1;
 			anchor.m_selectionPosStop = selEnd+1;
 		}
+		EDN_DEBUG("SET in anchor " << m_AnchorList[localID].m_displaySize.y << " lines to display");
+		for(int32_t iii=0; iii</*edn_min(*/m_AnchorList[localID].m_displaySize.y/*, MAX_LINE_DISPLAYABLE_BY_BUFFER)*/; iii++) {
+			anchor.m_redrawLine[iii] = m_AnchorList[localID].m_redrawLine[iii];
+			m_AnchorList[localID].m_redrawLine[iii] = false;
+			/*if (iii > m_AnchorList[localID].m_displaySize.y - 4) {
+				anchor.m_redrawLine[iii] = true;
+			}*/
+		}
+		anchor.m_BufferNumberLineOffset = m_AnchorList[localID].m_BufferNumberLineOffset;
+		m_AnchorList[localID].m_BufferNumberLineOffset = 0;
+		
 		EDN_DEBUG("Request display : line=" << anchor.m_lineNumber << " (" << anchor.m_posStart << "," << anchor.m_posStop << ")");
 		EDN_DEBUG("     ==> select : (" << anchor.m_selectionPosStart << "," << anchor.m_selectionPosStop << ")");
 		return true;

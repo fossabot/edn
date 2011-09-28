@@ -40,7 +40,7 @@
 #define FONT_ITALIC_YES	(1)
 
 
-// Variables privÃ© du namespace
+// Variables privé du namespace
 #define		POLICE_NAME		"Monospace"
 
 #ifdef USE_GTK_VERSION_3_0
@@ -140,7 +140,7 @@ cairo_font_face_t * Display::GetFont(bool bold, bool italic)
  * @return ---
  *
  */
-DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
+DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y, int32_t scrollOffset)
 {
 	m_size.x = x;
 	m_size.y = y;
@@ -162,8 +162,10 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
 		m_cairo = gdk_cairo_create(m_windows);
 		// Copy the previous display data from the current display to the double buffer area:
 		cairo_surface_t * drawableSurface = cairo_get_target(cairoWindows);
+		TranslateVertical(-1* scrollOffset);
 		cairo_set_source_surface(m_cairo, drawableSurface, 0, 0);
 		cairo_paint(m_cairo);
+		TranslateVertical(scrollOffset);
 		//cairo_surface_destroy(drawableSurface);
 		cairo_destroy(cairoWindows);
 	}
@@ -172,7 +174,7 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
 
 	// for Test only : this remove slowly the old line that is not rewritten
 	cairo_set_source_rgb(m_cairo, 0, 0, 0);
-	cairo_set_source_rgba(m_cairo, 1, 1, 1, 0.3);
+	cairo_set_source_rgba(m_cairo, 1, 1, 1, 0.05);
 	cairo_paint(m_cairo);
 	
 	cairo_set_font_size(m_cairo, POLICE_SIZE);
@@ -598,6 +600,14 @@ void DrawerManager::UTF8UnknownElement(Colorize *SelectColor, int32_t x, int32_t
 }
 
 
+void DrawerManager::TranslateVertical(int32_t nbPixelTranslation)
+{
+	Flush();
+	//scale((xmax-xmin)/W, (ymax-ymin)/H)
+	cairo_translate(m_cairo, 0, nbPixelTranslation);
+	cairo_fill(m_cairo);
+	cairo_paint(m_cairo);
+}
 
 
 /* Basic axample with cairo and pango...

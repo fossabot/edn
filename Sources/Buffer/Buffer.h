@@ -31,6 +31,8 @@
 #include "charset.h"
 #include "Edn.h"
 
+#define MAX_LINE_DISPLAYABLE_BY_BUFFER (200)
+
 extern "C"
 {
 	typedef struct{
@@ -43,23 +45,27 @@ extern "C"
 	}infoStatBuffer_ts;
 	
 	typedef struct {
-		int32_t      m_idAnchor;     //!< reference id of the anchor (real id of the upper displayer of CodeView)
-		bool         m_curent;       //!< set at true if the anchor is a reference with the curent display
-		int32_t      m_lineId;       //!< first line ID to display
-		int32_t      m_bufferPos;    //!< position of the first lineId
-		position_ts  m_displayStart; //!< start display position
-		position_ts  m_displaySize;  //!< size of the curent display
+		int32_t      m_idAnchor;                                   //!< reference id of the anchor (real id of the upper displayer of CodeView)
+		bool         m_curent;                                     //!< set at true if the anchor is a reference with the curent display
+		int32_t      m_lineId;                                     //!< first line ID to display
+		int32_t      m_bufferPos;                                  //!< position of the first lineId
+		position_ts  m_displayStart;                               //!< start display position
+		position_ts  m_displaySize;                                //!< size of the curent display
+		bool         m_redrawLine[MAX_LINE_DISPLAYABLE_BY_BUFFER]; //!< List of the current line that must be redisplayed
+		int32_t      m_BufferNumberLineOffset;                     //!< number of line that might be an ofset on the curent screen
 	} bufferAnchorReference_ts;
 	
 	typedef struct {
-		position_ts  m_displayStart;       //!< start display position
-		position_ts  m_displaySize;        //!< size of the curent display
-		int32_t      m_lineNumber;         //!< current line-number id
-		int32_t      m_nbIterationMax;     //!< number of cycle needed to end the dispalay
-		int32_t      m_posStart;           //!< position of the start of the line
-		int32_t      m_posStop;            //!< position of the end of the line
-		int32_t      m_selectionPosStart;  //!< position of the selection start
-		int32_t      m_selectionPosStop;   //!< position of the selection stop
+		position_ts  m_displayStart;                               //!< start display position
+		position_ts  m_displaySize;                                //!< size of the curent display
+		int32_t      m_lineNumber;                                 //!< current line-number id
+		int32_t      m_nbIterationMax;                             //!< number of cycle needed to end the dispalay
+		int32_t      m_posStart;                                   //!< position of the start of the line
+		int32_t      m_posStop;                                    //!< position of the end of the line
+		int32_t      m_selectionPosStart;                          //!< position of the selection start
+		int32_t      m_selectionPosStop;                           //!< position of the selection stop
+		bool         m_redrawLine[MAX_LINE_DISPLAYABLE_BY_BUFFER]; //!< List of the current line that must be redisplayed
+		int32_t      m_BufferNumberLineOffset;                     //!< number of line that might be an ofset on the curent screen
 	} bufferAnchor_ts;
 }
 
@@ -152,6 +158,9 @@ class Buffer {
 		int32_t           m_lineHeight;
 		int32_t           AnchorRealId(int32_t anchorID);
 		int32_t           AnchorCurrentId(void);
+		void              AnchorForceRedrawAll(void);
+		void              AnchorForceRedrawLine(int32_t lineID);
+		void              AnchorForceRedrawOffsef(int32_t offset);
 		Edn::VectorType<bufferAnchorReference_ts> m_AnchorList;              //!< list of all line anchor in the current buffer
 		int32_t           m_uniqueID;
 

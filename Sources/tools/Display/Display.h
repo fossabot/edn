@@ -52,7 +52,7 @@ class DrawerManager;
 class DrawerManager {
 	public:
 		// Constructeur
-		DrawerManager(GtkWidget * widget, int32_t x, int32_t y);
+		DrawerManager(GtkWidget * widget, int32_t x, int32_t y, int32_t scrollOffset=0);
 		~DrawerManager();
 
 		void    Rectangle(Colorize *SelectColor, int32_t x, int32_t y, int32_t width, int32_t height);
@@ -72,6 +72,7 @@ class DrawerManager {
 		void    Flush(void);
 		int32_t GetWidth(void) { return m_size.x; };
 		int32_t GetHeight(void) { return m_size.y; };
+		void    TranslateVertical(int32_t nbPixelTranslation);
 
 	private:
 		void    DirectRectangle(Colorize *SelectColor, int32_t x, int32_t y, int32_t width, int32_t height);

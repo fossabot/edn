@@ -235,15 +235,8 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 	ColorizeManager *myColorManager = NULL;
 	myColorManager = ColorizeManager::getInstance();
 	
-	DrawerManager monDrawer(widget, self->m_shawableAreaX, self->m_shawableAreaY);
 	Buffer * tmpBuf = self->m_bufferManager->Get(self->m_bufferID);
 
-	// set cursor : 
-	/*
-	GdkCursor plop;
-	plop.GSEAL = GDK_PENCIL;
-	gdk_window_set_cursor(gtk_widget_get_window(self->m_widget), &plop);
-	*/
 	#ifdef COUNT_TIME
 		GTimeVal timeStart;
 		g_get_current_time(&timeStart);
@@ -252,19 +245,27 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 	
 	tmpBuf->AnchorSetSize(self->m_displayUniqueId, self->m_shawableAreaX, self->m_shawableAreaY);
 	bool enableToWrite = tmpBuf->AnchorGet(self->m_displayUniqueId, anchor);
+	DrawerManager monDrawer(widget, self->m_shawableAreaX, self->m_shawableAreaY, Display::GetFontHeight()*anchor.m_BufferNumberLineOffset);
+	
+	int32_t currentLineID = 0;
 	while (true == enableToWrite) {
-		tmpBuf->DrawLine(monDrawer, anchor);
+		if (true == anchor.m_redrawLine[currentLineID]) {
+			EDN_DEBUG("draw line : " << currentLineID);
+			tmpBuf->DrawLine(monDrawer, anchor);
+		}
 		enableToWrite = tmpBuf->AnchorNext(anchor);
+		currentLineID++;
 	}
 	monDrawer.Flush();
 	
 	// Need to clean the end of windows (sometimes)...
-	/*
-	if (iii<lineIdEnd+1) {
-		int32_t positionY = letterHeight * (iii - m_displayStart.y - 1);
-		drawer.Rectangle(myColorManager->Get(COLOR_CODE_BASIC_BG), 0, positionY, drawer.GetWidth(), letterHeight*(lineIdEnd+1-iii) );
+	if(currentLineID<anchor.m_displaySize.y+1) {
+		int32_t positionY = Display::GetFontHeight() * (currentLineID);
+		int32_t positionZ = Display::GetFontHeight() * (anchor.m_displaySize.y-currentLineID);
+		//monDrawer.Rectangle(myColorManager->Get(COLOR_CODE_BASIC_BG), 0, positionY, monDrawer.GetWidth(), positionZ );
+		monDrawer.Rectangle(myColorManager->Get(COLOR_CODE_CURSOR), 0, positionY, monDrawer.GetWidth(), positionZ );
+		currentLineID ++;
 	}
-	*/
 	#ifdef COUNT_TIME
 		GTimeVal timeStop;
 		g_get_current_time(&timeStop);
