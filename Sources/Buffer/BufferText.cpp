@@ -56,8 +56,6 @@ void BufferText::BasicInit(void)
 	m_nbColoneForLineNumber = 1;
 	// init the link with the buffer manager
 	myColorManager = ColorizeManager::getInstance();
-	// Init Selection mode : 
-	SelectionEnd();
 	//EDN_INFO("Init");
 	// new mode : 
 	m_cursorPos = 0;
@@ -172,28 +170,6 @@ void BufferText::Save(void)
 BufferText::~BufferText(void)
 {
 	EDN_INFO("Delete(BufferText)");
-}
-
-
-void BufferText::SelectionStart(void)
-{
-	// start a nex selection
-	SelectionCheckMode();
-	//EDN_DEBUG("SELECT_start");
-}
-
-void BufferText::SelectionEnd(void)
-{
-	//EDN_DEBUG("SELECT_stop");
-}
-
-void BufferText::SelectionCheckMode(void)
-{
-	/*
-	if (true == globals::IsSetCtrl() ) {
-	} else {
-	}
-	*/
 }
 
 
@@ -728,18 +704,6 @@ bool BufferText::TextDMoveDown(int32_t offset)
 void BufferText::cursorMove(int32_t gtkKey)
 {
 	bool needUpdatePosition = true;
-	// check selection event ...
-	/*
-	if (true == globals::IsSetShift() ) {
-		if ( CURSOR_MODE_NORMAL == cursorMode) {
-			SelectionStart();
-		} else {
-			SelectionCheckMode();
-		}
-	} else {
-		SelectionEnd();
-	}
-	*/
 	switch(gtkKey) {
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Left:

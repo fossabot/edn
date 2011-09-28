@@ -87,10 +87,6 @@ class BufferText : public Buffer {
 		// Direct buffer IO
 		EdnBuf                  m_EdnBuf;                       //!< buffer associated on this displayer
 		
-		//position_ts             m_displayStart;                 //!< position where the display is starting
-		//position_ts             m_displaySize;                  //!< number of char displayable in the screan
-		//int32_t                 m_displayStartBufferPos;        //!< position where the buffer start
-		
 		// Cursor :
 		int32_t                 m_cursorPos;                    //!< position in the buffer of the cursor
 		int32_t                 m_cursorPreferredCol;           //!< colomn of the last up and down ...
@@ -103,10 +99,6 @@ class BufferText : public Buffer {
 		void     displayLineNumber(DrawerManager &drawer);
 		
 		void     CleanSelectLine(void);
-		
-		void     SelectionStart(void);
-		void     SelectionEnd(void);
-		void     SelectionCheckMode(void);
 		
 		void     CheckAndUpdateLineForModification(uint32_t lineID);
 		bool     TextDMoveUp(int32_t offset);
