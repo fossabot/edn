@@ -171,12 +171,13 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y, int32_t s
 	}
 	
 	cairo_scale(m_cairo, 1.0, 1.0);
-
-	// for Test only : this remove slowly the old line that is not rewritten
-	cairo_set_source_rgb(m_cairo, 0, 0, 0);
-	cairo_set_source_rgba(m_cairo, 1, 1, 1, 0.05);
-	cairo_paint(m_cairo);
 	
+#	ifndef NDEBUG
+		// for Test only : this remove slowly the old line that is not rewritten
+		cairo_set_source_rgb(m_cairo, 0, 0, 0);
+		cairo_set_source_rgba(m_cairo, 1, 1, 1, 0.05);
+		cairo_paint(m_cairo);
+#	endif
 	cairo_set_font_size(m_cairo, POLICE_SIZE);
 	m_dataToDisplay[0] = '\0';
 	

@@ -43,7 +43,7 @@
 BufferEmpty::BufferEmpty()
 {
 	m_lineWidth = Display::GetFontWidth();
-	m_lineHeight = Display::GetFontHeight();
+	m_lineHeight = Display::GetFontHeight()*4;
 }
 
 /**

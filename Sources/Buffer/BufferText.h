@@ -88,6 +88,7 @@ class BufferText : public Buffer {
 		EdnBuf                  m_EdnBuf;                       //!< buffer associated on this displayer
 		
 		// Cursor :
+		int32_t                 m_cursorPosPrevious;            //!< Previous position in the buffer of the cursor
 		int32_t                 m_cursorPos;                    //!< position in the buffer of the cursor
 		int32_t                 m_cursorPreferredCol;           //!< colomn of the last up and down ...
 		bool                    m_cursorOn;                     //!< the blink of the cursor ...

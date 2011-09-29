@@ -59,6 +59,7 @@ void BufferText::BasicInit(void)
 	//EDN_INFO("Init");
 	// new mode : 
 	m_cursorPos = 0;
+	m_cursorPosPrevious = m_cursorPos;
 	m_cursorPreferredCol = -1;
 	m_cursorOn = true;
 	// set at the sustem buffer internal
@@ -475,6 +476,7 @@ void BufferText::MouseEventDouble(void)
 	int32_t beginPos, endPos;
 	if (true == m_EdnBuf.SelectAround(m_cursorPos, beginPos, endPos)) {
 		m_EdnBuf.Select(SELECTION_PRIMARY, beginPos, endPos);
+		m_cursorPosPrevious = m_cursorPos;
 		m_cursorPos = endPos;
 	}
 	// no else
@@ -491,6 +493,7 @@ void BufferText::MouseEventDouble(void)
 void BufferText::MouseEventTriple(void)
 {
 	m_EdnBuf.Select(SELECTION_PRIMARY, m_EdnBuf.StartOfLine(m_cursorPos), m_EdnBuf.EndOfLine(m_cursorPos));
+	m_cursorPosPrevious = m_cursorPos;
 	m_cursorPos = m_EdnBuf.EndOfLine(m_cursorPos);
 }
 
@@ -500,18 +503,21 @@ void BufferText::RemoveLine(void)
 	int32_t stop = m_EdnBuf.EndOfLine(m_cursorPos);
 	m_EdnBuf.Remove(start, stop+1);
 	SetInsertPosition(start);
-		SetModify(true);
+	SetModify(true);
 }
 
 void BufferText::SelectAll(void)
 {
 	m_EdnBuf.Select(SELECTION_PRIMARY, 0, m_EdnBuf.Size());
+	m_cursorPosPrevious = m_cursorPos;
 	m_cursorPos = m_EdnBuf.Size();
+	AnchorForceRedrawAll();
 }
 
 void BufferText::SelectNone(void)
 {
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
+	AnchorForceRedrawAll();
 }
 
 #define SCROLL_NB_LINE (3)
@@ -526,7 +532,6 @@ void BufferText::SelectNone(void)
  */
 void BufferText::ScrollDown(void)
 {
-	
 	MoveUpDown(SCROLL_NB_LINE);
 }
 
@@ -592,7 +597,6 @@ void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 	int32_t rememberCursorPos = m_cursorPos;
 
 	//EDN_DEBUG("newPos=" << newPos);
-
 	// unselect buffer:
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
 	/* make sure new position is ok, do nothing if it hasn't changed */
@@ -603,6 +607,7 @@ void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 		if (newPos > m_EdnBuf.Size()) {
 			newPos = m_EdnBuf.Size();
 		}
+		m_cursorPosPrevious = m_cursorPos;
 		m_cursorPos = newPos;
 	}
 	m_cursorPreferredCol = -1;
@@ -721,8 +726,6 @@ void BufferText::cursorMove(int32_t gtkKey)
 			if (m_cursorPos > 0) {
 				SetInsertPosition(m_cursorPos - 1); 
 			}
-			tmplineID = m_EdnBuf.CountLines(0, m_cursorPos);
-			AnchorForceRedrawLine(tmplineID);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Right:
@@ -733,8 +736,6 @@ void BufferText::cursorMove(int32_t gtkKey)
 			if (m_cursorPos < m_EdnBuf.Size() ) {
 				SetInsertPosition(m_cursorPos + 1);
 			}
-			tmplineID = m_EdnBuf.CountLines(0, m_cursorPos);
-			AnchorForceRedrawLine(tmplineID);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Up:
@@ -742,10 +743,7 @@ void BufferText::cursorMove(int32_t gtkKey)
 		case GDK_Up:
 #		endif
 			//EDN_INFO("keyEvent : <UP>");
-			tmplineID = m_EdnBuf.CountLines(0, m_cursorPos);
-			AnchorForceRedrawLine(tmplineID);
 			TextDMoveUp(1);
-			AnchorForceRedrawLine(tmplineID-1);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Down:
@@ -754,10 +752,7 @@ void BufferText::cursorMove(int32_t gtkKey)
 #		endif
 			//EDN_INFO("keyEvent : <DOWN>");
 			// check if we have enought line ...
-			tmplineID = m_EdnBuf.CountLines(0, m_cursorPos);
-			AnchorForceRedrawLine(tmplineID);
 			TextDMoveDown(1);
-			AnchorForceRedrawLine(tmplineID+1);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Page_Up:
@@ -812,16 +807,26 @@ void BufferText::cursorMove(int32_t gtkKey)
  */
 void BufferText::UpdateWindowsPosition(bool centerPage)
 {
-	for (int32_t iii=0; iii < m_AnchorList.Size() ; iii++) {
-		if (centerPage == false) {
-			// Display position (Y mode):
-			//EDN_INFO(" m_displayStart(" << m_displayStart.x << "," << m_displayStart.y << ") m_displaySize(" << m_displaySize.x << "," <<m_displaySize.y << ")");
-			position_ts cursorPosition;
-			cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
-			int32_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
-			cursorPosition.x = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
-			//EDN_INFO(" curent cursor position : (" << cursorPosition.x << "," << cursorPosition.y << ")");
-			
+	int32_t linePreviousID = m_EdnBuf.CountLines(0, m_cursorPosPrevious);
+	AnchorForceRedrawLine(linePreviousID);
+	
+	if (centerPage == false) {
+		// Display position (Y mode):
+		int32_t lineStartPos;
+		// Get current position of cursor :
+		position_ts cursorPosition;
+		cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
+		AnchorForceRedrawLine(cursorPosition.y);
+		lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
+		cursorPosition.x = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
+		//EDN_INFO(" curent cursor position : (" << cursorPosition.x << "," << cursorPosition.y << ")");
+		
+		// Done for all Anchor elements ...
+		//for (int32_t iii=0; iii < m_AnchorList.Size() ; iii++) {
+		int32_t iii = AnchorCurrentId();
+		if (iii >=0) {
+			position_ts displayPreviousStart = m_AnchorList[iii].m_displayStart;
+			//EDN_INFO(" m_displayStart(" << m_AnchorList[iii].m_displayStart.x << "," << m_AnchorList[iii].m_displayStart.y << ") m_displaySize(" << m_AnchorList[iii].m_displaySize.x << "," << m_AnchorList[iii].m_displaySize.y << ")");
 			if (m_AnchorList[iii].m_displayStart.y > (int32_t)cursorPosition.y - globals::getNbLineBorder() ) {
 				m_AnchorList[iii].m_displayStart.y = cursorPosition.y - globals::getNbLineBorder();
 				if (m_AnchorList[iii].m_displayStart.y < 0) {
@@ -844,14 +849,39 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 			//update the buffer position ID : 
 			m_AnchorList[iii].m_bufferPos = m_EdnBuf.CountForwardNLines(0, m_AnchorList[iii].m_displayStart.y);
 			m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
-		} else {
-			// center the line at the middle of the screen :
-			position_ts cursorPosition;
-			//EDN_DEBUG(" -------------------------------------------------");
-			cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
-			//EDN_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << cursorPosition.y);
-			cursorPosition.x = 0;
-			
+			if (m_AnchorList[iii].m_displayStart.x != displayPreviousStart.x) {
+				AnchorForceRedrawAll(iii);
+			} else {
+				if (m_AnchorList[iii].m_displayStart.y != displayPreviousStart.y) {
+					EDN_WARNING("SELECT an ofset : displayPreviousStart.y=" << displayPreviousStart.y << "  m_AnchorList[iii].m_displayStart.y=" << m_AnchorList[iii].m_displayStart.y << " ==>" << m_AnchorList[iii].m_displayStart.y - displayPreviousStart.y);
+					EDN_WARNING("SELECT ... offset = " << m_AnchorList[iii].m_BufferNumberLineOffset);
+					AnchorForceRedrawOffsef(m_AnchorList[iii].m_displayStart.y - displayPreviousStart.y);
+					EDN_WARNING("SELECT ... offset = " << m_AnchorList[iii].m_BufferNumberLineOffset);
+				}
+				int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
+				bool SelectionIsRect;
+				bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+				if (true == haveSelectionActive) {
+					int32_t start = edn_min(linePreviousID, cursorPosition.y);
+					int32_t stop = edn_max(linePreviousID, cursorPosition.y);
+					EDN_WARNING("SELECT force redraw range of lines : (" << start << "," << stop << ")");
+					for (int32_t jjj=start; jjj <= stop; jjj++) {
+						AnchorForceRedrawLine(jjj);
+					}
+				}
+			}
+		}
+	} else {
+		// center the line at the middle of the screen :
+		position_ts cursorPosition;
+		//EDN_DEBUG(" -------------------------------------------------");
+		cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
+		//EDN_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << cursorPosition.y);
+		cursorPosition.x = 0;
+		// Done for all Anchor elements ...
+		//for (int32_t iii=0; iii < m_AnchorList.Size() ; iii++) {
+		int32_t iii = AnchorCurrentId();
+		if (iii >=0) {
 			m_AnchorList[iii].m_displayStart.x = 0;
 			//EDN_DEBUG(" display size : " << m_displaySize.y);
 			m_AnchorList[iii].m_displayStart.y = cursorPosition.y - m_AnchorList[iii].m_displaySize.y/2;
@@ -860,6 +890,7 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 			m_AnchorList[iii].m_lineId = m_AnchorList[iii].m_displayStart.y;
 			//EDN_DEBUG(" display start : " << m_displayStart.x << "x" << m_displayStart.y);
 			//EDN_DEBUG(" -------------------------------------------------");
+			AnchorForceRedrawAll(iii);
 		}
 	}
 }
@@ -898,11 +929,13 @@ void BufferText::AddChar(char * UTF8data)
 					m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
 					SetInsertPosition(SelectionStart+tmpVect.Size(), true);
 				} else {
+					int32_t tmpPos = m_cursorPos;
 					if (true == globals::IsSetShift() ) {
-						m_cursorPos = m_EdnBuf.UnIndent(SELECTION_PRIMARY);
+						tmpPos = m_EdnBuf.UnIndent(SELECTION_PRIMARY);
 					} else {
-						m_cursorPos = m_EdnBuf.Indent(SELECTION_PRIMARY);
+						tmpPos = m_EdnBuf.Indent(SELECTION_PRIMARY);
 					}
+					SetInsertPosition(tmpPos, true);
 				}
 			}
 			actionDone = true;
@@ -992,8 +1025,6 @@ void BufferText::AddChar(char * UTF8data)
 			}
 		}
 	}
-	int32_t tmplineID = m_EdnBuf.CountLines(0, m_cursorPos);
-	AnchorForceRedrawLine(tmplineID);
 	SetModify(true);
 	UpdateWindowsPosition();
 }
@@ -1186,7 +1217,7 @@ void BufferText::Cut(int8_t clipboardID)
 	if (true == haveSelectionActive ) {
 		EDN_INFO("REMOVE SELECTION");
 		m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
-		m_cursorPos = SelectionStart;
+		SetInsertPosition(SelectionStart, true);
 	}
 	UpdateWindowsPosition();
 	SetModify(true);
@@ -1214,11 +1245,11 @@ void BufferText::Paste(int8_t clipboardID)
 	if (true == haveSelectionActive ) {
 		// replace data
 		m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, mVect );
-		m_cursorPos = SelectionStart + mVect.Size();
+		SetInsertPosition(SelectionStart + mVect.Size(), true);
 	} else {
 		// insert data
 		m_EdnBuf.Insert(m_cursorPos, mVect);
-		m_cursorPos += mVect.Size();
+		SetInsertPosition(mVect.Size(), true);
 	}
 	
 	UpdateWindowsPosition();

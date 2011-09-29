@@ -192,6 +192,25 @@ void Buffer::DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor)
  *
  * @return ---
  *
+ */
+void Buffer::DrawLineEmpty(DrawerManager &drawer, int32_t lineScreenID)
+{
+	ColorizeManager * myColorManager = ColorizeManager::getInstance();
+	int32_t positionY = m_lineHeight * (lineScreenID);
+#	ifdef NDEBUG
+	drawer.Rectangle(myColorManager->Get(COLOR_CODE_BASIC_BG), 0, positionY, drawer.GetWidth(), m_lineHeight );
+#	else
+	drawer.Rectangle(myColorManager->Get(COLOR_CODE_CURSOR), 0, positionY, drawer.GetWidth(), m_lineHeight );
+#	endif
+}
+
+/**
+ * @brief
+ *
+ * @param[in,out] ---
+ *
+ * @return ---
+ *
  * @todo : Set the move up and DOWN...
  *
  */
@@ -457,8 +476,15 @@ void Buffer::AnchorSetSize(int32_t anchorID, int32_t sizePixelX, int32_t sizePix
 {
 	int32_t localID = AnchorRealId(anchorID);
 	if (localID >=0) {
-		m_AnchorList[localID].m_displaySize.x = sizePixelX / m_lineWidth;
-		m_AnchorList[localID].m_displaySize.y = sizePixelY / m_lineHeight;
+		position_ts mySize;
+		mySize.x = sizePixelX / m_lineWidth;
+		mySize.y = sizePixelY / m_lineHeight;
+		if(    m_AnchorList[localID].m_displaySize.x != mySize.x
+		    || m_AnchorList[localID].m_displaySize.y != mySize.y )
+		{
+			AnchorForceRedrawAll(localID);
+		}
+		m_AnchorList[localID].m_displaySize = mySize;
 	}
 }
 
@@ -475,6 +501,7 @@ void Buffer::AnchorSetStartOffset(int32_t anchorID, int32_t offsetX, int32_t off
 		if (0<m_AnchorList[localID].m_displayStart.y) {
 			m_AnchorList[localID].m_displayStart.y = 0;
 		}
+		AnchorForceRedrawAll(localID);
 	}
 }
 
@@ -501,13 +528,20 @@ int32_t Buffer::AnchorCurrentId(void)
 	return 0;
 }
 
-void Buffer::AnchorForceRedrawAll(void)
+void Buffer::AnchorForceRedrawAll(int32_t realAnchorId)
 {
-	int32_t localID = AnchorCurrentId();
-	if (localID >=0) {
-		m_AnchorList[localID].m_BufferNumberLineOffset = 0;
+	if (-5000 == realAnchorId) {
+		int32_t localID = AnchorCurrentId();
+		if (localID >=0) {
+			m_AnchorList[localID].m_BufferNumberLineOffset = 0;
+			for(int32_t iii=0; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
+				m_AnchorList[localID].m_redrawLine[iii] = true;
+			}
+		}
+	} else {
+		m_AnchorList[realAnchorId].m_BufferNumberLineOffset = 0;
 		for(int32_t iii=0; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
-			m_AnchorList[localID].m_redrawLine[iii] = true;
+			m_AnchorList[realAnchorId].m_redrawLine[iii] = true;
 		}
 	}
 }
@@ -528,18 +562,25 @@ void Buffer::AnchorForceRedrawLine(int32_t lineID)
 
 void Buffer::AnchorForceRedrawOffsef(int32_t offset)
 {
-	//offset *= -1;
-	//EDN_DEBUG("** => set ofset : " << offset);
+	EDN_DEBUG("** => set ofset : " << offset);
+	if (0 == offset) {
+		EDN_DEBUG("No apply offset ...");
+		return;
+	}
 	int32_t localID = AnchorCurrentId();
 	if (localID >=0) {
+		EDN_DEBUG("offset ID=" << localID);
 		m_AnchorList[localID].m_BufferNumberLineOffset += offset;
 		
 		if (offset < 0) {
 			if (-1 * offset < MAX_LINE_DISPLAYABLE_BY_BUFFER) {
+				EDN_DEBUG("move redraw request : [" << -1*offset << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER << "[=[" << -1*offset + offset << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER+offset << "[");
+				//for(int32_t iii=MAX_LINE_DISPLAYABLE_BY_BUFFER; iii >= -1*offset; iii--) {
 				for(int32_t iii=-1*offset; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
 					//EDN_DEBUG("move redraw request : " << iii << " <==  " << iii+offset << " val=" << m_AnchorList[localID].m_redrawLine[iii+offset]);
 					m_AnchorList[localID].m_redrawLine[iii] = m_AnchorList[localID].m_redrawLine[iii+offset];
 				}
+				EDN_DEBUG("move redraw request : [" << 0 << "," << -1*offset << "[=true");
 				for(int32_t iii=0; iii < -1*offset; iii++) {
 					//EDN_DEBUG("move redraw request : " << iii << " <== true");
 					m_AnchorList[localID].m_redrawLine[iii] = true;
@@ -553,10 +594,12 @@ void Buffer::AnchorForceRedrawOffsef(int32_t offset)
 			}
 		} else {
 			if (offset < MAX_LINE_DISPLAYABLE_BY_BUFFER) {
+				EDN_DEBUG("move redraw request : [" << 0 << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER-offset << "[=[" << offset << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER << "[");
 				for(int32_t iii=0; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER-offset ; iii++) {
 					//EDN_DEBUG("move redraw request : " << iii << " <== " << iii+offset << " val=" << m_AnchorList[localID].m_redrawLine[iii+offset]);
 					m_AnchorList[localID].m_redrawLine[iii] = m_AnchorList[localID].m_redrawLine[iii+offset];
 				}
+				EDN_DEBUG("move redraw request : [" << MAX_LINE_DISPLAYABLE_BY_BUFFER-offset+1 << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER << "[=true");
 				for(int32_t iii=MAX_LINE_DISPLAYABLE_BY_BUFFER-offset+1; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
 					//EDN_DEBUG("move redraw request : " << iii << " <== true");
 					m_AnchorList[localID].m_redrawLine[iii] = true;
@@ -569,9 +612,12 @@ void Buffer::AnchorForceRedrawOffsef(int32_t offset)
 				}
 			}
 		}
+		EDN_DEBUG("move redraw request : [" << m_AnchorList[localID].m_displaySize.y << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER << "[=true");
 		for(int32_t iii=m_AnchorList[localID].m_displaySize.y; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
 			//EDN_DEBUG("move redraw request : " << iii << " <== true");
 			m_AnchorList[localID].m_redrawLine[iii] = true;
 		}
+	} else {
+		EDN_ERROR("can not find the real ID in linste.Size()=" << m_AnchorList.Size());
 	}
 }

@@ -110,6 +110,7 @@ class Buffer {
 		virtual void      SetLineDisplay(uint32_t lineNumber);
 		
 		virtual void      DrawLine(DrawerManager &drawer, bufferAnchor_ts &anchor);
+		virtual void      DrawLineEmpty(DrawerManager &drawer, int32_t lineScreenID);
 		// return the new cursor position ...
 		virtual void      AddChar(char * UTF8data);
 		virtual void      cursorMove(int32_t gtkKey);
@@ -158,7 +159,7 @@ class Buffer {
 		int32_t           m_lineHeight;
 		int32_t           AnchorRealId(int32_t anchorID);
 		int32_t           AnchorCurrentId(void);
-		void              AnchorForceRedrawAll(void);
+		void              AnchorForceRedrawAll(int32_t realAnchorId = -5000);
 		void              AnchorForceRedrawLine(int32_t lineID);
 		void              AnchorForceRedrawOffsef(int32_t offset);
 		Edn::VectorType<bufferAnchorReference_ts> m_AnchorList;              //!< list of all line anchor in the current buffer

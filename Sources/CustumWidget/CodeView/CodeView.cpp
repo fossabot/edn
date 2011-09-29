@@ -197,8 +197,6 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 }
 
 
-#define COUNT_TIME plop
-
 gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	CodeView * self = reinterpret_cast<CodeView*>(data);
@@ -237,7 +235,7 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 	
 	Buffer * tmpBuf = self->m_bufferManager->Get(self->m_bufferID);
 
-	#ifdef COUNT_TIME
+	#ifndef NDEBUG
 		GTimeVal timeStart;
 		g_get_current_time(&timeStart);
 	#endif
@@ -250,7 +248,9 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 	int32_t currentLineID = 0;
 	while (true == enableToWrite) {
 		if (true == anchor.m_redrawLine[currentLineID]) {
-			EDN_DEBUG("draw line : " << currentLineID);
+			#ifndef NDEBUG
+				EDN_DEBUG("draw line=" << currentLineID << " realID=" << anchor.m_lineNumber );
+			#endif
 			tmpBuf->DrawLine(monDrawer, anchor);
 		}
 		enableToWrite = tmpBuf->AnchorNext(anchor);
@@ -260,13 +260,11 @@ gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpo
 	
 	// Need to clean the end of windows (sometimes)...
 	if(currentLineID<anchor.m_displaySize.y+1) {
-		int32_t positionY = Display::GetFontHeight() * (currentLineID);
-		int32_t positionZ = Display::GetFontHeight() * (anchor.m_displaySize.y-currentLineID);
-		//monDrawer.Rectangle(myColorManager->Get(COLOR_CODE_BASIC_BG), 0, positionY, monDrawer.GetWidth(), positionZ );
-		monDrawer.Rectangle(myColorManager->Get(COLOR_CODE_CURSOR), 0, positionY, monDrawer.GetWidth(), positionZ );
-		currentLineID ++;
+		for (int32_t iii=currentLineID; iii < anchor.m_displaySize.y; iii++) {
+			tmpBuf->DrawLineEmpty(monDrawer, iii);
+		}
 	}
-	#ifdef COUNT_TIME
+	#ifndef NDEBUG
 		GTimeVal timeStop;
 		g_get_current_time(&timeStop);
 		EDN_DEBUG("Display Generation = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
