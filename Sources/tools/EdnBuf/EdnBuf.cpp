@@ -646,8 +646,22 @@ int32_t EdnBuf::CountLines(int32_t startPos, int32_t endPos)
 	EdnVectorBuf::Iterator myPosIt = m_data.Position(startPos);
 	int32_t lineCount = 0;
 	
+	#ifndef NDEBUG
+		GTimeVal timeStart;
+		if (0 == startPos) {
+			g_get_current_time(&timeStart);
+		}
+	#endif
+	
 	while (myPosIt) {
 		if (myPosIt.Position() == endPos) {
+			#ifndef NDEBUG
+				if (0 == startPos) {
+					GTimeVal timeStop;
+					g_get_current_time(&timeStop);
+					EDN_ERROR("Count line (" << startPos << "," << endPos << ") time = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
+				}
+			#endif
 			return lineCount;
 		}
 		if ('\n' == *myPosIt) {
@@ -655,6 +669,76 @@ int32_t EdnBuf::CountLines(int32_t startPos, int32_t endPos)
 		}
 		myPosIt++;
 	}
+	
+	#ifndef NDEBUG
+		if (0 == startPos) {
+			GTimeVal timeStop;
+			g_get_current_time(&timeStop);
+			EDN_ERROR("Count line (" << startPos << "," << endPos << ") time = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
+		}
+	#endif
+	
+	return lineCount;
+}
+
+/**
+ * @brief Get the Id of the line where is positionned the current pos element
+ * 
+ * @param[in] pos posithion in the buffer where we need to know the current line
+ * @param[in] refPos reference position
+ * @param[in] refLine reference Line of the position
+ * 
+ * @return the current line ID of the pos
+ * 
+ */
+int32_t EdnBuf::GetLinesIdWithRef(int32_t pos, int32_t refPos, int32_t refLine)
+{
+	EdnVectorBuf::Iterator myPosIt = m_data.Position(refPos);
+	int32_t lineCount = refLine;
+	
+	#ifndef NDEBUG
+		GTimeVal timeStart;
+		g_get_current_time(&timeStart);
+	#endif
+	if (pos == refPos) {
+		return refLine;
+	} else if (pos > refPos) {
+		while (myPosIt) {
+			if (myPosIt.Position() == pos) {
+				#ifndef NDEBUG
+					GTimeVal timeStop;
+					g_get_current_time(&timeStop);
+					EDN_DEBUG("Count line " << pos << " with ref(" << refPos << "," << refPos << ") time = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
+				#endif
+				return lineCount;
+			}
+			if ('\n' == *myPosIt) {
+				lineCount++;
+			}
+			myPosIt++;
+		}
+	} else {
+		while (myPosIt) {
+			if (myPosIt.Position() == pos) {
+				#ifndef NDEBUG
+					GTimeVal timeStop;
+					g_get_current_time(&timeStop);
+					EDN_DEBUG("Count line " << pos << " with ref(" << refPos << "," << refPos << ") time = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
+				#endif
+				return lineCount;
+			}
+			if ('\n' == *myPosIt) {
+				lineCount--;
+			}
+			myPosIt--;
+		}
+	}
+	#ifndef NDEBUG
+		GTimeVal timeStop;
+		g_get_current_time(&timeStop);
+		EDN_DEBUG("Count line " << pos << " with ref(" << refPos << "," << refPos << ") time = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
+	#endif
+	
 	return lineCount;
 }
 
@@ -685,12 +769,21 @@ int32_t EdnBuf::CountLines(void)
 	EdnVectorBuf::Iterator myPosIt = m_data.Begin();
 	int32_t lineCount = 0;
 	
+	#ifndef NDEBUG
+		GTimeVal timeStart;
+		g_get_current_time(&timeStart);
+	#endif
 	while(myPosIt) {
 		if ('\n' == *myPosIt) {
 			lineCount++;
 		}
 		myPosIt++;
 	}
+	#ifndef NDEBUG
+		GTimeVal timeStop;
+		g_get_current_time(&timeStop);
+		EDN_DEBUG("count total number of line time = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
+	#endif
 	return lineCount;
 }
 
@@ -720,6 +813,12 @@ void EdnBuf::CountNumberOfLines(void)
  */
 int32_t EdnBuf::CountForwardNLines(int32_t startPos, int32_t nLines)
 {
+	#ifndef NDEBUG
+		GTimeVal timeStart;
+		if (0 == startPos) {
+			g_get_current_time(&timeStart);
+		}
+	#endif
 	if (nLines == 0) {
 		return startPos;
 	} else if (startPos > m_data.Size() ) {
@@ -739,6 +838,14 @@ int32_t EdnBuf::CountForwardNLines(int32_t startPos, int32_t nLines)
 		}
 		myPosIt++;
 	}
+	
+	#ifndef NDEBUG
+		if (0 == startPos) {
+			GTimeVal timeStop;
+			g_get_current_time(&timeStop);
+			EDN_DEBUG("get poiner line (pos=" << startPos << "=>" << nLines << "lines) time = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s ==> " << (timeStop.tv_usec - timeStart.tv_usec)/1000. << "ms");
+		}
+	#endif
 	//EDN_INFO("   ==> (2) at position=" << myPosIt.Position() );
 	return myPosIt.Position();
 }

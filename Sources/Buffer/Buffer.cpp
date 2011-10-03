@@ -530,6 +530,7 @@ int32_t Buffer::AnchorCurrentId(void)
 
 void Buffer::AnchorForceRedrawAll(int32_t realAnchorId)
 {
+	EDN_DEBUG("AnchorForceRedrawAll(" << realAnchorId << ")");
 	if (-5000 == realAnchorId) {
 		int32_t localID = AnchorCurrentId();
 		if (localID >=0) {
@@ -572,50 +573,46 @@ void Buffer::AnchorForceRedrawOffsef(int32_t offset)
 		EDN_DEBUG("offset ID=" << localID);
 		m_AnchorList[localID].m_BufferNumberLineOffset += offset;
 		
+		EDN_DEBUG("move redraw request : [" << m_AnchorList[localID].m_displaySize.y << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER << "[=true");
+		for(int32_t iii=m_AnchorList[localID].m_displaySize.y; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
+			m_AnchorList[localID].m_redrawLine[iii] = true;
+		}
+		
+		int32_t maxSize = edn_min(m_AnchorList[localID].m_displaySize.y, MAX_LINE_DISPLAYABLE_BY_BUFFER);
+		
 		if (offset < 0) {
-			if (-1 * offset < MAX_LINE_DISPLAYABLE_BY_BUFFER) {
-				EDN_DEBUG("move redraw request : [" << -1*offset << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER << "[=[" << -1*offset + offset << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER+offset << "[");
-				//for(int32_t iii=MAX_LINE_DISPLAYABLE_BY_BUFFER; iii >= -1*offset; iii--) {
-				for(int32_t iii=-1*offset; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
-					//EDN_DEBUG("move redraw request : " << iii << " <==  " << iii+offset << " val=" << m_AnchorList[localID].m_redrawLine[iii+offset]);
+			if (-1 * offset < maxSize) {
+				EDN_DEBUG("move redraw request : ]" << maxSize << "," << -1*offset << "]=]" << maxSize+offset << "," << -1*offset + offset << "]");
+				for(int32_t iii=maxSize-1; iii >= -1*offset; iii--) {
 					m_AnchorList[localID].m_redrawLine[iii] = m_AnchorList[localID].m_redrawLine[iii+offset];
 				}
 				EDN_DEBUG("move redraw request : [" << 0 << "," << -1*offset << "[=true");
 				for(int32_t iii=0; iii < -1*offset; iii++) {
-					//EDN_DEBUG("move redraw request : " << iii << " <== true");
 					m_AnchorList[localID].m_redrawLine[iii] = true;
 				}
 			} else {
 				EDN_WARNING("FORCE a total redraw... 1");
-				for(int32_t iii=0; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
-					//EDN_DEBUG("move redraw request : " << iii << " <== true");
+				for(int32_t iii=0; iii < maxSize; iii++) {
 					m_AnchorList[localID].m_redrawLine[iii] = true;
 				}
 			}
 		} else {
-			if (offset < MAX_LINE_DISPLAYABLE_BY_BUFFER) {
-				EDN_DEBUG("move redraw request : [" << 0 << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER-offset << "[=[" << offset << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER << "[");
-				for(int32_t iii=0; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER-offset ; iii++) {
-					//EDN_DEBUG("move redraw request : " << iii << " <== " << iii+offset << " val=" << m_AnchorList[localID].m_redrawLine[iii+offset]);
+			if (offset < maxSize) {
+				EDN_DEBUG("move redraw request : [" << 0 << "," << maxSize-offset << "[=[" << offset << "," << maxSize << "[");
+				for(int32_t iii=0; iii < maxSize-offset ; iii++) {
 					m_AnchorList[localID].m_redrawLine[iii] = m_AnchorList[localID].m_redrawLine[iii+offset];
 				}
-				EDN_DEBUG("move redraw request : [" << MAX_LINE_DISPLAYABLE_BY_BUFFER-offset+1 << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER << "[=true");
-				for(int32_t iii=MAX_LINE_DISPLAYABLE_BY_BUFFER-offset+1; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
-					//EDN_DEBUG("move redraw request : " << iii << " <== true");
+				// note the -1 is to force the redisplay of the previous of the last line ==> special case of the gtk 3.0 marker to resize the windows
+				EDN_DEBUG("move redraw request : [" << maxSize-offset-1 << "," << maxSize << "[=true");
+				for(int32_t iii=maxSize-offset-1; iii < maxSize; iii++) {
 					m_AnchorList[localID].m_redrawLine[iii] = true;
 				}
 			} else {
 				EDN_WARNING("FORCE a total redraw... 2");
-				for(int32_t iii=0; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
-					//EDN_DEBUG("move redraw request : " << iii << " <== true");
+				for(int32_t iii=0; iii < maxSize; iii++) {
 					m_AnchorList[localID].m_redrawLine[iii] = true;
 				}
 			}
-		}
-		EDN_DEBUG("move redraw request : [" << m_AnchorList[localID].m_displaySize.y << "," << MAX_LINE_DISPLAYABLE_BY_BUFFER << "[=true");
-		for(int32_t iii=m_AnchorList[localID].m_displaySize.y; iii < MAX_LINE_DISPLAYABLE_BY_BUFFER; iii++) {
-			//EDN_DEBUG("move redraw request : " << iii << " <== true");
-			m_AnchorList[localID].m_redrawLine[iii] = true;
 		}
 	} else {
 		EDN_ERROR("can not find the real ID in linste.Size()=" << m_AnchorList.Size());

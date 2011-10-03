@@ -105,6 +105,7 @@ class EdnBuf {
 		int32_t CharWidth(              char c,      int32_t indent); 	// TODO : rework this
 		int32_t CountDispChars(         int32_t lineStartPos, int32_t targetPos);
 		int32_t CountForwardDispChars(  int32_t lineStartPos, int32_t nChars);
+		int32_t GetLinesIdWithRef(      int32_t pos, int32_t refPos, int32_t refLine);
 		int32_t CountLines(             int32_t startPos, int32_t endPos);
 		int32_t CountLines(             void);
 		int32_t CountLines(             Edn::VectorType<int8_t> &data);
