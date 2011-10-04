@@ -298,10 +298,12 @@ gint CodeView::CB_focusGet(	GtkWidget *widget, GdkEventFocus *event, gpointer da
 	GTK_WIDGET_SET_FLAGS (widget, GTK_HAS_FOCUS);
 #	endif
 	self->SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, self->m_bufferID);
+#	ifdef USE_GTK_VERSION_2_0
 	Buffer * tmpBuf = self->m_bufferManager->Get(self->m_bufferID);
 	tmpBuf->AnchorRedrawAll(self->m_displayUniqueId);
 	// Force redraw of the widget
 	gtk_widget_queue_draw_area(self->m_widget, 0, 0, self->m_shawableAreaX, self->m_shawableAreaY);
+#	endif
 	EDN_INFO("Focus - In");
 	return FALSE;
 }
