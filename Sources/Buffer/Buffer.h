@@ -149,6 +149,7 @@ class Buffer {
 	public:
 		void              AnchorAdd(int32_t anchorID);
 		void              AnchorRm(int32_t anchorID);
+		void              AnchorRedrawAll(int32_t anchorID);
 		virtual bool      AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor);
 		virtual bool      AnchorNext(bufferAnchor_ts & anchor);
 		void              AnchorSetSize(int32_t anchorID, int32_t sizePixelX, int32_t sizePixelY);

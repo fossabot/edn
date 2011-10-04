@@ -458,6 +458,21 @@ void Buffer::AnchorRm(int32_t anchorID)
 }
 
 
+void Buffer::AnchorRedrawAll(int32_t anchorID)
+{
+	if (anchorID == -1) {
+		EDN_ERROR("[" << m_uniqueID << "] AnchorID="<< anchorID << " Can not redraw this one !!!");
+		return;
+	}
+	int32_t localID = AnchorRealId(anchorID);
+	if (localID >=0) {
+		AnchorForceRedrawAll(localID);
+	} else {
+		EDN_ERROR("[" << m_uniqueID << "] AnchorID="<< anchorID << " does not exist !!!");
+	}
+}
+
+
 bool Buffer::AnchorGet(int32_t anchorID, bufferAnchor_ts & anchor)
 {
 	EDN_ERROR("[" << m_uniqueID << "] AnchorID="<< anchorID << " Main buffer ==> can not manage Anchor (type buffer specific)");
