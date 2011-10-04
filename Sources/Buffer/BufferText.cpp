@@ -408,6 +408,10 @@ void BufferText::MouseEvent(int32_t width, int32_t height)
 			m_cursorPreferredCol = posX;
 		}
 		m_EdnBuf.Unselect(SELECTION_PRIMARY);
+		/*
+		// for the redraw to permit to remove display error ...
+		AnchorForceRedrawAll();
+		*/
 
 		UpdateWindowsPosition();
 	}
@@ -502,6 +506,8 @@ void BufferText::RemoveLine(void)
 	int32_t start = m_EdnBuf.StartOfLine(m_cursorPos);
 	int32_t stop = m_EdnBuf.EndOfLine(m_cursorPos);
 	m_EdnBuf.Remove(start, stop+1);
+	// for the redraw to permit to remove display error ...
+	AnchorForceRedrawAll();
 	SetInsertPosition(start);
 	SetModify(true);
 }
@@ -517,6 +523,7 @@ void BufferText::SelectAll(void)
 void BufferText::SelectNone(void)
 {
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
+	// for the redraw to permit to remove display error ...
 	AnchorForceRedrawAll();
 }
 
@@ -1049,6 +1056,8 @@ void BufferText::JumpAtLine(int32_t newLine)
 {
 	int32_t positionLine = m_EdnBuf.CountForwardNLines(0, newLine);
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
+	// for the redraw to permit to remove display error ...
+	AnchorForceRedrawAll();
 	EDN_DEBUG("jump at the line : " << newLine );
 	SetInsertPosition(positionLine);
 	UpdateWindowsPosition(true);
@@ -1214,6 +1223,8 @@ void BufferText::Cut(int8_t clipboardID)
 		m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
 		SetInsertPosition(SelectionStart, true);
 	}
+	// for the redraw to permit to remove display error ...
+	AnchorForceRedrawAll();
 	UpdateWindowsPosition();
 	SetModify(true);
 }
@@ -1244,9 +1255,10 @@ void BufferText::Paste(int8_t clipboardID)
 	} else {
 		// insert data
 		m_EdnBuf.Insert(m_cursorPos, mVect);
-		SetInsertPosition(mVect.Size(), true);
+		SetInsertPosition(m_cursorPos + mVect.Size(), true);
 	}
-	
+	// for the redraw to permit to remove display error ...
+	AnchorForceRedrawAll();
 	UpdateWindowsPosition();
 	SetModify(true);
 }
@@ -1260,6 +1272,8 @@ void BufferText::Undo(void)
 		UpdateWindowsPosition();
 		SetModify(true);
 	}
+	// for the redraw to permit to remove display error ...
+	AnchorForceRedrawAll();
 }
 
 void BufferText::Redo(void)
@@ -1270,6 +1284,8 @@ void BufferText::Redo(void)
 		UpdateWindowsPosition();
 		SetModify(true);
 	}
+	// for the redraw to permit to remove display error ...
+	AnchorForceRedrawAll();
 }
 
 
