@@ -997,6 +997,7 @@ void BufferText::AddChar(char * UTF8data)
 			}
 			actionDone = true;
 		}
+		AnchorForceRedrawAll();
 	}
 	
 	if (false == actionDone) {
