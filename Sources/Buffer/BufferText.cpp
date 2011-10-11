@@ -37,6 +37,10 @@
 
 const uint32_t nbLineAllocatedInBase = 300;
 
+extern "C"
+{
+	const char * g_pointerForTheDisplayLine[] = {"%1d", "%2d","%3d","%4d","%5d","%6d","%7d","%8d","%9d","%d"};
+}
 
 
 
@@ -236,7 +240,33 @@ void BufferText::DrawLineNumber(DrawerManager &drawer,char *myPrint,  int32_t li
 	drawer.Text(myColorManager->Get(COLOR_CODE_LINE_NUMBER), 1, positionY, tmpLineNumber);
 }
 
-
+/**
+ * @brief Update internal data of the pointer to display
+ *
+ * @param[in,out] ---
+ *
+ * @return ---
+ *
+ */
+/*
+void BufferText::UpdatePointerNumber(void)
+{
+	// get the number of line in the buffer
+	int32_t maxNumberLine = m_EdnBuf.NumberOfLines();
+	//int32_t maxNumberLine = 2096;
+	if (10 > maxNumberLine) {				m_nbColoneForLineNumber = 1;
+	} else if (100 > maxNumberLine) {		m_nbColoneForLineNumber = 2;
+	} else if (1000 > maxNumberLine) {		m_nbColoneForLineNumber = 3;
+	} else if (10000 > maxNumberLine) {		m_nbColoneForLineNumber = 4;
+	} else if (100000 > maxNumberLine) {	m_nbColoneForLineNumber = 5;
+	} else if (1000000 > maxNumberLine) {	m_nbColoneForLineNumber = 6;
+	} else if (1000000 > maxNumberLine) {	m_nbColoneForLineNumber = 7;
+	} else if (10000000 > maxNumberLine) {	m_nbColoneForLineNumber = 8;
+	} else if (100000000 > maxNumberLine) {	m_nbColoneForLineNumber = 9;
+	} else {								m_nbColoneForLineNumber = 10;
+	}
+}
+*/
 /**
  * @brief Display the curent buffer with all the probematic imposed by the xharset and the user contraint.
  *
@@ -842,7 +872,7 @@ void BufferText::cursorMove(int32_t gtkKey)
 		case GDK_Page_Up:
 #		endif
 			//EDN_INFO("keyEvent : <PAGE-UP>");
-			TextDMoveUp(m_displaySize.x);
+			TextDMoveUp(m_displaySize.y);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Page_Down:
@@ -850,7 +880,7 @@ void BufferText::cursorMove(int32_t gtkKey)
 		case GDK_Page_Down:
 #		endif
 			//EDN_INFO("keyEvent : <PAGE-DOWN>");
-			TextDMoveDown(m_displaySize.x);
+			TextDMoveDown(m_displaySize.y);
 			break;
 #		ifdef USE_GTK_VERSION_3_0
 		case GDK_KEY_Begin:

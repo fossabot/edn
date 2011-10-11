@@ -39,7 +39,7 @@
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<start>//</start>
+			<start>(//|@)</start>
 			<end>\n</end>
 			<EscapeChar>\</EscapeChar>
 		</rule>

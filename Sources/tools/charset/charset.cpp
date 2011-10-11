@@ -1139,7 +1139,11 @@ void ConvertInput(GdkEventKey *event, char* Utf8Out, bool &controlKey, bool &mov
 #		endif
 			key = '?';
 			break;
+#		ifdef USE_GTK_VERSION_3_0
+		case GDK_KEY_Caps_Lock:
+#		elif USE_GTK_VERSION_2_0
 		case GDK_Caps_Lock:
+#		endif
 			controlKey = true;
 			break;
 		default:
