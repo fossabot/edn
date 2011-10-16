@@ -145,6 +145,7 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
 	m_size.x = x;
 	m_size.y = y;
 	m_haveWork = false;
+	m_nbElement = 0;
 	// Create the Cairo Element
 #   if USE_GTK_VERSION_3_0
 	m_cairo = gdk_cairo_create(gtk_widget_get_window(widget));
