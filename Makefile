@@ -299,6 +299,10 @@ install: .encadrer .versionFile $(OUTPUT_NAME_RELEASE)
 	@mkdir -p /usr/share/edn/images/
 	@cp -vf data/imagesSources/icone.png /usr/share/edn/images/
 	@cp -vf data/imagesSources/delete-24px.png /usr/share/edn/images/
+	# gnome adding for the program at the list (manage icone in .xpm)
+	@cp -vf data/edn.desktop /usr/share/applications/
+	@cp -vf data/imagesSources/icone.png /usr/share/app-install/icons/Edn.png
+	@cp -vf data/imagesSources/icone.xpm /usr/share/pixmaps/Edn.xpm
 
 
 # http://alp.developpez.com/tutoriels/debian/creer-paquet/
