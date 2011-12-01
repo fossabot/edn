@@ -134,6 +134,11 @@ void HighlightManager::loadLanguages(void)
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	
+	xmlFilename = homedir;
+	xmlFilename += "lang_java.xml";
+	myHightline = new Highlight(xmlFilename);
+	listHighlight.PushBack(myHightline);
+	
 	//myHightline->Display();
 }
 

@@ -42,16 +42,17 @@
 
 // Variables privé du namespace
 #define		POLICE_NAME		"Monospace"
-
+/*
 #ifdef USE_GTK_VERSION_3_0
 	#define		POLICE_SIZE		15
 	static int32_t				m_pangoFontWidth  = 9;
 	static int32_t				m_pangoFontHeight = 19;
 #elif USE_GTK_VERSION_2_0
+*/
 	#define		POLICE_SIZE		12
 	static int32_t				m_pangoFontWidth  = 7;
 	static int32_t				m_pangoFontHeight = 15;
-#endif
+//#endif
 /*
 	#define		POLICE_SIZE		11
 	static int32_t				  m_pangoFontWidth  = 7;

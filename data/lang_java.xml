@@ -1,46 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EdnLang version="0.1" lang="c">
-	<ext>*.c</ext>
-	<ext>*.cpp</ext>
-	<ext>*.h</ext>
-	<ext>*.hpp</ext>
+<EdnLang version="0.1" lang="java">
+	<ext>*.java</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline doxygen">
 			<color>commentDoxygen</color>
 			<start>/\*\*</start>
-			<end>\*/</end>
-			<rule name="macro">
-				<color>macro</color>
-				<start>\@[A-Z_]{4,500}\@</start>
-			</rule>
-			<rule name="keyword">
-				<color>keyword</color>
-				<start>@\w*[ \t]*(\[(in|out| |,)*\])?[ \t]*([a-zA-Z0-9\-_]*)</start>
-				<underColor idPThese="1"></underColor><!-- (\[(in|out| |,)*\]) -->
-				<underColor idPThese="3"></underColor><!-- (([a-zA-Z0-9\-_])*) -->
-			</rule>
-		</rule>
-		<rule name="code Review">
-			<color>SYNTAX_ERROR</color>
-			<start>/\*[ \t]*@review</start>
 			<end>\*/</end>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
 			<start>/\*</start>
 			<end>\*/</end>
-		</rule>
-		<rule name="my if 0">
-			<color>preprocesseur</color>
-			<start>#[ \t]*if 0</start>
-			<end>#endif|#else</end>
-			<EscapeChar>\</EscapeChar>
-		</rule>
-		<rule name="my preprocesseur">
-			<color>preprocesseur</color>
-			<start>#</start>
-			<end>\n</end>
-			<EscapeChar>\</EscapeChar>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
@@ -83,11 +53,11 @@
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<start>\@bool|BOOL|char|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128)\@</start>
+			<start>\@bool|char|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128)\@</start>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<start>\@const|class|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum\@</start>
+			<start>\@import|package|extends|Override|const|class|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum\@</start>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
@@ -113,12 +83,5 @@
 			<color>boolean</color>
 			<start>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</start>
 		</rule>
-        <!-- With all elementes : 
-		<rule name="BIG LETTER">
-			<color>macro</color>
-			<start>([A-Z]|_){4,500}</start>
-            <elemSubColor id="1">doxElem</elemSubColor>
-		</rule>
-        -->
 	</pass2>
 </EdnLang>
