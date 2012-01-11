@@ -25,12 +25,11 @@
 #ifndef __BUFFER_VIEW_H__
 #define __BUFFER_VIEW_H__
 
-#include "tools_debug.h"
-#include "Singleton.h"
-#include "CodeView.h"
-#include "BufferManager.h"
-#include "Display.h"
-#include "MsgBroadcast.h"
+#include <tools_debug.h>
+#include <CodeView.h>
+#include <BufferManager.h>
+#include <Display.h>
+#include <MsgBroadcast.h>
 
 
 
@@ -40,8 +39,9 @@ class BufferView : public MsgBroadcast
 		// Constructeur
 		BufferView(void);
 		~BufferView(void);
-		GtkWidget	*GetMainWidget(void);
+		//GtkWidget	*GetMainWidget(void);
 		void OnMessage(int32_t id, int32_t dataID);
+		/*
 		// sur : GTK+ callback :
 		static gboolean	CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data);
 		static gboolean	CB_displayInit( GtkWidget *widget, gpointer data);
@@ -56,12 +56,12 @@ class BufferView : public MsgBroadcast
 		static void     OnPopupEventClose(GtkWidget *menuitem, gpointer data);
 		static void     OnPopupEventSave(GtkWidget *menuitem, gpointer data);
 		static void     OnPopupEventSaveAs(GtkWidget *menuitem, gpointer data);
-	
+		*/
 	
 	private:
-		void        ViewPopupMenu(GtkWidget *parrent, GdkEventButton *event, int32_t BufferID);
+		//void        ViewPopupMenu(GtkWidget *parrent, GdkEventButton *event, int32_t BufferID);
 		// main windows widget : 
-		GtkWidget *           m_widget;
+		//GtkWidget *           m_widget;
 		// récupération des proprieter général...
 		BufferManager *       m_bufferManager;
 		ColorizeManager *     m_colorManager;

@@ -26,9 +26,9 @@
 #ifndef __TOOLS_DISPLAY_H__
 #define __TOOLS_DISPLAY_H__
 
-#include "tools_debug.h"
-#include "Colorize.h"
-#include "ColorizeManager.h"
+#include <tools_debug.h>
+#include <Colorize.h>
+#include <ColorizeManager.h>
 
 
 /**
@@ -38,7 +38,8 @@ namespace Display
 {
 	void                    Init(void);
 	void                    UnInit(void);
-	cairo_font_face_t *     GetFont(bool bold, bool italic);
+	//cairo_font_face_t *     GetFont(bool bold, bool italic);
+	void *                  GetFont(bool bold, bool italic);
 	int32_t                 GetFontHeight(void);
 	int32_t                 GetFontWidth(void);
 };
@@ -52,7 +53,8 @@ class DrawerManager;
 class DrawerManager {
 	public:
 		// Constructeur
-		DrawerManager(GtkWidget * widget, int32_t x, int32_t y);
+		//DrawerManager(GtkWidget * widget, int32_t x, int32_t y);
+		DrawerManager(void * widget, int32_t x, int32_t y);
 		~DrawerManager();
 
 		void    Rectangle(Colorize *SelectColor, int32_t x, int32_t y, int32_t width, int32_t height);
@@ -84,7 +86,7 @@ class DrawerManager {
 		Colorize *      m_selectColor;                          //!< curent color to display
 
 		position_ts     m_size;                                 //!< Total size
-		cairo_t *       m_cairo;                                //!< Cairo Layout pointer
+		//cairo_t *       m_cairo;                                //!< Cairo Layout pointer
 		
 };
 

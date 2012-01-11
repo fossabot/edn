@@ -23,43 +23,33 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "Display.h"
-#include "BufferManager.h"
-#include "ColorizeManager.h"
-#include "HighlightManager.h"
-#include "ClipBoard.h"
-#include <string>
-#include "WindowsManager.h"
-#include "Search.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <Display.h>
+#include <BufferManager.h>
+#include <ColorizeManager.h>
+#include <HighlightManager.h>
+#include <ClipBoard.h>
+#include <etk/String.h>
+#include <WindowsManager.h>
+#include <Search.h>
 #include <unistd.h>
-#include "readtags.h"
-#include "CTagsManager.h"
-
-
-#include "Edn.h"
-
+#include <readtags.h>
+#include <CTagsManager.h>
 
 /**
- * @brief Main start function of the system
- * 
- * @param[in] argc    number of argument when called
- * @param[in] argv    sus nomer arguments
- *
- * @return EXIT_SUCCESS, all time
- *
+ * @brief main application function Initialisation
  */
-int main (int argc, char *argv[])
+void APP_Init(int argc, char *argv[])
 {
 	EDN_INFO("Start Edn");
 
-	//Edn::TestUntaire_String();
+	//etk::TestUntaire_String();
 	//return 0;
 
 
 	// Use and remove GTK arguments from the application argument list.
-	gtk_init (&argc, &argv);
+	//gtk_init (&argc, &argv);
 
 	// init internal global value
 	globals::init();
@@ -69,7 +59,7 @@ int main (int argc, char *argv[])
 	
 	// init ALL Singleton :
 	(void)MsgBroadcastCore::getInstance();
-	(void)AccelKey::getInstance();
+	//(void)AccelKey::getInstance();
 	(void)WindowsManager::getInstance();
 	(void)CTagsManager::getInstance();
 	BufferManager *myBufferManager = BufferManager::getInstance();
@@ -77,7 +67,7 @@ int main (int argc, char *argv[])
 	// set color and other trucs...
 	ColorizeManager *myColorManager = NULL;
 	myColorManager = ColorizeManager::getInstance();
-	Edn::String homedir;
+	etk::String homedir;
 	//homedir = getenv("HOME");
 #ifdef NDEBUG
 	homedir = "/usr/share/edn/";
@@ -99,7 +89,7 @@ int main (int argc, char *argv[])
 	// get the curent program folder
 	char cCurrentPath[FILENAME_MAX];
 	if (!getcwd(cCurrentPath, FILENAME_MAX)) {
-		return -1;
+		return ;
 	}
 	cCurrentPath[FILENAME_MAX - 1] = '\0';
 	//EDN_INFO("The current working directory is " << cCurrentPath);
@@ -109,7 +99,7 @@ int main (int argc, char *argv[])
 	EDN_INFO("show list of files : ");
 	for( int32_t i=1 ; i<argc; i++) {
 		EDN_INFO("need load file : \"" << argv[i] << "\"" );
-		Edn::File myfile = (char *)argv[i];
+		etk::File myfile = (char *)argv[i];
 
 		if (false == myBufferManager->Exist(myfile) ) {
 			int32_t idBuffOpened = myBufferManager->Open(myfile);
@@ -118,26 +108,30 @@ int main (int argc, char *argv[])
 			}
 		}
 	}
+}
 
-	EDN_INFO("Start gtk main");
-	gtk_main();
-	EDN_INFO("Stop gtk main");
+
+/**
+ * @brief main application function Un-Initialisation
+ */
+void APP_UnInit(void)
+{
 
 	//Kill all singleton
 	EDN_INFO("Stop BufferManager");
-	BufferManager::kill();
+	//BufferManager::kill();
 	EDN_INFO("Stop ColorizeManager");
-	ColorizeManager::kill();
+	//ColorizeManager::kill();
 	EDN_INFO("Stop Search");
-	Search::kill();
+	//Search::kill();
 	EDN_INFO("Stop Accel key");
-	AccelKey::kill();
+	//AccelKey::kill();
 	EDN_INFO("Stop Display");
 	Display::UnInit();
 	
 
 
 	EDN_INFO("Stop Edn");
-	return EXIT_SUCCESS;
+	//return EXIT_SUCCESS;
 } 
 

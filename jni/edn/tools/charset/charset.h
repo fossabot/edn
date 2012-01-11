@@ -26,7 +26,7 @@
 #ifndef __CHARSET_H__
 #define __CHARSET_H__
 
-#include "VectorType.h"
+#include <etk/VectorType.h>
 
 typedef enum {
 	EDN_CHARSET_UTF8,
@@ -47,20 +47,20 @@ typedef enum {
 } charset_te;
 
 // transform ISO <==> Unicode
-void    convertIsoToUnicode(charset_te inputCharset, char                   input_ISO,     int32_t &              output_Unicode);
-void    convertUnicodeToIso(charset_te inputCharset, int32_t                input_Unicode, char &                 output_ISO);
-int32_t convertIsoToUnicode(charset_te inputCharset, Edn::VectorType<char>&    input_ISO,     Edn::VectorType<int32_t>& output_Unicode);
-int32_t convertUnicodeToIso(charset_te inputCharset, Edn::VectorType<int32_t>& input_Unicode, Edn::VectorType<char>&    output_ISO);
+void    convertIsoToUnicode(charset_te inputCharset, char                      input_ISO,     int32_t &                 output_Unicode);
+void    convertUnicodeToIso(charset_te inputCharset, int32_t                   input_Unicode, char &                    output_ISO);
+int32_t convertIsoToUnicode(charset_te inputCharset, etk::VectorType<char>&    input_ISO,     etk::VectorType<int32_t>& output_Unicode);
+int32_t convertUnicodeToIso(charset_te inputCharset, etk::VectorType<int32_t>& input_Unicode, etk::VectorType<char>&    output_ISO);
 // Transform UTF-8 <==> Unicode
-void    convertUnicodeToUtf8(                        int32_t                input_Unicode, char *                 output_UTF8);
-void    convertUtf8ToUnicode(                        char *                 input_UTF8,    int32_t&               output_Unicode);
-int32_t convertUnicodeToUtf8(                        Edn::VectorType<int32_t>& input_Unicode, Edn::VectorType<char>&    output_UTF8);
-int32_t convertUtf8ToUnicode(                        Edn::VectorType<char>&    input_UTF8,    Edn::VectorType<int32_t>& output_Unicode);
+void    convertUnicodeToUtf8(                        int32_t                   input_Unicode, char *                    output_UTF8);
+void    convertUtf8ToUnicode(                        char *                    input_UTF8,    int32_t&                  output_Unicode);
+int32_t convertUnicodeToUtf8(                        etk::VectorType<int32_t>& input_Unicode, etk::VectorType<char>&    output_UTF8);
+int32_t convertUtf8ToUnicode(                        etk::VectorType<char>&    input_UTF8,    etk::VectorType<int32_t>& output_Unicode);
 // Transform ISO <==> UTF-8
-void    convertIsoToUtf8(  charset_te inputCharset,  char                   input_ISO,     char *                 output_UTF8);
-void    convertUtf8ToIso(  charset_te inputCharset,  char *                 input_UTF8,    char &                 output_ISO);
-int32_t convertIsoToUtf8(  charset_te inputCharset,  Edn::VectorType<char>&    input_ISO,     Edn::VectorType<char>&    output_UTF8);
-int32_t convertUtf8ToIso(  charset_te inputCharset,  Edn::VectorType<char>&    input_UTF8,    Edn::VectorType<char>&    output_ISO);
+void    convertIsoToUtf8(  charset_te inputCharset,  char                      input_ISO,     char *                    output_UTF8);
+void    convertUtf8ToIso(  charset_te inputCharset,  char *                    input_UTF8,    char &                    output_ISO);
+int32_t convertIsoToUtf8(  charset_te inputCharset,  etk::VectorType<char>&    input_ISO,     etk::VectorType<char>&    output_UTF8);
+int32_t convertUtf8ToIso(  charset_te inputCharset,  etk::VectorType<char>&    input_UTF8,    etk::VectorType<char>&    output_ISO);
 
 void    Utf8_SizeElement(const char * data, int32_t lenMax , uint8_t &size, bool &baseValid);
 int32_t strUtf8Len(const char *input_UTF8);
@@ -79,7 +79,7 @@ int32_t strUtf8Len(const char *input_UTF8);
 #endif
 //#	define GDK_Retur		(65516)
 
-void ConvertInput(GdkEventKey *event, char* Utf8Out, bool &controlKey, bool &moveKey, int32_t &key);
+//void ConvertInput(GdkEventKey *event, char* Utf8Out, bool &controlKey, bool &moveKey, int32_t &key);
 
 void testDisplayConvChar(void);
 

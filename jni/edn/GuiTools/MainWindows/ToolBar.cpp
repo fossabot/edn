@@ -23,10 +23,11 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "ToolBar.h"
-#include "ClipBoard.h"
+#include <tools_debug.h>
+#include <ToolBar.h>
+#include <ClipBoard.h>
 
+/*
 static void CB_menuGenerique(GtkMenuItem *menu_item, gpointer data)
 {
 	//EDN_INFO("basic menue_event");
@@ -34,11 +35,11 @@ static void CB_menuGenerique(GtkMenuItem *menu_item, gpointer data)
 	// broacast message : 
 	GeneralSendMessage(msg->msgId, msg->dataId);
 }
-
-
+*/
 
 ToolBar::ToolBar(void) : MsgBroadcast("Tool bar", EDN_CAT_GUI)
 {
+/*
 	m_mainWidget = gtk_toolbar_new();
 #	ifdef USE_GTK_VERSION_2_0
 	gtk_toolbar_set_orientation(GTK_TOOLBAR(m_mainWidget), GTK_ORIENTATION_VERTICAL);
@@ -55,6 +56,7 @@ ToolBar::ToolBar(void) : MsgBroadcast("Tool bar", EDN_CAT_GUI)
 	Add(GTK_STOCK_SAVE_AS, "Enregistrer sous", EDN_MSG__CURRENT_SAVE_AS);
 	AddSeparator();
 	Add(GTK_STOCK_QUIT, "Quitter");
+*/
 }
 
 ToolBar::~ToolBar(void)
@@ -66,7 +68,7 @@ void ToolBar::OnMessage(int32_t id, int32_t dataID)
 {
 	//EDN_INFO("ReceiveMessage");
 }
-
+/*
 void ToolBar::AddSeparator(void)
 {
 #	ifdef USE_GTK_VERSION_3_0
@@ -87,7 +89,7 @@ void ToolBar::Add(const char * title, const char * labelHelp, messageType_te id,
 	gtk_toolbar_insert_stock(GTK_TOOLBAR(m_mainWidget), title, labelHelp, NULL, G_CALLBACK(CB_menuGenerique), message, -1);
 #	endif
 }
-
+*/
 
 
 

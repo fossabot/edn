@@ -22,10 +22,10 @@
  *
  *******************************************************************************
  */
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "ColorizeManager.h"
-#include "tinyxml.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <ColorizeManager.h>
+#include <tinyXML/tinyxml.h>
 
 #define PFX	"ColorizeManager "
 
@@ -58,8 +58,8 @@ void ColorizeManager::OnMessage(int32_t id, int32_t dataID)
 		case EDN_MSG__RELOAD_COLOR_FILE:
 			{
 				// Reaload File
-				// TODO : Check this : Pb in the recopy Edn::String element
-				Edn::String plop = m_fileColor;
+				// TODO : Check this : Pb in the recopy etk::String element
+				etk::String plop = m_fileColor;
 				LoadFile(plop.c_str());
 			}
 			break;
@@ -67,7 +67,7 @@ void ColorizeManager::OnMessage(int32_t id, int32_t dataID)
 }
 
 
-void ColorizeManager::LoadFile(Edn::String &xmlFilename)
+void ColorizeManager::LoadFile(etk::String &xmlFilename)
 {
 	LoadFile(xmlFilename.c_str());
 }
@@ -236,7 +236,7 @@ Colorize *ColorizeManager::Get(const char *colorName)
 {
 	int32_t i;
 	for (i=0; i<listMyColor.Size(); i++) {
-		Edn::String elementName = listMyColor[i]->GetName();
+		etk::String elementName = listMyColor[i]->GetName();
 		if (elementName == colorName) {
 			return listMyColor[i];
 		}
@@ -246,7 +246,7 @@ Colorize *ColorizeManager::Get(const char *colorName)
 	return errorColor;
 }
 
-Colorize *ColorizeManager::Get(Edn::String &colorName)
+Colorize *ColorizeManager::Get(etk::String &colorName)
 {
 	return Get(colorName.c_str());
 }
@@ -265,14 +265,14 @@ bool ColorizeManager::Exist(const char *colorName)
 {
 	int32_t i;
 	for (i=0; i<listMyColor.Size(); i++) {
-		Edn::String elementName = listMyColor[i]->GetName();
+		etk::String elementName = listMyColor[i]->GetName();
 		if (elementName == colorName) {
 			return true;
 		}
 	}
 	return false;
 }
-bool ColorizeManager::Exist(Edn::String &colorName)
+bool ColorizeManager::Exist(etk::String &colorName)
 {
 	return Exist(colorName.c_str());
 }
@@ -282,7 +282,7 @@ void ColorizeManager::DisplayListOfColor(void)
 	int32_t i;
 	EDN_INFO(PFX"List of ALL COLOR : ");
 	for (i=0; i<listMyColor.Size(); i++) {
-		//Edn::String elementName = listMyColor[i]->GetName();
+		//etk::String elementName = listMyColor[i]->GetName();
 		//EDN_INFO(i << " : \"" <<  elementName.c_str() << "\"" );
 		listMyColor[i]->Display(i);
 	}

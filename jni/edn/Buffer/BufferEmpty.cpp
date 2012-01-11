@@ -23,11 +23,11 @@
  *******************************************************************************
  */
  
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "BufferEmpty.h"
-#include "ColorizeManager.h"
-#include "MainWindows.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <BufferEmpty.h>
+#include <ColorizeManager.h>
+#include <MainWindows.h>
 
 #undef __class__
 #define __class__	"BufferEmpty"

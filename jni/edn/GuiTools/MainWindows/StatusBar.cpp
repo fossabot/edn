@@ -23,13 +23,14 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "StatusBar.h"
+#include <tools_debug.h>
+#include <StatusBar.h>
 
 
 
 StatusBar::StatusBar(void) : MsgBroadcast("Status bar", EDN_CAT_GUI)
 {
+/*
 	m_mainWidget = gtk_statusbar_new();
 	// pas très bien compris pourquoi mais ca marche...
 	m_iContextId = gtk_statusbar_get_context_id(GTK_STATUSBAR(m_mainWidget), "ExitMsg");
@@ -37,6 +38,7 @@ StatusBar::StatusBar(void) : MsgBroadcast("Status bar", EDN_CAT_GUI)
 	gtk_statusbar_push(GTK_STATUSBAR (m_mainWidget), GPOINTER_TO_INT(m_iContextId), "Edn Editeur de n'ours");
 	// Supression du précédent message :
 	//gtk_statusbar_pop(GTK_STATUSBAR(m_mainWidget), GPOINTER_TO_INT(m_iContextId));
+*/
 }
 
 StatusBar::~StatusBar(void)

@@ -23,30 +23,32 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "MsgBroadcast.h"
-#include "VectorType.h"
-#include "AccelKey.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <MsgBroadcast.h>
+#include <etk/VectorType.h>
+#include <AccelKey.h>
 
 #ifndef __MENU_BAR_H__
 #define __MENU_BAR_H__
 
-class MenuBarMain;
+//class MenuBarMain;
 
 class MenuBar: public MsgBroadcast
 {
 	public:
 		// Constructeur
-		MenuBar(void);
-		~MenuBar(void);
-		GtkWidget	* GetWidget(void) { return m_mainWidget; };
-		void          OnMessage(int32_t id, int32_t dataID);
+		MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI){};
+		~MenuBar(void) {};
+		//GtkWidget	* GetWidget(void) { return m_mainWidget; };
+		void          OnMessage(int32_t id, int32_t dataID) {};
 	
 	private:
+		/*
 		GtkWidget *                     m_mainWidget;
 		GtkAccelGroup *                 m_accelGroup;
-		Edn::VectorType<MenuBarMain*>   m_listMenu;
+		etk::VectorType<MenuBarMain*>   m_listMenu;
+		*/
 };
 
 

@@ -23,22 +23,21 @@
  *******************************************************************************
  */
 
-#include "tools_globals.h"
-#include "SearchData.h"
-#include "Edn.h"
+#include <tools_globals.h>
+#include <SearchData.h>
 
 
 #undef __class__
 #define __class__	"SearchData"
 
 
-static Edn::String m_findRequest = "";
+static etk::String m_findRequest = "";
 
-void SearchData::SetSearch(Edn::String &myData)
+void SearchData::SetSearch(etk::String &myData)
 {
 	m_findRequest = myData;
 }
-void SearchData::GetSearch(Edn::String &myData)
+void SearchData::GetSearch(etk::String &myData)
 {
 	myData = m_findRequest;
 }
@@ -50,12 +49,12 @@ bool SearchData::IsSearchEmpty(void)
 	return true;
 }
 
-static Edn::String m_replaceRequest = "";
-void SearchData::SetReplace(Edn::String &myData)
+static etk::String m_replaceRequest = "";
+void SearchData::SetReplace(etk::String &myData)
 {
 	m_replaceRequest = myData;
 }
-void SearchData::GetReplace(Edn::String &myData)
+void SearchData::GetReplace(etk::String &myData)
 {
 	myData = m_replaceRequest;
 }

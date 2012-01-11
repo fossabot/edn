@@ -26,7 +26,7 @@
 #ifndef __BUFFER_EMPTY_H__
 #define __BUFFER_EMPTY_H__
 
-#include "Buffer.h"
+#include <Buffer.h>
 
 class BufferEmpty : public Buffer {
 	public:

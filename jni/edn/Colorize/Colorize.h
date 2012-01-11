@@ -25,9 +25,7 @@
  
 #ifndef __COLORIZE_H__
 #define __COLORIZE_H__
-
-#include "Edn.h"
-
+/*
 extern "C" {
 	typedef struct {
 		float red;
@@ -35,22 +33,22 @@ extern "C" {
 		float blue;
 	} color_ts;
 }
-
+*/
 
 class Colorize {
 	public:
 		// Constructeur
 		Colorize(void);
-		Colorize(Edn::String &newColorName);
+		Colorize(etk::String &newColorName);
 		~Colorize(void);
 		
-		void SetName(Edn::String &newColorName);
+		void SetName(etk::String &newColorName);
 		void SetName(const char *newColorName);
-		Edn::String GetName(void);
+		etk::String GetName(void);
 		void SetFgColor(const char *myColor);
 		void SetBgColor(const char *myColor);
-		void ApplyFG(cairo_t * cr) { cairo_set_source_rgba(cr, m_colorFG.red, m_colorFG.green, m_colorFG.blue, 1); };
-		void ApplyBG(cairo_t * cr) { cairo_set_source_rgba(cr, m_colorBG.red, m_colorBG.green, m_colorBG.blue, 1); };
+		//void ApplyFG(cairo_t * cr) { cairo_set_source_rgba(cr, m_colorFG.red, m_colorFG.green, m_colorFG.blue, 1); };
+		//void ApplyBG(cairo_t * cr) { cairo_set_source_rgba(cr, m_colorBG.red, m_colorBG.green, m_colorBG.blue, 1); };
 		
 		color_ts & GetFG(void) { return m_colorFG; };
 		color_ts & GetBG(void) { return m_colorBG; };
@@ -65,7 +63,7 @@ class Colorize {
 		void Display(int32_t i) { EDN_INFO("        " << i << " : \"" <<  ColorName.c_str() << "\"" /*<< "     fg="<< m_colorFG.red <<","<< m_colorFG.green <<","<< m_colorFG.blue <<"     bg="<< m_colorBG.red <<","<< m_colorBG.green <<","<< m_colorBG.blue*/ ); };
 
 	private:
-		Edn::String ColorName;						//!< curent color Name
+		etk::String ColorName;						//!< curent color Name
 		color_ts m_colorFG;
 		color_ts m_colorBG;
 		

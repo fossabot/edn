@@ -26,9 +26,9 @@
 #ifndef __MSG_BROADCAST_H__
 #define __MSG_BROADCAST_H__
 
-#include "tools_debug.h"
-#include "Edn.h"
-#include "Singleton.h"
+#include <tools_debug.h>
+#include <etk/Singleton.h>
+#include <etk/String.h>
 
 
 
@@ -163,7 +163,7 @@ class MsgBroadcastCore;
 class MsgBroadcast
 {
 	private:
-		Edn::String             m_className;
+		etk::String             m_className;
 		MsgBroadcastCore *      m_messageSystem;
 		messageCat_te           m_cat;
 	public:
@@ -171,7 +171,7 @@ class MsgBroadcast
 		virtual ~MsgBroadcast(void);
 		// caul when a message is send
 		virtual void     OnMessage(int32_t id, int32_t dataID);
-		Edn::String&     GetName(void) { return m_className; };
+		etk::String&     GetName(void) { return m_className; };
 		messageCat_te    GetCat(void) { return m_cat; };
 	protected :
 		void         SendMessage(messageType_te id, int32_t dataID = -1);
@@ -186,9 +186,9 @@ typedef struct {
 }messageElement_ts;
 
 // need to create a syngleton ...
-class MsgBroadcastCore: public Singleton<MsgBroadcastCore>
+class MsgBroadcastCore: public etk::Singleton<MsgBroadcastCore>
 {
-	friend class Singleton<MsgBroadcastCore>;
+	friend class etk::Singleton<MsgBroadcastCore>;
 	// specific for sigleton system...
 	private:
 		// Constructeur
@@ -200,17 +200,13 @@ class MsgBroadcastCore: public Singleton<MsgBroadcastCore>
 		void RmReceiver(MsgBroadcast * pointerOnReceiver);
 
 	private:
-		Edn::VectorType<MsgBroadcast*>         m_listMessage;
+		etk::VectorType<MsgBroadcast*>         m_listMessage;
 		uint32_t                               m_messageID;
-		Edn::VectorType<messageElement_ts>     m_listOfMessage;
+		etk::VectorType<messageElement_ts>     m_listOfMessage;
 };
 
 
 void GeneralSendMessage(messageType_te id, int32_t dataID = -1);
-
-
-
-
 
 #endif
 

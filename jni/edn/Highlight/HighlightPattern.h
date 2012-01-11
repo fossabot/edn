@@ -23,19 +23,19 @@
  *******************************************************************************
  */
 
-#include "Highlight.h"
+#include <Highlight.h>
 
 #ifndef __HIGHLIGHT_PATTERN_H__
 #define __HIGHLIGHT_PATTERN_H__
 
 class HighlightPattern;
 
-#include "Edn.h"
-#include "RegExp.h"
-#include "Colorize.h"
-#include "VectorType.h"
-#include "tinyxml.h"
-#include "EdnVectorBuf.h"
+
+#include <etk/RegExp.h>
+#include <Colorize.h>
+#include <etk/VectorType.h>
+#include <tinyXML/tinyxml.h>
+#include <EdnVectorBuf.h>
 
 typedef enum {
 	HLP_FIND_ERROR,
@@ -51,13 +51,13 @@ class HighlightPattern {
 		HighlightPattern(void);
 		~HighlightPattern(void);
 		
-		void            SetName(Edn::String &name) { m_paternName = name;};
-		Edn::String     GetName(void) { return m_paternName;};
+		void            SetName(etk::String &name) { m_paternName = name;};
+		etk::String     GetName(void) { return m_paternName;};
 		
-		void            SetPaternStart(Edn::String &regExp);
-		void            SetPaternStop(Edn::String &regExp);
-		void            SetColor(Edn::String &colorName);
-		void            SetEscapeChar(Edn::String &EscapeChar);
+		void            SetPaternStart(etk::String &regExp);
+		void            SetPaternStop(etk::String &regExp);
+		void            SetColor(etk::String &colorName);
+		void            SetEscapeChar(etk::String &EscapeChar);
 		void            SetMultiline(bool enable) { m_multiline = enable; };
 		
 		void            SetLevel(int32_t newLevel) { m_level = newLevel; };
@@ -73,16 +73,16 @@ class HighlightPattern {
 
 	private:
 		int32_t                             m_level;                    //!< Level of the pattern ==> this is to overwrite next pattern when we create an higher ....
-		Edn::String                         m_paternName;               //!< Current style name (like "c++" or "c" or "script Bash")
-		Edn::String                         m_colorName;                //!< Current color name
+		etk::String                         m_paternName;               //!< Current style name (like "c++" or "c" or "script Bash")
+		etk::String                         m_colorName;                //!< Current color name
 		Colorize *                          m_color;                    //!< Link to the color manager
-		EdnRegExp<EdnVectorBuf> *           m_regExpStart;              //!< Start of Regular expression
-		EdnRegExp<EdnVectorBuf> *           m_regExpStop;               //!< Stop of Regular Expression
+		etk::RegExp<EdnVectorBuf> *         m_regExpStart;              //!< Start of Regular expression
+		etk::RegExp<EdnVectorBuf> *         m_regExpStop;               //!< Stop of Regular Expression
 		bool                                m_haveStopPatern;           //!< Stop patern presence
 		bool                                m_multiline;                //!< The patern is multiline
 		char                                m_escapeChar;               //!< Escape char to prevent exeit of patern ....
-		Edn::VectorType<HighlightPattern *> m_subPatern;                //!< Under patern of this one
-//		Edn::VectorType<HighlightPattern *> m_subColor;                 //!< Under Color in the start RegExp ...
+		etk::VectorType<HighlightPattern *> m_subPatern;                //!< Under patern of this one
+//		etk::VectorType<HighlightPattern *> m_subColor;                 //!< Under Color in the start RegExp ...
 };
 
 #endif

@@ -24,39 +24,40 @@
  */
 
 
-#include "tools_debug.h"
-#include "Singleton.h"
-#include "MsgBroadcast.h"
+#include <tools_debug.h>
+#include <etk/Singleton.h>
+#include <MsgBroadcast.h>
 
-#include "CodeView.h"
-#include "BufferView.h"
-#include "BufferManager.h"
-#include "MenuBar.h"
-#include "StatusBar.h"
-#include "ToolBar.h"
+#include <CodeView.h>
+#include <BufferView.h>
+#include <BufferManager.h>
+#include <MenuBar.h>
+#include <StatusBar.h>
+#include <ToolBar.h>
 
 
 #ifndef __MAIN_WINDOWS_H__
 #define __MAIN_WINDOWS_H__
 
-class MainWindows: public Singleton<MainWindows>, public MsgBroadcast
+class MainWindows: public etk::Singleton<MainWindows>, public MsgBroadcast
 {
-	friend class Singleton<MainWindows>;
+	friend class etk::Singleton<MainWindows>;
 	// specific for sigleton system...
 	private:
 		// Constructeur
 		MainWindows(void);
 		~MainWindows(void);
 	public:
-		GtkWidget *     GetWidget(void) { return m_mainWindow;};
+		//GtkWidget *     GetWidget(void) { return m_mainWindow;};
 		void            OnMessage(int32_t id, int32_t dataID);
-		static bool     OnQuit(GtkWidget *widget, gpointer data);
-		static gboolean OnStateChange(GtkWidget *widget, GdkEvent* event, gpointer data);
+		//static bool     OnQuit(GtkWidget *widget, gpointer data);
+		//static gboolean OnStateChange(GtkWidget *widget, GdkEvent* event, gpointer data);
 	
 	private:
-		void            SetTitle(Edn::File &fileName, bool isModify);
+		void            SetTitle(etk::File &fileName, bool isModify);
 		void            SetNoTitle(void);
 		// main windows widget : 
+		/*
 		GtkWidget *     m_mainWindow;
 		GtkWidget *     m_internalTitleLabel;
 		BufferView      m_BufferView;
@@ -64,6 +65,7 @@ class MainWindows: public Singleton<MainWindows>, public MsgBroadcast
 		MenuBar         m_MenuBar;
 		StatusBar       m_StatusBar;
 		ToolBar         m_ToolBar;
+		*/
 };
 
 #endif

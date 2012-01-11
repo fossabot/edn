@@ -28,14 +28,14 @@
 
 class HighlightManager;
 
-#include "Singleton.h"
-#include "MsgBroadcast.h"
-#include "Highlight.h"
+#include <etk/Singleton.h>
+#include <MsgBroadcast.h>
+#include <Highlight.h>
 
 
-class HighlightManager: public Singleton<HighlightManager>, public MsgBroadcast
+class HighlightManager: public etk::Singleton<HighlightManager>, public MsgBroadcast
 {
-	friend class Singleton<HighlightManager>;
+	friend class etk::Singleton<HighlightManager>;
 	// specific for sigleton system...
 	private:
 		// Constructeur
@@ -46,11 +46,11 @@ class HighlightManager: public Singleton<HighlightManager>, public MsgBroadcast
 		void    OnMessage(int32_t id, int32_t dataID);
 	public:
 		void loadLanguages(void);
-		Highlight	* Get(Edn::File &fileName);
-		bool		  Exist(Edn::File &fileName);
+		Highlight	* Get(etk::File &fileName);
+		bool		  Exist(etk::File &fileName);
 
 	private:
-		Edn::VectorType<Highlight*> listHighlight;		//!< List of ALL hightlight modules
+		etk::VectorType<Highlight*> listHighlight;		//!< List of ALL hightlight modules
 };
 
 #endif

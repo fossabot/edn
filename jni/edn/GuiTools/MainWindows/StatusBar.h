@@ -23,7 +23,7 @@
  *******************************************************************************
  */
 
-#include "MsgBroadcast.h"
+#include <MsgBroadcast.h>
 
 #ifndef __STATUS_BAR_H__
 #define __STATUS_BAR_H__
@@ -34,12 +34,12 @@ class StatusBar: public MsgBroadcast
 		// Constructeur
 		StatusBar(void);
 		~StatusBar(void);
-		GtkWidget	* GetWidget(void) { return m_mainWidget; };
+		//GtkWidget	* GetWidget(void) { return m_mainWidget; };
 		void          OnMessage(int32_t id, int32_t dataID);
 	
 	private:
-		GtkWidget *     m_mainWidget;
-		guint           m_iContextId;
+		//GtkWidget *     m_mainWidget;
+		//guint           m_iContextId;
 };
 
 

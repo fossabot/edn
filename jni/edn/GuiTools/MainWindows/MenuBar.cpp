@@ -24,12 +24,12 @@
  */
 
 
-#include "tools_debug.h"
-#include "MenuBar.h"
-#include "ClipBoard.h"
-#include "charset.h"
-#include "ColorizeManager.h"
-
+#include <tools_debug.h>
+#include <MenuBar.h>
+#include <ClipBoard.h>
+#include <charset.h>
+#include <ColorizeManager.h>
+#if 0
 #define MENU_MSG
 const char * MSG_TogleDisplayChar    = "Request a Togle of char displaying";
 const char * MSG_TogleDisplayEOL     = "Request a Togle of displaying EndOfLine";
@@ -79,7 +79,7 @@ static void CB_menuInternal(GtkMenuItem *menu_item, gpointer data)
 		GeneralSendMessage(EDN_MSG__CURRENT_SET_CHARSET, EDN_CHARSET_UTF8);
 	} else if (myPointer == MSG_LoadColorWhite) {
 		ColorizeManager * myColorSystem = ColorizeManager::getInstance();
-		Edn::String homedir;
+		etk::String homedir;
 #		ifdef NDEBUG
 			homedir = "/usr/share/edn/";
 #		else
@@ -89,7 +89,7 @@ static void CB_menuInternal(GtkMenuItem *menu_item, gpointer data)
 		myColorSystem->LoadFile(homedir);
 	} else if (myPointer == MSG_LoadColorBlack) {
 		ColorizeManager * myColorSystem = ColorizeManager::getInstance();
-		Edn::String homedir;
+		etk::String homedir;
 #		ifdef NDEBUG
 			homedir = "/usr/share/edn/";
 #		else
@@ -217,7 +217,7 @@ class MenuBarMain
 		GtkWidget *       m_parent;
 		GtkWidget *       m_menu;
 		GtkWidget *       m_menuListe;
-		Edn::VectorType<messageData_ts*>    m_message;
+		etk::VectorType<messageData_ts*>    m_message;
 };
 
 #undef __class__
@@ -383,4 +383,4 @@ void MenuBar::OnMessage(int32_t id, int32_t dataID)
 	//EDN_INFO("ReceiveMessage");
 }
 
-
+#endif

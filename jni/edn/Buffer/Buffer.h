@@ -26,10 +26,11 @@
 #ifndef __BUFFER_H__
 #define __BUFFER_H__
 
-#include <string>
-#include "Display.h"
-#include "charset.h"
-#include "Edn.h"
+#include <etk/String.h>
+#include <etk/File.h>
+#include <Display.h>
+#include <charset.h>
+
 
 
 typedef struct{
@@ -45,24 +46,24 @@ typedef struct{
 class Buffer {
 	public:
 		                  Buffer(void);
-		                  Buffer(Edn::File &newName);
+		                  Buffer(etk::File &newName);
 		virtual          ~Buffer(void);
 		
-		Edn::File         GetFileName(void)
+		etk::File         GetFileName(void)
 		{
 			return m_fileName;
 		};
 		
-		void              SetFileName(Edn::File &newName)
+		void              SetFileName(etk::File &newName)
 		{
 			m_fileName = newName;
 			m_haveName = true;
 			NameChange();
 		};
 		
-		void              SetFileName(Edn::String &newName)
+		void              SetFileName(etk::String &newName)
 		{
-			m_fileName.SetCompleateName(newName);
+			m_fileName.SetCompleateName(newName, etk::FILE_TYPE_DIRECT);
 			m_haveName = true;
 			NameChange();
 		};
@@ -102,16 +103,16 @@ class Buffer {
 		virtual void      Copy(int8_t clipboardID);
 		virtual void      Cut(int8_t clipboardID);
 		virtual void      Paste(int8_t clipboardID);
-		virtual void      Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
-		virtual void      Replace(Edn::String &data);
-		virtual int32_t   FindLine(Edn::String &data);
+		virtual void      Search(etk::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
+		virtual void      Replace(etk::String &data);
+		virtual int32_t   FindLine(etk::String &data);
 		virtual void      JumpAtLine(int32_t newLine);
 		virtual int32_t   GetCurrentLine(void);
 		
 	protected:
 		bool              m_fileModify;           //!< 
 		// naming
-		Edn::File         m_fileName;             //!< filename of the curent buffer
+		etk::File         m_fileName;             //!< filename of the curent buffer
 		bool              m_haveName;             //!< to know if the file have a name or NOT
 };
 

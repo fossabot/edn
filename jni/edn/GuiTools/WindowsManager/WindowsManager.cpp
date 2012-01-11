@@ -24,12 +24,11 @@
  */
 
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "WindowsManager.h"
-#include "MainWindows.h"
-#include "Edn.h"
-#include "Search.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <WindowsManager.h>
+#include <MainWindows.h>
+#include <Search.h>
 
 
 #undef  __class__
@@ -65,6 +64,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 {
 	switch (id)
 	{
+	/*
 		case EDN_MSG__BUFFER_CHANGE_CURRENT:
 			m_currentBufferID = dataID;
 			break;
@@ -101,13 +101,13 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				if(    -1   != m_currentBufferID
 				    && true == myBufferManager->Exist(m_currentBufferID) )
 				{
-					Edn::File fileName = myBufferManager->Get(m_currentBufferID)->GetFileName();
+					etk::File fileName = myBufferManager->Get(m_currentBufferID)->GetFileName();
 					gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), fileName.GetFolder().c_str());
 					gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), fileName.GetShortFilename().c_str());
 				}
 				if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 				{
-					Edn::File myfilename;
+					etk::File myfilename;
 					myfilename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (dialog));
 
 					if (false == myBufferManager->Exist(myfilename) ) {
@@ -131,7 +131,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 					idSelected = dataID;
 				}
 				Buffer *myBuffer = BufferManager::getInstance()->Get(idSelected);
-				Edn::String tmpString = "Save as file : ";
+				etk::String tmpString = "Save as file : ";
 				tmpString += myBuffer->GetFileName().GetShortFilename().c_str();
 				GtkWidget *dialog = gtk_file_chooser_dialog_new( tmpString.c_str(), NULL,
 				                                                 GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -142,7 +142,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				gtk_window_set_skip_pager_hint(GTK_WINDOW(dialog), TRUE);
 				if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 				{
-					Edn::String myfilename;
+					etk::String myfilename;
 					myfilename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (dialog));
 					
 					myBuffer->SetFileName(myfilename);
@@ -311,10 +311,10 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 						gtk_widget_destroy (p_dialog);
 						break;
 				}
-				
-				
 			}
 			break;
-	
+	*/
+		default:
+			break;
 	}
 }

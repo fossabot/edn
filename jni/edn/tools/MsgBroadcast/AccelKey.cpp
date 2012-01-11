@@ -23,9 +23,9 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "AccelKey.h"
-
+#include <tools_debug.h>
+#include <AccelKey.h>
+#if 0
 AccelKey::AccelKey(void)
 {
 	m_accelGroup = gtk_accel_group_new();
@@ -94,4 +94,4 @@ void AccelKey::LinkCommonAccel(GtkWindow * widget)
 	gtk_window_add_accel_group(GTK_WINDOW(widget), m_accelGroup);
 }
 
-
+#endif

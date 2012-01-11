@@ -23,9 +23,9 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "MsgBroadcast.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <MsgBroadcast.h>
 
 #undef __class__
 #define __class__	"MsgBroadcast"
@@ -33,7 +33,7 @@
 
 MsgBroadcast::MsgBroadcast(const char * className, messageCat_te cat)
 {
-	m_messageSystem = MsgBroadcastCore::getInstance();
+	m_messageSystem = MsgBroadcastCore::Get();
 	m_className = className;
 	m_cat = cat;
 	// add on listner
@@ -282,5 +282,5 @@ void MsgBroadcastCore::RmReceiver(MsgBroadcast * pointerOnReceiver)
 
 void GeneralSendMessage(messageType_te id, int32_t dataID)
 {
-	MsgBroadcastCore::getInstance()->SendMessage(NULL, id, dataID);
+	MsgBroadcastCore::Get()->SendMessage(NULL, id, dataID);
 }

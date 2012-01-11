@@ -23,17 +23,16 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "Colorize.h"
-#include "Edn.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <Colorize.h>
 
 
 #undef __class__
 #define __class__	"Colorize"
 
 
-Colorize::Colorize(	Edn::String &newColorName)
+Colorize::Colorize(	etk::String &newColorName)
 {
 
 	m_colorFG.red=0;
@@ -82,14 +81,14 @@ void Colorize::SetName(const char *newColorName)
 	ColorName = newColorName;
 }
 
-void Colorize::SetName(Edn::String &newColorName)
+void Colorize::SetName(etk::String &newColorName)
 {
 	//EDN_INFO("color change name : \"%s\" ==> \"%s\"",ColorName.c_str(), newColorName.c_str());
 	ColorName = newColorName;
 }
 
 
-Edn::String Colorize::GetName(void)
+etk::String Colorize::GetName(void)
 {
 	return ColorName;
 }

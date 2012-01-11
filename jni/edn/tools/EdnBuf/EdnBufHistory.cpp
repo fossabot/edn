@@ -24,9 +24,9 @@
  */
 
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "EdnBufHistory.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <EdnBufHistory.h>
 
 
 #undef __class__
@@ -39,7 +39,7 @@ EdnBufHistory::EdnBufHistory(void)
 	m_nInserted = 0;
 }
 
-EdnBufHistory::EdnBufHistory(int32_t pos, int32_t nInserted, Edn::VectorType<int8_t> &deletedText)
+EdnBufHistory::EdnBufHistory(int32_t pos, int32_t nInserted, etk::VectorType<int8_t> &deletedText)
 {
 	//EDN_INFO("EdnBufHistory new + data");
 	m_pos = pos;
@@ -47,7 +47,7 @@ EdnBufHistory::EdnBufHistory(int32_t pos, int32_t nInserted, Edn::VectorType<int
 	m_deletedText = deletedText;
 }
 
-void EdnBufHistory::Set(int32_t pos, int32_t nInserted, Edn::VectorType<int8_t> &deletedText)
+void EdnBufHistory::Set(int32_t pos, int32_t nInserted, etk::VectorType<int8_t> &deletedText)
 {
 	//EDN_INFO("EdnBufHistory new + data");
 	m_pos = pos;
@@ -75,7 +75,7 @@ int32_t EdnBufHistory::getnbInserted(void)
 	return m_nInserted;
 }
 
-void EdnBufHistory::getData(Edn::VectorType<int8_t> &deletedText)
+void EdnBufHistory::getData(etk::VectorType<int8_t> &deletedText)
 {
 	deletedText = m_deletedText;
 }

@@ -23,13 +23,13 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "Display.h"
-#include "BufferView.h"
-#include "BufferManager.h"
-#include "ColorizeManager.h"
-#include "MainWindows.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <Display.h>
+#include <BufferView.h>
+#include <BufferManager.h>
+#include <ColorizeManager.h>
+#include <MainWindows.h>
 
 #undef __class__
 #define __class__	"BufferView"
@@ -39,9 +39,9 @@ BufferView::BufferView(void) : MsgBroadcast("Buffer View", EDN_CAT_GUI)
 	m_shawableAreaX = 0;
 	m_shawableAreaY = 0;
 	// Init link with the buffer Manager
-	m_bufferManager = BufferManager::getInstance();
-	m_colorManager = ColorizeManager::getInstance();
-
+	//m_bufferManager = BufferManager::Get();
+	//m_colorManager = ColorizeManager::Get();
+#if 0
 	m_widget = gtk_drawing_area_new();
 	gtk_widget_set_size_request( m_widget, 250, 100);
 
@@ -74,6 +74,7 @@ BufferView::BufferView(void) : MsgBroadcast("Buffer View", EDN_CAT_GUI)
 #	elif defined( USE_GTK_VERSION_2_0 )
 	g_signal_connect(		G_OBJECT(m_widget), "expose_event",			G_CALLBACK(CB_displayDraw),		this);
 #	endif
+#endif
 	m_selectedID = -1;
 
 }
@@ -82,11 +83,12 @@ BufferView::~BufferView(void)
 {
 
 }
-
+/*
 GtkWidget * BufferView::GetMainWidget(void)
 {
 	return m_widget;
 }
+*/
 
 void BufferView::OnMessage(int32_t id, int32_t dataID)
 {
@@ -98,15 +100,15 @@ void BufferView::OnMessage(int32_t id, int32_t dataID)
 		case EDN_MSG__BUFFER_CHANGE_NAME:
 		case EDN_MSG__BUFFER_CHANGE_MODIFY:
 			// change Title :
-			gtk_widget_queue_draw(m_widget);
+			//gtk_widget_queue_draw(m_widget);
 			break;
 		case EDN_MSG__USER_DISPLAY_CHANGE:
 			// Redraw all the display ...
-			gtk_widget_queue_draw(m_widget);
+			//gtk_widget_queue_draw(m_widget);
 			break;
 	}
 }
-
+#if 0
 
 gboolean BufferView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
@@ -381,5 +383,5 @@ gint BufferView::CB_mouseMotionEvent( GtkWidget *widget, GdkEventMotion *event, 
 */
 	return true;
 }
-
+#endif
 

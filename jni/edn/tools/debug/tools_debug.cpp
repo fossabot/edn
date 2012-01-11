@@ -23,40 +23,5 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "time.h"
 
-// Max string size : (wide screan console nb caractere)
-#define EDN_LOG_MAX_LENGTH 250
-
-
-#define FUNCTION_NAME_SIZE	(50)
-
-void TOOLS_DisplayFuncName(int32_t ligne, const char* className, const char* funcName)
-{
-	char tmpName[FUNCTION_NAME_SIZE] = "";
-	if (NULL == className) {
-		snprintf(tmpName, FUNCTION_NAME_SIZE, "(l=%5d) %s                                             ",ligne, funcName);
-	} else {
-		snprintf(tmpName, FUNCTION_NAME_SIZE, "(l=%5d) %s::%s                                             ",ligne, className, funcName);
-	}
-	tmpName[FUNCTION_NAME_SIZE-4] = ' ';
-	tmpName[FUNCTION_NAME_SIZE-3] = '|';
-	tmpName[FUNCTION_NAME_SIZE-2] = ' ';
-	tmpName[FUNCTION_NAME_SIZE-1] = '\0';
-	std::cout << tmpName;
-}
-
-
-void TOOLS_DisplayTime(void)
-{
-	time_t rawtime;
-	struct tm * timeinfo;
-	char tmpdata[50];
-	
-	time ( &rawtime );
-	timeinfo = localtime ( &rawtime );
-	sprintf(tmpdata, " %2dh %2dmin %2ds | ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
-	std::cout << tmpdata ;
-}
-
+const char * ednLog = "edn      ";

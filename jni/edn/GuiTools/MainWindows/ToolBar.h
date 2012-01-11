@@ -23,7 +23,7 @@
  *******************************************************************************
  */
 
-#include "MsgBroadcast.h"
+#include <MsgBroadcast.h>
 
 #ifndef __TOOL_BAR_H__
 #define __TOOL_BAR_H__
@@ -35,14 +35,14 @@ class ToolBar: public MsgBroadcast
 		// Constructeur
 		ToolBar(void);
 		~ToolBar(void);
-		GtkWidget	* GetWidget(void) { return m_mainWidget; };
+		//GtkWidget	* GetWidget(void) { return m_mainWidget; };
 		void          OnMessage(int32_t id, int32_t dataID);
 	
 	private:
-		void AddSeparator(void);
-		void Add(const char * title, const char * labelHelp, messageType_te id = EDN_MSG__NONE, bool enable = false);
-		GtkWidget *                      m_mainWidget;
-		Edn::VectorType<messageData_ts*>    m_message;
+		//void AddSeparator(void);
+		//void Add(const char * title, const char * labelHelp, messageType_te id = EDN_MSG__NONE, bool enable = false);
+		//GtkWidget *                      m_mainWidget;
+		//etk::VectorType<messageData_ts*>    m_message;
 };
 
 

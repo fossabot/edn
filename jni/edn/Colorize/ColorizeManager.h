@@ -26,10 +26,9 @@
 #ifndef __COLORIZE_MANAGER_H__
 #define __COLORIZE_MANAGER_H__
 
-#include "Singleton.h"
-#include "Colorize.h"
-#include "MsgBroadcast.h"
-#include "Edn.h"
+#include <etk/Singleton.h>
+#include <Colorize.h>
+#include <MsgBroadcast.h>
 
 typedef enum {
 	// BASIC color for codeViewer
@@ -50,9 +49,9 @@ typedef enum {
 
 
 
-class ColorizeManager: public Singleton<ColorizeManager>, public MsgBroadcast
+class ColorizeManager: public etk::Singleton<ColorizeManager>, public MsgBroadcast
 {
-	friend class Singleton<ColorizeManager>;
+	friend class etk::Singleton<ColorizeManager>;
 	// specific for sigleton system...
 	private:
 		// Constructeur
@@ -61,18 +60,18 @@ class ColorizeManager: public Singleton<ColorizeManager>, public MsgBroadcast
 	public:
 		void    OnMessage(int32_t id, int32_t dataID);
 	public:
-		void        LoadFile(Edn::String &xmlFilename);
+		void        LoadFile(etk::String &xmlFilename);
 		void        LoadFile(const char * xmlFilename);
 		Colorize *  Get(const char *colorName);
-		Colorize *  Get(Edn::String &colorName);
+		Colorize *  Get(etk::String &colorName);
 		color_ts &  Get(basicColor_te myColor);
-		bool        Exist(Edn::String &colorName);
+		bool        Exist(etk::String &colorName);
 		bool        Exist(const char *colorName);
 		void        DisplayListOfColor(void);
 
 	private:
-		Edn::String                 m_fileColor;
-		Edn::VectorType<Colorize*>  listMyColor;		//!< List of ALL Color
+		etk::String                 m_fileColor;
+		etk::VectorType<Colorize*>  listMyColor;		//!< List of ALL Color
 		Colorize *                  errorColor;
 		color_ts                    basicColors[COLOR_NUMBER_MAX];
 };

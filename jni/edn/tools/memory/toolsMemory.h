@@ -1,6 +1,6 @@
 /**
  *******************************************************************************
- * @file toolsmemory.h
+ * @file toolsMemory.h
  * @brief Editeur De N'ours : Memory implementation (headers)
  * @author Edouard DUPIN
  * @date 12/01/2011
@@ -27,9 +27,8 @@
 #define __TOOLS_MEMORY_H__
 
 
-
 // General 
-#if EDN_MEMORY_CHECKER > 0
+#ifdef EDN_MEMORY_CHECKER
     void EDN_MemFree( void * pointerData, const char * variableName, const char * functionName, int32_t line, const char * fileName );
     void * EDN_MemMalloc( size_t num, size_t size, uint8_t init, const char * variableName, const char * functionName, int32_t line, const char * fileName );
     void EDN_MemShowLogs( void );

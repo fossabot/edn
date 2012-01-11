@@ -24,9 +24,9 @@
  */
 
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "charsetTable.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <charsetTable.h>
 
 extern "C" {
 
@@ -295,18 +295,6 @@ extern "C" {
 		0x000000E0, 0x000000E1, 0x000000E2, 0x000000E3, 0x000000E4, 0x000000E5, 0x000000E6, 0x000000E7, 0x000000E8, 0x000000E9, 0x000000EA, 0x000000EB, 0x000000EC, 0x000000ED, 0x000000EE, 0x000000EF, 
 		0x000000F0, 0x000000F1, 0x000000F2, 0x000000F3, 0x000000F4, 0x000000F5, 0x000000F6, 0x000000F7, 0x000000F8, 0x000000F9, 0x000000FA, 0x000000FB, 0x000000FC, 0x000000FD, 0x000000FE, 0x000000FF
 	};
-
-
-
-
-
-
-
-
-
-
-
-	
 
 }
 

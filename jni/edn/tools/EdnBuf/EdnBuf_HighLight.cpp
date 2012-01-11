@@ -23,9 +23,9 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "EdnBuf.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <EdnBuf.h>
 
 
 #undef __class__
@@ -43,8 +43,8 @@ void EdnBuf::SetHLSystem(Highlight * newHLSystem)
 // TODO : Check this fuction it have too many conditionnal inside ==> can do a better algo
 void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdded)
 {
-	GTimeVal timeStart;
-	g_get_current_time(&timeStart);
+	//GTimeVal timeStart;
+	//g_get_current_time(&timeStart);
 	
 	// remove display HL...
 	m_HLDataSequence++;
@@ -64,7 +64,7 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 	int32_t i;
 	/*
 	for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
-		Edn::String ploppp;
+		etk::String ploppp;
 		if (NULL != m_HLDataPass1[i].patern ) {
 			ploppp = ((HighlightPattern*)m_HLDataPass1[i].patern)->GetName();
 		}
@@ -108,7 +108,7 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 		//EDN_DEBUG("new size=" << (int32_t)m_HLDataPass1.Size()-1);
 		/*
 				for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
-					Edn::String ploppp;
+					etk::String ploppp;
 					if (NULL != m_HLDataPass1[i].patern ) {
 						ploppp = ((HighlightPattern*)m_HLDataPass1[i].patern)->GetName();
 					}
@@ -151,16 +151,16 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 	}
 	/*
 	for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
-		Edn::String ploppp;
+		etk::String ploppp;
 		if (NULL != m_HLDataPass1[i].patern ) {
 			ploppp = ((HighlightPattern*)m_HLDataPass1[i].patern)->GetName();
 		}
 		EDN_DEBUG("HighLight (end) element id=" << i << " S=" << m_HLDataPass1[i].beginStart << " E=" << m_HLDataPass1[i].endStop << " patern name=" << ploppp );
 	}
 	*/
-	GTimeVal timeStop;
-	g_get_current_time(&timeStop);
-	EDN_DEBUG("HL General = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
+	//GTimeVal timeStop;
+	//g_get_current_time(&timeStop);
+	//EDN_DEBUG("HL General = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
 }
 
 void EdnBuf::FindMainHighLightPosition(int32_t startPos, int32_t endPos, int32_t &startId, int32_t &stopId, bool backPreviousNotEnded)
@@ -296,8 +296,8 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 		return;
 	}
 	if (MData.idSequence != m_HLDataSequence) {
-		GTimeVal timeStart;
-		g_get_current_time(&timeStart);
+		//GTimeVal timeStart;
+		//g_get_current_time(&timeStart);
 		MData.idSequence = m_HLDataSequence;
 		HLStart = StartOfLine(HLStart);
 		MData.HLData.Clear();
@@ -350,9 +350,9 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 			}
 		}
 		
-		GTimeVal timeStop;
-		g_get_current_time(&timeStop);
-		EDN_DEBUG("Display reAnnalyse = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
+		//GTimeVal timeStop;
+		//g_get_current_time(&timeStop);
+		//EDN_DEBUG("Display reAnnalyse = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
 	}
 
 }

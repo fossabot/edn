@@ -23,13 +23,12 @@
  *******************************************************************************
  */
  
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "ClipBoard.h"
-#include "BufferText.h"
-#include "toolsMemory.h"
-#include "Edn.h"
-#include "RegExp.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <ClipBoard.h>
+#include <BufferText.h>
+#include <toolsMemory.h>
+#include <etk/RegExp.h>
 
 #undef __class__
 #define __class__	"BufferText"
@@ -125,7 +124,7 @@ BufferText::BufferText()
  * @return ---
  *
  */
-BufferText::BufferText(Edn::File &fileName) : Buffer(fileName)
+BufferText::BufferText(etk::File &fileName) : Buffer(fileName)
 {
 	BasicInit();
 	NameChange();
@@ -327,8 +326,8 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 	int displayLines = 0;
 	// Regenerate the colorizing if necessary ...
 	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, m_displayStartBufferPos, m_displaySize.y);
-	GTimeVal timeStart;
-	g_get_current_time(&timeStart);
+	//GTimeVal timeStart;
+	//g_get_current_time(&timeStart);
 
 	// draw the lineNumber : 
 	int32_t currentLineID = m_displayStart.y+1;
@@ -450,9 +449,9 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 	}
 	drawer.Flush();
 	
-	GTimeVal timeStop;
-	g_get_current_time(&timeStop);
-	EDN_DEBUG("Display Generation = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
+	//GTimeVal timeStop;
+	//g_get_current_time(&timeStop);
+	//EDN_DEBUG("Display Generation = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
 
 	return ERR_NONE;
 }
@@ -993,7 +992,7 @@ void BufferText::AddChar(char * UTF8data)
 	if (1==size) {
 		if (UTF8data[0] == 0x09) {
 			if (false == haveSelectionActive) {
-				Edn::VectorType<int8_t> tmpVect;
+				etk::VectorType<int8_t> tmpVect;
 				tmpVect.PushBack(0x09);
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
 				SetInsertPosition(m_cursorPos+1, true);
@@ -1002,7 +1001,7 @@ void BufferText::AddChar(char * UTF8data)
 				// count the number of line : 
 				int32_t nbSelectedLines = m_EdnBuf.CountLines(SelectionStart, SelectionEnd);
 				if (0 == nbSelectedLines) {
-					Edn::VectorType<int8_t> tmpVect;
+					etk::VectorType<int8_t> tmpVect;
 					tmpVect.PushBack(0x09);
 					m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
 					SetInsertPosition(SelectionStart+tmpVect.Size(), true);
@@ -1016,7 +1015,7 @@ void BufferText::AddChar(char * UTF8data)
 			}
 			actionDone = true;
 		} else if (UTF8data[0] == '\n') {
-			Edn::VectorType<int8_t> tmpVect;
+			etk::VectorType<int8_t> tmpVect;
 			if (true == globals::IsSetShift()) {
 				tmpVect.PushBack('\r');
 			} else {
@@ -1075,7 +1074,7 @@ void BufferText::AddChar(char * UTF8data)
 	
 	if (false == actionDone) {
 		if (true == m_EdnBuf.GetUTF8Mode()) {
-			Edn::VectorType<int8_t> tmpVect;
+			etk::VectorType<int8_t> tmpVect;
 			int32_t localOfset = strlen(UTF8data);
 			tmpVect.PushBack((int8_t*)UTF8data, localOfset);
 			if (false == haveSelectionActive) {
@@ -1090,7 +1089,7 @@ void BufferText::AddChar(char * UTF8data)
 			char output_ISO;
 			convertUtf8ToIso(m_EdnBuf.GetCharsetType(), UTF8data, output_ISO);
 			//printf(" insert : \"%s\"==> 0x%08x=%d ", UTF8data, (unsigned int)output_ISO, (int)output_ISO);
-			Edn::VectorType<int8_t> tmpVect;
+			etk::VectorType<int8_t> tmpVect;
 			tmpVect.PushBack(output_ISO);
 			if (false == haveSelectionActive) {
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
@@ -1107,14 +1106,14 @@ void BufferText::AddChar(char * UTF8data)
 }
 
 
-int32_t BufferText::FindLine(Edn::String &data)
+int32_t BufferText::FindLine(etk::String &data)
 {
 	if ( 0 == data.Size()) {
 		EDN_WARNING("no search data");
 		return 0;
 	}
 	EDN_INFO("Search data line : \"" << data << "\"");
-	Edn::VectorType<int8_t> mVectSearch;
+	etk::VectorType<int8_t> mVectSearch;
 	mVectSearch = data.GetVector();
 	//EDN_INFO("search data Forward : startSearchPos=" << startSearchPos );
 	int32_t foundPos;
@@ -1151,7 +1150,7 @@ int32_t BufferText::GetCurrentLine(void)
 
 
 
-void BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
+void BufferText::Search(etk::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
 {
 	EDN_INFO("Search data : \"" << data << "\"");
 	
@@ -1172,7 +1171,7 @@ void BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool w
 		EDN_WARNING("no search data");
 		return;
 	}
-	Edn::VectorType<int8_t> mVectSearch;
+	etk::VectorType<int8_t> mVectSearch;
 	mVectSearch = data.GetVector();
 	if (false == back) {
 		//EDN_INFO("search data Forward : startSearchPos=" << startSearchPos );
@@ -1239,14 +1238,14 @@ void BufferText::Search(Edn::String &data, bool back, bool caseSensitive, bool w
 }
 
 
-void BufferText::Replace(Edn::String &data)
+void BufferText::Replace(etk::String &data)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	if (true == haveSelectionActive) {
 		// Replace Data : 
-		Edn::VectorType<int8_t> myData = data.GetVector();
+		etk::VectorType<int8_t> myData = data.GetVector();
 		m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, myData);
 		SetInsertPosition(SelectionStart + myData.Size());
 	}
@@ -1264,7 +1263,7 @@ void BufferText::Replace(Edn::String &data)
  */
 void BufferText::Copy(int8_t clipboardID)
 {
-	Edn::VectorType<int8_t> mVect;
+	etk::VectorType<int8_t> mVect;
 	// get the curent selected data
 	if (true == m_EdnBuf.SelectHasSelection(SELECTION_PRIMARY) ) {
 		m_EdnBuf.GetSelectionText(SELECTION_PRIMARY, mVect);
@@ -1313,7 +1312,7 @@ void BufferText::Cut(int8_t clipboardID)
  */
 void BufferText::Paste(int8_t clipboardID)
 {
-	Edn::VectorType<int8_t> mVect;
+	etk::VectorType<int8_t> mVect;
 	// copy data from the click board : 
 	ClipBoard::Get(clipboardID, mVect);
 	

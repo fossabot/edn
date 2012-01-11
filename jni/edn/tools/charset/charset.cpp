@@ -25,10 +25,10 @@
 
 // cf : http://unicode.org/fr/charts/symbols.html#CombiningDiacriticalMarks
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "charsetTable.h"
-#include "charset.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <charsetTable.h>
+#include <charset.h>
 
 //    /usr/include/gtk-3.0/gdk/gdkkeysyms.h
 
@@ -101,14 +101,14 @@ void convertUnicodeToIso(charset_te inputCharset, int32_t input_Unicode, char & 
 }
 
 
-int32_t convertIsoToUnicode(charset_te inputCharset, Edn::VectorType<char>& input_ISO, Edn::VectorType<int32_t>& output_Unicode)
+int32_t convertIsoToUnicode(charset_te inputCharset, etk::VectorType<char>& input_ISO, etk::VectorType<int32_t>& output_Unicode)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
 }
 
 
-int32_t convertUnicodeToIso(charset_te inputCharset, Edn::VectorType<int32_t>& input_Unicode, Edn::VectorType<char>&    output_ISO)
+int32_t convertUnicodeToIso(charset_te inputCharset, etk::VectorType<int32_t>& input_Unicode, etk::VectorType<char>&    output_ISO)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
@@ -204,14 +204,14 @@ void convertUtf8ToUnicode(char * input_UTF8, int32_t &output_Unicode)
 }
 
 
-int32_t convertUnicodeToUtf8(Edn::VectorType<int32_t>& input_Unicode, Edn::VectorType<char>& output_UTF8)
+int32_t convertUnicodeToUtf8(etk::VectorType<int32_t>& input_Unicode, etk::VectorType<char>& output_UTF8)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
 }
 
 
-int32_t convertUtf8ToUnicode(Edn::VectorType<char>& input_UTF8, Edn::VectorType<int32_t>& output_Unicode)
+int32_t convertUtf8ToUnicode(etk::VectorType<char>& input_UTF8, etk::VectorType<int32_t>& output_Unicode)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
@@ -239,14 +239,14 @@ void convertUtf8ToIso(charset_te inputCharset,  char * input_UTF8, char & output
 }
 
 
-int32_t convertIsoToUtf8(charset_te inputCharset, Edn::VectorType<char>& input_ISO, Edn::VectorType<char>& output_UTF8)
+int32_t convertIsoToUtf8(charset_te inputCharset, etk::VectorType<char>& input_ISO, etk::VectorType<char>& output_UTF8)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
 }
 
 
-int32_t convertUtf8ToIso(charset_te inputCharset, Edn::VectorType<char>& input_UTF8, Edn::VectorType<char>& output_ISO)
+int32_t convertUtf8ToIso(charset_te inputCharset, etk::VectorType<char>& input_UTF8, etk::VectorType<char>& output_ISO)
 {
 	EDN_WARNING("TODO : not coded...");
 	return 0;
@@ -567,7 +567,7 @@ iconv -c --from-code=ISO-8859-15 --to-code=UTF-8 -o fichierUTF8_iso-15 fichierIs
 #endif
 
 
-
+#if 0
 
 void ConvertInput(GdkEventKey *event, char* Utf8Out, bool &controlKey, bool &moveKey, int32_t &key)
 {
@@ -1170,3 +1170,5 @@ void ConvertInput(GdkEventKey *event, char* Utf8Out, bool &controlKey, bool &mov
 	}
 
 }
+#endif
+

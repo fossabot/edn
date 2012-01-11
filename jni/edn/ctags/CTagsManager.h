@@ -27,10 +27,9 @@
 #define __C_TAGS_MANAGER_H__
 
 
-#include "Singleton.h"
+#include <etk/Singleton.h>
 #include "MsgBroadcast.h"
 #include "readtags.h"
-#include "Edn.h"
 
 #define MAX_REG_EXP_SEARCH	(1024)
 
@@ -41,9 +40,9 @@ typedef struct{
 } TagListFind_ts;
 
 
-class CTagsManager: public Singleton<CTagsManager>, public MsgBroadcast
+class CTagsManager: public etk::Singleton<CTagsManager>, public MsgBroadcast
 {
-	friend class Singleton<CTagsManager>;
+	friend class etk::Singleton<CTagsManager>;
 	// specific for sigleton system...
 	private:
 		// Constructeur
@@ -58,24 +57,26 @@ class CTagsManager: public Singleton<CTagsManager>, public MsgBroadcast
 		int32_t                    MultipleJump(void);
 		void                       JumpTo(void);
 		void                       PrintTag(const tagEntry *entry, bool small);
-		Edn::String                GetFolder(Edn::String &inputString);
-		Edn::String                m_tagFolderBase;
-		Edn::String                m_tagFilename;
+		etk::String                GetFolder(etk::String &inputString);
+		etk::String                m_tagFolderBase;
+		etk::String                m_tagFilename;
 		tagFile *                  m_ctagFile;
 		// history system
 		void                       AddToHistory(int32_t bufferID);
 		int32_t                    m_historyPos;
-		Edn::VectorType<Edn::File*>   m_historyList;
-		Edn::VectorType<TagListFind_ts> m_currentList;
+		etk::VectorType<etk::File*>   m_historyList;
+		etk::VectorType<TagListFind_ts> m_currentList;
 		void                       JumpAtID(int32_t selectID);
+		/*
 		GtkWidget *                CreateViewAndModel(void);
 		static void cb_row (GtkTreeView *p_treeview,
-                    GtkTreePath * p_path,
-                    GtkTreeViewColumn * p_column,
-                    gpointer p_data);
+		                    GtkTreePath * p_path,
+		                    GtkTreeViewColumn * p_column,
+		                    gpointer p_data);
 		// save data in the list : 
 		GtkListStore *   m_listStore;
 		GtkWidget *      m_Dialog;
+		*/
 };
 
 #endif

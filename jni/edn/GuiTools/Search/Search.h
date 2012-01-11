@@ -26,13 +26,13 @@
 #ifndef __SEARCH_H__
 #define __SEARCH_H__
 
-#include "tools_debug.h"
-#include "Singleton.h"
+#include <tools_debug.h>
+#include <etk/Singleton.h>
 
 
-class Search: public Singleton<Search>
+class Search: public etk::Singleton<Search>
 {
-	friend class Singleton<Search>;
+	friend class etk::Singleton<Search>;
 	// specific for sigleton system...
 	private:
 		// Constructeur
@@ -41,9 +41,9 @@ class Search: public Singleton<Search>
 
 	public:
 		void Destroy(void);
-		void Display(GtkWindow *parent);
+		//void Display(GtkWindow *parent);
 		void Hide(void);
-
+/*
 	private:
 		GtkWidget * m_localDialog;          //!< local dialog element
 		// entry
@@ -75,7 +75,7 @@ class Search: public Singleton<Search>
 		static void OnCheckBoxEventRegExp(GtkWidget *widget, gpointer user_data);
 		static void OnEntrySearchChange(GtkWidget *widget, gpointer user_data);
 		static void OnEntryReplaceChange(GtkWidget *widget, gpointer user_data);
-		
+*/
 };
 
 

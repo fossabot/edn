@@ -26,7 +26,9 @@
 #ifndef __TOOLS_GLOBALS_H__
 #define __TOOLS_GLOBALS_H__
 
-#include "tools_debug.h"
+#include <tools_debug.h>
+#include <types_generique.h>
+
 
 namespace globals
 {

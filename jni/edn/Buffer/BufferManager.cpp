@@ -24,10 +24,9 @@
  */
 
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "BufferManager.h"
-//#include "MsgBroadcast.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <BufferManager.h>
 
 #undef __class__
 #define __class__	"BufferManager"
@@ -185,7 +184,7 @@ int32_t	BufferManager::Create(void)
  * @todo : check if this file is not curently open and return the old ID
  *
  */
-int32_t BufferManager::Open(Edn::File &myFile)
+int32_t BufferManager::Open(etk::File &myFile)
 {
 	// TODO : Check here if the file is already open ==> and display it if needed
 	// allocate a new Buffer
@@ -236,7 +235,7 @@ bool BufferManager::Exist(int32_t BufferID)
 }
 
 
-bool BufferManager::Exist(Edn::File &myFile )
+bool BufferManager::Exist(etk::File &myFile )
 {
 	if (-1 == GetId(myFile)) {
 		return false;
@@ -245,7 +244,7 @@ bool BufferManager::Exist(Edn::File &myFile )
 }
 
 
-int32_t BufferManager::GetId(Edn::File &myFile)
+int32_t BufferManager::GetId(etk::File &myFile)
 {
 	int32_t iii;
 	// check if the Buffer existed

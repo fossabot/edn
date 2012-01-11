@@ -23,12 +23,12 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "Display.h"
-#include "ColorizeManager.h"
-#include "charset.h"
-#include <string>
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <Display.h>
+#include <ColorizeManager.h>
+#include <charset.h>
+#include <etk/String.h>
 
 #undef __class__
 #define __class__	"Display"
@@ -59,9 +59,12 @@
 	static int32_t				  m_pangoFontHeight = 11;
 static cairo_font_face_t	* m_cairoFont[2][2] = {{NULL, NULL},{ NULL, NULL}};
 */
-static cairo_font_face_t	* m_cairoFont[2][2] = {{NULL, NULL},{ NULL, NULL}};
+//static cairo_font_face_t	* m_cairoFont[2][2] = {{NULL, NULL},{ NULL, NULL}};
+
+
 void Display::Init(void)
 {
+/*
 	m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_NO]    = cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 	m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_NO]   = cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_NORMAL);
 	m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_YES]   = cairo_toy_font_face_create(POLICE_NAME, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
@@ -81,6 +84,7 @@ void Display::Init(void)
 		EDN_ERROR("Italic & Bold font error ... link with basic font");
 		m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_YES] = m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_NO];
 	}
+*/
 }
 
 
@@ -89,11 +93,13 @@ void Display::Init(void)
 
 void Display::UnInit(void)
 {
+/*
 	// clean the builder...
 	cairo_font_face_destroy(m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_NO]);
 	cairo_font_face_destroy(m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_NO]);
 	cairo_font_face_destroy(m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_YES]);
 	cairo_font_face_destroy(m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_YES]);
+*/
 }
 
 
@@ -109,8 +115,9 @@ int32_t Display::GetFontWidth(void)
 
 
 
-cairo_font_face_t * Display::GetFont(bool bold, bool italic)
+void * Display::GetFont(bool bold, bool italic)
 {
+/*
     if(    false == bold
         && false == italic) {
         return m_cairoFont[FONT_ITALIC_NO][FONT_BOLD_NO];
@@ -122,6 +129,8 @@ cairo_font_face_t * Display::GetFont(bool bold, bool italic)
         return m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_NO];
     }
     return m_cairoFont[FONT_ITALIC_YES][FONT_BOLD_YES];
+*/
+	return NULL;
 }
 
 
@@ -140,7 +149,7 @@ cairo_font_face_t * Display::GetFont(bool bold, bool italic)
  * @return ---
  *
  */
-DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
+DrawerManager::DrawerManager(void * widget, int32_t x, int32_t y)
 {
 
 	m_size.x = x;
@@ -148,6 +157,7 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
 	m_haveWork = false;
 	m_nbElement = 0;
 	// Create the Cairo Element
+/*
 #   if USE_GTK_VERSION_3_0
 	m_cairo = gdk_cairo_create(gtk_widget_get_window(widget));
 #   elif USE_GTK_VERSION_2_0
@@ -157,20 +167,10 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
 	cairo_set_source_rgb(m_cairo, 0, 0, 0);
 	cairo_paint(m_cairo);
 	cairo_set_font_size(m_cairo, POLICE_SIZE);
+*/
 	m_dataToDisplay[0] = '\0';
 	
-	cairo_scale(m_cairo, 1.0, 1.0);
-	
-	// http://cairographics.org/FAQ/#clear_a_surface
-	// http://gtk.developpez.com/faq/?page=gtkwidget#GTK_WIDGET_transparent
-	//cairo_set_source_rgba(m_cairo, 1, 1, 1, 0);
-	//cairo_set_operator(m_cairo, CAIRO_OPERATOR_SOURCE);
-	//cairo_paint(m_cairo);
-	//cairo_fill(m_cairo);
-	//cairo_stroke (m_cairo);
-
-	
-	
+	//cairo_scale(m_cairo, 1.0, 1.0);
 	
 }
 
@@ -187,7 +187,7 @@ DrawerManager::DrawerManager(GtkWidget * widget, int32_t x, int32_t y)
  */
 DrawerManager::~DrawerManager()
 {
-	cairo_destroy(m_cairo);
+	//cairo_destroy(m_cairo);
 }
 
 
@@ -208,6 +208,7 @@ DrawerManager::~DrawerManager()
  */
 void DrawerManager::Text(Colorize *SelectColor, int32_t x, int32_t y,const char *myUTF8Text, int32_t len)
 {
+/*
 	EDN_CHECK_INOUT(NULL!=SelectColor);
 	// check if flush is needed : 
 	if (true == m_haveWork) {
@@ -233,10 +234,12 @@ void DrawerManager::Text(Colorize *SelectColor, int32_t x, int32_t y,const char 
 	} else {
 		m_nbElement+=strUtf8Len(myUTF8Text);
 	}
+*/
 }
 
 void DrawerManager::Text(color_ts & SelectColorFg, color_ts & SelectColorBg, int32_t x, int32_t y,const char *myText)
 {
+/*
 	Flush();
 	cairo_set_font_face(m_cairo, Display::GetFont(false, false));
 	int32_t letterHeight = Display::GetFontHeight();
@@ -247,10 +250,12 @@ void DrawerManager::Text(color_ts & SelectColorFg, color_ts & SelectColorBg, int
 	cairo_set_source_rgb(m_cairo, SelectColorFg.red, SelectColorFg.green, SelectColorFg.blue);
 	cairo_show_text(m_cairo, myText);
 	cairo_fill(m_cairo);
+*/
 }
 
 void DrawerManager::Text(color_ts & SelectColorFg, int32_t x, int32_t y,const char *myText)
 {
+/*
 	Flush();
 	cairo_set_font_face(m_cairo, Display::GetFont(false, false));
 	int32_t letterHeight = Display::GetFontHeight();
@@ -258,16 +263,18 @@ void DrawerManager::Text(color_ts & SelectColorFg, int32_t x, int32_t y,const ch
 	cairo_set_source_rgb(m_cairo, SelectColorFg.red, SelectColorFg.green, SelectColorFg.blue);
 	cairo_show_text(m_cairo, myText);
 	cairo_fill(m_cairo);
-	
+*/
 }
 
 void DrawerManager::SpaceText(color_ts & SelectColor, int32_t x, int32_t y,int32_t nbChar)
 {
+/*
 	Flush();
 	int32_t letterHeight = Display::GetFontHeight();
 	int32_t letterWidth = Display::GetFontWidth();
 	DirectRectangle(SelectColor, x, y, letterWidth*nbChar, letterHeight);
 	cairo_fill(m_cairo);
+*/
 }
 
 
@@ -283,6 +290,7 @@ void DrawerManager::SpaceText(color_ts & SelectColor, int32_t x, int32_t y,int32
  */
 void DrawerManager::Flush(void)
 {
+/*
 	if (true == m_haveWork) {
 		//EDN_WARNING("flush : \"" << m_dataToDisplay << "\"" << " bold=" << m_selectColor->GetBold() << " italic=" << m_selectColor->GetItalic());
 		m_haveWork = false;
@@ -303,6 +311,7 @@ void DrawerManager::Flush(void)
 		m_dataToDisplay[0] = '\0';
 		m_nbElement = 0;
 	}
+*/
 }
 
 
@@ -322,8 +331,8 @@ void DrawerManager::Flush(void)
  */
 void DrawerManager::Rectangle(Colorize *SelectColor, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-	Flush();
-	DirectRectangle(SelectColor, x, y, width, height);
+	//Flush();
+	//DirectRectangle(SelectColor, x, y, width, height);
 }
 
 
@@ -341,6 +350,7 @@ void DrawerManager::Rectangle(Colorize *SelectColor, int32_t x, int32_t y, int32
  */
 void DrawerManager::DirectRectangle(Colorize *SelectColor, int32_t x, int32_t y, int32_t width, int32_t height)
 {
+/*
 	EDN_CHECK_INOUT(NULL!=SelectColor);
 	//EDN_INFO("x="<< x <<" y="<< y <<" width="<< width <<" height="<< height);
 	//gdk_draw_rectangle(	p_pixmap, SelectColor->GetColorBG(), TRUE, x, y, width, height);
@@ -351,16 +361,18 @@ void DrawerManager::DirectRectangle(Colorize *SelectColor, int32_t x, int32_t y,
 	//cairo_stroke(m_cairo);
 	// flush
 	cairo_fill(m_cairo);
+*/
 }
 void DrawerManager::DirectRectangle(color_ts &SelectColor, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-
+/*
 	cairo_set_source_rgb(m_cairo, SelectColor.red, SelectColor.green, SelectColor.blue);
 	// set postion
 	cairo_rectangle(m_cairo, x, y, width, height);
 	//cairo_stroke(m_cairo);
 	// flush
 	cairo_fill(m_cairo);
+*/
 }
 
 
@@ -374,8 +386,10 @@ void DrawerManager::DirectRectangle(color_ts &SelectColor, int32_t x, int32_t y,
  */
 void DrawerManager::Clean(Colorize *SelectColor)
 {
+/*
 	m_haveWork = false;
 	DirectRectangle(SelectColor, 0, 0, m_size.x, m_size.y);
+*/
 }
 
 /**
@@ -388,8 +402,10 @@ void DrawerManager::Clean(Colorize *SelectColor)
  */
 void DrawerManager::Clean(color_ts & SelectColor)
 {
+/*
 	m_haveWork = false;
 	DirectRectangle(SelectColor, 0, 0, m_size.x, m_size.y);
+*/
 }
 
 /**
@@ -406,6 +422,7 @@ void DrawerManager::Clean(color_ts & SelectColor)
 #define CURSOR_WIDTH	(4)
 void DrawerManager::Cursor(int32_t x, int32_t y)
 {
+/*
 	Flush();
 	// get the cursor Color : 
 	color_ts myColor = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
@@ -433,6 +450,7 @@ void DrawerManager::Cursor(int32_t x, int32_t y)
 	}
 	cairo_stroke(m_cairo);
 	cairo_fill(m_cairo);
+*/
 }
 
 /**
@@ -448,6 +466,7 @@ void DrawerManager::Cursor(int32_t x, int32_t y)
  */
 void DrawerManager::EndOfLine(int32_t x, int32_t y)
 {
+#if 0
 	if (true == globals::IsSetDisplayEndOfLine() ) {
 		Flush();
 		// get the cursor Color : 
@@ -472,6 +491,7 @@ void DrawerManager::EndOfLine(int32_t x, int32_t y)
 		cairo_stroke(m_cairo);
 		cairo_fill(m_cairo);
 	}
+#endif
 }
 
 
@@ -489,6 +509,7 @@ void DrawerManager::EndOfLine(int32_t x, int32_t y)
  */
 void DrawerManager::Tabulation(Colorize *SelectColor, int32_t x, int32_t y, int32_t mbColomn)
 {
+/*
 	Flush();
 	int32_t letterWidth = Display::GetFontWidth();
 	int32_t letterHeight = Display::GetFontHeight();
@@ -509,6 +530,7 @@ void DrawerManager::Tabulation(Colorize *SelectColor, int32_t x, int32_t y, int3
 	
 	cairo_stroke(m_cairo);
 	cairo_fill(m_cairo);
+*/
 }
 
 
@@ -526,6 +548,7 @@ void DrawerManager::Tabulation(Colorize *SelectColor, int32_t x, int32_t y, int3
  */
 void DrawerManager::UTF8UnknownElement(Colorize *SelectColor, int32_t x, int32_t y, int8_t utf8Size, bool ValidUtf8)
 {
+#if 0
 	Flush();
 	int32_t letterWidth = Display::GetFontWidth();
 	int32_t letterHeight = Display::GetFontHeight();
@@ -576,6 +599,7 @@ void DrawerManager::UTF8UnknownElement(Colorize *SelectColor, int32_t x, int32_t
 	}
 	cairo_stroke(m_cairo);
 	cairo_fill(m_cairo);
+#endif
 }
 
 

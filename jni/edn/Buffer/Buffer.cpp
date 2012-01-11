@@ -23,10 +23,10 @@
  *******************************************************************************
  */
  
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "Buffer.h"
-#include "BufferManager.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <Buffer.h>
+#include <BufferManager.h>
 
 #undef __class__
 #define __class__	"Buffer"
@@ -44,7 +44,7 @@ Buffer::Buffer()
 	static int32_t fileBasicID = 0;
 	m_fileModify = true;
 	m_haveName = false;
-	Edn::String mString = "Untitle - ";
+	etk::String mString = "Untitle - ";
 	mString += fileBasicID++;
 	SetFileName(mString);
 	m_haveName = false;
@@ -58,7 +58,7 @@ Buffer::Buffer()
  * @return ---
  *
  */
-Buffer::Buffer(Edn::File &newName)
+Buffer::Buffer(etk::File &newName)
 {
 	m_fileModify = false;
 	SetFileName(newName);
@@ -269,17 +269,17 @@ void Buffer::AddChar(char * UTF8data)
 	// nothing to do
 }
 
-void Buffer::Search(Edn::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
+void Buffer::Search(etk::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
 {
 	// nothing to do
 }
 
-void Buffer::Replace(Edn::String &data)
+void Buffer::Replace(etk::String &data)
 {
 	// nothing to do
 }
 
-int32_t Buffer::FindLine(Edn::String &data)
+int32_t Buffer::FindLine(etk::String &data)
 {
 	// nothing to do
 	return 0;

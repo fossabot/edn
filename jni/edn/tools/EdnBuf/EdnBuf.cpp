@@ -23,9 +23,9 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "EdnBuf.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <EdnBuf.h>
 
 
 #undef __class__
@@ -126,7 +126,7 @@ bool EdnBuf::DumpFrom(FILE *myFile)
 }
 
 
-void EdnBuf::GetAll(Edn::VectorType<int8_t> &text)
+void EdnBuf::GetAll(etk::VectorType<int8_t> &text)
 {
 	// Clean output vector
 	text.Clear();
@@ -135,9 +135,9 @@ void EdnBuf::GetAll(Edn::VectorType<int8_t> &text)
 }
 
 
-void EdnBuf::SetAll(Edn::VectorType<int8_t> &text)
+void EdnBuf::SetAll(etk::VectorType<int8_t> &text)
 {
-	Edn::VectorType<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	
 	// extract all data of the buffer :
 	GetAll(deletedText);
@@ -155,7 +155,7 @@ void EdnBuf::SetAll(Edn::VectorType<int8_t> &text)
 	eventModification(0, m_data.Size(), deletedText); 
 }
 
-void EdnBuf::GetRange(int32_t start, int32_t end, Edn::VectorType<int8_t> &output)
+void EdnBuf::GetRange(int32_t start, int32_t end, etk::VectorType<int8_t> &output)
 {
 	// Remove all data ...
 	output.Clear();
@@ -189,7 +189,7 @@ int8_t EdnBuf::operator[] (int32_t pos)
  * @return ---
  * 
  */
-void EdnBuf::Insert(int32_t pos, Edn::VectorType<int8_t> &insertText)
+void EdnBuf::Insert(int32_t pos, etk::VectorType<int8_t> &insertText)
 {
 	// if pos is not contiguous to existing text, make it
 	pos = edn_average(0, pos, m_data.Size() );
@@ -197,7 +197,7 @@ void EdnBuf::Insert(int32_t pos, Edn::VectorType<int8_t> &insertText)
 	insert(pos, insertText);
 
 	// Call the redisplay ...
-	Edn::VectorType<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	eventModification(pos, insertText.Size(), deletedText);
 }
 
@@ -212,9 +212,9 @@ void EdnBuf::Insert(int32_t pos, Edn::VectorType<int8_t> &insertText)
  * @return ---
  * 
  */
-void EdnBuf::Replace(int32_t start, int32_t end, Edn::VectorType<int8_t> &insertText)
+void EdnBuf::Replace(int32_t start, int32_t end, etk::VectorType<int8_t> &insertText)
 {
-	Edn::VectorType<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	GetRange(start, end, deletedText);
 	m_data.Replace(start, end-start, insertText);
 	// update internal elements
@@ -234,7 +234,7 @@ void EdnBuf::Replace(int32_t start, int32_t end, Edn::VectorType<int8_t> &insert
 void EdnBuf::Remove(int32_t start, int32_t end)
 {
 
-	Edn::VectorType<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	// Make sure the arguments make sense
 	if (start > end) {
 		int32_t temp = start;
@@ -265,7 +265,7 @@ int32_t EdnBuf::Indent(selectionType_te select)
 	// Get Range :
 	int32_t l_start = StartOfLine(SelectionStart);
 	int32_t l_end = EndOfLine(SelectionEnd);
-	Edn::VectorType<int8_t> l_tmpData;
+	etk::VectorType<int8_t> l_tmpData;
 	GetRange(l_start, l_end, l_tmpData);
 	
 	l_tmpData.Insert(0, '\n');
@@ -304,7 +304,7 @@ int32_t EdnBuf::UnIndent(selectionType_te select)
 	// Get Range :
 	int32_t l_start = StartOfLine(SelectionStart);
 	int32_t l_end = EndOfLine(SelectionEnd);
-	Edn::VectorType<int8_t> l_tmpData;
+	etk::VectorType<int8_t> l_tmpData;
 	GetRange(l_start, l_end, l_tmpData);
 	
 	l_tmpData.Insert(0, '\n');
@@ -346,7 +346,7 @@ int32_t EdnBuf::UnIndent(selectionType_te select)
  * @return ---
  * 
  */
-void EdnBuf::GetLineText(int32_t pos, Edn::VectorType<int8_t> &text)
+void EdnBuf::GetLineText(int32_t pos, etk::VectorType<int8_t> &text)
 {
 	GetRange( StartOfLine(pos), EndOfLine(pos), text);
 }
@@ -666,9 +666,9 @@ int32_t EdnBuf::CountLines(int32_t startPos, int32_t endPos)
  * @return number of line found
  * 
  */
-int32_t EdnBuf::CountLines(Edn::VectorType<int8_t> &data)
+int32_t EdnBuf::CountLines(etk::VectorType<int8_t> &data)
 {
-	Edn::VectorType<int8_t>::Iterator myPosIt = data.Begin();
+	etk::VectorType<int8_t>::Iterator myPosIt = data.Begin();
 	int32_t lineCount = 0;
 	
 	while(myPosIt) {
@@ -810,7 +810,7 @@ bool EdnBuf::charMatch(char first, char second, bool caseSensitive)
  * @return false ==> not found data
  * 
  */
-bool EdnBuf::SearchForward(int32_t startPos, Edn::VectorType<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive)
+bool EdnBuf::SearchForward(int32_t startPos, etk::VectorType<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive)
 {
 	int32_t position;
 	int32_t searchLen = searchVect.Size();
@@ -851,7 +851,7 @@ bool EdnBuf::SearchForward(int32_t startPos, Edn::VectorType<int8_t> &searchVect
  * @return false ==> not found data
  * 
  */
-bool EdnBuf::SearchBackward(int32_t startPos, Edn::VectorType<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive)
+bool EdnBuf::SearchBackward(int32_t startPos, etk::VectorType<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive)
 {
 	int32_t position;
 	int32_t searchLen = searchVect.Size();
@@ -977,7 +977,7 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
  * @return number of element inserted.
  * 
  */
-int32_t EdnBuf::insert(int32_t pos, Edn::VectorType<int8_t> &insertText)
+int32_t EdnBuf::insert(int32_t pos, etk::VectorType<int8_t> &insertText)
 {
 	// Insert data in buffer
 	m_data.Insert(pos, insertText);
@@ -998,7 +998,7 @@ int32_t EdnBuf::insert(int32_t pos, Edn::VectorType<int8_t> &insertText)
  * @return ---
  * 
  */
-void EdnBuf::eventModification(int32_t pos, int32_t nInserted, Edn::VectorType<int8_t> &deletedText)
+void EdnBuf::eventModification(int32_t pos, int32_t nInserted, etk::VectorType<int8_t> &deletedText)
 {
 	if(		0 == deletedText.Size()
 		&&	0 == nInserted)

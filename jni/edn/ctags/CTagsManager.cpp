@@ -23,12 +23,11 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "Edn.h"
-#include "CTagsManager.h"
-#include "ClipBoard.h"
-#include "BufferManager.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <CTagsManager.h>
+#include <ClipBoard.h>
+#include <BufferManager.h>
 
 
 
@@ -61,16 +60,19 @@ CTagsManager::CTagsManager(void) : MsgBroadcast("C-Tags Manager", EDN_CAT_CTAGS)
  */
 CTagsManager::~CTagsManager(void)
 {
+	/*
 	if(0 != m_historyList.Size()) {
 		for (int32_t iii=0; iii< m_historyList.Size(); iii++) {
 			delete(m_historyList[iii]);
 		}
 		m_historyList.Clear();
 	}
+	*/
 }
 
-Edn::String CTagsManager::GetFolder(Edn::String &inputString)
+etk::String CTagsManager::GetFolder(etk::String &inputString)
 {
+	/*
 	char tmpVal[4096];
 	strncpy(tmpVal, inputString.c_str(), 4096);
 	tmpVal[4096-1] = '\0';
@@ -78,17 +80,21 @@ Edn::String CTagsManager::GetFolder(Edn::String &inputString)
 	if (NULL == ptr) {
 		ptr = strrchr(tmpVal, '\\');
 	}
-	Edn::String out = "./";
+	etk::String out = "./";
 	if (NULL != ptr) {
 		*ptr = '\0';
 		out = tmpVal;
 		out+= '/';
 	}
 	return out;
+	*/
+	etk::String out = "./";
+	return out;
 }
 
 void CTagsManager::OnMessage(int32_t id, int32_t dataID)
 {
+	/*
 	switch (id)
 	{
 		case EDN_MSG__BUFFER_CHANGE_CURRENT:
@@ -136,13 +142,14 @@ void CTagsManager::OnMessage(int32_t id, int32_t dataID)
 				m_historyList.PopBack();
 			}
 			break;
-			
 	}
+	*/
 }
 
 
 void CTagsManager::LoadTagFile(void)
 {
+	/*
 	tagFileInfo info;
 	
 	// close previous tag file
@@ -161,10 +168,12 @@ void CTagsManager::LoadTagFile(void)
 	} else {
 		EDN_INFO("Error to open ctags file ...");
 	}
+	*/
 }
 
 void CTagsManager::AddToHistory(int32_t bufferID)
 {
+	/*
 	// check tho history position : remove if needed
 	if (m_historyPos < edn_max(m_historyList.Size()-1, 0) ) {
 		for(int32_t iii= m_historyPos; iii < m_historyList.Size(); iii++) {
@@ -174,16 +183,17 @@ void CTagsManager::AddToHistory(int32_t bufferID)
 	}
 	// add the current element
 	BufferManager *myBufferManager = BufferManager::getInstance();
-	Edn::File currentFilename = myBufferManager->Get(bufferID)->GetFileName();
+	etk::File currentFilename = myBufferManager->Get(bufferID)->GetFileName();
+	*/
 }
 
+/*
 enum
 {
 	CTAGS_COL_FILE = 0,
 	CTAGS_COL_LINE_NUMBER,
 	CTAGS_NUM_COLS
 };
-
 void CTagsManager::cb_row(GtkTreeView *p_treeview,
                           GtkTreePath * p_path,
                           GtkTreeViewColumn * p_column,
@@ -219,9 +229,9 @@ void CTagsManager::cb_row(GtkTreeView *p_treeview,
 		}
 	}
 }
+*/
 
-
-
+/*
 GtkWidget * CTagsManager::CreateViewAndModel(void)
 {
 	
@@ -260,18 +270,19 @@ GtkWidget * CTagsManager::CreateViewAndModel(void)
 	}
 	
 	gtk_tree_view_set_model( GTK_TREE_VIEW(view), GTK_TREE_MODEL(m_listStore) );
-	g_signal_connect( G_OBJECT(view), "row-activated", G_CALLBACK(cb_row), /*(gpointer)p_model*/ this );
+	g_signal_connect( G_OBJECT(view), "row-activated", G_CALLBACK(cb_row), this );
 	//g_object_unref(GTK_TREE_MODEL(m_listStore));
 	
 	return view;
 }
 
-
+*/
 
 
 
 int32_t CTagsManager::MultipleJump(void)
 {
+	/*
 	// dlg to confirm the quit event : 
 	m_Dialog = gtk_dialog_new_with_buttons("C-Tags jump...",
 	                                       NULL,
@@ -294,34 +305,21 @@ int32_t CTagsManager::MultipleJump(void)
 		// Remove dialogue
 		gtk_widget_destroy(m_Dialog);
 	}
-	//GtkTreeIter *myIter;
-	//gtk_tree_selection_get_selected(selection, &model, myIter);
-
-	
-	
-	// Remove dialogue
-	//gtk_widget_destroy(myDialog);
+	*/
 	return 0;
 }
-/*
-void BufferView::OnCtagsEventList(GtkWidget *menuitem, gpointer data)
-{
-	//BufferView * self = reinterpret_cast<BufferView*>(data);
-	//self->SendMessage(EDN_MSG__GUI_SHOW_SAVE_AS, self->m_contectMenuSelectID);
-	//self->m_contectMenuSelectID = -1;
-}
-*/
 
 
 void CTagsManager::JumpAtID(int32_t selectID)
 {
+/*
 	BufferManager *myBufferManager = BufferManager::getInstance();
-	Edn::File myFile = m_currentList[selectID].filename;
+	etk::File myFile = m_currentList[selectID].filename;
 	EDN_INFO("save curent filename and position : ");
 	int32_t currentSelected = myBufferManager->GetSelected();
 	Buffer* tmpBuf = myBufferManager->Get(currentSelected);
 	if (NULL != tmpBuf) {
-		Edn::File * bufferFilename = new Edn::File();
+		etk::File * bufferFilename = new etk::File();
 		*bufferFilename = tmpBuf->GetFileName();
 		bufferFilename->SetLineNumber(tmpBuf->GetCurrentLine());
 		m_historyList.PushBack(bufferFilename);
@@ -334,28 +332,17 @@ void CTagsManager::JumpAtID(int32_t selectID)
 	} else {
 		SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, myBufferManager->GetId(myFile));
 	}
-	/*
-	int32_t localId = myBufferManager->GetId(myFile);
-	Edn::String pattern = entry.address.pattern;
-	EDN_DEBUG("try to find line with : \"" << pattern << "\"" );
-	if (pattern.Size() > 4) {
-		pattern.Remove(0,2);
-		pattern.Remove(pattern.Size()-1,2);
-	}
-	// TODO : remove '\' char when needed ...
-	EDN_DEBUG("try to find line with : \"" << pattern << "\"" );
-	int32_t destLine = myBufferManager->Get(localId)->FindLine(pattern);
-	SendMessage(EDN_MSG__CURRENT_GOTO_LINE, destLine);
-	*/
 	SendMessage(EDN_MSG__CURRENT_GOTO_LINE, m_currentList[selectID].lineID - 1);
+*/
 }
 
 
 void CTagsManager::JumpTo(void)
 {
+/*
 	m_currentList.Clear();
 	if (NULL != m_ctagFile) {
-		Edn::VectorType<int8_t> data;
+		etk::VectorType<int8_t> data;
 		// get the middle button of the clipboard ==> represent the current selection ...
 		ClipBoard::Get(COPY_MIDDLE_BUTTON, data);
 		if (data.Size() == 0) {
@@ -370,9 +357,9 @@ void CTagsManager::JumpTo(void)
 			
 			// For all tags : Save in an internal Structure :
 			do {
-				Edn::String destinationFilename = m_tagFolderBase;
+				etk::String destinationFilename = m_tagFolderBase;
 				destinationFilename += entry.file;
-				Edn::File myfile = destinationFilename;
+				etk::File myfile = destinationFilename;
 				TagListFind_ts myStruct;
 				strncpy(myStruct.filename, myfile.GetCompleateName().c_str(), MAX_FILE_NAME);
 				myStruct.filename[MAX_FILE_NAME-1] = '\0';
@@ -392,18 +379,13 @@ void CTagsManager::JumpTo(void)
 				// Open a choice windows...
 				int32_t SelectID = MultipleJump();
 			}
-			/*
-			// Display all the element : 
-			do {
-				PrintTag(&entry, true);
-			} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
-			*/
 		} else {
 			EDN_INFO("no tag find ...");
 		}
 	}
+*/
 }
-
+/*
 void CTagsManager::PrintTag (const tagEntry *entry, bool small)
 {
 	if (small==true) {
@@ -427,3 +409,4 @@ void CTagsManager::PrintTag (const tagEntry *entry, bool small)
 		}
 	}
 }
+*/

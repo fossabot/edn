@@ -23,25 +23,25 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "MainWindows.h"
-#include "CodeView.h"
-#include "ClipBoard.h"
-#include "BufferView.h"
-#include "AccelKey.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <MainWindows.h>
+#include <CodeView.h>
+#include <ClipBoard.h>
+#include <BufferView.h>
+#include <AccelKey.h>
 
 #undef __class__
 #define __class__	"MainWindows"
 
 MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 {
-
+#if 0
 	m_mainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 	// select the program icone
 	GError *err = NULL;
-	Edn::String iconeFile;
+	etk::String iconeFile;
 #ifdef NDEBUG
 	iconeFile = "/usr/share/edn/images/icone.png";
 #else
@@ -79,7 +79,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	GtkWidget *hboxMenu = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start(	GTK_BOX (vbox), hboxMenu, FALSE, FALSE, 0);
 	// Add Exit boutton
-	Edn::String ExitIconeFile;
+	etk::String ExitIconeFile;
 #ifdef NDEBUG
 	ExitIconeFile = "/usr/share/edn/images/delete-24px.png";
 #else
@@ -140,7 +140,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 
 	// recursive version of gtk_widget_show
 	gtk_widget_show_all(m_mainWindow); 
-
+#endif
 }
 
 MainWindows::~MainWindows(void)
@@ -154,9 +154,9 @@ MainWindows::~MainWindows(void)
 
 
 
-void MainWindows::SetTitle(Edn::File &fileName, bool isModify)
+void MainWindows::SetTitle(etk::File &fileName, bool isModify)
 {
-	Edn::String tmp = "";
+	etk::String tmp = "";
 	if (fileName.GetShortFilename() != "") {
 		tmp += fileName.GetShortFilename();
 		tmp += " - ";
@@ -164,7 +164,7 @@ void MainWindows::SetTitle(Edn::File &fileName, bool isModify)
 		tmp += " - ";
 	}
 	tmp += "Edn";
-	gtk_window_set_title(GTK_WINDOW(m_mainWindow), tmp.c_str());
+	//gtk_window_set_title(GTK_WINDOW(m_mainWindow), tmp.c_str());
 	tmp = " ";
 	if (fileName.GetShortFilename() != "") {
 		tmp += fileName.GetFolder();
@@ -173,16 +173,16 @@ void MainWindows::SetTitle(Edn::File &fileName, bool isModify)
 	} else {
 		tmp += "Edn";
 	}
-		tmp += " ";
-	gtk_label_set_text(GTK_LABEL(m_internalTitleLabel), tmp.c_str());
+	tmp += " ";
+	//gtk_label_set_text(GTK_LABEL(m_internalTitleLabel), tmp.c_str());
 	
 }
 
 void MainWindows::SetNoTitle(void)
 {
-	Edn::String tmp = "Edn";
-	gtk_window_set_title(GTK_WINDOW(m_mainWindow), tmp.c_str());
-	gtk_label_set_text(GTK_LABEL(m_internalTitleLabel), tmp.c_str());
+	etk::String tmp = "Edn";
+	//gtk_window_set_title(GTK_WINDOW(m_mainWindow), tmp.c_str());
+	//gtk_label_set_text(GTK_LABEL(m_internalTitleLabel), tmp.c_str());
 }
 
 void MainWindows::OnMessage(int32_t id, int32_t dataID)
@@ -195,16 +195,18 @@ void MainWindows::OnMessage(int32_t id, int32_t dataID)
 			if (-1 == dataID) {
 				SetNoTitle();
 			} else {
+				/*
 				Buffer *mybuf = BufferManager::getInstance()->Get(dataID);
 				if (NULL != mybuf) {
-					Edn::File plop = mybuf->GetFileName();
+					etk::File plop = mybuf->GetFileName();
 					SetTitle(plop, mybuf->IsModify() );
 				}
+				*/
 			}
 			break;
 	}
 }
-
+/*
 bool MainWindows::OnQuit(GtkWidget *widget, gpointer data)
 {
 	//MainWindows * self = reinterpret_cast<MainWindows*>(data);
@@ -232,7 +234,7 @@ gboolean MainWindows::OnStateChange(GtkWidget *widget, GdkEvent* event, gpointer
 		}
 	}
 }
-
+*/
 
 
 

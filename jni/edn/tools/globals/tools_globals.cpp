@@ -23,9 +23,9 @@
  *******************************************************************************
  */
 
-#include "tools_globals.h"
-#include "ColorizeManager.h"
-#include "MsgBroadcast.h"
+#include <tools_globals.h>
+#include <ColorizeManager.h>
+#include <MsgBroadcast.h>
 
 #undef __class__
 #define __class__	"globals"

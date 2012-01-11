@@ -24,16 +24,16 @@
  *******************************************************************************
  */
 
-#include "CodeView.h"
+#include <CodeView.h>
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "Display.h"
-#include "CodeView.h"
-#include "BufferManager.h"
-#include "ColorizeManager.h"
-#include "ClipBoard.h"
-#include "SearchData.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <Display.h>
+#include <CodeView.h>
+#include <BufferManager.h>
+#include <ColorizeManager.h>
+#include <ClipBoard.h>
+#include <SearchData.h>
 
 
 CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
@@ -44,9 +44,9 @@ CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
 	m_shawableAreaY = 0;
 
 	// Init link with the buffer Manager
-	m_bufferManager = BufferManager::getInstance();
-	m_colorManager = ColorizeManager::getInstance();
-
+	//m_bufferManager = BufferManager::Get();
+	//m_colorManager = ColorizeManager::Get();
+/*
 	m_widget = gtk_drawing_area_new();
 	gtk_widget_set_size_request( m_widget, 200, 100);
 
@@ -79,18 +79,19 @@ CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
 #	elif defined( USE_GTK_VERSION_2_0 )
 	g_signal_connect(		G_OBJECT(m_widget), "expose_event",			G_CALLBACK(CB_displayDraw),		this);
 #	endif
+*/
 }
 
 CodeView::~CodeView(void)
 {
 
 }
-
+/*
 GtkWidget * CodeView::GetMainWidget(void)
 {
 	return m_widget;
 }
-
+*/
 
 void CodeView::OnMessage(int32_t id, int32_t dataID)
 {
@@ -138,21 +139,21 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			break;
 		case EDN_MSG__CURRENT_FIND_PREVIOUS:
 			{
-				Edn::String myDataString;
+				etk::String myDataString;
 				SearchData::GetSearch(myDataString);
 				m_bufferManager->Get(m_bufferID)->Search(myDataString, true, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
 			}
 			break;
 		case EDN_MSG__CURRENT_FIND_NEXT:
 			{
-				Edn::String myDataString;
+				etk::String myDataString;
 				SearchData::GetSearch(myDataString);
 				m_bufferManager->Get(m_bufferID)->Search(myDataString, false, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
 			}
 			break;
 		case EDN_MSG__CURRENT_REPLACE:
 			{
-				Edn::String myDataString;
+				etk::String myDataString;
 				SearchData::GetReplace(myDataString);
 				m_bufferManager->Get(m_bufferID)->Replace(myDataString);
 			}
@@ -184,11 +185,11 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			break;
 	}
 	// Force redraw of the widget
-	gtk_widget_queue_draw(m_widget);
+	//gtk_widget_queue_draw(m_widget);
 }
 
 
-
+#if 0
 gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	CodeView * self = reinterpret_cast<CodeView*>(data);
@@ -416,6 +417,6 @@ gint CodeView::CB_mouseScrollEvent( GtkWidget *widget, GdkEventScroll *event, gp
 }
 
 
-
+#endif
 
 

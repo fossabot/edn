@@ -26,12 +26,11 @@
 #ifndef __CODE_VIEW_H__
 #define __CODE_VIEW_H__
 
-#include "tools_debug.h"
-#include "Singleton.h"
-#include "CodeView.h"
-#include "BufferManager.h"
-#include "Display.h"
-#include "MsgBroadcast.h"
+#include <tools_debug.h>
+#include <CodeView.h>
+#include <BufferManager.h>
+#include <Display.h>
+#include <MsgBroadcast.h>
 
 class CodeView : public MsgBroadcast
 {
@@ -40,6 +39,7 @@ class CodeView : public MsgBroadcast
 		CodeView(void);
 		~CodeView(void);
 		void OnMessage(int32_t id, int32_t dataID);
+		/*
 		GtkWidget	*GetMainWidget(void);
 		// sur : GTK+ callback :
 		static gboolean		CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data);
@@ -50,10 +50,11 @@ class CodeView : public MsgBroadcast
 		static gint			CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, gpointer data);
 		static gint			CB_mouseMotionEvent( GtkWidget *widget, GdkEventMotion *event, gpointer data);
 		static gint			CB_mouseScrollEvent( GtkWidget *widget, GdkEventScroll *event, gpointer data);
+		*/
 
 	private:
 		// main windows widget : 
-		GtkWidget *         m_widget;
+		//GtkWidget *         m_widget;
 		// récupération des proprieter général...
 		BufferManager *     m_bufferManager;
 		ColorizeManager *   m_colorManager;

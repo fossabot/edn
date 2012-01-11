@@ -26,16 +26,15 @@
 #ifndef __SEARCH_DATA_H__
 #define __SEARCH_DATA_H__
 
-#include "tools_debug.h"
-#include "Edn.h"
+#include <tools_debug.h>
 
 namespace SearchData
 {
-	void SetSearch(Edn::String &myData);
-	void GetSearch(Edn::String &myData);
+	void SetSearch(etk::String &myData);
+	void GetSearch(etk::String &myData);
 	bool IsSearchEmpty(void);
-	void SetReplace(Edn::String &myData);
-	void GetReplace(Edn::String &myData);
+	void SetReplace(etk::String &myData);
+	void GetReplace(etk::String &myData);
 	bool IsReplaceEmpty(void);
 	void SetCase(bool value);
 	bool GetCase(void);

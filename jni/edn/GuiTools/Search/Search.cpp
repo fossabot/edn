@@ -36,26 +36,28 @@
 
 
 Search::Search(void)
-	:	m_localDialog(NULL),
+	/*:	m_localDialog(NULL),
 		m_searchLabel(NULL),
 		m_searchEntry(NULL),
 		m_replaceLabel(NULL),
 		m_replaceEntry(NULL),
 		m_CkMatchCase(NULL),
-		m_CkWrapAround(NULL)
+		m_CkWrapAround(NULL) */
 {
 	// nothing to do ...
 }
 
 Search::~Search(void)
 {
+/*
 	if (NULL!=m_localDialog) {
 		gtk_widget_hide(m_localDialog);
 		gtk_widget_destroy(m_localDialog);
 		m_localDialog = NULL;
 	}
+*/
 }
-
+/*
 void Search::Display(GtkWindow *parent)
 {
 	if(NULL == m_localDialog) {
@@ -193,7 +195,7 @@ void Search::Display(GtkWindow *parent)
 			gtk_widget_set_sensitive(m_CkMatchCase, true);
 		}
 		// Remove data form the search
-		Edn::String myDataString = "";
+		etk::String myDataString = "";
 		SearchData::SetSearch(myDataString);
 		gtk_entry_set_text(GTK_ENTRY(m_searchEntry), myDataString.c_str());
 		if (0 == strlen(myDataString.c_str())) {
@@ -228,21 +230,25 @@ void Search::Display(GtkWindow *parent)
 		gtk_widget_hide(m_CkRegularExpression);
 	}
 }
+*/
 
 void Search::Destroy(void)
 {
+/*
 	if (NULL!=m_localDialog) {
 		gtk_widget_destroy(m_localDialog);
 		m_localDialog = NULL;
 	}
+*/
 }
 
 
 void Search::Hide(void)
 {
-	gtk_widget_hide(m_localDialog);
+	//gtk_widget_hide(m_localDialog);
 }
 
+/*
 void Search::OnButtonPrevious(GtkWidget *widget, gpointer data)
 {
 	//EDN_INFO("CALLBACK");
@@ -315,7 +321,7 @@ void Search::OnEntrySearchChange(GtkWidget *widget, gpointer data)
 	// update research data
 	const char *testData = gtk_entry_get_text(GTK_ENTRY(widget));
 	if (NULL !=  testData) {
-		Edn::String myDataString = testData;
+		etk::String myDataString = testData;
 		SearchData::SetSearch(myDataString);
 		if (0 == strlen(testData)) {
 			self->m_haveSearchData = false;
@@ -341,7 +347,7 @@ void Search::OnEntryReplaceChange(GtkWidget *widget, gpointer data)
 	// update replace data
 	const char *testData = gtk_entry_get_text(GTK_ENTRY(widget));
 	if (NULL !=  testData) {
-		Edn::String myDataString = testData;
+		etk::String myDataString = testData;
 		SearchData::SetReplace(myDataString);
 		if (0 == strlen(testData)) {
 			self->m_haveReplaceData = false;
@@ -357,3 +363,4 @@ void Search::OnEntryReplaceChange(GtkWidget *widget, gpointer data)
 		}
 	}
 }
+*/

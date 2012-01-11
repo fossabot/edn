@@ -26,13 +26,13 @@
 #ifndef __WINDOWS_MANAGER_H__
 #define __WINDOWS_MANAGER_H__
 
-#include "Singleton.h"
-#include "MsgBroadcast.h"
-#include "MainWindows.h"
+#include <etk/Singleton.h>
+#include <MsgBroadcast.h>
+#include <MainWindows.h>
 
-class WindowsManager: public Singleton<WindowsManager>, public MsgBroadcast
+class WindowsManager: public etk::Singleton<WindowsManager>, public MsgBroadcast
 {
-	friend class Singleton<WindowsManager>;
+	friend class etk::Singleton<WindowsManager>;
 	// specific for sigleton system...
 	private:
 		// Constructeur

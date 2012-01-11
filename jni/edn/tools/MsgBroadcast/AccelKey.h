@@ -26,9 +26,9 @@
 #ifndef __ACCEL_KEY_H__
 #define __ACCEL_KEY_H__
 
-#include "tools_debug.h"
-#include "Singleton.h"
-
+#include <tools_debug.h>
+#include <etk/Singleton.h>
+/*
 // need to create a syngleton ...
 class AccelKey: public Singleton<AccelKey>
 {
@@ -50,7 +50,7 @@ class AccelKey: public Singleton<AccelKey>
 	private:
 		GtkAccelGroup * m_accelGroup;
 };
-
+*/
 
 #endif
 

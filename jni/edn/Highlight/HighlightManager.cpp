@@ -23,9 +23,9 @@
  *******************************************************************************
  */
 
-#include "tools_debug.h"
-#include "tools_globals.h"
-#include "HighlightManager.h"
+#include <tools_debug.h>
+#include <tools_globals.h>
+#include <HighlightManager.h>
 
 #undef __class__
 #define __class__	"HighlightManager"
@@ -65,7 +65,7 @@ void HighlightManager::OnMessage(int32_t id, int32_t dataID)
 	}
 }
 
-Highlight *HighlightManager::Get(Edn::File &fileName)
+Highlight *HighlightManager::Get(etk::File &fileName)
 {
 	int32_t i;
 	for (i=0; i<listHighlight.Size(); i++) {
@@ -76,7 +76,7 @@ Highlight *HighlightManager::Get(Edn::File &fileName)
 	return NULL;
 }
 
-bool HighlightManager::Exist(Edn::File &fileName)
+bool HighlightManager::Exist(etk::File &fileName)
 {
 	if (NULL != Get(fileName) ) {
 		return true;
@@ -87,14 +87,14 @@ bool HighlightManager::Exist(Edn::File &fileName)
 
 void HighlightManager::loadLanguages(void)
 {
-	Edn::String homedir;
+	etk::String homedir;
 #ifdef NDEBUG
 	homedir = "/usr/share/edn/";
 #else
 	homedir = "./data/";
 #endif
 
-	Edn::String xmlFilename = homedir;
+	etk::String xmlFilename = homedir;
 	xmlFilename += "lang_c.xml";
 	Highlight *myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
