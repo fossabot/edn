@@ -34,28 +34,7 @@
 #include <string.h>
 #include <assert.h>
 
-extern "C" {
-	// includes GDK_q
-	#include <gdk/gdkkeysyms.h>
-	#include <gtk/gtk.h>
-}
-
-
-
-#ifndef __int8_t_defined
-#   define __int8_t_defined
-    typedef   signed char                    int8_t;
-    typedef   signed short int               int16_t;
-    typedef   int                            int32_t;
-    typedef   signed long long int           int64_t;
-#endif
-
-typedef unsigned char                   uint8_t;
-typedef unsigned short int              uint16_t;
-typedef unsigned long int               uint32_t;
-typedef unsigned long long int          uint64_t;
-
-typedef  bool     BOOL;
+#include <ewol/ewol.h>
 
 typedef enum {
     ERR_NONE = 0,   //!< No error, luckily everything went fine
@@ -70,17 +49,6 @@ typedef enum {
 #define edn_min(elemA, elemB)					((elemA)<(elemB)) ? (elemA) : (elemB)
 #define edn_max(elemA, elemB)					((elemA)<(elemB)) ? (elemB) : (elemA)
 #define edn_average(minimim, elem, maximum)		((minimim)>(elem)) ? (minimim) : ((maximum)<(elem)) ? (maximum) : (elem)
-
-
-
-
-
-typedef struct {
-	int32_t x;
-	int32_t y;
-} position_ts;
-
-
 
 #endif
 
