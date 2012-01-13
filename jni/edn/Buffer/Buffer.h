@@ -30,7 +30,7 @@
 #include <etk/File.h>
 #include <Display.h>
 #include <charset.h>
-
+#include <ewol/ewol.h>
 
 
 typedef struct{
@@ -82,7 +82,7 @@ class Buffer {
 		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		virtual void      SetLineDisplay(uint32_t lineNumber);
 		
-		virtual int32_t   Display(DrawerManager &drawer);
+		virtual int32_t   Display(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY);
 		virtual void      ForceReDraw(bool allElement);
 		virtual void      AddChar(char * UTF8data);
 		virtual void      cursorMove(int32_t gtkKey);

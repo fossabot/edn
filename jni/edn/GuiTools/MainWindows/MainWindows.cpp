@@ -31,22 +31,94 @@
 #include <BufferView.h>
 #include <AccelKey.h>
 
+#include <ewol/widget/Button.h>
+#include <ewol/widget/CheckBox.h>
+#include <ewol/widget/SizerHori.h>
+#include <ewol/widget/SizerVert.h>
+#include <ewol/widget/Test.h>
+#include <ewol/widget/Label.h>
+#include <ewol/widget/Entry.h>
+#include <ewol/widget/List.h>
+#include <ewol/widget/PopUp.h>
+#include <ewol/widget/Spacer.h>
+#include <ewol/widgetMeta/FileChooser.h>
+#include <ewol/WidgetManager.h>
+
 #undef __class__
 #define __class__	"MainWindows"
 
+
+
+MainWindows::MainWindows(void)
+{
+	EDN_DEBUG("CREATE WINDOWS ... ");
+	ewol::SizerVert * mySizerVert = NULL;
+	ewol::SizerHori * mySizerHori = NULL;
+	ewol::Button * myButton = NULL;
+	ewol::Label * myLabel = NULL;
+	CodeView * myCodeView = NULL;
+	
+	mySizerVert = new ewol::SizerVert();
+	SetSubWidget(mySizerVert);
+	
+		mySizerHori = new ewol::SizerHori();
+		mySizerVert->SubWidgetAdd(mySizerHori);
+			
+			myButton = new ewol::Button("Open");
+			mySizerHori->SubWidgetAdd(myButton);
+			myButton = new ewol::Button("Close");
+			mySizerHori->SubWidgetAdd(myButton);
+			myButton = new ewol::Button("Save");
+			mySizerHori->SubWidgetAdd(myButton);
+			myButton = new ewol::Button("Save As ...");
+			mySizerHori->SubWidgetAdd(myButton);
+			
+			myLabel = new ewol::Label("FileName");
+			myLabel->SetExpendX(true);
+			myLabel->SetFillY(true);
+			mySizerHori->SubWidgetAdd(myLabel);
+		
+		mySizerHori = new ewol::SizerHori();
+		mySizerVert->SubWidgetAdd(mySizerHori);
+			myCodeView = new CodeView();
+			myCodeView->SetExpendX(true);
+			myCodeView->SetExpendY(true);
+			myCodeView->SetFillX(true);
+			myCodeView->SetFillY(true);
+			mySizerHori->SubWidgetAdd(myCodeView);
+			
+}
+
+
+MainWindows::~MainWindows(void)
+{
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ifdef SDFGSDFGSDF___SDFGSDFG
 MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 {
-#if 0
 	m_mainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 	// select the program icone
 	GError *err = NULL;
 	etk::String iconeFile;
-#ifdef NDEBUG
 	iconeFile = "/usr/share/edn/images/icone.png";
-#else
-	iconeFile = "./data/imagesSources/icone.png";
-#endif
 
 	GdkPixbuf * icone = gdk_pixbuf_new_from_file(iconeFile.c_str(), &err);
 	if (err != NULL) {
@@ -54,17 +126,11 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	} else {
 		gtk_window_set_icon(GTK_WINDOW(m_mainWindow), icone);
 	}
-	// Default size open windows
-	gtk_window_set_default_size(GTK_WINDOW(m_mainWindow), 800, 600);
 
 	// enable the close signal of the windows 
 	g_signal_connect(G_OBJECT(m_mainWindow), "delete-event", G_CALLBACK(OnQuit), this);
 	g_signal_connect(G_OBJECT(m_mainWindow), "window-state-event", G_CALLBACK(OnStateChange), this);
-	//g_signal_connect(G_OBJECT(m_mainWindow), "destroy", G_CALLBACK(OnQuit), this);
-	
-	// remove decoration
-	//gtk_window_set_decorated(GTK_WINDOW(m_mainWindow), FALSE);
-	
+
 	// Create a vertical box for stacking the menu and editor widgets in.
 	GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(m_mainWindow), vbox);
@@ -73,18 +139,11 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	AccelKey::getInstance()->LinkCommonAccel(GTK_WINDOW(m_mainWindow));
 
 	// Create the menu bar.
-#if 0
-	gtk_box_pack_start(	GTK_BOX (vbox), m_MenuBar.GetWidget(), FALSE, FALSE, 0);
-#else
 	GtkWidget *hboxMenu = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start(	GTK_BOX (vbox), hboxMenu, FALSE, FALSE, 0);
 	// Add Exit boutton
 	etk::String ExitIconeFile;
-#ifdef NDEBUG
 	ExitIconeFile = "/usr/share/edn/images/delete-24px.png";
-#else
-	ExitIconeFile = "./data/imagesSources/delete-24px.png";
-#endif
 	// TODO : find a good way to change the size of an image
 	GtkWidget *myImageQuit = gtk_image_new_from_file(ExitIconeFile.c_str());
 	GtkIconSize mySize = GTK_ICON_SIZE_SMALL_TOOLBAR;
@@ -100,25 +159,10 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	
 	// add the real menu bar
 	gtk_box_pack_start(	GTK_BOX (hboxMenu), m_MenuBar.GetWidget(), FALSE, FALSE, 0);
-	GdkColor color;
-	GtkStateType tmpppppp = GTK_STATE_NORMAL;
-	//GtkStateType tmpppppp = GTK_STATE_ACTIVE;
-	//GtkStateType tmpppppp = GTK_STATE_PRELIGHT;
-	//GtkStateType tmpppppp = GTK_STATE_SELECTED;
-	//GtkStateType tmpppppp = GTK_STATE_INSENSITIVE;
-	//gdk_color_parse ("green", &color);
-	//gtk_widget_modify_fg(m_MenuBar.GetWidget(), tmpppppp, &color);
-	//gdk_color_parse ("blue", &color);
-	//gtk_widget_modify_bg(m_MenuBar.GetWidget(), tmpppppp, &color);
-	gdk_color_parse ("red", &color);
-	gtk_widget_modify_text(m_MenuBar.GetWidget(), tmpppppp, &color);
-	//gdk_color_parse ("orange", &color);
-	gtk_widget_modify_base(m_MenuBar.GetWidget(), tmpppppp, &color);
 
 	// Add title
 	m_internalTitleLabel = gtk_label_new("Edn");
 	gtk_box_pack_start(	GTK_BOX (hboxMenu), m_internalTitleLabel, FALSE, FALSE, 0);
-#endif
 	// **********************************************************
 	// *                Horizontal ELEMENTS :                   *
 	// **********************************************************
@@ -126,9 +170,6 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 		GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 		gtk_container_add(GTK_CONTAINER (vbox), hbox);
 		// create the toolbar :
-#		if USE_GTK_VERSION_2_0
-		//gtk_box_pack_start(GTK_BOX(hbox), m_ToolBar.GetWidget(), FALSE, FALSE, 0);
-#		endif
 		// TreeView :
 		gtk_box_pack_start(GTK_BOX(hbox), m_BufferView.GetMainWidget(), FALSE, TRUE, 1);
 
@@ -140,8 +181,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 
 	// recursive version of gtk_widget_show
 	gtk_widget_show_all(m_mainWindow); 
-#endif
-}
+
 
 MainWindows::~MainWindows(void)
 {
@@ -206,7 +246,6 @@ void MainWindows::OnMessage(int32_t id, int32_t dataID)
 			break;
 	}
 }
-/*
 bool MainWindows::OnQuit(GtkWidget *widget, gpointer data)
 {
 	//MainWindows * self = reinterpret_cast<MainWindows*>(data);
@@ -234,7 +273,7 @@ gboolean MainWindows::OnStateChange(GtkWidget *widget, GdkEvent* event, gpointer
 		}
 	}
 }
-*/
+#endif
 
 
 

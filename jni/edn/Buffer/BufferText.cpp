@@ -30,6 +30,12 @@
 #include <toolsMemory.h>
 #include <etk/RegExp.h>
 
+#include <ewol/ewol.h>
+#include <ewol/OObject.h>
+#include <ewol/WidgetManager.h>
+#include <ewol/Widget.h>
+
+
 #undef __class__
 #define __class__	"BufferText"
 
@@ -274,25 +280,27 @@ void BufferText::UpdatePointerNumber(void)
  * @return 
  *
  */
-int32_t	BufferText::Display(DrawerManager &drawer)
+int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
 {
-	int32_t letterHeight = Display::GetFontHeight();
-	int32_t letterWidth = Display::GetFontWidth();
-	// update the number of element that can be displayed
-	m_displaySize.x = (drawer.GetWidth()/letterWidth) + 1 - nbColoneForLineNumber;;
-	m_displaySize.y = (drawer.GetHeight()/letterHeight) + 1;
-	EDN_INFO("main DIPLAY " << m_displaySize.x << " char * " << m_displaySize.y << " char");
-	
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
-	int32_t selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
+	int32_t selHave;
+	
+	int32_t fontId = ewol::GetDefaultFontId();
+	int32_t letterWidth = ewol::GetWidth(fontId, "A");
+	int32_t letterHeight = ewol::GetHeight(fontId);
+	
+	// update the number of element that can be displayed
+	m_displaySize.x = (sizeX/letterWidth) + 1 - nbColoneForLineNumber;
+	m_displaySize.y = (sizeY/letterHeight) + 1;
+	EDN_INFO("main DIPLAY " << m_displaySize.x << " char * " << m_displaySize.y << " char");
+	
+	selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
 	
 	colorInformation_ts * HLColor = NULL;
 	
-	//displayLineNumber(drawer);
 	// get the number of line in the buffer
 	int32_t maxNumberLine = m_EdnBuf.NumberOfLines();
-	//int32_t maxNumberLine = 2096;
 	char *myPrint = NULL;
 	if (10 > maxNumberLine) {				nbColoneForLineNumber = 1;	myPrint = (char *)"%1d";
 	} else if (100 > maxNumberLine) {		nbColoneForLineNumber = 2;	myPrint = (char *)"%2d";
@@ -316,21 +324,27 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 	Colorize *  selectColor       = NULL;
 	char displayChar[MAX_EXP_CHAR_LEN];
 	memset(displayChar, 0, sizeof(char)*MAX_EXP_CHAR_LEN);
-
-
+	
 	int mylen = m_EdnBuf.Size();
 	int32_t x_base=nbColoneForLineNumber*letterWidth + 3;
 	uint32_t xx = 0;
 	int32_t idX = 0;
-	drawer.Clean(myColorManager->Get(COLOR_CODE_BASIC_BG));
+	
+	color_ts bgColor;  //!< Text color
+	color_ts & tmpppppp = myColorManager->Get(COLOR_CODE_BASIC_BG);
+	OOColored->SetColor(tmpppppp);
+	OOColored->Rectangle( 0, 0, sizeX, sizeY);
+	
 	int displayLines = 0;
 	// Regenerate the colorizing if necessary ...
 	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, m_displayStartBufferPos, m_displaySize.y);
 	//GTimeVal timeStart;
 	//g_get_current_time(&timeStart);
-
+	
 	// draw the lineNumber : 
 	int32_t currentLineID = m_displayStart.y+1;
+	
+#if 0
 	DrawLineNumber(drawer, myPrint, currentLineID, y);
 	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
 		//EDN_INFO("diplay element=" << iii);
@@ -452,7 +466,7 @@ int32_t	BufferText::Display(DrawerManager &drawer)
 	//GTimeVal timeStop;
 	//g_get_current_time(&timeStop);
 	//EDN_DEBUG("Display Generation = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
-
+#endif
 	return ERR_NONE;
 }
 

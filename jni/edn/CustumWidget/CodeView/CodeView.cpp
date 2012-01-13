@@ -36,6 +36,149 @@
 #include <SearchData.h>
 
 
+
+
+#undef __class__
+#define __class__	"ewol::Button"
+
+
+CodeView::CodeView(void)
+{
+	m_label = "CodeView is disable ...";
+	m_bufferID = -1;
+	m_buttunOneSelected = false;
+	
+	// Init link with the buffer Manager
+	m_bufferManager = BufferManager::getInstance();
+	m_colorManager = ColorizeManager::getInstance();
+	
+	m_textColorFg.red   = 0.0;
+	m_textColorFg.green = 0.0;
+	m_textColorFg.blue  = 0.0;
+	m_textColorFg.alpha = 1.0;
+	
+	m_textColorBg.red   = 0.0;
+	m_textColorBg.green = 0.0;
+	m_textColorBg.blue  = 0.0;
+	m_textColorBg.alpha = 0.25;
+	SetCanHaveFocus(true);
+}
+
+CodeView::~CodeView(void)
+{
+	
+}
+
+bool CodeView::CalculateMinSize(void)
+{
+	m_minSize.x = 50;
+	m_minSize.y = 50;
+	return true;
+}
+
+
+
+void CodeView::OnRegenerateDisplay(void)
+{
+	// create tmp object :
+	ewol::OObject2DText*    myOObjectText     = new ewol::OObject2DText("", -1, m_textColorFg);
+	ewol::OObject2DColored* myOObjectsColored = new ewol::OObject2DColored();
+	
+	// generate the objects :
+	m_bufferManager->Get(m_bufferID)->Display(myOObjectText, myOObjectsColored, m_size.x, m_size.y);
+	
+	// clean the object list ...
+	ClearOObjectList();
+	// add generated element
+	AddOObject(myOObjectsColored, "CodeViewBackground");
+	AddOObject(myOObjectText,     "CodeViewText");
+	
+	
+/*
+	// TODO later : Add this in the basic element of the widget ...
+	int32_t borderSize = 2;
+	int32_t paddingSize = 3;
+	
+	int32_t tmpSizeX = m_minSize.x;
+	int32_t tmpSizeY = m_minSize.y;
+	int32_t tmpOriginX = (m_size.x - tmpSizeX) / 2;
+	int32_t tmpOriginY = (m_size.y - tmpSizeY) / 2;
+	// no change for the text orogin : 
+	int32_t tmpTextOriginX = (m_size.x - tmpSizeX) / 2 + borderSize + 2*paddingSize;
+	int32_t tmpTextOriginY = (m_size.y - tmpSizeY) / 2 + borderSize + 2*paddingSize;
+	
+	if (true==m_userFillX) {
+		tmpSizeX = m_size.x;
+		tmpOriginX = 0;
+	}
+	if (true==m_userFillY) {
+		tmpSizeY = m_size.y;
+		tmpOriginY = 0;
+	}
+	tmpOriginX += paddingSize;
+	tmpOriginY += paddingSize;
+	tmpSizeX -= 2*paddingSize;
+	tmpSizeY -= 2*paddingSize;
+
+	ewol::OObject2DText * tmpText = new ewol::OObject2DText("", -1, m_textColorFg);
+	//int32_t fontId = GetDefaultFontId();
+	//int32_t fontHeight = ewol::GetHeight(fontId);
+	//int32_t fontWidth = ewol::GetWidth(fontId, m_label.c_str());
+	tmpText->Text(tmpTextOriginX, tmpTextOriginY, m_label.c_str(), m_size.x - borderSize - 2*paddingSize);
+
+	ewol::OObject2DColored * tmpOObjects = new ewol::OObject2DColored;
+	tmpOObjects->SetColor(m_textColorBg);
+	tmpOObjects->Rectangle( tmpOriginX, tmpOriginY, tmpSizeX, tmpSizeY);
+	tmpOObjects->SetColor(m_textColorFg);
+	tmpOObjects->RectangleBorder( tmpOriginX, tmpOriginY, tmpSizeX, tmpSizeY, borderSize);
+	AddOObject(tmpOObjects, "BouttonDecoration");
+	AddOObject(tmpText, "BouttonText");
+*/
+}
+
+bool CodeView::OnEventArea(const char * generateEventId, etkFloat_t x, etkFloat_t y)
+{
+/*
+	//bool eventIsOK = false;
+	//EWOL_DEBUG("Receive event : \"" << generateEventId << "\"");
+	if(ewolEventButtonPressed == generateEventId) {
+		EWOL_INFO("BT pressed ... " << m_label);
+		//eventIsOK = true;
+		ewol::widgetManager::FocusKeep(this);
+	} else if(ewolEventButtonEnter == generateEventId) {
+		OnRegenerateDisplay();
+	}
+	//return eventIsOK;
+*/
+	// in every case this not stop the propagation of the event
+	return false;
+	// if overwrited... you can ...
+}
+
+
+bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, char UTF8_data[UTF8_MAX_SIZE])
+{
+	//EWOL_DEBUG("BT PRESSED : \"" << UTF8_data << "\" size=" << strlen(UTF8_data));
+	if(    UTF8_data != NULL
+	    && typeEvent == ewol::EVENT_KB_TYPE_DOWN
+	    && UTF8_data[0] == '\r') {
+		//return OnEventArea(ewolEventButtonPressed, -1, -1);
+	}
+	return false;
+}
+
+
+
+
+
+
+
+
+
+
+#ifdef SDFGSDFGSDFG_FGSDFG_SDF_G___DSFG_SD_FG__SD_F_G_SD_FG
+
+
 CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
 {
 	m_bufferID = -1;
@@ -189,7 +332,6 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 }
 
 
-#if 0
 gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	CodeView * self = reinterpret_cast<CodeView*>(data);
@@ -418,5 +560,6 @@ gint CodeView::CB_mouseScrollEvent( GtkWidget *widget, GdkEventScroll *event, gp
 
 
 #endif
+
 
 

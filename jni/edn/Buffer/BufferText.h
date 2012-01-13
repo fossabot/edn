@@ -46,7 +46,7 @@ class BufferText : public Buffer {
 		void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		void      SetLineDisplay(uint32_t lineNumber);
 		
-		int32_t   Display(DrawerManager &drawer);
+		int32_t   Display(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY);
 		void      ForceReDraw(bool allElement);
 		void      AddChar(char * UTF8data);
 		void      cursorMove(int32_t gtkKey);

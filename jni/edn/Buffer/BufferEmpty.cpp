@@ -67,30 +67,28 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
-int32_t	BufferEmpty::Display(DrawerManager &drawer)
+int32_t BufferEmpty::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
 {
-
-	ColorizeManager * myColorManager = ColorizeManager::getInstance();
-	// Get color : 
-	Colorize	*myColor = NULL;
-	// Clean Buffer
-	drawer.Clean(myColorManager->Get(COLOR_CODE_BASIC_BG) );
+	if (NULL == OOText) {
+		EDN_ERROR("Input VALUE is NULL");
+		return ERR_FAIL;
+	}
+	if (NULL == OOColored) {
+		EDN_ERROR("Input VALUE is NULL");
+		return ERR_FAIL;
+	}
+	OOText->TextAdd(20, 20, "edn - Editeur De N'ours, l'Editeur Desoxyribo-Nucleique", sizeX);
+	OOText->TextAdd(20, 50, "No Buffer Availlable to display", sizeX);
 	
-	myColor = myColorManager->Get("normal");
-	// Draw the 2 comments Lines :
-	drawer.Text(myColor, 20,20, "edn - Editeur De N'ours, l'Editeur Desoxyribo-Nucleique");
-	//drawer.Flush();
-	myColor = myColorManager->Get("commentDoxygen");
-	drawer.Text(myColor, 20,25 + Display::GetFontHeight(), "No Buffer Availlable to display");
-	drawer.Flush();
-	/*
-	myColor = myColorManager->Get(("SelectedText"));
-	drawer.Cursor(20, 50);
-	drawer.EndOfLine(20, 70);
-	drawer.Tabulation(myColor, 20, 90, 5);
-	drawer.UTF8UnknownElement(myColor, 20, 120, 3, false);
-	drawer.Flush();
-	*/
+	
+	color_ts bgColor;  //!< Text color
+	bgColor.red   = 1.0;
+	bgColor.green = 1.0;
+	bgColor.blue  = 1.0;
+	bgColor.alpha = 1.0;
+	OOColored->SetColor(bgColor);
+	OOColored->Rectangle( 0, 0, sizeX, sizeY);
+	
 	return ERR_NONE;
 }
 

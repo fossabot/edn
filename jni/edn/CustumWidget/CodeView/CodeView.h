@@ -32,6 +32,34 @@
 #include <Display.h>
 #include <MsgBroadcast.h>
 
+#include <etk/Types.h>
+#include <ewol/Widget.h>
+
+class CodeView :public ewol::Widget
+{
+	public:
+		         CodeView(void);
+		virtual ~CodeView(void);
+		virtual bool   CalculateMinSize(void);
+	private:
+		etk::String    m_label;
+		color_ts       m_textColorFg;  //!< Text color
+		color_ts       m_textColorBg;  //!< Background color
+		BufferManager *     m_bufferManager;
+		ColorizeManager *   m_colorManager;
+		int32_t             m_bufferID;
+		bool                m_buttunOneSelected;
+	public:
+		virtual void   OnRegenerateDisplay(void);
+	public:
+		//virtual bool OnEventInput(int32_t IdInput, eventInputType_te typeEvent, etkFloat_t x, etkFloat_t y);
+		virtual bool OnEventArea(const char * generateEventId, etkFloat_t x, etkFloat_t y);
+		virtual bool OnEventKb(ewol::eventKbType_te typeEvent, char UTF8_data[UTF8_MAX_SIZE]);
+};
+
+
+
+#if 0
 class CodeView : public MsgBroadcast
 {
 	public:
@@ -63,6 +91,9 @@ class CodeView : public MsgBroadcast
 		int32_t             m_bufferID;
 		bool                m_buttunOneSelected;
 };
+
+#endif
+
 #endif
 
 

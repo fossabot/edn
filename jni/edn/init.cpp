@@ -25,6 +25,7 @@
 
 #include <tools_debug.h>
 #include <tools_globals.h>
+#include <ewol/ewol.h>
 #include <Display.h>
 #include <BufferManager.h>
 #include <ColorizeManager.h>
@@ -37,19 +38,44 @@
 #include <readtags.h>
 #include <CTagsManager.h>
 
+MainWindows * basicWindows = NULL;
+
+
 /**
  * @brief main application function Initialisation
  */
 void APP_Init(int argc, char *argv[])
 {
 	EDN_INFO("Start Edn");
+	ewol::ChangeSize(800, 600);
 
-	//etk::TestUntaire_String();
-	//return 0;
-
-
-	// Use and remove GTK arguments from the application argument list.
-	//gtk_init (&argc, &argv);
+	// set the default Path of the application : 
+	#ifdef PLATFORM_Linux
+		etk::String homedir;
+		#ifdef NDEBUG
+			homedir = "/usr/share/"PROJECT_NAME"/";
+		#else
+			char cCurrentPath[FILENAME_MAX];
+			if (!getcwd(cCurrentPath, FILENAME_MAX)) {
+				homedir = "./assets/";
+			} else {
+				cCurrentPath[FILENAME_MAX - 1] = '\0';
+				homedir = cCurrentPath;
+				homedir += "/assets/";
+			}
+		#endif
+		SetBaseFolderData(homedir.c_str());
+		SetBaseFolderDataUser("~/."PROJECT_NAME"/");
+		SetBaseFolderCache("/tmp/"PROJECT_NAME"/");
+	#endif
+	
+	ewol::SetFontFolder("Font");
+	#ifdef EWOL_USE_FREE_TYPE
+		ewol::SetDefaultFont("freefont/FreeMono", 14);
+	#else
+		//ewol::SetDefaultFont("ebtfont/Monospace", 14);
+		ewol::SetDefaultFont("ebtfont/Monospace", 22);
+	#endif
 
 	// init internal global value
 	globals::init();
@@ -108,6 +134,16 @@ void APP_Init(int argc, char *argv[])
 			}
 		}
 	}
+	
+	basicWindows = new MainWindows();
+	if (NULL == basicWindows) {
+		EDN_ERROR("Can not allocate the basic windows");
+		ewol::Stop();
+	}
+	
+	// create the specific windows
+	ewol::DisplayWindows(basicWindows);
+	
 }
 
 
@@ -128,7 +164,9 @@ void APP_UnInit(void)
 	//AccelKey::kill();
 	EDN_INFO("Stop Display");
 	Display::UnInit();
-	
+	if (NULL != basicWindows) {
+		delete(basicWindows);
+	}
 
 
 	EDN_INFO("Stop Edn");

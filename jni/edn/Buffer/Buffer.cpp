@@ -146,7 +146,7 @@ void Buffer::SetLineDisplay(uint32_t lineNumber)
  * @return ---
  *
  */
-int32_t	Buffer::Display(DrawerManager &drawer)
+int32_t Buffer::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
 {
 	return ERR_NONE;
 }

@@ -38,7 +38,7 @@
 
 #ifndef __MAIN_WINDOWS_H__
 #define __MAIN_WINDOWS_H__
-
+#if 0
 class MainWindows: public etk::Singleton<MainWindows>, public MsgBroadcast
 {
 	friend class etk::Singleton<MainWindows>;
@@ -67,7 +67,14 @@ class MainWindows: public etk::Singleton<MainWindows>, public MsgBroadcast
 		ToolBar         m_ToolBar;
 		*/
 };
-
+#endif
+class MainWindows : public ewol::Windows
+{
+	public:
+		// Constructeur
+		MainWindows(void);
+		~MainWindows(void);
+};
 #endif
 
 
