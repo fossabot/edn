@@ -125,7 +125,7 @@ void APP_Init(int argc, char *argv[])
 	EDN_INFO("show list of files : ");
 	for( int32_t i=1 ; i<argc; i++) {
 		EDN_INFO("need load file : \"" << argv[i] << "\"" );
-		etk::File myfile = (char *)argv[i];
+		etk::File myfile((char *)argv[i], etk::FILE_TYPE_DIRECT);
 
 		if (false == myBufferManager->Exist(myfile) ) {
 			int32_t idBuffOpened = myBufferManager->Open(myfile);

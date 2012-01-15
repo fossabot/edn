@@ -85,6 +85,7 @@ void CodeView::OnRegenerateDisplay(void)
 	ewol::OObject2DColored* myOObjectsColored = new ewol::OObject2DColored();
 	
 	// generate the objects :
+	m_bufferID = 0;
 	m_bufferManager->Get(m_bufferID)->Display(myOObjectText, myOObjectsColored, m_size.x, m_size.y);
 	
 	// clean the object list ...

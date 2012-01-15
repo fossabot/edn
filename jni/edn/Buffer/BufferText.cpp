@@ -343,11 +343,11 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 	
 	// draw the lineNumber : 
 	int32_t currentLineID = m_displayStart.y+1;
+	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
 	
-#if 0
-	DrawLineNumber(drawer, myPrint, currentLineID, y);
+	//////    DrawLineNumber(drawer, myPrint, currentLineID, y);
 	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
-		//EDN_INFO("diplay element=" << iii);
+		//EDN_DEBUG("diplay element=" << iii);
 		int32_t pixelX = xx*letterWidth + x_base;
 		int displaywidth;
 		uint32_t currentChar = '\0';
@@ -393,11 +393,11 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 						&&	selStart <= iii
 						&&	selEnd   > iii)
 					{
-						drawer.SpaceText(myColorSel->GetBG(), pixelX ,y , 1);
+						//drawer.SpaceText(myColorSel->GetBG(), pixelX ,y , 1);
 					} else if (true == selectColor->HaveBg()) {
-						drawer.SpaceText(selectColor->GetBG(), pixelX ,y , 1);
+						//drawer.SpaceText(selectColor->GetBG(), pixelX ,y , 1);
 					} else {
-						drawer.SpaceText(myColorSpace, pixelX ,y , 1);
+						//drawer.SpaceText(myColorSpace, pixelX ,y , 1);
 					}
 				} else if(		'\t' == currentChar
 							&&	true == globals::IsSetDisplaySpaceChar() )
@@ -406,11 +406,11 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 						&&	selStart <= iii
 						&&	selEnd   > iii)
 					{
-						drawer.SpaceText(myColorSel->GetBG(), pixelX ,y , strlen(tmpDisplayOfset));
+						//drawer.SpaceText(myColorSel->GetBG(), pixelX ,y , strlen(tmpDisplayOfset));
 					} else if (true == selectColor->HaveBg()) {
-						drawer.SpaceText(selectColor->GetBG(), pixelX ,y , strlen(tmpDisplayOfset));
+						//drawer.SpaceText(selectColor->GetBG(), pixelX ,y , strlen(tmpDisplayOfset));
 					} else  {
-						drawer.SpaceText(myColorTab, pixelX ,y , strlen(tmpDisplayOfset));
+						//drawer.SpaceText(myColorTab, pixelX ,y , strlen(tmpDisplayOfset));
 					}
 				} else {
 					if(	true == selHave
@@ -420,9 +420,11 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 						selectColor = myColorSel;
 					}
 					if (currentChar <= 0x7F) {
-						drawer.Text(selectColor, pixelX ,y, tmpDisplayOfset);
+						//drawer.Text(selectColor, pixelX ,y, tmpDisplayOfset);
+						OOText->TextAdd(pixelX, y, tmpDisplayOfset, -1);
 					} else {
-						drawer.Text(selectColor, pixelX ,y, displayChar);
+						//drawer.Text(selectColor, pixelX ,y, displayChar);
+						OOText->TextAdd(pixelX, y, displayChar, -1);
 					}
 				}
 				xx+=widthToDisplay;
@@ -433,7 +435,7 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 		if (m_cursorPos == iii) {
 			// display the cursor:
 			if (true == m_cursorOn) {
-				drawer.Cursor(pixelX, y+letterHeight);
+				//drawer.Cursor(pixelX, y+letterHeight);
 				//m_cursorOn = false;
 			} else {
 				m_cursorOn = true;
@@ -441,32 +443,32 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 		}
 		// move to next line ...
 		if (currentChar=='\n') {
-			drawer.EndOfLine(pixelX, y+letterHeight);
-			drawer.Flush();
+			//drawer.EndOfLine(pixelX, y+letterHeight);
+			//drawer.Flush();
 			xx = 0;
 			idX =0;
 			y += letterHeight;
 			displayLines++;
 			currentLineID++;
-			DrawLineNumber(drawer, myPrint, currentLineID, y);
+			//DrawLineNumber(drawer, myPrint, currentLineID, y);
 		}
 	}
 	// special case : the cursor is at the end of the buffer...
 	if (m_cursorPos == iii) {
 		// display the cursor:
 		if (true == m_cursorOn) {
-			drawer.Cursor(xx*letterWidth + x_base, y+letterHeight);
+			//drawer.Cursor(xx*letterWidth + x_base, y+letterHeight);
 			m_cursorOn = false;
 		} else {
 			m_cursorOn = true;
 		}
 	}
-	drawer.Flush();
+	//drawer.Flush();
 	
 	//GTimeVal timeStop;
 	//g_get_current_time(&timeStop);
 	//EDN_DEBUG("Display Generation = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
-#endif
+
 	return ERR_NONE;
 }
 
