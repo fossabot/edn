@@ -114,7 +114,9 @@ class BufferText : public Buffer {
 		
 		void     GetMousePosition(int32_t width, int32_t height, int32_t &x, int32_t &y);
 		void     MoveUpDown(int32_t ofset);
-		void     DrawLineNumber(DrawerManager &drawer,char *myPrint,  int32_t lineNumber, int32_t positionY);
+		void     DrawLineNumber(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY);
+		
+		void     CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth);
 
 };
 

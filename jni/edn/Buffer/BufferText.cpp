@@ -238,12 +238,58 @@ void BufferText::SetLineDisplay(uint32_t lineNumber)
 
 }
 
-void BufferText::DrawLineNumber(DrawerManager &drawer,char *myPrint,  int32_t lineNumber, int32_t positionY)
+void BufferText::DrawLineNumber(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY)
 {
 	char tmpLineNumber[50];
 	sprintf(tmpLineNumber, myPrint, lineNumber);
-	drawer.Text(myColorManager->Get(COLOR_CODE_LINE_NUMBER), 1, positionY, tmpLineNumber);
+	//drawer.Text(myColorManager->Get(COLOR_CODE_LINE_NUMBER), 1, positionY, tmpLineNumber);
+	OOText->TextAdd(1, positionY, tmpLineNumber, -1);
 }
+
+#define CURSOR_WIDTH           (4)
+void BufferText::CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth)
+{
+
+	EWOL_ERROR("RequestCursorDisplay(" << x << "," << y << ")" );
+/*	
+	color_ts & tmpppppp = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
+	
+	OOColored->SetColor(tmpppppp);
+	
+	OOColored->Rectangle( x, y, letterWidth, letterHeight);
+*/	
+	
+	// get the cursor Color : 
+	//color_ts myColor = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
+	//cairo_set_source_rgb(m_cairo, myColor.red, myColor.green, myColor.blue);
+
+	// draw cursor
+	//int32_t letterHeight = Display::GetFontHeight();
+	//int32_t letterWidth = Display::GetFontWidth();
+	// depending on the inserting mode
+	if (false == globals::IsSetInsert()) {
+		//OOColored.Line(x-CURSOR_WIDTH, y-letterHeight+1, etkFloat_t ex, etkFloat_t ey, etkFloat_t thickness);
+		/*
+		cairo_set_line_width(m_cairo, 2);
+		cairo_move_to(m_cairo, x-CURSOR_WIDTH, y - letterHeight+1);
+		cairo_rel_line_to(m_cairo, CURSOR_WIDTH*2, 0);
+		cairo_rel_move_to(m_cairo, -CURSOR_WIDTH, 0);
+		cairo_rel_line_to(m_cairo, 0, letterHeight-2);
+		cairo_rel_move_to(m_cairo, -CURSOR_WIDTH, 0);
+		cairo_rel_line_to(m_cairo, CURSOR_WIDTH*2, 0);
+		*/
+	} else {
+		/*
+		cairo_set_line_width(m_cairo, 1);
+		cairo_move_to(m_cairo, x, y - letterHeight  + 1);
+		cairo_rel_line_to(m_cairo, letterWidth, 0);
+		cairo_rel_line_to(m_cairo, 0, letterHeight);
+		cairo_rel_line_to(m_cairo, -letterWidth, 0);
+		cairo_rel_line_to(m_cairo, 0, -letterHeight);
+		*/
+	}
+}
+
 
 /**
  * @brief Update internal data of the pointer to display
@@ -344,8 +390,9 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 	// draw the lineNumber : 
 	int32_t currentLineID = m_displayStart.y+1;
 	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
+	EDN_DEBUG("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
 	
-	//////    DrawLineNumber(drawer, myPrint, currentLineID, y);
+	DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
 	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
 		//EDN_DEBUG("diplay element=" << iii);
 		int32_t pixelX = xx*letterWidth + x_base;
@@ -432,14 +479,20 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 			idX += displaywidth;
 		}
 		// display cursor : 
+		//EDN_DEBUG(" is equal : " << m_cursorPos << "=" << iii);
 		if (m_cursorPos == iii) {
+			EDN_DEBUG("Yes ...");
 			// display the cursor:
-			if (true == m_cursorOn) {
-				//drawer.Cursor(pixelX, y+letterHeight);
+			CursorDisplay(OOColored, pixelX, y+letterHeight, letterHeight, letterWidth);
+			color_ts & tmpppppp = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
+			OOColored->SetColor(tmpppppp);
+			OOColored->Rectangle( pixelX, y+letterHeight, letterWidth, letterHeight);
+			/*if (true == m_cursorOn) {
+				//Cursor(OOColored, pixelX, y+letterHeight, letterHeight, letterWidth);
 				//m_cursorOn = false;
 			} else {
 				m_cursorOn = true;
-			}
+			}*/
 		}
 		// move to next line ...
 		if (currentChar=='\n') {
@@ -450,14 +503,14 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 			y += letterHeight;
 			displayLines++;
 			currentLineID++;
-			//DrawLineNumber(drawer, myPrint, currentLineID, y);
+			DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
 		}
 	}
 	// special case : the cursor is at the end of the buffer...
 	if (m_cursorPos == iii) {
 		// display the cursor:
 		if (true == m_cursorOn) {
-			//drawer.Cursor(xx*letterWidth + x_base, y+letterHeight);
+			//Cursor(OOColored, xx*letterWidth + x_base, yy+letterHeight, letterHeight, letterWidth);
 			m_cursorOn = false;
 		} else {
 			m_cursorOn = true;

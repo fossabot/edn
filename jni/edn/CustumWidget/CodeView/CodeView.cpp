@@ -42,7 +42,7 @@
 #define __class__	"ewol::Button"
 
 
-CodeView::CodeView(void)
+CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
 {
 	m_label = "CodeView is disable ...";
 	m_bufferID = -1;
@@ -93,48 +93,6 @@ void CodeView::OnRegenerateDisplay(void)
 	// add generated element
 	AddOObject(myOObjectsColored, "CodeViewBackground");
 	AddOObject(myOObjectText,     "CodeViewText");
-	
-	
-/*
-	// TODO later : Add this in the basic element of the widget ...
-	int32_t borderSize = 2;
-	int32_t paddingSize = 3;
-	
-	int32_t tmpSizeX = m_minSize.x;
-	int32_t tmpSizeY = m_minSize.y;
-	int32_t tmpOriginX = (m_size.x - tmpSizeX) / 2;
-	int32_t tmpOriginY = (m_size.y - tmpSizeY) / 2;
-	// no change for the text orogin : 
-	int32_t tmpTextOriginX = (m_size.x - tmpSizeX) / 2 + borderSize + 2*paddingSize;
-	int32_t tmpTextOriginY = (m_size.y - tmpSizeY) / 2 + borderSize + 2*paddingSize;
-	
-	if (true==m_userFillX) {
-		tmpSizeX = m_size.x;
-		tmpOriginX = 0;
-	}
-	if (true==m_userFillY) {
-		tmpSizeY = m_size.y;
-		tmpOriginY = 0;
-	}
-	tmpOriginX += paddingSize;
-	tmpOriginY += paddingSize;
-	tmpSizeX -= 2*paddingSize;
-	tmpSizeY -= 2*paddingSize;
-
-	ewol::OObject2DText * tmpText = new ewol::OObject2DText("", -1, m_textColorFg);
-	//int32_t fontId = GetDefaultFontId();
-	//int32_t fontHeight = ewol::GetHeight(fontId);
-	//int32_t fontWidth = ewol::GetWidth(fontId, m_label.c_str());
-	tmpText->Text(tmpTextOriginX, tmpTextOriginY, m_label.c_str(), m_size.x - borderSize - 2*paddingSize);
-
-	ewol::OObject2DColored * tmpOObjects = new ewol::OObject2DColored;
-	tmpOObjects->SetColor(m_textColorBg);
-	tmpOObjects->Rectangle( tmpOriginX, tmpOriginY, tmpSizeX, tmpSizeY);
-	tmpOObjects->SetColor(m_textColorFg);
-	tmpOObjects->RectangleBorder( tmpOriginX, tmpOriginY, tmpSizeX, tmpSizeY, borderSize);
-	AddOObject(tmpOObjects, "BouttonDecoration");
-	AddOObject(tmpText, "BouttonText");
-*/
 }
 
 bool CodeView::OnEventArea(const char * generateEventId, etkFloat_t x, etkFloat_t y)
@@ -169,73 +127,77 @@ bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, char UTF8_data[UTF8_MAX
 }
 
 
-
-
-
-
-
-
-
-
-#ifdef SDFGSDFGSDFG_FGSDFG_SDF_G___DSFG_SD_FG__SD_F_G_SD_FG
-
-
-CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
+bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, etkFloat_t x, etkFloat_t y)
 {
-	m_bufferID = -1;
-	m_buttunOneSelected = false;
-	m_shawableAreaX = 0;
-	m_shawableAreaY = 0;
-
-	// Init link with the buffer Manager
-	//m_bufferManager = BufferManager::Get();
-	//m_colorManager = ColorizeManager::Get();
-/*
-	m_widget = gtk_drawing_area_new();
-	gtk_widget_set_size_request( m_widget, 200, 100);
-
-	gtk_widget_add_events(	m_widget, 
-								GDK_KEY_PRESS_MASK
-							|	GDK_BUTTON_PRESS_MASK
-							|	GDK_BUTTON_RELEASE_MASK
-							|	GDK_POINTER_MOTION_MASK
-							|	GDK_POINTER_MOTION_HINT_MASK);
-#	ifdef USE_GTK_VERSION_3_0
-	g_object_set(m_widget,"can-focus", TRUE, NULL);
-#	elif defined( USE_GTK_VERSION_2_0 )
-	GTK_WIDGET_SET_FLAGS(m_widget, GTK_CAN_FOCUS);
-#	endif
-	// Focus Event
-	g_signal_connect(		G_OBJECT(m_widget), "focus_in_event",		G_CALLBACK(CB_focusGet),		 this);
-	g_signal_connect(		G_OBJECT(m_widget), "focus_out_event",		G_CALLBACK(CB_focusLost),		 this);
-	// Keyboard Event
-	g_signal_connect_after(	G_OBJECT(m_widget), "key_press_event",		G_CALLBACK(CB_keyboardEvent),	 this);
-	g_signal_connect_after(	G_OBJECT(m_widget), "key_release_event",	G_CALLBACK(CB_keyboardEvent),	 this);
-	// Mouse Event
-	g_signal_connect(		G_OBJECT(m_widget), "button_press_event",	G_CALLBACK(CB_mouseButtonEvent), this);
-	g_signal_connect(		G_OBJECT(m_widget), "button_release_event",	G_CALLBACK(CB_mouseButtonEvent), this);
-	g_signal_connect(		G_OBJECT(m_widget), "motion_notify_event",	G_CALLBACK(CB_mouseMotionEvent), this);
-	g_signal_connect(		G_OBJECT(m_widget), "scroll-event",			G_CALLBACK(CB_mouseScrollEvent), this);
-	// Display Event
-	g_signal_connect(		G_OBJECT(m_widget), "realize",				G_CALLBACK(CB_displayInit), 	 this);
-#	ifdef USE_GTK_VERSION_3_0
-	g_signal_connect(		G_OBJECT(m_widget), "draw",					G_CALLBACK(CB_displayDraw),		this);
-#	elif defined( USE_GTK_VERSION_2_0 )
-	g_signal_connect(		G_OBJECT(m_widget), "expose_event",			G_CALLBACK(CB_displayDraw),		this);
-#	endif
-*/
+	/*
+	etk::String type = (int)typeEvent;
+	switch (typeEvent)
+	{
+		case ewol::EVENT_INPUT_TYPE_DOWN:
+			type = "EVENT_INPUT_TYPE_DOWN";
+			break;
+		case ewol::EVENT_INPUT_TYPE_MOVE:
+			type = "EVENT_INPUT_TYPE_MOVE";
+			break;
+		case ewol::EVENT_INPUT_TYPE_SINGLE:
+			type = "EVENT_INPUT_TYPE_SINGLE";
+			break;
+		case ewol::EVENT_INPUT_TYPE_DOUBLE:
+			type = "EVENT_INPUT_TYPE_DOUBLE";
+			break;
+		case ewol::EVENT_INPUT_TYPE_TRIPLE:
+			type = "EVENT_INPUT_TYPE_TRIPLE";
+			break;
+		case ewol::EVENT_INPUT_TYPE_UP:
+			type = "EVENT_INPUT_TYPE_UP";
+			break;
+		case ewol::EVENT_INPUT_TYPE_ENTER:
+			type = "EVENT_INPUT_TYPE_ENTER";
+			break;
+		case ewol::EVENT_INPUT_TYPE_LEAVE:
+			type = "EVENT_INPUT_TYPE_LEAVE";
+			break;
+		default:
+			break;
+	};
+	
+	EDN_DEBUG("Event : " << IdInput << "  type : " << type << "  position(" << x << "," << y << ")");
+	*/
+	if (1 == IdInput)
+	{
+		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
+			//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
+			m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
+			OnRegenerateDisplay();
+			m_buttunOneSelected = true;
+		} else if (ewol::EVENT_INPUT_TYPE_DOUBLE == typeEvent) {
+			//EDN_INFO("mouse-event BT1  ==> Double Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
+			m_bufferManager->Get(m_bufferID)->MouseEventDouble();
+			OnRegenerateDisplay();
+			m_buttunOneSelected = true;
+		} else if (ewol::EVENT_INPUT_TYPE_TRIPLE == typeEvent) {
+			//EDN_INFO("mouse-event BT1  ==> Triple Clicked");
+			m_bufferManager->Get(m_bufferID)->MouseEventTriple();
+			OnRegenerateDisplay();
+			m_buttunOneSelected = true;
+		}
+	}
+	
+	if (4 == IdInput && ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent)
+	{
+		//EDN_INFO("mouse-event GDK_SCROLL_UP");
+		m_bufferManager->Get(m_bufferID)->ScrollUp();
+		OnRegenerateDisplay();
+	} else if (5 == IdInput && ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent)
+	{
+		//EDN_INFO("mouse-event GDK_SCROLL_DOWN");
+		m_bufferManager->Get(m_bufferID)->ScrollDown();
+		OnRegenerateDisplay();
+	}
+	return true;
 }
 
-CodeView::~CodeView(void)
-{
 
-}
-/*
-GtkWidget * CodeView::GetMainWidget(void)
-{
-	return m_widget;
-}
-*/
 
 void CodeView::OnMessage(int32_t id, int32_t dataID)
 {
@@ -270,7 +232,7 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			m_bufferManager->Get(m_bufferID)->Copy(dataID);
 			break;
 		case EDN_MSG__CURRENT_CUT:
-			if (dataID == -1) {
+			if (dataID == -1) {y
 				dataID = COPY_STD;
 			}
 			m_bufferManager->Get(m_bufferID)->Cut(dataID);
@@ -328,9 +290,19 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			// Redraw all the display ... Done under ...
 			break;
 	}
+	OnRegenerateDisplay();
 	// Force redraw of the widget
 	//gtk_widget_queue_draw(m_widget);
 }
+
+
+
+
+
+
+
+#ifdef SDFGSDFGSDFG_FGSDFG_SDF_G___DSFG_SD_FG__SD_F_G_SD_FG
+
 
 
 gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data)
