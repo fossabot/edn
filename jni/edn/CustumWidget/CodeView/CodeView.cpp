@@ -35,7 +35,7 @@
 #include <ClipBoard.h>
 #include <SearchData.h>
 
-
+#include <ewol/WidgetManager.h>
 
 
 #undef __class__
@@ -117,11 +117,10 @@ bool CodeView::OnEventArea(const char * generateEventId, etkFloat_t x, etkFloat_
 
 bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, char UTF8_data[UTF8_MAX_SIZE])
 {
-	//EWOL_DEBUG("BT PRESSED : \"" << UTF8_data << "\" size=" << strlen(UTF8_data));
-	if(    UTF8_data != NULL
-	    && typeEvent == ewol::EVENT_KB_TYPE_DOWN
-	    && UTF8_data[0] == '\r') {
-		//return OnEventArea(ewolEventButtonPressed, -1, -1);
+	EWOL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data));
+	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
+		m_bufferManager->Get(m_bufferID)->AddChar(UTF8_data);
+		OnRegenerateDisplay();
 	}
 	return false;
 }
@@ -163,36 +162,62 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 	
 	EDN_DEBUG("Event : " << IdInput << "  type : " << type << "  position(" << x << "," << y << ")");
 	*/
-	if (1 == IdInput)
-	{
-		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
+	if (1 == IdInput) {
+		if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
+			m_buttunOneSelected = true;
+			ewol::widgetManager::FocusKeep(this);
+		} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
+			m_buttunOneSelected = false;
+			m_bufferManager->Get(m_bufferID)->Copy(COPY_MIDDLE_BUTTON);
+			OnRegenerateDisplay();
+		} else if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
 			m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
 			OnRegenerateDisplay();
-			m_buttunOneSelected = true;
 		} else if (ewol::EVENT_INPUT_TYPE_DOUBLE == typeEvent) {
 			//EDN_INFO("mouse-event BT1  ==> Double Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
 			m_bufferManager->Get(m_bufferID)->MouseEventDouble();
 			OnRegenerateDisplay();
-			m_buttunOneSelected = true;
 		} else if (ewol::EVENT_INPUT_TYPE_TRIPLE == typeEvent) {
 			//EDN_INFO("mouse-event BT1  ==> Triple Clicked");
 			m_bufferManager->Get(m_bufferID)->MouseEventTriple();
 			OnRegenerateDisplay();
-			m_buttunOneSelected = true;
+		} else if (ewol::EVENT_INPUT_TYPE_MOVE == typeEvent) {
+			if (true == m_buttunOneSelected) {
+				int xxx, yyy;
+				xxx = x;
+				yyy = y;
+				if (xxx<0) {
+					xxx = 0;
+				}
+				if (yyy<0) {
+					yyy = 0;
+				}
+				//EDN_INFO("mouse-motion BT1 %d, %d", xxx, yyy);
+				m_bufferManager->Get(m_bufferID)->MouseSelectFromCursorTo(xxx, yyy);
+				OnRegenerateDisplay();
+			}
+		}
+	} else if (2 == IdInput) {
+		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
+			m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
+			m_bufferManager->Get(m_bufferID)->Paste(COPY_MIDDLE_BUTTON);
+			OnRegenerateDisplay();
+			ewol::widgetManager::FocusKeep(this);
 		}
 	}
-	
 	if (4 == IdInput && ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent)
 	{
 		//EDN_INFO("mouse-event GDK_SCROLL_UP");
 		m_bufferManager->Get(m_bufferID)->ScrollUp();
 		OnRegenerateDisplay();
+		ewol::widgetManager::FocusKeep(this);
 	} else if (5 == IdInput && ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent)
 	{
 		//EDN_INFO("mouse-event GDK_SCROLL_DOWN");
 		m_bufferManager->Get(m_bufferID)->ScrollDown();
 		OnRegenerateDisplay();
+		ewol::widgetManager::FocusKeep(this);
 	}
 	return true;
 }
@@ -232,7 +257,7 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			m_bufferManager->Get(m_bufferID)->Copy(dataID);
 			break;
 		case EDN_MSG__CURRENT_CUT:
-			if (dataID == -1) {y
+			if (dataID == -1) {
 				dataID = COPY_STD;
 			}
 			m_bufferManager->Get(m_bufferID)->Cut(dataID);
@@ -304,93 +329,9 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 #ifdef SDFGSDFGSDFG_FGSDFG_SDF_G___DSFG_SD_FG__SD_F_G_SD_FG
 
 
-
-gboolean CodeView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
-	CodeView * self = reinterpret_cast<CodeView*>(data);
-
-	//EDN_INFO("displayDraw_cb");
-#	ifdef USE_GTK_VERSION_3_0
-	GtkAllocation allocation;
-	gtk_widget_get_allocation(widget, &allocation);
-	bool needRedrawAll = false;
-	if (self->m_shawableAreaX != allocation.width) {
-		needRedrawAll = true;
-		self->m_shawableAreaX = allocation.width;
-	}
-	if (self->m_shawableAreaY != allocation.height) {
-		needRedrawAll = true;
-		self->m_shawableAreaY = allocation.height;
-	}
-#	elif defined( USE_GTK_VERSION_2_0)
-	bool needRedrawAll = false;
-	if (self->m_shawableAreaX != widget->allocation.width) {
-		needRedrawAll = true;
-		self->m_shawableAreaX = widget->allocation.width;
-	}
-	if (self->m_shawableAreaY != widget->allocation.height) {
-		needRedrawAll = true;
-		self->m_shawableAreaY = widget->allocation.height;
-	}
-#	endif
-	if (true == needRedrawAll) {
-		//updateScrollElement();
-		self->m_bufferManager->Get(self->m_bufferID)->ForceReDraw(true);
-	}
-	EDN_INFO("Request a display of : " << self->m_shawableAreaX << "px * "<<  self->m_shawableAreaY<<"px");
-	/*
-	EDN_INFO("widget width=%d", widget->allocation.width);
-	EDN_INFO("widget height=%d", widget->allocation.height);
-	*/
-
-	//EDN_INFO("BufferView Display");
-	// Get the color Manager :
-	ColorizeManager *myColorManager = NULL;
-	myColorManager = ColorizeManager::getInstance();
-	
-	//(void)m_bufferManager->Get(m_bufferID)->Display(m_displayParameters, m_shawableAreaX, m_shawableAreaY);
-	DrawerManager monDrawer(widget, self->m_shawableAreaX, self->m_shawableAreaY);
-	//EDN_INFO("Display buffer ID = " << m_bufferID);
-	(void)self->m_bufferManager->Get(self->m_bufferID)->Display(monDrawer);
-//	EDN_WARNING("Must display here ... ");
-	return TRUE;
-}
-
-
-
-
-// sur : émis lors du premier affichage de la GtkDrawingArea
-gboolean CodeView::CB_displayInit( GtkWidget *widget, gpointer data)
-{
-	CodeView * self = reinterpret_cast<CodeView*>(data);
-#	ifdef USE_GTK_VERSION_3_0
-	GtkAllocation allocation;
-	gtk_widget_get_allocation(widget, &allocation);
-	int32_t size_x = allocation.width;
-	int32_t size_y = allocation.height;
-	
-	self->m_shawableAreaX = allocation.width;
-	self->m_shawableAreaY = allocation.height;
-#	elif defined( USE_GTK_VERSION_2_0)
-	int32_t size_x = widget->allocation.width;
-	int32_t size_y = widget->allocation.height;
-	
-	self->m_shawableAreaX = widget->allocation.width;
-	self->m_shawableAreaY = widget->allocation.height;
-#	endif
-	EDN_INFO("Request a diplay of : "<< size_x <<"px * "<< size_y <<"px");
-
-	gtk_widget_queue_draw( widget );
-
-	return TRUE;
-}
-
 gint CodeView::CB_focusGet(	GtkWidget *widget, GdkEventFocus *event, gpointer data)
 {
 	CodeView * self = reinterpret_cast<CodeView*>(data);
-#	ifdef USE_GTK_VERSION_2_0
-	GTK_WIDGET_SET_FLAGS (widget, GTK_HAS_FOCUS);
-#	endif
 	self->SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, self->m_bufferID);
 	EDN_INFO("Focus - In");
 	return FALSE;
@@ -398,11 +339,6 @@ gint CodeView::CB_focusGet(	GtkWidget *widget, GdkEventFocus *event, gpointer da
 
 gint CodeView::CB_focusLost(	GtkWidget *widget, GdkEventFocus *event, gpointer data)
 {
-	//CodeView * self = reinterpret_cast<CodeView*>(data);
-	
-#	ifdef USE_GTK_VERSION_2_0
-	GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
-#	endif
 	EDN_INFO("Focus - out");
 	return FALSE;
 }
@@ -431,105 +367,6 @@ gint CodeView::CB_keyboardEvent(GtkWidget *widget, GdkEventKey *event, gpointer 
 }
 
 
-gint CodeView::CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, gpointer data)
-{
-
-	CodeView * self = reinterpret_cast<CodeView*>(data);
-	
-	// get focus on the widget
-	gtk_widget_grab_focus(widget);
-	if (event->button == 1) {
-		if (event->type == GDK_BUTTON_PRESS) {
-			//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
-			self->m_bufferManager->Get(self->m_bufferID)->MouseEvent(event->x, event->y);
-			gtk_widget_queue_draw( widget );
-			self->m_buttunOneSelected = true;
-		}else if (event->type == GDK_2BUTTON_PRESS) {
-			//EDN_INFO("mouse-event BT1  ==> Double Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
-			self->m_bufferManager->Get(self->m_bufferID)->MouseEventDouble();
-			gtk_widget_queue_draw( widget );
-			self->m_buttunOneSelected = true;
-		}else if (event->type == GDK_3BUTTON_PRESS) {
-			//EDN_INFO("mouse-event BT1  ==> Triple Clicked");
-			self->m_bufferManager->Get(self->m_bufferID)->MouseEventTriple();
-			gtk_widget_queue_draw( widget );
-			self->m_buttunOneSelected = true;
-		}else if (event->type == GDK_BUTTON_RELEASE) {
-			//EDN_INFO("mouse-event BT1  ==> Realease");
-			self->m_buttunOneSelected = false;
-			self->m_bufferManager->Get(self->m_bufferID)->Copy(COPY_MIDDLE_BUTTON);
-		}
-	} else if (event->button == 2) {
-		if (event->type == GDK_BUTTON_PRESS) {
-			EDN_INFO("mouse-event BT2 PRESS");
-			self->m_bufferManager->Get(self->m_bufferID)->MouseEvent(event->x, event->y);
-			self->m_bufferManager->Get(self->m_bufferID)->Paste(COPY_MIDDLE_BUTTON);
-			gtk_widget_queue_draw(widget);
-		}
-	} else if (event->button == 3) {
-		if (event->type == GDK_BUTTON_PRESS) {
-			EDN_INFO("mouse-event BT3 PRESS");
-		}
-	} else {
-		EDN_INFO("mouse-event BT" << event->type <<" PRESS");
-	}
-	return true;
-}
-
-
-
-gint CodeView::CB_mouseMotionEvent( GtkWidget *widget, GdkEventMotion *event, gpointer data)
-{
-	CodeView * self = reinterpret_cast<CodeView*>(data);
-	
-	if (true == self->m_buttunOneSelected) {
-		int x, y;
-		GdkModifierType state;
-
-		if (event->is_hint) {
-			gdk_window_get_pointer(event->window, &x, &y, &state);
-		} else {
-			x = event->x;
-			y = event->y;
-			state = (GdkModifierType)event->state;
-		}
-		if (x<0) {
-			x = 0;
-		}
-		if (y<0) {
-			y = 0;
-		}
-		//EDN_INFO("mouse-motion BT1 %d, %d", x, y);
-		self->m_bufferManager->Get(self->m_bufferID)->MouseSelectFromCursorTo(x, y);
-		gtk_widget_queue_draw( widget );
-	}
-	return true;
-}
-
-
-gint CodeView::CB_mouseScrollEvent( GtkWidget *widget, GdkEventScroll *event, gpointer data)
-{
-	CodeView * self = reinterpret_cast<CodeView*>(data);
-	
-	if (event->direction == GDK_SCROLL_UP)
-	{
-		// up code
-		//EDN_INFO("mouse-event GDK_SCROLL_UP");
-		self->m_bufferManager->Get(self->m_bufferID)->ScrollUp();
-		gtk_widget_queue_draw( widget );
-	}
-	else if (event->direction == GDK_SCROLL_DOWN)
-	{
-		// down code
-		//EDN_INFO("mouse-event GDK_SCROLL_DOWN");
-		self->m_bufferManager->Get(self->m_bufferID)->ScrollDown();
-		gtk_widget_queue_draw( widget );
-	} else {
-		EDN_INFO("mouse-event SCROLL");
-	}
-
-	return true;
-}
 
 
 #endif
