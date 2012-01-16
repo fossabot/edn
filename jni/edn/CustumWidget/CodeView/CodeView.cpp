@@ -81,8 +81,8 @@ bool CodeView::CalculateMinSize(void)
 void CodeView::OnRegenerateDisplay(void)
 {
 	// create tmp object :
-	ewol::OObject2DText*    myOObjectText     = new ewol::OObject2DText("", -1, m_textColorFg);
-	ewol::OObject2DColored* myOObjectsColored = new ewol::OObject2DColored();
+	ewol::OObject2DTextColored* myOObjectText     = new ewol::OObject2DTextColored("", -1);
+	ewol::OObject2DColored*     myOObjectsColored = new ewol::OObject2DColored();
 	
 	// generate the objects :
 	m_bufferID = 0;
@@ -128,6 +128,8 @@ bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, char UTF8_data[UTF8_MAX
 
 bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, etkFloat_t x, etkFloat_t y)
 {
+	x -= m_origin.x;
+	y -= m_origin.y;
 	/*
 	etk::String type = (int)typeEvent;
 	switch (typeEvent)
@@ -232,7 +234,7 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			//EDN_INFO("Select a new Buffer ... " << dataID);
 			m_bufferID = dataID;
 			m_bufferManager->Get(m_bufferID)->ForceReDraw(true);
-			// request the dispplay of the curent Editor
+			// request the display of the curent Editor
 			SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
 			break;
 		case EDN_MSG__CURRENT_SAVE:

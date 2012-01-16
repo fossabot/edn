@@ -38,9 +38,11 @@ Colorize::Colorize(	etk::String &newColorName)
 	m_colorFG.red=0;
 	m_colorFG.green=0;
 	m_colorFG.blue=0;
+	m_colorFG.alpha=1;
 	m_colorBG.red=0;
 	m_colorBG.green=0;
 	m_colorBG.blue=0;
+	m_colorBG.alpha=1;
 	
 	italic	= false;
 	bold	= false;
@@ -57,9 +59,11 @@ Colorize::Colorize(void)
 	m_colorFG.red=0;
 	m_colorFG.green=0;
 	m_colorFG.blue=0;
+	m_colorFG.alpha=1;
 	m_colorBG.red=0;
 	m_colorBG.green=0;
 	m_colorBG.blue=0;
+	m_colorBG.alpha=1;
 	
 	italic	= false;
 	bold	= false;
@@ -97,24 +101,38 @@ etk::String Colorize::GetName(void)
 void Colorize::SetFgColor(const char *myColor)
 {
 	haveFG = true;
-	unsigned int r=0;
-	unsigned int v=0;
-	unsigned int b=0;
-	sscanf(myColor, "#%02x%02x%02x", &r,&v,&b);
+	signed int r=0;
+	signed int v=0;
+	signed int b=0;
+	signed int a=-1;
+	sscanf(myColor, "#%02x%02x%02x%02x", &r, &v, &b, &a);
 	m_colorFG.red = (float)r/255.0;
 	m_colorFG.green = (float)v/255.0;
 	m_colorFG.blue = (float)b/255.0;
+	if (-1 == a) {
+		m_colorFG.alpha = 1;
+	} else {
+		m_colorFG.alpha = (float)a/255.0;
+	}
 	//EDN_INFO(myColor << " ==> r="<< r <<" v="<< v <<" b="<< b );
 }
 
 void Colorize::SetBgColor(const char *myColor)
 {
 	haveBG = true;
-	unsigned int r,v,b;
-	sscanf(myColor, "#%02x%02x%02x", &r,&v,&b);
+	signed int r=0;
+	signed int v=0;
+	signed int b=0;
+	signed int a=-1;
+	sscanf(myColor, "#%02x%02x%02x%02x", &r, &v, &b, &a);
 	m_colorBG.red = (float)r/255.0;
 	m_colorBG.green = (float)v/255.0;
 	m_colorBG.blue = (float)b/255.0;
+	if (-1 == a) {
+		m_colorBG.alpha = 1;
+	} else {
+		m_colorBG.alpha = (float)a/255.0;
+	}
 }
 
 bool Colorize::HaveBg(void)

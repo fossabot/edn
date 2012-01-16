@@ -137,13 +137,11 @@ void APP_Init(int argc, char *argv[])
 	{
 		EDN_INFO("need load file : \"" << "avancement.boo" << "\"" );
 		etk::File myfile("avancement.boo", etk::FILE_TYPE_DIRECT);
-
 		if (false == myBufferManager->Exist(myfile) ) {
 			int32_t idBuffOpened = myBufferManager->Open(myfile);
 			MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idBuffOpened);
 		}
 	}
-	
 	basicWindows = new MainWindows();
 	if (NULL == basicWindows) {
 		EDN_ERROR("Can not allocate the basic windows");

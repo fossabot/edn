@@ -46,7 +46,7 @@ class BufferText : public Buffer {
 		void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		void      SetLineDisplay(uint32_t lineNumber);
 		
-		int32_t   Display(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY);
+		int32_t   Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY);
 		void      ForceReDraw(bool allElement);
 		void      AddChar(char * UTF8data);
 		void      cursorMove(int32_t gtkKey);
@@ -114,7 +114,7 @@ class BufferText : public Buffer {
 		
 		void     GetMousePosition(int32_t width, int32_t height, int32_t &x, int32_t &y);
 		void     MoveUpDown(int32_t ofset);
-		void     DrawLineNumber(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY);
+		void     DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY);
 		
 		void     CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth);
 

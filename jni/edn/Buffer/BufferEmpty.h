@@ -32,7 +32,7 @@ class BufferEmpty : public Buffer {
 	public:
 		BufferEmpty(void);
 		virtual ~BufferEmpty(void);
-		int32_t Display(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY);
+		int32_t Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY);
 
 };
 

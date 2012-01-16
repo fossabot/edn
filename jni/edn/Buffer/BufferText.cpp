@@ -238,11 +238,12 @@ void BufferText::SetLineDisplay(uint32_t lineNumber)
 
 }
 
-void BufferText::DrawLineNumber(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY)
+void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY)
 {
 	char tmpLineNumber[50];
 	sprintf(tmpLineNumber, myPrint, lineNumber);
 	//drawer.Text(myColorManager->Get(COLOR_CODE_LINE_NUMBER), 1, positionY, tmpLineNumber);
+	OOText->SetColor(myColorManager->Get(COLOR_CODE_LINE_NUMBER));
 	OOText->TextAdd(1, positionY, tmpLineNumber, -1);
 }
 
@@ -250,14 +251,12 @@ void BufferText::DrawLineNumber(ewol::OObject2DText* OOText, ewol::OObject2DColo
 void BufferText::CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth)
 {
 
-	EWOL_ERROR("RequestCursorDisplay(" << x << "," << y << ")" );
-/*	
+	//EDN_ERROR("RequestCursorDisplay(" << x << "," << y << ")" );
 	color_ts & tmpppppp = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
 	
 	OOColored->SetColor(tmpppppp);
 	
 	OOColored->Rectangle( x, y, letterWidth, letterHeight);
-*/	
 	
 	// get the cursor Color : 
 	//color_ts myColor = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
@@ -326,7 +325,7 @@ void BufferText::UpdatePointerNumber(void)
  * @return 
  *
  */
-int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
+int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
 {
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
@@ -468,9 +467,11 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 					}
 					if (currentChar <= 0x7F) {
 						//drawer.Text(selectColor, pixelX ,y, tmpDisplayOfset);
+						OOText->SetColor(selectColor->GetFG());
 						OOText->TextAdd(pixelX, y, tmpDisplayOfset, -1);
 					} else {
 						//drawer.Text(selectColor, pixelX ,y, displayChar);
+						OOText->SetColor(selectColor->GetFG());
 						OOText->TextAdd(pixelX, y, displayChar, -1);
 					}
 				}
@@ -481,12 +482,8 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 		// display cursor : 
 		//EDN_DEBUG(" is equal : " << m_cursorPos << "=" << iii);
 		if (m_cursorPos == iii) {
-			EDN_DEBUG("Yes ...");
 			// display the cursor:
-			CursorDisplay(OOColored, pixelX, y+letterHeight, letterHeight, letterWidth);
-			color_ts & tmpppppp = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
-			OOColored->SetColor(tmpppppp);
-			OOColored->Rectangle( pixelX, y+letterHeight, letterWidth, letterHeight);
+			CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
 			/*if (true == m_cursorOn) {
 				//Cursor(OOColored, pixelX, y+letterHeight, letterHeight, letterWidth);
 				//m_cursorOn = false;
@@ -529,6 +526,7 @@ int32_t BufferText::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored*
 
 void BufferText::GetMousePosition(int32_t width, int32_t height, int32_t &x, int32_t &y)
 {
+	
 	x = (width - 3) / Display::GetFontWidth() - nbColoneForLineNumber;
 	y = height / Display::GetFontHeight();
 	if (x < 0) {

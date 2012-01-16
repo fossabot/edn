@@ -67,8 +67,14 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
-int32_t BufferEmpty::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
+int32_t BufferEmpty::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
 {
+	ColorizeManager * myColorManager = ColorizeManager::getInstance();
+	// Get color : 
+	Colorize	*myColor = NULL;
+	//drawer.Flush();
+	
+	
 	if (NULL == OOText) {
 		EDN_ERROR("Input VALUE is NULL");
 		return ERR_FAIL;
@@ -77,7 +83,13 @@ int32_t BufferEmpty::Display(ewol::OObject2DText* OOText, ewol::OObject2DColored
 		EDN_ERROR("Input VALUE is NULL");
 		return ERR_FAIL;
 	}
+	
+	myColor = myColorManager->Get("normal");
+	OOText->SetColor(myColor->GetFG());
 	OOText->TextAdd(20, 20, "edn - Editeur De N'ours, l'Editeur Desoxyribo-Nucleique", sizeX);
+	
+	myColor = myColorManager->Get("commentDoxygen");
+	OOText->SetColor(myColor->GetFG());
 	OOText->TextAdd(20, 50, "No Buffer Availlable to display", sizeX);
 	
 	

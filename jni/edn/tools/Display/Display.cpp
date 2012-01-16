@@ -105,12 +105,14 @@ void Display::UnInit(void)
 
 int32_t Display::GetFontHeight(void)
 {
-	return m_pangoFontHeight;
+	int32_t fontId = ewol::GetDefaultFontId();
+	return ewol::GetHeight(fontId);
 }
 
 int32_t Display::GetFontWidth(void)
 {
-	return m_pangoFontWidth;
+	int32_t fontId = ewol::GetDefaultFontId();
+	return ewol::GetWidth(fontId, "A");
 }
 
 

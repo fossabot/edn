@@ -150,13 +150,19 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 						}
 						const char *color = pGuiNode->ToElement()->Attribute("val");
 						if (NULL != color) {
-							unsigned int r=0;
-							unsigned int v=0;
-							unsigned int b=0;
-							sscanf(color, "#%02x%02x%02x", &r,&v,&b);
+							int r=0;
+							int v=0;
+							int b=0;
+							int a=-1;
+							sscanf(color, "#%02x%02x%02x%02x", &r, &v, &b, &a);
 							basicColors[id].red = (float)r/255.0;
 							basicColors[id].green = (float)v/255.0;
 							basicColors[id].blue = (float)b/255.0;
+							if (-1 == a) {
+								basicColors[id].alpha = 1;
+							} else {
+								basicColors[id].alpha = (float)a/255.0;
+							}
 							/*
 							EDN_INFO(" Specify color for system ID="<< id );
 							EDN_INFO("    " << color << " ==> r="<< r <<" v="<< v <<" b="<< b );
