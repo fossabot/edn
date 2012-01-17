@@ -247,45 +247,18 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 	OOText->TextAdd(1, positionY, tmpLineNumber, -1);
 }
 
-#define CURSOR_WIDTH           (4)
+#define CURSOR_WIDTH           (5)
+#define CURSOR_THICKNESS       (1.2)
 void BufferText::CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth)
 {
-
-	//EDN_ERROR("RequestCursorDisplay(" << x << "," << y << ")" );
 	color_ts & tmpppppp = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
-	
 	OOColored->SetColor(tmpppppp);
-	
-	OOColored->Rectangle( x, y, letterWidth, letterHeight);
-	
-	// get the cursor Color : 
-	//color_ts myColor = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
-	//cairo_set_source_rgb(m_cairo, myColor.red, myColor.green, myColor.blue);
-
-	// draw cursor
-	//int32_t letterHeight = Display::GetFontHeight();
-	//int32_t letterWidth = Display::GetFontWidth();
-	// depending on the inserting mode
-	if (false == globals::IsSetInsert()) {
-		//OOColored.Line(x-CURSOR_WIDTH, y-letterHeight+1, etkFloat_t ex, etkFloat_t ey, etkFloat_t thickness);
-		/*
-		cairo_set_line_width(m_cairo, 2);
-		cairo_move_to(m_cairo, x-CURSOR_WIDTH, y - letterHeight+1);
-		cairo_rel_line_to(m_cairo, CURSOR_WIDTH*2, 0);
-		cairo_rel_move_to(m_cairo, -CURSOR_WIDTH, 0);
-		cairo_rel_line_to(m_cairo, 0, letterHeight-2);
-		cairo_rel_move_to(m_cairo, -CURSOR_WIDTH, 0);
-		cairo_rel_line_to(m_cairo, CURSOR_WIDTH*2, 0);
-		*/
+	if (true == globals::IsSetInsert()) {
+		OOColored->Rectangle( x, y, letterWidth, letterHeight);
 	} else {
-		/*
-		cairo_set_line_width(m_cairo, 1);
-		cairo_move_to(m_cairo, x, y - letterHeight  + 1);
-		cairo_rel_line_to(m_cairo, letterWidth, 0);
-		cairo_rel_line_to(m_cairo, 0, letterHeight);
-		cairo_rel_line_to(m_cairo, -letterWidth, 0);
-		cairo_rel_line_to(m_cairo, 0, -letterHeight);
-		*/
+		OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y)                              , (int32_t)(x+CURSOR_WIDTH), (int32_t)(y)                              , CURSOR_THICKNESS);
+		OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), (int32_t)(x+CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
+		OOColored->Line( (int32_t)(x)             , (int32_t)(y)                              , (int32_t)(x)             , (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
 	}
 }
 
