@@ -49,7 +49,7 @@ class BufferText : public Buffer {
 		int32_t   Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY);
 		void      ForceReDraw(bool allElement);
 		void      AddChar(char * UTF8data);
-		void      cursorMove(int32_t gtkKey);
+		void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);
 		void      MouseSelectFromCursorTo(int32_t width, int32_t height);
 		void      MouseEvent(int32_t width, int32_t height);
 		void      MouseEventDouble(void);

@@ -856,7 +856,7 @@ bool BufferText::TextDMoveDown(int32_t offset)
  * @return ---
  *
  */
-void BufferText::cursorMove(int32_t gtkKey)
+void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
 {
 	bool needUpdatePosition = true;
 	// check selection event ...
@@ -871,73 +871,41 @@ void BufferText::cursorMove(int32_t gtkKey)
 		SelectionEnd();
 	}
 	*/
-	switch(gtkKey) {
-#		ifdef USE_GTK_VERSION_3_0
-		case GDK_KEY_Left:
-#		elif defined( USE_GTK_VERSION_2_0)
-		case GDK_Left:
-#		endif
+	switch(moveTypeEvent) {
+		case ewol::EVENT_KB_MOVE_TYPE_LEFT:
 			//EDN_INFO("keyEvent : <LEFT>");
 			if (m_cursorPos > 0) {
 				SetInsertPosition(m_cursorPos - 1); 
 			}
 			break;
-#		ifdef USE_GTK_VERSION_3_0
-		case GDK_KEY_Right:
-#		elif defined( USE_GTK_VERSION_2_0)
-		case GDK_Right:
-#		endif
+		case ewol::EVENT_KB_MOVE_TYPE_RIGHT:
 			//EDN_INFO("keyEvent : <RIGHT>");
 			if (m_cursorPos < m_EdnBuf.Size() ) {
 				SetInsertPosition(m_cursorPos + 1);
 			}
 			break;
-#		ifdef USE_GTK_VERSION_3_0
-		case GDK_KEY_Up:
-#		elif defined( USE_GTK_VERSION_2_0)
-		case GDK_Up:
-#		endif
+		case ewol::EVENT_KB_MOVE_TYPE_UP:
 			//EDN_INFO("keyEvent : <UP>");
 			TextDMoveUp(1);
 			break;
-#		ifdef USE_GTK_VERSION_3_0
-		case GDK_KEY_Down:
-#		elif defined( USE_GTK_VERSION_2_0)
-		case GDK_Down:
-#		endif
+		case ewol::EVENT_KB_MOVE_TYPE_DOWN:
 			//EDN_INFO("keyEvent : <DOWN>");
 			// check if we have enought line ...
 			TextDMoveDown(1);
 			break;
-#		ifdef USE_GTK_VERSION_3_0
-		case GDK_KEY_Page_Up:
-#		elif defined( USE_GTK_VERSION_2_0)
-		case GDK_Page_Up:
-#		endif
+		case ewol::EVENT_KB_MOVE_TYPE_PAGE_UP:
 			//EDN_INFO("keyEvent : <PAGE-UP>");
 			TextDMoveUp(m_displaySize.y);
 			break;
-#		ifdef USE_GTK_VERSION_3_0
-		case GDK_KEY_Page_Down:
-#		elif defined( USE_GTK_VERSION_2_0)
-		case GDK_Page_Down:
-#		endif
+		case ewol::EVENT_KB_MOVE_TYPE_PAGE_DOWN:
 			//EDN_INFO("keyEvent : <PAGE-DOWN>");
 			TextDMoveDown(m_displaySize.y);
 			break;
-#		ifdef USE_GTK_VERSION_3_0
-		case GDK_KEY_Begin:
-#		elif defined( USE_GTK_VERSION_2_0)
-		case GDK_Begin:
-#		endif
+		case ewol::EVENT_KB_MOVE_TYPE_START:
 			//EDN_INFO("keyEvent : <Start of line>");
 			SetInsertPosition(m_EdnBuf.StartOfLine(m_cursorPos) );
 			break;
-#		ifdef USE_GTK_VERSION_3_0
-		case GDK_KEY_End:
-#		elif defined( USE_GTK_VERSION_2_0)
-		case GDK_End:
-#		endif
+		case ewol::EVENT_KB_MOVE_TYPE_END:
 			//EDN_INFO("keyEvent : <End of line>");
 			SetInsertPosition(m_EdnBuf.EndOfLine(m_cursorPos) );
 			break;

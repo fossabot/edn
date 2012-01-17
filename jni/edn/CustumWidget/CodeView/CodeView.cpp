@@ -85,7 +85,7 @@ void CodeView::OnRegenerateDisplay(void)
 	ewol::OObject2DColored*     myOObjectsColored = new ewol::OObject2DColored();
 	
 	// generate the objects :
-	m_bufferID = 0;
+	//m_bufferID = 0;
 	m_bufferManager->Get(m_bufferID)->Display(myOObjectText, myOObjectsColored, m_size.x, m_size.y);
 	
 	// clean the object list ...
@@ -117,13 +117,24 @@ bool CodeView::OnEventArea(const char * generateEventId, etkFloat_t x, etkFloat_
 
 bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, char UTF8_data[UTF8_MAX_SIZE])
 {
-	EWOL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data));
+	EDN_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << typeEvent);
 	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
 		m_bufferManager->Get(m_bufferID)->AddChar(UTF8_data);
 		OnRegenerateDisplay();
 	}
-	return false;
+	return true;
 }
+
+
+bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveType_te moveTypeEvent)
+{
+	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
+		m_bufferManager->Get(m_bufferID)->cursorMove(moveTypeEvent);
+		OnRegenerateDisplay();
+	}
+	return true;
+}
+
 
 
 bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, etkFloat_t x, etkFloat_t y)
@@ -231,7 +242,7 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 	switch (id)
 	{
 		case EDN_MSG__CURRENT_CHANGE_BUFFER_ID:
-			//EDN_INFO("Select a new Buffer ... " << dataID);
+			EDN_INFO("Select a new Buffer ... " << dataID);
 			m_bufferID = dataID;
 			m_bufferManager->Get(m_bufferID)->ForceReDraw(true);
 			// request the display of the curent Editor
@@ -317,61 +328,21 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			// Redraw all the display ... Done under ...
 			break;
 	}
-	OnRegenerateDisplay();
 	// Force redraw of the widget
-	//gtk_widget_queue_draw(m_widget);
+	OnRegenerateDisplay();
 }
 
 
-
-
-
-
-
-#ifdef SDFGSDFGSDFG_FGSDFG_SDF_G___DSFG_SD_FG__SD_F_G_SD_FG
-
-
-gint CodeView::CB_focusGet(	GtkWidget *widget, GdkEventFocus *event, gpointer data)
+void CodeView::OnGetFocus(void)
 {
-	CodeView * self = reinterpret_cast<CodeView*>(data);
-	self->SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, self->m_bufferID);
+	SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
 	EDN_INFO("Focus - In");
-	return FALSE;
 }
 
-gint CodeView::CB_focusLost(	GtkWidget *widget, GdkEventFocus *event, gpointer data)
+
+void CodeView::OnLostFocus(void)
 {
 	EDN_INFO("Focus - out");
-	return FALSE;
 }
-
-gint CodeView::CB_keyboardEvent(GtkWidget *widget, GdkEventKey *event, gpointer data)
-{
-	CodeView * self = reinterpret_cast<CodeView*>(data);
-	
-	char Utf8Out[10];
-	bool controlKey;
-	bool moveKey;
-	int32_t key;
-	// Convert input key : 
-	ConvertInput(event, Utf8Out, controlKey, moveKey, key);
-	
-	if(event->type == GDK_KEY_PRESS) {
-		if(false==controlKey) {
-			self->m_bufferManager->Get(self->m_bufferID)->AddChar(Utf8Out);
-			gtk_widget_queue_draw( widget );
-		} else if (true == moveKey) {
-			self->m_bufferManager->Get(self->m_bufferID)->cursorMove(key);
-			gtk_widget_queue_draw( widget );
-		}
-	}
-	return true;
-}
-
-
-
-
-#endif
-
 
 

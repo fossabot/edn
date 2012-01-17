@@ -85,7 +85,7 @@ class Buffer {
 		virtual int32_t   Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY);
 		virtual void      ForceReDraw(bool allElement);
 		virtual void      AddChar(char * UTF8data);
-		virtual void      cursorMove(int32_t gtkKey);
+		virtual void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);
 		virtual void      MouseSelectFromCursorTo(int32_t width, int32_t height);
 		virtual void      MouseEvent(int32_t width, int32_t height);
 		virtual void      MouseEventDouble(void);

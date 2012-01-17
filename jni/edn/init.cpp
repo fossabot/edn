@@ -120,13 +120,13 @@ void APP_Init(int argc, char *argv[])
 	cCurrentPath[FILENAME_MAX - 1] = '\0';
 	//EDN_INFO("The current working directory is " << cCurrentPath);
 
+	basicWindows = new MainWindows();
 	
 	// add files
 	EDN_INFO("show list of files : ");
 	for( int32_t i=1 ; i<argc; i++) {
 		EDN_INFO("need load file : \"" << argv[i] << "\"" );
 		etk::File myfile((char *)argv[i], etk::FILE_TYPE_DIRECT);
-
 		if (false == myBufferManager->Exist(myfile) ) {
 			int32_t idBuffOpened = myBufferManager->Open(myfile);
 			if (1==i) {
@@ -134,15 +134,6 @@ void APP_Init(int argc, char *argv[])
 			}
 		}
 	}
-	{
-		EDN_INFO("need load file : \"" << "avancement.boo" << "\"" );
-		etk::File myfile("RegExp.cpp", etk::FILE_TYPE_DIRECT);
-		if (false == myBufferManager->Exist(myfile) ) {
-			int32_t idBuffOpened = myBufferManager->Open(myfile);
-			MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idBuffOpened);
-		}
-	}
-	basicWindows = new MainWindows();
 	if (NULL == basicWindows) {
 		EDN_ERROR("Can not allocate the basic windows");
 		ewol::Stop();

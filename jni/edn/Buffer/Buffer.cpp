@@ -251,7 +251,7 @@ void Buffer::ForceReDraw(bool allElement)
 
 
 
-void Buffer::cursorMove(int32_t gtkKey)
+void Buffer::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
 {
 	// nothing to do
 }
