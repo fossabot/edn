@@ -432,19 +432,18 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 				if(		' ' == currentChar
 					&&	true == globals::IsSetDisplaySpaceChar() )
 				{
-					//selectColor = myColorSel;
-					//SpaceText(color_ts & SelectColor, int32_t x, int32_t y,int32_t nbChar)
-
+					selectColor = myColorSel;
 					if(	true == selHave
 						&&	selStart <= iii
 						&&	selEnd   > iii)
 					{
-						//drawer.SpaceText(myColorSel->GetBG(), pixelX ,y , 1);
+						OOColored->SetColor(myColorSel->GetBG());
 					} else if (true == selectColor->HaveBg()) {
-						//drawer.SpaceText(selectColor->GetBG(), pixelX ,y , 1);
+						OOColored->SetColor(selectColor->GetBG());
 					} else {
-						//drawer.SpaceText(myColorSpace, pixelX ,y , 1);
+						OOColored->SetColor(myColorSpace);
 					}
+					OOColored->Rectangle( pixelX, y, letterWidth, letterHeight);
 				} else if(		'\t' == currentChar
 							&&	true == globals::IsSetDisplaySpaceChar() )
 				{
@@ -452,12 +451,13 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 						&&	selStart <= iii
 						&&	selEnd   > iii)
 					{
-						//drawer.SpaceText(myColorSel->GetBG(), pixelX ,y , strlen(tmpDisplayOfset));
+						OOColored->SetColor(myColorSel->GetBG());
 					} else if (true == selectColor->HaveBg()) {
-						//drawer.SpaceText(selectColor->GetBG(), pixelX ,y , strlen(tmpDisplayOfset));
+						OOColored->SetColor(selectColor->GetBG());
 					} else  {
-						//drawer.SpaceText(myColorTab, pixelX ,y , strlen(tmpDisplayOfset));
+						OOColored->SetColor(myColorTab);
 					}
+					OOColored->Rectangle( pixelX, y, letterWidth*strlen(tmpDisplayOfset), letterHeight);
 				} else {
 					if(	true == selHave
 						&&	selStart <= iii
@@ -465,14 +465,18 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 					{
 						selectColor = myColorSel;
 					}
+					OOColored->SetColor(selectColor->GetBG());
+					OOText->SetColor(selectColor->GetFG());
 					if (currentChar <= 0x7F) {
-						//drawer.Text(selectColor, pixelX ,y, tmpDisplayOfset);
-						OOText->SetColor(selectColor->GetFG());
 						OOText->TextAdd(pixelX, y, tmpDisplayOfset, -1);
+						if (true == selectColor->HaveBg() ) {
+							OOColored->Rectangle( pixelX, y, letterWidth*strlen(tmpDisplayOfset), letterHeight);
+						}
 					} else {
-						//drawer.Text(selectColor, pixelX ,y, displayChar);
-						OOText->SetColor(selectColor->GetFG());
 						OOText->TextAdd(pixelX, y, displayChar, -1);
+						if (true == selectColor->HaveBg() ) {
+							OOColored->Rectangle( pixelX, y, letterWidth*strlen(tmpDisplayOfset), letterHeight);
+						}
 					}
 				}
 				xx+=widthToDisplay;
