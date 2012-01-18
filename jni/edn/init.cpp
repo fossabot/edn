@@ -71,9 +71,9 @@ void APP_Init(int argc, char *argv[])
 	
 	ewol::SetFontFolder("Font");
 	#ifdef EWOL_USE_FREE_TYPE
-		ewol::SetDefaultFont("freefont/FreeMono.ttf", 12);
+		//ewol::SetDefaultFont("freefont/FreeMono.ttf", 12);
 		//ewol::SetDefaultFont("freefont/FreeMonoBold.ttf", 12);
-		//ewol::SetDefaultFont("ACharmingFont.ttf", 45);
+		ewol::SetDefaultFont("ACharmingFont.ttf", 45);
 		//ewol::SetDefaultFont("Monospace/Monospace", 40);
 		//ewol::SetDefaultFont("unispace.ttf", 12);
 	#else
@@ -136,6 +136,13 @@ void APP_Init(int argc, char *argv[])
 			if (1==i) {
 				MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idBuffOpened);
 			}
+		}
+	}
+	{
+		etk::File myfile((char *)"licence.txt", etk::FILE_TYPE_DIRECT);
+		if (false == myBufferManager->Exist(myfile) ) {
+			int32_t idBuffOpened = myBufferManager->Open(myfile);
+			MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idBuffOpened);
 		}
 	}
 	if (NULL == basicWindows) {

@@ -117,7 +117,7 @@ bool CodeView::OnEventArea(const char * generateEventId, etkFloat_t x, etkFloat_
 
 bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, char UTF8_data[UTF8_MAX_SIZE])
 {
-	EDN_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << typeEvent);
+	//EDN_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
 	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
 		m_bufferManager->Get(m_bufferID)->AddChar(UTF8_data);
 		OnRegenerateDisplay();

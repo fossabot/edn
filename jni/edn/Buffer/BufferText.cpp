@@ -1051,8 +1051,10 @@ void BufferText::AddChar(char * UTF8data)
 		} else if (UTF8data[0] == '\n') {
 			etk::VectorType<int8_t> tmpVect;
 			if (true == globals::IsSetShift()) {
+				EDN_ERROR("kjhkjhkjhkjh");
 				tmpVect.PushBack('\r');
 			} else {
+				EDN_ERROR("plop");
 				tmpVect.PushBack('\n');
 				// if Auto indent Enable ==> we get the start of the previous line and add it to tne new one
 				if (true == globals::IsSetAutoIndent() ) {
