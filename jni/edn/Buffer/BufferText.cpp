@@ -360,6 +360,21 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	//GTimeVal timeStart;
 	//g_get_current_time(&timeStart);
 	
+	
+#if 0
+	// TODO : change diplay methode : 
+	// Extract the entire line on the buffer with all char expended and the data in Unicode
+	// Second parsing of the line ==> to have the syntax highligt
+	// Draw all needed char in the 
+	int32_t currentLineID = m_displayStart.y+1;
+	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
+	bool ended = false;
+	while (true == ended) {
+		
+		currentLineID++;
+		ended = true;
+	}
+#else
 	// draw the lineNumber : 
 	int32_t currentLineID = m_displayStart.y+1;
 	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
@@ -497,7 +512,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 			m_cursorOn = true;
 		}
 	}
-	//drawer.Flush();
+#endif
 	
 	//GTimeVal timeStop;
 	//g_get_current_time(&timeStop);

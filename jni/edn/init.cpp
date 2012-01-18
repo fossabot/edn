@@ -71,14 +71,11 @@ void APP_Init(int argc, char *argv[])
 	
 	ewol::SetFontFolder("Font");
 	#ifdef EWOL_USE_FREE_TYPE
-		//ewol::SetDefaultFont("freefont/FreeMono.ttf", 12);
-		ewol::SetDefaultFont("ACharmingFont.ttf", 45);
-		//ewol::SetDefaultFont("DeutscheZierschrift.ttf", 40);
-		//ewol::SetDefaultFont("Dragon_Order_v2.ttf", 40);
-		//ewol::SetDefaultFont("Alien_lines_1.9.ttf", 40);
+		ewol::SetDefaultFont("freefont/FreeMono.ttf", 12);
 		//ewol::SetDefaultFont("freefont/FreeMonoBold.ttf", 12);
+		//ewol::SetDefaultFont("ACharmingFont.ttf", 45);
 		//ewol::SetDefaultFont("Monospace/Monospace", 40);
-		//ewol::SetDefaultFont("UniSpace/unispace.ttf", 12);
+		//ewol::SetDefaultFont("unispace.ttf", 12);
 	#else
 		//ewol::SetDefaultFont("ebtfont/Monospace", 14);
 		ewol::SetDefaultFont("ebtfont/Monospace", 22);
