@@ -306,6 +306,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	
 	int32_t fontId = ewol::GetDefaultFontId();
 	int32_t letterWidth = ewol::GetWidth(fontId, "A");
+	int32_t spaceWidth = ewol::GetWidth(fontId, " ");
 	int32_t letterHeight = ewol::GetHeight(fontId);
 	
 	// update the number of element that can be displayed
@@ -365,9 +366,9 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	EDN_DEBUG("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
 	
 	DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
+	int32_t pixelX = x_base;
 	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
 		//EDN_DEBUG("diplay element=" << iii);
-		int32_t pixelX = xx*letterWidth + x_base;
 		int displaywidth;
 		uint32_t currentChar = '\0';
 		new_i = iii;
@@ -416,7 +417,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 					} else {
 						OOColored->SetColor(myColorSpace);
 					}
-					OOColored->Rectangle( pixelX, y, letterWidth, letterHeight);
+					OOColored->Rectangle( pixelX, y, spaceWidth, letterHeight);
+					pixelX += spaceWidth;
 				} else if(		'\t' == currentChar
 							&&	true == globals::IsSetDisplaySpaceChar() )
 				{
@@ -430,7 +432,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 					} else  {
 						OOColored->SetColor(myColorTab);
 					}
-					OOColored->Rectangle( pixelX, y, letterWidth*strlen(tmpDisplayOfset), letterHeight);
+					OOColored->Rectangle( pixelX, y, spaceWidth*strlen(tmpDisplayOfset), letterHeight);
+					pixelX += spaceWidth*strlen(tmpDisplayOfset);
 				} else {
 					if(	true == selHave
 						&&	selStart <= iii
@@ -441,15 +444,17 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 					OOColored->SetColor(selectColor->GetBG());
 					OOText->SetColor(selectColor->GetFG());
 					if (currentChar <= 0x7F) {
-						OOText->TextAdd(pixelX, y, tmpDisplayOfset, -1);
+						int32_t drawSize = OOText->TextAdd(pixelX, y, tmpDisplayOfset, -1);
 						if (true == selectColor->HaveBg() ) {
-							OOColored->Rectangle( pixelX, y, letterWidth*strlen(tmpDisplayOfset), letterHeight);
+							OOColored->Rectangle( pixelX, y, drawSize*strlen(tmpDisplayOfset), letterHeight);
 						}
+						pixelX += drawSize;
 					} else {
-						OOText->TextAdd(pixelX, y, displayChar, -1);
+						int32_t drawSize = OOText->TextAdd(pixelX, y, displayChar, -1);
 						if (true == selectColor->HaveBg() ) {
-							OOColored->Rectangle( pixelX, y, letterWidth*strlen(tmpDisplayOfset), letterHeight);
+							OOColored->Rectangle( pixelX, y, drawSize*strlen(tmpDisplayOfset), letterHeight);
 						}
+						pixelX += drawSize;
 					}
 				}
 				xx+=widthToDisplay;
@@ -474,6 +479,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 			//drawer.Flush();
 			xx = 0;
 			idX =0;
+			pixelX = x_base;
 			y += letterHeight;
 			displayLines++;
 			currentLineID++;
@@ -482,6 +488,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	}
 	// special case : the cursor is at the end of the buffer...
 	if (m_cursorPos == iii) {
+		CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
 		// display the cursor:
 		if (true == m_cursorOn) {
 			//Cursor(OOColored, xx*letterWidth + x_base, yy+letterHeight, letterHeight, letterWidth);
