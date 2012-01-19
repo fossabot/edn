@@ -47,22 +47,6 @@ namespace globals
 
 	void    init2(void);
 
-	void    SetShift(void);
-	void    UnSetShift(void);
-	bool    IsSetShift(void);
-	void    SetAlt(void);
-	void    UnSetAlt(void);
-	bool    IsSetAlt(void);
-	void    SetCtrl(void);
-	void    UnSetCtrl(void);
-	bool    IsSetCtrl(void);
-	void    SetPomme(void);
-	void    UnSetPomme(void);
-	bool    IsSetPomme(void);
-	void    SetInsert(void);
-	void    UnSetInsert(void);
-	void    ToggleInsert(void);
-	bool    IsSetInsert(void);
 }
 
 #endif

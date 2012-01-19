@@ -205,7 +205,7 @@ void BufferText::SelectionEnd(void)
 void BufferText::SelectionCheckMode(void)
 {
 	/*
-	if (true == globals::IsSetCtrl() ) {
+	if (true == ewol::IsSetCtrl() ) {
 	} else {
 	}
 	*/
@@ -253,7 +253,7 @@ void BufferText::CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int
 {
 	color_ts & tmpppppp = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
 	OOColored->SetColor(tmpppppp);
-	if (true == globals::IsSetInsert()) {
+	if (true == ewol::IsSetInsert()) {
 		OOColored->Rectangle( x, y, letterWidth, letterHeight);
 	} else {
 		OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y)                              , (int32_t)(x+CURSOR_WIDTH), (int32_t)(y)                              , CURSOR_THICKNESS);
@@ -548,7 +548,7 @@ void BufferText::GetMousePosition(int32_t width, int32_t height, int32_t &x, int
 // TODO : Simplify selection ....
 void BufferText::MouseEvent(int32_t width, int32_t height)
 {
-	if (true == globals::IsSetShift() ) {
+	if (true == ewol::IsSetShift() ) {
 		MouseSelectFromCursorTo(width, height);
 	} else {
 		int32_t posX, posY;
@@ -786,11 +786,11 @@ void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 	}
 	
 	if(		false == haveSelectionActive
-		&&	true  == globals::IsSetShift() )
+		&&	true  == ewol::IsSetShift() )
 	{
 		// new selection
 		m_EdnBuf.Select(SELECTION_PRIMARY, rememberCursorPos, m_cursorPos);
-	} else if(		true == globals::IsSetShift()
+	} else if(		true == ewol::IsSetShift()
 				&&	true == haveSelectionActive)
 	{
 		// update selection
@@ -883,7 +883,7 @@ void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
 	bool needUpdatePosition = true;
 	// check selection event ...
 	/*
-	if (true == globals::IsSetShift() ) {
+	if (true == ewol::IsSetShift() ) {
 		if ( CURSOR_MODE_NORMAL == cursorMode) {
 			SelectionStart();
 		} else {
@@ -1040,7 +1040,7 @@ void BufferText::AddChar(char * UTF8data)
 					m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
 					SetInsertPosition(SelectionStart+tmpVect.Size(), true);
 				} else {
-					if (true == globals::IsSetShift() ) {
+					if (true == ewol::IsSetShift() ) {
 						m_cursorPos = m_EdnBuf.UnIndent(SELECTION_PRIMARY);
 					} else {
 						m_cursorPos = m_EdnBuf.Indent(SELECTION_PRIMARY);
@@ -1050,11 +1050,9 @@ void BufferText::AddChar(char * UTF8data)
 			actionDone = true;
 		} else if (UTF8data[0] == '\n') {
 			etk::VectorType<int8_t> tmpVect;
-			if (true == globals::IsSetShift()) {
-				EDN_ERROR("kjhkjhkjhkjh");
+			if (true == ewol::IsSetShift()) {
 				tmpVect.PushBack('\r');
 			} else {
-				EDN_ERROR("plop");
 				tmpVect.PushBack('\n');
 				// if Auto indent Enable ==> we get the start of the previous line and add it to tne new one
 				if (true == globals::IsSetAutoIndent() ) {
