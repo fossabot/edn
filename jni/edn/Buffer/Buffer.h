@@ -29,7 +29,7 @@
 #include <etk/String.h>
 #include <etk/File.h>
 #include <Display.h>
-#include <charset.h>
+#include <etk/unicode.h>
 #include <ewol/ewol.h>
 
 
@@ -97,7 +97,7 @@ class Buffer {
 		virtual void      SelectNone(void);
 		virtual void      Undo(void);
 		virtual void      Redo(void);
-		virtual void      SetCharset(charset_te newCharset) {};
+		virtual void      SetCharset(unicode::charset_te newCharset) {};
 
 		//virtual void	SelectAll(void);
 		virtual void      Copy(int8_t clipboardID);

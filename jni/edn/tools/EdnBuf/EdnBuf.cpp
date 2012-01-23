@@ -25,6 +25,7 @@
 
 #include <tools_debug.h>
 #include <tools_globals.h>
+#include <etk/unicode.h>
 #include <EdnBuf.h>
 
 
@@ -476,6 +477,108 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, char outUTF8[MAX_E
 				*tmp++ = tmpString[k];
 			}
 			*tmp = '\0';
+		} else {
+			sprintf(outUTF8, "<? ? ? ?>");
+		}
+		if (0 == size) {
+			EDN_ERROR("plop");
+		}
+		pos+=size;
+		return strlen(outUTF8);
+	}
+	return 1;
+}
+
+/**
+ * @brief Transform the current caracter in the buffer in a displayable vector of char
+ * 
+ * @param[in,out] pos position of the char that might be converted (incremented to the next char (in case of UTF8)
+ * @param[in] indent Curent indentation befor the curent char
+ * @param[out] outUTF8 string of the displayed element
+ * @param[out] currentChar curent unicode output char
+ * 
+ * @return number of displayable char (display char width)
+ * 
+ */
+int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnicode[MAX_EXP_CHAR_LEN], uint32_t &currentChar)
+{
+	int32_t i, nSpaces;
+	char c = m_data.Get(pos);
+	currentChar = (uint32_t)c & 0xFF;
+	/* Convert tabs to spaces */
+	if (c == '\t') {
+		nSpaces = m_tabDist - (indent % m_tabDist);
+		for (i=0; i<nSpaces; i++) {
+			outUnicode[i] = ' ';
+		}
+		outUnicode[i] = '\0';
+		pos++;
+		return nSpaces;
+	}
+	
+	// Convert ASCII control codes to readable character sequences
+	if (c == '\0') {
+		outUnicode[0] = '<';
+		outUnicode[1] = 'n';
+		outUnicode[2] = 'u';
+		outUnicode[3] = 'l';
+		outUnicode[4] = '>';
+		outUnicode[5] = '\0';
+		pos++;
+		return 5;
+	}
+	if (((unsigned char)c) == '\n') {
+		outUnicode[0] = (unsigned char)c;
+		outUnicode[1] = '\0';
+		pos++;
+		return 1;
+	}
+	if (((unsigned char)c) <= 31) {
+		const char * tmp = ControlCodeTable[(unsigned char)c];
+		int32_t nbElem = 2;
+		*outUnicode++ = '<';
+		while (*tmp!='\0') {
+			*outUnicode++ = *tmp;
+			tmp++;
+			nbElem++;
+		}
+		*outUnicode++ = '>';
+		*outUnicode++ = '\0';
+		pos++;
+		return nbElem;
+	} else if (c == 127) {
+		outUnicode[0] = '<';
+		outUnicode[1] = 'd';
+		outUnicode[2] = 'e';
+		outUnicode[3] = 'l';
+		outUnicode[4] = '>';
+		outUnicode[5] = '\0';
+		pos++;
+		return 5;
+	}
+	
+	// Otherwise, just return the character
+	if (false ==m_isUtf8) {
+		unicode::convertIsoToUnicode(m_charsetType, c, outUnicode[0]);
+		pos++;
+	} else {
+		char tmpString[8];
+		for (int32_t k=0; k<6 && k< m_data.Size() - pos; k++) {
+			tmpString[k] = m_data.Get(pos+k);
+		}
+		tmpString[6] = '\0';
+		uint8_t size;
+		bool baseValid;
+		unicode::Utf8_SizeElement(tmpString, 6 , size, baseValid);
+		currentChar = 0; // TODO : Set UNICODE char ...
+		if (true == baseValid) {
+			char *tmp = outUnicode;
+			for (int32_t k=0; k<size; k++) {
+				*tmp++ = tmpString[k];
+			}
+			*tmp = '\0';
+			unicode::convertIsoToUnicode(m_charsetType, c, outUnicode);
+			
 		} else {
 			sprintf(outUTF8, "<? ? ? ?>");
 		}

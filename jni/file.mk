@@ -27,9 +27,7 @@ FILE_LIST+=		edn/tools/EdnTemplate/EdnVectorBuf.cpp		\
 FILE_LIST+=		edn/tools/Display/Display.cpp				\
 				edn/tools/ClipBoard/ClipBoard.cpp			\
 				edn/tools/MsgBroadcast/MsgBroadcast.cpp		\
-				edn/tools/MsgBroadcast/AccelKey.cpp			\
-				edn/tools/charset/charsetTable.cpp			\
-				edn/tools/charset/charset.cpp
+				edn/tools/MsgBroadcast/AccelKey.cpp
 
 # Gui:
 FILE_LIST+=		edn/CustumWidget/BufferView/BufferView.cpp		\

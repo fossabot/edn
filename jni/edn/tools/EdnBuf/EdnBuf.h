@@ -34,7 +34,7 @@ class EdnBuf;
 #include <EdnVectorBuf.h>
 #include <EdnBufHistory.h>
 #include <HighlightManager.h>
-#include <charset.h>
+#include <etk/unicode.h>
 
 /*
                                                                                                     
@@ -100,9 +100,10 @@ class EdnBuf {
 		int32_t StartOfLine(            int32_t pos);
 		int32_t EndOfLine(              int32_t pos);
 		
-		int32_t GetExpandedChar(        int32_t &pos, int32_t indent, char outUTF8[MAX_EXP_CHAR_LEN], uint32_t &currentChar);
-		int32_t ExpandCharacter(        char c,      int32_t indent, char outUTF8[MAX_EXP_CHAR_LEN]); 	// TODO : rework this
-		int32_t CharWidth(              char c,      int32_t indent); 	// TODO : rework this
+		int32_t GetExpandedChar(        int32_t &pos, int32_t indent, uniChar_t outUnicode[MAX_EXP_CHAR_LEN], uint32_t &currentChar);
+		int32_t GetExpandedChar(        int32_t &pos, int32_t indent, char      outUTF8[MAX_EXP_CHAR_LEN], uint32_t &currentChar);
+		int32_t ExpandCharacter(        char c,       int32_t indent, char      outUTF8[MAX_EXP_CHAR_LEN]); // TODO : Remove
+		int32_t CharWidth(              char c,       int32_t indent); 	// TODO : rework this
 		int32_t CountDispChars(         int32_t lineStartPos, int32_t targetPos);
 		int32_t CountForwardDispChars(  int32_t lineStartPos, int32_t nChars);
 		int32_t CountLines(             int32_t startPos, int32_t endPos);
@@ -178,19 +179,19 @@ class EdnBuf {
 	// Display property and charset ...
 	// -----------------------------------------
 	public:
-		int32_t     GetTabDistance(void)              { return m_tabDist; } ;
-		void        SetTabDistance(int32_t tabDist)   { m_tabDist = tabDist; };
-		charset_te  GetCharsetType(void)              { return m_charsetType; };
-		void        SetCharsetType(charset_te newOne) { m_charsetType = newOne; if (EDN_CHARSET_UTF8==newOne){m_isUtf8=true;} else {m_isUtf8=false;} };
-		bool        GetUTF8Mode(void)                 { return m_isUtf8; };
-		void        SetUTF8Mode(bool newOne)          { m_isUtf8 = newOne; m_charsetType=EDN_CHARSET_UTF8; };
+		int32_t              GetTabDistance(void)                       { return m_tabDist; } ;
+		void                 SetTabDistance(int32_t tabDist)            { m_tabDist = tabDist; };
+		unicode::charset_te  GetCharsetType(void)                       { return m_charsetType; };
+		void                 SetCharsetType(unicode::charset_te newOne) { m_charsetType = newOne; if (unicode::EDN_CHARSET_UTF8==newOne){m_isUtf8=true;} else {m_isUtf8=false;} };
+		bool                 GetUTF8Mode(void)                          { return m_isUtf8; };
+		void                 SetUTF8Mode(bool newOne)                   { m_isUtf8 = newOne; m_charsetType=unicode::EDN_CHARSET_UTF8; };
 	private:
 		// Special mode of the buffer :
-		bool        m_isUtf8;           //!< true if we are in UTF8 mode ==> if true the size of a char is 0, otherwise .. 1->4 ( TODO : not now)
-		charset_te  m_charsetType;      //!< if UTF8 mode is at false : the charset type of the buffer
+		bool                 m_isUtf8;           //!< true if we are in UTF8 mode ==> if true the size of a char is 0, otherwise .. 1->4 ( TODO : not now)
+		unicode::charset_te  m_charsetType;      //!< if UTF8 mode is at false : the charset type of the buffer
 		// Local Tabulation policies
-		int32_t     m_tabDist;          //!< equiv. number of characters in a tab
-		bool        m_useTabs;          //!< True if buffer routines are allowed to use tabs for padding in rectangular operations
+		int32_t              m_tabDist;          //!< equiv. number of characters in a tab
+		bool                 m_useTabs;          //!< True if buffer routines are allowed to use tabs for padding in rectangular operations
 	
 	// -----------------------------------------
 	// Local function : 

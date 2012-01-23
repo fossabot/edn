@@ -341,7 +341,6 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	color_ts &  myColorSpace      = myColorManager->Get(COLOR_CODE_SPACE);
 	color_ts &  myColorTab        = myColorManager->Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
-	char displayChar[MAX_EXP_CHAR_LEN];
 	memset(displayChar, 0, sizeof(char)*MAX_EXP_CHAR_LEN);
 	
 	int mylen = m_EdnBuf.Size();
@@ -361,20 +360,97 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	//g_get_current_time(&timeStart);
 	
 	
-#if 0
-	// TODO : change diplay methode : 
-	// Extract the entire line on the buffer with all char expended and the data in Unicode
-	// Second parsing of the line ==> to have the syntax highligt
-	// Draw all needed char in the 
+#if 1
+	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
+	// draw the lineNumber : 
 	int32_t currentLineID = m_displayStart.y+1;
 	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
-	bool ended = false;
-	while (true == ended) {
-		
-		currentLineID++;
-		ended = true;
+	EDN_DEBUG("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
+	
+	DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
+	int32_t pixelX = x_base;
+	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
+		//EDN_DEBUG("diplay element=" << iii);
+		int displaywidth;
+		uint32_t currentChar = '\0';
+		new_i = iii;
+		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
+		//EDN_INFO("diplay element=" << new_i);
+		if (currentChar!='\n') {
+			selectColor = myColor;
+			//kwow size to display
+			int32_t widthToDisplay;
+			char * tmpDisplayOfset;
+			HLColor = m_EdnBuf.GetElementColorAtPosition(m_displayLocalSyntax, iii);
+			if (NULL != HLColor) {
+				if (NULL != HLColor->patern) {
+					selectColor = HLColor->patern->GetColor();
+				}
+			}
+
+			if(	true == selHave
+				&&	selStart <= iii
+				&&	selEnd   > iii)
+			{
+				selectColor = myColorSel;
+			}
+			OOColored->SetColor(selectColor->GetBG());
+			OOText->SetColor(selectColor->GetFG());
+			if (currentChar <= 0x7F) {
+				int32_t drawSize = OOText->TextAdd(pixelX, y, tmpDisplayOfset, -1);
+				if (true == selectColor->HaveBg() ) {
+					OOColored->Rectangle( pixelX, y, drawSize*strlen(tmpDisplayOfset), letterHeight);
+				}
+				pixelX += drawSize;
+			} else {
+				int32_t drawSize = OOText->TextAdd(pixelX, y, displayChar, -1);
+				if (true == selectColor->HaveBg() ) {
+					OOColored->Rectangle( pixelX, y, drawSize*strlen(tmpDisplayOfset), letterHeight);
+				}
+				pixelX += drawSize;
+			}
+		}
+		xx+=widthToDisplay;
+		idX += displaywidth;
+
+		// display cursor : 
+		//EDN_DEBUG(" is equal : " << m_cursorPos << "=" << iii);
+		if (m_cursorPos == iii) {
+			// display the cursor:
+			CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
+			/*if (true == m_cursorOn) {
+				//Cursor(OOColored, pixelX, y+letterHeight, letterHeight, letterWidth);
+				//m_cursorOn = false;
+			} else {
+				m_cursorOn = true;
+			}*/
+		}
+		// move to next line ...
+		if (currentChar=='\n') {
+			//drawer.EndOfLine(pixelX, y+letterHeight);
+			//drawer.Flush();
+			xx = 0;
+			idX =0;
+			pixelX = x_base;
+			y += letterHeight;
+			displayLines++;
+			currentLineID++;
+			DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
+		}
+	}
+	// special case : the cursor is at the end of the buffer...
+	if (m_cursorPos == iii) {
+		CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
+		// display the cursor:
+		if (true == m_cursorOn) {
+			//Cursor(OOColored, xx*letterWidth + x_base, yy+letterHeight, letterHeight, letterWidth);
+			m_cursorOn = false;
+		} else {
+			m_cursorOn = true;
+		}
 	}
 #else
+	char displayChar[MAX_EXP_CHAR_LEN];
 	// draw the lineNumber : 
 	int32_t currentLineID = m_displayStart.y+1;
 	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
