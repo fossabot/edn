@@ -367,12 +367,11 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
 	EDN_DEBUG("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
 	
-	coord2D_ts drawClippingOrigin;
-	drawClippingOrigin.x = 0;
-	drawClippingOrigin.y = 0;
-	coord2D_ts drawClippingSize;
-	drawClippingSize.x = sizeX;
-	drawClippingSize.y = sizeY;
+	clipping_ts drawClipping;
+	drawClipping.x = 0;
+	drawClipping.y = 0;
+	drawClipping.w = sizeX;
+	drawClipping.h = sizeY;
 	
 	DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
 	int32_t pixelX = x_base;
@@ -403,9 +402,9 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 			coord2D_ts textPos;
 			textPos.x = pixelX-m_displayStartPixelX;
 			textPos.y = y;
-			drawSize = OOText->TextAdd(textPos, drawClippingOrigin, drawClippingSize, displayChar);
+			drawSize = OOText->TextAdd(textPos, drawClipping, displayChar);
 			if (true == selectColor->HaveBg() ) {
-				//OOColored->Rectangle( pixelX, y, drawSize*strlen(tmpDisplayOfset), letterHeight);
+				OOColored->Rectangle( pixelX, y, drawSize, letterHeight, drawClipping);
 			}
 		}
 		idX += displaywidth;
@@ -417,8 +416,6 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 		pixelX += drawSize;
 		// move to next line ...
 		if (currentChar=='\n') {
-			//drawer.EndOfLine(pixelX, y+letterHeight);
-			//drawer.Flush();
 			xx = 0;
 			idX =0;
 			pixelX = x_base;
@@ -442,15 +439,13 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 
 
 
-void BufferText::GetMousePosition(int32_t width, int32_t height, int32_t &x, int32_t &y)
+int32_t BufferText::GetMousePosition(int32_t width, int32_t height)
 {
-	
 	int32_t fontId = ewol::GetDefaultFontId();
 	int32_t letterWidth = ewol::GetWidth(fontId, "9");
 	int32_t letterHeight = ewol::GetHeight(fontId);
 	
 	int32_t lineOffset = height / letterHeight;
-	y = m_displayStartLineId + lineOffset;
 	
 	//*******************************    get the X position :    *******************************************
 	
@@ -479,12 +474,11 @@ void BufferText::GetMousePosition(int32_t width, int32_t height, int32_t &x, int
 	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
 	
 	int32_t pixelX = x_base;
-	if (width <= pixelX) {
-		x = 0;
-		EDN_DEBUG("    Element : Befor the start of the line ... ==> END");
-		return;
-	}
 	int32_t startLinePosition = m_EdnBuf.CountForwardNLines(m_displayStartBufferPos, lineOffset);
+	if (width <= pixelX) {
+		EDN_DEBUG("    Element : Befor the start of the line ... ==> END");
+		return startLinePosition;
+	}
 	EDN_DEBUG("Get id element : x=" << width << "px y=" << height << "px");
 	EDN_DEBUG("    line offset  = " << lineOffset);
 	for (iii=startLinePosition; iii<mylen; iii = new_i) {
@@ -508,8 +502,8 @@ void BufferText::GetMousePosition(int32_t width, int32_t height, int32_t &x, int
 		}
 		idX += displaywidth;
 	}
-	x = iii-startLinePosition;
-	EDN_DEBUG("BufferText::GetMousePosition(" << width << "," << height << "); ==> (" << x << "," << y << ")" );
+	EDN_DEBUG("BufferText::GetMousePosition(" << width << "," << height << "); ==> " << iii );
+	return iii;
 }
 
 
@@ -527,20 +521,15 @@ void BufferText::MouseEvent(int32_t width, int32_t height)
 	if (true == ewol::IsSetShift() ) {
 		MouseSelectFromCursorTo(width, height);
 	} else {
-		int32_t posX, posY;
 		// Get the caracter mouse position
-		GetMousePosition(width, height, posX, posY);
-		// find the current selected line : 
-		int32_t newPos = m_EdnBuf.CountForwardNLines(0, posY);
-		// Get the display char position
-		newPos = m_EdnBuf.CountForwardDispChars(newPos, posX);
+		int32_t newPos = GetMousePosition(width, height);
 		// move the cursor
 		SetInsertPosition(newPos);
 
 		// if a preferred column wasn't aleady established, establish it
-		if (m_cursorPreferredCol < 0) {
+		/*if (m_cursorPreferredCol < 0) {
 			m_cursorPreferredCol = posX;
-		}
+		}*/
 		m_EdnBuf.Unselect(SELECTION_PRIMARY);
 
 		ForceReDraw(true);
@@ -561,28 +550,21 @@ void BufferText::MouseEvent(int32_t width, int32_t height)
 // TODO : Simplify selection ....
 void BufferText::MouseSelectFromCursorTo(int32_t width, int32_t height)
 {
-	int32_t posX, posY;
 	// Get the caracter mouse position
-	GetMousePosition(width, height, posX, posY);
+	int32_t newPos = GetMousePosition(width, height);
 	
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
 	int32_t selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
 	//EDN_DEBUG("BufferText:: " << selHave << " = BufGetSelectionPos(SELECTION_PRIMARY," << selStart << "," << selEnd << "," << selIsRect << "," << selRectStart << "," << selRectEnd << ");" );
-	
 	int32_t rememberCursorPos = m_cursorPos;
-	
-	// find the current selected line : 
-	int32_t newPos = m_EdnBuf.CountForwardNLines(0, posY);
-	// Get the display char position
-	newPos = m_EdnBuf.CountForwardDispChars(newPos, posX);
 	// move the cursor
 	SetInsertPosition(newPos);
 	
 	// if a preferred column wasn't aleady established, establish it
-	if (m_cursorPreferredCol < 0) {
+	/*if (m_cursorPreferredCol < 0) {
 		m_cursorPreferredCol = posX;
-	}
+	}*/
 	
 	if (false == selHave) {
 		m_EdnBuf.Select(SELECTION_PRIMARY, rememberCursorPos, m_cursorPos);
