@@ -72,7 +72,7 @@ class BufferText : public Buffer {
 		void      SelectNone(void);
 		void      Undo(void);
 		void      Redo(void);
-		void      SetCharset(charset_te newCharset);
+		void      SetCharset(unicode::charset_te newCharset);
 	protected:
 		void      NameChange(void);
 
@@ -85,13 +85,13 @@ class BufferText : public Buffer {
 		
 		// Direct buffer IO
 		EdnBuf                  m_EdnBuf;                   //!< buffer associated on this displayer
-		position_ts             m_displayStart;             //!< position where the display is starting
+		int32_t                 m_displayStartLineId;       //!< Id of the line that the display is starting (in nb line)
+		int32_t                 m_displayStartPixelX;       //!< Pixel of the display starting (in pixel)
 		position_ts             m_displaySize;              //!< number of char displayable in the screan
 		int32_t                 m_displayStartBufferPos;    //!< position where the buffer start
 		// Cursor :
 		int32_t                 m_cursorPos;                //!< position in the buffer of the cursor
 		int32_t                 m_cursorPreferredCol;       //!< colomn of the last up and down ...
-		bool                    m_cursorOn;                 //!< the blink of the cursor ...
 		cursorDisplayMode_te    m_cursorMode;               //!< type of cursor Selected
 		
 		displayHLData_ts        m_displayLocalSyntax;       //!< for the display of the local elements (display HL mode)

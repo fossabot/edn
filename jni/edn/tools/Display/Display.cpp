@@ -27,7 +27,6 @@
 #include <tools_globals.h>
 #include <Display.h>
 #include <ColorizeManager.h>
-#include <charset.h>
 #include <etk/String.h>
 
 #undef __class__

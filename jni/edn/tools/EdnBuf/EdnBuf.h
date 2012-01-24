@@ -76,6 +76,7 @@ typedef struct {
 
 
 class EdnBuf {
+	// TODO : Set an iterator to acces at every data without knowin the system ...
 	public:
 		// constructer
 		EdnBuf(void);

@@ -322,7 +322,7 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 		case EDN_MSG__REFRESH_DISPLAY:
 			break;
 		case EDN_MSG__CURRENT_SET_CHARSET:
-			m_bufferManager->Get(m_bufferID)->SetCharset((charset_te)dataID);
+			m_bufferManager->Get(m_bufferID)->SetCharset((unicode::charset_te)dataID);
 			break;
 		case EDN_MSG__USER_DISPLAY_CHANGE:
 			// Redraw all the display ... Done under ...

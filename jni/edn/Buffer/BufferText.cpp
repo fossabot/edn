@@ -34,6 +34,7 @@
 #include <ewol/OObject.h>
 #include <ewol/WidgetManager.h>
 #include <ewol/Widget.h>
+#include <ewol/Font.h>
 
 
 #undef __class__
@@ -73,10 +74,9 @@ void BufferText::BasicInit(void)
 	// new mode : 
 	m_cursorPos = 0;
 	m_cursorPreferredCol = -1;
-	m_cursorOn = true;
 	//m_cursorMode = CURSOR_DISPLAY_MODE_NORMAL;
-	m_displayStart.x = 0;
-	m_displayStart.y = 0;
+	m_displayStartPixelX = 0;
+	m_displayStartLineId = 0;
 	m_displaySize.x = 200;
 	m_displaySize.y = 20;
 	m_displayLocalSyntax.idSequence = -1;
@@ -242,7 +242,8 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 {
 	char tmpLineNumber[50];
 	sprintf(tmpLineNumber, myPrint, lineNumber);
-	//drawer.Text(myColorManager->Get(COLOR_CODE_LINE_NUMBER), 1, positionY, tmpLineNumber);
+	OOColored->SetColor(myColorManager->Get(COLOR_LIST_BG_2));
+	OOColored->Rectangle( 0, positionY, 68, sizeY);
 	OOText->SetColor(myColorManager->Get(COLOR_CODE_LINE_NUMBER));
 	OOText->TextAdd(1, positionY, tmpLineNumber, -1);
 }
@@ -341,7 +342,6 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	color_ts &  myColorSpace      = myColorManager->Get(COLOR_CODE_SPACE);
 	color_ts &  myColorTab        = myColorManager->Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
-	memset(displayChar, 0, sizeof(char)*MAX_EXP_CHAR_LEN);
 	
 	int mylen = m_EdnBuf.Size();
 	int32_t x_base=nbColoneForLineNumber*letterWidth + 3;
@@ -360,12 +360,19 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	//g_get_current_time(&timeStart);
 	
 	
-#if 1
 	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
+	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
 	// draw the lineNumber : 
-	int32_t currentLineID = m_displayStart.y+1;
+	int32_t currentLineID = m_displayStartLineId+1;
 	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
 	EDN_DEBUG("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
+	
+	coord2D_ts drawClippingOrigin;
+	drawClippingOrigin.x = 0;
+	drawClippingOrigin.y = 0;
+	coord2D_ts drawClippingSize;
+	drawClippingSize.x = sizeX;
+	drawClippingSize.y = sizeY;
 	
 	DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
 	int32_t pixelX = x_base;
@@ -375,19 +382,16 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 		uint32_t currentChar = '\0';
 		new_i = iii;
 		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
+		int32_t drawSize = 0;
 		//EDN_INFO("diplay element=" << new_i);
 		if (currentChar!='\n') {
 			selectColor = myColor;
-			//kwow size to display
-			int32_t widthToDisplay;
-			char * tmpDisplayOfset;
 			HLColor = m_EdnBuf.GetElementColorAtPosition(m_displayLocalSyntax, iii);
 			if (NULL != HLColor) {
 				if (NULL != HLColor->patern) {
 					selectColor = HLColor->patern->GetColor();
 				}
 			}
-
 			if(	true == selHave
 				&&	selStart <= iii
 				&&	selEnd   > iii)
@@ -396,35 +400,21 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 			}
 			OOColored->SetColor(selectColor->GetBG());
 			OOText->SetColor(selectColor->GetFG());
-			if (currentChar <= 0x7F) {
-				int32_t drawSize = OOText->TextAdd(pixelX, y, tmpDisplayOfset, -1);
-				if (true == selectColor->HaveBg() ) {
-					OOColored->Rectangle( pixelX, y, drawSize*strlen(tmpDisplayOfset), letterHeight);
-				}
-				pixelX += drawSize;
-			} else {
-				int32_t drawSize = OOText->TextAdd(pixelX, y, displayChar, -1);
-				if (true == selectColor->HaveBg() ) {
-					OOColored->Rectangle( pixelX, y, drawSize*strlen(tmpDisplayOfset), letterHeight);
-				}
-				pixelX += drawSize;
+			coord2D_ts textPos;
+			textPos.x = pixelX-m_displayStartPixelX;
+			textPos.y = y;
+			drawSize = OOText->TextAdd(textPos, drawClippingOrigin, drawClippingSize, displayChar);
+			if (true == selectColor->HaveBg() ) {
+				//OOColored->Rectangle( pixelX, y, drawSize*strlen(tmpDisplayOfset), letterHeight);
 			}
 		}
-		xx+=widthToDisplay;
 		idX += displaywidth;
-
 		// display cursor : 
-		//EDN_DEBUG(" is equal : " << m_cursorPos << "=" << iii);
 		if (m_cursorPos == iii) {
 			// display the cursor:
 			CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
-			/*if (true == m_cursorOn) {
-				//Cursor(OOColored, pixelX, y+letterHeight, letterHeight, letterWidth);
-				//m_cursorOn = false;
-			} else {
-				m_cursorOn = true;
-			}*/
 		}
+		pixelX += drawSize;
 		// move to next line ...
 		if (currentChar=='\n') {
 			//drawer.EndOfLine(pixelX, y+letterHeight);
@@ -441,154 +431,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	// special case : the cursor is at the end of the buffer...
 	if (m_cursorPos == iii) {
 		CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
-		// display the cursor:
-		if (true == m_cursorOn) {
-			//Cursor(OOColored, xx*letterWidth + x_base, yy+letterHeight, letterHeight, letterWidth);
-			m_cursorOn = false;
-		} else {
-			m_cursorOn = true;
-		}
 	}
-#else
-	char displayChar[MAX_EXP_CHAR_LEN];
-	// draw the lineNumber : 
-	int32_t currentLineID = m_displayStart.y+1;
-	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
-	EDN_DEBUG("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
-	
-	DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
-	int32_t pixelX = x_base;
-	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
-		//EDN_DEBUG("diplay element=" << iii);
-		int displaywidth;
-		uint32_t currentChar = '\0';
-		new_i = iii;
-		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
-		//EDN_INFO("diplay element=" << new_i);
-		if (currentChar!='\n') {
-			selectColor = myColor;
-			//kwow size to display
-			int32_t widthToDisplay;
-			char * tmpDisplayOfset;
-			bool inTheScreen = true;
-			if (m_displayStart.x <= idX) {
-				// Normal display
-				tmpDisplayOfset = displayChar;
-				widthToDisplay = displaywidth;
-			} else if (m_displayStart.x < idX + displaywidth) {
-				// special case of partial display : 
-				widthToDisplay = idX + displaywidth - m_displayStart.x;
-				tmpDisplayOfset = displayChar + (displaywidth-widthToDisplay);
-			} else {
-				// Out of range ...
-				widthToDisplay = displaywidth;
-				tmpDisplayOfset = displayChar;
-				inTheScreen = false;
-			}
-			if (true==inTheScreen) {
-				HLColor = m_EdnBuf.GetElementColorAtPosition(m_displayLocalSyntax, iii);
-				if (NULL != HLColor) {
-					if (NULL != HLColor->patern) {
-						selectColor = HLColor->patern->GetColor();
-					}
-				}
-
-				// If user want to display space char : overwrite curent color
-				if(		' ' == currentChar
-					&&	true == globals::IsSetDisplaySpaceChar() )
-				{
-					selectColor = myColorSel;
-					if(	true == selHave
-						&&	selStart <= iii
-						&&	selEnd   > iii)
-					{
-						OOColored->SetColor(myColorSel->GetBG());
-					} else if (true == selectColor->HaveBg()) {
-						OOColored->SetColor(selectColor->GetBG());
-					} else {
-						OOColored->SetColor(myColorSpace);
-					}
-					OOColored->Rectangle( pixelX, y, spaceWidth, letterHeight);
-					pixelX += spaceWidth;
-				} else if(		'\t' == currentChar
-							&&	true == globals::IsSetDisplaySpaceChar() )
-				{
-					if(	true == selHave
-						&&	selStart <= iii
-						&&	selEnd   > iii)
-					{
-						OOColored->SetColor(myColorSel->GetBG());
-					} else if (true == selectColor->HaveBg()) {
-						OOColored->SetColor(selectColor->GetBG());
-					} else  {
-						OOColored->SetColor(myColorTab);
-					}
-					OOColored->Rectangle( pixelX, y, spaceWidth*strlen(tmpDisplayOfset), letterHeight);
-					pixelX += spaceWidth*strlen(tmpDisplayOfset);
-				} else {
-					if(	true == selHave
-						&&	selStart <= iii
-						&&	selEnd   > iii)
-					{
-						selectColor = myColorSel;
-					}
-					OOColored->SetColor(selectColor->GetBG());
-					OOText->SetColor(selectColor->GetFG());
-					if (currentChar <= 0x7F) {
-						int32_t drawSize = OOText->TextAdd(pixelX, y, tmpDisplayOfset, -1);
-						if (true == selectColor->HaveBg() ) {
-							OOColored->Rectangle( pixelX, y, drawSize*strlen(tmpDisplayOfset), letterHeight);
-						}
-						pixelX += drawSize;
-					} else {
-						int32_t drawSize = OOText->TextAdd(pixelX, y, displayChar, -1);
-						if (true == selectColor->HaveBg() ) {
-							OOColored->Rectangle( pixelX, y, drawSize*strlen(tmpDisplayOfset), letterHeight);
-						}
-						pixelX += drawSize;
-					}
-				}
-				xx+=widthToDisplay;
-			}
-			idX += displaywidth;
-		}
-		// display cursor : 
-		//EDN_DEBUG(" is equal : " << m_cursorPos << "=" << iii);
-		if (m_cursorPos == iii) {
-			// display the cursor:
-			CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
-			/*if (true == m_cursorOn) {
-				//Cursor(OOColored, pixelX, y+letterHeight, letterHeight, letterWidth);
-				//m_cursorOn = false;
-			} else {
-				m_cursorOn = true;
-			}*/
-		}
-		// move to next line ...
-		if (currentChar=='\n') {
-			//drawer.EndOfLine(pixelX, y+letterHeight);
-			//drawer.Flush();
-			xx = 0;
-			idX =0;
-			pixelX = x_base;
-			y += letterHeight;
-			displayLines++;
-			currentLineID++;
-			DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
-		}
-	}
-	// special case : the cursor is at the end of the buffer...
-	if (m_cursorPos == iii) {
-		CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
-		// display the cursor:
-		if (true == m_cursorOn) {
-			//Cursor(OOColored, xx*letterWidth + x_base, yy+letterHeight, letterHeight, letterWidth);
-			m_cursorOn = false;
-		} else {
-			m_cursorOn = true;
-		}
-	}
-#endif
 	
 	//GTimeVal timeStop;
 	//g_get_current_time(&timeStop);
@@ -602,14 +445,71 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 void BufferText::GetMousePosition(int32_t width, int32_t height, int32_t &x, int32_t &y)
 {
 	
-	x = (width - 3) / Display::GetFontWidth() - nbColoneForLineNumber;
-	y = height / Display::GetFontHeight();
-	if (x < 0) {
-		x = 0;
+	int32_t fontId = ewol::GetDefaultFontId();
+	int32_t letterWidth = ewol::GetWidth(fontId, "9");
+	int32_t letterHeight = ewol::GetHeight(fontId);
+	
+	int32_t lineOffset = height / letterHeight;
+	y = m_displayStartLineId + lineOffset;
+	
+	//*******************************    get the X position :    *******************************************
+	
+	
+	// get the number of line in the buffer
+	int32_t maxNumberLine = m_EdnBuf.NumberOfLines();
+	if (10 > maxNumberLine) {				nbColoneForLineNumber = 1;
+	} else if (100 > maxNumberLine) {		nbColoneForLineNumber = 2;
+	} else if (1000 > maxNumberLine) {		nbColoneForLineNumber = 3;
+	} else if (10000 > maxNumberLine) {		nbColoneForLineNumber = 4;
+	} else if (100000 > maxNumberLine) {	nbColoneForLineNumber = 5;
+	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 6;
+	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 7;
+	} else if (10000000 > maxNumberLine) {	nbColoneForLineNumber = 8;
+	} else if (100000000 > maxNumberLine) {	nbColoneForLineNumber = 9;
+	} else {								nbColoneForLineNumber = 10;
 	}
-	x += m_displayStart.x;
-	y += m_displayStart.y;
-	//EDN_DEBUG("BufferText::GetMousePosition(" << width << "," << height << "); ==> (" << x << "," << y << ")" );
+	
+	int32_t iii, new_i;
+	
+	int mylen = m_EdnBuf.Size();
+	int32_t x_base=nbColoneForLineNumber*letterWidth + 3;
+	int32_t idX = 0;
+	
+	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
+	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
+	
+	int32_t pixelX = x_base;
+	if (width <= pixelX) {
+		x = 0;
+		EDN_DEBUG("    Element : Befor the start of the line ... ==> END");
+		return;
+	}
+	int32_t startLinePosition = m_EdnBuf.CountForwardNLines(m_displayStartBufferPos, lineOffset);
+	EDN_DEBUG("Get id element : x=" << width << "px y=" << height << "px");
+	EDN_DEBUG("    line offset  = " << lineOffset);
+	for (iii=startLinePosition; iii<mylen; iii = new_i) {
+		int displaywidth;
+		uint32_t currentChar = '\0';
+		new_i = iii;
+		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
+		if (currentChar!='\n') {
+			int32_t drawSize = ewol::GetWidth(fontId, displayChar);
+			EDN_DEBUG("    Element : " << currentChar << "=\"" << (char)currentChar << "\" display offset=" << pixelX << "px  width=" << drawSize << "px");
+			pixelX += drawSize;
+			if (width <= pixelX) {
+				EDN_DEBUG("        Find IT ==> END");
+				// find position ...
+				break;
+			}
+		} else {
+			EDN_DEBUG("    Element : \"\\n\" display width=---px ==> end of line ==> END");
+			// end of line ... exit cycle
+			break;
+		}
+		idX += displaywidth;
+	}
+	x = iii-startLinePosition;
+	EDN_DEBUG("BufferText::GetMousePosition(" << width << "," << height << "); ==> (" << x << "," << y << ")" );
 }
 
 
@@ -796,20 +696,20 @@ void BufferText::MoveUpDown(int32_t ofset)
 	m_displayLocalSyntax.idSequence = -1;
 	if (ofset >= 0) {
 		int32_t nbLine = m_EdnBuf.NumberOfLines();
-		if (m_displayStart.y+ofset+3 > nbLine) {
-			m_displayStart.y = nbLine-3;
+		if (m_displayStartLineId+ofset+3 > nbLine) {
+			m_displayStartLineId = nbLine-3;
 		} else {
-			m_displayStart.y += ofset;
+			m_displayStartLineId += ofset;
 		}
-		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
+		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
 	} else {
 		ofset *= -1;
-		if (m_displayStart.y < ofset) {
-			m_displayStart.y = 0;
+		if (m_displayStartLineId < ofset) {
+			m_displayStartLineId = 0;
 			m_displayStartBufferPos = 0;
 		} else {
-			m_displayStart.y -= ofset;
-			m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
+			m_displayStartLineId -= ofset;
+			m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
 		}
 	}
 	
@@ -853,8 +753,6 @@ void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 		m_cursorPos = newPos;
 	}
 	m_cursorPreferredCol = -1;
-	// Force the cursor display
-	m_cursorOn = true;
 	
 	// special case when insert char ...
 	if (true == insertChar) {
@@ -1029,39 +927,41 @@ void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
 void BufferText::UpdateWindowsPosition(bool centerPage)
 {
 	if (centerPage == false) {
+	/*
 		// Display position (Y mode):
-		//EDN_INFO("BufferText::UpdateWindowsPosition() m_displayStart(" << m_displayStart.x << "," << m_displayStart.y << ") m_displaySize(" << m_displaySize.x << "," <<m_displaySize.y << ")");
+		//EDN_INFO("BufferText::UpdateWindowsPosition() m_displayStart(" << m_displayStartPixelX << "px," << m_displayStartLineId << "id) m_displaySize(" << m_displaySize.x << "," <<m_displaySize.y << ")");
 		position_ts cursorPosition;
 		cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
 		int32_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
 		cursorPosition.x = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
 		//EDN_INFO("BufferText::UpdateWindowsPosition() curent cursor position : (" << cursorPosition.x << "," << cursorPosition.y << ")");
 		
-		if (m_displayStart.y > (int32_t)cursorPosition.y - globals::getNbLineBorder() ) {
-			m_displayStart.y = cursorPosition.y - globals::getNbLineBorder();
-			if (m_displayStart.y < 0) {
-				m_displayStart.y = 0;
+		if (m_displayStartLineId > (int32_t)cursorPosition.y - globals::getNbLineBorder() ) {
+			m_displayStartLineId = cursorPosition.y - globals::getNbLineBorder();
+			if (m_displayStartLineId < 0) {
+				m_displayStartLineId = 0;
 				ForceReDraw(true);
 			}
-		} else if (m_displayStart.y + m_displaySize.y <= (int32_t)cursorPosition.y + globals::getNbLineBorder() ) {
-			m_displayStart.y = cursorPosition.y - m_displaySize.y + globals::getNbLineBorder() + 1;
+		} else if (m_displayStartLineId + m_displaySize.y <= (int32_t)cursorPosition.y + globals::getNbLineBorder() ) {
+			m_displayStartLineId = cursorPosition.y - m_displaySize.y + globals::getNbLineBorder() + 1;
 			ForceReDraw(true);
 		}
 		// Display position (X mode):
-		//EDN_INFO("cursorPosition X : " << cursorPosition.y << " windows " << m_displayStart.y << "=>" << m_displayStart.x + m_displaySize.x);
-		if (m_displayStart.x > cursorPosition.x - globals::getNbColoneBorder() ) {
-			m_displayStart.x = cursorPosition.x - globals::getNbColoneBorder();
-			if (m_displayStart.x < 0) {
-				m_displayStart.x = 0;
+		//EDN_INFO("cursorPosition X : " << cursorPosition.y << " windows " << m_displayStartLineId << "=>" << m_displayStartPixelX + m_displaySize.x);
+		if (m_displayStartPixelX > cursorPosition.x - globals::getNbColoneBorder() ) {
+			m_displayStartPixelX = cursorPosition.x - globals::getNbColoneBorder();
+			if (m_displayStartPixelX < 0) {
+				m_displayStartPixelX = 0;
 				ForceReDraw(true);
 			}
-		} else if (m_displayStart.x + m_displaySize.x <= cursorPosition.x + globals::getNbColoneBorder() ) {
-			m_displayStart.x = cursorPosition.x - m_displaySize.x + globals::getNbColoneBorder() + 1;
+		} else if (m_displayStartPixelX + m_displaySize.x <= cursorPosition.x + globals::getNbColoneBorder() ) {
+			m_displayStartPixelX = cursorPosition.x - m_displaySize.x + globals::getNbColoneBorder() + 1;
 			ForceReDraw(true);
 		}
 		
 		//update the buffer position ID : 
-		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
+		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
+	*/
 	} else {
 		// center the line at the middle of the screen :
 		position_ts cursorPosition;
@@ -1070,14 +970,14 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 		//EDN_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << cursorPosition.y);
 		cursorPosition.x = 0;
 		
-		m_displayStart.x = 0;
+		m_displayStartPixelX = 0;
 		//EDN_DEBUG(" display size : " << m_displaySize.y);
-		m_displayStart.y = cursorPosition.y - m_displaySize.y/2;
-		m_displayStart.y = edn_max(m_displayStart.y, 0);
+		m_displayStartLineId = cursorPosition.y - m_displaySize.y/2;
+		m_displayStartLineId = edn_max(m_displayStartLineId, 0);
 		
-		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStart.y);
+		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
 		ForceReDraw(true);
-		//EDN_DEBUG(" display start : " << m_displayStart.x << "x" << m_displayStart.y);
+		//EDN_DEBUG(" display start : " << m_displayStartPixelX << "x" << m_displayStartLineId);
 		//EDN_DEBUG(" -------------------------------------------------");
 	}
 }
@@ -1469,7 +1369,7 @@ void BufferText::Redo(void)
 }
 
 
-void BufferText::SetCharset(charset_te newCharset)
+void BufferText::SetCharset(unicode::charset_te newCharset)
 {
 	m_EdnBuf.SetCharsetType(newCharset);
 	ForceReDraw(true);

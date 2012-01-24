@@ -27,7 +27,7 @@
 #include <tools_debug.h>
 #include <MenuBar.h>
 #include <ClipBoard.h>
-#include <charset.h>
+#include <etk/unicode.h>
 #include <ColorizeManager.h>
 #if 0
 #define MENU_MSG

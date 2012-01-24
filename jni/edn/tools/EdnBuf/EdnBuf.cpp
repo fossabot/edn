@@ -70,7 +70,7 @@ EdnBuf::EdnBuf(void)
 
 	// charset : 
 	m_isUtf8 = false;
-	m_charsetType = EDN_CHARSET_ISO_8859_15;
+	m_charsetType = unicode::EDN_CHARSET_ISO_8859_15;
 	
 	m_isUndoProcessing = false;
 	m_isRedoProcessing = false;
@@ -469,7 +469,7 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, char outUTF8[MAX_E
 		tmpString[6] = '\0';
 		uint8_t size;
 		bool baseValid;
-		Utf8_SizeElement(tmpString, 6 , size, baseValid);
+		unicode::Utf8_SizeElement(tmpString, 6 , size, baseValid);
 		currentChar = 0; // TODO : Set UNICODE char ...
 		if (true == baseValid) {
 			char *tmp = outUTF8;
@@ -556,6 +556,8 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnico
 		pos++;
 		return 5;
 	}
+	// clear all the data ...
+	memset(outUnicode, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
 	
 	// Otherwise, just return the character
 	if (false ==m_isUtf8) {
@@ -570,23 +572,32 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnico
 		uint8_t size;
 		bool baseValid;
 		unicode::Utf8_SizeElement(tmpString, 6 , size, baseValid);
-		currentChar = 0; // TODO : Set UNICODE char ...
+		currentChar = 0;
 		if (true == baseValid) {
-			char *tmp = outUnicode;
+			uniChar_t *tmp = outUnicode;
 			for (int32_t k=0; k<size; k++) {
 				*tmp++ = tmpString[k];
 			}
 			*tmp = '\0';
-			unicode::convertIsoToUnicode(m_charsetType, c, outUnicode);
+			unicode::convertIsoToUnicode(m_charsetType, c, outUnicode[0]);
 			
 		} else {
-			sprintf(outUTF8, "<? ? ? ?>");
+			outUnicode[0] = '<';
+			outUnicode[1] = '?';
+			outUnicode[2] = '?';
+			outUnicode[3] = '?';
+			outUnicode[4] = '>';
+			outUnicode[5] = 0;
 		}
 		if (0 == size) {
 			EDN_ERROR("plop");
 		}
 		pos+=size;
-		return strlen(outUTF8);
+		int32_t outSize = 0;
+		while (outUnicode[outSize]!=0) {
+			outSize++;
+		}
+		return outSize;
 	}
 	return 1;
 }
@@ -648,7 +659,7 @@ int32_t EdnBuf::ExpandCharacter(char c, int32_t indent, char outUTF8[MAX_EXP_CHA
 	
 	// Otherwise, just return the character
 	//*outStr = c;   // deprecated 
-	convertIsoToUtf8(EDN_CHARSET_ISO_8859_15, c, outUTF8);
+	convertIsoToUtf8(unicode::EDN_CHARSET_ISO_8859_15, c, outUTF8);
 	return 1;
 }
 
