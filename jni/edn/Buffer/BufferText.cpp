@@ -348,7 +348,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	uint32_t xx = 0;
 	int32_t idX = 0;
 	
-	color_ts bgColor;  //!< Text color
+	color_ts bgColor;
 	color_ts & tmpppppp = myColorManager->Get(COLOR_CODE_BASIC_BG);
 	OOColored->SetColor(tmpppppp);
 	OOColored->Rectangle( 0, 0, sizeX, sizeY);
@@ -391,19 +391,36 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 					selectColor = HLColor->patern->GetColor();
 				}
 			}
+			bool haveBg = false;
 			if(	true == selHave
 				&&	selStart <= iii
 				&&	selEnd   > iii)
 			{
 				selectColor = myColorSel;
+				OOColored->SetColor(selectColor->GetBG());
+				haveBg = selectColor->HaveBg();
+			} else {
+				if(		' ' == currentChar
+				&&	true == globals::IsSetDisplaySpaceChar() )
+				{
+					OOColored->SetColor(myColorSpace);
+					haveBg = true;
+				} else if(		'\t' == currentChar
+							&&	true == globals::IsSetDisplaySpaceChar() )
+				{
+					OOColored->SetColor(myColorTab);
+					haveBg = true;
+				} else {
+					OOColored->SetColor(selectColor->GetBG());
+					haveBg = selectColor->HaveBg();
+				}
 			}
-			OOColored->SetColor(selectColor->GetBG());
 			OOText->SetColor(selectColor->GetFG());
 			coord2D_ts textPos;
 			textPos.x = pixelX-m_displayStartPixelX;
 			textPos.y = y;
 			drawSize = OOText->TextAdd(textPos, drawClipping, displayChar);
-			if (true == selectColor->HaveBg() ) {
+			if (true == haveBg ) {
 				OOColored->Rectangle( pixelX, y, drawSize, letterHeight, drawClipping);
 			}
 		}
