@@ -3,7 +3,8 @@
           package="com.heeroyui.ednpackage"
           android:versionCode="1"
           android:versionName="1.0">
-	<application android:label="Edn">
+	<application android:label="Edn"
+	             android:icon="@drawable/ic_luncher_edn">
 	             <!--android:hasCode="false"-->
 	             <!-- classpath-->
 		<activity android:name=".edn"
