@@ -93,7 +93,7 @@ void HighlightManager::loadLanguages(void)
 #else
 	homedir = "./data/";
 #endif
-
+/*
 	etk::String xmlFilename = homedir;
 	xmlFilename += "lang_c.xml";
 	Highlight *myHightline = new Highlight(xmlFilename);
@@ -138,7 +138,7 @@ void HighlightManager::loadLanguages(void)
 	xmlFilename += "lang_java.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
-	
+*/
 	//myHightline->Display();
 }
 

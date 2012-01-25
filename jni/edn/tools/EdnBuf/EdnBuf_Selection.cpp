@@ -58,7 +58,7 @@ bool EdnBuf::SelectHasSelection(selectionType_te select)
  */
 void EdnBuf::Select(selectionType_te select, int32_t start, int32_t end)
 {
-	selection oldSelection = m_selectionList[select];
+	//selection oldSelection = m_selectionList[select];
 	m_selectionList[select].selected = start != end;
 	m_selectionList[select].zeroWidth = (start == end) ? true : false;
 	m_selectionList[select].rectangular = false;
@@ -77,7 +77,7 @@ void EdnBuf::Select(selectionType_te select, int32_t start, int32_t end)
  */
 void EdnBuf::Unselect(selectionType_te select)
 {
-	selection oldSelection = m_selectionList[select];
+	//selection oldSelection = m_selectionList[select];
 	m_selectionList[select].selected = false;
 	m_selectionList[select].zeroWidth = false;
 }

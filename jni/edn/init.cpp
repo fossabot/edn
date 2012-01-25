@@ -71,9 +71,9 @@ void APP_Init(int argc, char *argv[])
 	
 	ewol::SetFontFolder("Font");
 	#ifdef EWOL_USE_FREE_TYPE
-		//ewol::SetDefaultFont("freefont/FreeMono.ttf", 12);
+		ewol::SetDefaultFont("freefont/FreeMono.ttf", 12);
 		//ewol::SetDefaultFont("freefont/FreeMonoBold.ttf", 12);
-		ewol::SetDefaultFont("ACharmingFont.ttf", 45);
+		//ewol::SetDefaultFont("ACharmingFont.ttf", 45);
 		//ewol::SetDefaultFont("Monospace/Monospace", 40);
 		//ewol::SetDefaultFont("unispace.ttf", 12);
 	#else
@@ -84,7 +84,6 @@ void APP_Init(int argc, char *argv[])
 	// init internal global value
 	globals::init();
 	ClipBoard::Init();
-	Display::Init();
 	
 	
 	// init ALL Singleton :
@@ -105,7 +104,7 @@ void APP_Init(int argc, char *argv[])
 	homedir = "./data/";
 #endif
 	//homedir += "color_black.xml";
-	homedir += "color_white.xml";
+	homedir = "color_white.xml";
 	myColorManager->LoadFile( homedir.c_str() );
 	myColorManager->DisplayListOfColor();
 	
@@ -138,6 +137,7 @@ void APP_Init(int argc, char *argv[])
 			}
 		}
 	}
+	/*
 	{
 		etk::File myfile((char *)"licence.txt", etk::FILE_TYPE_DIRECT);
 		if (false == myBufferManager->Exist(myfile) ) {
@@ -145,6 +145,7 @@ void APP_Init(int argc, char *argv[])
 			MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idBuffOpened);
 		}
 	}
+	*/
 	if (NULL == basicWindows) {
 		EDN_ERROR("Can not allocate the basic windows");
 		ewol::Stop();
@@ -171,8 +172,6 @@ void APP_UnInit(void)
 	//Search::kill();
 	EDN_INFO("Stop Accel key");
 	//AccelKey::kill();
-	EDN_INFO("Stop Display");
-	Display::UnInit();
 	if (NULL != basicWindows) {
 		delete(basicWindows);
 	}

@@ -307,7 +307,6 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	
 	int32_t fontId = ewol::GetDefaultFontId();
 	int32_t letterWidth = ewol::GetWidth(fontId, "A");
-	int32_t spaceWidth = ewol::GetWidth(fontId, " ");
 	int32_t letterHeight = ewol::GetHeight(fontId);
 	
 	// update the number of element that can be displayed
@@ -345,12 +344,9 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	
 	int mylen = m_EdnBuf.Size();
 	int32_t x_base=nbColoneForLineNumber*letterWidth + 3;
-	uint32_t xx = 0;
 	int32_t idX = 0;
 	
-	color_ts bgColor;
-	color_ts & tmpppppp = myColorManager->Get(COLOR_CODE_BASIC_BG);
-	OOColored->SetColor(tmpppppp);
+	OOColored->SetColor(myColorManager->Get(COLOR_CODE_BASIC_BG));
 	OOColored->Rectangle( 0, 0, sizeX, sizeY);
 	
 	int displayLines = 0;
@@ -433,7 +429,6 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 		pixelX += drawSize;
 		// move to next line ...
 		if (currentChar=='\n') {
-			xx = 0;
 			idX =0;
 			pixelX = x_base;
 			y += letterHeight;

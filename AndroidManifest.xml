@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.heeroyui.ednpackage"
+          android:versionCode="1"
+          android:versionName="1.0">
+	<application android:label="Edn">
+	             <!--android:hasCode="false"-->
+	             <!-- classpath-->
+		<activity android:name=".edn"
+		          android:label="Edn Text-Editor"
+		          android:icon="@drawable/ic_luncher_edn">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+	</application>
+	<uses-sdk android:minSdkVersion="4" />
+</manifest> 

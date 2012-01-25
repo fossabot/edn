@@ -99,7 +99,6 @@ class BufferText : public Buffer {
 		// internal function
 		void     BasicInit(void);
 		void     UpdateWindowsPosition(bool centerPage = false);
-		void     displayLineNumber(DrawerManager &drawer);
 		
 		void     CleanSelectLine(void);
 		

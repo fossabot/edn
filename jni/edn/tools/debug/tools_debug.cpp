@@ -24,4 +24,4 @@
  */
 
 
-const char * ednLog = "edn      ";
+const char * ednLog = "edn     ";

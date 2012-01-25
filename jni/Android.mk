@@ -2,18 +2,21 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := ednpackage
-LOCAL_STATIC_LIBRARIES := ewol
-
-LOCAL_C_INCLUDES := $(LOCAL_PATH)
-
 # load the common sources file of the platform
 include $(LOCAL_PATH)/file.mk
+
+LOCAL_MODULE := ednpackage
+LOCAL_STATIC_LIBRARIES := ewol etk tinyxml libzip libpng
+
+LOCAL_C_INCLUDES := $(LOCAL_PATH) $(addprefix $(LOCAL_PATH)/, $(sort $(dir $(FILE_LIST))))
 
 LOCAL_SRC_FILES := ewolAndroidAbstraction.cpp \
                    $(FILE_LIST)
 
 LOCAL_LDLIBS    := -llog -landroid
+
+LOCAL_CFLAGS    :=  -DEWOL_USE_FREE_TYPE \
+                    -DEDN_DEBUG_LEVEL=3
 
 include $(BUILD_SHARED_LIBRARY)
 
