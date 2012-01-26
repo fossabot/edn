@@ -70,7 +70,7 @@ void APP_Init(int argc, char *argv[])
 	#endif
 	
 	ewol::SetFontFolder("Font");
-	//ewol::SetDefaultFont("freefont/FreeMono.ttf", 12);
+	ewol::SetDefaultFont("freefont/FreeMono.ttf", 12);
 	//ewol::SetDefaultFont("freefont/FreeMonoBold.ttf", 12);
 	//ewol::SetDefaultFont("ACharmingFont.ttf", 45);
 	//ewol::SetDefaultFont("Monospace/Monospace", 40);
@@ -139,7 +139,6 @@ void APP_Init(int argc, char *argv[])
 	
 	// add files
 	EDN_INFO("show list of files : ");
-	/*
 	for( int32_t i=1 ; i<argc; i++) {
 		EDN_INFO("need load file : \"" << argv[i] << "\"" );
 		etk::File myfile((char *)argv[i], etk::FILE_TYPE_DIRECT);
@@ -149,7 +148,7 @@ void APP_Init(int argc, char *argv[])
 				MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idBuffOpened);
 			}
 		}
-	}*/
+	}
 	
 	EDN_DEBUG("TEST16");
 	/*
