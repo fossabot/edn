@@ -9,7 +9,8 @@
 	             <!-- classpath-->
 		<activity android:name=".edn"
 		          android:label="Edn Text-Editor"
-		          android:icon="@drawable/ic_luncher_edn">
+		          android:icon="@drawable/ic_luncher_edn"
+		          android:configChanges="orientation">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />

@@ -77,29 +77,21 @@ void APP_Init(int argc, char *argv[])
 	//ewol::SetDefaultFont("unispace.ttf", 12);
 	
 	
-	EDN_DEBUG("TEST1");
 	// init internal global value
 	globals::init();
-	EDN_DEBUG("TEST2");
 	ClipBoard::Init();
 	
-	EDN_DEBUG("TEST3");
 	
 	// init ALL Singleton :
 	(void)MsgBroadcastCore::getInstance();
-	EDN_DEBUG("TEST4");
 	//(void)AccelKey::getInstance();
 	(void)WindowsManager::getInstance();
-	EDN_DEBUG("TEST5");
 	(void)CTagsManager::getInstance();
-	EDN_DEBUG("TEST6");
 	BufferManager *myBufferManager = BufferManager::getInstance();
-	EDN_DEBUG("TEST7");
 	
 	// set color and other trucs...
 	ColorizeManager *myColorManager = NULL;
 	myColorManager = ColorizeManager::getInstance();
-	EDN_DEBUG("TEST8");
 	etk::String homedir;
 	//homedir = getenv("HOME");
 #ifdef NDEBUG
@@ -110,19 +102,14 @@ void APP_Init(int argc, char *argv[])
 	//homedir += "color_black.xml";
 	homedir = "color_white.xml";
 	myColorManager->LoadFile( homedir.c_str() );
-	EDN_DEBUG("TEST9");
 	myColorManager->DisplayListOfColor();
-	EDN_DEBUG("TEST10");
 	
 	HighlightManager *myHighlightManager = NULL;
 	myHighlightManager = HighlightManager::getInstance();
-	EDN_DEBUG("TEST11");
 	myHighlightManager->loadLanguages();
-	EDN_DEBUG("TEST12");
 
 	// open display
 	MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__GUI_SHOW_MAIN_WINDOWS);
-	EDN_DEBUG("TEST13");
 	
 	// get the curent program folder
 	char cCurrentPath[FILENAME_MAX];
@@ -132,10 +119,8 @@ void APP_Init(int argc, char *argv[])
 	cCurrentPath[FILENAME_MAX - 1] = '\0';
 	//EDN_INFO("The current working directory is " << cCurrentPath);
 
-	EDN_DEBUG("TEST14");
 	basicWindows = new MainWindows();
 	
-	EDN_DEBUG("TEST15");
 	
 	// add files
 	EDN_INFO("show list of files : ");
@@ -150,7 +135,6 @@ void APP_Init(int argc, char *argv[])
 		}
 	}
 	
-	EDN_DEBUG("TEST16");
 	/*
 	{
 		etk::File myfile((char *)"licence.txt", etk::FILE_TYPE_DIRECT);
@@ -164,11 +148,9 @@ void APP_Init(int argc, char *argv[])
 		EDN_ERROR("Can not allocate the basic windows");
 		ewol::Stop();
 	}
-	EDN_DEBUG("TEST17");
 	
 	// create the specific windows
 	ewol::DisplayWindows(basicWindows);
-	EDN_DEBUG("TEST18");
 	
 }
 
