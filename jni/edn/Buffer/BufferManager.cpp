@@ -27,6 +27,7 @@
 #include <tools_debug.h>
 #include <tools_globals.h>
 #include <BufferManager.h>
+#include <ewol/WidgetMessageMultiCast.h>
 
 #undef __class__
 #define __class__	"BufferManager"
@@ -40,11 +41,16 @@
  * @return ---
  *
  */
-BufferManager::BufferManager(void) : MsgBroadcast("Buffer Manager", EDN_CAT_BUFFER_MANAGER)
+BufferManager::BufferManager(void)
 {
 	// nothing to do ...
 	BufferNotExiste = new BufferEmpty();
 	m_idSelected = -1;
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerNewFile);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerSaveAll);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerCloseAll);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerClose);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerSave);
 }
 
 /**
@@ -68,8 +74,9 @@ BufferManager::~BufferManager(void)
 }
 
 
-void BufferManager::OnMessage(int32_t id, int32_t dataID)
+bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
+	/*
 	switch (id)
 	{
 		case EDN_MSG__BUFFER_CHANGE_CURRENT:
@@ -127,6 +134,8 @@ void BufferManager::OnMessage(int32_t id, int32_t dataID)
 			}
 			break;
 	}
+	*/
+	return false;
 }
 
 
@@ -149,7 +158,8 @@ void BufferManager::RemoveAll(void)
 	for (i=0; i<listBuffer.Size(); i++) {
 		Remove(i);
 	}
-	SendMessage(EDN_MSG__BUFFER_REMOVE_ALL);
+	//SendMessage(EDN_MSG__BUFFER_REMOVE_ALL);
+	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferRemoveAll);
 }
 
 
@@ -169,7 +179,8 @@ int32_t	BufferManager::Create(void)
 	// Add at the list of element
 	listBuffer.PushBack(myBuffer);
 	int32_t basicID = listBuffer.Size() - 1;
-	SendMessage(EDN_MSG__BUFFER_ADD, basicID);
+	//SendMessage(EDN_MSG__BUFFER_ADD, basicID);
+	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferAdd);
 	return basicID;
 }
 
@@ -192,7 +203,8 @@ int32_t BufferManager::Open(etk::File &myFile)
 	// Add at the list of element
 	listBuffer.PushBack(myBuffer);
 	int32_t basicID = listBuffer.Size() - 1;
-	SendMessage(EDN_MSG__BUFFER_ADD, basicID);
+	//SendMessage(EDN_MSG__BUFFER_ADD, basicID);
+	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferAdd);
 	return basicID;
 }
 
@@ -293,7 +305,8 @@ bool BufferManager::Remove(int32_t BufferID)
 			// Delete the Buffer
 			delete( listBuffer[BufferID] );
 			listBuffer[BufferID] = NULL;
-			SendMessage(EDN_MSG__BUFFER_REMOVE, BufferID);
+			//SendMessage(EDN_MSG__BUFFER_REMOVE, BufferID);
+			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferRemove);
 			return true;
 		} else {
 			EDN_INFO("non existing Buffer " << BufferID);

@@ -37,7 +37,7 @@ static void CB_menuGenerique(GtkMenuItem *menu_item, gpointer data)
 }
 */
 
-ToolBar::ToolBar(void) : MsgBroadcast("Tool bar", EDN_CAT_GUI)
+ToolBar::ToolBar(void)
 {
 /*
 	m_mainWidget = gtk_toolbar_new();

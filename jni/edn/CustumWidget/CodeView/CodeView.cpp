@@ -36,13 +36,14 @@
 #include <SearchData.h>
 
 #include <ewol/WidgetManager.h>
+#include <ewol/WidgetMessageMultiCast.h>
 
 
 #undef __class__
-#define __class__	"ewol::Button"
+#define __class__	"ewol::CodeView"
 
 
-CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
+CodeView::CodeView(void)
 {
 	m_label = "CodeView is disable ...";
 	m_bufferID = -1;
@@ -62,6 +63,25 @@ CodeView::CodeView(void) : MsgBroadcast("Code View", EDN_CAT_WORK_AREA)
 	m_textColorBg.blue  = 0.0;
 	m_textColorBg.alpha = 0.25;
 	SetCanHaveFocus(true);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentChangeBufferId);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSave);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSaveAs);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSelectAll);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentRemoveLine);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentUnSelect);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentCopy);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentCut);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentPaste);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentFindPrevious);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentFindNext);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentFindOldNext);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentReplace);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentReplaceAll);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentClose);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentUndo);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentRedo);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentGotoLine);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSetCharset);
 }
 
 CodeView::~CodeView(void)
@@ -237,8 +257,60 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 
 
 
-void CodeView::OnMessage(int32_t id, int32_t dataID)
+bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
+	EDN_DEBUG("Extern Event : " << widgetID << "  type : " << generateEventId << "  position(" << x << "," << y << ")");
+	
+	if( ednMsgCodeViewCurrentChangeBufferId == generateEventId) {
+		int32_t bufferID = 0;
+		sscanf(eventExternId, "%d", &bufferID);
+		EDN_INFO("Select a new Buffer ... " << bufferID);
+		m_bufferID = bufferID;
+		m_bufferManager->Get(m_bufferID)->ForceReDraw(true);
+		// request the display of the curent Editor
+		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferChangeCurrent, (char*)eventExternId);
+		
+	} else if (ednMsgCodeViewCurrentSave == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentSaveAs == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentSelectAll == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentRemoveLine == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentUnSelect == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentCopy == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentCut == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentPaste == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentFindPrevious == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentFindNext == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentFindOldNext == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentReplace == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentReplaceAll == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentClose == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentUndo == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentRedo == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentGotoLine == generateEventId) {
+	
+	} else if (ednMsgCodeViewCurrentSetCharset == generateEventId) {
+	
+	} else {
+	
+	}
+	
+	/*
 	switch (id)
 	{
 		case EDN_MSG__CURRENT_CHANGE_BUFFER_ID:
@@ -328,14 +400,17 @@ void CodeView::OnMessage(int32_t id, int32_t dataID)
 			// Redraw all the display ... Done under ...
 			break;
 	}
+	*/
 	// Force redraw of the widget
 	OnRegenerateDisplay();
+	return true;
 }
 
 
 void CodeView::OnGetFocus(void)
 {
-	SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
+	//SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
+	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferChangeCurrent);
 	EDN_INFO("Focus - In");
 }
 

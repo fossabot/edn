@@ -35,12 +35,11 @@
 #include <etk/Types.h>
 #include <ewol/Widget.h>
 
-class CodeView :public ewol::Widget, public MsgBroadcast
+class CodeView :public ewol::Widget
 {
 	public:
 		         CodeView(void);
 		virtual ~CodeView(void);
-		void OnMessage(int32_t id, int32_t dataID);
 		virtual bool   CalculateMinSize(void);
 	private:
 		etk::String    m_label;
@@ -52,6 +51,7 @@ class CodeView :public ewol::Widget, public MsgBroadcast
 		bool                m_buttunOneSelected;
 	public:
 		virtual void   OnRegenerateDisplay(void);
+		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
 	public:
 		virtual bool OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, etkFloat_t x, etkFloat_t y);
 		virtual bool OnEventArea(const char * generateEventId, etkFloat_t x, etkFloat_t y);

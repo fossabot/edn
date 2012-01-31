@@ -26,12 +26,14 @@
 #include <tools_globals.h>
 #include <ColorizeManager.h>
 #include <tinyXML/tinyxml.h>
+#include <ewol/WidgetMessageMultiCast.h>
 
 #define PFX	"ColorizeManager "
 
 
-ColorizeManager::ColorizeManager(void) : MsgBroadcast("Colorize Manager", EDN_CAT_COLOR)
+ColorizeManager::ColorizeManager(void)
 {
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgReloadColorFile);
 }
 
 ColorizeManager::~ColorizeManager(void)
@@ -51,8 +53,9 @@ ColorizeManager::~ColorizeManager(void)
 }
 
 
-void ColorizeManager::OnMessage(int32_t id, int32_t dataID)
+bool ColorizeManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
+	/*
 	switch (id)
 	{
 		case EDN_MSG__RELOAD_COLOR_FILE:
@@ -64,6 +67,8 @@ void ColorizeManager::OnMessage(int32_t id, int32_t dataID)
 			}
 			break;
 	}
+	*/
+	return false;
 }
 
 
@@ -263,8 +268,8 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 	if (NULL != fileBuffer) {
 		delete[] fileBuffer;
 	}
-	SendMessage(EDN_MSG__COLOR_HAS_CHANGE);
-	SendMessage(EDN_MSG__USER_DISPLAY_CHANGE);
+	//SendMessage(EDN_MSG__COLOR_HAS_CHANGE);
+	//SendMessage(EDN_MSG__USER_DISPLAY_CHANGE);
 }
 
 Colorize *ColorizeManager::Get(const char *colorName)

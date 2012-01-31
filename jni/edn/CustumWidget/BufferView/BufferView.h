@@ -33,14 +33,14 @@
 
 
 
-class BufferView : public MsgBroadcast
+class BufferView : public ewol::Widget
 {
 	public:
 		// Constructeur
 		BufferView(void);
 		~BufferView(void);
 		//GtkWidget	*GetMainWidget(void);
-		void OnMessage(int32_t id, int32_t dataID);
+		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
 		/*
 		// sur : GTK+ callback :
 		static gboolean	CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data);

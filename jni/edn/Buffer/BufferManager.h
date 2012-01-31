@@ -31,8 +31,9 @@
 #include <BufferEmpty.h>
 #include <etk/Singleton.h>
 #include <MsgBroadcast.h>
+#include <ewol/Widget.h>
 
-class BufferManager: public etk::Singleton<BufferManager>, public MsgBroadcast
+class BufferManager: public etk::Singleton<BufferManager>, public ewol::Widget
 {
 	friend class etk::Singleton<BufferManager>;
 	// specific for sigleton system...
@@ -42,7 +43,7 @@ class BufferManager: public etk::Singleton<BufferManager>, public MsgBroadcast
 		~BufferManager(void);
 
 	public:
-		void OnMessage(int32_t id, int32_t dataID);
+		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
 		
 		// return the ID of the buffer allocated
 		// create a buffer with no element

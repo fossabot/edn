@@ -27,6 +27,7 @@
 #include <tools_globals.h>
 #include <Buffer.h>
 #include <BufferManager.h>
+#include <ewol/WidgetMessageMultiCast.h>
 
 #undef __class__
 #define __class__	"Buffer"
@@ -93,7 +94,7 @@ void Buffer::SetModify(bool status)
 {
 	if (status != m_fileModify) {
 		m_fileModify = status;
-		GeneralSendMessage(EDN_MSG__BUFFER_CHANGE_MODIFY);
+		ewol::widgetMessageMultiCast::Send(-1, ednMsgBufferModify);
 	}
 }
 

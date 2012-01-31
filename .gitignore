@@ -4,9 +4,14 @@
 ###################################
 CVS
 .svn
+.gitk-tmp.*
 Object/
 doxygen/API/
 doxygen/ALL/
+bin/
+gen/
+linux/
+obj/
 
 ###################################
 # backup files

@@ -28,7 +28,7 @@
 
 
 
-StatusBar::StatusBar(void) : MsgBroadcast("Status bar", EDN_CAT_GUI)
+StatusBar::StatusBar(void)
 {
 /*
 	m_mainWidget = gtk_statusbar_new();

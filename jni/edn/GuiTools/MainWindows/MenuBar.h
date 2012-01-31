@@ -34,11 +34,11 @@
 
 //class MenuBarMain;
 
-class MenuBar: public MsgBroadcast
+class MenuBar
 {
 	public:
 		// Constructeur
-		MenuBar(void) : MsgBroadcast("Menu bar", EDN_CAT_GUI){};
+		MenuBar(void) {};
 		~MenuBar(void) {};
 		//GtkWidget	* GetWidget(void) { return m_mainWidget; };
 		void          OnMessage(int32_t id, int32_t dataID) {};

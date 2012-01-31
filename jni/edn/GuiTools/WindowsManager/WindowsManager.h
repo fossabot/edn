@@ -30,7 +30,7 @@
 #include <MsgBroadcast.h>
 #include <MainWindows.h>
 
-class WindowsManager: public etk::Singleton<WindowsManager>, public MsgBroadcast
+class WindowsManager: public etk::Singleton<WindowsManager>
 {
 	friend class etk::Singleton<WindowsManager>;
 	// specific for sigleton system...

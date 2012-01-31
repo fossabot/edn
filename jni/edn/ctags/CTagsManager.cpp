@@ -28,6 +28,7 @@
 #include <CTagsManager.h>
 #include <ClipBoard.h>
 #include <BufferManager.h>
+#include <ewol/WidgetMessageMultiCast.h>
 
 
 
@@ -42,12 +43,16 @@
  * @return ---
  *
  */
-CTagsManager::CTagsManager(void) : MsgBroadcast("C-Tags Manager", EDN_CAT_CTAGS)
+CTagsManager::CTagsManager(void)
 {
 	m_tagFilename = "";
 	m_tagFolderBase = "";
 	m_ctagFile = NULL;
 	m_historyPos = 0;
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCtagsOpen);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCtagsReload);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCtagsJumpCurrentSelection);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCtagsJumpBack);
 }
 
 /**
@@ -92,7 +97,7 @@ etk::String CTagsManager::GetFolder(etk::String &inputString)
 	return out;
 }
 
-void CTagsManager::OnMessage(int32_t id, int32_t dataID)
+bool CTagsManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
 	/*
 	switch (id)
@@ -144,6 +149,7 @@ void CTagsManager::OnMessage(int32_t id, int32_t dataID)
 			break;
 	}
 	*/
+	return false;
 }
 
 

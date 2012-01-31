@@ -28,6 +28,7 @@
 
 
 #include <etk/Singleton.h>
+#include <ewol/Widget.h>
 #include "MsgBroadcast.h"
 #include "readtags.h"
 
@@ -40,7 +41,7 @@ typedef struct{
 } TagListFind_ts;
 
 
-class CTagsManager: public etk::Singleton<CTagsManager>, public MsgBroadcast
+class CTagsManager: public etk::Singleton<CTagsManager>, public ewol::Widget
 {
 	friend class etk::Singleton<CTagsManager>;
 	// specific for sigleton system...
@@ -50,7 +51,7 @@ class CTagsManager: public etk::Singleton<CTagsManager>, public MsgBroadcast
 		~CTagsManager(void);
 
 	public:
-		void                       OnMessage(int32_t id, int32_t dataID);
+		virtual bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
 	private:
 		int32_t                    m_currentSelectedID;
 		void                       LoadTagFile(void);

@@ -31,9 +31,10 @@ class HighlightManager;
 #include <etk/Singleton.h>
 #include <MsgBroadcast.h>
 #include <Highlight.h>
+#include <ewol/Widget.h>
 
 
-class HighlightManager: public etk::Singleton<HighlightManager>, public MsgBroadcast
+class HighlightManager: public etk::Singleton<HighlightManager>, public ewol::Widget
 {
 	friend class etk::Singleton<HighlightManager>;
 	// specific for sigleton system...
@@ -43,7 +44,7 @@ class HighlightManager: public etk::Singleton<HighlightManager>, public MsgBroad
 		~HighlightManager(void);
 
 	public:
-		void    OnMessage(int32_t id, int32_t dataID);
+		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
 	public:
 		void loadLanguages(void);
 		Highlight	* Get(etk::File &fileName);

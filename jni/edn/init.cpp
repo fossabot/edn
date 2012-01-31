@@ -37,6 +37,7 @@
 #include <unistd.h>
 #include <readtags.h>
 #include <CTagsManager.h>
+#include <ewol/WidgetMessageMultiCast.h>
 
 MainWindows * basicWindows = NULL;
 
@@ -83,8 +84,6 @@ void APP_Init(int argc, char *argv[])
 	
 	
 	// init ALL Singleton :
-	(void)MsgBroadcastCore::getInstance();
-	//(void)AccelKey::getInstance();
 	(void)WindowsManager::getInstance();
 	(void)CTagsManager::getInstance();
 	BufferManager *myBufferManager = BufferManager::getInstance();
@@ -92,15 +91,7 @@ void APP_Init(int argc, char *argv[])
 	// set color and other trucs...
 	ColorizeManager *myColorManager = NULL;
 	myColorManager = ColorizeManager::getInstance();
-	etk::String homedir;
-	//homedir = getenv("HOME");
-#ifdef NDEBUG
-	homedir = "/usr/share/edn/";
-#else
-	homedir = "./data/";
-#endif
-	//homedir += "color_black.xml";
-	homedir = "color_white.xml";
+	etk::String homedir = "color_white.xml";
 	myColorManager->LoadFile( homedir.c_str() );
 	myColorManager->DisplayListOfColor();
 	
@@ -108,8 +99,6 @@ void APP_Init(int argc, char *argv[])
 	myHighlightManager = HighlightManager::getInstance();
 	myHighlightManager->loadLanguages();
 
-	// open display
-	MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__GUI_SHOW_MAIN_WINDOWS);
 	
 	// get the curent program folder
 	char cCurrentPath[FILENAME_MAX];
@@ -130,20 +119,11 @@ void APP_Init(int argc, char *argv[])
 		if (false == myBufferManager->Exist(myfile) ) {
 			int32_t idBuffOpened = myBufferManager->Open(myfile);
 			if (1==i) {
-				MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idBuffOpened);
+				//MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idBuffOpened);
+				ewol::widgetMessageMultiCast::Add(-1, ednMsgCodeViewCurrentChangeBufferId);
 			}
 		}
 	}
-	
-	/*
-	{
-		etk::File myfile((char *)"licence.txt", etk::FILE_TYPE_DIRECT);
-		if (false == myBufferManager->Exist(myfile) ) {
-			int32_t idBuffOpened = myBufferManager->Open(myfile);
-			MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idBuffOpened);
-		}
-	}
-	*/
 	if (NULL == basicWindows) {
 		EDN_ERROR("Can not allocate the basic windows");
 		ewol::Stop();

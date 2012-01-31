@@ -26,13 +26,14 @@
 #include <tools_debug.h>
 #include <tools_globals.h>
 #include <HighlightManager.h>
+#include <ewol/WidgetMessageMultiCast.h>
 
 #undef __class__
 #define __class__	"HighlightManager"
 
-HighlightManager::HighlightManager(void) : MsgBroadcast("Hight-light Manager", EDN_CAT_HL)
+HighlightManager::HighlightManager(void)
 {
-
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgColorHasChange);
 }
 
 HighlightManager::~HighlightManager(void)
@@ -50,8 +51,9 @@ HighlightManager::~HighlightManager(void)
 }
 
 
-void HighlightManager::OnMessage(int32_t id, int32_t dataID)
+bool HighlightManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
+	/*
 	switch (id)
 	{
 		case EDN_MSG__COLOR_HAS_CHANGE:
@@ -63,6 +65,8 @@ void HighlightManager::OnMessage(int32_t id, int32_t dataID)
 			}
 			break;
 	}
+	*/
+	return false;
 }
 
 Highlight *HighlightManager::Get(etk::File &fileName)
@@ -87,58 +91,42 @@ bool HighlightManager::Exist(etk::File &fileName)
 
 void HighlightManager::loadLanguages(void)
 {
-	etk::String homedir;
-#ifdef NDEBUG
-	homedir = "/usr/share/edn/";
-#else
-	homedir = "./data/";
-#endif
-/*
-	etk::String xmlFilename = homedir;
-	xmlFilename += "lang_c.xml";
+	etk::String xmlFilename = "lang_c.xml";
 	Highlight *myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	
-	xmlFilename = homedir;
-	xmlFilename += "lang_boo.xml";
+	xmlFilename = "lang_boo.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	
-	xmlFilename = homedir;
-	xmlFilename += "lang_Makefile.xml";
+	xmlFilename = "lang_Makefile.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	
-	xmlFilename = homedir;
-	xmlFilename += "lang_asm.xml";
+	xmlFilename = "lang_asm.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	
-	xmlFilename = homedir;
-	xmlFilename += "lang_xml.xml";
+	xmlFilename = "lang_xml.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	
-	xmlFilename = homedir;
-	xmlFilename += "lang_php.xml";
+	xmlFilename = "lang_php.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	
-	xmlFilename = homedir;
-	xmlFilename += "lang_bash.xml";
+	xmlFilename = "lang_bash.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	
-	xmlFilename = homedir;
-	xmlFilename += "lang_matlab.xml";
+	xmlFilename = "lang_matlab.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	
-	xmlFilename = homedir;
-	xmlFilename += "lang_java.xml";
+	xmlFilename = "lang_java.xml";
 	myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
-*/
+	
 	//myHightline->Display();
 }
 

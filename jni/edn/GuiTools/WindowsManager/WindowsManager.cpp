@@ -42,7 +42,7 @@
  * @return ---
  *
  */
-WindowsManager::WindowsManager(void) : MsgBroadcast("Windows Manager", EDN_CAT_GUI_MANAGER)
+WindowsManager::WindowsManager(void)
 {
 	m_currentBufferID = -1;
 }

@@ -26,6 +26,7 @@
 #include <tools_globals.h>
 #include <ColorizeManager.h>
 #include <MsgBroadcast.h>
+#include <ewol/WidgetMessageMultiCast.h>
 
 #undef __class__
 #define __class__	"globals"
@@ -54,7 +55,7 @@ void globals::SetDisplayEndOfLine(bool newVal)
 {
 	EDN_INFO("Set EndOfLine " << newVal);
 	displayEOL = newVal;
-	GeneralSendMessage(EDN_MSG__REFRESH_DISPLAY);
+	ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
 // -----------------------------------------------------------
@@ -68,7 +69,7 @@ void globals::SetDisplaySpaceChar(bool newVal)
 {
 	EDN_INFO("Set SpaceChar " << newVal);
 	displaySpaceChar = newVal;
-	GeneralSendMessage(EDN_MSG__REFRESH_DISPLAY);
+	ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
 

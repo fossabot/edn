@@ -28,7 +28,7 @@
 #ifndef __STATUS_BAR_H__
 #define __STATUS_BAR_H__
 
-class StatusBar: public MsgBroadcast
+class StatusBar
 {
 	public:
 		// Constructeur

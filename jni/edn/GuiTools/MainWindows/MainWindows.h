@@ -74,6 +74,7 @@ class MainWindows : public ewol::Windows
 		// Constructeur
 		MainWindows(void);
 		~MainWindows(void);
+		virtual bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y);
 };
 #endif
 

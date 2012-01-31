@@ -30,14 +30,16 @@
 #include <BufferManager.h>
 #include <ColorizeManager.h>
 #include <MainWindows.h>
+#include <ewol/WidgetMessageMultiCast.h>
 
 #undef __class__
 #define __class__	"BufferView"
 
-BufferView::BufferView(void) : MsgBroadcast("Buffer View", EDN_CAT_GUI)
+BufferView::BufferView(void)
 {
 	m_shawableAreaX = 0;
 	m_shawableAreaY = 0;
+	//ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerNewFile);
 	// Init link with the buffer Manager
 	//m_bufferManager = BufferManager::Get();
 	//m_colorManager = ColorizeManager::Get();
@@ -89,9 +91,9 @@ GtkWidget * BufferView::GetMainWidget(void)
 	return m_widget;
 }
 */
-
-void BufferView::OnMessage(int32_t id, int32_t dataID)
+bool BufferView::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
+	/*
 	switch (id)
 	{
 		case EDN_MSG__BUFFER_CHANGE_CURRENT:
@@ -107,6 +109,8 @@ void BufferView::OnMessage(int32_t id, int32_t dataID)
 			//gtk_widget_queue_draw(m_widget);
 			break;
 	}
+	*/
+	return false;
 }
 #if 0
 

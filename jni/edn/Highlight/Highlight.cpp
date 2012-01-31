@@ -47,14 +47,40 @@ void Highlight::ParseRules(TiXmlNode *child, etk::VectorType<HighlightPattern*> 
 
 Highlight::Highlight(etk::String &xmlFilename)
 {
-
 	TiXmlDocument XmlDocument;
-	// open the curent File
-	bool loadError = XmlDocument.LoadFile(xmlFilename.c_str());
+
+	etk::File fileName(xmlFilename, etk::FILE_TYPE_DATA);
+	if (false == fileName.Exist()) {
+		EWOL_ERROR("File Does not exist : " << fileName);
+		return;
+	}
+	int32_t fileSize = fileName.Size();
+	if (0==fileSize) {
+		EWOL_ERROR("This file is empty : " << fileName);
+		return;
+	}
+	if (false == fileName.fOpenRead()) {
+		EWOL_ERROR("Can not open the file : " << fileName);
+		return;
+	}
+	// allocate data
+	char * fileBuffer = new char[fileSize];
+	if (NULL == fileBuffer) {
+		EWOL_ERROR("Error Memory allocation size=" << fileSize);
+		return;
+	}
+	// load data from the file :
+	fileName.fRead(fileBuffer, 1, fileSize);
+	// close the file:
+	fileName.fClose();
+	// load the XML from the memory
+	bool loadError = XmlDocument.Parse((const char*)fileBuffer, 0, TIXML_ENCODING_UTF8);
 	if (false == loadError) {
 		EDN_ERROR( "can not load Hightlight XML: PARSING error: \"" << xmlFilename << "\"");
 		return;
 	}
+
+
 	TiXmlElement* root = XmlDocument.FirstChildElement( "EdnLang" );
 	if (NULL == root) {
 		EDN_ERROR( "can not load Hightlight XML: main node not find: \"EdnLang\"");
@@ -108,6 +134,9 @@ Highlight::Highlight(etk::String &xmlFilename)
 		}
 		// get the next node element : 
 		child = child->NextSibling();
+	}
+	if (NULL != fileBuffer) {
+		delete[] fileBuffer;
 	}
 }
 

@@ -29,6 +29,7 @@
 #include <etk/Singleton.h>
 #include <Colorize.h>
 #include <MsgBroadcast.h>
+#include <ewol/Widget.h>
 
 typedef enum {
 	// BASIC color for codeViewer
@@ -49,7 +50,7 @@ typedef enum {
 
 
 
-class ColorizeManager: public etk::Singleton<ColorizeManager>, public MsgBroadcast
+class ColorizeManager: public etk::Singleton<ColorizeManager>, public ewol::Widget
 {
 	friend class etk::Singleton<ColorizeManager>;
 	// specific for sigleton system...
@@ -58,7 +59,7 @@ class ColorizeManager: public etk::Singleton<ColorizeManager>, public MsgBroadca
 		ColorizeManager(void);
 		~ColorizeManager(void);
 	public:
-		void    OnMessage(int32_t id, int32_t dataID);
+		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
 	public:
 		void        LoadFile(etk::String &xmlFilename);
 		void        LoadFile(const char * xmlFilename);

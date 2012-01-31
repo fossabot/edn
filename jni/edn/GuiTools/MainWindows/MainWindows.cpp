@@ -43,11 +43,18 @@
 #include <ewol/widget/Spacer.h>
 #include <ewol/widgetMeta/FileChooser.h>
 #include <ewol/WidgetManager.h>
+#include <ewol/WidgetMessageMultiCast.h>
 
 #undef __class__
 #define __class__	"MainWindows"
 
 
+const char * const ednEventOpenFile = "edn-Open-File";
+const char * const ednEventCloseFile = "edn-Close-File";
+const char * const ednEventSaveFile = "edn-Save-File";
+const char * const ednEventSaveAsFile = "edn-SaveAs-File";
+const char * const ednEventPopUpClose = "edn-PopUp-Close";
+const char * const ednEventPopUpFileSelected = "edn-PopUp-FileSelected";
 
 MainWindows::MainWindows(void)
 {
@@ -66,12 +73,28 @@ MainWindows::MainWindows(void)
 			
 			myButton = new ewol::Button("Open");
 			mySizerHori->SubWidgetAdd(myButton);
+			if (false == myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ednEventOpenFile) ) {
+				EDN_CRITICAL("link with an entry event");
+			}
+			
 			myButton = new ewol::Button("Close");
 			mySizerHori->SubWidgetAdd(myButton);
+			if (false == myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ednEventCloseFile) ) {
+				EDN_CRITICAL("link with an entry event");
+			}
+			
 			myButton = new ewol::Button("Save");
 			mySizerHori->SubWidgetAdd(myButton);
+			if (false == myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ednEventSaveFile) ) {
+				EDN_CRITICAL("link with an entry event");
+			}
+			
 			myButton = new ewol::Button("Save As ...");
 			mySizerHori->SubWidgetAdd(myButton);
+			if (false == myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ednEventSaveAsFile) ) {
+				EDN_CRITICAL("link with an entry event");
+			}
+			
 			
 			myLabel = new ewol::Label("FileName");
 			myLabel->SetExpendX(true);
@@ -97,6 +120,46 @@ MainWindows::~MainWindows(void)
 
 
 
+bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y)
+{
+	EDN_INFO("Receive Event from the main windows ... : widgetid=" << widgetID << "\"" << generateEventId << "\" ==> data=\"" << data << "\"" );
+	if (generateEventId == ednEventOpenFile) {
+		ewol::FileChooser* tmpWidget = new ewol::FileChooser();
+		tmpWidget->SetTitle("Open Files ...");
+		tmpWidget->SetValidateLabel("Open");
+		tmpWidget->SetFolder("/");
+		PopUpWidgetPush(tmpWidget);
+		if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserCancel, GetWidgetId(), ednEventPopUpClose) ) {
+			EDN_CRITICAL("link with an entry event");
+		}
+		if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserValidate, GetWidgetId(), ednEventPopUpFileSelected) ) {
+			EDN_CRITICAL("link with an entry event");
+		}
+	} else if (generateEventId == ednEventPopUpClose) {
+		PopUpWidgetPop();
+	} else if (generateEventId == ednEventPopUpFileSelected) {
+		// get widget:
+		ewol::FileChooser * tmpWidget = (ewol::FileChooser*)ewol::widgetManager::Get(widgetID);
+		if (NULL == tmpWidget) {
+			EDN_ERROR("impossible to get pop_upWidget " << widgetID);
+			PopUpWidgetPop();
+			return false;
+		}
+		// get the filename : 
+		etk::String tmpData = tmpWidget->GetCompleateFileName();
+		etk::File myfilename = tmpData;
+		BufferManager *myBufferManager = BufferManager::getInstance();
+		if (false == myBufferManager->Exist(myfilename) ) {
+			int32_t openID = myBufferManager->Open(myfilename);
+			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgCodeViewCurrentChangeBufferId, openID);
+		} else {
+			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgCodeViewCurrentChangeBufferId, myBufferManager->GetId(myfilename));
+		}
+		EDN_DEBUG("Request opening the file : " << tmpData);
+		PopUpWidgetPop();
+	}
+	return true;
+}
 
 
 

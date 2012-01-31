@@ -29,7 +29,7 @@
 #define __TOOL_BAR_H__
 
 
-class ToolBar: public MsgBroadcast
+class ToolBar
 {
 	public:
 		// Constructeur
