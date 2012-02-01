@@ -71,7 +71,8 @@ void APP_Init(int argc, char *argv[])
 	#endif
 	
 	ewol::SetFontFolder("Font");
-	ewol::SetDefaultFont("freefont/FreeMono.ttf", 12);
+	//ewol::SetDefaultFont("freefont/FreeMono.ttf", 12);
+	ewol::SetDefaultFont("freefont/FreeSerif.ttf", 12);
 	//ewol::SetDefaultFont("freefont/FreeMonoBold.ttf", 12);
 	//ewol::SetDefaultFont("ACharmingFont.ttf", 45);
 	//ewol::SetDefaultFont("Monospace/Monospace", 40);
@@ -119,8 +120,7 @@ void APP_Init(int argc, char *argv[])
 		if (false == myBufferManager->Exist(myfile) ) {
 			int32_t idBuffOpened = myBufferManager->Open(myfile);
 			if (1==i) {
-				//MsgBroadcastCore::getInstance()->SendMessage(NULL, EDN_MSG__CURRENT_CHANGE_BUFFER_ID, idBuffOpened);
-				ewol::widgetMessageMultiCast::Add(-1, ednMsgCodeViewCurrentChangeBufferId);
+				ewol::widgetMessageMultiCast::Send(-1, ednMsgCodeViewCurrentChangeBufferId, idBuffOpened);
 			}
 		}
 	}
