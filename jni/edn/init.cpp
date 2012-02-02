@@ -45,7 +45,7 @@ MainWindows * basicWindows = NULL;
 /**
  * @brief main application function Initialisation
  */
-void APP_Init(int argc, char *argv[])
+void APP_Init(void)
 {
 	EDN_INFO("Start Edn");
 	ewol::ChangeSize(800, 600);
@@ -111,27 +111,28 @@ void APP_Init(int argc, char *argv[])
 
 	basicWindows = new MainWindows();
 	
+	if (NULL == basicWindows) {
+		EDN_ERROR("Can not allocate the basic windows");
+		ewol::Stop();
+		return;
+	}
+	// create the specific windows
+	ewol::DisplayWindows(basicWindows);
 	
 	// add files
 	EDN_INFO("show list of files : ");
-	for( int32_t i=1 ; i<argc; i++) {
-		EDN_INFO("need load file : \"" << argv[i] << "\"" );
-		etk::File myfile((char *)argv[i], etk::FILE_TYPE_DIRECT);
+	
+	for( int32_t iii=0 ; iii<ewol::CmdLineNb(); iii++) {
+		EDN_INFO("need load file : \"" << ewol::CmdLineGet(iii) << "\"" );
+		etk::String tmpString = ewol::CmdLineGet(iii);
+		etk::File myfile(tmpString, etk::FILE_TYPE_DIRECT);
 		if (false == myBufferManager->Exist(myfile) ) {
 			int32_t idBuffOpened = myBufferManager->Open(myfile);
-			if (1==i) {
+			if (1==iii) {
 				ewol::widgetMessageMultiCast::Send(-1, ednMsgCodeViewCurrentChangeBufferId, idBuffOpened);
 			}
 		}
 	}
-	if (NULL == basicWindows) {
-		EDN_ERROR("Can not allocate the basic windows");
-		ewol::Stop();
-	}
-	
-	// create the specific windows
-	ewol::DisplayWindows(basicWindows);
-	
 }
 
 
@@ -140,22 +141,22 @@ void APP_Init(int argc, char *argv[])
  */
 void APP_UnInit(void)
 {
-
+	// Remove windows :
+	ewol::DisplayWindows(NULL);
+	
 	//Kill all singleton
 	EDN_INFO("Stop BufferManager");
-	//BufferManager::kill();
+	BufferManager::Kill();
 	EDN_INFO("Stop ColorizeManager");
-	//ColorizeManager::kill();
+	ColorizeManager::Kill();
 	EDN_INFO("Stop Search");
-	//Search::kill();
-	EDN_INFO("Stop Accel key");
-	//AccelKey::kill();
+	Search::Kill();
+	//EDN_INFO("Stop Accel key");
+	//AccelKey::Kill();
+	
 	if (NULL != basicWindows) {
 		delete(basicWindows);
 	}
-
-
 	EDN_INFO("Stop Edn");
-	//return EXIT_SUCCESS;
-} 
+}
 
