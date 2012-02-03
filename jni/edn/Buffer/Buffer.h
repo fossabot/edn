@@ -82,7 +82,11 @@ class Buffer {
 		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		virtual void      SetLineDisplay(uint32_t lineNumber);
 		
-		virtual int32_t   Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY);
+		virtual int32_t   Display(ewol::OObject2DTextColored* OOTextNormal,
+		                          ewol::OObject2DTextColored* OOTextBold,
+		                          ewol::OObject2DTextColored* OOTextItalic,
+		                          ewol::OObject2DTextColored* OOTextBoldItalic,
+		                          ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY);
 		virtual void      ForceReDraw(bool allElement);
 		virtual void      AddChar(char * UTF8data);
 		virtual void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);

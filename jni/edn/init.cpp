@@ -129,7 +129,7 @@ void APP_Init(void)
 		if (false == myBufferManager->Exist(myfile) ) {
 			int32_t idBuffOpened = myBufferManager->Open(myfile);
 			if (1==iii) {
-				ewol::widgetMessageMultiCast::Send(-1, ednMsgCodeViewCurrentChangeBufferId, idBuffOpened);
+				ewol::widgetMessageMultiCast::Send(-1, ednMsgCodeViewCurrentChangeBufferId, idBuffOpened-1);
 			}
 		}
 	}

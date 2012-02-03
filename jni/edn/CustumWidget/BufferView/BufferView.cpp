@@ -37,46 +37,13 @@
 
 BufferView::BufferView(void)
 {
-	m_shawableAreaX = 0;
-	m_shawableAreaY = 0;
-	//ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerNewFile);
 	// Init link with the buffer Manager
-	//m_bufferManager = BufferManager::Get();
-	//m_colorManager = ColorizeManager::Get();
-#if 0
-	m_widget = gtk_drawing_area_new();
-	gtk_widget_set_size_request( m_widget, 250, 100);
-
-	gtk_widget_add_events(	m_widget, 
-								GDK_KEY_PRESS_MASK
-							|	GDK_BUTTON_PRESS_MASK
-							|	GDK_BUTTON_RELEASE_MASK
-							|	GDK_POINTER_MOTION_MASK
-							|	GDK_POINTER_MOTION_HINT_MASK);
-
-#	ifdef USE_GTK_VERSION_3_0
-	g_object_set(m_widget,"can-focus", TRUE, NULL);
-#	elif defined( USE_GTK_VERSION_2_0 )
-	GTK_WIDGET_SET_FLAGS(m_widget, GTK_CAN_FOCUS);
-#	endif
-	// Focus Event
-	g_signal_connect(		G_OBJECT(m_widget), "focus_in_event",		G_CALLBACK(CB_focusGet),         this);
-	g_signal_connect(		G_OBJECT(m_widget), "focus_out_event",		G_CALLBACK(CB_focusLost),        this);
-	// Keyboard Event
-	g_signal_connect_after(	G_OBJECT(m_widget), "key_press_event",		G_CALLBACK(CB_keyboardEvent),    this);
-	g_signal_connect_after(	G_OBJECT(m_widget), "key_release_event",	G_CALLBACK(CB_keyboardEvent),    this);
-	// Mouse Event
-	g_signal_connect(		G_OBJECT(m_widget), "button_press_event",	G_CALLBACK(CB_mouseButtonEvent), this);
-	g_signal_connect(		G_OBJECT(m_widget), "button_release_event",	G_CALLBACK(CB_mouseButtonEvent), this);
-	g_signal_connect(		G_OBJECT(m_widget), "motion_notify_event",	G_CALLBACK(CB_mouseMotionEvent), this);
-	// Display Event
-	g_signal_connect(		G_OBJECT(m_widget), "realize",				G_CALLBACK(CB_displayInit),      this);
-#	ifdef USE_GTK_VERSION_3_0
-	g_signal_connect(		G_OBJECT(m_widget), "draw",					G_CALLBACK(CB_displayDraw),		this);
-#	elif defined( USE_GTK_VERSION_2_0 )
-	g_signal_connect(		G_OBJECT(m_widget), "expose_event",			G_CALLBACK(CB_displayDraw),		this);
-#	endif
-#endif
+	m_bufferManager = BufferManager::getInstance();
+	m_colorManager = ColorizeManager::getInstance();
+	SetCanHaveFocus(true);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferListChange);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferState);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
 	m_selectedID = -1;
 
 }
@@ -93,25 +60,105 @@ GtkWidget * BufferView::GetMainWidget(void)
 */
 bool BufferView::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
-	/*
-	switch (id)
-	{
-		case EDN_MSG__BUFFER_CHANGE_CURRENT:
-			m_selectedID = dataID;
-		case EDN_MSG__BUFFER_CHANGE_STATE:
-		case EDN_MSG__BUFFER_CHANGE_NAME:
-		case EDN_MSG__BUFFER_CHANGE_MODIFY:
-			// change Title :
-			//gtk_widget_queue_draw(m_widget);
-			break;
-		case EDN_MSG__USER_DISPLAY_CHANGE:
-			// Redraw all the display ...
-			//gtk_widget_queue_draw(m_widget);
-			break;
+	if (generateEventId == ednMsgBufferListChange) {
+		OnRegenerateDisplay();
+	}else if (ednMsgBufferId == ednMsgBufferListChange) {
+		OnRegenerateDisplay();
+	}else if (ednMsgBufferState == ednMsgBufferListChange) {
+		OnRegenerateDisplay();
 	}
-	*/
 	return false;
 }
+
+
+color_ts BufferView::GetBasicBG(void)
+{
+	return m_colorManager->Get(COLOR_LIST_BG_1);
+}
+
+uint32_t BufferView::GetNuberOfColomn(void)
+{
+	return 1;
+}
+
+bool BufferView::GetTitle(int32_t colomn, etk::String &myTitle, color_ts &fg, color_ts &bg)
+{
+	myTitle = "Buffers : ";
+	return true;
+}
+
+uint32_t BufferView::GetNuberOfRaw(void)
+{
+	if (NULL != m_bufferManager) {
+		return m_bufferManager->Size();
+	}
+	return 0;
+}
+
+bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::String &myTextToWrite, color_ts &fg, color_ts &bg)
+{
+	etk::File name;
+	bool isModify;
+	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;
+	basicColor_te selectBG = COLOR_LIST_BG_1;
+	if (m_bufferManager->Exist(raw)) {
+		isModify = m_bufferManager->Get(raw)->IsModify();
+		name = m_bufferManager->Get(raw)->GetFileName();
+		char *tmpModify = (char*)" ";
+		if (true == isModify) {
+			tmpModify = (char*)"M";
+		}
+		char name2[1024] = "";
+		sprintf(name2, "[%2d](%s) %s", raw, tmpModify, name.GetShortFilename().c_str() );
+		
+		myTextToWrite = name2;
+		
+		if (true == isModify) {
+			selectFG = COLOR_LIST_TEXT_MODIFY;
+		} else {
+			selectFG = COLOR_LIST_TEXT_NORMAL;
+		}
+		if (raw%2==0) {
+			selectBG = COLOR_LIST_BG_1;
+		} else {
+			selectBG = COLOR_LIST_BG_2;
+		}
+		if (m_selectedID == raw) {
+			selectBG = COLOR_LIST_BG_SELECTED;
+		}
+	} else {
+		myTextToWrite = "ERROR";
+	}
+	fg = m_colorManager->Get(selectFG);
+	bg = m_colorManager->Get(selectBG);
+	return true;
+}
+
+bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, etkFloat_t x, etkFloat_t y)
+{
+	if (typeEvent == ewol::EVENT_INPUT_TYPE_SINGLE) {
+		EDN_INFO("Event on List : IdInput=" << IdInput << " colomn=" << colomn << " raw=" << raw );
+		int32_t selectBuf = m_bufferManager->WitchBuffer(raw+1);
+		if ( 0 <= selectBuf) {
+			m_selectedID = raw;
+		}
+	}
+	if (typeEvent == ewol::EVENT_INPUT_TYPE_DOUBLE) {
+		EDN_INFO("Event Double on List : IdInput=" << IdInput << " colomn=" << colomn << " raw=" << raw );
+		int32_t selectBuf = m_bufferManager->WitchBuffer(raw+1);
+		//EDN_INFO(" plop %d / %d = %d ==> %d", (uint32_t)event->y, fontHeight, ((uint32_t)event->y / fontHeight), selectBuf);
+		if ( 0 <= selectBuf) {
+			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, selectBuf);
+		}
+	}
+	OnRegenerateDisplay();
+	return false;
+}
+
+
+
+
+
 #if 0
 
 gboolean BufferView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data)

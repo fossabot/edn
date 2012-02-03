@@ -238,12 +238,14 @@ void BufferText::SetLineDisplay(uint32_t lineNumber)
 
 }
 
+#define SEPARATION_SIZE_LINE_NUMBER         (3)
+
 void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY)
 {
 	char tmpLineNumber[50];
 	sprintf(tmpLineNumber, myPrint, lineNumber);
 	OOColored->SetColor(myColorManager->Get(COLOR_LIST_BG_2));
-	OOColored->Rectangle( 0, positionY, 68, sizeY);
+	OOColored->Rectangle( 0, positionY, sizeX+0.5*SEPARATION_SIZE_LINE_NUMBER, sizeY);
 	OOText->SetColor(myColorManager->Get(COLOR_CODE_LINE_NUMBER));
 	OOText->TextAdd(1, positionY, tmpLineNumber, -1);
 }
@@ -291,6 +293,11 @@ void BufferText::UpdatePointerNumber(void)
 	}
 }
 */
+
+// TODO : Remove this ... it is really bad...
+
+static int32_t g_basicfontId = 0;
+
 /**
  * @brief Display the curent buffer with all the probematic imposed by the xharset and the user contraint.
  *
@@ -299,13 +306,19 @@ void BufferText::UpdatePointerNumber(void)
  * @return 
  *
  */
-int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
+int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
+                            ewol::OObject2DTextColored* OOTextBold,
+                            ewol::OObject2DTextColored* OOTextItalic,
+                            ewol::OObject2DTextColored* OOTextBoldItalic,
+                            ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
 {
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
 	int32_t selHave;
 	
-	int32_t fontId = ewol::GetDefaultFontId();
+	int32_t fontId = OOTextNormal->GetFontID();
+	// TODO : Remove this ...
+	g_basicfontId = fontId;
 	int32_t letterWidth = ewol::GetWidth(fontId, "A");
 	int32_t letterHeight = ewol::GetHeight(fontId);
 	
@@ -341,9 +354,10 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	color_ts &  myColorSpace      = myColorManager->Get(COLOR_CODE_SPACE);
 	color_ts &  myColorTab        = myColorManager->Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
+	ewol::OObject2DTextColored* OOTextSelected = NULL;
 	
 	int mylen = m_EdnBuf.Size();
-	int32_t x_base=nbColoneForLineNumber*letterWidth + 3;
+	int32_t x_base=nbColoneForLineNumber*letterWidth;
 	int32_t idX = 0;
 	
 	OOColored->SetColor(myColorManager->Get(COLOR_CODE_BASIC_BG));
@@ -369,8 +383,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 	drawClipping.w = sizeX;
 	drawClipping.h = sizeY;
 	
-	DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
-	int32_t pixelX = x_base;
+	DrawLineNumber(OOTextNormal, OOColored, x_base, sizeY, myPrint, currentLineID, y);
+	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
 		//EDN_DEBUG("diplay element=" << iii);
 		int displaywidth;
@@ -411,11 +425,24 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 					haveBg = selectColor->HaveBg();
 				}
 			}
-			OOText->SetColor(selectColor->GetFG());
 			coord2D_ts textPos;
 			textPos.x = pixelX-m_displayStartPixelX;
 			textPos.y = y;
-			drawSize = OOText->TextAdd(textPos, drawClipping, displayChar);
+			if (true == selectColor->GetItalic() ) {
+				if (true == selectColor->GetBold() ) {
+					OOTextSelected = OOTextBoldItalic;
+				} else {
+					OOTextSelected = OOTextItalic;
+				}
+			} else {
+				if (true == selectColor->GetBold() ) {
+					OOTextSelected = OOTextBold;
+				} else {
+					OOTextSelected = OOTextNormal;
+				}
+			}
+			OOTextSelected->SetColor(selectColor->GetFG());
+			drawSize = OOTextSelected->TextAdd(textPos, drawClipping, displayChar);
 			if (true == haveBg ) {
 				OOColored->Rectangle( pixelX, y, drawSize, letterHeight, drawClipping);
 			}
@@ -430,11 +457,11 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 		// move to next line ...
 		if (currentChar=='\n') {
 			idX =0;
-			pixelX = x_base;
+			pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 			y += letterHeight;
 			displayLines++;
 			currentLineID++;
-			DrawLineNumber(OOText, OOColored, sizeX, sizeY, myPrint, currentLineID, y);
+			DrawLineNumber(OOTextNormal, OOColored, x_base, sizeY, myPrint, currentLineID, y);
 		}
 	}
 	// special case : the cursor is at the end of the buffer...
@@ -453,9 +480,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DC
 
 int32_t BufferText::GetMousePosition(int32_t width, int32_t height)
 {
-	int32_t fontId = ewol::GetDefaultFontId();
-	int32_t letterWidth = ewol::GetWidth(fontId, "9");
-	int32_t letterHeight = ewol::GetHeight(fontId);
+	int32_t letterWidth = ewol::GetWidth(g_basicfontId, "9");
+	int32_t letterHeight = ewol::GetHeight(g_basicfontId);
 	
 	int32_t lineOffset = height / letterHeight;
 	
@@ -479,7 +505,7 @@ int32_t BufferText::GetMousePosition(int32_t width, int32_t height)
 	int32_t iii, new_i;
 	
 	int mylen = m_EdnBuf.Size();
-	int32_t x_base=nbColoneForLineNumber*letterWidth + 3;
+	int32_t x_base=nbColoneForLineNumber*letterWidth + SEPARATION_SIZE_LINE_NUMBER;
 	int32_t idX = 0;
 	
 	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
@@ -499,7 +525,7 @@ int32_t BufferText::GetMousePosition(int32_t width, int32_t height)
 		new_i = iii;
 		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
 		if (currentChar!='\n') {
-			int32_t drawSize = ewol::GetWidth(fontId, displayChar);
+			int32_t drawSize = ewol::GetWidth(g_basicfontId, displayChar);
 			EDN_DEBUG("    Element : " << currentChar << "=\"" << (char)currentChar << "\" display offset=" << pixelX << "px  width=" << drawSize << "px");
 			pixelX += drawSize;
 			if (width <= pixelX) {

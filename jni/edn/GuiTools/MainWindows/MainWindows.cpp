@@ -49,6 +49,7 @@
 #define __class__	"MainWindows"
 
 
+const char * const ednEventNewFile = "edn-New-File";
 const char * const ednEventOpenFile = "edn-Open-File";
 const char * const ednEventCloseFile = "edn-Close-File";
 const char * const ednEventSaveFile = "edn-Save-File";
@@ -64,12 +65,19 @@ MainWindows::MainWindows(void)
 	ewol::Button * myButton = NULL;
 	ewol::Label * myLabel = NULL;
 	CodeView * myCodeView = NULL;
+	BufferView * myBufferView = NULL;
 	
 	mySizerVert = new ewol::SizerVert();
 	SetSubWidget(mySizerVert);
 	
 		mySizerHori = new ewol::SizerHori();
 		mySizerVert->SubWidgetAdd(mySizerHori);
+			
+			myButton = new ewol::Button("New");
+			mySizerHori->SubWidgetAdd(myButton);
+			if (false == myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ednEventNewFile) ) {
+				EDN_CRITICAL("link with an entry event");
+			}
 			
 			myButton = new ewol::Button("Open");
 			mySizerHori->SubWidgetAdd(myButton);
@@ -103,11 +111,22 @@ MainWindows::MainWindows(void)
 		
 		mySizerHori = new ewol::SizerHori();
 		mySizerVert->SubWidgetAdd(mySizerHori);
+			myBufferView = new BufferView();
+			myBufferView->SetExpendX(false);
+			myBufferView->SetExpendY(true);
+			myBufferView->SetFillX(true);
+			myBufferView->SetFillY(true);
+			mySizerHori->SubWidgetAdd(myBufferView);
 			myCodeView = new CodeView();
 			myCodeView->SetExpendX(true);
 			myCodeView->SetExpendY(true);
 			myCodeView->SetFillX(true);
 			myCodeView->SetFillY(true);
+			myCodeView->SetFontSize(11);
+			myCodeView->SetFontNameNormal(    "freefont/FreeMono.ttf");
+			myCodeView->SetFontNameBold(      "freefont/FreeMonoBold.ttf");
+			myCodeView->SetFontNameItalic(    "freefont/FreeMonoOblique.ttf");
+			myCodeView->SetFontNameBoldItalic("freefont/FreeMonoBoldOblique.ttf");
 			mySizerHori->SubWidgetAdd(myCodeView);
 			
 }
@@ -123,7 +142,12 @@ MainWindows::~MainWindows(void)
 bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y)
 {
 	EDN_INFO("Receive Event from the main windows ... : widgetid=" << widgetID << "\"" << generateEventId << "\" ==> data=\"" << data << "\"" );
-	if (generateEventId == ednEventOpenFile) {
+	// newFile section ...
+	if (generateEventId == ednEventNewFile) {
+		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiNew);
+	}
+	// Open file Section ...
+	else if (generateEventId == ednEventOpenFile) {
 		ewol::FileChooser* tmpWidget = new ewol::FileChooser();
 		tmpWidget->SetTitle("Open Files ...");
 		tmpWidget->SetValidateLabel("Open");

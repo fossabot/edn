@@ -67,7 +67,11 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
-int32_t BufferEmpty::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
+int32_t BufferEmpty::Display(ewol::OObject2DTextColored* OOTextNormal,
+                             ewol::OObject2DTextColored* OOTextBold,
+                             ewol::OObject2DTextColored* OOTextItalic,
+                             ewol::OObject2DTextColored* OOTextBoldItalic,
+                             ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
 {
 	ColorizeManager * myColorManager = ColorizeManager::getInstance();
 	// Get color : 
@@ -75,7 +79,7 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2D
 	//drawer.Flush();
 	
 	
-	if (NULL == OOText) {
+	if (NULL == OOTextNormal) {
 		EDN_ERROR("Input VALUE is NULL");
 		return ERR_FAIL;
 	}
@@ -83,14 +87,16 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2D
 		EDN_ERROR("Input VALUE is NULL");
 		return ERR_FAIL;
 	}
+	int32_t fontId = OOTextNormal->GetFontID();
+	int32_t letterHeight = ewol::GetHeight(fontId);
 	
 	myColor = myColorManager->Get("normal");
-	OOText->SetColor(myColor->GetFG());
-	OOText->TextAdd(20, 20, "edn - Editeur De N'ours, l'Editeur Desoxyribo-Nucleique", sizeX);
+	OOTextNormal->SetColor(myColor->GetFG());
+	OOTextNormal->TextAdd(20, 20, "edn - Editeur De N'ours, l'Editeur Desoxyribo-Nucleique", sizeX);
 	
 	myColor = myColorManager->Get("commentDoxygen");
-	OOText->SetColor(myColor->GetFG());
-	OOText->TextAdd(20, 50, "No Buffer Availlable to display", sizeX);
+	OOTextNormal->SetColor(myColor->GetFG());
+	OOTextNormal->TextAdd(20, 20 + letterHeight*1.30, "No Buffer Availlable to display", sizeX);
 	
 	
 	color_ts bgColor;  //!< Text color

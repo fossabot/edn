@@ -46,11 +46,14 @@ BufferManager::BufferManager(void)
 	// nothing to do ...
 	BufferNotExiste = new BufferEmpty();
 	m_idSelected = -1;
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiNew);
+	/*
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerNewFile);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerSaveAll);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerCloseAll);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerClose);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerSave);
+	*/
 }
 
 /**
@@ -76,6 +79,15 @@ BufferManager::~BufferManager(void)
 
 bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
+	if (generateEventId == ednMsgGuiNew) {
+		int32_t newOne = Create();
+		if (-1 != newOne) {
+			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, newOne);
+			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferListChange);
+		}
+	} else if (generateEventId == NULL) {
+	
+	}
 	/*
 	switch (id)
 	{

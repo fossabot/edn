@@ -46,6 +46,12 @@
 CodeView::CodeView(void)
 {
 	m_label = "CodeView is disable ...";
+	m_fontNormal = -1;
+	m_fontBold = -1;
+	m_fontItalic = -1;
+	m_fontBoldItalic = -1;
+	m_fontSize = 15;
+	
 	m_bufferID = -1;
 	m_buttunOneSelected = false;
 	
@@ -63,6 +69,10 @@ CodeView::CodeView(void)
 	m_textColorBg.blue  = 0.0;
 	m_textColorBg.alpha = 0.25;
 	SetCanHaveFocus(true);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
+	
+	
+	//old
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentChangeBufferId);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSave);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSaveAs);
@@ -101,37 +111,24 @@ bool CodeView::CalculateMinSize(void)
 void CodeView::OnRegenerateDisplay(void)
 {
 	// create tmp object :
-	ewol::OObject2DTextColored* myOObjectText     = new ewol::OObject2DTextColored("", -1);
+	ewol::OObject2DTextColored* myOObjectTextNormal     = new ewol::OObject2DTextColored(m_fontNormal);
+	ewol::OObject2DTextColored* myOObjectTextBold       = new ewol::OObject2DTextColored(m_fontBold);
+	ewol::OObject2DTextColored* myOObjectTextItalic     = new ewol::OObject2DTextColored(m_fontItalic);
+	ewol::OObject2DTextColored* myOObjectTextBoldItalic = new ewol::OObject2DTextColored(m_fontBoldItalic);
 	ewol::OObject2DColored*     myOObjectsColored = new ewol::OObject2DColored();
 	
 	// generate the objects :
 	//m_bufferID = 0;
-	m_bufferManager->Get(m_bufferID)->Display(myOObjectText, myOObjectsColored, m_size.x, m_size.y);
+	m_bufferManager->Get(m_bufferID)->Display(myOObjectTextNormal, myOObjectTextBold, myOObjectTextItalic, myOObjectTextBoldItalic, myOObjectsColored, m_size.x, m_size.y);
 	
 	// clean the object list ...
 	ClearOObjectList();
 	// add generated element
-	AddOObject(myOObjectsColored, "CodeViewBackground");
-	AddOObject(myOObjectText,     "CodeViewText");
-}
-
-bool CodeView::OnEventArea(const char * generateEventId, etkFloat_t x, etkFloat_t y)
-{
-/*
-	//bool eventIsOK = false;
-	//EWOL_DEBUG("Receive event : \"" << generateEventId << "\"");
-	if(ewolEventButtonPressed == generateEventId) {
-		EWOL_INFO("BT pressed ... " << m_label);
-		//eventIsOK = true;
-		ewol::widgetManager::FocusKeep(this);
-	} else if(ewolEventButtonEnter == generateEventId) {
-		OnRegenerateDisplay();
-	}
-	//return eventIsOK;
-*/
-	// in every case this not stop the propagation of the event
-	return false;
-	// if overwrited... you can ...
+	AddOObject(myOObjectsColored,       "CodeViewBackground");
+	AddOObject(myOObjectTextNormal,     "CodeViewTextNormal");
+	AddOObject(myOObjectTextBold,       "CodeViewTextBold");
+	AddOObject(myOObjectTextItalic,     "CodeViewTextItalic");
+	AddOObject(myOObjectTextBoldItalic, "CodeViewTextBoldItalic");
 }
 
 
@@ -239,13 +236,13 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 			ewol::widgetManager::FocusKeep(this);
 		}
 	}
-	if (4 == IdInput && ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent)
+	if (4 == IdInput && ewol::EVENT_INPUT_TYPE_UP == typeEvent)
 	{
 		//EDN_INFO("mouse-event GDK_SCROLL_UP");
 		m_bufferManager->Get(m_bufferID)->ScrollUp();
 		OnRegenerateDisplay();
 		ewol::widgetManager::FocusKeep(this);
-	} else if (5 == IdInput && ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent)
+	} else if (5 == IdInput && ewol::EVENT_INPUT_TYPE_UP == typeEvent)
 	{
 		//EDN_INFO("mouse-event GDK_SCROLL_DOWN");
 		m_bufferManager->Get(m_bufferID)->ScrollDown();
@@ -257,18 +254,29 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 
 
 
-bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
+bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y)
 {
 	EDN_DEBUG("Extern Event : " << widgetID << "  type : " << generateEventId << "  position(" << x << "," << y << ")");
 	
-	if( ednMsgCodeViewCurrentChangeBufferId == generateEventId) {
+	
+	
+	if( ednMsgBufferId == generateEventId) {
 		int32_t bufferID = 0;
-		sscanf(eventExternId, "%d", &bufferID);
+		sscanf(data, "%d", &bufferID);
+		EDN_INFO("Select a new Buffer ... " << bufferID);
+		m_bufferID = bufferID;
+		m_bufferManager->Get(m_bufferID)->ForceReDraw(true);
+		// TODO : need to update the state of the file and the filenames ...
+	}
+	// old
+	else if( ednMsgCodeViewCurrentChangeBufferId == generateEventId) {
+		int32_t bufferID = 0;
+		sscanf(data, "%d", &bufferID);
 		EDN_INFO("Select a new Buffer ... " << bufferID);
 		m_bufferID = bufferID;
 		m_bufferManager->Get(m_bufferID)->ForceReDraw(true);
 		// request the display of the curent Editor
-		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferChangeCurrent, (char*)eventExternId);
+		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferChangeCurrent, (char*)data);
 		
 	} else if (ednMsgCodeViewCurrentSave == generateEventId) {
 	
@@ -420,4 +428,39 @@ void CodeView::OnLostFocus(void)
 	EDN_INFO("Focus - out");
 }
 
+void CodeView::SetFontSize(int32_t size)
+{
+	m_fontSize = size;
+}
 
+void CodeView::SetFontNameNormal(etk::String fontName)
+{
+	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
+	if (fontID >= 0) {
+		m_fontNormal = fontID;
+	}
+}
+
+void CodeView::SetFontNameBold(etk::String fontName)
+{
+	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
+	if (fontID >= 0) {
+		m_fontBold = fontID;
+	}
+}
+
+void CodeView::SetFontNameItalic(etk::String fontName)
+{
+	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
+	if (fontID >= 0) {
+		m_fontItalic = fontID;
+	}
+}
+
+void CodeView::SetFontNameBoldItalic(etk::String fontName)
+{
+	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
+	if (fontID >= 0) {
+		m_fontBoldItalic = fontID;
+	}
+}

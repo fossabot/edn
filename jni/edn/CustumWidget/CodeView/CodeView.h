@@ -42,9 +42,9 @@ class CodeView :public ewol::Widget
 		virtual ~CodeView(void);
 		virtual bool   CalculateMinSize(void);
 	private:
-		etk::String    m_label;
-		color_ts       m_textColorFg;  //!< Text color
-		color_ts       m_textColorBg;  //!< Background color
+		etk::String         m_label;
+		color_ts            m_textColorFg;  //!< Text color
+		color_ts            m_textColorBg;  //!< Background color
 		BufferManager *     m_bufferManager;
 		ColorizeManager *   m_colorManager;
 		int32_t             m_bufferID;
@@ -54,50 +54,23 @@ class CodeView :public ewol::Widget
 		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
 	public:
 		virtual bool OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, etkFloat_t x, etkFloat_t y);
-		virtual bool OnEventArea(const char * generateEventId, etkFloat_t x, etkFloat_t y);
 		virtual bool OnEventKb(ewol::eventKbType_te typeEvent, char UTF8_data[UTF8_MAX_SIZE]);
 		virtual bool OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveType_te moveTypeEvent);
 		virtual void OnGetFocus(void);
 		virtual void OnLostFocus(void);
-};
-
-
-
-#if 0
-class CodeView : public MsgBroadcast
-{
-	public:
-		// Constructeur
-		CodeView(void);
-		~CodeView(void);
-		void OnMessage(int32_t id, int32_t dataID);
-		/*
-		GtkWidget	*GetMainWidget(void);
-		// sur : GTK+ callback :
-		static gboolean		CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data);
-		static gboolean		CB_displayInit( GtkWidget *widget, gpointer data);
-		static gint			CB_focusGet( GtkWidget *widget, GdkEventFocus *event, gpointer data);
-		static gint			CB_focusLost( GtkWidget *widget, GdkEventFocus *event, gpointer data);
-		static gint			CB_keyboardEvent( GtkWidget *widget, GdkEventKey *event, gpointer data);
-		static gint			CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, gpointer data);
-		static gint			CB_mouseMotionEvent( GtkWidget *widget, GdkEventMotion *event, gpointer data);
-		static gint			CB_mouseScrollEvent( GtkWidget *widget, GdkEventScroll *event, gpointer data);
-		*/
-
 	private:
-		// main windows widget : 
-		//GtkWidget *         m_widget;
-		// récupération des proprieter général...
-		BufferManager *     m_bufferManager;
-		ColorizeManager *   m_colorManager;
-		int32_t             m_shawableAreaX;
-		int32_t             m_shawableAreaY;
-		int32_t             m_bufferID;
-		bool                m_buttunOneSelected;
+		int32_t m_fontSize;
+		int32_t m_fontNormal;
+		int32_t m_fontBold;
+		int32_t m_fontItalic;
+		int32_t m_fontBoldItalic;
+	public:
+		void SetFontSize(int32_t size);
+		void SetFontNameNormal(etk::String fontName);
+		void SetFontNameBold(etk::String fontName);
+		void SetFontNameItalic(etk::String fontName);
+		void SetFontNameBoldItalic(etk::String fontName);
 };
 
 #endif
-
-#endif
-
 

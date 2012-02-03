@@ -30,10 +30,11 @@
 #include <BufferManager.h>
 #include <Display.h>
 #include <MsgBroadcast.h>
+#include <ewol/widget/List.h>
 
 
 
-class BufferView : public ewol::Widget
+class BufferView : public ewol::List
 {
 	public:
 		// Constructeur
@@ -41,34 +42,19 @@ class BufferView : public ewol::Widget
 		~BufferView(void);
 		//GtkWidget	*GetMainWidget(void);
 		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
-		/*
-		// sur : GTK+ callback :
-		static gboolean	CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, gpointer data);
-		static gboolean	CB_displayInit( GtkWidget *widget, gpointer data);
-		static gint		CB_focusGet( GtkWidget *widget, GdkEventFocus *event, gpointer data);
-		static gint		CB_focusLost( GtkWidget *widget, GdkEventFocus *event, gpointer data);
-		static gint		CB_keyboardEvent( GtkWidget *widget, GdkEventKey *event, gpointer data);
-		static gint		CB_mouseButtonEvent(GtkWidget *widget, GdkEventButton *event, gpointer data);
-		static gint		CB_mouseMotionEvent( GtkWidget *widget, GdkEventMotion *event, gpointer data);
-		static void		CB_EventOnBufferManager(gpointer data);
-
-		static void     OnPopupEventShow(GtkWidget *menuitem, gpointer data);
-		static void     OnPopupEventClose(GtkWidget *menuitem, gpointer data);
-		static void     OnPopupEventSave(GtkWidget *menuitem, gpointer data);
-		static void     OnPopupEventSaveAs(GtkWidget *menuitem, gpointer data);
-		*/
-	
+	protected:
+		// function call to display the list :
+		virtual color_ts GetBasicBG(void);
+		virtual uint32_t GetNuberOfColomn(void);
+		virtual bool GetTitle(int32_t colomn, etk::String &myTitle, color_ts &fg, color_ts &bg);
+		virtual uint32_t GetNuberOfRaw(void);
+		virtual bool GetElement(int32_t colomn, int32_t raw, etk::String &myTextToWrite, color_ts &fg, color_ts &bg);
+		virtual bool OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, etkFloat_t x, etkFloat_t y);
 	private:
-		//void        ViewPopupMenu(GtkWidget *parrent, GdkEventButton *event, int32_t BufferID);
-		// main windows widget : 
-		//GtkWidget *           m_widget;
 		// récupération des proprieter général...
 		BufferManager *       m_bufferManager;
 		ColorizeManager *     m_colorManager;
-		int32_t               m_shawableAreaX;
-		int32_t               m_shawableAreaY;
 		int32_t               m_selectedID;
-		int32_t               m_contectMenuSelectID;
 };
 
 

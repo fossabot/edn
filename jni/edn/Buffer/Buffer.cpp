@@ -147,7 +147,10 @@ void Buffer::SetLineDisplay(uint32_t lineNumber)
  * @return ---
  *
  */
-int32_t Buffer::Display(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
+int32_t Buffer::Display(ewol::OObject2DTextColored* OOTextNormal,
+                        ewol::OObject2DTextColored* OOTextBold,
+                        ewol::OObject2DTextColored* OOTextItalic,
+                        ewol::OObject2DTextColored* OOTextBoldItalic, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
 {
 	return ERR_NONE;
 }
