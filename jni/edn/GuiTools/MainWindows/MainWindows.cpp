@@ -171,15 +171,8 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		}
 		// get the filename : 
 		etk::String tmpData = tmpWidget->GetCompleateFileName();
-		etk::File myfilename = tmpData;
-		BufferManager *myBufferManager = BufferManager::getInstance();
-		if (false == myBufferManager->Exist(myfilename) ) {
-			int32_t openID = myBufferManager->Open(myfilename);
-			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgCodeViewCurrentChangeBufferId, openID);
-		} else {
-			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgCodeViewCurrentChangeBufferId, myBufferManager->GetId(myfilename));
-		}
 		EDN_DEBUG("Request opening the file : " << tmpData);
+		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData.c_str());
 		PopUpWidgetPop();
 	}
 	return true;

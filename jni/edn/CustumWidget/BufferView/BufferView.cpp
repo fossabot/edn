@@ -141,13 +141,6 @@ bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,
 		int32_t selectBuf = m_bufferManager->WitchBuffer(raw+1);
 		if ( 0 <= selectBuf) {
 			m_selectedID = raw;
-		}
-	}
-	if (typeEvent == ewol::EVENT_INPUT_TYPE_DOUBLE) {
-		EDN_INFO("Event Double on List : IdInput=" << IdInput << " colomn=" << colomn << " raw=" << raw );
-		int32_t selectBuf = m_bufferManager->WitchBuffer(raw+1);
-		//EDN_INFO(" plop %d / %d = %d ==> %d", (uint32_t)event->y, fontHeight, ((uint32_t)event->y / fontHeight), selectBuf);
-		if ( 0 <= selectBuf) {
 			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, selectBuf);
 		}
 	}

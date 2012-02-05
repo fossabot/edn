@@ -47,6 +47,7 @@ BufferManager::BufferManager(void)
 	BufferNotExiste = new BufferEmpty();
 	m_idSelected = -1;
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiNew);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgOpenFile);
 	/*
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerNewFile);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerSaveAll);
@@ -77,7 +78,7 @@ BufferManager::~BufferManager(void)
 }
 
 
-bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
+bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y)
 {
 	if (generateEventId == ednMsgGuiNew) {
 		int32_t newOne = Create();
@@ -85,8 +86,15 @@ bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateE
 			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, newOne);
 			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferListChange);
 		}
-	} else if (generateEventId == NULL) {
-	
+	} else if (generateEventId == ednMsgOpenFile) {
+		if (NULL != data) {
+			etk::File myFile(data, etk::FILE_TYPE_DIRECT);
+			int32_t newOne = Open(myFile);
+			if (-1 != newOne) {
+				ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, newOne);
+				ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferListChange);
+			}
+		}
 	}
 	/*
 	switch (id)
@@ -214,10 +222,7 @@ int32_t BufferManager::Open(etk::File &myFile)
 	Buffer *myBuffer = new BufferText(myFile);
 	// Add at the list of element
 	listBuffer.PushBack(myBuffer);
-	int32_t basicID = listBuffer.Size() - 1;
-	//SendMessage(EDN_MSG__BUFFER_ADD, basicID);
-	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferAdd);
-	return basicID;
+	return listBuffer.Size() - 1;
 }
 
 

@@ -22,7 +22,7 @@
  *
  *******************************************************************************
  */
- 
+
 #ifndef __BUFFER_MANAGER_H__
 #define __BUFFER_MANAGER_H__
 
@@ -44,12 +44,14 @@ class BufferManager: public etk::Singleton<BufferManager>, public ewol::Widget
 
 	public:
 		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
-		
+	private:
 		// return the ID of the buffer allocated
 		// create a buffer with no element
 		int32_t     Create(void);
 		// open curent filename
 		int32_t     Open(etk::File &myFile);
+		bool        Remove(int32_t BufferID);
+	public:
 		int32_t     GetSelected(void) { return m_idSelected;};
 		void        SetSelected(int32_t id) {m_idSelected = id;};
 		Buffer *    Get(int32_t BufferID);
@@ -60,7 +62,6 @@ class BufferManager: public etk::Singleton<BufferManager>, public ewol::Widget
 		uint32_t    Size(void);
 		int32_t     WitchBuffer(int32_t iEmeElement);
 		
-		bool        Remove(int32_t BufferID);
 
 	private:
 		

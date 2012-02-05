@@ -96,7 +96,7 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored* OOTextNormal,
 	
 	myColor = myColorManager->Get("commentDoxygen");
 	OOTextNormal->SetColor(myColor->GetFG());
-	OOTextNormal->TextAdd(20, 20 + letterHeight*1.30, "No Buffer Availlable to display", sizeX);
+	OOTextNormal->TextAdd(20, (int32_t)(20 + letterHeight*1.30), "No Buffer Availlable to display", sizeX);
 	
 	
 	color_ts bgColor;  //!< Text color

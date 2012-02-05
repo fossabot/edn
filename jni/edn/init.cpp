@@ -47,7 +47,7 @@ MainWindows * basicWindows = NULL;
  */
 void APP_Init(void)
 {
-	EDN_INFO("Start Edn");
+	EDN_INFO("==> Init Edn (START)");
 	ewol::ChangeSize(800, 600);
 
 	// set the default Path of the application : 
@@ -124,15 +124,9 @@ void APP_Init(void)
 	
 	for( int32_t iii=0 ; iii<ewol::CmdLineNb(); iii++) {
 		EDN_INFO("need load file : \"" << ewol::CmdLineGet(iii) << "\"" );
-		etk::String tmpString = ewol::CmdLineGet(iii);
-		etk::File myfile(tmpString, etk::FILE_TYPE_DIRECT);
-		if (false == myBufferManager->Exist(myfile) ) {
-			int32_t idBuffOpened = myBufferManager->Open(myfile);
-			if (1==iii) {
-				ewol::widgetMessageMultiCast::Send(-1, ednMsgCodeViewCurrentChangeBufferId, idBuffOpened-1);
-			}
-		}
+		ewol::widgetMessageMultiCast::Send(-1, ednMsgOpenFile, ewol::CmdLineGet(iii).c_str());
 	}
+	EDN_INFO("==> Init Edn (END)");
 }
 
 
@@ -141,6 +135,7 @@ void APP_Init(void)
  */
 void APP_UnInit(void)
 {
+	EDN_INFO("==> Un-Init Edn (START)");
 	// Remove windows :
 	ewol::DisplayWindows(NULL);
 	
@@ -157,6 +152,7 @@ void APP_UnInit(void)
 	if (NULL != basicWindows) {
 		delete(basicWindows);
 	}
-	EDN_INFO("Stop Edn");
+	basicWindows = NULL;
+	EDN_INFO("==> Un-Init Edn (END)");
 }
 
