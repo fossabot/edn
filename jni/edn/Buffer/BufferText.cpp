@@ -310,7 +310,9 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
                             ewol::OObject2DTextColored* OOTextBold,
                             ewol::OObject2DTextColored* OOTextItalic,
                             ewol::OObject2DTextColored* OOTextBoldItalic,
-                            ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY)
+                            ewol::OObject2DColored* OOColored,
+                            int32_t offsetX, int32_t offsetY,
+                            int32_t sizeX, int32_t sizeY)
 {
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
@@ -321,6 +323,12 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	g_basicfontId = fontId;
 	int32_t letterWidth = ewol::GetWidth(fontId, "A");
 	int32_t letterHeight = ewol::GetHeight(fontId);
+	
+	m_displayStartLineId = offsetY / letterHeight;
+	
+	// update the display position with the scroll ofset : 
+	m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
+	
 	
 	// update the number of element that can be displayed
 	m_displaySize.x = (sizeX/letterWidth) + 1 - nbColoneForLineNumber;

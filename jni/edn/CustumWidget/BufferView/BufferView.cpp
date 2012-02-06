@@ -61,11 +61,11 @@ GtkWidget * BufferView::GetMainWidget(void)
 bool BufferView::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
 	if (generateEventId == ednMsgBufferListChange) {
-		OnRegenerateDisplay();
+		MarkToReedraw();
 	}else if (ednMsgBufferId == ednMsgBufferListChange) {
-		OnRegenerateDisplay();
+		MarkToReedraw();
 	}else if (ednMsgBufferState == ednMsgBufferListChange) {
-		OnRegenerateDisplay();
+		MarkToReedraw();
 	}
 	return false;
 }
@@ -144,7 +144,7 @@ bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,
 			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, selectBuf);
 		}
 	}
-	OnRegenerateDisplay();
+	MarkToReedraw();
 	return false;
 }
 

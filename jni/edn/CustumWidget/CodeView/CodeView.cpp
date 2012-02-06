@@ -119,7 +119,8 @@ void CodeView::OnRegenerateDisplay(void)
 	
 	// generate the objects :
 	//m_bufferID = 0;
-	m_bufferManager->Get(m_bufferID)->Display(myOObjectTextNormal, myOObjectTextBold, myOObjectTextItalic, myOObjectTextBoldItalic, myOObjectsColored, m_size.x, m_size.y);
+	m_bufferManager->Get(m_bufferID)->Display(myOObjectTextNormal, myOObjectTextBold, myOObjectTextItalic, myOObjectTextBoldItalic, myOObjectsColored, 
+	                                          m_originScrooledX, m_originScrooledY, m_size.x, m_size.y);
 	
 	// clean the object list ...
 	ClearOObjectList();
@@ -137,7 +138,7 @@ bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, char UTF8_data[UTF8_MAX
 	//EDN_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
 	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
 		m_bufferManager->Get(m_bufferID)->AddChar(UTF8_data);
-		OnRegenerateDisplay();
+		MarkToReedraw();
 	}
 	return true;
 }
@@ -147,7 +148,7 @@ bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveTy
 {
 	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
 		m_bufferManager->Get(m_bufferID)->cursorMove(moveTypeEvent);
-		OnRegenerateDisplay();
+		MarkToReedraw();
 	}
 	return true;
 }
@@ -156,6 +157,11 @@ bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveTy
 
 bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, etkFloat_t x, etkFloat_t y)
 {
+	if (true == WidgetScrooled::OnEventInput(IdInput, typeEvent, x, y)) {
+		ewol::widgetManager::FocusKeep(this);
+		// nothing to do ... done on upper widet ...
+		return true;
+	}
 	x -= m_origin.x;
 	y -= m_origin.y;
 	/*
@@ -199,19 +205,19 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 		} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 			m_buttunOneSelected = false;
 			m_bufferManager->Get(m_bufferID)->Copy(COPY_MIDDLE_BUTTON);
-			OnRegenerateDisplay();
+			MarkToReedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
 			m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
-			OnRegenerateDisplay();
+			MarkToReedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_DOUBLE == typeEvent) {
 			//EDN_INFO("mouse-event BT1  ==> Double Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
 			m_bufferManager->Get(m_bufferID)->MouseEventDouble();
-			OnRegenerateDisplay();
+			MarkToReedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_TRIPLE == typeEvent) {
 			//EDN_INFO("mouse-event BT1  ==> Triple Clicked");
 			m_bufferManager->Get(m_bufferID)->MouseEventTriple();
-			OnRegenerateDisplay();
+			MarkToReedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_MOVE == typeEvent) {
 			if (true == m_buttunOneSelected) {
 				int xxx, yyy;
@@ -225,30 +231,33 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 				}
 				//EDN_INFO("mouse-motion BT1 %d, %d", xxx, yyy);
 				m_bufferManager->Get(m_bufferID)->MouseSelectFromCursorTo(xxx, yyy);
-				OnRegenerateDisplay();
+				MarkToReedraw();
 			}
 		}
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
 			m_bufferManager->Get(m_bufferID)->Paste(COPY_MIDDLE_BUTTON);
-			OnRegenerateDisplay();
+			MarkToReedraw();
 			ewol::widgetManager::FocusKeep(this);
 		}
 	}
+	// TODO : No mere used here ... ==> set in the scrooled windows ...
+	/* 
 	if (4 == IdInput && ewol::EVENT_INPUT_TYPE_UP == typeEvent)
 	{
 		//EDN_INFO("mouse-event GDK_SCROLL_UP");
 		m_bufferManager->Get(m_bufferID)->ScrollUp();
-		OnRegenerateDisplay();
+		MarkToReedraw();
 		ewol::widgetManager::FocusKeep(this);
 	} else if (5 == IdInput && ewol::EVENT_INPUT_TYPE_UP == typeEvent)
 	{
 		//EDN_INFO("mouse-event GDK_SCROLL_DOWN");
 		m_bufferManager->Get(m_bufferID)->ScrollDown();
-		OnRegenerateDisplay();
+		MarkToReedraw();
 		ewol::widgetManager::FocusKeep(this);
 	}
+	*/
 	return true;
 }
 
@@ -410,7 +419,7 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 	}
 	*/
 	// Force redraw of the widget
-	OnRegenerateDisplay();
+	MarkToReedraw();
 	return true;
 }
 
