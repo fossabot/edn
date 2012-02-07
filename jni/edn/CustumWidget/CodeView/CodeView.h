@@ -71,6 +71,8 @@ class CodeView :public ewol::WidgetScrooled
 		void SetFontNameBold(etk::String fontName);
 		void SetFontNameItalic(etk::String fontName);
 		void SetFontNameBoldItalic(etk::String fontName);
+	private:
+		void CalculateMaxSize(void);
 };
 
 #endif

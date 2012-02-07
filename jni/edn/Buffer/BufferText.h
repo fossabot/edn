@@ -79,6 +79,7 @@ class BufferText : public Buffer {
 		void      Undo(void);
 		void      Redo(void);
 		void      SetCharset(unicode::charset_te newCharset);
+		int32_t   GetNumberOfLine(void);
 	protected:
 		void      NameChange(void);
 
@@ -99,8 +100,6 @@ class BufferText : public Buffer {
 		int32_t                 m_cursorPos;                //!< position in the buffer of the cursor
 		int32_t                 m_cursorPreferredCol;       //!< colomn of the last up and down ...
 		cursorDisplayMode_te    m_cursorMode;               //!< type of cursor Selected
-		
-		displayHLData_ts        m_displayLocalSyntax;       //!< for the display of the local elements (display HL mode)
 		
 		// internal function
 		void     BasicInit(void);

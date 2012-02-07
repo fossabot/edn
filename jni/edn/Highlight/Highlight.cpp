@@ -64,11 +64,12 @@ Highlight::Highlight(etk::String &xmlFilename)
 		return;
 	}
 	// allocate data
-	char * fileBuffer = new char[fileSize];
+	char * fileBuffer = new char[fileSize+5];
 	if (NULL == fileBuffer) {
 		EWOL_ERROR("Error Memory allocation size=" << fileSize);
 		return;
 	}
+	memset(fileBuffer, 0, (fileSize+5)*sizeof(char));
 	// load data from the file :
 	fileName.fRead(fileBuffer, 1, fileSize);
 	// close the file:

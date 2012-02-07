@@ -78,7 +78,6 @@ EdnBuf::EdnBuf(void)
 	// basicly no HL system ...
 	m_Highlight = NULL;
 	m_nbLine = 1;
-	m_HLDataSequence = 0;
 }
 
 /**

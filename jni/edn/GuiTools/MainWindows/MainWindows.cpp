@@ -122,13 +122,20 @@ MainWindows::MainWindows(void)
 			myCodeView->SetExpendY(true);
 			myCodeView->SetFillX(true);
 			myCodeView->SetFillY(true);
+			
 			myCodeView->SetFontSize(11);
 			myCodeView->SetFontNameNormal(    "freefont/FreeMono.ttf");
 			myCodeView->SetFontNameBold(      "freefont/FreeMonoBold.ttf");
 			myCodeView->SetFontNameItalic(    "freefont/FreeMonoOblique.ttf");
 			myCodeView->SetFontNameBoldItalic("freefont/FreeMonoBoldOblique.ttf");
+			/*
+			myCodeView->SetFontSize(11);
+			myCodeView->SetFontNameNormal(    "ubuntu/UbuntuMono-R.ttf");
+			myCodeView->SetFontNameBold(      "ubuntu/UbuntuMono-B.ttf");
+			myCodeView->SetFontNameItalic(    "ubuntu/UbuntuMono-RI.ttf");
+			myCodeView->SetFontNameBoldItalic("ubuntu/UbuntuMono-BI.ttf");
+			*/
 			mySizerHori->SubWidgetAdd(myCodeView);
-			
 }
 
 

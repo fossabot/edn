@@ -79,7 +79,6 @@ void BufferText::BasicInit(void)
 	m_displayStartLineId = 0;
 	m_displaySize.x = 200;
 	m_displaySize.y = 20;
-	m_displayLocalSyntax.idSequence = -1;
 }
 
 
@@ -294,6 +293,12 @@ void BufferText::UpdatePointerNumber(void)
 }
 */
 
+int32_t BufferText::GetNumberOfLine(void)
+{
+	return m_EdnBuf.CountLines();
+}
+
+
 // TODO : Remove this ... it is really bad...
 
 static int32_t g_basicfontId = 0;
@@ -314,6 +319,10 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
                             int32_t offsetX, int32_t offsetY,
                             int32_t sizeX, int32_t sizeY)
 {
+	offsetX -= 40;
+	if (offsetX<0) {
+		offsetX = 0;
+	}
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
 	int32_t selHave;
@@ -373,6 +382,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	
 	int displayLines = 0;
 	// Regenerate the colorizing if necessary ...
+	displayHLData_ts m_displayLocalSyntax;
 	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, m_displayStartBufferPos, m_displaySize.y);
 	//GTimeVal timeStart;
 	//g_get_current_time(&timeStart);
@@ -385,14 +395,22 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
 	EDN_DEBUG("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
 	
+	
+	DrawLineNumber(OOTextNormal, OOColored, x_base, sizeY, myPrint, currentLineID, y);
+	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
+	
 	clipping_ts drawClipping;
 	drawClipping.x = 0;
 	drawClipping.y = 0;
 	drawClipping.w = sizeX;
 	drawClipping.h = sizeY;
 	
-	DrawLineNumber(OOTextNormal, OOColored, x_base, sizeY, myPrint, currentLineID, y);
-	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
+	clipping_ts drawClippingTextArea;
+	drawClippingTextArea.x = pixelX;
+	drawClippingTextArea.y = 0;
+	drawClippingTextArea.w = sizeX - drawClipping.x;
+	drawClippingTextArea.h = sizeY;
+	
 	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
 		//EDN_DEBUG("diplay element=" << iii);
 		int displaywidth;
@@ -434,7 +452,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 				}
 			}
 			coord2D_ts textPos;
-			textPos.x = pixelX-m_displayStartPixelX;
+			textPos.x = pixelX-offsetX;
 			textPos.y = y;
 			if (true == selectColor->GetItalic() ) {
 				if (true == selectColor->GetBold() ) {
@@ -450,9 +468,9 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 				}
 			}
 			OOTextSelected->SetColor(selectColor->GetFG());
-			drawSize = OOTextSelected->TextAdd(textPos, drawClipping, displayChar);
+			drawSize = OOTextSelected->TextAdd(textPos, drawClippingTextArea, displayChar);
 			if (true == haveBg ) {
-				OOColored->Rectangle( pixelX, y, drawSize, letterHeight, drawClipping);
+				OOColored->Rectangle(textPos.x, y, drawSize, letterHeight, drawClippingTextArea);
 			}
 		}
 		idX += displaywidth;
@@ -525,8 +543,8 @@ int32_t BufferText::GetMousePosition(int32_t width, int32_t height)
 		EDN_DEBUG("    Element : Befor the start of the line ... ==> END");
 		return startLinePosition;
 	}
-	EDN_DEBUG("Get id element : x=" << width << "px y=" << height << "px");
-	EDN_DEBUG("    line offset  = " << lineOffset);
+	EDN_VERBOSE("Get id element : x=" << width << "px y=" << height << "px");
+	EDN_VERBOSE("    line offset  = " << lineOffset);
 	for (iii=startLinePosition; iii<mylen; iii = new_i) {
 		int displaywidth;
 		uint32_t currentChar = '\0';
@@ -534,21 +552,21 @@ int32_t BufferText::GetMousePosition(int32_t width, int32_t height)
 		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
 		if (currentChar!='\n') {
 			int32_t drawSize = ewol::GetWidth(g_basicfontId, displayChar);
-			EDN_DEBUG("    Element : " << currentChar << "=\"" << (char)currentChar << "\" display offset=" << pixelX << "px  width=" << drawSize << "px");
+			EDN_VERBOSE("    Element : " << currentChar << "=\"" << (char)currentChar << "\" display offset=" << pixelX << "px  width=" << drawSize << "px");
 			pixelX += drawSize;
 			if (width <= pixelX) {
-				EDN_DEBUG("        Find IT ==> END");
+				EDN_VERBOSE("        Find IT ==> END");
 				// find position ...
 				break;
 			}
 		} else {
-			EDN_DEBUG("    Element : \"\\n\" display width=---px ==> end of line ==> END");
+			EDN_VERBOSE("    Element : \"\\n\" display width=---px ==> end of line ==> END");
 			// end of line ... exit cycle
 			break;
 		}
 		idX += displaywidth;
 	}
-	EDN_DEBUG("BufferText::GetMousePosition(" << width << "," << height << "); ==> " << iii );
+	EDN_VERBOSE("BufferText::GetMousePosition(" << width << "," << height << "); ==> " << iii );
 	return iii;
 }
 
@@ -721,7 +739,6 @@ void BufferText::ScrollUp(void)
  */
 void BufferText::MoveUpDown(int32_t ofset)
 {
-	m_displayLocalSyntax.idSequence = -1;
 	if (ofset >= 0) {
 		int32_t nbLine = m_EdnBuf.NumberOfLines();
 		if (m_displayStartLineId+ofset+3 > nbLine) {
@@ -756,7 +773,6 @@ void BufferText::MoveUpDown(int32_t ofset)
 void BufferText::ForceReDraw(bool allElement)
 {
 	NeedToCleanEndPage = true;
-	//m_displayLocalSyntax.idSequence = -1;
 }
 
 void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)

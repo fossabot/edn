@@ -68,7 +68,6 @@ typedef enum{
 
 typedef struct {
 	etk::VectorType<colorInformation_ts>    HLData;
-	int32_t                                 idSequence;
 	int32_t                                 posHLPass1;
 	int32_t                                 posHLPass2;
 }displayHLData_ts;
@@ -159,7 +158,6 @@ class EdnBuf {
 	private:
 		Highlight *                             m_Highlight;         //!< internal link with the Highlight system
 		etk::VectorType<colorInformation_ts>    m_HLDataPass1;       //!< colorisation position in the current buffer pass 1
-		int32_t                                 m_HLDataSequence;    //!< position of the start of line requested by the screen viewer
 		void                                    RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdded);
 		void                                    GenerateHighLightAt(int32_t pos, int32_t endPos, int32_t addinPos=0);
 		void                                    CleanHighLight(void);

@@ -113,6 +113,8 @@ class Buffer {
 		virtual void      JumpAtLine(int32_t newLine);
 		virtual int32_t   GetCurrentLine(void);
 		
+		virtual int32_t   GetNumberOfLine(void) { return 1; };
+		
 	protected:
 		bool              m_fileModify;           //!< 
 		// naming

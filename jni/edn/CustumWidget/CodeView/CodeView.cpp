@@ -73,6 +73,7 @@ CodeView::CodeView(void)
 	
 	
 	//old
+	/*
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentChangeBufferId);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSave);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSaveAs);
@@ -92,6 +93,7 @@ CodeView::CodeView(void)
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentRedo);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentGotoLine);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSetCharset);
+	*/
 }
 
 CodeView::~CodeView(void)
@@ -106,30 +108,45 @@ bool CodeView::CalculateMinSize(void)
 	return true;
 }
 
+void CodeView::CalculateMaxSize(void)
+{
+	m_maxSize.x = 4096;
+	int32_t letterHeight = ewol::GetHeight(m_fontNormal);
+	m_maxSize.y = m_bufferManager->Get(m_bufferID)->GetNumberOfLine() * letterHeight;
+}
+
 
 
 void CodeView::OnRegenerateDisplay(void)
 {
-	// create tmp object :
-	ewol::OObject2DTextColored* myOObjectTextNormal     = new ewol::OObject2DTextColored(m_fontNormal);
-	ewol::OObject2DTextColored* myOObjectTextBold       = new ewol::OObject2DTextColored(m_fontBold);
-	ewol::OObject2DTextColored* myOObjectTextItalic     = new ewol::OObject2DTextColored(m_fontItalic);
-	ewol::OObject2DTextColored* myOObjectTextBoldItalic = new ewol::OObject2DTextColored(m_fontBoldItalic);
-	ewol::OObject2DColored*     myOObjectsColored = new ewol::OObject2DColored();
-	
-	// generate the objects :
-	//m_bufferID = 0;
-	m_bufferManager->Get(m_bufferID)->Display(myOObjectTextNormal, myOObjectTextBold, myOObjectTextItalic, myOObjectTextBoldItalic, myOObjectsColored, 
-	                                          m_originScrooledX, m_originScrooledY, m_size.x, m_size.y);
-	
-	// clean the object list ...
-	ClearOObjectList();
-	// add generated element
-	AddOObject(myOObjectsColored,       "CodeViewBackground");
-	AddOObject(myOObjectTextNormal,     "CodeViewTextNormal");
-	AddOObject(myOObjectTextBold,       "CodeViewTextBold");
-	AddOObject(myOObjectTextItalic,     "CodeViewTextItalic");
-	AddOObject(myOObjectTextBoldItalic, "CodeViewTextBoldItalic");
+	if (true == NeedRedraw()) {
+		// For the scrooling windows
+		CalculateMaxSize();
+		
+		// create tmp object :
+		ewol::OObject2DTextColored* myOObjectTextNormal     = new ewol::OObject2DTextColored(m_fontNormal);
+		ewol::OObject2DTextColored* myOObjectTextBold       = new ewol::OObject2DTextColored(m_fontBold);
+		ewol::OObject2DTextColored* myOObjectTextItalic     = new ewol::OObject2DTextColored(m_fontItalic);
+		ewol::OObject2DTextColored* myOObjectTextBoldItalic = new ewol::OObject2DTextColored(m_fontBoldItalic);
+		ewol::OObject2DColored*     myOObjectsColored = new ewol::OObject2DColored();
+		
+		// generate the objects :
+		//m_bufferID = 0;
+		m_bufferManager->Get(m_bufferID)->Display(myOObjectTextNormal, myOObjectTextBold, myOObjectTextItalic, myOObjectTextBoldItalic, myOObjectsColored, 
+		                                          m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
+		
+		// clean the object list ...
+		ClearOObjectList();
+		// add generated element
+		AddOObject(myOObjectsColored,       "CodeViewBackground");
+		AddOObject(myOObjectTextNormal,     "CodeViewTextNormal");
+		AddOObject(myOObjectTextBold,       "CodeViewTextBold");
+		AddOObject(myOObjectTextItalic,     "CodeViewTextItalic");
+		AddOObject(myOObjectTextBoldItalic, "CodeViewTextBoldItalic");
+		
+		// call the herited class...
+		WidgetScrooled::OnRegenerateDisplay();
+	}
 }
 
 
@@ -202,14 +219,15 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 		if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
 			m_buttunOneSelected = true;
 			ewol::widgetManager::FocusKeep(this);
+			//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
+			m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
+			MarkToReedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 			m_buttunOneSelected = false;
 			m_bufferManager->Get(m_bufferID)->Copy(COPY_MIDDLE_BUTTON);
 			MarkToReedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
-			//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
-			m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
-			MarkToReedraw();
+			// nothing to do ...
 		} else if (ewol::EVENT_INPUT_TYPE_DOUBLE == typeEvent) {
 			//EDN_INFO("mouse-event BT1  ==> Double Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
 			m_bufferManager->Get(m_bufferID)->MouseEventDouble();
