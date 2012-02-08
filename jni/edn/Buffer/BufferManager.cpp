@@ -48,6 +48,7 @@ BufferManager::BufferManager(void)
 	m_idSelected = -1;
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiNew);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgOpenFile);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiClose);
 	/*
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerNewFile);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerSaveAll);
@@ -93,6 +94,16 @@ bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateE
 			if (-1 != newOne) {
 				ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, newOne);
 				ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferListChange);
+			}
+		}
+	} else if (generateEventId == ednMsgGuiClose) {
+		if (NULL == data) {
+			EDN_ERROR("Null data for close file ... ");
+		} else {
+			if (0 == strcmp(data , "current") {
+				
+			} else if (0 == strcmp(data , "All") {
+				
 			}
 		}
 	}

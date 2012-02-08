@@ -148,10 +148,19 @@ MainWindows::~MainWindows(void)
 
 bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y)
 {
-	EDN_INFO("Receive Event from the main windows ... : widgetid=" << widgetID << "\"" << generateEventId << "\" ==> data=\"" << data << "\"" );
+	//EDN_INFO("Receive Event from the main windows ... : widgetid=" << widgetID << "\"" << generateEventId << "\" ==> data=\"" << data << "\"" );
 	// newFile section ...
 	if (generateEventId == ednEventNewFile) {
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiNew);
+	}
+	else if (generateEventId == ednEventCloseFile) {
+		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiClose, "current");
+	}
+	else if (generateEventId == ednEventSaveFile) {
+		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave);
+	}
+	else if (generateEventId == ednEventSaveAsFile) {
+		//ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSaveAs);
 	}
 	// Open file Section ...
 	else if (generateEventId == ednEventOpenFile) {
@@ -167,6 +176,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 			EDN_CRITICAL("link with an entry event");
 		}
 	} else if (generateEventId == ednEventPopUpClose) {
+		// TODO : Set this in the upper windows ...
 		PopUpWidgetPop();
 	} else if (generateEventId == ednEventPopUpFileSelected) {
 		// get widget:

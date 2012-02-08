@@ -87,7 +87,7 @@ void APP_Init(void)
 	// init ALL Singleton :
 	(void)WindowsManager::getInstance();
 	(void)CTagsManager::getInstance();
-	BufferManager *myBufferManager = BufferManager::getInstance();
+	(void)BufferManager::getInstance();
 	
 	// set color and other trucs...
 	ColorizeManager *myColorManager = NULL;
