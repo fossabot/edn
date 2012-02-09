@@ -62,9 +62,9 @@ bool BufferView::OnEventAreaExternal(int32_t widgetID, const char * generateEven
 {
 	if (generateEventId == ednMsgBufferListChange) {
 		MarkToReedraw();
-	}else if (ednMsgBufferId == ednMsgBufferListChange) {
+	}else if (generateEventId == ednMsgBufferId) {
 		MarkToReedraw();
-	}else if (ednMsgBufferState == ednMsgBufferListChange) {
+	}else if (generateEventId == ednMsgBufferState) {
 		MarkToReedraw();
 	}
 	return false;

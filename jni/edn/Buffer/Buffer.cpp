@@ -94,7 +94,8 @@ void Buffer::SetModify(bool status)
 {
 	if (status != m_fileModify) {
 		m_fileModify = status;
-		ewol::widgetMessageMultiCast::Send(-1, ednMsgBufferModify);
+		// TODO : Remove from here
+		ewol::widgetMessageMultiCast::Send(-1, ednMsgBufferState, "Modify");
 	}
 }
 

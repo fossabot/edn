@@ -70,6 +70,8 @@ class MainWindows: public etk::Singleton<MainWindows>, public MsgBroadcast
 #endif
 class MainWindows : public ewol::Windows
 {
+	private:
+		int32_t m_currentSavingAsIdBuffer;
 	public:
 		// Constructeur
 		MainWindows(void);

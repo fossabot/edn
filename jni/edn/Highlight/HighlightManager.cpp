@@ -33,7 +33,7 @@
 
 HighlightManager::HighlightManager(void)
 {
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgColorHasChange);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferColor);
 }
 
 HighlightManager::~HighlightManager(void)

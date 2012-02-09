@@ -55,7 +55,7 @@ void globals::SetDisplayEndOfLine(bool newVal)
 {
 	EDN_INFO("Set EndOfLine " << newVal);
 	displayEOL = newVal;
-	ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
+	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
 // -----------------------------------------------------------
@@ -69,7 +69,7 @@ void globals::SetDisplaySpaceChar(bool newVal)
 {
 	EDN_INFO("Set SpaceChar " << newVal);
 	displaySpaceChar = newVal;
-	ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
+	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
 

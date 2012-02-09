@@ -53,7 +53,7 @@ class BufferManager: public etk::Singleton<BufferManager>, public ewol::Widget
 		bool        Remove(int32_t BufferID);
 	public:
 		int32_t     GetSelected(void) { return m_idSelected;};
-		void        SetSelected(int32_t id) {m_idSelected = id;};
+		//void        SetSelected(int32_t id) {m_idSelected = id;};
 		Buffer *    Get(int32_t BufferID);
 		bool        Exist(int32_t BufferID);
 		bool        Exist(etk::File &myFile);

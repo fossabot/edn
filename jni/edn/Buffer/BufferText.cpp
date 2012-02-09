@@ -342,7 +342,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	// update the number of element that can be displayed
 	m_displaySize.x = (sizeX/letterWidth) + 1 - nbColoneForLineNumber;
 	m_displaySize.y = (sizeY/letterHeight) + 1;
-	EDN_INFO("main DIPLAY " << m_displaySize.x << " char * " << m_displaySize.y << " char");
+	EDN_VERBOSE("main DIPLAY " << m_displaySize.x << " char * " << m_displaySize.y << " char");
 	
 	selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
 	
@@ -392,8 +392,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
 	// draw the lineNumber : 
 	int32_t currentLineID = m_displayStartLineId+1;
-	EDN_DEBUG("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
-	EDN_DEBUG("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
+	EDN_VERBOSE("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
+	EDN_VERBOSE("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
 	
 	
 	DrawLineNumber(OOTextNormal, OOColored, x_base, sizeY, myPrint, currentLineID, y);

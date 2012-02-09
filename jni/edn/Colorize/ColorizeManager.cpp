@@ -33,7 +33,7 @@
 
 ColorizeManager::ColorizeManager(void)
 {
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgReloadColorFile);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiChangeColor);
 }
 
 ColorizeManager::~ColorizeManager(void)

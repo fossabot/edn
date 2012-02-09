@@ -56,6 +56,7 @@ const char * const ednEventSaveFile = "edn-Save-File";
 const char * const ednEventSaveAsFile = "edn-SaveAs-File";
 const char * const ednEventPopUpClose = "edn-PopUp-Close";
 const char * const ednEventPopUpFileSelected = "edn-PopUp-FileSelected";
+const char * const ednEventPopUpFileSaveAs = "edn-PopUp-FileSaveAs";
 
 MainWindows::MainWindows(void)
 {
@@ -136,6 +137,9 @@ MainWindows::MainWindows(void)
 			myCodeView->SetFontNameBoldItalic("ubuntu/UbuntuMono-BI.ttf");
 			*/
 			mySizerHori->SubWidgetAdd(myCodeView);
+			
+	// Generic event ...
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiSaveAs);
 }
 
 
@@ -148,6 +152,9 @@ MainWindows::~MainWindows(void)
 
 bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y)
 {
+	if (true == ewol::Windows::OnEventAreaExternal(widgetID, generateEventId, data, x, y) ) {
+		return true;
+	}
 	//EDN_INFO("Receive Event from the main windows ... : widgetid=" << widgetID << "\"" << generateEventId << "\" ==> data=\"" << data << "\"" );
 	// newFile section ...
 	if (generateEventId == ednEventNewFile) {
@@ -157,17 +164,18 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiClose, "current");
 	}
 	else if (generateEventId == ednEventSaveFile) {
-		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave);
+		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave, "current");
 	}
 	else if (generateEventId == ednEventSaveAsFile) {
-		//ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSaveAs);
+		OnEventAreaExternal(GetWidgetId(), ednMsgGuiSaveAs, "current", x, y);
 	}
 	// Open file Section ...
 	else if (generateEventId == ednEventOpenFile) {
 		ewol::FileChooser* tmpWidget = new ewol::FileChooser();
 		tmpWidget->SetTitle("Open Files ...");
 		tmpWidget->SetValidateLabel("Open");
-		tmpWidget->SetFolder("/");
+		// TODO : Set the good folder ...
+		//tmpWidget->SetFolder("/");
 		PopUpWidgetPush(tmpWidget);
 		if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserCancel, GetWidgetId(), ednEventPopUpClose) ) {
 			EDN_CRITICAL("link with an entry event");
@@ -190,6 +198,45 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		etk::String tmpData = tmpWidget->GetCompleateFileName();
 		EDN_DEBUG("Request opening the file : " << tmpData);
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData.c_str());
+		PopUpWidgetPop();
+	} else if (generateEventId == ednMsgGuiSaveAs) {
+		if (NULL == data) {
+			EDN_ERROR("Null data for Save As file ... ");
+		} else {
+			BufferManager * myMng = BufferManager::getInstance();
+			m_currentSavingAsIdBuffer = -1;
+			if (0 == strcmp(data , "current")) {
+				m_currentSavingAsIdBuffer = myMng->GetSelected();
+			} else {
+				sscanf(data, "%d", &m_currentSavingAsIdBuffer);
+			}
+			
+			if (false == myMng->Exist(m_currentSavingAsIdBuffer)) {
+				EDN_ERROR("Request saveAs on non existant Buffer ID=" << m_currentSavingAsIdBuffer);
+			} else {
+				Buffer * myBuffer = myMng->Get(m_currentSavingAsIdBuffer);
+				ewol::FileChooser* tmpWidget = new ewol::FileChooser();
+				tmpWidget->SetTitle("Save Files As...");
+				tmpWidget->SetValidateLabel("Save");
+				etk::String folder = "/home/";
+				etk::String fileName = "";
+				if (true == myBuffer->HaveName()) {
+					etk::File tmpName = myBuffer->GetFileName();
+					folder = tmpName.GetFolder();
+					fileName = tmpName.GetShortFilename();
+				}
+				tmpWidget->SetFolder(folder);
+				tmpWidget->SetFileName(fileName);
+				PopUpWidgetPush(tmpWidget);
+				if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserCancel, GetWidgetId(), ednEventPopUpClose) ) {
+					EDN_CRITICAL("link with an entry event");
+				}
+				if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserValidate, GetWidgetId(), ednEventPopUpFileSaveAs) ) {
+					EDN_CRITICAL("link with an entry event");
+				}
+			}
+		}
+	} else if (generateEventId == ednEventPopUpFileSaveAs) {
 		PopUpWidgetPop();
 	}
 	return true;

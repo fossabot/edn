@@ -296,6 +296,7 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 		// TODO : need to update the state of the file and the filenames ...
 	}
 	// old
+	/*
 	else if( ednMsgCodeViewCurrentChangeBufferId == generateEventId) {
 		int32_t bufferID = 0;
 		sscanf(data, "%d", &bufferID);
@@ -305,7 +306,10 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 		// request the display of the curent Editor
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferChangeCurrent, (char*)data);
 		
-	} else if (ednMsgCodeViewCurrentSave == generateEventId) {
+	}
+	*/
+	/*
+	 else if (ednMsgCodeViewCurrentSave == generateEventId) {
 	
 	} else if (ednMsgCodeViewCurrentSaveAs == generateEventId) {
 	
@@ -341,7 +345,9 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 	
 	} else if (ednMsgCodeViewCurrentSetCharset == generateEventId) {
 	
-	} else {
+	}
+	*/
+	else {
 	
 	}
 	
@@ -444,14 +450,15 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 
 void CodeView::OnGetFocus(void)
 {
-	//SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
-	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferChangeCurrent);
+	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, m_bufferID);
+	ewol::KeyboardShow(ewol::KEYBOARD_MODE_CODE);
 	EDN_INFO("Focus - In");
 }
 
 
 void CodeView::OnLostFocus(void)
 {
+	ewol::KeyboardHide();
 	EDN_INFO("Focus - out");
 }
 

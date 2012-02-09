@@ -49,10 +49,7 @@ CTagsManager::CTagsManager(void)
 	m_tagFolderBase = "";
 	m_ctagFile = NULL;
 	m_historyPos = 0;
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCtagsOpen);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCtagsReload);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCtagsJumpCurrentSelection);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCtagsJumpBack);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiCtags);
 }
 
 /**

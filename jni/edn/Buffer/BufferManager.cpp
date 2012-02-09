@@ -49,6 +49,8 @@ BufferManager::BufferManager(void)
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiNew);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgOpenFile);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiClose);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiSave);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewSelectedId);
 	/*
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerNewFile);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerSaveAll);
@@ -84,7 +86,8 @@ bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateE
 	if (generateEventId == ednMsgGuiNew) {
 		int32_t newOne = Create();
 		if (-1 != newOne) {
-			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, newOne);
+			m_idSelected = newOne;
+			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, m_idSelected);
 			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferListChange);
 		}
 	} else if (generateEventId == ednMsgOpenFile) {
@@ -92,35 +95,71 @@ bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateE
 			etk::File myFile(data, etk::FILE_TYPE_DIRECT);
 			int32_t newOne = Open(myFile);
 			if (-1 != newOne) {
-				ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, newOne);
+				m_idSelected = newOne;
+				ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, m_idSelected);
 				ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferListChange);
+			}
+		}
+	} else if (generateEventId == ednMsgGuiSave) {
+		if (NULL == data) {
+			EDN_ERROR("Null data for close file ... ");
+		} else {
+			if (0 == strcmp(data , "current")) {
+				// Check buffer existence
+				if(true == Exist(m_idSelected)) {
+					// If no name ==> request a Gui display ...
+					if (Get(m_idSelected)->HaveName() == false) {
+						ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSaveAs, "current");
+					} else {
+						Get(m_idSelected)->Save();
+					}
+				}
+			} else {
+				int32_t newId;
+				sscanf(data, "%d", &newId);
+				if (false == Exist(newId)) {
+					EDN_ERROR("Request a save As with a non existant ID=" << newId);
+				} else {
+					// If no name ==> request a Gui display ...
+					if (Get(newId)->HaveName() == false) {
+						ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSaveAs, newId);
+					} else {
+						Get(m_idSelected)->Save();
+					}
+				}
+				ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferState, "saved");
 			}
 		}
 	} else if (generateEventId == ednMsgGuiClose) {
 		if (NULL == data) {
 			EDN_ERROR("Null data for close file ... ");
 		} else {
-			if (0 == strcmp(data , "current") {
+			if (0 == strcmp(data , "current")) {
 				
-			} else if (0 == strcmp(data , "All") {
+			} else if (0 == strcmp(data , "All")) {
 				
 			}
+		}
+	} else if (generateEventId == ednMsgCodeViewSelectedId) {
+		//Change the selected buffer
+		if (NULL == data) {
+			EDN_ERROR("Null data for changing buffer ID file ... ");
+		} else {
+			int32_t newId;
+			sscanf(data, "%d", &newId);
+			if (true == Exist(newId)) {
+				m_idSelected = newId;
+			} else {
+				EDN_ERROR("code biew request the selection of an non -existant buffer ==> reset to -1");
+				m_idSelected = -1;
+			}
+			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, m_idSelected);
+			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferListChange);
 		}
 	}
 	/*
 	switch (id)
 	{
-		case EDN_MSG__BUFFER_CHANGE_CURRENT:
-			m_idSelected = dataID;
-			break;
-		case EDN_MSG__NEW:
-			{
-				int32_t newOne = Create();
-				if (-1 != newOne) {
-					SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, newOne);
-				}
-			}
-			break;
 		case EDN_MSG__BUFF_ID_CLOSE:
 			// Check buffer existence
 			if(true == Exist(dataID)) {
@@ -189,8 +228,7 @@ void BufferManager::RemoveAll(void)
 	for (i=0; i<listBuffer.Size(); i++) {
 		Remove(i);
 	}
-	//SendMessage(EDN_MSG__BUFFER_REMOVE_ALL);
-	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferRemoveAll);
+	ewol::widgetMessageMultiCast::Send(-1, ednMsgGuiClose, "All");
 }
 
 
@@ -210,8 +248,6 @@ int32_t	BufferManager::Create(void)
 	// Add at the list of element
 	listBuffer.PushBack(myBuffer);
 	int32_t basicID = listBuffer.Size() - 1;
-	//SendMessage(EDN_MSG__BUFFER_ADD, basicID);
-	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferAdd);
 	return basicID;
 }
 
@@ -333,8 +369,7 @@ bool BufferManager::Remove(int32_t BufferID)
 			// Delete the Buffer
 			delete( listBuffer[BufferID] );
 			listBuffer[BufferID] = NULL;
-			//SendMessage(EDN_MSG__BUFFER_REMOVE, BufferID);
-			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferRemove);
+			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferListChange);
 			return true;
 		} else {
 			EDN_INFO("non existing Buffer " << BufferID);
