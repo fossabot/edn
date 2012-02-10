@@ -70,30 +70,6 @@ CodeView::CodeView(void)
 	m_textColorBg.alpha = 0.25;
 	SetCanHaveFocus(true);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
-	
-	
-	//old
-	/*
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentChangeBufferId);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSave);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSaveAs);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSelectAll);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentRemoveLine);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentUnSelect);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentCopy);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentCut);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentPaste);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentFindPrevious);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentFindNext);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentFindOldNext);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentReplace);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentReplaceAll);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentClose);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentUndo);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentRedo);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentGotoLine);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewCurrentSetCharset);
-	*/
 }
 
 CodeView::~CodeView(void)
@@ -110,7 +86,7 @@ bool CodeView::CalculateMinSize(void)
 
 void CodeView::CalculateMaxSize(void)
 {
-	m_maxSize.x = 4096;
+	m_maxSize.x = 2048;
 	int32_t letterHeight = ewol::GetHeight(m_fontNormal);
 	m_maxSize.y = m_bufferManager->Get(m_bufferID)->GetNumberOfLine() * letterHeight;
 }

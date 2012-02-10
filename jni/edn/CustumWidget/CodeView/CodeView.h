@@ -33,7 +33,6 @@
 #include <MsgBroadcast.h>
 
 #include <etk/Types.h>
-#include <ewol/Widget.h>
 #include <ewol/widget/WidgetScrolled.h>
 
 class CodeView :public ewol::WidgetScrooled
