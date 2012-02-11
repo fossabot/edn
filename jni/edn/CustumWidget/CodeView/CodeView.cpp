@@ -192,18 +192,28 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 	EDN_DEBUG("Event : " << IdInput << "  type : " << type << "  position(" << x << "," << y << ")");
 	*/
 	if (1 == IdInput) {
-		if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
-			m_buttunOneSelected = true;
-			ewol::widgetManager::FocusKeep(this);
-			//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
-			m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
-			MarkToReedraw();
-		} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
-			m_buttunOneSelected = false;
-			m_bufferManager->Get(m_bufferID)->Copy(COPY_MIDDLE_BUTTON);
-			MarkToReedraw();
-		} else if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
-			// nothing to do ...
+		#ifndef __MODE__Touch
+			if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
+				m_buttunOneSelected = true;
+				ewol::widgetManager::FocusKeep(this);
+				//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
+				m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
+				MarkToReedraw();
+			} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
+				m_buttunOneSelected = false;
+				m_bufferManager->Get(m_bufferID)->Copy(COPY_MIDDLE_BUTTON);
+				MarkToReedraw();
+			} else 
+		#endif
+		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
+			#ifdef __MODE__Touch
+				ewol::widgetManager::FocusKeep(this);
+				//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
+				m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
+				MarkToReedraw();
+			#else
+				// nothing to do ...
+			#endif
 		} else if (ewol::EVENT_INPUT_TYPE_DOUBLE == typeEvent) {
 			//EDN_INFO("mouse-event BT1  ==> Double Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
 			m_bufferManager->Get(m_bufferID)->MouseEventDouble();

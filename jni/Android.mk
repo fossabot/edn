@@ -16,6 +16,7 @@ LOCAL_SRC_FILES := ewolAndroidAbstraction.cpp \
 LOCAL_LDLIBS    := -llog -landroid
 
 LOCAL_CFLAGS    :=  -D__PLATFORM__Android \
+                    -D__MODE__Touch \
                     -DEWOL_USE_FREE_TYPE \
                     -DETK_DEBUG_LEVEL=3 \
                     -DEDN_DEBUG_LEVEL=3 \
