@@ -157,40 +157,6 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 	}
 	x -= m_origin.x;
 	y -= m_origin.y;
-	/*
-	etk::String type = (int)typeEvent;
-	switch (typeEvent)
-	{
-		case ewol::EVENT_INPUT_TYPE_DOWN:
-			type = "EVENT_INPUT_TYPE_DOWN";
-			break;
-		case ewol::EVENT_INPUT_TYPE_MOVE:
-			type = "EVENT_INPUT_TYPE_MOVE";
-			break;
-		case ewol::EVENT_INPUT_TYPE_SINGLE:
-			type = "EVENT_INPUT_TYPE_SINGLE";
-			break;
-		case ewol::EVENT_INPUT_TYPE_DOUBLE:
-			type = "EVENT_INPUT_TYPE_DOUBLE";
-			break;
-		case ewol::EVENT_INPUT_TYPE_TRIPLE:
-			type = "EVENT_INPUT_TYPE_TRIPLE";
-			break;
-		case ewol::EVENT_INPUT_TYPE_UP:
-			type = "EVENT_INPUT_TYPE_UP";
-			break;
-		case ewol::EVENT_INPUT_TYPE_ENTER:
-			type = "EVENT_INPUT_TYPE_ENTER";
-			break;
-		case ewol::EVENT_INPUT_TYPE_LEAVE:
-			type = "EVENT_INPUT_TYPE_LEAVE";
-			break;
-		default:
-			break;
-	};
-	
-	EDN_DEBUG("Event : " << IdInput << "  type : " << type << "  position(" << x << "," << y << ")");
-	*/
 	if (1 == IdInput) {
 		#ifndef __MODE__Touch
 			if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
@@ -246,22 +212,6 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 			ewol::widgetManager::FocusKeep(this);
 		}
 	}
-	// TODO : No mere used here ... ==> set in the scrooled windows ...
-	/* 
-	if (4 == IdInput && ewol::EVENT_INPUT_TYPE_UP == typeEvent)
-	{
-		//EDN_INFO("mouse-event GDK_SCROLL_UP");
-		m_bufferManager->Get(m_bufferID)->ScrollUp();
-		MarkToReedraw();
-		ewol::widgetManager::FocusKeep(this);
-	} else if (5 == IdInput && ewol::EVENT_INPUT_TYPE_UP == typeEvent)
-	{
-		//EDN_INFO("mouse-event GDK_SCROLL_DOWN");
-		m_bufferManager->Get(m_bufferID)->ScrollDown();
-		MarkToReedraw();
-		ewol::widgetManager::FocusKeep(this);
-	}
-	*/
 	return true;
 }
 
