@@ -29,6 +29,7 @@
 #include <BufferText.h>
 #include <toolsMemory.h>
 #include <etk/RegExp.h>
+#include <etk/unicode.h>
 
 #include <ewol/ewol.h>
 #include <ewol/OObject.h>
@@ -1035,102 +1036,94 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
  * @return ---
  *
  */
-void BufferText::AddChar(char * UTF8data)
+void BufferText::AddChar(uniChar_t unicodeData)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
-
-	int32_t size=strlen(UTF8data);
-	bool actionDone = false;
-	if (1==size) {
-		if (UTF8data[0] == 0x09) {
-			if (false == haveSelectionActive) {
+	if (unicodeData == 0x09) {
+		if (false == haveSelectionActive) {
+			etk::VectorType<int8_t> tmpVect;
+			tmpVect.PushBack(0x09);
+			m_EdnBuf.Insert(m_cursorPos, tmpVect);
+			SetInsertPosition(m_cursorPos+1, true);
+		} else {
+			// Indent depend of the multiline in the selection ...
+			// count the number of line : 
+			int32_t nbSelectedLines = m_EdnBuf.CountLines(SelectionStart, SelectionEnd);
+			if (0 == nbSelectedLines) {
 				etk::VectorType<int8_t> tmpVect;
 				tmpVect.PushBack(0x09);
-				m_EdnBuf.Insert(m_cursorPos, tmpVect);
-				SetInsertPosition(m_cursorPos+1, true);
-			} else {
-				// Indent depend of the multiline in the selection ...
-				// count the number of line : 
-				int32_t nbSelectedLines = m_EdnBuf.CountLines(SelectionStart, SelectionEnd);
-				if (0 == nbSelectedLines) {
-					etk::VectorType<int8_t> tmpVect;
-					tmpVect.PushBack(0x09);
-					m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
-					SetInsertPosition(SelectionStart+tmpVect.Size(), true);
-				} else {
-					if (true == ewol::IsSetShift() ) {
-						m_cursorPos = m_EdnBuf.UnIndent(SELECTION_PRIMARY);
-					} else {
-						m_cursorPos = m_EdnBuf.Indent(SELECTION_PRIMARY);
-					}
-				}
-			}
-			actionDone = true;
-		} else if (UTF8data[0] == '\n') {
-			etk::VectorType<int8_t> tmpVect;
-			if (true == ewol::IsSetShift()) {
-				tmpVect.PushBack('\r');
-			} else {
-				tmpVect.PushBack('\n');
-				// if Auto indent Enable ==> we get the start of the previous line and add it to tne new one
-				if (true == globals::IsSetAutoIndent() ) {
-					int32_t l_lineStart;
-					// Get the begin of the line or the begin of the line befor selection
-					if (false == haveSelectionActive) {
-						l_lineStart = m_EdnBuf.StartOfLine(m_cursorPos);
-					} else {
-						l_lineStart = m_EdnBuf.StartOfLine(SelectionStart);
-					}
-					// add same characters in the temporar buffer
-					for (int32_t kk=l_lineStart; kk<m_cursorPos; kk++) {
-						if (' ' == m_EdnBuf[kk]) {
-							tmpVect.PushBack(' ');
-						} else if('\t' == m_EdnBuf[kk]) {
-							tmpVect.PushBack('\t');
-						} else {
-							break;
-						}
-					}
-				}
-			}
-			// Set temporary buffer in the real buffer
-			if (false == haveSelectionActive) {
-				m_EdnBuf.Insert(m_cursorPos, tmpVect);
-				SetInsertPosition(m_cursorPos+tmpVect.Size(), true);
-			} else {
 				m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
 				SetInsertPosition(SelectionStart+tmpVect.Size(), true);
-			}
-			actionDone = true;
-		} else if (UTF8data[0] == 0x7F ) {
-			//EDN_INFO("keyEvent : <Suppr>	pos=" << m_cursorPos);
-			if (false == haveSelectionActive) {
-				m_EdnBuf.Remove(m_cursorPos, m_cursorPos+1);
 			} else {
-				m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
-				SetInsertPosition(SelectionStart, true);
+				if (true == ewol::IsSetShift() ) {
+					m_cursorPos = m_EdnBuf.UnIndent(SELECTION_PRIMARY);
+				} else {
+					m_cursorPos = m_EdnBuf.Indent(SELECTION_PRIMARY);
+				}
 			}
-			actionDone = true;
-		} else if (UTF8data[0] == 0x08) {
-			//EDN_INFO("keyEvent : <Del>		pos=" << m_cursorPos);
-			if (false == haveSelectionActive) {
-				m_EdnBuf.Remove(m_cursorPos-1, m_cursorPos);
-				SetInsertPosition(m_cursorPos-1, true);
-			} else {
-				m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
-				SetInsertPosition(SelectionStart, true);
-			}
-			actionDone = true;
 		}
-	}
-	
-	if (false == actionDone) {
+	} else if (unicodeData == '\n') {
+		etk::VectorType<int8_t> tmpVect;
+		if (true == ewol::IsSetShift()) {
+			tmpVect.PushBack('\r');
+		} else {
+			tmpVect.PushBack('\n');
+			// if Auto indent Enable ==> we get the start of the previous line and add it to tne new one
+			if (true == globals::IsSetAutoIndent() ) {
+				int32_t l_lineStart;
+				// Get the begin of the line or the begin of the line befor selection
+				if (false == haveSelectionActive) {
+					l_lineStart = m_EdnBuf.StartOfLine(m_cursorPos);
+				} else {
+					l_lineStart = m_EdnBuf.StartOfLine(SelectionStart);
+				}
+				// add same characters in the temporar buffer
+				for (int32_t kk=l_lineStart; kk<m_cursorPos; kk++) {
+					if (' ' == m_EdnBuf[kk]) {
+						tmpVect.PushBack(' ');
+					} else if('\t' == m_EdnBuf[kk]) {
+						tmpVect.PushBack('\t');
+					} else {
+						break;
+					}
+				}
+			}
+		}
+		// Set temporary buffer in the real buffer
+		if (false == haveSelectionActive) {
+			m_EdnBuf.Insert(m_cursorPos, tmpVect);
+			SetInsertPosition(m_cursorPos+tmpVect.Size(), true);
+		} else {
+			m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
+			SetInsertPosition(SelectionStart+tmpVect.Size(), true);
+		}
+	} else if (unicodeData == 0x7F ) {
+		//EDN_INFO("keyEvent : <Suppr>	pos=" << m_cursorPos);
+		if (false == haveSelectionActive) {
+			m_EdnBuf.Remove(m_cursorPos, m_cursorPos+1);
+		} else {
+			m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
+			SetInsertPosition(SelectionStart, true);
+		}
+	} else if (unicodeData == 0x08) {
+		//EDN_INFO("keyEvent : <Del>		pos=" << m_cursorPos);
+		if (false == haveSelectionActive) {
+			m_EdnBuf.Remove(m_cursorPos-1, m_cursorPos);
+			SetInsertPosition(m_cursorPos-1, true);
+		} else {
+			m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
+			SetInsertPosition(SelectionStart, true);
+		}
+	} else {
+		// normal adding char ...
 		if (true == m_EdnBuf.GetUTF8Mode()) {
+			char tmpUTF8[16];
+			unicode::convertUnicodeToUtf8(unicodeData, tmpUTF8);
 			etk::VectorType<int8_t> tmpVect;
-			int32_t localOfset = strlen(UTF8data);
-			tmpVect.PushBack((int8_t*)UTF8data, localOfset);
+			int32_t localOfset = strlen(tmpUTF8);
+			tmpVect.PushBack((int8_t*)tmpUTF8, localOfset);
 			if (false == haveSelectionActive) {
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
 				SetInsertPosition(m_cursorPos+localOfset, true);
@@ -1141,7 +1134,7 @@ void BufferText::AddChar(char * UTF8data)
 		} else {
 			// convert in the Good ISO format : 
 			char output_ISO;
-			convertUtf8ToIso(m_EdnBuf.GetCharsetType(), UTF8data, output_ISO);
+			unicode::convertUnicodeToIso(m_EdnBuf.GetCharsetType(), unicodeData, output_ISO);
 			//printf(" insert : \"%s\"==> 0x%08x=%d ", UTF8data, (unsigned int)output_ISO, (int)output_ISO);
 			etk::VectorType<int8_t> tmpVect;
 			tmpVect.PushBack(output_ISO);

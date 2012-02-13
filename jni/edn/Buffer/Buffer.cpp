@@ -270,7 +270,7 @@ void Buffer::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
  * @return ---
  *
  */
-void Buffer::AddChar(char * UTF8data)
+void Buffer::AddChar(uniChar_t unicodeData)
 {
 	// nothing to do
 }

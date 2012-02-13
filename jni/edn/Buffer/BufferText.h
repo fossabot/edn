@@ -54,7 +54,7 @@ class BufferText : public Buffer {
 		                  int32_t offsetX, int32_t offsetY,
 		                  int32_t sizeX, int32_t sizeY);
 		void      ForceReDraw(bool allElement);
-		void      AddChar(char * UTF8data);
+		void      AddChar(uniChar_t unicodeData);
 		void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);
 		void      MouseSelectFromCursorTo(int32_t width, int32_t height);
 		void      MouseEvent(int32_t width, int32_t height);
