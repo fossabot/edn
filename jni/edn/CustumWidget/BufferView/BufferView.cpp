@@ -90,7 +90,7 @@ bool BufferView::GetTitle(int32_t colomn, etk::String &myTitle, color_ts &fg, co
 uint32_t BufferView::GetNuberOfRaw(void)
 {
 	if (NULL != m_bufferManager) {
-		return m_bufferManager->Size();
+		return m_bufferManager->SizeOpen();
 	}
 	return 0;
 }
@@ -101,15 +101,18 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::String &myTextToWr
 	bool isModify;
 	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;
 	basicColor_te selectBG = COLOR_LIST_BG_1;
-	if (m_bufferManager->Exist(raw)) {
-		isModify = m_bufferManager->Get(raw)->IsModify();
-		name = m_bufferManager->Get(raw)->GetFileName();
+	
+	// transforme the ID in the real value ...
+	int32_t realID = m_bufferManager->WitchBuffer(raw+1);
+	if (m_bufferManager->Exist(realID)) {
+		isModify = m_bufferManager->Get(realID)->IsModify();
+		name = m_bufferManager->Get(realID)->GetFileName();
 		char *tmpModify = (char*)" ";
 		if (true == isModify) {
 			tmpModify = (char*)"M";
 		}
 		char name2[1024] = "";
-		sprintf(name2, "[%2d](%s) %s", raw, tmpModify, name.GetShortFilename().c_str() );
+		sprintf(name2, "[%2d](%s) %s", realID, tmpModify, name.GetShortFilename().c_str() );
 		
 		myTextToWrite = name2;
 		
@@ -231,7 +234,6 @@ gboolean BufferView::CB_displayDraw( GtkWidget *widget, GdkEventExpose *event, g
 			monDrawer.Flush();
 			lineID ++;
 		}
-		
 	}
 	return TRUE;
 

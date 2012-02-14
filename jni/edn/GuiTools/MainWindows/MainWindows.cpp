@@ -237,6 +237,23 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 			}
 		}
 	} else if (generateEventId == ednEventPopUpFileSaveAs) {
+		// get widget:
+		ewol::FileChooser * tmpWidget = (ewol::FileChooser*)ewol::widgetManager::Get(widgetID);
+		if (NULL == tmpWidget) {
+			EDN_ERROR("impossible to get pop_upWidget " << widgetID);
+			PopUpWidgetPop();
+			return false;
+		}
+		// get the filename : 
+		etk::String tmpData = tmpWidget->GetCompleateFileName();
+		EDN_DEBUG("Request Saving As file : " << tmpData);
+		
+		BufferManager * myMng = BufferManager::getInstance();
+		myMng->Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
+		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave, m_currentSavingAsIdBuffer);
+		
+		//ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData.c_str());
+		
 		PopUpWidgetPop();
 	}
 	return true;

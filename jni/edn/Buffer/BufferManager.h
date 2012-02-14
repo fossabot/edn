@@ -60,6 +60,7 @@ class BufferManager: public etk::Singleton<BufferManager>, public ewol::Widget
 		int32_t     GetId(etk::File &myFile);
 		// return the number of buffer (open in the past) if 5 buffer open and 4 close ==> return 5
 		uint32_t    Size(void);
+		uint32_t    SizeOpen(void);
 		int32_t     WitchBuffer(int32_t iEmeElement);
 		
 

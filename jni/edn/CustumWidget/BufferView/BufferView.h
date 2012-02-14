@@ -40,7 +40,6 @@ class BufferView : public ewol::List
 		// Constructeur
 		BufferView(void);
 		~BufferView(void);
-		//GtkWidget	*GetMainWidget(void);
 		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
 	protected:
 		// function call to display the list :

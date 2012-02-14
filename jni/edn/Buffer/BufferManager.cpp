@@ -51,6 +51,8 @@ BufferManager::BufferManager(void)
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiClose);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiSave);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgCodeViewSelectedId);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
+	
 	/*
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerNewFile);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferManagerSaveAll);
@@ -83,7 +85,21 @@ BufferManager::~BufferManager(void)
 
 bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y)
 {
-	if (generateEventId == ednMsgGuiNew) {
+	if (generateEventId == ednMsgBufferId) {
+		// select a new buffer ID :
+		if (NULL == data) {
+			EDN_ERROR("Request select buffer ID = NULL ????");
+		} else {
+			int32_t newID = -1;
+			sscanf(data, "%d", &newID);
+			if(true == Exist(newID)) {
+				m_idSelected = newID;
+			} else {
+				m_idSelected = -1;
+				EDN_ERROR("Request a non existant ID : " << newID << " reset to -1...");
+			}
+		}
+	} else if (generateEventId == ednMsgGuiNew) {
 		int32_t newOne = Create();
 		if (-1 != newOne) {
 			m_idSelected = newOne;
@@ -134,10 +150,48 @@ bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateE
 		if (NULL == data) {
 			EDN_ERROR("Null data for close file ... ");
 		} else {
-			if (0 == strcmp(data , "current")) {
+			if (0 == strcmp(data , "All")) {
 				
-			} else if (0 == strcmp(data , "All")) {
-				
+			} else {
+				int32_t closeID = -1;
+				if (0 == strcmp(data , "current")) {
+					closeID = m_idSelected;
+					EDN_DEBUG("Close specific buffer ID" << closeID);
+				} else {
+					// close specific buffer ...
+					sscanf(data, "%d", &closeID);
+					EDN_DEBUG("Close specific buffer ID="<< closeID);
+				}
+				if(true == Exist(closeID)) {
+					// Get the new display buffer 
+					if (m_idSelected == closeID) {
+						// Try previous buffer
+						int32_t destBuffer = -1;
+						for(int32_t ii=closeID-1; ii >= 0; ii--) {
+							if (true == Exist(ii) ) {
+								destBuffer = ii;
+								break;
+							}
+						}
+						// try next buffer
+						if (-1 == destBuffer) {
+							for(int32_t ii=closeID+1; ii < listBuffer.Size(); ii++) {
+								if (true == Exist(ii) ) {
+									destBuffer = ii;
+									break;
+								}
+							}
+						}
+						// set it to the currect display
+						ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, destBuffer);
+						m_idSelected = destBuffer;
+					}
+					// Remove requested buffer
+					Remove(closeID);
+					ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferListChange);
+				} else {
+					EDN_ERROR("Request Close of a non existant ID : " << closeID);
+				}
 			}
 		}
 	} else if (generateEventId == ednMsgCodeViewSelectedId) {
@@ -160,39 +214,6 @@ bool BufferManager::OnEventAreaExternal(int32_t widgetID, const char * generateE
 	/*
 	switch (id)
 	{
-		case EDN_MSG__BUFF_ID_CLOSE:
-			// Check buffer existence
-			if(true == Exist(dataID)) {
-				// Get the new display buffer 
-				if (m_idSelected == dataID) {
-					// Try previous buffer
-					int32_t destBuffer = -1;
-					for(int32_t ii=dataID-1; ii >= 0; ii--) {
-						if (true == Exist(ii) ) {
-							destBuffer = ii;
-							break;
-						}
-					}
-					//EDN_DEBUG("new buffer selected : ?? " << destBuffer);
-					// try next buffer
-					if (-1 == destBuffer) {
-						for(int32_t ii=dataID+1; ii < listBuffer.Size(); ii++) {
-							if (true == Exist(ii) ) {
-								destBuffer = ii;
-								break;
-							}
-						}
-					}
-					//EDN_DEBUG("new buffer selected : ?? " << destBuffer);
-					// set it to the currect display
-					SendMessage(EDN_MSG__CURRENT_CHANGE_BUFFER_ID, destBuffer);
-				}
-				//EDN_DEBUG("Remove : " << dataID);
-				// Remove requested buffer
-				Remove(dataID);
-			}
-			break;
-		case EDN_MSG__BUFF_ID_SAVE:
 			// Check buffer existence
 			if(true == Exist(dataID)) {
 				// If no name ==> request a Gui display ...
@@ -342,6 +363,19 @@ uint32_t BufferManager::Size(void)
 	return listBuffer.Size();
 }
 
+// nb of opens file Now ...
+uint32_t BufferManager::SizeOpen(void)
+{
+	uint32_t jjj = 0;
+	// check if the Buffer existed
+	for (int32_t iii=0; iii<listBuffer.Size(); iii++) {
+		// check if the buffer already existed
+		if (NULL != listBuffer[iii]) {
+			jjj++;
+		}
+	}
+	return jjj;
+}
 
 /**
  * @brief
