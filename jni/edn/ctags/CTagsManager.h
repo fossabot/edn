@@ -58,9 +58,9 @@ class CTagsManager: public etk::Singleton<CTagsManager>, public ewol::Widget
 		int32_t                    MultipleJump(void);
 		void                       JumpTo(void);
 		void                       PrintTag(const tagEntry *entry, bool small);
-		etk::String                GetFolder(etk::String &inputString);
-		etk::String                m_tagFolderBase;
-		etk::String                m_tagFilename;
+		etk::UString               GetFolder(etk::UString &inputString);
+		etk::UString               m_tagFolderBase;
+		etk::UString               m_tagFilename;
 		tagFile *                  m_ctagFile;
 		// history system
 		void                       AddToHistory(int32_t bufferID);

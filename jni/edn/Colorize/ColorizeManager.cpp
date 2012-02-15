@@ -61,9 +61,9 @@ bool ColorizeManager::OnEventAreaExternal(int32_t widgetID, const char * generat
 		case EDN_MSG__RELOAD_COLOR_FILE:
 			{
 				// Reaload File
-				// TODO : Check this : Pb in the recopy etk::String element
-				etk::String plop = m_fileColor;
-				LoadFile(plop.c_str());
+				// TODO : Check this : Pb in the recopy etk::UString element
+				etk::UString plop = m_fileColor;
+				LoadFile(plop);
 			}
 			break;
 	}
@@ -72,11 +72,13 @@ bool ColorizeManager::OnEventAreaExternal(int32_t widgetID, const char * generat
 }
 
 
-void ColorizeManager::LoadFile(etk::String &xmlFilename)
+void ColorizeManager::LoadFile(etk::UString &xmlFilename)
 {
-	LoadFile(xmlFilename.c_str());
+	// TODO : Remove this
+	LoadFile(xmlFilename.Utf8Data());
 }
 
+// TODO : Remove this ...
 void ColorizeManager::LoadFile(const char * xmlFilename)
 {
 	// Remove all old color : 
@@ -273,11 +275,12 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 	//SendMessage(EDN_MSG__USER_DISPLAY_CHANGE);
 }
 
+// TODO : Remove this ...
 Colorize *ColorizeManager::Get(const char *colorName)
 {
 	int32_t i;
 	for (i=0; i<listMyColor.Size(); i++) {
-		etk::String elementName = listMyColor[i]->GetName();
+		etk::UString elementName = listMyColor[i]->GetName();
 		if (elementName == colorName) {
 			return listMyColor[i];
 		}
@@ -287,9 +290,10 @@ Colorize *ColorizeManager::Get(const char *colorName)
 	return errorColor;
 }
 
-Colorize *ColorizeManager::Get(etk::String &colorName)
+Colorize *ColorizeManager::Get(etk::UString &colorName)
 {
-	return Get(colorName.c_str());
+	// TODO : Remove this
+	return Get(colorName.Utf8Data());
 }
 
 color_ts & ColorizeManager::Get(basicColor_te myColor)
@@ -302,20 +306,23 @@ color_ts & ColorizeManager::Get(basicColor_te myColor)
 }
 
 
+// TODO : Remove this ...
 bool ColorizeManager::Exist(const char *colorName)
 {
 	int32_t i;
 	for (i=0; i<listMyColor.Size(); i++) {
-		etk::String elementName = listMyColor[i]->GetName();
+		etk::UString elementName = listMyColor[i]->GetName();
 		if (elementName == colorName) {
 			return true;
 		}
 	}
 	return false;
 }
-bool ColorizeManager::Exist(etk::String &colorName)
+
+bool ColorizeManager::Exist(etk::UString &colorName)
 {
-	return Exist(colorName.c_str());
+	// TODO : Remove this
+	return Exist(colorName.Utf8Data());
 }
 
 void ColorizeManager::DisplayListOfColor(void)
@@ -323,7 +330,7 @@ void ColorizeManager::DisplayListOfColor(void)
 	int32_t i;
 	EDN_INFO(PFX"List of ALL COLOR : ");
 	for (i=0; i<listMyColor.Size(); i++) {
-		//etk::String elementName = listMyColor[i]->GetName();
+		//etk::UString elementName = listMyColor[i]->GetName();
 		//EDN_INFO(i << " : \"" <<  elementName.c_str() << "\"" );
 		listMyColor[i]->Display(i);
 	}

@@ -50,12 +50,12 @@ HighlightPattern::~HighlightPattern(void)
 	delete(m_regExpStop);
 }
 
-void  HighlightPattern::SetPaternStart(etk::String &regExp)
+void  HighlightPattern::SetPaternStart(etk::UString &regExp)
 {
 	m_regExpStart->SetRegExp(regExp);
 }
 
-void  HighlightPattern::SetPaternStop(etk::String &regExp)
+void  HighlightPattern::SetPaternStop(etk::UString &regExp)
 {
 	if (regExp.Size() != 0) {
 		m_regExpStop->SetRegExp(regExp);
@@ -65,17 +65,17 @@ void  HighlightPattern::SetPaternStop(etk::String &regExp)
 	}
 }
 
-void HighlightPattern::SetEscapeChar(etk::String &EscapeChar)
+void HighlightPattern::SetEscapeChar(etk::UString &EscapeChar)
 {
 	if (EscapeChar.Size()>0) {
-		m_escapeChar = EscapeChar.c_str()[0];
+		m_escapeChar = EscapeChar[0];
 	} else {
 		m_escapeChar = 0;
 	}
 }
 
 
-void  HighlightPattern::SetColor(etk::String &colorName)
+void  HighlightPattern::SetColor(etk::UString &colorName)
 {
 	m_colorName = colorName;
 	ColorizeManager *myColorManager = ColorizeManager::getInstance();
@@ -140,7 +140,7 @@ void HighlightPattern::ParseRules(TiXmlNode *child, int32_t level)
 	//--------------------------------------------------------------------------------------------
 	// process attribute	
 	const char *highLightName = child->ToElement()->Attribute("name");
-	etk::String myEdnDataTmp = "???";
+	etk::UString myEdnDataTmp = "???";
 	if (NULL != highLightName) {
 		myEdnDataTmp = highLightName;
 	}
@@ -152,7 +152,7 @@ void HighlightPattern::ParseRules(TiXmlNode *child, int32_t level)
 		const char *myData = xChild->GetText();
 		if (myData) {
 			//EDN_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			etk::String myEdnData = myData;
+			etk::UString myEdnData = myData;
 			SetColor(myEdnData);
 		}
 	}
@@ -161,7 +161,7 @@ void HighlightPattern::ParseRules(TiXmlNode *child, int32_t level)
 		const char *myData = xChild->GetText();
 		if (myData) {
 			//EDN_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			etk::String myEdnData = myData;
+			etk::UString myEdnData = myData;
 			SetPaternStart(myEdnData);
 		}
 	}
@@ -170,7 +170,7 @@ void HighlightPattern::ParseRules(TiXmlNode *child, int32_t level)
 		const char *myData = xChild->GetText();
 		if (myData) {
 			//EDN_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			etk::String myEdnData = myData;
+			etk::UString myEdnData = myData;
 			SetPaternStop(myEdnData);
 		}
 	}
@@ -179,7 +179,7 @@ void HighlightPattern::ParseRules(TiXmlNode *child, int32_t level)
 		const char *myData = xChild->GetText();
 		if (myData) {
 			//EDN_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			etk::String myEdnData = myData;
+			etk::UString myEdnData = myData;
 			SetEscapeChar(myEdnData);
 		}
 	}

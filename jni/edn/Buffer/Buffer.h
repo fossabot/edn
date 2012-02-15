@@ -26,7 +26,7 @@
 #ifndef __BUFFER_H__
 #define __BUFFER_H__
 
-#include <etk/String.h>
+#include <etk/UString.h>
 #include <etk/File.h>
 #include <Display.h>
 #include <etk/unicode.h>
@@ -61,7 +61,7 @@ class Buffer {
 			NameChange();
 		};
 		
-		void              SetFileName(etk::String &newName)
+		void              SetFileName(etk::UString &newName)
 		{
 			m_fileName.SetCompleateName(newName, etk::FILE_TYPE_DIRECT);
 			m_haveName = true;
@@ -107,9 +107,9 @@ class Buffer {
 		virtual void      Copy(int8_t clipboardID);
 		virtual void      Cut(int8_t clipboardID);
 		virtual void      Paste(int8_t clipboardID);
-		virtual void      Search(etk::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
-		virtual void      Replace(etk::String &data);
-		virtual int32_t   FindLine(etk::String &data);
+		virtual void      Search(etk::UString &data, bool back, bool caseSensitive, bool wrap, bool regExp);
+		virtual void      Replace(etk::UString &data);
+		virtual int32_t   FindLine(etk::UString &data);
 		virtual void      JumpAtLine(int32_t newLine);
 		virtual int32_t   GetCurrentLine(void);
 		

@@ -45,7 +45,7 @@ Buffer::Buffer()
 	static int32_t fileBasicID = 0;
 	m_fileModify = true;
 	m_haveName = false;
-	etk::String mString = "Untitle - ";
+	etk::UString mString = "Untitle - ";
 	mString += fileBasicID++;
 	SetFileName(mString);
 	m_haveName = false;
@@ -275,17 +275,17 @@ void Buffer::AddChar(uniChar_t unicodeData)
 	// nothing to do
 }
 
-void Buffer::Search(etk::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
+void Buffer::Search(etk::UString &data, bool back, bool caseSensitive, bool wrap, bool regExp)
 {
 	// nothing to do
 }
 
-void Buffer::Replace(etk::String &data)
+void Buffer::Replace(etk::UString &data)
 {
 	// nothing to do
 }
 
-int32_t Buffer::FindLine(etk::String &data)
+int32_t Buffer::FindLine(etk::UString &data)
 {
 	// nothing to do
 	return 0;

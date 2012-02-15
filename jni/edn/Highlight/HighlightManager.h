@@ -29,6 +29,7 @@
 class HighlightManager;
 
 #include <etk/Singleton.h>
+#include <etk/UString.h>
 #include <MsgBroadcast.h>
 #include <Highlight.h>
 #include <ewol/Widget.h>

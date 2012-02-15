@@ -31,13 +31,13 @@
 #define __class__	"SearchData"
 
 
-static etk::String m_findRequest = "";
+static etk::UString m_findRequest = "";
 
-void SearchData::SetSearch(etk::String &myData)
+void SearchData::SetSearch(etk::UString &myData)
 {
 	m_findRequest = myData;
 }
-void SearchData::GetSearch(etk::String &myData)
+void SearchData::GetSearch(etk::UString &myData)
 {
 	myData = m_findRequest;
 }
@@ -49,12 +49,12 @@ bool SearchData::IsSearchEmpty(void)
 	return true;
 }
 
-static etk::String m_replaceRequest = "";
-void SearchData::SetReplace(etk::String &myData)
+static etk::UString m_replaceRequest = "";
+void SearchData::SetReplace(etk::UString &myData)
 {
 	m_replaceRequest = myData;
 }
-void SearchData::GetReplace(etk::String &myData)
+void SearchData::GetReplace(etk::UString &myData)
 {
 	myData = m_replaceRequest;
 }

@@ -42,7 +42,7 @@ class CodeView :public ewol::WidgetScrooled
 		virtual ~CodeView(void);
 		virtual bool   CalculateMinSize(void);
 	private:
-		etk::String         m_label;
+		etk::UString         m_label;
 		color_ts            m_textColorFg;  //!< Text color
 		color_ts            m_textColorBg;  //!< Background color
 		BufferManager *     m_bufferManager;
@@ -66,10 +66,10 @@ class CodeView :public ewol::WidgetScrooled
 		int32_t m_fontBoldItalic;
 	public:
 		void SetFontSize(int32_t size);
-		void SetFontNameNormal(etk::String fontName);
-		void SetFontNameBold(etk::String fontName);
-		void SetFontNameItalic(etk::String fontName);
-		void SetFontNameBoldItalic(etk::String fontName);
+		void SetFontNameNormal(etk::UString fontName);
+		void SetFontNameBold(etk::UString fontName);
+		void SetFontNameItalic(etk::UString fontName);
+		void SetFontNameBoldItalic(etk::UString fontName);
 	private:
 		void CalculateMaxSize(void);
 };

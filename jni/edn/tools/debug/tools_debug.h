@@ -59,7 +59,7 @@ extern const char * ednLog;
 #	define EDN_VERBOSE(data)         do {}while(0)
 #endif
 
-#define EDN_TODO(data)             DRAW_WARNING("TODO : " << data)
+#define EDN_TODO(data)             ETK_WARNING(ednLog, "TODO : " << data)
 
 #define EDN_ASSERT(cond, data)     ETK_ASSERT(ednLog, cond, data)
 

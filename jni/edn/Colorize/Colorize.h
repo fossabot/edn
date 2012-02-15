@@ -31,12 +31,12 @@ class Colorize {
 	public:
 		// Constructeur
 		Colorize(void);
-		Colorize(etk::String &newColorName);
+		Colorize(etk::UString &newColorName);
 		~Colorize(void);
 		
-		void SetName(etk::String &newColorName);
+		void SetName(etk::UString &newColorName);
 		void SetName(const char *newColorName);
-		etk::String GetName(void);
+		etk::UString GetName(void);
 		void SetFgColor(const char *myColor);
 		void SetBgColor(const char *myColor);
 		
@@ -50,10 +50,10 @@ class Colorize {
 		bool GetItalic(void);
 		bool GetBold(void);
 		
-		void Display(int32_t i) { EDN_INFO("        " << i << " : \"" <<  ColorName.c_str() << "\"" << "     fg="<< m_colorFG.red <<","<< m_colorFG.green <<","<< m_colorFG.blue <<","<< m_colorFG.alpha /*<<"     bg="<< m_colorBG.red <<","<< m_colorBG.green <<","<< m_colorBG.blue*/ ); };
+		void Display(int32_t i) { EDN_INFO("        " << i << " : \"" <<  ColorName << "\"" << "     fg="<< m_colorFG.red <<","<< m_colorFG.green <<","<< m_colorFG.blue <<","<< m_colorFG.alpha /*<<"     bg="<< m_colorBG.red <<","<< m_colorBG.green <<","<< m_colorBG.blue*/ ); };
 
 	private:
-		etk::String ColorName;						//!< curent color Name
+		etk::UString ColorName;						//!< curent color Name
 		color_ts m_colorFG;
 		color_ts m_colorBG;
 		

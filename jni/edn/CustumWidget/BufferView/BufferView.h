@@ -45,9 +45,9 @@ class BufferView : public ewol::List
 		// function call to display the list :
 		virtual color_ts GetBasicBG(void);
 		virtual uint32_t GetNuberOfColomn(void);
-		virtual bool GetTitle(int32_t colomn, etk::String &myTitle, color_ts &fg, color_ts &bg);
+		virtual bool GetTitle(int32_t colomn, etk::UString &myTitle, color_ts &fg, color_ts &bg);
 		virtual uint32_t GetNuberOfRaw(void);
-		virtual bool GetElement(int32_t colomn, int32_t raw, etk::String &myTextToWrite, color_ts &fg, color_ts &bg);
+		virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, color_ts &fg, color_ts &bg);
 		virtual bool OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, etkFloat_t x, etkFloat_t y);
 	private:
 		// récupération des proprieter général...

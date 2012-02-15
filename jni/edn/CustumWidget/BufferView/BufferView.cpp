@@ -81,7 +81,7 @@ uint32_t BufferView::GetNuberOfColomn(void)
 	return 1;
 }
 
-bool BufferView::GetTitle(int32_t colomn, etk::String &myTitle, color_ts &fg, color_ts &bg)
+bool BufferView::GetTitle(int32_t colomn, etk::UString &myTitle, color_ts &fg, color_ts &bg)
 {
 	myTitle = "Buffers : ";
 	return true;
@@ -95,7 +95,7 @@ uint32_t BufferView::GetNuberOfRaw(void)
 	return 0;
 }
 
-bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::String &myTextToWrite, color_ts &fg, color_ts &bg)
+bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, color_ts &fg, color_ts &bg)
 {
 	etk::File name;
 	bool isModify;
@@ -111,10 +111,12 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::String &myTextToWr
 		if (true == isModify) {
 			tmpModify = (char*)"M";
 		}
-		char name2[1024] = "";
-		sprintf(name2, "[%2d](%s) %s", realID, tmpModify, name.GetShortFilename().c_str() );
-		
-		myTextToWrite = name2;
+		myTextToWrite  = "[";
+		myTextToWrite += realID;
+		myTextToWrite += "](";
+		myTextToWrite += tmpModify;
+		myTextToWrite += ") ";
+		myTextToWrite += name.GetShortFilename();
 		
 		if (true == isModify) {
 			selectFG = COLOR_LIST_TEXT_MODIFY;

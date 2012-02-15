@@ -51,13 +51,13 @@ class HighlightPattern {
 		HighlightPattern(void);
 		~HighlightPattern(void);
 		
-		void            SetName(etk::String &name) { m_paternName = name;};
-		etk::String     GetName(void) { return m_paternName;};
+		void            SetName(etk::UString &name) { m_paternName = name;};
+		etk::UString    GetName(void) { return m_paternName;};
 		
-		void            SetPaternStart(etk::String &regExp);
-		void            SetPaternStop(etk::String &regExp);
-		void            SetColor(etk::String &colorName);
-		void            SetEscapeChar(etk::String &EscapeChar);
+		void            SetPaternStart(etk::UString &regExp);
+		void            SetPaternStop(etk::UString &regExp);
+		void            SetColor(etk::UString &colorName);
+		void            SetEscapeChar(etk::UString &EscapeChar);
 		void            SetMultiline(bool enable) { m_multiline = enable; };
 		
 		void            SetLevel(int32_t newLevel) { m_level = newLevel; };
@@ -73,14 +73,14 @@ class HighlightPattern {
 
 	private:
 		int32_t                             m_level;                    //!< Level of the pattern ==> this is to overwrite next pattern when we create an higher ....
-		etk::String                         m_paternName;               //!< Current style name (like "c++" or "c" or "script Bash")
-		etk::String                         m_colorName;                //!< Current color name
+		etk::UString                        m_paternName;               //!< Current style name (like "c++" or "c" or "script Bash")
+		etk::UString                        m_colorName;                //!< Current color name
 		Colorize *                          m_color;                    //!< Link to the color manager
 		etk::RegExp<EdnVectorBuf> *         m_regExpStart;              //!< Start of Regular expression
 		etk::RegExp<EdnVectorBuf> *         m_regExpStop;               //!< Stop of Regular Expression
 		bool                                m_haveStopPatern;           //!< Stop patern presence
 		bool                                m_multiline;                //!< The patern is multiline
-		char                                m_escapeChar;               //!< Escape char to prevent exeit of patern ....
+		uniChar_t                           m_escapeChar;               //!< Escape char to prevent exeit of patern ....
 		etk::VectorType<HighlightPattern *> m_subPatern;                //!< Under patern of this one
 //		etk::VectorType<HighlightPattern *> m_subColor;                 //!< Under Color in the start RegExp ...
 };

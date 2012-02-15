@@ -50,9 +50,9 @@ extern "C" {
 class Highlight {
 	public:
 		// Constructeur
-		Highlight(etk::String &xmlFilename);
+		Highlight(etk::UString &xmlFilename);
 		~Highlight(void);
-		bool HasExtention(etk::String &ext);
+		bool HasExtention(etk::UString &ext);
 		bool FileNameCompatible(etk::File &fileName);
 		void Display(void);
 		void ReloadColor(void);
@@ -67,8 +67,8 @@ class Highlight {
 		            EdnVectorBuf &buffer);
 	private:
 		void                                ParseRules(TiXmlNode *child, etk::VectorType<HighlightPattern*> &mListPatern, int32_t level);
-		etk::String                         m_styleName;               //!< curent style name (like "c++" or "c" or "script Bash")
-		etk::VectorType<etk::String*>       m_listExtentions;          //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
+		etk::UString                        m_styleName;               //!< curent style name (like "c++" or "c" or "script Bash")
+		etk::VectorType<etk::UString*>      m_listExtentions;          //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
 		etk::VectorType<HighlightPattern*>  m_listHighlightPass1;      //!< List of ALL hightlight modules (pass 1 ==> when we load and wride data on the buffer)
 		etk::VectorType<HighlightPattern*>  m_listHighlightPass2;      //!< List of ALL hightlight modules (pass 2 ==> When we display the buffer( only the display area (100 lines)) )
 };

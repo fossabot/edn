@@ -91,7 +91,7 @@ bool HighlightManager::Exist(etk::File &fileName)
 
 void HighlightManager::loadLanguages(void)
 {
-	etk::String xmlFilename = "lang_c.xml";
+	etk::UString xmlFilename = "lang_c.xml";
 	Highlight *myHightline = new Highlight(xmlFilename);
 	listHighlight.PushBack(myHightline);
 	

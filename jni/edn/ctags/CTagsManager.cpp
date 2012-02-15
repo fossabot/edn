@@ -72,7 +72,7 @@ CTagsManager::~CTagsManager(void)
 	*/
 }
 
-etk::String CTagsManager::GetFolder(etk::String &inputString)
+etk::UString CTagsManager::GetFolder(etk::UString &inputString)
 {
 	/*
 	char tmpVal[4096];
@@ -82,7 +82,7 @@ etk::String CTagsManager::GetFolder(etk::String &inputString)
 	if (NULL == ptr) {
 		ptr = strrchr(tmpVal, '\\');
 	}
-	etk::String out = "./";
+	etk::UString out = "./";
 	if (NULL != ptr) {
 		*ptr = '\0';
 		out = tmpVal;
@@ -90,7 +90,7 @@ etk::String CTagsManager::GetFolder(etk::String &inputString)
 	}
 	return out;
 	*/
-	etk::String out = "./";
+	etk::UString out = "./";
 	return out;
 }
 
@@ -360,7 +360,7 @@ void CTagsManager::JumpTo(void)
 			
 			// For all tags : Save in an internal Structure :
 			do {
-				etk::String destinationFilename = m_tagFolderBase;
+				etk::UString destinationFilename = m_tagFolderBase;
 				destinationFilename += entry.file;
 				etk::File myfile = destinationFilename;
 				TagListFind_ts myStruct;

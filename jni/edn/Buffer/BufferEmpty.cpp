@@ -90,13 +90,25 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored* OOTextNormal,
 	int32_t fontId = OOTextNormal->GetFontID();
 	int32_t letterHeight = ewol::GetHeight(fontId);
 	
+	coord2D_ts textPos;
+	textPos.x = 20;
+	textPos.y = 20;
+	clipping_ts drawClipping;
+	drawClipping.x = 0;
+	drawClipping.y = 0;
+	drawClipping.w = sizeX;
+	drawClipping.h = sizeY;
+	
 	myColor = myColorManager->Get("normal");
 	OOTextNormal->SetColor(myColor->GetFG());
-	OOTextNormal->TextAdd(20, 20, "edn - Editeur De N'ours, l'Editeur Desoxyribo-Nucleique", sizeX);
+	etk::UString tmpDisplay = "edn - Editeur De N'ours";
+	OOTextBold->Text(textPos, drawClipping, tmpDisplay);
 	
 	myColor = myColorManager->Get("commentDoxygen");
 	OOTextNormal->SetColor(myColor->GetFG());
-	OOTextNormal->TextAdd(20, (int32_t)(20 + letterHeight*1.30), "No Buffer Availlable to display", sizeX);
+	textPos.y = (int32_t)(textPos.y + letterHeight*1.30);
+	tmpDisplay = "No Buffer Availlable to display";
+	OOTextNormal->Text(textPos, drawClipping, tmpDisplay);
 	
 	
 	color_ts bgColor;  //!< Text color

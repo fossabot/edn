@@ -61,17 +61,17 @@ class ColorizeManager: public etk::Singleton<ColorizeManager>, public ewol::Widg
 	public:
 		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
 	public:
-		void        LoadFile(etk::String &xmlFilename);
+		void        LoadFile(etk::UString &xmlFilename);
 		void        LoadFile(const char * xmlFilename);
 		Colorize *  Get(const char *colorName);
-		Colorize *  Get(etk::String &colorName);
+		Colorize *  Get(etk::UString &colorName);
 		color_ts &  Get(basicColor_te myColor);
-		bool        Exist(etk::String &colorName);
+		bool        Exist(etk::UString &colorName);
 		bool        Exist(const char *colorName);
 		void        DisplayListOfColor(void);
 
 	private:
-		etk::String                 m_fileColor;
+		etk::UString                 m_fileColor;
 		etk::VectorType<Colorize*>  listMyColor;		//!< List of ALL Color
 		Colorize *                  errorColor;
 		color_ts                    basicColors[COLOR_NUMBER_MAX];

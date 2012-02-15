@@ -61,7 +61,7 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 	int32_t i;
 	/*
 	for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
-		etk::String ploppp;
+		etk::UString ploppp;
 		if (NULL != m_HLDataPass1[i].patern ) {
 			ploppp = ((HighlightPattern*)m_HLDataPass1[i].patern)->GetName();
 		}
@@ -105,7 +105,7 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 		//EDN_DEBUG("new size=" << (int32_t)m_HLDataPass1.Size()-1);
 		/*
 				for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
-					etk::String ploppp;
+					etk::UString ploppp;
 					if (NULL != m_HLDataPass1[i].patern ) {
 						ploppp = ((HighlightPattern*)m_HLDataPass1[i].patern)->GetName();
 					}
@@ -148,7 +148,7 @@ void EdnBuf::RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdd
 	}
 	/*
 	for (i=0; i< (int32_t)m_HLDataPass1.Size(); i++) {
-		etk::String ploppp;
+		etk::UString ploppp;
 		if (NULL != m_HLDataPass1[i].patern ) {
 			ploppp = ((HighlightPattern*)m_HLDataPass1[i].patern)->GetName();
 		}

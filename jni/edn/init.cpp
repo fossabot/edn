@@ -31,7 +31,6 @@
 #include <ColorizeManager.h>
 #include <HighlightManager.h>
 #include <ClipBoard.h>
-#include <etk/String.h>
 #include <WindowsManager.h>
 #include <Search.h>
 #include <unistd.h>
@@ -69,7 +68,7 @@ void APP_Init(void)
 
 	// set the default Path of the application : 
 	#ifdef PLATFORM_Linux
-		etk::String homedir;
+		etk::UString homedir;
 		#ifdef NDEBUG
 			homedir = "/usr/share/"PROJECT_NAME"/";
 		#else
@@ -82,7 +81,8 @@ void APP_Init(void)
 				homedir += "/assets/";
 			}
 		#endif
-		SetBaseFolderData(homedir.c_str());
+		// TODO : Remove the Utf8Data
+		SetBaseFolderData(homedir.Utf8Data());
 		SetBaseFolderDataUser("~/."PROJECT_NAME"/");
 		SetBaseFolderCache("/tmp/"PROJECT_NAME"/");
 	#endif
@@ -109,8 +109,8 @@ void APP_Init(void)
 	// set color and other trucs...
 	ColorizeManager *myColorManager = NULL;
 	myColorManager = ColorizeManager::getInstance();
-	etk::String homedir = "color_white.xml";
-	myColorManager->LoadFile( homedir.c_str() );
+	etk::UString homedir = "color_white.xml";
+	myColorManager->LoadFile( homedir.Utf8Data() );
 	myColorManager->DisplayListOfColor();
 	
 	HighlightManager *myHighlightManager = NULL;
@@ -141,7 +141,8 @@ void APP_Init(void)
 	
 	for( int32_t iii=0 ; iii<ewol::CmdLineNb(); iii++) {
 		EDN_INFO("need load file : \"" << ewol::CmdLineGet(iii) << "\"" );
-		ewol::widgetMessageMultiCast::Send(-1, ednMsgOpenFile, ewol::CmdLineGet(iii).c_str());
+		etk::UString tmpppp = ewol::CmdLineGet(iii);
+		ewol::widgetMessageMultiCast::Send(-1, ednMsgOpenFile, tmpppp);
 	}
 	EDN_INFO("==> Init Edn (END)");
 }

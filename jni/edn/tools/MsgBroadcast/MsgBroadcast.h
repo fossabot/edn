@@ -27,7 +27,7 @@
 #define __MSG_BROADCAST_H__
 
 #include <tools_debug.h>
-#include <etk/String.h>
+#include <etk/UString.h>
 
 
 // new list of edn event generic : 

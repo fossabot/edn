@@ -131,7 +131,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 					idSelected = dataID;
 				}
 				Buffer *myBuffer = BufferManager::getInstance()->Get(idSelected);
-				etk::String tmpString = "Save as file : ";
+				etk::UString tmpString = "Save as file : ";
 				tmpString += myBuffer->GetFileName().GetShortFilename().c_str();
 				GtkWidget *dialog = gtk_file_chooser_dialog_new( tmpString.c_str(), NULL,
 				                                                 GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -142,7 +142,7 @@ void WindowsManager::OnMessage(int32_t id, int32_t dataID)
 				gtk_window_set_skip_pager_hint(GTK_WINDOW(dialog), TRUE);
 				if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 				{
-					etk::String myfilename;
+					etk::UString myfilename;
 					myfilename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (dialog));
 					
 					myBuffer->SetFileName(myfilename);

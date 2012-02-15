@@ -45,7 +45,7 @@ void Highlight::ParseRules(TiXmlNode *child, etk::VectorType<HighlightPattern*> 
 
 
 
-Highlight::Highlight(etk::String &xmlFilename)
+Highlight::Highlight(etk::UString &xmlFilename)
 {
 	TiXmlDocument XmlDocument;
 
@@ -99,7 +99,7 @@ Highlight::Highlight(etk::String &xmlFilename)
 			const char *myData = child->ToElement()->GetText();
 			if (NULL != myData) {
 				//EDN_INFO(PFX"(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
-				etk::String * myEdnData = new etk::String(myData);
+				etk::UString * myEdnData = new etk::UString(myData);
 				m_listExtentions.PushBack(myEdnData);
 			}
 		} else if (!strcmp(child->Value(), "pass1")) {
@@ -180,7 +180,7 @@ void Highlight::ReloadColor(void)
 	}
 }
 
-bool Highlight::HasExtention(etk::String &ext)
+bool Highlight::HasExtention(etk::UString &ext)
 {
 	int32_t i;
 	for (i=0; i<m_listExtentions.Size(); i++) {
@@ -194,7 +194,7 @@ bool Highlight::HasExtention(etk::String &ext)
 bool Highlight::FileNameCompatible(etk::File &fileName)
 {
 	int32_t i;
-	etk::String extention;
+	etk::UString extention;
 	if (true == fileName.HasExtention() ) {
 		extention = "*.";
 		extention += fileName.GetExtention();

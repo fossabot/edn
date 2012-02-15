@@ -332,21 +332,21 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 			break;
 		case EDN_MSG__CURRENT_FIND_PREVIOUS:
 			{
-				etk::String myDataString;
+				etk::UString myDataString;
 				SearchData::GetSearch(myDataString);
 				m_bufferManager->Get(m_bufferID)->Search(myDataString, true, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
 			}
 			break;
 		case EDN_MSG__CURRENT_FIND_NEXT:
 			{
-				etk::String myDataString;
+				etk::UString myDataString;
 				SearchData::GetSearch(myDataString);
 				m_bufferManager->Get(m_bufferID)->Search(myDataString, false, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
 			}
 			break;
 		case EDN_MSG__CURRENT_REPLACE:
 			{
-				etk::String myDataString;
+				etk::UString myDataString;
 				SearchData::GetReplace(myDataString);
 				m_bufferManager->Get(m_bufferID)->Replace(myDataString);
 			}
@@ -403,7 +403,7 @@ void CodeView::SetFontSize(int32_t size)
 	m_fontSize = size;
 }
 
-void CodeView::SetFontNameNormal(etk::String fontName)
+void CodeView::SetFontNameNormal(etk::UString fontName)
 {
 	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
 	if (fontID >= 0) {
@@ -411,7 +411,7 @@ void CodeView::SetFontNameNormal(etk::String fontName)
 	}
 }
 
-void CodeView::SetFontNameBold(etk::String fontName)
+void CodeView::SetFontNameBold(etk::UString fontName)
 {
 	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
 	if (fontID >= 0) {
@@ -419,7 +419,7 @@ void CodeView::SetFontNameBold(etk::String fontName)
 	}
 }
 
-void CodeView::SetFontNameItalic(etk::String fontName)
+void CodeView::SetFontNameItalic(etk::UString fontName)
 {
 	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
 	if (fontID >= 0) {
@@ -427,7 +427,7 @@ void CodeView::SetFontNameItalic(etk::String fontName)
 	}
 }
 
-void CodeView::SetFontNameBoldItalic(etk::String fontName)
+void CodeView::SetFontNameBoldItalic(etk::UString fontName)
 {
 	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
 	if (fontID >= 0) {

@@ -138,7 +138,7 @@ BufferText::BufferText(etk::File &fileName) : Buffer(fileName)
 	FILE * myFile = NULL;
 	// try to open the file. if not existed, new file
 	
-	myFile = fopen(fileName.GetCompleateName().c_str(), "r");
+	myFile = fopen(fileName.GetCompleateName().Utf8Data(), "r");
 	if (NULL != myFile) {
 		m_EdnBuf.DumpFrom(myFile);
 		// close the input file
@@ -166,7 +166,7 @@ void BufferText::Save(void)
 {
 	EDN_INFO("Save File : \"" <<  GetFileName() << "\"" );
 	FILE * myFile = NULL;
-	myFile = fopen(GetFileName().GetCompleateName().c_str(), "w");
+	myFile = fopen(GetFileName().GetCompleateName().Utf8Data(), "w");
 	if (NULL != myFile) {
 		m_EdnBuf.DumpIn(myFile);
 		fclose(myFile);
@@ -247,7 +247,19 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 	OOColored->SetColor(myColorManager->Get(COLOR_LIST_BG_2));
 	OOColored->Rectangle( 0, positionY, sizeX+0.5*SEPARATION_SIZE_LINE_NUMBER, sizeY);
 	OOText->SetColor(myColorManager->Get(COLOR_CODE_LINE_NUMBER));
-	OOText->TextAdd(1, positionY, tmpLineNumber, -1);
+	
+	
+	coord2D_ts textPos;
+	textPos.x = 1;
+	textPos.y = positionY;
+	clipping_ts drawClipping;
+	drawClipping.x = 0;
+	drawClipping.y = 0;
+	drawClipping.w = sizeX;
+	drawClipping.h = sizeY;
+	// TODO : Remove this unreallistic leak of time
+	etk::UString tmppp = tmpLineNumber;
+	OOText->Text(textPos, drawClipping, tmppp);
 }
 
 #define CURSOR_WIDTH           (5)
@@ -391,6 +403,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	
 	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
 	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
+	etk::UString myStringToDisplay;
 	// draw the lineNumber : 
 	int32_t currentLineID = m_displayStartLineId+1;
 	EDN_VERBOSE("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
@@ -469,7 +482,9 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 				}
 			}
 			OOTextSelected->SetColor(selectColor->GetFG());
-			drawSize = OOTextSelected->TextAdd(textPos, drawClippingTextArea, displayChar);
+			// TODO : Remove this unreallistic leak of time
+			myStringToDisplay = displayChar;
+			drawSize = OOTextSelected->Text(textPos, drawClippingTextArea, myStringToDisplay);
 			if (true == haveBg ) {
 				OOColored->Rectangle(textPos.x, y, drawSize, letterHeight, drawClippingTextArea);
 			}
@@ -1153,16 +1168,17 @@ void BufferText::AddChar(uniChar_t unicodeData)
 }
 
 
-int32_t BufferText::FindLine(etk::String &data)
+int32_t BufferText::FindLine(etk::UString &data)
 {
 	if ( 0 == data.Size()) {
 		EDN_WARNING("no search data");
 		return 0;
 	}
 	EDN_INFO("Search data line : \"" << data << "\"");
-	etk::VectorType<int8_t> mVectSearch;
+	etk::VectorType<uniChar_t> mVectSearch;
 	mVectSearch = data.GetVector();
 	//EDN_INFO("search data Forward : startSearchPos=" << startSearchPos );
+	/*
 	int32_t foundPos;
 	bool findSomething = m_EdnBuf.SearchForward(0, mVectSearch, &foundPos, true);
 	// if find data : 
@@ -1171,6 +1187,9 @@ int32_t BufferText::FindLine(etk::String &data)
 	} else {
 		return 0;
 	}
+	*/
+	EDN_TODO("Remove for now ...");
+	return 0;
 }
 
 void BufferText::JumpAtLine(int32_t newLine)
@@ -1197,7 +1216,7 @@ int32_t BufferText::GetCurrentLine(void)
 
 
 
-void BufferText::Search(etk::String &data, bool back, bool caseSensitive, bool wrap, bool regExp)
+void BufferText::Search(etk::UString &data, bool back, bool caseSensitive, bool wrap, bool regExp)
 {
 	EDN_INFO("Search data : \"" << data << "\"");
 	
@@ -1218,8 +1237,10 @@ void BufferText::Search(etk::String &data, bool back, bool caseSensitive, bool w
 		EDN_WARNING("no search data");
 		return;
 	}
-	etk::VectorType<int8_t> mVectSearch;
+	etk::VectorType<uniChar_t> mVectSearch;
 	mVectSearch = data.GetVector();
+	EDN_TODO("Remove for now ...");
+	/*
 	if (false == back) {
 		//EDN_INFO("search data Forward : startSearchPos=" << startSearchPos );
 		int32_t foundPos;
@@ -1257,44 +1278,21 @@ void BufferText::Search(etk::String &data, bool back, bool caseSensitive, bool w
 			UpdateWindowsPosition();
 		}
 	}
-	
-	// NOTE : Need to be use in the highligner and the current buffer when we select Regular Expression ...
-/*
-	// Test avec le truc de regExp : 
-	char * myBuf = m_EdnBuf.GetRange(0, m_EdnBuf.Size());
-	regexp *compiledRE;
-	char *compileMsg;
-	
-	compiledRE = CompileRE(data.GetDirectPointer(), &compileMsg, REDFLT_STANDARD);
-	if (compiledRE == NULL) {
-		EDN_ERROR("RegExpression : \"" << data.GetDirectPointer() << "\" error named : \"" << compileMsg << "\"" );
-	} else {
-		EDN_DEBUG("RegExpression : \"" << data.GetDirectPointer() << "\" OK ... ");
-		if (true == ExecRE(compiledRE, NULL, myBuf, NULL, false, '\0', '\0', NULL, NULL)) {
-			EDN_INFO("    ==> top_branch=" << compiledRE->top_branch << "; extentpBW=" << (int32_t)(compiledRE->extentpBW - myBuf) << "; extentpFW=" << (int32_t)(compiledRE->extentpFW - myBuf));
-		} else {
-			EDN_INFO("    ==> not fined ... ");
-		}
-	}
-	
-	// free copy of buffer ...
-	if (myBuf != NULL) {
-		free(myBuf);
-	}
-*/
+	*/
 }
 
 
-void BufferText::Replace(etk::String &data)
+void BufferText::Replace(etk::UString &data)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	if (true == haveSelectionActive) {
 		// Replace Data : 
-		etk::VectorType<int8_t> myData = data.GetVector();
-		m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, myData);
-		SetInsertPosition(SelectionStart + myData.Size());
+		etk::VectorType<uniChar_t> myData = data.GetVector();
+		EDN_TODO("Remove for now ...");
+		//m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, myData);
+		//SetInsertPosition(SelectionStart + myData.Size());
 	}
 	SetModify(true);
 }
@@ -1310,13 +1308,15 @@ void BufferText::Replace(etk::String &data)
  */
 void BufferText::Copy(int8_t clipboardID)
 {
-	etk::VectorType<int8_t> mVect;
+	etk::VectorType<uniChar_t> mVect;
 	// get the curent selected data
 	if (true == m_EdnBuf.SelectHasSelection(SELECTION_PRIMARY) ) {
-		m_EdnBuf.GetSelectionText(SELECTION_PRIMARY, mVect);
+		//m_EdnBuf.GetSelectionText(SELECTION_PRIMARY, mVect);
+		EDN_TODO("Remove for now ...");
 	}
 	// copy data in the click board : 
-	ClipBoard::Set(clipboardID, mVect);
+	//ClipBoard::Set(clipboardID, mVect);
+	EDN_TODO("Remove for now ...");
 }
 
 
@@ -1359,7 +1359,10 @@ void BufferText::Cut(int8_t clipboardID)
  */
 void BufferText::Paste(int8_t clipboardID)
 {
-	etk::VectorType<int8_t> mVect;
+	etk::VectorType<uniChar_t> mVect;
+	
+	EDN_TODO("Remove for now ...");
+	/*
 	// copy data from the click board : 
 	ClipBoard::Get(clipboardID, mVect);
 	
@@ -1376,7 +1379,7 @@ void BufferText::Paste(int8_t clipboardID)
 		m_EdnBuf.Insert(m_cursorPos, mVect);
 		m_cursorPos += mVect.Size();
 	}
-	
+	*/
 	UpdateWindowsPosition();
 	ForceReDraw(true);
 	SetModify(true);

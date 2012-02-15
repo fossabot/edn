@@ -30,11 +30,11 @@
 
 namespace SearchData
 {
-	void SetSearch(etk::String &myData);
-	void GetSearch(etk::String &myData);
+	void SetSearch(etk::UString &myData);
+	void GetSearch(etk::UString &myData);
 	bool IsSearchEmpty(void);
-	void SetReplace(etk::String &myData);
-	void GetReplace(etk::String &myData);
+	void SetReplace(etk::UString &myData);
+	void GetReplace(etk::UString &myData);
 	bool IsReplaceEmpty(void);
 	void SetCase(bool value);
 	bool GetCase(void);

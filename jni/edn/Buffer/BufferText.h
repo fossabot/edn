@@ -67,9 +67,9 @@ class BufferText : public Buffer {
 		void      Cut(int8_t clipboardID);
 		void      Paste(int8_t clipboardID);
 
-		void      Search(etk::String &data, bool back, bool caseSensitive, bool wrap, bool regExp);
-		void      Replace(etk::String &data);
-		int32_t   FindLine(etk::String &data);
+		void      Search(etk::UString &data, bool back, bool caseSensitive, bool wrap, bool regExp);
+		void      Replace(etk::UString &data);
+		int32_t   FindLine(etk::UString &data);
 		void      JumpAtLine(int32_t newLine);
 		int32_t   GetCurrentLine(void);
 		

@@ -195,9 +195,9 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 			return false;
 		}
 		// get the filename : 
-		etk::String tmpData = tmpWidget->GetCompleateFileName();
+		etk::UString tmpData = tmpWidget->GetCompleateFileName();
 		EDN_DEBUG("Request opening the file : " << tmpData);
-		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData.c_str());
+		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData);
 		PopUpWidgetPop();
 	} else if (generateEventId == ednMsgGuiSaveAs) {
 		if (NULL == data) {
@@ -218,8 +218,8 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 				ewol::FileChooser* tmpWidget = new ewol::FileChooser();
 				tmpWidget->SetTitle("Save Files As...");
 				tmpWidget->SetValidateLabel("Save");
-				etk::String folder = "/home/";
-				etk::String fileName = "";
+				etk::UString folder = "/home/";
+				etk::UString fileName = "";
 				if (true == myBuffer->HaveName()) {
 					etk::File tmpName = myBuffer->GetFileName();
 					folder = tmpName.GetFolder();
@@ -245,14 +245,14 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 			return false;
 		}
 		// get the filename : 
-		etk::String tmpData = tmpWidget->GetCompleateFileName();
+		etk::UString tmpData = tmpWidget->GetCompleateFileName();
 		EDN_DEBUG("Request Saving As file : " << tmpData);
 		
 		BufferManager * myMng = BufferManager::getInstance();
 		myMng->Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave, m_currentSavingAsIdBuffer);
 		
-		//ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData.c_str());
+		//ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData);
 		
 		PopUpWidgetPop();
 	}
@@ -278,7 +278,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 
 	// select the program icone
 	GError *err = NULL;
-	etk::String iconeFile;
+	etk::UString iconeFile;
 	iconeFile = "/usr/share/edn/images/icone.png";
 
 	GdkPixbuf * icone = gdk_pixbuf_new_from_file(iconeFile.c_str(), &err);
@@ -303,7 +303,7 @@ MainWindows::MainWindows(void) : MsgBroadcast("Main Windows", EDN_CAT_GUI)
 	GtkWidget *hboxMenu = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start(	GTK_BOX (vbox), hboxMenu, FALSE, FALSE, 0);
 	// Add Exit boutton
-	etk::String ExitIconeFile;
+	etk::UString ExitIconeFile;
 	ExitIconeFile = "/usr/share/edn/images/delete-24px.png";
 	// TODO : find a good way to change the size of an image
 	GtkWidget *myImageQuit = gtk_image_new_from_file(ExitIconeFile.c_str());
@@ -357,7 +357,7 @@ MainWindows::~MainWindows(void)
 
 void MainWindows::SetTitle(etk::File &fileName, bool isModify)
 {
-	etk::String tmp = "";
+	etk::UString tmp = "";
 	if (fileName.GetShortFilename() != "") {
 		tmp += fileName.GetShortFilename();
 		tmp += " - ";
@@ -381,7 +381,7 @@ void MainWindows::SetTitle(etk::File &fileName, bool isModify)
 
 void MainWindows::SetNoTitle(void)
 {
-	etk::String tmp = "Edn";
+	etk::UString tmp = "Edn";
 	//gtk_window_set_title(GTK_WINDOW(m_mainWindow), tmp.c_str());
 	//gtk_label_set_text(GTK_LABEL(m_internalTitleLabel), tmp.c_str());
 }

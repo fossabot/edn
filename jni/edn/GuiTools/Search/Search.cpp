@@ -195,7 +195,7 @@ void Search::Display(GtkWindow *parent)
 			gtk_widget_set_sensitive(m_CkMatchCase, true);
 		}
 		// Remove data form the search
-		etk::String myDataString = "";
+		etk::UString myDataString = "";
 		SearchData::SetSearch(myDataString);
 		gtk_entry_set_text(GTK_ENTRY(m_searchEntry), myDataString.c_str());
 		if (0 == strlen(myDataString.c_str())) {
@@ -321,7 +321,7 @@ void Search::OnEntrySearchChange(GtkWidget *widget, gpointer data)
 	// update research data
 	const char *testData = gtk_entry_get_text(GTK_ENTRY(widget));
 	if (NULL !=  testData) {
-		etk::String myDataString = testData;
+		etk::UString myDataString = testData;
 		SearchData::SetSearch(myDataString);
 		if (0 == strlen(testData)) {
 			self->m_haveSearchData = false;
@@ -347,7 +347,7 @@ void Search::OnEntryReplaceChange(GtkWidget *widget, gpointer data)
 	// update replace data
 	const char *testData = gtk_entry_get_text(GTK_ENTRY(widget));
 	if (NULL !=  testData) {
-		etk::String myDataString = testData;
+		etk::UString myDataString = testData;
 		SearchData::SetReplace(myDataString);
 		if (0 == strlen(testData)) {
 			self->m_haveReplaceData = false;
