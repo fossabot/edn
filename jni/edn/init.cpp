@@ -47,22 +47,6 @@ MainWindows * basicWindows = NULL;
  */
 void APP_Init(void)
 {
-	etk::UString myTmpString("test élémentaire...");
-	
-	EDN_CRITICAL("essay de UString : " << myTmpString);
-	
-	myTmpString = "TT...SDFSDFSDFQAEZqsdgfqsdfqskdj";
-	
-	EDN_CRITICAL("essay de UString : " << myTmpString);
-	
-	myTmpString += "19";
-	
-	EDN_CRITICAL("essay de UString : " << myTmpString);
-
-
-
-
-
 	EDN_INFO("==> Init Edn (START)");
 	ewol::ChangeSize(800, 600);
 
