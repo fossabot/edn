@@ -42,6 +42,7 @@
 #include <ewol/widget/ContextMenu.h>
 #include <ewol/widget/PopUp.h>
 #include <ewol/widget/Spacer.h>
+#include <ewol/widget/Menu.h>
 #include <ewol/widgetMeta/FileChooser.h>
 #include <ewol/WidgetManager.h>
 #include <ewol/WidgetMessageMultiCast.h>
@@ -68,16 +69,17 @@ MainWindows::MainWindows(void)
 	ewol::Label * myLabel = NULL;
 	CodeView * myCodeView = NULL;
 	BufferView * myBufferView = NULL;
+	ewol::Menu * myMenu = NULL;
 	
 	mySizerVert = new ewol::SizerVert();
 	SetSubWidget(mySizerVert);
 	
 		mySizerHori = new ewol::SizerHori();
 		mySizerVert->SubWidgetAdd(mySizerHori);
-			/*
+			
 			myMenu = new ewol::Menu();
 			mySizerHori->SubWidgetAdd(myMenu);
-			int32_t idMenuFile = myMenu->Add("File");
+			int32_t idMenuFile = myMenu->AddTitle("File");
 				myMenu->Add(idMenuFile, "New", "", ednMsgGuiNew);
 				myMenu->AddSpacer();
 				myMenu->Add(idMenuFile, "Open", "", ednMsgGuiOpen);
@@ -86,8 +88,8 @@ MainWindows::MainWindows(void)
 				myMenu->Add(idMenuFile, "Save", "", ednMsgGuiSave, "current");
 				myMenu->Add(idMenuFile, "Save As ...", "", ednMsgGuiSaveAs);
 				myMenu->AddSpacer();
-				myMenu->Add(idMenuFile, "Exit", "", ednMsgGuiExit);
-			int32_t idMenuEdit = myMenu->Add("Edit");
+				//myMenu->Add(idMenuFile, "Exit", "", ednMsgGuiExit);
+			int32_t idMenuEdit = myMenu->AddTitle("Edit");
 				myMenu->Add(idMenuEdit, "Undo", "", ednMsgGuiUndo);
 				myMenu->Add(idMenuEdit, "Redo", "", ednMsgGuiRedo);
 				myMenu->AddSpacer();
@@ -100,7 +102,7 @@ MainWindows::MainWindows(void)
 				myMenu->Add(idMenuEdit, "Select All","", ednMsgGuiSelect, "ALL");
 				myMenu->Add(idMenuEdit, "Un-Select","", ednMsgGuiSelect, "NONE");
 				myMenu->Add(idMenuEdit, "Goto line ...","", ednMsgGuiGotoLine, "???");
-			int32_t idMenuSearch = myMenu->Add("Search");
+			int32_t idMenuSearch = myMenu->AddTitle("Search");
 				myMenu->Add(idMenuEdit, "Search",         "", ednMsgGuiSearch);
 				myMenu->Add(idMenuEdit, "Replace",        "", ednMsgGuiReplace);
 				myMenu->AddSpacer();
@@ -108,14 +110,14 @@ MainWindows::MainWindows(void)
 				myMenu->Add(idMenuEdit, "Find (next)",    "", ednMsgGuiFind, "Next");
 				myMenu->Add(idMenuEdit, "Find (all)",     "", ednMsgGuiFind, "All");
 				myMenu->Add(idMenuEdit, "Un-Select",      "", ednMsgGuiFind, "None");
-			int32_t idMenuCTags = myMenu->Add("C-tags");
+			int32_t idMenuCTags = myMenu->AddTitle("C-tags");
 				myMenu->Add(idMenuEdit, "Load",      "", ednMsgGuiCtags, "Load");
 				myMenu->Add(idMenuEdit, "ReLoad",    "", ednMsgGuiCtags, "ReLoad");
 				myMenu->Add(idMenuEdit, "Jump",      "", ednMsgGuiCtags, "Jump");
 				myMenu->Add(idMenuEdit, "Back",      "", ednMsgGuiCtags, "Back");
-			int32_t idMenuAbout = myMenu->Add("?", "", ednMsgGuiAbout);
-			*/
+			int32_t idMenuAbout = myMenu->AddTitle("?", "", ednMsgGuiAbout);
 			
+			/*
 			myButton = new ewol::Button("New");
 			mySizerHori->SubWidgetAdd(myButton);
 			if (false == myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ednEventNewFile) ) {
@@ -145,6 +147,8 @@ MainWindows::MainWindows(void)
 			if (false == myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ednEventSaveAsFile) ) {
 				EDN_CRITICAL("link with an entry event");
 			}
+			*/
+			
 			myButton = new ewol::Button(" * Other * ");
 			mySizerHori->SubWidgetAdd(myButton);
 			if (false == myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ednEventContextMenuOther) ) {
