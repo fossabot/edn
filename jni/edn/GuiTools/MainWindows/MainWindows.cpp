@@ -39,6 +39,7 @@
 #include <ewol/widget/Label.h>
 #include <ewol/widget/Entry.h>
 #include <ewol/widget/List.h>
+#include <ewol/widget/ContextMenu.h>
 #include <ewol/widget/PopUp.h>
 #include <ewol/widget/Spacer.h>
 #include <ewol/widgetMeta/FileChooser.h>
@@ -54,9 +55,9 @@ const char * const ednEventOpenFile = "edn-Open-File";
 const char * const ednEventCloseFile = "edn-Close-File";
 const char * const ednEventSaveFile = "edn-Save-File";
 const char * const ednEventSaveAsFile = "edn-SaveAs-File";
-const char * const ednEventPopUpClose = "edn-PopUp-Close";
 const char * const ednEventPopUpFileSelected = "edn-PopUp-FileSelected";
 const char * const ednEventPopUpFileSaveAs = "edn-PopUp-FileSaveAs";
+const char * const ednEventContextMenuOther = "edn-Other";
 
 MainWindows::MainWindows(void)
 {
@@ -73,6 +74,47 @@ MainWindows::MainWindows(void)
 	
 		mySizerHori = new ewol::SizerHori();
 		mySizerVert->SubWidgetAdd(mySizerHori);
+			/*
+			myMenu = new ewol::Menu();
+			mySizerHori->SubWidgetAdd(myMenu);
+			int32_t idMenuFile = myMenu->Add("File");
+				myMenu->Add(idMenuFile, "New", "", ednMsgGuiNew);
+				myMenu->AddSpacer();
+				myMenu->Add(idMenuFile, "Open", "", ednMsgGuiOpen);
+				myMenu->Add(idMenuFile, "Close", "", ednMsgGuiClose, "current");
+				myMenu->Add(idMenuFile, "Close (all)", "", ednMsgGuiClose, "All");
+				myMenu->Add(idMenuFile, "Save", "", ednMsgGuiSave, "current");
+				myMenu->Add(idMenuFile, "Save As ...", "", ednMsgGuiSaveAs);
+				myMenu->AddSpacer();
+				myMenu->Add(idMenuFile, "Exit", "", ednMsgGuiExit);
+			int32_t idMenuEdit = myMenu->Add("Edit");
+				myMenu->Add(idMenuEdit, "Undo", "", ednMsgGuiUndo);
+				myMenu->Add(idMenuEdit, "Redo", "", ednMsgGuiRedo);
+				myMenu->AddSpacer();
+				myMenu->Add(idMenuEdit, "Copy",  "", ednMsgGuiCopy, "STD");
+				myMenu->Add(idMenuEdit, "Cut",   "", ednMsgGuiCut, "STD");
+				myMenu->Add(idMenuEdit, "Paste", "", ednMsgGuiPaste, "STD");
+				myMenu->Add(idMenuEdit, "Redo",  "", ednMsgGuiRedo);
+				myMenu->Add(idMenuEdit, "Remove","", ednMsgGuiRm);
+				myMenu->AddSpacer();
+				myMenu->Add(idMenuEdit, "Select All","", ednMsgGuiSelect, "ALL");
+				myMenu->Add(idMenuEdit, "Un-Select","", ednMsgGuiSelect, "NONE");
+				myMenu->Add(idMenuEdit, "Goto line ...","", ednMsgGuiGotoLine, "???");
+			int32_t idMenuSearch = myMenu->Add("Search");
+				myMenu->Add(idMenuEdit, "Search",         "", ednMsgGuiSearch);
+				myMenu->Add(idMenuEdit, "Replace",        "", ednMsgGuiReplace);
+				myMenu->AddSpacer();
+				myMenu->Add(idMenuEdit, "Find (previous)","", ednMsgGuiFind, "Previous");
+				myMenu->Add(idMenuEdit, "Find (next)",    "", ednMsgGuiFind, "Next");
+				myMenu->Add(idMenuEdit, "Find (all)",     "", ednMsgGuiFind, "All");
+				myMenu->Add(idMenuEdit, "Un-Select",      "", ednMsgGuiFind, "None");
+			int32_t idMenuCTags = myMenu->Add("C-tags");
+				myMenu->Add(idMenuEdit, "Load",      "", ednMsgGuiCtags, "Load");
+				myMenu->Add(idMenuEdit, "ReLoad",    "", ednMsgGuiCtags, "ReLoad");
+				myMenu->Add(idMenuEdit, "Jump",      "", ednMsgGuiCtags, "Jump");
+				myMenu->Add(idMenuEdit, "Back",      "", ednMsgGuiCtags, "Back");
+			int32_t idMenuAbout = myMenu->Add("?", "", ednMsgGuiAbout);
+			*/
 			
 			myButton = new ewol::Button("New");
 			mySizerHori->SubWidgetAdd(myButton);
@@ -101,6 +143,11 @@ MainWindows::MainWindows(void)
 			myButton = new ewol::Button("Save As ...");
 			mySizerHori->SubWidgetAdd(myButton);
 			if (false == myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ednEventSaveAsFile) ) {
+				EDN_CRITICAL("link with an entry event");
+			}
+			myButton = new ewol::Button(" * Other * ");
+			mySizerHori->SubWidgetAdd(myButton);
+			if (false == myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ednEventContextMenuOther) ) {
 				EDN_CRITICAL("link with an entry event");
 			}
 			
@@ -177,28 +224,20 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		// TODO : Set the good folder ...
 		//tmpWidget->SetFolder("/");
 		PopUpWidgetPush(tmpWidget);
-		if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserCancel, GetWidgetId(), ednEventPopUpClose) ) {
-			EDN_CRITICAL("link with an entry event");
-		}
 		if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserValidate, GetWidgetId(), ednEventPopUpFileSelected) ) {
 			EDN_CRITICAL("link with an entry event");
 		}
-	} else if (generateEventId == ednEventPopUpClose) {
-		// TODO : Set this in the upper windows ...
-		PopUpWidgetPop();
 	} else if (generateEventId == ednEventPopUpFileSelected) {
 		// get widget:
 		ewol::FileChooser * tmpWidget = (ewol::FileChooser*)ewol::widgetManager::Get(widgetID);
 		if (NULL == tmpWidget) {
 			EDN_ERROR("impossible to get pop_upWidget " << widgetID);
-			PopUpWidgetPop();
 			return false;
 		}
 		// get the filename : 
 		etk::UString tmpData = tmpWidget->GetCompleateFileName();
 		EDN_DEBUG("Request opening the file : " << tmpData);
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData);
-		PopUpWidgetPop();
 	} else if (generateEventId == ednMsgGuiSaveAs) {
 		if (NULL == data) {
 			EDN_ERROR("Null data for Save As file ... ");
@@ -228,9 +267,6 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 				tmpWidget->SetFolder(folder);
 				tmpWidget->SetFileName(fileName);
 				PopUpWidgetPush(tmpWidget);
-				if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserCancel, GetWidgetId(), ednEventPopUpClose) ) {
-					EDN_CRITICAL("link with an entry event");
-				}
 				if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserValidate, GetWidgetId(), ednEventPopUpFileSaveAs) ) {
 					EDN_CRITICAL("link with an entry event");
 				}
@@ -241,7 +277,6 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		ewol::FileChooser * tmpWidget = (ewol::FileChooser*)ewol::widgetManager::Get(widgetID);
 		if (NULL == tmpWidget) {
 			EDN_ERROR("impossible to get pop_upWidget " << widgetID);
-			PopUpWidgetPop();
 			return false;
 		}
 		// get the filename : 
@@ -253,8 +288,41 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave, m_currentSavingAsIdBuffer);
 		
 		//ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData);
+	} else if (generateEventId == ednEventContextMenuOther) {
+		ewol::ContextMenu * tmpWidget = new ewol::ContextMenu();
+		if (NULL == tmpWidget) {
+			return false;
+		}
+		tmpWidget->SetPositionMark(ewol::CONTEXT_MENU_MARK_TOP, {x, y} );
 		
-		PopUpWidgetPop();
+		ewol::SizerVert * mySizerVert = NULL;
+		ewol::Button * myButton = NULL;
+		
+		mySizerVert = new ewol::SizerVert();
+			mySizerVert->LockExpendContamination(true);
+			// set it in the pop-up-system : 
+			tmpWidget->SubWidgetSet(mySizerVert);
+			
+			myButton = new ewol::Button("plop");
+				//m_widgetValidateId = myButton->GetWidgetId();
+				//myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ewolEventFileChooserValidate);
+				myButton->SetExpendX(true);
+				myButton->SetFillX(true);
+				mySizerVert->SubWidgetAdd(myButton);
+			myButton = new ewol::Button("plop2");
+				//m_widgetCancelId = myButton->GetWidgetId();
+				//myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ewolEventFileChooserCancel);
+				myButton->SetExpendX(true);
+				myButton->SetFillX(true);
+				mySizerVert->SubWidgetAdd(myButton);
+			myButton = new ewol::Button("plop3");
+				//m_widgetCancelId = myButton->GetWidgetId();
+				//myButton->ExternLinkOnEvent(ewolEventButtonPressed, GetWidgetId(), ewolEventFileChooserCancel);
+				myButton->SetExpendX(true);
+				myButton->SetFillX(true);
+				mySizerVert->SubWidgetAdd(myButton);
+		
+		PopUpWidgetPush(tmpWidget);
 	}
 	return true;
 }

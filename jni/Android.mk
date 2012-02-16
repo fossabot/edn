@@ -20,7 +20,8 @@ LOCAL_CFLAGS    :=  -D__PLATFORM__Android \
                     -DEWOL_USE_FREE_TYPE \
                     -DETK_DEBUG_LEVEL=3 \
                     -DEDN_DEBUG_LEVEL=3 \
-                    -DDATA_IN_APK
+                    -DDATA_IN_APK \
+                    -std=c++0x
 
 include $(BUILD_SHARED_LIBRARY)
 

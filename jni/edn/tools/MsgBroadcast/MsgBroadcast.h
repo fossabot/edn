@@ -51,7 +51,7 @@
 	
 	extern const char* const ednMsgGuiSearch;     // data : ""
 	extern const char* const ednMsgGuiReplace;    // data : ""
-	extern const char* const ednMsgGuiFind;       // data : "Next" "Previous"
+	extern const char* const ednMsgGuiFind;       // data : "Next" "Previous" "All" "None"
 	
 	extern const char* const ednMsgGuiChangeColor;   // data : "Black" "White"
 	extern const char* const ednMsgGuiChangeCharset; // data : "UTF-8" "ISO-8859-1" "ISO-8859-15"

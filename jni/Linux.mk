@@ -16,7 +16,8 @@ LOCAL_SRC_FILES := $(FILE_LIST)
 LOCAL_LDLIBS    := 
 
 LOCAL_CFLAGS    :=  -DEWOL_USE_FREE_TYPE \
-                    -DEDN_DEBUG_LEVEL=3
+                    -DEDN_DEBUG_LEVEL=3 \
+                    -std=c++0x
 
 include $(BUILD_EXECUTABLE)
 
