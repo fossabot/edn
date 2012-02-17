@@ -1,9 +1,9 @@
 /**
  *******************************************************************************
- * @file MenuBar.h
- * @brief Editeur De N'ours : abstraction of the menu bar (Header)
+ * @file MainWindows.h
+ * @brief Editeur De N'ours : main Windows diplayer (header)
  * @author Edouard DUPIN
- * @date 17/06/2011
+ * @date 04/01/2011
  * @par Project
  * Edn
  *
@@ -23,33 +23,28 @@
  *******************************************************************************
  */
 
+
 #include <tools_debug.h>
-#include <tools_globals.h>
+#include <etk/Singleton.h>
 #include <MsgBroadcast.h>
-#include <etk/VectorType.h>
-#include <AccelKey.h>
 
-#ifndef __MENU_BAR_H__
-#define __MENU_BAR_H__
+#include <CodeView.h>
+#include <BufferView.h>
+#include <BufferManager.h>
 
-//class MenuBarMain;
 
-class MenuBar
+#ifndef __MAIN_WINDOWS_H__
+#define __MAIN_WINDOWS_H__
+class MainWindows : public ewol::Windows
 {
+	private:
+		int32_t m_currentSavingAsIdBuffer;
 	public:
 		// Constructeur
-		MenuBar(void) {};
-		~MenuBar(void) {};
-		//GtkWidget	* GetWidget(void) { return m_mainWidget; };
-		void          OnMessage(int32_t id, int32_t dataID) {};
-	
-	private:
-		/*
-		GtkWidget *                     m_mainWidget;
-		GtkAccelGroup *                 m_accelGroup;
-		etk::VectorType<MenuBarMain*>   m_listMenu;
-		*/
+		MainWindows(void);
+		~MainWindows(void);
+		virtual bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y);
 };
-
-
 #endif
+
+

@@ -26,13 +26,13 @@
 #include <tools_debug.h>
 #include <tools_globals.h>
 #include <ewol/ewol.h>
+#include <Gui/MainWindows.h>
 #include <Display.h>
 #include <BufferManager.h>
 #include <ColorizeManager.h>
 #include <HighlightManager.h>
 #include <ClipBoard.h>
-#include <WindowsManager.h>
-#include <Search.h>
+#include <Gui/Search.h>
 #include <unistd.h>
 #include <readtags.h>
 #include <CTagsManager.h>
@@ -85,7 +85,6 @@ void APP_Init(void)
 	
 	
 	// init ALL Singleton :
-	(void)WindowsManager::getInstance();
 	(void)CTagsManager::getInstance();
 	(void)BufferManager::getInstance();
 	

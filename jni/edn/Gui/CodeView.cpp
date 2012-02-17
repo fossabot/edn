@@ -96,6 +96,7 @@ void CodeView::CalculateMaxSize(void)
 void CodeView::OnRegenerateDisplay(void)
 {
 	if (true == NeedRedraw()) {
+		EDN_WARNING("Regenerate compleately the CODE display ... ");
 		// For the scrooling windows
 		CalculateMaxSize();
 		

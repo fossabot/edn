@@ -143,6 +143,7 @@ MainWindows::MainWindows(void)
 	// Generic event ...
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiSaveAs);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiOpen);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiAbout);
 }
 
 
@@ -159,7 +160,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 	if (true == ewol::Windows::OnEventAreaExternal(widgetID, generateEventId, data, x, y) ) {
 		return true;
 	}
-	//EDN_INFO("Receive Event from the main windows ... : widgetid=" << widgetID << "\"" << generateEventId << "\" ==> data=\"" << data << "\"" );
+	EDN_INFO("Receive Event from the main windows ... : widgetid=" << widgetID << "\"" << generateEventId << "\" ==> data=\"" << data << "\"" );
 	// Open file Section ...
 	if (generateEventId == ednMsgGuiOpen) {
 		ewol::FileChooser* tmpWidget = new ewol::FileChooser();
@@ -230,6 +231,36 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		BufferManager * myMng = BufferManager::getInstance();
 		myMng->Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave, m_currentSavingAsIdBuffer);
+	} else if (generateEventId == ednMsgGuiAbout) {
+	/*
+		//Title 
+			"Edn"
+		// version
+			VERSION_TAG_NAME
+		// comments:
+			"Editeur De N'ours\n"
+			"L'Editeur Desoxyribo-Nucleique.\n"
+			"Source Code Editor\n"
+			"Build Time : " VERSION_BUILD_TIME;
+		// copyright
+			"Copyright 2010 Edouard DUPIN, all right reserved";
+		// licence
+			"This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY\n\n"
+			"You can:\n"
+			"    * Redistribute the sources code and binaries.\n"
+			"    * Modify the Sources code.\n"
+			"    * Use a part of the sources (less than 50%) in an other software, just write somewhere \"Edn is great\" visible by the user (on your product or on your website with a link to my page).\n"
+			"    * Redistribute the modification only if you want.\n"
+			"    * Send me the bug-fix (it could be great).\n"
+			"    * Pay me a beer or some other things.\n"
+			"    * Print the source code on WC paper ...\n\n"
+			"You can NOT:\n"
+			"    * Earn money with this Software (But I can).\n"
+			"    * Add malware in the Sources.\n"
+			"    * Do something bad with the sources.\n"
+			"    * Use it to travel in the space with a toaster.\n\n"
+			"I reserve the right to change this licence. If it change the version of the copy you have keep its own license."
+		*/
 	}
 	
 	return true;
