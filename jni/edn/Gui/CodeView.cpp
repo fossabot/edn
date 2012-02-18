@@ -70,9 +70,6 @@ CodeView::CodeView(void)
 	m_textColorBg.alpha = 0.25;
 	SetCanHaveFocus(true);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
-	
-	GenericDrawDisable();
-	SpecificDrawEnable();
 }
 
 CodeView::~CodeView(void)

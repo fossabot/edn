@@ -174,7 +174,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		}
 	} else if (generateEventId == ednEventPopUpFileSelected) {
 		// get widget:
-		ewol::FileChooser * tmpWidget = (ewol::FileChooser*)ewol::widgetManager::Get(widgetID);
+		ewol::FileChooser * tmpWidget = reinterpret_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
 		if (NULL == tmpWidget) {
 			EDN_ERROR("impossible to get pop_upWidget " << widgetID);
 			return false;
@@ -219,7 +219,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		}
 	} else if (generateEventId == ednEventPopUpFileSaveAs) {
 		// get widget:
-		ewol::FileChooser * tmpWidget = (ewol::FileChooser*)ewol::widgetManager::Get(widgetID);
+		ewol::FileChooser * tmpWidget = reinterpret_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
 		if (NULL == tmpWidget) {
 			EDN_ERROR("impossible to get pop_upWidget " << widgetID);
 			return false;
