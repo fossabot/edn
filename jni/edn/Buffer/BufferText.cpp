@@ -324,11 +324,11 @@ static int32_t g_basicfontId = 0;
  * @return 
  *
  */
-int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
-                            ewol::OObject2DTextColored* OOTextBold,
-                            ewol::OObject2DTextColored* OOTextItalic,
-                            ewol::OObject2DTextColored* OOTextBoldItalic,
-                            ewol::OObject2DColored* OOColored,
+int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
+                            ewol::OObject2DTextColored& OOTextBold,
+                            ewol::OObject2DTextColored& OOTextItalic,
+                            ewol::OObject2DTextColored& OOTextBoldItalic,
+                            ewol::OObject2DColored& OOColored,
                             int32_t offsetX, int32_t offsetY,
                             int32_t sizeX, int32_t sizeY)
 {
@@ -340,7 +340,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	bool selIsRect;
 	int32_t selHave;
 	
-	int32_t fontId = OOTextNormal->GetFontID();
+	int32_t fontId = OOTextNormal.GetFontID();
 	// TODO : Remove this ...
 	g_basicfontId = fontId;
 	int32_t letterWidth = ewol::GetWidth(fontId, "A");
@@ -390,13 +390,17 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	int32_t x_base=nbColoneForLineNumber*letterWidth;
 	int32_t idX = 0;
 	
-	OOColored->SetColor(myColorManager->Get(COLOR_CODE_BASIC_BG));
-	OOColored->Rectangle( 0, 0, sizeX, sizeY);
+	OOColored.SetColor(myColorManager->Get(COLOR_CODE_BASIC_BG));
+	OOColored.Rectangle( 0, 0, sizeX, sizeY);
 	
+	int64_t startTime = GetCurrentTime();
 	int displayLines = 0;
 	// Regenerate the colorizing if necessary ...
 	displayHLData_ts m_displayLocalSyntax;
 	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, m_displayStartBufferPos, m_displaySize.y);
+	
+	int64_t stopTime = GetCurrentTime();
+	EDN_DEBUG("Parsing Highlight = " << stopTime - startTime << " milli-s");
 	
 	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
 	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
@@ -407,7 +411,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	EDN_VERBOSE("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
 	
 	
-	DrawLineNumber(OOTextNormal, OOColored, x_base, sizeY, myPrint, currentLineID, y);
+	DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, myPrint, currentLineID, y);
 	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 	
 	clipping_ts drawClipping;
@@ -444,21 +448,21 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 				&&	selEnd   > iii)
 			{
 				selectColor = myColorSel;
-				OOColored->SetColor(selectColor->GetBG());
+				OOColored.SetColor(selectColor->GetBG());
 				haveBg = selectColor->HaveBg();
 			} else {
 				if(		' ' == currentChar
 				&&	true == globals::IsSetDisplaySpaceChar() )
 				{
-					OOColored->SetColor(myColorSpace);
+					OOColored.SetColor(myColorSpace);
 					haveBg = true;
 				} else if(		'\t' == currentChar
 							&&	true == globals::IsSetDisplaySpaceChar() )
 				{
-					OOColored->SetColor(myColorTab);
+					OOColored.SetColor(myColorTab);
 					haveBg = true;
 				} else {
-					OOColored->SetColor(selectColor->GetBG());
+					OOColored.SetColor(selectColor->GetBG());
 					haveBg = selectColor->HaveBg();
 				}
 			}
@@ -467,30 +471,31 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 			textPos.y = y;
 			if (true == selectColor->GetItalic() ) {
 				if (true == selectColor->GetBold() ) {
-					OOTextSelected = OOTextBoldItalic;
+					OOTextSelected = &OOTextBoldItalic;
 				} else {
-					OOTextSelected = OOTextItalic;
+					OOTextSelected = &OOTextItalic;
 				}
 			} else {
 				if (true == selectColor->GetBold() ) {
-					OOTextSelected = OOTextBold;
+					OOTextSelected = &OOTextBold;
 				} else {
-					OOTextSelected = OOTextNormal;
+					OOTextSelected = &OOTextNormal;
 				}
 			}
 			OOTextSelected->SetColor(selectColor->GetFG());
 			// TODO : Remove this unreallistic leak of time
 			myStringToDisplay = displayChar;
 			drawSize = OOTextSelected->Text(textPos, drawClippingTextArea, myStringToDisplay);
+			
 			if (true == haveBg ) {
-				OOColored->Rectangle(textPos.x, y, drawSize, letterHeight, drawClippingTextArea);
+				OOColored.Rectangle(textPos.x, y, drawSize, letterHeight, drawClippingTextArea);
 			}
 		}
 		idX += displaywidth;
 		// display cursor : 
 		if (m_cursorPos == iii) {
 			// display the cursor:
-			CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
+			CursorDisplay(&OOColored, pixelX, y, letterHeight, letterWidth);
 		}
 		pixelX += drawSize;
 		// move to next line ...
@@ -500,13 +505,16 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 			y += letterHeight;
 			displayLines++;
 			currentLineID++;
-			DrawLineNumber(OOTextNormal, OOColored, x_base, sizeY, myPrint, currentLineID, y);
+			DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, myPrint, currentLineID, y);
 		}
 	}
 	// special case : the cursor is at the end of the buffer...
 	if (m_cursorPos == iii) {
-		CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
+		CursorDisplay(&OOColored, pixelX, y, letterHeight, letterWidth);
 	}
+	
+	int64_t stopTime2 = GetCurrentTime();
+	EDN_DEBUG("DRAW text (brut) = " << stopTime2 - stopTime << " milli-s");
 
 	return ERR_NONE;
 }

@@ -15,7 +15,8 @@ LOCAL_SRC_FILES := $(FILE_LIST)
 
 LOCAL_LDLIBS    := 
 
-LOCAL_CFLAGS    :=  -DEWOL_USE_FREE_TYPE \
+LOCAL_CFLAGS    :=  -D__PLATFORM__Linux \
+                    -DEWOL_USE_FREE_TYPE \
                     -DEDN_DEBUG_LEVEL=3
 
 include $(BUILD_EXECUTABLE)

@@ -70,6 +70,9 @@ CodeView::CodeView(void)
 	m_textColorBg.alpha = 0.25;
 	SetCanHaveFocus(true);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
+	
+	GenericDrawDisable();
+	SpecificDrawEnable();
 }
 
 CodeView::~CodeView(void)
@@ -90,8 +93,21 @@ void CodeView::CalculateMaxSize(void)
 	int32_t letterHeight = ewol::GetHeight(m_fontNormal);
 	m_maxSize.y = m_bufferManager->Get(m_bufferID)->GetNumberOfLine() * letterHeight;
 }
+// TODO : remove this from here ...
+#include <ewol/importgl.h>
 
-
+bool CodeView::OnDraw(void)
+{
+	//glLoadIdentity();
+	glTranslatef(m_origin.x,m_origin.y, 0);
+	m_OObjectsColored[      m_currentDrawId].Draw();
+	m_OObjectTextNormal[    m_currentDrawId].Draw();
+	m_OObjectTextBold[      m_currentDrawId].Draw();
+	m_OObjectTextItalic[    m_currentDrawId].Draw();
+	m_OObjectTextBoldItalic[m_currentDrawId].Draw();
+	glTranslatef(-m_origin.x,-m_origin.y, 0);
+	return true;
+}
 
 void CodeView::OnRegenerateDisplay(void)
 {
@@ -101,32 +117,33 @@ void CodeView::OnRegenerateDisplay(void)
 		// For the scrooling windows
 		CalculateMaxSize();
 		
-		// create tmp object :
-		ewol::OObject2DTextColored* myOObjectTextNormal     = new ewol::OObject2DTextColored(m_fontNormal);
-		ewol::OObject2DTextColored* myOObjectTextBold       = new ewol::OObject2DTextColored(m_fontBold);
-		ewol::OObject2DTextColored* myOObjectTextItalic     = new ewol::OObject2DTextColored(m_fontItalic);
-		ewol::OObject2DTextColored* myOObjectTextBoldItalic = new ewol::OObject2DTextColored(m_fontBoldItalic);
-		ewol::OObject2DColored*     myOObjectsColored       = new ewol::OObject2DColored();
+		// clean internal elements ...
+		m_OObjectTextNormal[    m_currentCreateId].SetFontID(m_fontNormal);
+		m_OObjectTextBold[      m_currentCreateId].SetFontID(m_fontBold);
+		m_OObjectTextItalic[    m_currentCreateId].SetFontID(m_fontItalic);
+		m_OObjectTextBoldItalic[m_currentCreateId].SetFontID(m_fontBoldItalic);
+		
+		m_OObjectTextNormal[    m_currentCreateId].Clear();
+		m_OObjectTextBold[      m_currentCreateId].Clear();
+		m_OObjectTextItalic[    m_currentCreateId].Clear();
+		m_OObjectTextBoldItalic[m_currentCreateId].Clear();
+		m_OObjectsColored[      m_currentCreateId].Clear();
+		
 		
 		// generate the objects :
-		//m_bufferID = 0;
-		m_bufferManager->Get(m_bufferID)->Display(myOObjectTextNormal, myOObjectTextBold, myOObjectTextItalic, myOObjectTextBoldItalic, myOObjectsColored, 
+		m_bufferManager->Get(m_bufferID)->Display(m_OObjectTextNormal[m_currentCreateId],
+		                                          m_OObjectTextBold[m_currentCreateId],
+		                                          m_OObjectTextItalic[m_currentCreateId],
+		                                          m_OObjectTextBoldItalic[m_currentCreateId],
+		                                          m_OObjectsColored[m_currentCreateId],
 		                                          m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
-		
-		// clean the object list ...
-		ClearOObjectList();
-		// add generated element
-		AddOObject(myOObjectsColored,       "CodeViewBackground");
-		AddOObject(myOObjectTextNormal,     "CodeViewTextNormal");
-		AddOObject(myOObjectTextBold,       "CodeViewTextBold");
-		AddOObject(myOObjectTextItalic,     "CodeViewTextItalic");
-		AddOObject(myOObjectTextBoldItalic, "CodeViewTextBoldItalic");
 		
 		int64_t stopTime = GetCurrentTime();
 		EDN_DEBUG("Display Code Generation = " << stopTime - startTime << " milli-s");
 		
 		// call the herited class...
 		WidgetScrooled::OnRegenerateDisplay();
+		m_needFlipFlop = true;
 	}
 }
 

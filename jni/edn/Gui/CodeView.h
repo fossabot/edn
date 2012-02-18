@@ -42,13 +42,20 @@ class CodeView :public ewol::WidgetScrooled
 		virtual ~CodeView(void);
 		virtual bool   CalculateMinSize(void);
 	private:
-		etk::UString         m_label;
-		color_ts            m_textColorFg;  //!< Text color
-		color_ts            m_textColorBg;  //!< Background color
-		BufferManager *     m_bufferManager;
-		ColorizeManager *   m_colorManager;
-		int32_t             m_bufferID;
-		bool                m_buttunOneSelected;
+		etk::UString                 m_label;
+		color_ts                     m_textColorFg;  //!< Text color
+		color_ts                     m_textColorBg;  //!< Background color
+		BufferManager *              m_bufferManager;
+		ColorizeManager *            m_colorManager;
+		int32_t                      m_bufferID;
+		bool                         m_buttunOneSelected;
+		// drawing elements :
+		ewol::OObject2DTextColored   m_OObjectTextNormal[NB_BOUBLE_BUFFER];
+		ewol::OObject2DTextColored   m_OObjectTextBold[NB_BOUBLE_BUFFER];
+		ewol::OObject2DTextColored   m_OObjectTextItalic[NB_BOUBLE_BUFFER];
+		ewol::OObject2DTextColored   m_OObjectTextBoldItalic[NB_BOUBLE_BUFFER];
+		ewol::OObject2DColored       m_OObjectsColored[NB_BOUBLE_BUFFER];
+		
 	public:
 		virtual void   OnRegenerateDisplay(void);
 		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
@@ -72,6 +79,9 @@ class CodeView :public ewol::WidgetScrooled
 		void SetFontNameBoldItalic(etk::UString fontName);
 	private:
 		void CalculateMaxSize(void);
+	// widget drawing : 
+	protected:
+		virtual bool OnDraw(void);
 };
 
 #endif

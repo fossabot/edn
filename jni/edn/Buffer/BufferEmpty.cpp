@@ -67,27 +67,17 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
-int32_t BufferEmpty::Display(ewol::OObject2DTextColored* OOTextNormal,
-                             ewol::OObject2DTextColored* OOTextBold,
-                             ewol::OObject2DTextColored* OOTextItalic,
-                             ewol::OObject2DTextColored* OOTextBoldItalic,
-                             ewol::OObject2DColored* OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
+int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
+                             ewol::OObject2DTextColored& OOTextBold,
+                             ewol::OObject2DTextColored& OOTextItalic,
+                             ewol::OObject2DTextColored& OOTextBoldItalic,
+                             ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
 {
 	ColorizeManager * myColorManager = ColorizeManager::getInstance();
 	// Get color : 
 	Colorize	*myColor = NULL;
-	//drawer.Flush();
 	
-	
-	if (NULL == OOTextNormal) {
-		EDN_ERROR("Input VALUE is NULL");
-		return ERR_FAIL;
-	}
-	if (NULL == OOColored) {
-		EDN_ERROR("Input VALUE is NULL");
-		return ERR_FAIL;
-	}
-	int32_t fontId = OOTextNormal->GetFontID();
+	int32_t fontId = OOTextNormal.GetFontID();
 	int32_t letterHeight = ewol::GetHeight(fontId);
 	
 	coord2D_ts textPos;
@@ -100,15 +90,15 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored* OOTextNormal,
 	drawClipping.h = sizeY;
 	
 	myColor = myColorManager->Get("normal");
-	OOTextNormal->SetColor(myColor->GetFG());
+	OOTextNormal.SetColor(myColor->GetFG());
 	etk::UString tmpDisplay = "edn - Editeur De N'ours";
-	OOTextBold->Text(textPos, drawClipping, tmpDisplay);
+	OOTextBold.Text(textPos, drawClipping, tmpDisplay);
 	
 	myColor = myColorManager->Get("commentDoxygen");
-	OOTextNormal->SetColor(myColor->GetFG());
+	OOTextNormal.SetColor(myColor->GetFG());
 	textPos.y = (int32_t)(textPos.y + letterHeight*1.30);
 	tmpDisplay = "No Buffer Availlable to display";
-	OOTextNormal->Text(textPos, drawClipping, tmpDisplay);
+	OOTextNormal.Text(textPos, drawClipping, tmpDisplay);
 	
 	
 	color_ts bgColor;  //!< Text color
@@ -116,8 +106,8 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored* OOTextNormal,
 	bgColor.green = 1.0;
 	bgColor.blue  = 1.0;
 	bgColor.alpha = 1.0;
-	OOColored->SetColor(bgColor);
-	OOColored->Rectangle( 0, 0, sizeX, sizeY);
+	OOColored.SetColor(bgColor);
+	OOColored.Rectangle( 0, 0, sizeX, sizeY);
 	
 	return ERR_NONE;
 }

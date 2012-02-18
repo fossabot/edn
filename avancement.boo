@@ -1,4 +1,12 @@
 # action a faire (ordonner par révision) :
+
+dans la liste des truc important a refaire
+	l'annalyseur d'expression regulière pour le display, le faire ligne par ligne
+	ne pas regénéré l'affichage des widget quand les taille change
+	mettre en place le positionnement des élément par matrice ... ==> gain de temps en repaint...
+	
+
+
 * 0.2.X :
 	- gui : Amelioration du full-screen et du display de base (sans l'entete de la fenetre)
 	- gui : Mise en place d'un display ligne par ligne
