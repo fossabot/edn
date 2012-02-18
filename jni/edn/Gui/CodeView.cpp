@@ -96,7 +96,8 @@ void CodeView::CalculateMaxSize(void)
 void CodeView::OnRegenerateDisplay(void)
 {
 	if (true == NeedRedraw()) {
-		EDN_WARNING("Regenerate compleately the CODE display ... ");
+		int64_t startTime = GetCurrentTime();
+		
 		// For the scrooling windows
 		CalculateMaxSize();
 		
@@ -105,7 +106,7 @@ void CodeView::OnRegenerateDisplay(void)
 		ewol::OObject2DTextColored* myOObjectTextBold       = new ewol::OObject2DTextColored(m_fontBold);
 		ewol::OObject2DTextColored* myOObjectTextItalic     = new ewol::OObject2DTextColored(m_fontItalic);
 		ewol::OObject2DTextColored* myOObjectTextBoldItalic = new ewol::OObject2DTextColored(m_fontBoldItalic);
-		ewol::OObject2DColored*     myOObjectsColored = new ewol::OObject2DColored();
+		ewol::OObject2DColored*     myOObjectsColored       = new ewol::OObject2DColored();
 		
 		// generate the objects :
 		//m_bufferID = 0;
@@ -120,6 +121,9 @@ void CodeView::OnRegenerateDisplay(void)
 		AddOObject(myOObjectTextBold,       "CodeViewTextBold");
 		AddOObject(myOObjectTextItalic,     "CodeViewTextItalic");
 		AddOObject(myOObjectTextBoldItalic, "CodeViewTextBoldItalic");
+		
+		int64_t stopTime = GetCurrentTime();
+		EDN_DEBUG("Display Code Generation = " << stopTime - startTime << " milli-s");
 		
 		// call the herited class...
 		WidgetScrooled::OnRegenerateDisplay();

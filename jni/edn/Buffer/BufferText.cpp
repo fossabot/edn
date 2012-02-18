@@ -397,9 +397,6 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	// Regenerate the colorizing if necessary ...
 	displayHLData_ts m_displayLocalSyntax;
 	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, m_displayStartBufferPos, m_displaySize.y);
-	//GTimeVal timeStart;
-	//g_get_current_time(&timeStart);
-	
 	
 	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
 	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
@@ -510,10 +507,6 @@ int32_t BufferText::Display(ewol::OObject2DTextColored* OOTextNormal,
 	if (m_cursorPos == iii) {
 		CursorDisplay(OOColored, pixelX, y, letterHeight, letterWidth);
 	}
-	
-	//GTimeVal timeStop;
-	//g_get_current_time(&timeStop);
-	//EDN_DEBUG("Display Generation = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
 
 	return ERR_NONE;
 }
