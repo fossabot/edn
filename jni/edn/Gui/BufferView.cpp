@@ -141,7 +141,7 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 
 bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, etkFloat_t x, etkFloat_t y)
 {
-	if (typeEvent == ewol::EVENT_INPUT_TYPE_SINGLE) {
+	if (1 == IdInput && typeEvent == ewol::EVENT_INPUT_TYPE_SINGLE) {
 		EDN_INFO("Event on List : IdInput=" << IdInput << " colomn=" << colomn << " raw=" << raw );
 		int32_t selectBuf = m_bufferManager->WitchBuffer(raw+1);
 		if ( 0 <= selectBuf) {

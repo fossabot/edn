@@ -277,7 +277,7 @@ void Search::OnButtonReplaceAndNext(GtkWidget *widget, gpointer data)
 void Search::OnButtonQuit(GtkWidget *widget, gpointer data)
 {
 	//EDN_INFO("CALLBACK");
-	Search * self = reinterpret_cast<Search*>(data);
+	Search * self = dynamic_cast<Search*>(data);
 	self->Destroy();
 }
 
@@ -304,7 +304,7 @@ void Search::OnCheckBoxEventCase(GtkWidget *widget, gpointer data)
 void Search::OnCheckBoxEventRegExp(GtkWidget *widget, gpointer data)
 {
 	//EDN_INFO("CALLBACK");
-	Search * self = reinterpret_cast<Search*>(data);
+	Search * self = dynamic_cast<Search*>(data);
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
 		SearchData::SetRegExp(true);
 		gtk_widget_set_sensitive(self->m_CkMatchCase, false);
@@ -317,7 +317,7 @@ void Search::OnCheckBoxEventRegExp(GtkWidget *widget, gpointer data)
 void Search::OnEntrySearchChange(GtkWidget *widget, gpointer data)
 {
 	//EDN_INFO("CALLBACK");
-	Search * self = reinterpret_cast<Search*>(data);
+	Search * self = dynamic_cast<Search*>(data);
 	// update research data
 	const char *testData = gtk_entry_get_text(GTK_ENTRY(widget));
 	if (NULL !=  testData) {
@@ -343,7 +343,7 @@ void Search::OnEntrySearchChange(GtkWidget *widget, gpointer data)
 void Search::OnEntryReplaceChange(GtkWidget *widget, gpointer data)
 {
 	//EDN_INFO("CALLBACK");
-	Search * self = reinterpret_cast<Search*>(data);
+	Search * self = dynamic_cast<Search*>(data);
 	// update replace data
 	const char *testData = gtk_entry_get_text(GTK_ENTRY(widget));
 	if (NULL !=  testData) {

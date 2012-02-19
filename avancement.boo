@@ -1,9 +1,11 @@
 # action a faire (ordonner par révision) :
 
 dans la liste des truc important a refaire
-	l'annalyseur d'expression regulière pour le display, le faire ligne par ligne
-	ne pas regénéré l'affichage des widget quand les taille change
-	mettre en place le positionnement des élément par matrice ... ==> gain de temps en repaint...
+	retirer tout les singleton ==> passer par des namespace ==> fonctionnera mieux ...
+	finir de netoyer la classe widget
+	netoyer les classe text ...
+	mettre en pla ce le repositionnement automatique quand on change de buffer
+	Curseur au bon endroit
 	
 
 

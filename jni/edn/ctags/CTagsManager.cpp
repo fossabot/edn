@@ -203,7 +203,7 @@ void CTagsManager::cb_row(GtkTreeView *p_treeview,
                           gpointer data)
 {
 	EDN_DEBUG("event");
-	CTagsManager * self = reinterpret_cast<CTagsManager*>(data);
+	CTagsManager * self = dynamic_cast<CTagsManager*>(data);
 	
 	gchar * p_file=NULL;
 	gint lineNumber;

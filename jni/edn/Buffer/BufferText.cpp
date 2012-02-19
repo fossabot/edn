@@ -264,16 +264,19 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 
 #define CURSOR_WIDTH           (5)
 #define CURSOR_THICKNESS       (1.2)
-void BufferText::CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth)
+void BufferText::CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip)
 {
 	color_ts & tmpppppp = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
 	OOColored->SetColor(tmpppppp);
 	if (true == ewol::IsSetInsert()) {
-		OOColored->Rectangle( x, y, letterWidth, letterHeight);
+		OOColored->Rectangle( x, y, letterWidth, letterHeight, clip);
 	} else {
-		OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y)                              , (int32_t)(x+CURSOR_WIDTH), (int32_t)(y)                              , CURSOR_THICKNESS);
-		OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), (int32_t)(x+CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
-		OOColored->Line( (int32_t)(x)             , (int32_t)(y)                              , (int32_t)(x)             , (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
+		// TODO : Clipping
+		if (x >= clip.x) {
+			OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y)                              , (int32_t)(x+CURSOR_WIDTH), (int32_t)(y)                              , CURSOR_THICKNESS);
+			OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), (int32_t)(x+CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
+			OOColored->Line( (int32_t)(x)             , (int32_t)(y)                              , (int32_t)(x)             , (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
+		}
 	}
 }
 
@@ -495,7 +498,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 		// display cursor : 
 		if (m_cursorPos == iii) {
 			// display the cursor:
-			CursorDisplay(&OOColored, pixelX, y, letterHeight, letterWidth);
+			CursorDisplay(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
 		}
 		pixelX += drawSize;
 		// move to next line ...
@@ -510,7 +513,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	}
 	// special case : the cursor is at the end of the buffer...
 	if (m_cursorPos == iii) {
-		CursorDisplay(&OOColored, pixelX, y, letterHeight, letterWidth);
+		CursorDisplay(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
 	}
 	
 	int64_t stopTime2 = GetCurrentTime();
@@ -726,6 +729,7 @@ void BufferText::SelectNone(void)
  * @return ---
  *
  */
+// TODO : Deprecated...
 void BufferText::ScrollDown(void)
 {
 	MoveUpDown(3);
@@ -740,6 +744,7 @@ void BufferText::ScrollDown(void)
  * @return ---
  *
  */
+// TODO : Deprecated...
 void BufferText::ScrollUp(void)
 {
 	MoveUpDown(-3);

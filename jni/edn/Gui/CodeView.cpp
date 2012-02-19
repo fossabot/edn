@@ -90,19 +90,15 @@ void CodeView::CalculateMaxSize(void)
 	int32_t letterHeight = ewol::GetHeight(m_fontNormal);
 	m_maxSize.y = m_bufferManager->Get(m_bufferID)->GetNumberOfLine() * letterHeight;
 }
-// TODO : remove this from here ...
-#include <ewol/importgl.h>
+
 
 bool CodeView::OnDraw(void)
 {
-	//glLoadIdentity();
-	glTranslatef(m_origin.x,m_origin.y, 0);
 	m_OObjectsColored[      m_currentDrawId].Draw();
 	m_OObjectTextNormal[    m_currentDrawId].Draw();
 	m_OObjectTextBold[      m_currentDrawId].Draw();
 	m_OObjectTextItalic[    m_currentDrawId].Draw();
 	m_OObjectTextBoldItalic[m_currentDrawId].Draw();
-	glTranslatef(-m_origin.x,-m_origin.y, 0);
 	return true;
 }
 
@@ -174,8 +170,6 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 		// nothing to do ... done on upper widet ...
 		return true;
 	}
-	x -= m_origin.x;
-	y -= m_origin.y;
 	if (1 == IdInput) {
 		#ifndef __MODE__Touch
 			if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
