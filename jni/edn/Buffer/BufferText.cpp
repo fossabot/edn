@@ -272,11 +272,11 @@ void BufferText::CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int
 		OOColored->Rectangle( x, y, letterWidth, letterHeight, clip);
 	} else {
 		// TODO : Clipping
-		if (x >= clip.x) {
+		//if (x >= clip.x) {
 			OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y)                              , (int32_t)(x+CURSOR_WIDTH), (int32_t)(y)                              , CURSOR_THICKNESS);
 			OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), (int32_t)(x+CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
 			OOColored->Line( (int32_t)(x)             , (int32_t)(y)                              , (int32_t)(x)             , (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
-		}
+		//}
 	}
 }
 
