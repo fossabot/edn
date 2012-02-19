@@ -87,8 +87,6 @@ class BufferText : public Buffer {
 		// Display
 		bool                    NeedToCleanEndPage;         //!< if true, the end of the page need to be clean (arrive after a remove line)
 		uint32_t                nbColoneForLineNumber;      //!< number of colome used to display the line Number
-		ColorizeManager *       myColorManager;             //!< for the background color : 
-		
 		
 		// Direct buffer IO
 		EdnBuf                  m_EdnBuf;                   //!< buffer associated on this displayer

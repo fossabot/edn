@@ -37,8 +37,7 @@ HighlightPattern::HighlightPattern(void)
 {
 	m_haveStopPatern = false;
 	m_multiline = false;
-	ColorizeManager *myColorManager = ColorizeManager::getInstance();
-	m_color = myColorManager->Get("normal");
+	m_color = ColorizeManager::Get("normal");
 	m_regExpStart = new etk::RegExp<EdnVectorBuf>();
 	m_regExpStop = new etk::RegExp<EdnVectorBuf>();
 	m_escapeChar = 0;
@@ -78,8 +77,7 @@ void HighlightPattern::SetEscapeChar(etk::UString &EscapeChar)
 void  HighlightPattern::SetColor(etk::UString &colorName)
 {
 	m_colorName = colorName;
-	ColorizeManager *myColorManager = ColorizeManager::getInstance();
-	m_color = myColorManager->Get(m_colorName);
+	m_color = ColorizeManager::Get(m_colorName);
 }
 
 bool HighlightPattern::IsEnable(void)
@@ -90,8 +88,7 @@ bool HighlightPattern::IsEnable(void)
 
 void HighlightPattern::ReloadColor(void)
 {
-	ColorizeManager *myColorManager = ColorizeManager::getInstance();
-	m_color = myColorManager->Get(m_colorName);
+	m_color = ColorizeManager::Get(m_colorName);
 }
 
 /**

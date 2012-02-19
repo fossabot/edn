@@ -73,7 +73,6 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
                              ewol::OObject2DTextColored& OOTextBoldItalic,
                              ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
 {
-	ColorizeManager * myColorManager = ColorizeManager::getInstance();
 	// Get color : 
 	Colorize	*myColor = NULL;
 	
@@ -89,12 +88,12 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
 	drawClipping.w = sizeX;
 	drawClipping.h = sizeY;
 	
-	myColor = myColorManager->Get("normal");
+	myColor = ColorizeManager::Get("normal");
 	OOTextNormal.SetColor(myColor->GetFG());
 	etk::UString tmpDisplay = "edn - Editeur De N'ours";
 	OOTextBold.Text(textPos, drawClipping, tmpDisplay);
 	
-	myColor = myColorManager->Get("commentDoxygen");
+	myColor = ColorizeManager::Get("commentDoxygen");
 	OOTextNormal.SetColor(myColor->GetFG());
 	textPos.y = (int32_t)(textPos.y + letterHeight*1.30);
 	tmpDisplay = "No Buffer Availlable to display";

@@ -67,8 +67,6 @@ void BufferText::BasicInit(void)
 	
 	// set the number of the lineNumber;
 	nbColoneForLineNumber = 1;
-	// init the link with the buffer manager
-	myColorManager = ColorizeManager::getInstance();
 	// Init Selection mode : 
 	SelectionEnd();
 	//EDN_INFO("Init");
@@ -95,8 +93,8 @@ void BufferText::NameChange(void)
 {
 	// Find HL system
 	//EDN_DEBUG("check name change");
-	if (true == HighlightManager::getInstance()->Exist(m_fileName)) {
-		Highlight * myHL = HighlightManager::getInstance()->Get(m_fileName);
+	if (true == HighlightManager::Exist(m_fileName)) {
+		Highlight * myHL = HighlightManager::Get(m_fileName);
 		// Set the new HL
 		if (NULL != myHL) {
 			m_EdnBuf.SetHLSystem(myHL);
@@ -244,9 +242,9 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 {
 	char tmpLineNumber[50];
 	sprintf(tmpLineNumber, myPrint, lineNumber);
-	OOColored->SetColor(myColorManager->Get(COLOR_LIST_BG_2));
+	OOColored->SetColor(ColorizeManager::Get(COLOR_LIST_BG_2));
 	OOColored->Rectangle( 0, positionY, sizeX+0.5*SEPARATION_SIZE_LINE_NUMBER, sizeY);
-	OOText->SetColor(myColorManager->Get(COLOR_CODE_LINE_NUMBER));
+	OOText->SetColor(ColorizeManager::Get(COLOR_CODE_LINE_NUMBER));
 	
 	
 	coord2D_ts textPos;
@@ -266,7 +264,7 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 #define CURSOR_THICKNESS       (1.2)
 void BufferText::CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip)
 {
-	color_ts & tmpppppp = ColorizeManager::getInstance()->Get(COLOR_CODE_CURSOR);
+	color_ts & tmpppppp = ColorizeManager::Get(COLOR_CODE_CURSOR);
 	OOColored->SetColor(tmpppppp);
 	if (true == ewol::IsSetInsert()) {
 		OOColored->Rectangle( x, y, letterWidth, letterHeight, clip);
@@ -382,10 +380,10 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	uint32_t y = 0;
 	int32_t iii, new_i;
 	// Get color : 
-	Colorize *  myColor           = myColorManager->Get("normal");
-	Colorize *  myColorSel        = myColorManager->Get("SelectedText");
-	color_ts &  myColorSpace      = myColorManager->Get(COLOR_CODE_SPACE);
-	color_ts &  myColorTab        = myColorManager->Get(COLOR_CODE_TAB);
+	Colorize *  myColor           = ColorizeManager::Get("normal");
+	Colorize *  myColorSel        = ColorizeManager::Get("SelectedText");
+	color_ts &  myColorSpace      = ColorizeManager::Get(COLOR_CODE_SPACE);
+	color_ts &  myColorTab        = ColorizeManager::Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
 	ewol::OObject2DTextColored* OOTextSelected = NULL;
 	
@@ -393,7 +391,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	int32_t x_base=nbColoneForLineNumber*letterWidth;
 	int32_t idX = 0;
 	
-	OOColored.SetColor(myColorManager->Get(COLOR_CODE_BASIC_BG));
+	OOColored.SetColor(ColorizeManager::Get(COLOR_CODE_BASIC_BG));
 	OOColored.Rectangle( 0, 0, sizeX, sizeY);
 	
 	int64_t startTime = GetCurrentTime();

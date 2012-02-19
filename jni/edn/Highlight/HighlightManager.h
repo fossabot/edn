@@ -26,7 +26,6 @@
 #ifndef __HIGHLIGHT_MANAGER_H__
 #define __HIGHLIGHT_MANAGER_H__
 
-class HighlightManager;
 
 #include <etk/Singleton.h>
 #include <etk/UString.h>
@@ -34,26 +33,14 @@ class HighlightManager;
 #include <Highlight.h>
 #include <ewol/Widget.h>
 
-
-class HighlightManager: public etk::Singleton<HighlightManager>, public ewol::Widget
-{
-	friend class etk::Singleton<HighlightManager>;
-	// specific for sigleton system...
-	private:
-		// Constructeur
-		HighlightManager(void);
-		~HighlightManager(void);
-
-	public:
-		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
-	public:
-		void loadLanguages(void);
-		Highlight	* Get(etk::File &fileName);
-		bool		  Exist(etk::File &fileName);
-
-	private:
-		etk::VectorType<Highlight*> listHighlight;		//!< List of ALL hightlight modules
+namespace HighlightManager{
+	void       Init(void);
+	void       UnInit(void);
+	void       loadLanguages(void);
+	Highlight* Get(etk::File &fileName);
+	bool       Exist(etk::File &fileName);
 };
+
 
 #endif
 

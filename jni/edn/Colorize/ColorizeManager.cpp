@@ -27,16 +27,44 @@
 #include <ColorizeManager.h>
 #include <tinyXML/tinyxml.h>
 #include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/WidgetManager.h>
 
 #define PFX	"ColorizeManager "
 
 
-ColorizeManager::ColorizeManager(void)
+
+class classColorManager: public ewol::Widget
+{
+	public:
+		// Constructeur
+		classColorManager(void);
+		~classColorManager(void);
+	public:
+		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
+	public:
+		void        LoadFile(etk::UString &xmlFilename);
+		void        LoadFile(const char * xmlFilename);
+		Colorize *  Get(const char *colorName);
+		Colorize *  Get(etk::UString &colorName);
+		color_ts &  Get(basicColor_te myColor);
+		bool        Exist(etk::UString &colorName);
+		bool        Exist(const char *colorName);
+		void        DisplayListOfColor(void);
+
+	private:
+		etk::UString                 m_fileColor;
+		etk::VectorType<Colorize*>  listMyColor;		//!< List of ALL Color
+		Colorize *                  errorColor;
+		color_ts                    basicColors[COLOR_NUMBER_MAX];
+};
+
+
+classColorManager::classColorManager(void)
 {
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiChangeColor);
 }
 
-ColorizeManager::~ColorizeManager(void)
+classColorManager::~classColorManager(void)
 {
 	delete(errorColor);
 
@@ -53,7 +81,7 @@ ColorizeManager::~ColorizeManager(void)
 }
 
 
-bool ColorizeManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
+bool classColorManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
 	/*
 	switch (id)
@@ -72,14 +100,14 @@ bool ColorizeManager::OnEventAreaExternal(int32_t widgetID, const char * generat
 }
 
 
-void ColorizeManager::LoadFile(etk::UString &xmlFilename)
+void classColorManager::LoadFile(etk::UString &xmlFilename)
 {
 	// TODO : Remove this
 	LoadFile(xmlFilename.Utf8Data());
 }
 
 // TODO : Remove this ...
-void ColorizeManager::LoadFile(const char * xmlFilename)
+void classColorManager::LoadFile(const char * xmlFilename)
 {
 	// Remove all old color : 
 	int32_t i;
@@ -276,7 +304,7 @@ void ColorizeManager::LoadFile(const char * xmlFilename)
 }
 
 // TODO : Remove this ...
-Colorize *ColorizeManager::Get(const char *colorName)
+Colorize *classColorManager::Get(const char *colorName)
 {
 	int32_t i;
 	for (i=0; i<listMyColor.Size(); i++) {
@@ -290,13 +318,13 @@ Colorize *ColorizeManager::Get(const char *colorName)
 	return errorColor;
 }
 
-Colorize *ColorizeManager::Get(etk::UString &colorName)
+Colorize *classColorManager::Get(etk::UString &colorName)
 {
 	// TODO : Remove this
 	return Get(colorName.Utf8Data());
 }
 
-color_ts & ColorizeManager::Get(basicColor_te myColor)
+color_ts & classColorManager::Get(basicColor_te myColor)
 {
 	if (myColor < COLOR_NUMBER_MAX) {
 		return basicColors[myColor];
@@ -307,7 +335,7 @@ color_ts & ColorizeManager::Get(basicColor_te myColor)
 
 
 // TODO : Remove this ...
-bool ColorizeManager::Exist(const char *colorName)
+bool classColorManager::Exist(const char *colorName)
 {
 	int32_t i;
 	for (i=0; i<listMyColor.Size(); i++) {
@@ -319,13 +347,13 @@ bool ColorizeManager::Exist(const char *colorName)
 	return false;
 }
 
-bool ColorizeManager::Exist(etk::UString &colorName)
+bool classColorManager::Exist(etk::UString &colorName)
 {
 	// TODO : Remove this
 	return Exist(colorName.Utf8Data());
 }
 
-void ColorizeManager::DisplayListOfColor(void)
+void classColorManager::DisplayListOfColor(void)
 {
 	int32_t i;
 	EDN_INFO(PFX"List of ALL COLOR : ");
@@ -336,5 +364,99 @@ void ColorizeManager::DisplayListOfColor(void)
 	}
 }
 
+
+
+static classColorManager * localManager = NULL;
+
+
+void ColorizeManager::Init(void)
+{
+	if (NULL == localManager) {
+		EWOL_ERROR("ColorizeManager ==> already exist, just unlink the previous ...");
+		localManager = NULL;
+	}
+	localManager = new classColorManager();
+	
+	if (NULL == localManager) {
+		EWOL_CRITICAL("Allocation of HighlightManager not done ...");
+	}
+}
+
+void ColorizeManager::UnInit(void)
+{
+	if (NULL == localManager) {
+		EWOL_ERROR("ColorizeManager ==> request UnInit, but does not exist ...");
+		return;
+	}
+	ewol::widgetManager::MarkWidgetToBeRemoved(localManager);
+	localManager = NULL;
+}
+
+void ColorizeManager::LoadFile(etk::UString &xmlFilename)
+{
+	if (NULL == localManager) {
+		return;
+	}
+	localManager->LoadFile(xmlFilename);
+}
+
+
+void ColorizeManager::LoadFile(const char * xmlFilename)
+{
+	if (NULL == localManager) {
+		return;
+	}
+	localManager->LoadFile(xmlFilename);
+}
+
+Colorize* ColorizeManager::Get(const char *colorName)
+{
+	if (NULL == localManager) {
+		return NULL;
+	}
+	return localManager->Get(colorName);
+}
+
+Colorize* ColorizeManager::Get(etk::UString &colorName)
+{
+	if (NULL == localManager) {
+		return NULL;
+	}
+	return localManager->Get(colorName);
+}
+
+color_ts errorColor;
+
+color_ts& ColorizeManager::Get(basicColor_te myColor)
+{
+	if (NULL == localManager) {
+		return errorColor;
+	}
+	return localManager->Get(myColor);
+}
+
+bool ColorizeManager::Exist(etk::UString &colorName)
+{
+	if (NULL == localManager) {
+		return false;
+	}
+	return localManager->Exist(colorName);
+}
+
+bool ColorizeManager::Exist(const char *colorName)
+{
+	if (NULL == localManager) {
+		return false;
+	}
+	return localManager->Exist(colorName);
+}
+
+void ColorizeManager::DisplayListOfColor(void)
+{
+	if (NULL == localManager) {
+		return;
+	}
+	localManager->DisplayListOfColor();
+}
 
 

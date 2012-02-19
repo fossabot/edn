@@ -89,15 +89,13 @@ void APP_Init(void)
 	(void)BufferManager::getInstance();
 	
 	// set color and other trucs...
-	ColorizeManager *myColorManager = NULL;
-	myColorManager = ColorizeManager::getInstance();
+	ColorizeManager::Init();
 	etk::UString homedir = "color_white.xml";
-	myColorManager->LoadFile( homedir.Utf8Data() );
-	myColorManager->DisplayListOfColor();
+	ColorizeManager::LoadFile( homedir.Utf8Data() );
+	ColorizeManager::DisplayListOfColor();
 	
-	HighlightManager *myHighlightManager = NULL;
-	myHighlightManager = HighlightManager::getInstance();
-	myHighlightManager->loadLanguages();
+	HighlightManager::Init();
+	HighlightManager::loadLanguages();
 
 	
 	// get the curent program folder
@@ -139,11 +137,13 @@ void APP_UnInit(void)
 	// Remove windows :
 	ewol::DisplayWindows(NULL);
 	
+	EDN_INFO("Stop Hightlight");
+	HighlightManager::UnInit();
 	//Kill all singleton
 	EDN_INFO("Stop BufferManager");
 	BufferManager::Kill();
 	EDN_INFO("Stop ColorizeManager");
-	ColorizeManager::Kill();
+	ColorizeManager::UnInit();
 	EDN_INFO("Stop Search");
 	Search::Kill();
 	//EDN_INFO("Stop Accel key");

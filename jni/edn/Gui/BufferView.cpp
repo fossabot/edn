@@ -39,7 +39,6 @@ BufferView::BufferView(void)
 {
 	// Init link with the buffer Manager
 	m_bufferManager = BufferManager::getInstance();
-	m_colorManager = ColorizeManager::getInstance();
 	SetCanHaveFocus(true);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferListChange);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferState);
@@ -73,7 +72,7 @@ bool BufferView::OnEventAreaExternal(int32_t widgetID, const char * generateEven
 
 color_ts BufferView::GetBasicBG(void)
 {
-	return m_colorManager->Get(COLOR_LIST_BG_1);
+	return ColorizeManager::Get(COLOR_LIST_BG_1);
 }
 
 uint32_t BufferView::GetNuberOfColomn(void)
@@ -134,8 +133,8 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 	} else {
 		myTextToWrite = "ERROR";
 	}
-	fg = m_colorManager->Get(selectFG);
-	bg = m_colorManager->Get(selectBG);
+	fg = ColorizeManager::Get(selectFG);
+	bg = ColorizeManager::Get(selectBG);
 	return true;
 }
 

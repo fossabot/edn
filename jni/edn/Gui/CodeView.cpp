@@ -57,7 +57,6 @@ CodeView::CodeView(void)
 	
 	// Init link with the buffer Manager
 	m_bufferManager = BufferManager::getInstance();
-	m_colorManager = ColorizeManager::getInstance();
 	
 	m_textColorFg.red   = 0.0;
 	m_textColorFg.green = 0.0;

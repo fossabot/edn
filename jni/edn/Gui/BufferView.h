@@ -52,7 +52,6 @@ class BufferView : public ewol::List
 	private:
 		// récupération des proprieter général...
 		BufferManager *       m_bufferManager;
-		ColorizeManager *     m_colorManager;
 		int32_t               m_selectedID;
 };
 

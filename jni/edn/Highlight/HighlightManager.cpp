@@ -27,106 +27,165 @@
 #include <tools_globals.h>
 #include <HighlightManager.h>
 #include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/WidgetManager.h>
 
 #undef __class__
 #define __class__	"HighlightManager"
 
-HighlightManager::HighlightManager(void)
-{
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferColor);
-}
 
-HighlightManager::~HighlightManager(void)
+class localClassHighlightManager: public ewol::Widget
 {
-	int32_t i;
-	// clean all Element
-	for (i=0; i< listHighlight.Size(); i++) {
-		if (NULL != listHighlight[i]) {
-			delete(listHighlight[i]);
-			listHighlight[i] = NULL;
-		}
-	}
-	// clear the compleate list
-	listHighlight.Clear();
-}
-
-
-bool HighlightManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
-{
-	/*
-	switch (id)
-	{
-		case EDN_MSG__COLOR_HAS_CHANGE:
-			EDN_INFO("UPDATE the color pointer on the HL");
-			for (int32_t i=0; i<listHighlight.Size(); i++) {
+	private:
+		etk::VectorType<Highlight*> listHighlight;		//!< List of ALL hightlight modules
+	public:
+		// Constructeur
+		localClassHighlightManager(void) {
+			ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferColor);
+		};
+		~localClassHighlightManager(void) {
+			int32_t i;
+			// clean all Element
+			for (i=0; i< listHighlight.Size(); i++) {
 				if (NULL != listHighlight[i]) {
-					listHighlight[i]->ReloadColor();
+					delete(listHighlight[i]);
+					listHighlight[i] = NULL;
 				}
 			}
-			break;
+			// clear the compleate list
+			listHighlight.Clear();
+		};
+		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
+		{
+			/*
+			switch (id)
+			{
+				case EDN_MSG__COLOR_HAS_CHANGE:
+					EDN_INFO("UPDATE the color pointer on the HL");
+					for (int32_t i=0; i<listHighlight.Size(); i++) {
+						if (NULL != listHighlight[i]) {
+							listHighlight[i]->ReloadColor();
+						}
+					}
+					break;
+			}
+			*/
+			return false;
+		}
+		
+		Highlight* Get(etk::File &fileName)
+		{
+			int32_t i;
+			for (i=0; i<listHighlight.Size(); i++) {
+				if (true == listHighlight[i]->FileNameCompatible(fileName) ) {
+					return listHighlight[i];
+				}
+			}
+			return NULL;
+		}
+		
+		bool Exist(etk::File &fileName)
+		{
+			if (NULL != Get(fileName) ) {
+				return true;
+			}
+			return false;
+		}
+		
+		
+		void loadLanguages(void)
+		{
+			etk::UString xmlFilename = "lang_c.xml";
+			Highlight *myHightline = new Highlight(xmlFilename);
+			listHighlight.PushBack(myHightline);
+			
+			xmlFilename = "lang_boo.xml";
+			myHightline = new Highlight(xmlFilename);
+			listHighlight.PushBack(myHightline);
+			
+			xmlFilename = "lang_Makefile.xml";
+			myHightline = new Highlight(xmlFilename);
+			listHighlight.PushBack(myHightline);
+			
+			xmlFilename = "lang_asm.xml";
+			myHightline = new Highlight(xmlFilename);
+			listHighlight.PushBack(myHightline);
+			
+			xmlFilename = "lang_xml.xml";
+			myHightline = new Highlight(xmlFilename);
+			listHighlight.PushBack(myHightline);
+			
+			xmlFilename = "lang_php.xml";
+			myHightline = new Highlight(xmlFilename);
+			listHighlight.PushBack(myHightline);
+			
+			xmlFilename = "lang_bash.xml";
+			myHightline = new Highlight(xmlFilename);
+			listHighlight.PushBack(myHightline);
+			
+			xmlFilename = "lang_matlab.xml";
+			myHightline = new Highlight(xmlFilename);
+			listHighlight.PushBack(myHightline);
+			
+			xmlFilename = "lang_java.xml";
+			myHightline = new Highlight(xmlFilename);
+			listHighlight.PushBack(myHightline);
+			
+			//myHightline->Display();
+		}
+
+};
+
+
+static localClassHighlightManager * localManager = NULL;
+
+
+
+void HighlightManager::Init(void)
+{
+	if (NULL == localManager) {
+		EWOL_ERROR("HighlightManager ==> already exist, just unlink the previous ...");
+		localManager = NULL;
 	}
-	*/
-	return false;
+	localManager = new localClassHighlightManager();
+	
+	if (NULL == localManager) {
+		EWOL_CRITICAL("Allocation of HighlightManager not done ...");
+	}
 }
 
-Highlight *HighlightManager::Get(etk::File &fileName)
+void HighlightManager::UnInit(void)
 {
-	int32_t i;
-	for (i=0; i<listHighlight.Size(); i++) {
-		if (true == listHighlight[i]->FileNameCompatible(fileName) ) {
-			return listHighlight[i];
-		}
+	if (NULL == localManager) {
+		EWOL_ERROR("HighlightManager ==> request UnInit, but does not exist ...");
+		return;
 	}
-	return NULL;
+	ewol::widgetManager::MarkWidgetToBeRemoved(localManager);
+	localManager = NULL;
+}
+
+void HighlightManager::loadLanguages(void)
+{
+	if (NULL == localManager) {
+		return;
+	}
+	localManager->loadLanguages();
+}
+
+Highlight* HighlightManager::Get(etk::File &fileName)
+{
+	if (NULL == localManager) {
+		return NULL;
+	}
+	return localManager->Get(fileName);
 }
 
 bool HighlightManager::Exist(etk::File &fileName)
 {
-	if (NULL != Get(fileName) ) {
-		return true;
+	if (NULL == localManager) {
+		return false;
 	}
-	return false;
+	return localManager->Exist(fileName);
 }
 
 
-void HighlightManager::loadLanguages(void)
-{
-	etk::UString xmlFilename = "lang_c.xml";
-	Highlight *myHightline = new Highlight(xmlFilename);
-	listHighlight.PushBack(myHightline);
-	
-	xmlFilename = "lang_boo.xml";
-	myHightline = new Highlight(xmlFilename);
-	listHighlight.PushBack(myHightline);
-	
-	xmlFilename = "lang_Makefile.xml";
-	myHightline = new Highlight(xmlFilename);
-	listHighlight.PushBack(myHightline);
-	
-	xmlFilename = "lang_asm.xml";
-	myHightline = new Highlight(xmlFilename);
-	listHighlight.PushBack(myHightline);
-	
-	xmlFilename = "lang_xml.xml";
-	myHightline = new Highlight(xmlFilename);
-	listHighlight.PushBack(myHightline);
-	
-	xmlFilename = "lang_php.xml";
-	myHightline = new Highlight(xmlFilename);
-	listHighlight.PushBack(myHightline);
-	
-	xmlFilename = "lang_bash.xml";
-	myHightline = new Highlight(xmlFilename);
-	listHighlight.PushBack(myHightline);
-	
-	xmlFilename = "lang_matlab.xml";
-	myHightline = new Highlight(xmlFilename);
-	listHighlight.PushBack(myHightline);
-	
-	xmlFilename = "lang_java.xml";
-	myHightline = new Highlight(xmlFilename);
-	listHighlight.PushBack(myHightline);
-	
-	//myHightline->Display();
-}
 

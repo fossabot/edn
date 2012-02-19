@@ -50,31 +50,18 @@ typedef enum {
 
 
 
-class ColorizeManager: public etk::Singleton<ColorizeManager>, public ewol::Widget
+namespace ColorizeManager
 {
-	friend class etk::Singleton<ColorizeManager>;
-	// specific for sigleton system...
-	private:
-		// Constructeur
-		ColorizeManager(void);
-		~ColorizeManager(void);
-	public:
-		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
-	public:
-		void        LoadFile(etk::UString &xmlFilename);
-		void        LoadFile(const char * xmlFilename);
-		Colorize *  Get(const char *colorName);
-		Colorize *  Get(etk::UString &colorName);
-		color_ts &  Get(basicColor_te myColor);
-		bool        Exist(etk::UString &colorName);
-		bool        Exist(const char *colorName);
-		void        DisplayListOfColor(void);
-
-	private:
-		etk::UString                 m_fileColor;
-		etk::VectorType<Colorize*>  listMyColor;		//!< List of ALL Color
-		Colorize *                  errorColor;
-		color_ts                    basicColors[COLOR_NUMBER_MAX];
+	void        Init(void);
+	void        UnInit(void);
+	void        LoadFile(etk::UString &xmlFilename);
+	void        LoadFile(const char * xmlFilename);
+	Colorize *  Get(const char *colorName);
+	Colorize *  Get(etk::UString &colorName);
+	color_ts &  Get(basicColor_te myColor);
+	bool        Exist(etk::UString &colorName);
+	bool        Exist(const char *colorName);
+	void        DisplayListOfColor(void);
 };
 
 #endif
