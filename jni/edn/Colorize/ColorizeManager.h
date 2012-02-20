@@ -26,7 +26,6 @@
 #ifndef __COLORIZE_MANAGER_H__
 #define __COLORIZE_MANAGER_H__
 
-#include <etk/Singleton.h>
 #include <Colorize.h>
 #include <MsgBroadcast.h>
 #include <ewol/Widget.h>

@@ -27,14 +27,11 @@
 #define __SEARCH_H__
 
 #include <tools_debug.h>
-#include <etk/Singleton.h>
 
 
-class Search: public etk::Singleton<Search>
+class Search
 {
-	friend class etk::Singleton<Search>;
-	// specific for sigleton system...
-	private:
+	public:
 		// Constructeur
 		Search(void);
 		~Search(void);

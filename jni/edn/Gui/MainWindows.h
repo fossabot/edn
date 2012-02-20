@@ -25,7 +25,6 @@
 
 
 #include <tools_debug.h>
-#include <etk/Singleton.h>
 #include <MsgBroadcast.h>
 
 #include <CodeView.h>

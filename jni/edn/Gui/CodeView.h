@@ -45,7 +45,6 @@ class CodeView :public ewol::WidgetScrooled
 		etk::UString                 m_label;
 		color_ts                     m_textColorFg;  //!< Text color
 		color_ts                     m_textColorBg;  //!< Background color
-		BufferManager *              m_bufferManager;
 		int32_t                      m_bufferID;
 		bool                         m_buttunOneSelected;
 		// drawing elements :

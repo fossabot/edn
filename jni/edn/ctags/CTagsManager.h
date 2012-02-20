@@ -27,7 +27,6 @@
 #define __C_TAGS_MANAGER_H__
 
 
-#include <etk/Singleton.h>
 #include <ewol/Widget.h>
 #include "MsgBroadcast.h"
 #include "readtags.h"
@@ -40,7 +39,7 @@ typedef struct{
 	int32_t lineID;
 } TagListFind_ts;
 
-
+/*
 class CTagsManager: public etk::Singleton<CTagsManager>, public ewol::Widget
 {
 	friend class etk::Singleton<CTagsManager>;
@@ -68,16 +67,6 @@ class CTagsManager: public etk::Singleton<CTagsManager>, public ewol::Widget
 		etk::VectorType<etk::File*>   m_historyList;
 		etk::VectorType<TagListFind_ts> m_currentList;
 		void                       JumpAtID(int32_t selectID);
-		/*
-		GtkWidget *                CreateViewAndModel(void);
-		static void cb_row (GtkTreeView *p_treeview,
-		                    GtkTreePath * p_path,
-		                    GtkTreeViewColumn * p_column,
-		                    gpointer p_data);
-		// save data in the list : 
-		GtkListStore *   m_listStore;
-		GtkWidget *      m_Dialog;
-		*/
 };
-
+*/
 #endif

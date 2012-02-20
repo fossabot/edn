@@ -29,7 +29,6 @@
 #include <CodeView.h>
 #include <ClipBoard.h>
 #include <BufferView.h>
-#include <AccelKey.h>
 
 #include <ewol/widget/Button.h>
 #include <ewol/widget/CheckBox.h>
@@ -186,18 +185,17 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		if (NULL == data) {
 			EDN_ERROR("Null data for Save As file ... ");
 		} else {
-			BufferManager * myMng = BufferManager::getInstance();
 			m_currentSavingAsIdBuffer = -1;
 			if (0 == strcmp(data , "current")) {
-				m_currentSavingAsIdBuffer = myMng->GetSelected();
+				m_currentSavingAsIdBuffer = BufferManager::GetSelected();
 			} else {
 				sscanf(data, "%d", &m_currentSavingAsIdBuffer);
 			}
 			
-			if (false == myMng->Exist(m_currentSavingAsIdBuffer)) {
+			if (false == BufferManager::Exist(m_currentSavingAsIdBuffer)) {
 				EDN_ERROR("Request saveAs on non existant Buffer ID=" << m_currentSavingAsIdBuffer);
 			} else {
-				Buffer * myBuffer = myMng->Get(m_currentSavingAsIdBuffer);
+				Buffer * myBuffer = BufferManager::Get(m_currentSavingAsIdBuffer);
 				ewol::FileChooser* tmpWidget = new ewol::FileChooser();
 				tmpWidget->SetTitle("Save Files As...");
 				tmpWidget->SetValidateLabel("Save");
@@ -227,8 +225,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		etk::UString tmpData = tmpWidget->GetCompleateFileName();
 		EDN_DEBUG("Request Saving As file : " << tmpData);
 		
-		BufferManager * myMng = BufferManager::getInstance();
-		myMng->Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
+		BufferManager::Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave, m_currentSavingAsIdBuffer);
 	} else if (generateEventId == ednMsgGuiAbout) {
 	/*

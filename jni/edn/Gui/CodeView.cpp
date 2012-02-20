@@ -55,9 +55,6 @@ CodeView::CodeView(void)
 	m_bufferID = -1;
 	m_buttunOneSelected = false;
 	
-	// Init link with the buffer Manager
-	m_bufferManager = BufferManager::getInstance();
-	
 	m_textColorFg.red   = 0.0;
 	m_textColorFg.green = 0.0;
 	m_textColorFg.blue  = 0.0;
@@ -87,7 +84,7 @@ void CodeView::CalculateMaxSize(void)
 {
 	m_maxSize.x = 2048;
 	int32_t letterHeight = ewol::GetHeight(m_fontNormal);
-	m_maxSize.y = m_bufferManager->Get(m_bufferID)->GetNumberOfLine() * letterHeight;
+	m_maxSize.y = BufferManager::Get(m_bufferID)->GetNumberOfLine() * letterHeight;
 }
 
 
@@ -123,7 +120,7 @@ void CodeView::OnRegenerateDisplay(void)
 		
 		
 		// generate the objects :
-		m_bufferManager->Get(m_bufferID)->Display(m_OObjectTextNormal[m_currentCreateId],
+		BufferManager::Get(m_bufferID)->Display(m_OObjectTextNormal[m_currentCreateId],
 		                                          m_OObjectTextBold[m_currentCreateId],
 		                                          m_OObjectTextItalic[m_currentCreateId],
 		                                          m_OObjectTextBoldItalic[m_currentCreateId],
@@ -144,7 +141,7 @@ bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, uniChar_t unicodeData)
 {
 	//EDN_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
 	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
-		m_bufferManager->Get(m_bufferID)->AddChar(unicodeData);
+		BufferManager::Get(m_bufferID)->AddChar(unicodeData);
 		MarkToReedraw();
 	}
 	return true;
@@ -154,7 +151,7 @@ bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, uniChar_t unicodeData)
 bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveType_te moveTypeEvent)
 {
 	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
-		m_bufferManager->Get(m_bufferID)->cursorMove(moveTypeEvent);
+		BufferManager::Get(m_bufferID)->cursorMove(moveTypeEvent);
 		MarkToReedraw();
 	}
 	return true;
@@ -175,11 +172,11 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 				m_buttunOneSelected = true;
 				ewol::widgetManager::FocusKeep(this);
 				//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
-				m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
+				BufferManager::Get(m_bufferID)->MouseEvent(x, y);
 				MarkToReedraw();
 			} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 				m_buttunOneSelected = false;
-				m_bufferManager->Get(m_bufferID)->Copy(COPY_MIDDLE_BUTTON);
+				BufferManager::Get(m_bufferID)->Copy(COPY_MIDDLE_BUTTON);
 				MarkToReedraw();
 			} else 
 		#endif
@@ -187,18 +184,18 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 			#ifdef __MODE__Touch
 				ewol::widgetManager::FocusKeep(this);
 				//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
-				m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
+				BufferManager::Get(m_bufferID)->MouseEvent(x, y);
 				MarkToReedraw();
 			#else
 				// nothing to do ...
 			#endif
 		} else if (ewol::EVENT_INPUT_TYPE_DOUBLE == typeEvent) {
 			//EDN_INFO("mouse-event BT1  ==> Double Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
-			m_bufferManager->Get(m_bufferID)->MouseEventDouble();
+			BufferManager::Get(m_bufferID)->MouseEventDouble();
 			MarkToReedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_TRIPLE == typeEvent) {
 			//EDN_INFO("mouse-event BT1  ==> Triple Clicked");
-			m_bufferManager->Get(m_bufferID)->MouseEventTriple();
+			BufferManager::Get(m_bufferID)->MouseEventTriple();
 			MarkToReedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_MOVE == typeEvent) {
 			if (true == m_buttunOneSelected) {
@@ -212,14 +209,14 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 					yyy = 0;
 				}
 				//EDN_INFO("mouse-motion BT1 %d, %d", xxx, yyy);
-				m_bufferManager->Get(m_bufferID)->MouseSelectFromCursorTo(xxx, yyy);
+				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(xxx, yyy);
 				MarkToReedraw();
 			}
 		}
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
-			m_bufferManager->Get(m_bufferID)->MouseEvent(x, y);
-			m_bufferManager->Get(m_bufferID)->Paste(COPY_MIDDLE_BUTTON);
+			BufferManager::Get(m_bufferID)->MouseEvent(x, y);
+			BufferManager::Get(m_bufferID)->Paste(COPY_MIDDLE_BUTTON);
 			MarkToReedraw();
 			ewol::widgetManager::FocusKeep(this);
 		}
@@ -240,7 +237,7 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 		sscanf(data, "%d", &bufferID);
 		EDN_INFO("Select a new Buffer ... " << bufferID);
 		m_bufferID = bufferID;
-		m_bufferManager->Get(m_bufferID)->ForceReDraw(true);
+		BufferManager::Get(m_bufferID)->ForceReDraw(true);
 		// TODO : need to update the state of the file and the filenames ...
 	}
 	// old
@@ -250,7 +247,7 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 		sscanf(data, "%d", &bufferID);
 		EDN_INFO("Select a new Buffer ... " << bufferID);
 		m_bufferID = bufferID;
-		m_bufferManager->Get(m_bufferID)->ForceReDraw(true);
+		BufferManager::Get(m_bufferID)->ForceReDraw(true);
 		// request the display of the curent Editor
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferChangeCurrent, (char*)data);
 		
@@ -305,7 +302,7 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 		case EDN_MSG__CURRENT_CHANGE_BUFFER_ID:
 			EDN_INFO("Select a new Buffer ... " << dataID);
 			m_bufferID = dataID;
-			m_bufferManager->Get(m_bufferID)->ForceReDraw(true);
+			BufferManager::Get(m_bufferID)->ForceReDraw(true);
 			// request the display of the curent Editor
 			SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
 			break;
@@ -316,51 +313,51 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 			SendMessage(EDN_MSG__GUI_SHOW_SAVE_AS, m_bufferID);
 			break;
 		case EDN_MSG__CURRENT_REMOVE_LINE:
-			m_bufferManager->Get(m_bufferID)->RemoveLine();
+			BufferManager::Get(m_bufferID)->RemoveLine();
 			break;
 		case EDN_MSG__CURRENT_SELECT_ALL:
-			m_bufferManager->Get(m_bufferID)->SelectAll();
+			BufferManager::Get(m_bufferID)->SelectAll();
 			break;
 		case EDN_MSG__CURRENT_UN_SELECT:
-			m_bufferManager->Get(m_bufferID)->SelectNone();
+			BufferManager::Get(m_bufferID)->SelectNone();
 			break;
 		case EDN_MSG__CURRENT_COPY:
 			if (dataID == -1) {
 				dataID = COPY_STD;
 			}
-			m_bufferManager->Get(m_bufferID)->Copy(dataID);
+			BufferManager::Get(m_bufferID)->Copy(dataID);
 			break;
 		case EDN_MSG__CURRENT_CUT:
 			if (dataID == -1) {
 				dataID = COPY_STD;
 			}
-			m_bufferManager->Get(m_bufferID)->Cut(dataID);
+			BufferManager::Get(m_bufferID)->Cut(dataID);
 			break;
 		case EDN_MSG__CURRENT_PASTE:
 			if (dataID == -1) {
 				dataID = COPY_STD;
 			}
-			m_bufferManager->Get(m_bufferID)->Paste(dataID);
+			BufferManager::Get(m_bufferID)->Paste(dataID);
 			break;
 		case EDN_MSG__CURRENT_FIND_PREVIOUS:
 			{
 				etk::UString myDataString;
 				SearchData::GetSearch(myDataString);
-				m_bufferManager->Get(m_bufferID)->Search(myDataString, true, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
+				BufferManager::Get(m_bufferID)->Search(myDataString, true, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
 			}
 			break;
 		case EDN_MSG__CURRENT_FIND_NEXT:
 			{
 				etk::UString myDataString;
 				SearchData::GetSearch(myDataString);
-				m_bufferManager->Get(m_bufferID)->Search(myDataString, false, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
+				BufferManager::Get(m_bufferID)->Search(myDataString, false, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
 			}
 			break;
 		case EDN_MSG__CURRENT_REPLACE:
 			{
 				etk::UString myDataString;
 				SearchData::GetReplace(myDataString);
-				m_bufferManager->Get(m_bufferID)->Replace(myDataString);
+				BufferManager::Get(m_bufferID)->Replace(myDataString);
 			}
 			break;
 		case EDN_MSG__CURRENT_REPLACE_ALL:
@@ -369,21 +366,21 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 			SendMessage(EDN_MSG__BUFF_ID_CLOSE, m_bufferID);
 			break;
 		case EDN_MSG__CURRENT_UNDO:
-			m_bufferManager->Get(m_bufferID)->Undo();
+			BufferManager::Get(m_bufferID)->Undo();
 			break;
 		case EDN_MSG__CURRENT_REDO:
-			m_bufferManager->Get(m_bufferID)->Redo();
+			BufferManager::Get(m_bufferID)->Redo();
 			break;
 		case EDN_MSG__CURRENT_GOTO_LINE:
 			if (dataID<0) {
 				dataID = 0;
 			}
-			m_bufferManager->Get(m_bufferID)->JumpAtLine(dataID);
+			BufferManager::Get(m_bufferID)->JumpAtLine(dataID);
 			break;
 		case EDN_MSG__REFRESH_DISPLAY:
 			break;
 		case EDN_MSG__CURRENT_SET_CHARSET:
-			m_bufferManager->Get(m_bufferID)->SetCharset((unicode::charset_te)dataID);
+			BufferManager::Get(m_bufferID)->SetCharset((unicode::charset_te)dataID);
 			break;
 		case EDN_MSG__USER_DISPLAY_CHANGE:
 			// Redraw all the display ... Done under ...

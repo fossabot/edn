@@ -27,7 +27,6 @@
 #define __HIGHLIGHT_MANAGER_H__
 
 
-#include <etk/Singleton.h>
 #include <etk/UString.h>
 #include <MsgBroadcast.h>
 #include <Highlight.h>

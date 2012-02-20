@@ -38,6 +38,7 @@
 #include <CTagsManager.h>
 #include <etk/UString.h>
 #include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/WidgetManager.h>
 
 MainWindows * basicWindows = NULL;
 
@@ -85,8 +86,8 @@ void APP_Init(void)
 	
 	
 	// init ALL Singleton :
-	(void)CTagsManager::getInstance();
-	(void)BufferManager::getInstance();
+	//(void)CTagsManager::getInstance();
+	BufferManager::Init();
 	
 	// set color and other trucs...
 	ColorizeManager::Init();
@@ -141,18 +142,18 @@ void APP_UnInit(void)
 	HighlightManager::UnInit();
 	//Kill all singleton
 	EDN_INFO("Stop BufferManager");
-	BufferManager::Kill();
+	BufferManager::UnInit();
 	EDN_INFO("Stop ColorizeManager");
 	ColorizeManager::UnInit();
 	EDN_INFO("Stop Search");
-	Search::Kill();
+	//Search::Kill();
 	//EDN_INFO("Stop Accel key");
 	//AccelKey::Kill();
 	
 	if (NULL != basicWindows) {
-		delete(basicWindows);
+		ewol::widgetManager::MarkWidgetToBeRemoved(basicWindows);
+		basicWindows = NULL;
 	}
-	basicWindows = NULL;
 	EDN_INFO("==> Un-Init Edn (END)");
 }
 

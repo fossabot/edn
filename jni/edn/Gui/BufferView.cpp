@@ -37,8 +37,6 @@
 
 BufferView::BufferView(void)
 {
-	// Init link with the buffer Manager
-	m_bufferManager = BufferManager::getInstance();
 	SetCanHaveFocus(true);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferListChange);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferState);
@@ -88,10 +86,7 @@ bool BufferView::GetTitle(int32_t colomn, etk::UString &myTitle, color_ts &fg, c
 
 uint32_t BufferView::GetNuberOfRaw(void)
 {
-	if (NULL != m_bufferManager) {
-		return m_bufferManager->SizeOpen();
-	}
-	return 0;
+	return BufferManager::SizeOpen();
 }
 
 bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, color_ts &fg, color_ts &bg)
@@ -102,10 +97,10 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 	basicColor_te selectBG = COLOR_LIST_BG_1;
 	
 	// transforme the ID in the real value ...
-	int32_t realID = m_bufferManager->WitchBuffer(raw+1);
-	if (m_bufferManager->Exist(realID)) {
-		isModify = m_bufferManager->Get(realID)->IsModify();
-		name = m_bufferManager->Get(realID)->GetFileName();
+	int32_t realID = BufferManager::WitchBuffer(raw+1);
+	if (BufferManager::Exist(realID)) {
+		isModify = BufferManager::Get(realID)->IsModify();
+		name = BufferManager::Get(realID)->GetFileName();
 		char *tmpModify = (char*)" ";
 		if (true == isModify) {
 			tmpModify = (char*)"M";
@@ -142,7 +137,7 @@ bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,
 {
 	if (1 == IdInput && typeEvent == ewol::EVENT_INPUT_TYPE_SINGLE) {
 		EDN_INFO("Event on List : IdInput=" << IdInput << " colomn=" << colomn << " raw=" << raw );
-		int32_t selectBuf = m_bufferManager->WitchBuffer(raw+1);
+		int32_t selectBuf = BufferManager::WitchBuffer(raw+1);
 		if ( 0 <= selectBuf) {
 			m_selectedID = raw;
 			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, selectBuf);

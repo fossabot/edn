@@ -34,7 +34,7 @@
 
 #undef  __class__
 #define __class__    "CTagsManager"
-
+#if 0
 /**
  * @brief
  *
@@ -413,3 +413,6 @@ void CTagsManager::PrintTag (const tagEntry *entry, bool small)
 	}
 }
 */
+
+#endif
+
