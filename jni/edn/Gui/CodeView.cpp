@@ -159,9 +159,12 @@ bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveTy
 
 
 
-bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, etkFloat_t x, etkFloat_t y)
+bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, ewol::eventPosition_ts pos)
 {
-	if (true == WidgetScrooled::OnEventInput(IdInput, typeEvent, x, y)) {
+	if (m_bufferID < 0) {
+		return false;
+	}
+	if (true == WidgetScrooled::OnEventInput(IdInput, typeEvent, pos)) {
 		ewol::widgetManager::FocusKeep(this);
 		// nothing to do ... done on upper widet ...
 		return true;
@@ -171,8 +174,7 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 			if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
 				m_buttunOneSelected = true;
 				ewol::widgetManager::FocusKeep(this);
-				//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
-				BufferManager::Get(m_bufferID)->MouseEvent(x, y);
+				BufferManager::Get(m_bufferID)->MouseEvent(pos.local.x, pos.local.y);
 				MarkToReedraw();
 			} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 				m_buttunOneSelected = false;
@@ -183,25 +185,22 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			#ifdef __MODE__Touch
 				ewol::widgetManager::FocusKeep(this);
-				//EDN_INFO("mouse-event BT1  ==> One Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
-				BufferManager::Get(m_bufferID)->MouseEvent(x, y);
+				BufferManager::Get(m_bufferID)->MouseEvent(pos.local.x, pos.local.y);
 				MarkToReedraw();
 			#else
 				// nothing to do ...
 			#endif
 		} else if (ewol::EVENT_INPUT_TYPE_DOUBLE == typeEvent) {
-			//EDN_INFO("mouse-event BT1  ==> Double Clicked %d, %d", (uint32_t)event->x, (uint32_t)event->y);
 			BufferManager::Get(m_bufferID)->MouseEventDouble();
 			MarkToReedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_TRIPLE == typeEvent) {
-			//EDN_INFO("mouse-event BT1  ==> Triple Clicked");
 			BufferManager::Get(m_bufferID)->MouseEventTriple();
 			MarkToReedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_MOVE == typeEvent) {
 			if (true == m_buttunOneSelected) {
 				int xxx, yyy;
-				xxx = x;
-				yyy = y;
+				xxx = pos.local.x;
+				yyy = pos.local.y;
 				if (xxx<0) {
 					xxx = 0;
 				}
@@ -215,7 +214,7 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 		}
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
-			BufferManager::Get(m_bufferID)->MouseEvent(x, y);
+			BufferManager::Get(m_bufferID)->MouseEvent(pos.local.x, pos.local.y);
 			BufferManager::Get(m_bufferID)->Paste(COPY_MIDDLE_BUTTON);
 			MarkToReedraw();
 			ewol::widgetManager::FocusKeep(this);

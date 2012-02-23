@@ -58,7 +58,7 @@ class CodeView :public ewol::WidgetScrooled
 		virtual void   OnRegenerateDisplay(void);
 		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
 	public:
-		virtual bool OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, etkFloat_t x, etkFloat_t y);
+		virtual bool OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, ewol::eventPosition_ts pos);
 		virtual bool OnEventKb(ewol::eventKbType_te typeEvent, uniChar_t unicodeData);
 		virtual bool OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveType_te moveTypeEvent);
 		virtual void OnGetFocus(void);
