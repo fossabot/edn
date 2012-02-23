@@ -82,22 +82,17 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
 	coord2D_ts textPos;
 	textPos.x = 20;
 	textPos.y = 20;
-	clipping_ts drawClipping;
-	drawClipping.x = 0;
-	drawClipping.y = 0;
-	drawClipping.w = sizeX;
-	drawClipping.h = sizeY;
 	
 	myColor = ColorizeManager::Get("normal");
 	OOTextNormal.SetColor(myColor->GetFG());
 	etk::UString tmpDisplay = "edn - Editeur De N'ours";
-	OOTextBold.Text(textPos, drawClipping, tmpDisplay);
+	OOTextBold.Text(textPos, tmpDisplay);
 	
 	myColor = ColorizeManager::Get("commentDoxygen");
 	OOTextNormal.SetColor(myColor->GetFG());
 	textPos.y = (int32_t)(textPos.y + letterHeight*1.30);
 	tmpDisplay = "No Buffer Availlable to display";
-	OOTextNormal.Text(textPos, drawClipping, tmpDisplay);
+	OOTextNormal.Text(textPos, tmpDisplay);
 	
 	
 	color_ts bgColor;  //!< Text color

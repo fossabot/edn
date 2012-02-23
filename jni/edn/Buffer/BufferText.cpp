@@ -169,6 +169,8 @@ void BufferText::Save(void)
 		m_EdnBuf.DumpIn(myFile);
 		fclose(myFile);
 		SetModify(false);
+	} else {
+		EDN_ERROR("Can not open in writing the specify file");
 	}
 }
 
@@ -250,14 +252,8 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 	coord2D_ts textPos;
 	textPos.x = 1;
 	textPos.y = positionY;
-	clipping_ts drawClipping;
-	drawClipping.x = 0;
-	drawClipping.y = 0;
-	drawClipping.w = sizeX;
-	drawClipping.h = sizeY;
-	// TODO : Remove this unreallistic leak of time
 	etk::UString tmppp = tmpLineNumber;
-	OOText->Text(textPos, drawClipping, tmppp);
+	OOText->Text(textPos, tmppp);
 }
 
 #define CURSOR_WIDTH           (5)
@@ -267,7 +263,7 @@ void BufferText::CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int
 	color_ts & tmpppppp = ColorizeManager::Get(COLOR_CODE_CURSOR);
 	OOColored->SetColor(tmpppppp);
 	if (true == ewol::IsSetInsert()) {
-		OOColored->Rectangle( x, y, letterWidth, letterHeight, clip);
+		OOColored->Rectangle( x, y, letterWidth, letterHeight);
 	} else {
 		// TODO : Clipping
 		//if (x >= clip.x) {
@@ -427,6 +423,12 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	drawClippingTextArea.w = sizeX - drawClipping.x;
 	drawClippingTextArea.h = sizeY;
 	
+	OOTextNormal.clippingSet(drawClippingTextArea);
+	OOTextBold.clippingSet(drawClippingTextArea);
+	OOTextItalic.clippingSet(drawClippingTextArea);
+	OOTextBoldItalic.clippingSet(drawClippingTextArea);
+	OOColored.clippingSet(drawClippingTextArea);
+	
 	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
 		//EDN_DEBUG("diplay element=" << iii);
 		int displaywidth;
@@ -486,10 +488,10 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 			OOTextSelected->SetColor(selectColor->GetFG());
 			// TODO : Remove this unreallistic leak of time
 			myStringToDisplay = displayChar;
-			drawSize = OOTextSelected->Text(textPos, drawClippingTextArea, myStringToDisplay);
+			drawSize = OOTextSelected->Text(textPos, myStringToDisplay);
 			
 			if (true == haveBg ) {
-				OOColored.Rectangle(textPos.x, y, drawSize, letterHeight, drawClippingTextArea);
+				OOColored.Rectangle(textPos.x, y, drawSize, letterHeight);
 			}
 		}
 		idX += displaywidth;
@@ -506,7 +508,11 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 			y += letterHeight;
 			displayLines++;
 			currentLineID++;
+			OOTextNormal.clippingDisable();
+			OOColored.clippingDisable();
 			DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, myPrint, currentLineID, y);
+			OOTextNormal.clippingEnable();
+			OOColored.clippingEnable();
 		}
 	}
 	// special case : the cursor is at the end of the buffer...
