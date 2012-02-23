@@ -38,6 +38,7 @@ class MainWindows : public ewol::Windows
 {
 	private:
 		int32_t m_currentSavingAsIdBuffer;
+		int32_t m_fileNameLabelwidgetId;
 	public:
 		// Constructeur
 		MainWindows(void);

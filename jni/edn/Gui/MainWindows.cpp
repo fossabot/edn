@@ -106,6 +106,7 @@ MainWindows::MainWindows(void)
 			(void)myMenu->AddTitle("?", "", ednMsgGuiAbout);
 			
 			myLabel = new ewol::Label("FileName");
+			m_fileNameLabelwidgetId = myLabel->GetWidgetId();
 			myLabel->SetExpendX(true);
 			myLabel->SetFillY(true);
 			mySizerHori->SubWidgetAdd(myLabel);
@@ -142,6 +143,9 @@ MainWindows::MainWindows(void)
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiSaveAs);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiOpen);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiAbout);
+	// to update the title ... 
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferState);
+	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
 }
 
 
@@ -227,6 +231,23 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		
 		BufferManager::Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave, m_currentSavingAsIdBuffer);
+	} else if(    generateEventId == ednMsgBufferState
+	           || generateEventId == ednMsgBufferId) {
+		// the buffer change we need to update the widget string
+		Buffer* tmpBuffer = BufferManager::Get(BufferManager::GetSelected());
+		if (NULL != tmpBuffer) {
+			etk::File compleateName = tmpBuffer->GetFileName();
+			ewol::Label * tmpWidget = dynamic_cast<ewol::Label*>(ewol::widgetManager::Get(m_fileNameLabelwidgetId));
+			if (NULL == tmpWidget) {
+				EDN_ERROR("impossible to get label widget " << widgetID);
+				return false;
+			}
+			tmpWidget->SetLabel(compleateName.GetCompleateName());
+			
+			return true;
+		}
+		return false;
+		// TODO : Set the Title ....
 	} else if (generateEventId == ednMsgGuiAbout) {
 	/*
 		//Title 
