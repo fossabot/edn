@@ -39,6 +39,7 @@
 #include <etk/UString.h>
 #include <ewol/WidgetMessageMultiCast.h>
 #include <ewol/WidgetManager.h>
+#include <tools/MsgBroadcast/MsgBroadcast.h>
 
 MainWindows * basicWindows = NULL;
 
@@ -117,6 +118,24 @@ void APP_Init(void)
 	// create the specific windows
 	ewol::DisplayWindows(basicWindows);
 	
+	// add generic shortcut ...
+	//                 (shift, control, alt,  meta,  uniChar_t unicodeValue, const char * generateEventId, etk::UString& data)
+	ewol::shortCut::Add("ctrl+s",       ednMsgGuiSave, "current");
+	ewol::shortCut::Add("ctrl+shift+s", ednMsgGuiSave, "All");
+	ewol::shortCut::Add("ctrl+z",       ednMsgGuiUndo, "");
+	ewol::shortCut::Add("ctrl+shift+z", ednMsgGuiRedo, "");
+	
+	ewol::shortCut::Add("ctrl+w",       ednMsgGuiRm,     "Line");
+	ewol::shortCut::Add("ctrl+shift+w", ednMsgGuiRm,     "Paragraph");
+	ewol::shortCut::Add("ctrl+x",       ednMsgGuiCut,    "STD");
+	ewol::shortCut::Add("ctrl+c",       ednMsgGuiCopy,   "STD");
+	ewol::shortCut::Add("ctrl+v",       ednMsgGuiPaste,  "STD");
+	ewol::shortCut::Add("ctrl+a",       ednMsgGuiSelect, "ALL");
+	ewol::shortCut::Add("ctrl+shift+a", ednMsgGuiSelect, "NONE");
+	
+	ewol::shortCut::Add("ctrl+l",       ednMsgGuiGotoLine, "???");
+	
+	
 	// add files
 	EDN_INFO("show list of files : ");
 	
@@ -125,6 +144,7 @@ void APP_Init(void)
 		etk::UString tmpppp = ewol::CmdLineGet(iii);
 		ewol::widgetMessageMultiCast::Send(-1, ednMsgOpenFile, tmpppp);
 	}
+	
 	EDN_INFO("==> Init Edn (END)");
 }
 

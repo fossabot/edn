@@ -237,12 +237,17 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		Buffer* tmpBuffer = BufferManager::Get(BufferManager::GetSelected());
 		if (NULL != tmpBuffer) {
 			etk::File compleateName = tmpBuffer->GetFileName();
+			bool isModify = tmpBuffer->IsModify();
+			etk::UString directName = compleateName.GetCompleateName();
+			if (true == isModify) {
+				directName += " *";
+			}
 			ewol::Label * tmpWidget = dynamic_cast<ewol::Label*>(ewol::widgetManager::Get(m_fileNameLabelwidgetId));
 			if (NULL == tmpWidget) {
 				EDN_ERROR("impossible to get label widget " << widgetID);
 				return false;
 			}
-			tmpWidget->SetLabel(compleateName.GetCompleateName());
+			tmpWidget->SetLabel(directName);
 			
 			return true;
 		}
