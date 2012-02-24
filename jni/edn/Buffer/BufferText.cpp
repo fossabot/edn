@@ -408,6 +408,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	EDN_VERBOSE("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
 	
 	
+	OOTextNormal.clippingDisable();
+	OOColored.clippingDisable();
 	DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, myPrint, currentLineID, y);
 	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 	
