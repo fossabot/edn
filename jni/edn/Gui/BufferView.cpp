@@ -30,19 +30,20 @@
 #include <BufferManager.h>
 #include <ColorizeManager.h>
 #include <MainWindows.h>
-#include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/EObjectMessageMulticast.h>
 
 #undef __class__
 #define __class__	"BufferView"
 
 BufferView::BufferView(void)
 {
+	/*
 	SetCanHaveFocus(true);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferListChange);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferState);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
 	m_selectedID = -1;
-
+	*/
 }
 
 BufferView::~BufferView(void)
@@ -57,6 +58,7 @@ GtkWidget * BufferView::GetMainWidget(void)
 */
 bool BufferView::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
 {
+	/*
 	if (generateEventId == ednMsgBufferListChange) {
 		MarkToReedraw();
 	}else if (generateEventId == ednMsgBufferId) {
@@ -64,6 +66,7 @@ bool BufferView::OnEventAreaExternal(int32_t widgetID, const char * generateEven
 	}else if (generateEventId == ednMsgBufferState) {
 		MarkToReedraw();
 	}
+	*/
 	return false;
 }
 
@@ -135,6 +138,7 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 
 bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, etkFloat_t x, etkFloat_t y)
 {
+	/*
 	if (1 == IdInput && typeEvent == ewol::EVENT_INPUT_TYPE_SINGLE) {
 		EDN_INFO("Event on List : IdInput=" << IdInput << " colomn=" << colomn << " raw=" << raw );
 		int32_t selectBuf = BufferManager::WitchBuffer(raw+1);
@@ -144,6 +148,7 @@ bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,
 		}
 	}
 	MarkToReedraw();
+	*/
 	return false;
 }
 

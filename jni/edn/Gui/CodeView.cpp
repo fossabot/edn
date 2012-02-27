@@ -36,7 +36,7 @@
 #include <SearchData.h>
 
 #include <ewol/WidgetManager.h>
-#include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/EObjectMessageMulticast.h>
 
 
 #undef __class__
@@ -65,7 +65,9 @@ CodeView::CodeView(void)
 	m_textColorBg.blue  = 0.0;
 	m_textColorBg.alpha = 0.25;
 	SetCanHaveFocus(true);
+	/*
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
+	*/
 }
 
 CodeView::~CodeView(void)
@@ -394,7 +396,9 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 
 void CodeView::OnGetFocus(void)
 {
+	/*
 	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, m_bufferID);
+	*/
 	ewol::KeyboardShow(ewol::KEYBOARD_MODE_CODE);
 	EDN_INFO("Focus - In");
 }

@@ -26,7 +26,7 @@
 #include <tools_debug.h>
 #include <tools_globals.h>
 #include <HighlightManager.h>
-#include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/EObjectMessageMulticast.h>
 #include <ewol/WidgetManager.h>
 
 #undef __class__
@@ -40,7 +40,7 @@ class localClassHighlightManager: public ewol::Widget
 	public:
 		// Constructeur
 		localClassHighlightManager(void) {
-			ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferColor);
+			//ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferColor);
 		};
 		~localClassHighlightManager(void) {
 			int32_t i;
@@ -159,7 +159,7 @@ void HighlightManager::UnInit(void)
 		EWOL_ERROR("HighlightManager ==> request UnInit, but does not exist ...");
 		return;
 	}
-	ewol::widgetManager::MarkWidgetToBeRemoved(localManager);
+	localManager->MarkToRemove();
 	localManager = NULL;
 }
 

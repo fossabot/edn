@@ -28,7 +28,7 @@
 #include <CTagsManager.h>
 #include <ClipBoard.h>
 #include <BufferManager.h>
-#include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/EObjectMessageMulticast.h>
 
 
 

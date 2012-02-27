@@ -37,7 +37,7 @@
 #include <readtags.h>
 #include <CTagsManager.h>
 #include <etk/UString.h>
-#include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/EObjectMessageMulticast.h>
 #include <ewol/WidgetManager.h>
 #include <tools/MsgBroadcast/MsgBroadcast.h>
 
@@ -120,8 +120,15 @@ void APP_Init(void)
 	
 	// add generic shortcut ...
 	//                 (shift, control, alt,  meta,  uniChar_t unicodeValue, const char * generateEventId, etk::UString& data)
+	ewol::shortCut::Add("ctrl+o",       ednMsgGuiOpen,  "");
+	ewol::shortCut::Add("ctrl+n",       ednMsgGuiNew,   "");
+	
 	ewol::shortCut::Add("ctrl+s",       ednMsgGuiSave, "current");
 	ewol::shortCut::Add("ctrl+shift+s", ednMsgGuiSave, "All");
+	
+	ewol::shortCut::Add("ctrl+q",       ednMsgGuiClose, "current");
+	ewol::shortCut::Add("ctrl+shift+q", ednMsgGuiClose, "All");
+	
 	ewol::shortCut::Add("ctrl+z",       ednMsgGuiUndo, "");
 	ewol::shortCut::Add("ctrl+shift+z", ednMsgGuiRedo, "");
 	
@@ -136,13 +143,14 @@ void APP_Init(void)
 	ewol::shortCut::Add("ctrl+l",       ednMsgGuiGotoLine, "???");
 	
 	
+	
 	// add files
 	EDN_INFO("show list of files : ");
 	
 	for( int32_t iii=0 ; iii<ewol::CmdLineNb(); iii++) {
 		EDN_INFO("need load file : \"" << ewol::CmdLineGet(iii) << "\"" );
 		etk::UString tmpppp = ewol::CmdLineGet(iii);
-		ewol::widgetMessageMultiCast::Send(-1, ednMsgOpenFile, tmpppp);
+		ewol::EObjectMessageMultiCast::Send(NULL, ednMsgOpenFile, tmpppp);
 	}
 	
 	EDN_INFO("==> Init Edn (END)");
@@ -171,7 +179,7 @@ void APP_UnInit(void)
 	//AccelKey::Kill();
 	
 	if (NULL != basicWindows) {
-		ewol::widgetManager::MarkWidgetToBeRemoved(basicWindows);
+		basicWindows->MarkToRemove();
 		basicWindows = NULL;
 	}
 	EDN_INFO("==> Un-Init Edn (END)");

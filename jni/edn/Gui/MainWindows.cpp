@@ -43,7 +43,7 @@
 #include <ewol/widget/Menu.h>
 #include <ewol/widgetMeta/FileChooser.h>
 #include <ewol/WidgetManager.h>
-#include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/EObjectMessageMulticast.h>
 
 #undef __class__
 #define __class__	"MainWindows"
@@ -54,7 +54,6 @@ MainWindows::MainWindows(void)
 	ewol::SizerVert * mySizerVert = NULL;
 	ewol::SizerHori * mySizerHori = NULL;
 	//ewol::Button * myButton = NULL;
-	ewol::Label * myLabel = NULL;
 	CodeView * myCodeView = NULL;
 	BufferView * myBufferView = NULL;
 	ewol::Menu * myMenu = NULL;
@@ -105,11 +104,10 @@ MainWindows::MainWindows(void)
 				(void)myMenu->Add(idMenuCTags, "Back",      "", ednMsgGuiCtags, "Back");
 			(void)myMenu->AddTitle("?", "", ednMsgGuiAbout);
 			
-			myLabel = new ewol::Label("FileName");
-			m_fileNameLabelwidgetId = myLabel->GetWidgetId();
-			myLabel->SetExpendX(true);
-			myLabel->SetFillY(true);
-			mySizerHori->SubWidgetAdd(myLabel);
+			m_widgetLabelFileName = new ewol::Label("FileName");
+			m_widgetLabelFileName->SetExpendX(true);
+			m_widgetLabelFileName->SetFillY(true);
+			mySizerHori->SubWidgetAdd(m_widgetLabelFileName);
 		
 		mySizerHori = new ewol::SizerHori();
 		mySizerVert->SubWidgetAdd(mySizerHori);
@@ -139,6 +137,7 @@ MainWindows::MainWindows(void)
 			*/
 			mySizerHori->SubWidgetAdd(myCodeView);
 			
+	/*
 	// Generic event ...
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiSaveAs);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiOpen);
@@ -146,6 +145,7 @@ MainWindows::MainWindows(void)
 	// to update the title ... 
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferState);
 	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
+	*/
 }
 
 
@@ -171,10 +171,9 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		// TODO : Set the good folder ...
 		//tmpWidget->SetFolder("/");
 		PopUpWidgetPush(tmpWidget);
-		if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserValidate, GetWidgetId(), ednEventPopUpFileSelected) ) {
-			EDN_CRITICAL("link with an entry event");
-		}
+		tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
 	} else if (generateEventId == ednEventPopUpFileSelected) {
+		/*
 		// get widget:
 		ewol::FileChooser * tmpWidget = dynamic_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
 		if (NULL == tmpWidget) {
@@ -185,6 +184,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		etk::UString tmpData = tmpWidget->GetCompleateFileName();
 		EDN_DEBUG("Request opening the file : " << tmpData);
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData);
+		*/
 	} else if (generateEventId == ednMsgGuiSaveAs) {
 		if (NULL == data) {
 			EDN_ERROR("Null data for Save As file ... ");
@@ -213,12 +213,11 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 				tmpWidget->SetFolder(folder);
 				tmpWidget->SetFileName(fileName);
 				PopUpWidgetPush(tmpWidget);
-				if (false == tmpWidget->ExternLinkOnEvent(ewolEventFileChooserValidate, GetWidgetId(), ednEventPopUpFileSaveAs) ) {
-					EDN_CRITICAL("link with an entry event");
-				}
+				tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
 			}
 		}
 	} else if (generateEventId == ednEventPopUpFileSaveAs) {
+		/*
 		// get widget:
 		ewol::FileChooser * tmpWidget = dynamic_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
 		if (NULL == tmpWidget) {
@@ -231,6 +230,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		
 		BufferManager::Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave, m_currentSavingAsIdBuffer);
+		*/
 	} else if(    generateEventId == ednMsgBufferState
 	           || generateEventId == ednMsgBufferId) {
 		// the buffer change we need to update the widget string
@@ -242,13 +242,10 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 			if (true == isModify) {
 				directName += " *";
 			}
-			ewol::Label * tmpWidget = dynamic_cast<ewol::Label*>(ewol::widgetManager::Get(m_fileNameLabelwidgetId));
-			if (NULL == tmpWidget) {
-				EDN_ERROR("impossible to get label widget " << widgetID);
+			if (NULL == m_widgetLabelFileName) {
 				return false;
 			}
-			tmpWidget->SetLabel(directName);
-			
+			m_widgetLabelFileName->SetLabel(directName);
 			return true;
 		}
 		return false;

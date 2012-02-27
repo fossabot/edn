@@ -26,7 +26,7 @@
 #include <tools_globals.h>
 #include <ColorizeManager.h>
 #include <tinyXML/tinyxml.h>
-#include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/EObjectMessageMulticast.h>
 #include <ewol/WidgetManager.h>
 
 #define PFX	"ColorizeManager "
@@ -61,7 +61,7 @@ class classColorManager: public ewol::Widget
 
 classColorManager::classColorManager(void)
 {
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiChangeColor);
+	//ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiChangeColor);
 }
 
 classColorManager::~classColorManager(void)
@@ -388,7 +388,7 @@ void ColorizeManager::UnInit(void)
 		EWOL_ERROR("ColorizeManager ==> request UnInit, but does not exist ...");
 		return;
 	}
-	ewol::widgetManager::MarkWidgetToBeRemoved(localManager);
+	localManager->MarkToRemove();
 	localManager = NULL;
 }
 

@@ -26,7 +26,7 @@
 #include <tools_globals.h>
 #include <ColorizeManager.h>
 #include <MsgBroadcast.h>
-#include <ewol/WidgetMessageMultiCast.h>
+#include <ewol/EObjectMessageMulticast.h>
 
 #undef __class__
 #define __class__	"globals"

@@ -30,6 +30,7 @@
 #include <CodeView.h>
 #include <BufferView.h>
 #include <BufferManager.h>
+#include <ewol/widget/Label.h>
 
 
 #ifndef __MAIN_WINDOWS_H__
@@ -38,7 +39,7 @@ class MainWindows : public ewol::Windows
 {
 	private:
 		int32_t m_currentSavingAsIdBuffer;
-		int32_t m_fileNameLabelwidgetId;
+		ewol::Label* m_widgetLabelFileName;
 	public:
 		// Constructeur
 		MainWindows(void);
