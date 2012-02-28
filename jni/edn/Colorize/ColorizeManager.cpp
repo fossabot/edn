@@ -26,7 +26,7 @@
 #include <tools_globals.h>
 #include <ColorizeManager.h>
 #include <tinyXML/tinyxml.h>
-#include <ewol/EObjectMessageMulticast.h>
+#include <ewol/EObject.h>
 #include <ewol/WidgetManager.h>
 
 #define PFX	"ColorizeManager "

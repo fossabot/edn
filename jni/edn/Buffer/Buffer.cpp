@@ -27,7 +27,7 @@
 #include <tools_globals.h>
 #include <Buffer.h>
 #include <BufferManager.h>
-#include <ewol/EObjectMessageMulticast.h>
+#include <ewol/EObject.h>
 
 #undef __class__
 #define __class__	"Buffer"
@@ -96,7 +96,7 @@ void Buffer::SetModify(bool status)
 		m_fileModify = status;
 		// TODO : Remove from here
 		etk::UString data = "Modify";
-		ewol::EObjectMessageMultiCast::Send(NULL, ednMsgBufferState, data);
+		ewol::EObjectMessageMultiCast::AnonymousSend(ednMsgBufferState, data);
 	}
 }
 

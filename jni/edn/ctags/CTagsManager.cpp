@@ -28,7 +28,7 @@
 #include <CTagsManager.h>
 #include <ClipBoard.h>
 #include <BufferManager.h>
-#include <ewol/EObjectMessageMulticast.h>
+#include <ewol/EObject.h>
 
 
 
@@ -203,7 +203,7 @@ void CTagsManager::cb_row(GtkTreeView *p_treeview,
                           gpointer data)
 {
 	EDN_DEBUG("event");
-	CTagsManager * self = dynamic_cast<CTagsManager*>(data);
+	CTagsManager * self = static_cast<CTagsManager*>(data);
 	
 	gchar * p_file=NULL;
 	gint lineNumber;

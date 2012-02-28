@@ -30,7 +30,7 @@
 #include <BufferManager.h>
 #include <ColorizeManager.h>
 #include <MainWindows.h>
-#include <ewol/EObjectMessageMulticast.h>
+#include <ewol/EObject.h>
 
 #undef __class__
 #define __class__	"BufferView"

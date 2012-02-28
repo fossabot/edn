@@ -26,7 +26,7 @@
 #include <tools_debug.h>
 #include <tools_globals.h>
 #include <HighlightManager.h>
-#include <ewol/EObjectMessageMulticast.h>
+#include <ewol/EObject.h>
 #include <ewol/WidgetManager.h>
 
 #undef __class__

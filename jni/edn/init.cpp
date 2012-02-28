@@ -37,7 +37,7 @@
 #include <readtags.h>
 #include <CTagsManager.h>
 #include <etk/UString.h>
-#include <ewol/EObjectMessageMulticast.h>
+#include <ewol/EObject.h>
 #include <ewol/WidgetManager.h>
 #include <tools/MsgBroadcast/MsgBroadcast.h>
 
@@ -150,7 +150,7 @@ void APP_Init(void)
 	for( int32_t iii=0 ; iii<ewol::CmdLineNb(); iii++) {
 		EDN_INFO("need load file : \"" << ewol::CmdLineGet(iii) << "\"" );
 		etk::UString tmpppp = ewol::CmdLineGet(iii);
-		ewol::EObjectMessageMultiCast::Send(NULL, ednMsgOpenFile, tmpppp);
+		ewol::EObjectMessageMultiCast::AnonymousSend(ednMsgOpenFile, tmpppp);
 	}
 	
 	EDN_INFO("==> Init Edn (END)");

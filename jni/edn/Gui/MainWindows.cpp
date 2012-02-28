@@ -43,7 +43,7 @@
 #include <ewol/widget/Menu.h>
 #include <ewol/widgetMeta/FileChooser.h>
 #include <ewol/WidgetManager.h>
-#include <ewol/EObjectMessageMulticast.h>
+#include <ewol/EObject.h>
 
 #undef __class__
 #define __class__	"MainWindows"
@@ -175,7 +175,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 	} else if (generateEventId == ednEventPopUpFileSelected) {
 		/*
 		// get widget:
-		ewol::FileChooser * tmpWidget = dynamic_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
+		ewol::FileChooser * tmpWidget = static_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
 		if (NULL == tmpWidget) {
 			EDN_ERROR("impossible to get pop_upWidget " << widgetID);
 			return false;
@@ -219,7 +219,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 	} else if (generateEventId == ednEventPopUpFileSaveAs) {
 		/*
 		// get widget:
-		ewol::FileChooser * tmpWidget = dynamic_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
+		ewol::FileChooser * tmpWidget = static_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
 		if (NULL == tmpWidget) {
 			EDN_ERROR("impossible to get pop_upWidget " << widgetID);
 			return false;

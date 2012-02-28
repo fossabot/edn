@@ -36,7 +36,7 @@
 #include <SearchData.h>
 
 #include <ewol/WidgetManager.h>
-#include <ewol/EObjectMessageMulticast.h>
+#include <ewol/EObject.h>
 
 
 #undef __class__
