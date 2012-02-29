@@ -56,7 +56,14 @@ class CodeView :public ewol::WidgetScrooled
 		
 	public:
 		virtual void   OnRegenerateDisplay(void);
-		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
+		/**
+		 * @brief Receive a message from an other EObject with a specific eventId and data
+		 * @param[in] CallerObject Pointer on the EObject that information came from
+		 * @param[in] eventId Message registered by this class
+		 * @param[in] data Data registered by this class
+		 * @return ---
+		 */
+		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
 	public:
 		virtual bool OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, ewol::eventPosition_ts pos);
 		virtual bool OnEventKb(ewol::eventKbType_te typeEvent, uniChar_t unicodeData);

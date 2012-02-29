@@ -27,13 +27,13 @@
 #include <tools_globals.h>
 #include <HighlightManager.h>
 #include <ewol/EObject.h>
-#include <ewol/WidgetManager.h>
+#include <ewol/EObjectManager.h>
 
 #undef __class__
 #define __class__	"HighlightManager"
 
 
-class localClassHighlightManager: public ewol::Widget
+class localClassHighlightManager: public ewol::EObject
 {
 	private:
 		etk::VectorType<Highlight*> listHighlight;		//!< List of ALL hightlight modules
@@ -54,7 +54,14 @@ class localClassHighlightManager: public ewol::Widget
 			// clear the compleate list
 			listHighlight.Clear();
 		};
-		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
+		/**
+		 * @brief Receive a message from an other EObject with a specific eventId and data
+		 * @param[in] CallerObject Pointer on the EObject that information came from
+		 * @param[in] eventId Message registered by this class
+		 * @param[in] data Data registered by this class
+		 * @return ---
+		 */
+		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
 		{
 			/*
 			switch (id)
@@ -69,7 +76,6 @@ class localClassHighlightManager: public ewol::Widget
 					break;
 			}
 			*/
-			return false;
 		}
 		
 		Highlight* Get(etk::File &fileName)
@@ -159,7 +165,7 @@ void HighlightManager::UnInit(void)
 		EWOL_ERROR("HighlightManager ==> request UnInit, but does not exist ...");
 		return;
 	}
-	localManager->MarkToRemove();
+	ewol::EObjectManager::MarkToRemoved(localManager);
 	localManager = NULL;
 }
 

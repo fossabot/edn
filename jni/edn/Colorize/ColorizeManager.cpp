@@ -27,20 +27,27 @@
 #include <ColorizeManager.h>
 #include <tinyXML/tinyxml.h>
 #include <ewol/EObject.h>
-#include <ewol/WidgetManager.h>
+#include <ewol/EObjectManager.h>
 
 #define PFX	"ColorizeManager "
 
 
 
-class classColorManager: public ewol::Widget
+class classColorManager: public ewol::EObject
 {
 	public:
 		// Constructeur
 		classColorManager(void);
 		~classColorManager(void);
 	public:
-		bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
+		/**
+		 * @brief Receive a message from an other EObject with a specific eventId and data
+		 * @param[in] CallerObject Pointer on the EObject that information came from
+		 * @param[in] eventId Message registered by this class
+		 * @param[in] data Data registered by this class
+		 * @return ---
+		 */
+		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
 	public:
 		void        LoadFile(etk::UString &xmlFilename);
 		void        LoadFile(const char * xmlFilename);
@@ -80,8 +87,7 @@ classColorManager::~classColorManager(void)
 	listMyColor.Clear();
 }
 
-
-bool classColorManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
+void classColorManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
 {
 	/*
 	switch (id)
@@ -96,7 +102,6 @@ bool classColorManager::OnEventAreaExternal(int32_t widgetID, const char * gener
 			break;
 	}
 	*/
-	return false;
 }
 
 
@@ -388,7 +393,7 @@ void ColorizeManager::UnInit(void)
 		EWOL_ERROR("ColorizeManager ==> request UnInit, but does not exist ...");
 		return;
 	}
-	localManager->MarkToRemove();
+	ewol::EObjectManager::MarkToRemoved(localManager);
 	localManager = NULL;
 }
 

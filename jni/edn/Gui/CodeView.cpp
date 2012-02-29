@@ -65,9 +65,7 @@ CodeView::CodeView(void)
 	m_textColorBg.blue  = 0.0;
 	m_textColorBg.alpha = 0.25;
 	SetCanHaveFocus(true);
-	/*
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
-	*/
+	RegisterMultiCast(ednMsgBufferId);
 }
 
 CodeView::~CodeView(void)
@@ -123,11 +121,11 @@ void CodeView::OnRegenerateDisplay(void)
 		
 		// generate the objects :
 		BufferManager::Get(m_bufferID)->Display(m_OObjectTextNormal[m_currentCreateId],
-		                                          m_OObjectTextBold[m_currentCreateId],
-		                                          m_OObjectTextItalic[m_currentCreateId],
-		                                          m_OObjectTextBoldItalic[m_currentCreateId],
-		                                          m_OObjectsColored[m_currentCreateId],
-		                                          m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
+		                                        m_OObjectTextBold[m_currentCreateId],
+		                                        m_OObjectTextItalic[m_currentCreateId],
+		                                        m_OObjectTextBoldItalic[m_currentCreateId],
+		                                        m_OObjectsColored[m_currentCreateId],
+		                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
 		
 		int64_t stopTime = GetCurrentTime();
 		EDN_DEBUG("Display Code Generation = " << stopTime - startTime << " milli-s");
@@ -227,15 +225,23 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 
 
 
-bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y)
+/**
+ * @brief Receive a message from an other EObject with a specific eventId and data
+ * @param[in] CallerObject Pointer on the EObject that information came from
+ * @param[in] eventId Message registered by this class
+ * @param[in] data Data registered by this class
+ * @return ---
+ */
+void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
 {
-	EDN_DEBUG("Extern Event : " << widgetID << "  type : " << generateEventId << "  position(" << x << "," << y << ")");
+	ewol::WidgetScrooled::OnReceiveMessage(CallerObject, eventId, data);
+	EDN_DEBUG("Extern Event : " << CallerObject << "  type : " << eventId << "  data=\"" << data << "\"");
 	
 	
 	
-	if( ednMsgBufferId == generateEventId) {
+	if(eventId == ednMsgBufferId) {
 		int32_t bufferID = 0;
-		sscanf(data, "%d", &bufferID);
+		sscanf(data.Utf8Data(), "%d", &bufferID);
 		EDN_INFO("Select a new Buffer ... " << bufferID);
 		m_bufferID = bufferID;
 		BufferManager::Get(m_bufferID)->ForceReDraw(true);
@@ -390,7 +396,6 @@ bool CodeView::OnEventAreaExternal(int32_t widgetID, const char * generateEventI
 	*/
 	// Force redraw of the widget
 	MarkToReedraw();
-	return true;
 }
 
 

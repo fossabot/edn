@@ -137,15 +137,13 @@ MainWindows::MainWindows(void)
 			*/
 			mySizerHori->SubWidgetAdd(myCodeView);
 			
-	/*
 	// Generic event ...
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiSaveAs);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiOpen);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiAbout);
+	RegisterMultiCast(ednMsgGuiSaveAs);
+	RegisterMultiCast(ednMsgGuiOpen);
+	RegisterMultiCast(ednMsgGuiAbout);
 	// to update the title ... 
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferState);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
-	*/
+	RegisterMultiCast(ednMsgBufferState);
+	RegisterMultiCast(ednMsgBufferId);
 }
 
 
@@ -157,14 +155,20 @@ MainWindows::~MainWindows(void)
 const char *const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
 const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
 
-bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * data, etkFloat_t x, etkFloat_t y)
+/**
+ * @brief Receive a message from an other EObject with a specific eventId and data
+ * @param[in] CallerObject Pointer on the EObject that information came from
+ * @param[in] eventId Message registered by this class
+ * @param[in] data Data registered by this class
+ * @return ---
+ */
+void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
 {
-	if (true == ewol::Windows::OnEventAreaExternal(widgetID, generateEventId, data, x, y) ) {
-		return true;
-	}
-	EDN_INFO("Receive Event from the main windows ... : widgetid=" << widgetID << "\"" << generateEventId << "\" ==> data=\"" << data << "\"" );
+	ewol::Windows::OnReceiveMessage(CallerObject, eventId, data);
+	
+	EDN_INFO("Receive Event from the main windows ... : widgetid=" << CallerObject << "\"" << eventId << "\" ==> data=\"" << data << "\"" );
 	// Open file Section ...
-	if (generateEventId == ednMsgGuiOpen) {
+	if (eventId == ednMsgGuiOpen) {
 		ewol::FileChooser* tmpWidget = new ewol::FileChooser();
 		tmpWidget->SetTitle("Open Files ...");
 		tmpWidget->SetValidateLabel("Open");
@@ -172,7 +176,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		//tmpWidget->SetFolder("/");
 		PopUpWidgetPush(tmpWidget);
 		tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
-	} else if (generateEventId == ednEventPopUpFileSelected) {
+	} else if (eventId == ednEventPopUpFileSelected) {
 		/*
 		// get widget:
 		ewol::FileChooser * tmpWidget = static_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
@@ -185,15 +189,15 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		EDN_DEBUG("Request opening the file : " << tmpData);
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData);
 		*/
-	} else if (generateEventId == ednMsgGuiSaveAs) {
-		if (NULL == data) {
+	} else if (eventId == ednMsgGuiSaveAs) {
+		if (data == "") {
 			EDN_ERROR("Null data for Save As file ... ");
 		} else {
 			m_currentSavingAsIdBuffer = -1;
-			if (0 == strcmp(data , "current")) {
+			if (data == "current") {
 				m_currentSavingAsIdBuffer = BufferManager::GetSelected();
 			} else {
-				sscanf(data, "%d", &m_currentSavingAsIdBuffer);
+				sscanf(data.Utf8Data(), "%d", &m_currentSavingAsIdBuffer);
 			}
 			
 			if (false == BufferManager::Exist(m_currentSavingAsIdBuffer)) {
@@ -216,7 +220,7 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 				tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
 			}
 		}
-	} else if (generateEventId == ednEventPopUpFileSaveAs) {
+	} else if (eventId == ednEventPopUpFileSaveAs) {
 		/*
 		// get widget:
 		ewol::FileChooser * tmpWidget = static_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
@@ -231,8 +235,8 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		BufferManager::Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
 		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave, m_currentSavingAsIdBuffer);
 		*/
-	} else if(    generateEventId == ednMsgBufferState
-	           || generateEventId == ednMsgBufferId) {
+	} else if(    eventId == ednMsgBufferState
+	           || eventId == ednMsgBufferId) {
 		// the buffer change we need to update the widget string
 		Buffer* tmpBuffer = BufferManager::Get(BufferManager::GetSelected());
 		if (NULL != tmpBuffer) {
@@ -243,14 +247,14 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 				directName += " *";
 			}
 			if (NULL == m_widgetLabelFileName) {
-				return false;
+				return;
 			}
 			m_widgetLabelFileName->SetLabel(directName);
-			return true;
+			return;
 		}
-		return false;
+		return;
 		// TODO : Set the Title ....
-	} else if (generateEventId == ednMsgGuiAbout) {
+	} else if (eventId == ednMsgGuiAbout) {
 	/*
 		//Title 
 			"Edn"
@@ -282,6 +286,6 @@ bool MainWindows::OnEventAreaExternal(int32_t widgetID, const char * generateEve
 		*/
 	}
 	
-	return true;
+	return;
 }
 

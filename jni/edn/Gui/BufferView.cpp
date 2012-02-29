@@ -37,37 +37,36 @@
 
 BufferView::BufferView(void)
 {
-	/*
 	SetCanHaveFocus(true);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferListChange);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferState);
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferId);
+	RegisterMultiCast(ednMsgBufferListChange);
+	RegisterMultiCast(ednMsgBufferState);
+	RegisterMultiCast(ednMsgBufferId);
 	m_selectedID = -1;
-	*/
 }
 
 BufferView::~BufferView(void)
 {
 
 }
-/*
-GtkWidget * BufferView::GetMainWidget(void)
+
+
+/**
+ * @brief Receive a message from an other EObject with a specific eventId and data
+ * @param[in] CallerObject Pointer on the EObject that information came from
+ * @param[in] eventId Message registered by this class
+ * @param[in] data Data registered by this class
+ * @return ---
+ */
+void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
 {
-	return m_widget;
-}
-*/
-bool BufferView::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
-{
-	/*
-	if (generateEventId == ednMsgBufferListChange) {
+	ewol::List::OnReceiveMessage(CallerObject, eventId, data);
+	if (eventId == ednMsgBufferListChange) {
 		MarkToReedraw();
-	}else if (generateEventId == ednMsgBufferId) {
+	}else if (eventId == ednMsgBufferId) {
 		MarkToReedraw();
-	}else if (generateEventId == ednMsgBufferState) {
+	}else if (eventId == ednMsgBufferState) {
 		MarkToReedraw();
 	}
-	*/
-	return false;
 }
 
 
@@ -138,17 +137,15 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 
 bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, etkFloat_t x, etkFloat_t y)
 {
-	/*
 	if (1 == IdInput && typeEvent == ewol::EVENT_INPUT_TYPE_SINGLE) {
 		EDN_INFO("Event on List : IdInput=" << IdInput << " colomn=" << colomn << " raw=" << raw );
 		int32_t selectBuf = BufferManager::WitchBuffer(raw+1);
 		if ( 0 <= selectBuf) {
 			m_selectedID = raw;
-			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, selectBuf);
+			SendMultiCast(ednMsgBufferId, selectBuf);
 		}
 	}
 	MarkToReedraw();
-	*/
 	return false;
 }
 
