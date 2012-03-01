@@ -53,15 +53,12 @@ class BufferText : public Buffer {
 		                  ewol::OObject2DColored& OOColored,
 		                  int32_t offsetX, int32_t offsetY,
 		                  int32_t sizeX, int32_t sizeY);
-		void      ForceReDraw(bool allElement);
 		void      AddChar(uniChar_t unicodeData);
 		void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);
-		void      MouseSelectFromCursorTo(int32_t width, int32_t height);
-		void      MouseEvent(int32_t width, int32_t height);
+		void      MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t height);
+		void      MouseEvent(int32_t fontId, int32_t width, int32_t height);
 		void      MouseEventDouble(void);
 		void      MouseEventTriple(void);
-		void      ScrollDown(void);
-		void      ScrollUp(void);
 
 		void      Copy(int8_t clipboardID);
 		void      Cut(int8_t clipboardID);
@@ -85,7 +82,6 @@ class BufferText : public Buffer {
 
 	private:
 		// Display
-		bool                    NeedToCleanEndPage;         //!< if true, the end of the page need to be clean (arrive after a remove line)
 		uint32_t                nbColoneForLineNumber;      //!< number of colome used to display the line Number
 		
 		// Direct buffer IO
@@ -115,7 +111,6 @@ class BufferText : public Buffer {
 		void     SetInsertPosition(int32_t newPosition, bool insertChar = false);
 		
 		int32_t  GetMousePosition(int32_t width, int32_t height);
-		void     MoveUpDown(int32_t ofset);
 		void     DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY);
 		
 		void     CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip);

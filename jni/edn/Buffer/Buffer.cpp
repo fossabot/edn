@@ -168,7 +168,7 @@ int32_t Buffer::Display(ewol::OObject2DTextColored& OOTextNormal,
  * @todo : Set the move up and DOWN...
  *
  */
-void Buffer::MouseSelectFromCursorTo(int32_t width, int32_t height)
+void Buffer::MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t height)
 {
 	// nothing to do
 }
@@ -183,7 +183,7 @@ void Buffer::MouseSelectFromCursorTo(int32_t width, int32_t height)
  * @return ---
  *
  */
-void Buffer::MouseEvent(int32_t width, int32_t height)
+void Buffer::MouseEvent(int32_t fontId, int32_t width, int32_t height)
 {
 	// nothing to do
 }
@@ -213,49 +213,6 @@ void Buffer::MouseEventTriple(void)
 {
 	// nothing to do
 }
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void Buffer::ScrollDown(void)
-{
-	// nothing to do
-}
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void Buffer::ScrollUp(void)
-{
-	// nothing to do
-}
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void Buffer::ForceReDraw(bool allElement)
-{
-	// nothing to do
-}
-
 
 
 void Buffer::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)

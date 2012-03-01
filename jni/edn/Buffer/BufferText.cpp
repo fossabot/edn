@@ -61,7 +61,6 @@ extern "C"
  */
 void BufferText::BasicInit(void)
 {
-	NeedToCleanEndPage = true;
 	// set the first element that is displayed
 	m_displayStartBufferPos = 0;
 	
@@ -148,7 +147,6 @@ BufferText::BufferText(etk::File &fileName) : Buffer(fileName)
 		SetModify(true);
 	}
 	UpdateWindowsPosition();
-	ForceReDraw(true);
 }
 
 
@@ -530,7 +528,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 
 
 
-int32_t BufferText::GetMousePosition(int32_t width, int32_t height)
+int32_t BufferText::GetMousePosition(int32_t fontId, int32_t width, int32_t height)
 {
 	int32_t letterWidth = ewol::GetWidth(g_basicfontId, "9");
 	int32_t letterHeight = ewol::GetHeight(g_basicfontId);
@@ -564,7 +562,7 @@ int32_t BufferText::GetMousePosition(int32_t width, int32_t height)
 	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
 	
 	int32_t pixelX = x_base;
-	int32_t startLinePosition = m_EdnBuf.CountForwardNLines(m_displayStartBufferPos, lineOffset);
+	int32_t startLinePosition = m_EdnBuf.CountForwardNLines(0, lineOffset);
 	if (width <= pixelX) {
 		EDN_DEBUG("    Element : Befor the start of the line ... ==> END");
 		return startLinePosition;
@@ -606,7 +604,7 @@ int32_t BufferText::GetMousePosition(int32_t width, int32_t height)
  *
  */
 // TODO : Simplify selection ....
-void BufferText::MouseEvent(int32_t width, int32_t height)
+void BufferText::MouseEvent(int32_t fontId, int32_t width, int32_t height)
 {
 	if (true == ewol::IsSetShift() ) {
 		MouseSelectFromCursorTo(width, height);
@@ -622,7 +620,6 @@ void BufferText::MouseEvent(int32_t width, int32_t height)
 		}*/
 		m_EdnBuf.Unselect(SELECTION_PRIMARY);
 
-		ForceReDraw(true);
 		UpdateWindowsPosition();
 	}
 }
@@ -665,7 +662,6 @@ void BufferText::MouseSelectFromCursorTo(int32_t width, int32_t height)
 			m_EdnBuf.Select(SELECTION_PRIMARY, selStart, m_cursorPos);
 		}
 	}
-	ForceReDraw(true);
 	UpdateWindowsPosition();
 }
 
@@ -685,7 +681,6 @@ void BufferText::MouseEventDouble(void)
 	if (true == m_EdnBuf.SelectAround(m_cursorPos, beginPos, endPos)) {
 		m_EdnBuf.Select(SELECTION_PRIMARY, beginPos, endPos);
 		m_cursorPos = endPos;
-		ForceReDraw(true);
 	}
 	// no else
 }
@@ -702,7 +697,6 @@ void BufferText::MouseEventTriple(void)
 {
 	m_EdnBuf.Select(SELECTION_PRIMARY, m_EdnBuf.StartOfLine(m_cursorPos), m_EdnBuf.EndOfLine(m_cursorPos));
 	m_cursorPos = m_EdnBuf.EndOfLine(m_cursorPos);
-	ForceReDraw(true);
 }
 
 void BufferText::RemoveLine(void)
@@ -718,27 +712,11 @@ void BufferText::SelectAll(void)
 {
 	m_EdnBuf.Select(SELECTION_PRIMARY, 0, m_EdnBuf.Size());
 	m_cursorPos = m_EdnBuf.Size();
-	ForceReDraw(true);
 }
 
 void BufferText::SelectNone(void)
 {
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
-	ForceReDraw(true);
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-// TODO : Deprecated...
-void BufferText::ScrollDown(void)
-{
-	MoveUpDown(3);
 }
 
 
@@ -750,59 +728,6 @@ void BufferText::ScrollDown(void)
  * @return ---
  *
  */
-// TODO : Deprecated...
-void BufferText::ScrollUp(void)
-{
-	MoveUpDown(-3);
-}
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void BufferText::MoveUpDown(int32_t ofset)
-{
-	if (ofset >= 0) {
-		int32_t nbLine = m_EdnBuf.NumberOfLines();
-		if (m_displayStartLineId+ofset+3 > nbLine) {
-			m_displayStartLineId = nbLine-3;
-		} else {
-			m_displayStartLineId += ofset;
-		}
-		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
-	} else {
-		ofset *= -1;
-		if (m_displayStartLineId < ofset) {
-			m_displayStartLineId = 0;
-			m_displayStartBufferPos = 0;
-		} else {
-			m_displayStartLineId -= ofset;
-			m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
-		}
-	}
-	
-}
-
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void BufferText::ForceReDraw(bool allElement)
-{
-	NeedToCleanEndPage = true;
-}
-
 void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
@@ -1012,11 +937,9 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 			m_displayStartLineId = cursorPosition.y - globals::getNbLineBorder();
 			if (m_displayStartLineId < 0) {
 				m_displayStartLineId = 0;
-				ForceReDraw(true);
 			}
 		} else if (m_displayStartLineId + m_displaySize.y <= (int32_t)cursorPosition.y + globals::getNbLineBorder() ) {
 			m_displayStartLineId = cursorPosition.y - m_displaySize.y + globals::getNbLineBorder() + 1;
-			ForceReDraw(true);
 		}
 		// Display position (X mode):
 		//EDN_INFO("cursorPosition X : " << cursorPosition.y << " windows " << m_displayStartLineId << "=>" << m_displayStartPixelX + m_displaySize.x);
@@ -1024,11 +947,9 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 			m_displayStartPixelX = cursorPosition.x - globals::getNbColoneBorder();
 			if (m_displayStartPixelX < 0) {
 				m_displayStartPixelX = 0;
-				ForceReDraw(true);
 			}
 		} else if (m_displayStartPixelX + m_displaySize.x <= cursorPosition.x + globals::getNbColoneBorder() ) {
 			m_displayStartPixelX = cursorPosition.x - m_displaySize.x + globals::getNbColoneBorder() + 1;
-			ForceReDraw(true);
 		}
 		
 		//update the buffer position ID : 
@@ -1048,7 +969,6 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 		m_displayStartLineId = edn_max(m_displayStartLineId, 0);
 		
 		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
-		ForceReDraw(true);
 		//EDN_DEBUG(" display start : " << m_displayStartPixelX << "x" << m_displayStartLineId);
 		//EDN_DEBUG(" -------------------------------------------------");
 	}
@@ -1356,7 +1276,6 @@ void BufferText::Cut(int8_t clipboardID)
 		m_cursorPos = SelectionStart;
 	}
 	UpdateWindowsPosition();
-	ForceReDraw(true);
 	SetModify(true);
 }
 
@@ -1393,7 +1312,6 @@ void BufferText::Paste(int8_t clipboardID)
 	}
 	*/
 	UpdateWindowsPosition();
-	ForceReDraw(true);
 	SetModify(true);
 }
 
@@ -1404,7 +1322,6 @@ void BufferText::Undo(void)
 	if (newPos >= 0) {
 		SetInsertPosition(newPos, true);
 		UpdateWindowsPosition();
-		ForceReDraw(true);
 		SetModify(true);
 	}
 }
@@ -1415,7 +1332,6 @@ void BufferText::Redo(void)
 	if (newPos >= 0) {
 		SetInsertPosition(newPos, true);
 		UpdateWindowsPosition();
-		ForceReDraw(true);
 		SetModify(true);
 	}
 }
@@ -1424,6 +1340,5 @@ void BufferText::Redo(void)
 void BufferText::SetCharset(unicode::charset_te newCharset)
 {
 	m_EdnBuf.SetCharsetType(newCharset);
-	ForceReDraw(true);
 }
 

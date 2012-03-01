@@ -177,18 +177,16 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		PopUpWidgetPush(tmpWidget);
 		tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
 	} else if (eventId == ednEventPopUpFileSelected) {
-		/*
 		// get widget:
-		ewol::FileChooser * tmpWidget = static_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
+		ewol::FileChooser * tmpWidget = static_cast<ewol::FileChooser*>(CallerObject);
 		if (NULL == tmpWidget) {
-			EDN_ERROR("impossible to get pop_upWidget " << widgetID);
-			return false;
+			EDN_ERROR("impossible to get pop_upWidget " << CallerObject);
+			return;
 		}
 		// get the filename : 
 		etk::UString tmpData = tmpWidget->GetCompleateFileName();
 		EDN_DEBUG("Request opening the file : " << tmpData);
-		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgOpenFile, tmpData);
-		*/
+		SendMultiCast(ednMsgOpenFile, tmpData);
 	} else if (eventId == ednMsgGuiSaveAs) {
 		if (data == "") {
 			EDN_ERROR("Null data for Save As file ... ");
@@ -221,20 +219,18 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			}
 		}
 	} else if (eventId == ednEventPopUpFileSaveAs) {
-		/*
 		// get widget:
-		ewol::FileChooser * tmpWidget = static_cast<ewol::FileChooser*>(ewol::widgetManager::Get(widgetID));
+		ewol::FileChooser * tmpWidget = static_cast<ewol::FileChooser*>(CallerObject);
 		if (NULL == tmpWidget) {
-			EDN_ERROR("impossible to get pop_upWidget " << widgetID);
-			return false;
+			EDN_ERROR("impossible to get pop_upWidget " << CallerObject);
+			return;
 		}
 		// get the filename : 
 		etk::UString tmpData = tmpWidget->GetCompleateFileName();
 		EDN_DEBUG("Request Saving As file : " << tmpData);
 		
 		BufferManager::Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
-		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgGuiSave, m_currentSavingAsIdBuffer);
-		*/
+		SendMultiCast(ednMsgGuiSave, m_currentSavingAsIdBuffer);
 	} else if(    eventId == ednMsgBufferState
 	           || eventId == ednMsgBufferId) {
 		// the buffer change we need to update the widget string

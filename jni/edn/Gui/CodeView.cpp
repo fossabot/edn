@@ -174,7 +174,7 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 			if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
 				m_buttunOneSelected = true;
 				ewol::widgetManager::FocusKeep(this);
-				BufferManager::Get(m_bufferID)->MouseEvent(pos.local.x, pos.local.y);
+				BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, pos.local.x+m_originScrooled.x, pos.local.y+m_originScrooled.y);
 				MarkToReedraw();
 			} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 				m_buttunOneSelected = false;
@@ -185,7 +185,7 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			#ifdef __MODE__Touch
 				ewol::widgetManager::FocusKeep(this);
-				BufferManager::Get(m_bufferID)->MouseEvent(pos.local.x, pos.local.y);
+				BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, pos.local.x+m_originScrooled.x, pos.local.y+m_originScrooled.y);
 				MarkToReedraw();
 			#else
 				// nothing to do ...
@@ -208,13 +208,13 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 					yyy = 0;
 				}
 				//EDN_INFO("mouse-motion BT1 %d, %d", xxx, yyy);
-				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(xxx, yyy);
+				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(m_fontNormal, xxx, yyy);
 				MarkToReedraw();
 			}
 		}
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
-			BufferManager::Get(m_bufferID)->MouseEvent(pos.local.x, pos.local.y);
+			BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, pos.local.x+m_originScrooled.x, pos.local.y+m_originScrooled.y);
 			BufferManager::Get(m_bufferID)->Paste(COPY_MIDDLE_BUTTON);
 			MarkToReedraw();
 			ewol::widgetManager::FocusKeep(this);
@@ -244,7 +244,6 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 		sscanf(data.Utf8Data(), "%d", &bufferID);
 		EDN_INFO("Select a new Buffer ... " << bufferID);
 		m_bufferID = bufferID;
-		BufferManager::Get(m_bufferID)->ForceReDraw(true);
 		// TODO : need to update the state of the file and the filenames ...
 	}
 	// old

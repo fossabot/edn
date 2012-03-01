@@ -84,7 +84,6 @@ class CodeView :public ewol::WidgetScrooled
 		void SetFontNameBoldItalic(etk::UString fontName);
 	private:
 		void CalculateMaxSize(void);
-	// widget drawing : 
 	protected:
 		virtual bool OnDraw(void);
 };

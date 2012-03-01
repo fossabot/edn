@@ -87,15 +87,12 @@ class Buffer {
 		                          ewol::OObject2DTextColored& OOTextItalic,
 		                          ewol::OObject2DTextColored& OOTextBoldItalic,
 		                          ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY);
-		virtual void      ForceReDraw(bool allElement);
 		virtual void      AddChar(uniChar_t unicodeData);
 		virtual void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);
-		virtual void      MouseSelectFromCursorTo(int32_t width, int32_t height);
-		virtual void      MouseEvent(int32_t width, int32_t height);
+		virtual void      MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t height);
+		virtual void      MouseEvent(int32_t fontId, int32_t width, int32_t height);
 		virtual void      MouseEventDouble(void);
 		virtual void      MouseEventTriple(void);
-		virtual void      ScrollDown(void);
-		virtual void      ScrollUp(void);
 		virtual void      RemoveLine(void);
 		virtual void      SelectAll(void);
 		virtual void      SelectNone(void);
