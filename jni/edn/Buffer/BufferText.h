@@ -110,7 +110,7 @@ class BufferText : public Buffer {
 		bool     TextDMoveDown(int32_t offset);
 		void     SetInsertPosition(int32_t newPosition, bool insertChar = false);
 		
-		int32_t  GetMousePosition(int32_t width, int32_t height);
+		int32_t  GetMousePosition(int32_t fontId, int32_t width, int32_t height);
 		void     DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY);
 		
 		void     CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip);

@@ -306,11 +306,6 @@ int32_t BufferText::GetNumberOfLine(void)
 	return m_EdnBuf.CountLines();
 }
 
-
-// TODO : Remove this ... it is really bad...
-
-static int32_t g_basicfontId = 0;
-
 /**
  * @brief Display the curent buffer with all the probematic imposed by the xharset and the user contraint.
  *
@@ -327,17 +322,11 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
                             int32_t offsetX, int32_t offsetY,
                             int32_t sizeX, int32_t sizeY)
 {
-	offsetX -= 40;
-	if (offsetX<0) {
-		offsetX = 0;
-	}
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
 	int32_t selHave;
 	
 	int32_t fontId = OOTextNormal.GetFontID();
-	// TODO : Remove this ...
-	g_basicfontId = fontId;
 	int32_t letterWidth = ewol::GetWidth(fontId, "A");
 	int32_t letterHeight = ewol::GetHeight(fontId);
 	
@@ -530,8 +519,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 
 int32_t BufferText::GetMousePosition(int32_t fontId, int32_t width, int32_t height)
 {
-	int32_t letterWidth = ewol::GetWidth(g_basicfontId, "9");
-	int32_t letterHeight = ewol::GetHeight(g_basicfontId);
+	int32_t letterWidth = ewol::GetWidth(fontId, "9");
+	int32_t letterHeight = ewol::GetHeight(fontId);
 	
 	int32_t lineOffset = height / letterHeight;
 	
@@ -556,14 +545,18 @@ int32_t BufferText::GetMousePosition(int32_t fontId, int32_t width, int32_t heig
 	
 	int mylen = m_EdnBuf.Size();
 	int32_t x_base=nbColoneForLineNumber*letterWidth + SEPARATION_SIZE_LINE_NUMBER;
+	width -= x_base;
+	if (width < 0) {
+		width = 0;
+	}
 	int32_t idX = 0;
 	
 	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
 	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
 	
-	int32_t pixelX = x_base;
+	int32_t pixelX = 0;
 	int32_t startLinePosition = m_EdnBuf.CountForwardNLines(0, lineOffset);
-	if (width <= pixelX) {
+	if (width <= 0) {
 		EDN_DEBUG("    Element : Befor the start of the line ... ==> END");
 		return startLinePosition;
 	}
@@ -575,7 +568,7 @@ int32_t BufferText::GetMousePosition(int32_t fontId, int32_t width, int32_t heig
 		new_i = iii;
 		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
 		if (currentChar!='\n') {
-			int32_t drawSize = ewol::GetWidth(g_basicfontId, displayChar);
+			int32_t drawSize = ewol::GetWidth(fontId, displayChar);
 			EDN_VERBOSE("    Element : " << currentChar << "=\"" << (char)currentChar << "\" display offset=" << pixelX << "px  width=" << drawSize << "px");
 			pixelX += drawSize;
 			if (width <= pixelX) {
@@ -607,10 +600,10 @@ int32_t BufferText::GetMousePosition(int32_t fontId, int32_t width, int32_t heig
 void BufferText::MouseEvent(int32_t fontId, int32_t width, int32_t height)
 {
 	if (true == ewol::IsSetShift() ) {
-		MouseSelectFromCursorTo(width, height);
+		MouseSelectFromCursorTo(fontId, width, height);
 	} else {
 		// Get the caracter mouse position
-		int32_t newPos = GetMousePosition(width, height);
+		int32_t newPos = GetMousePosition(fontId, width, height);
 		// move the cursor
 		SetInsertPosition(newPos);
 
@@ -635,10 +628,10 @@ void BufferText::MouseEvent(int32_t fontId, int32_t width, int32_t height)
  *
  */
 // TODO : Simplify selection ....
-void BufferText::MouseSelectFromCursorTo(int32_t width, int32_t height)
+void BufferText::MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t height)
 {
 	// Get the caracter mouse position
-	int32_t newPos = GetMousePosition(width, height);
+	int32_t newPos = GetMousePosition(fontId, width, height);
 	
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
