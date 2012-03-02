@@ -81,39 +81,34 @@ class BufferText : public Buffer {
 		void      NameChange(void);
 
 	private:
-		// Display
-		uint32_t                nbColoneForLineNumber;      //!< number of colome used to display the line Number
+		int32_t   GetLineNumberNumberOfElement(void);
 		
 		// Direct buffer IO
 		EdnBuf                  m_EdnBuf;                   //!< buffer associated on this displayer
-		int32_t                 m_displayStartLineId;       //!< Id of the line that the display is starting (in nb line)
-		int32_t                 m_displayStartPixelX;       //!< Pixel of the display starting (in pixel)
 		position_ts             m_displaySize;              //!< number of char displayable in the screan
-		int32_t                 m_displayStartBufferPos;    //!< position where the buffer start
 		// Cursor :
 		int32_t                 m_cursorPos;                //!< position in the buffer of the cursor
 		int32_t                 m_cursorPreferredCol;       //!< colomn of the last up and down ...
 		cursorDisplayMode_te    m_cursorMode;               //!< type of cursor Selected
 		
 		// internal function
-		void     BasicInit(void);
-		void     UpdateWindowsPosition(bool centerPage = false);
+		void                    BasicInit(void);
+	// moving the current position of the display windows ...
+	private:
+		position_ts             m_requestDisplayPos;        //!< number of char displayable in the screan
+		void                    RequestPositionUpdate(bool centerPage = false);
+	public:
+		bool                    RequestPositionRequest(position_ts& newPos);
 		
-		void     CleanSelectLine(void);
-		
-		void     SelectionStart(void);
-		void     SelectionEnd(void);
-		void     SelectionCheckMode(void);
-		
-		void     CheckAndUpdateLineForModification(uint32_t lineID);
+	private:
 		bool     TextDMoveUp(int32_t offset);
 		bool     TextDMoveDown(int32_t offset);
 		void     SetInsertPosition(int32_t newPosition, bool insertChar = false);
 		
 		int32_t  GetMousePosition(int32_t fontId, int32_t width, int32_t height);
-		void     DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY);
 		
-		void     CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip);
+		void     DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
+		void     DrawCursor(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip);
 
 };
 

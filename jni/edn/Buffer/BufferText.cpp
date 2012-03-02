@@ -61,20 +61,10 @@ extern "C"
  */
 void BufferText::BasicInit(void)
 {
-	// set the first element that is displayed
-	m_displayStartBufferPos = 0;
-	
-	// set the number of the lineNumber;
-	nbColoneForLineNumber = 1;
-	// Init Selection mode : 
-	SelectionEnd();
-	//EDN_INFO("Init");
-	// new mode : 
+	// set basic position
 	m_cursorPos = 0;
 	m_cursorPreferredCol = -1;
 	//m_cursorMode = CURSOR_DISPLAY_MODE_NORMAL;
-	m_displayStartPixelX = 0;
-	m_displayStartLineId = 0;
 	m_displaySize.x = 200;
 	m_displaySize.y = 20;
 }
@@ -146,7 +136,7 @@ BufferText::BufferText(etk::File &fileName) : Buffer(fileName)
 		EDN_WARNING("No File ==> created a new one(" << GetFileName() << ")");
 		SetModify(true);
 	}
-	UpdateWindowsPosition();
+	RequestPositionUpdate();
 }
 
 
@@ -188,28 +178,6 @@ BufferText::~BufferText(void)
 }
 
 
-void BufferText::SelectionStart(void)
-{
-	// start a nex selection
-	SelectionCheckMode();
-	//EDN_DEBUG("SELECT_start");
-}
-
-void BufferText::SelectionEnd(void)
-{
-	//EDN_DEBUG("SELECT_stop");
-}
-
-void BufferText::SelectionCheckMode(void)
-{
-	/*
-	if (true == ewol::IsSetCtrl() ) {
-	} else {
-	}
-	*/
-}
-
-
 /**
  * @brief
  *
@@ -238,14 +206,13 @@ void BufferText::SetLineDisplay(uint32_t lineNumber)
 
 #define SEPARATION_SIZE_LINE_NUMBER         (3)
 
-void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY,char *myPrint,  int32_t lineNumber, int32_t positionY)
+void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn,  int32_t lineNumber, int32_t positionY)
 {
 	char tmpLineNumber[50];
-	sprintf(tmpLineNumber, myPrint, lineNumber);
+	sprintf(tmpLineNumber, "%*d", nbColomn, lineNumber);
 	OOColored->SetColor(ColorizeManager::Get(COLOR_LIST_BG_2));
 	OOColored->Rectangle( 0, positionY, sizeX+0.5*SEPARATION_SIZE_LINE_NUMBER, sizeY);
 	OOText->SetColor(ColorizeManager::Get(COLOR_CODE_LINE_NUMBER));
-	
 	
 	coord2D_ts textPos;
 	textPos.x = 1;
@@ -256,50 +223,46 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 
 #define CURSOR_WIDTH           (5)
 #define CURSOR_THICKNESS       (1.2)
-void BufferText::CursorDisplay(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip)
+void BufferText::DrawCursor(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip)
 {
 	color_ts & tmpppppp = ColorizeManager::Get(COLOR_CODE_CURSOR);
 	OOColored->SetColor(tmpppppp);
 	if (true == ewol::IsSetInsert()) {
 		OOColored->Rectangle( x, y, letterWidth, letterHeight);
 	} else {
-		// TODO : Clipping
-		//if (x >= clip.x) {
-			OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y)                              , (int32_t)(x+CURSOR_WIDTH), (int32_t)(y)                              , CURSOR_THICKNESS);
-			OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), (int32_t)(x+CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
-			OOColored->Line( (int32_t)(x)             , (int32_t)(y)                              , (int32_t)(x)             , (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
-		//}
+		OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y)                              , (int32_t)(x+CURSOR_WIDTH), (int32_t)(y)                              , CURSOR_THICKNESS);
+		OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), (int32_t)(x+CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
+		OOColored->Line( (int32_t)(x)             , (int32_t)(y)                              , (int32_t)(x)             , (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
 	}
 }
 
 
 /**
- * @brief Update internal data of the pointer to display
+ * @brief get the number of colomn neede to display lineNumber
  *
  * @param[in,out] ---
  *
- * @return ---
+ * @return the number of colomn
  *
  */
-/*
-void BufferText::UpdatePointerNumber(void)
+int32_t BufferText::GetLineNumberNumberOfElement(void)
 {
+	int32_t nbColoneForLineNumber = 1;
 	// get the number of line in the buffer
 	int32_t maxNumberLine = m_EdnBuf.NumberOfLines();
-	//int32_t maxNumberLine = 2096;
-	if (10 > maxNumberLine) {				m_nbColoneForLineNumber = 1;
-	} else if (100 > maxNumberLine) {		m_nbColoneForLineNumber = 2;
-	} else if (1000 > maxNumberLine) {		m_nbColoneForLineNumber = 3;
-	} else if (10000 > maxNumberLine) {		m_nbColoneForLineNumber = 4;
-	} else if (100000 > maxNumberLine) {	m_nbColoneForLineNumber = 5;
-	} else if (1000000 > maxNumberLine) {	m_nbColoneForLineNumber = 6;
-	} else if (1000000 > maxNumberLine) {	m_nbColoneForLineNumber = 7;
-	} else if (10000000 > maxNumberLine) {	m_nbColoneForLineNumber = 8;
-	} else if (100000000 > maxNumberLine) {	m_nbColoneForLineNumber = 9;
-	} else {								m_nbColoneForLineNumber = 10;
+	if (10 > maxNumberLine) {				nbColoneForLineNumber = 1;
+	} else if (100 > maxNumberLine) {		nbColoneForLineNumber = 2;
+	} else if (1000 > maxNumberLine) {		nbColoneForLineNumber = 3;
+	} else if (10000 > maxNumberLine) {		nbColoneForLineNumber = 4;
+	} else if (100000 > maxNumberLine) {	nbColoneForLineNumber = 5;
+	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 6;
+	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 7;
+	} else if (10000000 > maxNumberLine) {	nbColoneForLineNumber = 8;
+	} else if (100000000 > maxNumberLine) {	nbColoneForLineNumber = 9;
+	} else {								nbColoneForLineNumber = 10;
 	}
+	return nbColoneForLineNumber;
 }
-*/
 
 int32_t BufferText::GetNumberOfLine(void)
 {
@@ -330,11 +293,12 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	int32_t letterWidth = ewol::GetWidth(fontId, "A");
 	int32_t letterHeight = ewol::GetHeight(fontId);
 	
-	m_displayStartLineId = offsetY / letterHeight;
+	int32_t displayStartLineId = offsetY / letterHeight;
 	
 	// update the display position with the scroll ofset : 
-	m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
+	int32_t displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
 	
+	int32_t nbColoneForLineNumber = GetLineNumberNumberOfElement();
 	
 	// update the number of element that can be displayed
 	m_displaySize.x = (sizeX/letterWidth) + 1 - nbColoneForLineNumber;
@@ -344,21 +308,6 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
 	
 	colorInformation_ts * HLColor = NULL;
-	
-	// get the number of line in the buffer
-	int32_t maxNumberLine = m_EdnBuf.NumberOfLines();
-	char *myPrint = NULL;
-	if (10 > maxNumberLine) {				nbColoneForLineNumber = 1;	myPrint = (char *)"%1d";
-	} else if (100 > maxNumberLine) {		nbColoneForLineNumber = 2;	myPrint = (char *)"%2d";
-	} else if (1000 > maxNumberLine) {		nbColoneForLineNumber = 3;	myPrint = (char *)"%3d";
-	} else if (10000 > maxNumberLine) {		nbColoneForLineNumber = 4;	myPrint = (char *)"%4d";
-	} else if (100000 > maxNumberLine) {	nbColoneForLineNumber = 5;	myPrint = (char *)"%5d";
-	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 6;	myPrint = (char *)"%6d";
-	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 7;	myPrint = (char *)"%7d";
-	} else if (10000000 > maxNumberLine) {	nbColoneForLineNumber = 8;	myPrint = (char *)"%8d";
-	} else if (100000000 > maxNumberLine) {	nbColoneForLineNumber = 9;	myPrint = (char *)"%9d";
-	} else {								nbColoneForLineNumber = 10;	myPrint = (char *)"%d";
-	}
 	
 	uint32_t y = 0;
 	int32_t iii, new_i;
@@ -381,7 +330,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	int displayLines = 0;
 	// Regenerate the colorizing if necessary ...
 	displayHLData_ts m_displayLocalSyntax;
-	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, m_displayStartBufferPos, m_displaySize.y);
+	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, displayStartBufferPos, m_displaySize.y);
 	
 	int64_t stopTime = GetCurrentTime();
 	EDN_DEBUG("Parsing Highlight = " << stopTime - startTime << " milli-s");
@@ -390,14 +339,14 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
 	etk::UString myStringToDisplay;
 	// draw the lineNumber : 
-	int32_t currentLineID = m_displayStartLineId+1;
-	EDN_VERBOSE("Start display of text buffer [" << m_displayStartBufferPos<< ".." << mylen << "]");
-	EDN_VERBOSE("cursor Pos : " << m_cursorPos << "start at pos=" << m_displayStartBufferPos);
+	int32_t currentLineID = displayStartLineId+1;
+	EDN_VERBOSE("Start display of text buffer [" << displayStartBufferPos<< ".." << mylen << "]");
+	EDN_VERBOSE("cursor Pos : " << m_cursorPos << "start at pos=" << displayStartBufferPos);
 	
 	
 	OOTextNormal.clippingDisable();
 	OOColored.clippingDisable();
-	DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, myPrint, currentLineID, y);
+	DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
 	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 	
 	clipping_ts drawClipping;
@@ -418,7 +367,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	OOTextBoldItalic.clippingSet(drawClippingTextArea);
 	OOColored.clippingSet(drawClippingTextArea);
 	
-	for (iii=m_displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
+	for (iii=displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
 		//EDN_DEBUG("diplay element=" << iii);
 		int displaywidth;
 		uint32_t currentChar = '\0';
@@ -487,7 +436,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 		// display cursor : 
 		if (m_cursorPos == iii) {
 			// display the cursor:
-			CursorDisplay(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
+			DrawCursor(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
 		}
 		pixelX += drawSize;
 		// move to next line ...
@@ -499,14 +448,14 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 			currentLineID++;
 			OOTextNormal.clippingDisable();
 			OOColored.clippingDisable();
-			DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, myPrint, currentLineID, y);
+			DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
 			OOTextNormal.clippingEnable();
 			OOColored.clippingEnable();
 		}
 	}
 	// special case : the cursor is at the end of the buffer...
 	if (m_cursorPos == iii) {
-		CursorDisplay(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
+		DrawCursor(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
 	}
 	
 	int64_t stopTime2 = GetCurrentTime();
@@ -526,25 +475,10 @@ int32_t BufferText::GetMousePosition(int32_t fontId, int32_t width, int32_t heig
 	
 	//*******************************    get the X position :    *******************************************
 	
-	
-	// get the number of line in the buffer
-	int32_t maxNumberLine = m_EdnBuf.NumberOfLines();
-	if (10 > maxNumberLine) {				nbColoneForLineNumber = 1;
-	} else if (100 > maxNumberLine) {		nbColoneForLineNumber = 2;
-	} else if (1000 > maxNumberLine) {		nbColoneForLineNumber = 3;
-	} else if (10000 > maxNumberLine) {		nbColoneForLineNumber = 4;
-	} else if (100000 > maxNumberLine) {	nbColoneForLineNumber = 5;
-	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 6;
-	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 7;
-	} else if (10000000 > maxNumberLine) {	nbColoneForLineNumber = 8;
-	} else if (100000000 > maxNumberLine) {	nbColoneForLineNumber = 9;
-	} else {								nbColoneForLineNumber = 10;
-	}
-	
 	int32_t iii, new_i;
 	
 	int mylen = m_EdnBuf.Size();
-	int32_t x_base=nbColoneForLineNumber*letterWidth + SEPARATION_SIZE_LINE_NUMBER;
+	int32_t x_base=GetLineNumberNumberOfElement()*letterWidth + SEPARATION_SIZE_LINE_NUMBER;
 	width -= x_base;
 	if (width < 0) {
 		width = 0;
@@ -613,7 +547,7 @@ void BufferText::MouseEvent(int32_t fontId, int32_t width, int32_t height)
 		}*/
 		m_EdnBuf.Unselect(SELECTION_PRIMARY);
 
-		UpdateWindowsPosition();
+		RequestPositionUpdate();
 	}
 }
 
@@ -655,7 +589,7 @@ void BufferText::MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t 
 			m_EdnBuf.Select(SELECTION_PRIMARY, selStart, m_cursorPos);
 		}
 	}
-	UpdateWindowsPosition();
+	RequestPositionUpdate();
 }
 
 
@@ -846,17 +780,6 @@ void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
 {
 	bool needUpdatePosition = true;
 	// check selection event ...
-	/*
-	if (true == ewol::IsSetShift() ) {
-		if ( CURSOR_MODE_NORMAL == cursorMode) {
-			SelectionStart();
-		} else {
-			SelectionCheckMode();
-		}
-	} else {
-		SelectionEnd();
-	}
-	*/
 	switch(moveTypeEvent) {
 		case ewol::EVENT_KB_MOVE_TYPE_LEFT:
 			//EDN_INFO("keyEvent : <LEFT>");
@@ -901,7 +824,7 @@ void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
 			break;
 	}
 	if ( true == needUpdatePosition) {
-		UpdateWindowsPosition();
+		RequestPositionUpdate();
 	}
 }
 
@@ -914,17 +837,40 @@ void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
  * @return ---
  *
  */
-void BufferText::UpdateWindowsPosition(bool centerPage)
+bool BufferText::RequestPositionRequest(position_ts& newPos)
 {
+	if (-1 == m_requestDisplayPos.x || -1 == m_requestDisplayPos.y) {
+		return false;
+	}
+	newPos = m_requestDisplayPos;
+	m_requestDisplayPos.x = -1;
+	m_requestDisplayPos.y = -1;
+	return true;
+}
+
+
+/**
+ * @brief
+ *
+ * @param[in,out] ---
+ *
+ * @return ---
+ *
+ */
+void BufferText::RequestPositionUpdate(bool centerPage)
+{
+	m_requestDisplayPos.x = -1;
+	m_requestDisplayPos.y = -1;
+#if 0
 	if (centerPage == false) {
 	/*
 		// Display position (Y mode):
-		//EDN_INFO("BufferText::UpdateWindowsPosition() m_displayStart(" << m_displayStartPixelX << "px," << m_displayStartLineId << "id) m_displaySize(" << m_displaySize.x << "," <<m_displaySize.y << ")");
+		//EDN_INFO("BufferText::RequestPositionUpdate() m_displayStart(" << m_displayStartPixelX << "px," << m_displayStartLineId << "id) m_displaySize(" << m_displaySize.x << "," <<m_displaySize.y << ")");
 		position_ts cursorPosition;
 		cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
 		int32_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
 		cursorPosition.x = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
-		//EDN_INFO("BufferText::UpdateWindowsPosition() curent cursor position : (" << cursorPosition.x << "," << cursorPosition.y << ")");
+		//EDN_INFO("BufferText::RequestPositionUpdate() curent cursor position : (" << cursorPosition.x << "," << cursorPosition.y << ")");
 		
 		if (m_displayStartLineId > (int32_t)cursorPosition.y - globals::getNbLineBorder() ) {
 			m_displayStartLineId = cursorPosition.y - globals::getNbLineBorder();
@@ -965,6 +911,7 @@ void BufferText::UpdateWindowsPosition(bool centerPage)
 		//EDN_DEBUG(" display start : " << m_displayStartPixelX << "x" << m_displayStartLineId);
 		//EDN_DEBUG(" -------------------------------------------------");
 	}
+#endif
 }
 
 
@@ -1089,7 +1036,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 	}
 
 	SetModify(true);
-	UpdateWindowsPosition();
+	RequestPositionUpdate();
 }
 
 
@@ -1123,7 +1070,7 @@ void BufferText::JumpAtLine(int32_t newLine)
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
 	EDN_DEBUG("jump at the line : " << newLine );
 	SetInsertPosition(positionLine);
-	UpdateWindowsPosition(true);
+	RequestPositionUpdate(true);
 }
 
 /**
@@ -1182,7 +1129,7 @@ void BufferText::Search(etk::UString &data, bool back, bool caseSensitive, bool 
 			int32_t endSelectionPos = foundPos+mVectSearch.Size();
 			SetInsertPosition(endSelectionPos);
 			m_EdnBuf.Select(SELECTION_PRIMARY, foundPos, endSelectionPos);
-			UpdateWindowsPosition();
+			RequestPositionUpdate();
 		}
 	} else {
 		//EDN_INFO("search data Backward : " << data.GetDirectPointer() );
@@ -1200,7 +1147,7 @@ void BufferText::Search(etk::UString &data, bool back, bool caseSensitive, bool 
 			int32_t endSelectionPos = foundPos+mVectSearch.Size();
 			SetInsertPosition(foundPos);
 			m_EdnBuf.Select(SELECTION_PRIMARY, foundPos, endSelectionPos);
-			UpdateWindowsPosition();
+			RequestPositionUpdate();
 		}
 	}
 	*/
@@ -1268,7 +1215,7 @@ void BufferText::Cut(int8_t clipboardID)
 		m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
 		m_cursorPos = SelectionStart;
 	}
-	UpdateWindowsPosition();
+	RequestPositionUpdate();
 	SetModify(true);
 }
 
@@ -1304,7 +1251,7 @@ void BufferText::Paste(int8_t clipboardID)
 		m_cursorPos += mVect.Size();
 	}
 	*/
-	UpdateWindowsPosition();
+	RequestPositionUpdate();
 	SetModify(true);
 }
 
@@ -1314,7 +1261,7 @@ void BufferText::Undo(void)
 	int32_t newPos = m_EdnBuf.Undo();
 	if (newPos >= 0) {
 		SetInsertPosition(newPos, true);
-		UpdateWindowsPosition();
+		RequestPositionUpdate();
 		SetModify(true);
 	}
 }
@@ -1324,7 +1271,7 @@ void BufferText::Redo(void)
 	int32_t newPos = m_EdnBuf.Redo();
 	if (newPos >= 0) {
 		SetInsertPosition(newPos, true);
-		UpdateWindowsPosition();
+		RequestPositionUpdate();
 		SetModify(true);
 	}
 }
