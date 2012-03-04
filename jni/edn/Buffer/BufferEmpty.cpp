@@ -84,7 +84,7 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
 	textPos.y = 20;
 	
 	myColor = ColorizeManager::Get("normal");
-	OOTextNormal.SetColor(myColor->GetFG());
+	OOTextBold.SetColor(myColor->GetFG());
 	etk::UString tmpDisplay = "edn - Editeur De N'ours";
 	OOTextBold.Text(textPos, tmpDisplay);
 	
