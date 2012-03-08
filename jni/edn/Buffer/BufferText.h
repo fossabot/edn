@@ -85,7 +85,7 @@ class BufferText : public Buffer {
 		
 		// Direct buffer IO
 		EdnBuf                  m_EdnBuf;                   //!< buffer associated on this displayer
-		position_ts             m_displaySize;              //!< number of char displayable in the screan
+		coord2D_ts              m_displaySize;              //!< number of char displayable in the screan
 		// Cursor :
 		int32_t                 m_cursorPos;                //!< position in the buffer of the cursor
 		int32_t                 m_cursorPreferredCol;       //!< colomn of the last up and down ...
@@ -95,10 +95,10 @@ class BufferText : public Buffer {
 		void                    BasicInit(void);
 	// moving the current position of the display windows ...
 	private:
-		position_ts             m_requestDisplayPos;        //!< number of char displayable in the screan
+		coord2D_ts              m_requestDisplayPos;        //!< number of char displayable in the screan
 		void                    RequestPositionUpdate(bool centerPage = false);
 	public:
-		bool                    RequestPositionRequest(position_ts& newPos);
+		bool                    RequestPositionRequest(coord2D_ts& newPos);
 		
 	private:
 		bool     TextDMoveUp(int32_t offset);

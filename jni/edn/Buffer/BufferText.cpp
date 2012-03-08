@@ -837,7 +837,7 @@ void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
  * @return ---
  *
  */
-bool BufferText::RequestPositionRequest(position_ts& newPos)
+bool BufferText::RequestPositionRequest(coord2D_ts& newPos)
 {
 	if (-1 == m_requestDisplayPos.x || -1 == m_requestDisplayPos.y) {
 		return false;
@@ -866,7 +866,7 @@ void BufferText::RequestPositionUpdate(bool centerPage)
 	/*
 		// Display position (Y mode):
 		//EDN_INFO("BufferText::RequestPositionUpdate() m_displayStart(" << m_displayStartPixelX << "px," << m_displayStartLineId << "id) m_displaySize(" << m_displaySize.x << "," <<m_displaySize.y << ")");
-		position_ts cursorPosition;
+		coord2D_ts cursorPosition;
 		cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
 		int32_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
 		cursorPosition.x = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
@@ -896,7 +896,7 @@ void BufferText::RequestPositionUpdate(bool centerPage)
 	*/
 	} else {
 		// center the line at the middle of the screen :
-		position_ts cursorPosition;
+		coord2D_ts cursorPosition;
 		//EDN_DEBUG(" -------------------------------------------------");
 		cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
 		//EDN_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << cursorPosition.y);
