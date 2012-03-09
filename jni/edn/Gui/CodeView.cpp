@@ -88,14 +88,13 @@ void CodeView::CalculateMaxSize(void)
 }
 
 
-bool CodeView::OnDraw(void)
+void CodeView::OnDraw(void)
 {
 	m_OObjectsColored[      m_currentDrawId].Draw();
 	m_OObjectTextNormal[    m_currentDrawId].Draw();
 	m_OObjectTextBold[      m_currentDrawId].Draw();
 	m_OObjectTextItalic[    m_currentDrawId].Draw();
 	m_OObjectTextBoldItalic[m_currentDrawId].Draw();
-	return true;
 }
 
 void CodeView::OnRegenerateDisplay(void)
@@ -158,9 +157,17 @@ bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveTy
 }
 
 
-
-bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, ewol::eventPosition_ts pos)
+/**
+ * @brief Event on an input of this Widget
+ * @param[in] IdInput Id of the current Input (PC : left=1, right=2, middle=3, none=0 / Tactil : first finger=1 , second=2 (only on this widget, no knowledge at ouside finger))
+ * @param[in] typeEvent ewol type of event like EVENT_INPUT_TYPE_DOWN/EVENT_INPUT_TYPE_MOVE/EVENT_INPUT_TYPE_UP/EVENT_INPUT_TYPE_SINGLE/EVENT_INPUT_TYPE_DOUBLE/...
+ * @param[in] pos Absolute position of the event
+ * @return true the event is used
+ * @return false the event is not used
+ */
+bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, coord2D_ts pos)
 {
+	coord2D_ts relativePos = RelativePosition(pos);
 	if (m_bufferID < 0) {
 		return false;
 	}
@@ -174,7 +181,7 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 			if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
 				m_buttunOneSelected = true;
 				ewol::widgetManager::FocusKeep(this);
-				BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, pos.local.x+m_originScrooled.x, pos.local.y+m_originScrooled.y);
+				BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
 				MarkToReedraw();
 			} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 				m_buttunOneSelected = false;
@@ -185,7 +192,7 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			#ifdef __MODE__Touch
 				ewol::widgetManager::FocusKeep(this);
-				BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, pos.local.x+m_originScrooled.x, pos.local.y+m_originScrooled.y);
+				BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
 				MarkToReedraw();
 			#else
 				// nothing to do ...
@@ -199,8 +206,8 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 		} else if (ewol::EVENT_INPUT_TYPE_MOVE == typeEvent) {
 			if (true == m_buttunOneSelected) {
 				int xxx, yyy;
-				xxx = pos.local.x;
-				yyy = pos.local.y;
+				xxx = relativePos.x;
+				yyy = relativePos.y;
 				if (xxx<0) {
 					xxx = 0;
 				}
@@ -214,7 +221,7 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 		}
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
-			BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, pos.local.x+m_originScrooled.x, pos.local.y+m_originScrooled.y);
+			BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
 			BufferManager::Get(m_bufferID)->Paste(COPY_MIDDLE_BUTTON);
 			MarkToReedraw();
 			ewol::widgetManager::FocusKeep(this);
