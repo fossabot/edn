@@ -166,7 +166,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 {
 	ewol::Windows::OnReceiveMessage(CallerObject, eventId, data);
 	
-	EDN_INFO("Receive Event from the main windows ... : widgetid=" << CallerObject << "\"" << eventId << "\" ==> data=\"" << data << "\"" );
+	//EDN_INFO("Receive Event from the main windows ... : widgetid=" << CallerObject << "\"" << eventId << "\" ==> data=\"" << data << "\"" );
 	// Open file Section ...
 	if (eventId == ednMsgGuiOpen) {
 		ewol::FileChooser* tmpWidget = new ewol::FileChooser();
