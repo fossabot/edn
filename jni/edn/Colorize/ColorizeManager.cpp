@@ -137,22 +137,22 @@ void classColorManager::LoadFile(const char * xmlFilename)
 	// open the curent File
 	etk::File fileName(xmlFilename, etk::FILE_TYPE_DATA);
 	if (false == fileName.Exist()) {
-		EWOL_ERROR("File Does not exist : " << fileName);
+		EDN_ERROR("File Does not exist : " << fileName);
 		return;
 	}
 	int32_t fileSize = fileName.Size();
 	if (0==fileSize) {
-		EWOL_ERROR("This file is empty : " << fileName);
+		EDN_ERROR("This file is empty : " << fileName);
 		return;
 	}
 	if (false == fileName.fOpenRead()) {
-		EWOL_ERROR("Can not open the file : " << fileName);
+		EDN_ERROR("Can not open the file : " << fileName);
 		return;
 	}
 	// allocate data
 	char * fileBuffer = new char[fileSize+5];
 	if (NULL == fileBuffer) {
-		EWOL_ERROR("Error Memory allocation size=" << fileSize);
+		EDN_ERROR("Error Memory allocation size=" << fileSize);
 		return;
 	}
 	memset(fileBuffer, 0, (fileSize+5)*sizeof(char));
