@@ -178,7 +178,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
 	} else if (eventId == ednEventPopUpFileSelected) {
 		// get widget:
-		ewol::FileChooser * tmpWidget = static_cast<ewol::FileChooser*>(CallerObject);
+		ewol::FileChooser * tmpWidget = EWOL_CAST_WIDGET_FILE_CHOOSER(CallerObject);
 		if (NULL == tmpWidget) {
 			EDN_ERROR("impossible to get pop_upWidget " << CallerObject);
 			return;
@@ -220,7 +220,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		}
 	} else if (eventId == ednEventPopUpFileSaveAs) {
 		// get widget:
-		ewol::FileChooser * tmpWidget = static_cast<ewol::FileChooser*>(CallerObject);
+		ewol::FileChooser * tmpWidget = EWOL_CAST_WIDGET_FILE_CHOOSER(CallerObject);
 		if (NULL == tmpWidget) {
 			EDN_ERROR("impossible to get pop_upWidget " << CallerObject);
 			return;
