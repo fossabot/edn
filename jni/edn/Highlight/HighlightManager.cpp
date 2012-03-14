@@ -33,6 +33,9 @@
 #define __class__	"HighlightManager"
 
 
+//!< EObject name :
+extern const char * const TYPE_EOBJECT_EDN_HIGHLIGHT_MANAGER = "HighlightManager";
+
 class localClassHighlightManager: public ewol::EObject
 {
 	private:
@@ -54,6 +57,41 @@ class localClassHighlightManager: public ewol::EObject
 			// clear the compleate list
 			listHighlight.Clear();
 		};
+		
+		/**
+		 * @brief Check if the object has the specific type.
+		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
+		 * @param[in] objectType type of the object we want to check
+		 * @return true if the object is compatible, otherwise false
+		 */
+		bool CheckObjectType(const char * const objectType)
+		{
+			if (NULL == objectType) {
+				EWOL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_HIGHLIGHT_MANAGER << "\" != NULL(pointer) ");
+				return false;
+			}
+			if (objectType == TYPE_EOBJECT_EDN_HIGHLIGHT_MANAGER) {
+				return true;
+			} else {
+				if(true == ewol::EObject::CheckObjectType(objectType)) {
+					return true;
+				}
+				EWOL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_HIGHLIGHT_MANAGER << "\" != \"" << objectType << "\"");
+				return false;
+			}
+		}
+		
+		/**
+		 * @brief Get the current Object type of the EObject
+		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
+		 * @param[in] objectType type description
+		 * @return true if the object is compatible, otherwise false
+		 */
+		const char * const GetObjectType(void)
+		{
+			return TYPE_EOBJECT_EDN_HIGHLIGHT_MANAGER;
+		}
+		
 		/**
 		 * @brief Receive a message from an other EObject with a specific eventId and data
 		 * @param[in] CallerObject Pointer on the EObject that information came from
@@ -141,6 +179,7 @@ class localClassHighlightManager: public ewol::EObject
 
 };
 
+#define EDN_CAST_HIGHLIGHT_MANAGER(curentPointer) EWOL_CAST(TYPE_EOBJECT_EDN_HIGHLIGHT_MANAGER,localClassHighlightManager,curentPointer)
 
 static localClassHighlightManager * localManager = NULL;
 

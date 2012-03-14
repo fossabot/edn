@@ -48,6 +48,8 @@
 #undef __class__
 #define __class__	"MainWindows"
 
+extern const char * const TYPE_EOBJECT_EDN_MAIN_WINDOWS = "MainWindows";
+
 MainWindows::MainWindows(void)
 {
 	EDN_DEBUG("CREATE WINDOWS ... ");
@@ -151,6 +153,41 @@ MainWindows::~MainWindows(void)
 {
 	
 }
+
+/**
+ * @brief Check if the object has the specific type.
+ * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
+ * @param[in] objectType type of the object we want to check
+ * @return true if the object is compatible, otherwise false
+ */
+bool MainWindows::CheckObjectType(const char * const objectType)
+{
+	if (NULL == objectType) {
+		EWOL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_MAIN_WINDOWS << "\" != NULL(pointer) ");
+		return false;
+	}
+	if (objectType == TYPE_EOBJECT_EDN_MAIN_WINDOWS) {
+		return true;
+	} else {
+		if(true == ewol::Windows::CheckObjectType(objectType)) {
+			return true;
+		}
+		EWOL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_MAIN_WINDOWS << "\" != \"" << objectType << "\"");
+		return false;
+	}
+}
+
+/**
+ * @brief Get the current Object type of the EObject
+ * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
+ * @param[in] objectType type description
+ * @return true if the object is compatible, otherwise false
+ */
+const char * const MainWindows::GetObjectType(void)
+{
+	return TYPE_EOBJECT_EDN_MAIN_WINDOWS;
+}
+
 
 const char *const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
 const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";

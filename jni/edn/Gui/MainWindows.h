@@ -22,7 +22,8 @@
  *
  *******************************************************************************
  */
-
+#ifndef __MAIN_WINDOWS_H__
+#define __MAIN_WINDOWS_H__
 
 #include <tools_debug.h>
 #include <MsgBroadcast.h>
@@ -32,9 +33,8 @@
 #include <BufferManager.h>
 #include <ewol/widget/Label.h>
 
+extern const char * const TYPE_EOBJECT_EDN_MAIN_WINDOWS;
 
-#ifndef __MAIN_WINDOWS_H__
-#define __MAIN_WINDOWS_H__
 class MainWindows : public ewol::Windows
 {
 	private:
@@ -45,6 +45,20 @@ class MainWindows : public ewol::Windows
 		MainWindows(void);
 		~MainWindows(void);
 		/**
+		 * @brief Check if the object has the specific type.
+		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
+		 * @param[in] objectType type of the object we want to check
+		 * @return true if the object is compatible, otherwise false
+		 */
+		bool CheckObjectType(const char * const objectType);
+		/**
+		 * @brief Get the current Object type of the EObject
+		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
+		 * @param[in] objectType type description
+		 * @return true if the object is compatible, otherwise false
+		 */
+		const char * const GetObjectType(void);
+		/**
 		 * @brief Receive a message from an other EObject with a specific eventId and data
 		 * @param[in] CallerObject Pointer on the EObject that information came from
 		 * @param[in] eventId Message registered by this class
@@ -53,6 +67,9 @@ class MainWindows : public ewol::Windows
 		 */
 		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
 };
+
+#define EDN_CAST_MAIN_WINDOWS(curentPointer) EWOL_CAST(TYPE_EOBJECT_EDN_MAIN_WINDOWS,MainWindows,curentPointer)
+
 #endif
 
 
