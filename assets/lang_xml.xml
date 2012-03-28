@@ -2,6 +2,7 @@
 <EdnLang version="0.2" lang="XML">
 	<ext>*.xml</ext>
 	<ext>*.eol</ext>
+	<ext>*.svg</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="Comment">
 			<color>comment</color>

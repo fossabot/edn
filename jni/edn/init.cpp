@@ -78,7 +78,7 @@ void APP_Init(void)
 	#ifdef __PLATFORM__Android
 		ewol::SetDefaultFont("freefont/FreeSerif.ttf", 16);
 	#else
-		ewol::SetDefaultFont("freefont/FreeSerif.ttf", 12);
+		ewol::SetDefaultFont("freefont/FreeSerif.ttf", 14);
 	#endif
 	
 	// init internal global value
