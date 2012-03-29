@@ -25,6 +25,7 @@
 
 #include <tools_debug.h>
 #include <tools_globals.h>
+#include <etk/File.h>
 #include <ewol/ewol.h>
 #include <Gui/MainWindows.h>
 #include <Display.h>
@@ -72,7 +73,6 @@ void APP_Init(void)
 		SetBaseFolderDataUser("~/."PROJECT_NAME"/");
 		SetBaseFolderCache("/tmp/"PROJECT_NAME"/");
 	#endif
-	
 	ewol::SetFontFolder("Font");
 	
 	#ifdef __PLATFORM__Android
@@ -143,7 +143,6 @@ void APP_Init(void)
 	ewol::shortCut::Add("ctrl+l",       ednMsgGuiGotoLine, "???");
 	
 	
-	
 	// add files
 	EDN_INFO("show list of files : ");
 	
@@ -156,6 +155,12 @@ void APP_Init(void)
 	EDN_INFO("==> Init Edn (END)");
 }
 
+
+etk::File APP_Icon(void)
+{
+	etk::File bitmapFile("iconEdn.bmp", etk::FILE_TYPE_DATA);
+	return bitmapFile;
+}
 
 /**
  * @brief main application function Un-Initialisation

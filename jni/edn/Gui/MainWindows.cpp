@@ -69,7 +69,7 @@ MainWindows::MainWindows(void)
 			myMenu = new ewol::Menu();
 			mySizerHori->SubWidgetAdd(myMenu);
 			int32_t idMenuFile = myMenu->AddTitle("File");
-				(void)myMenu->Add(idMenuFile, "New",          "", ednMsgGuiNew);
+				(void)myMenu->Add(idMenuFile, "New",          "iconEdn.bmp", ednMsgGuiNew);
 				(void)myMenu->AddSpacer();
 				(void)myMenu->Add(idMenuFile, "Open",         "icon/Load.svg", ednMsgGuiOpen);
 				(void)myMenu->Add(idMenuFile, "Close",        "icon/Close.svg", ednMsgGuiClose, "current");
@@ -282,7 +282,13 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 				return;
 			}
 			m_widgetLabelFileName->SetLabel(directName);
+			etk::UString windowsTitle = "edn - ";
+			windowsTitle += directName;
+			ewol::SetTitle(windowsTitle);
 			return;
+		} else {
+			m_widgetLabelFileName->SetLabel("");
+			ewol::SetTitle("edn");
 		}
 		return;
 		// TODO : Set the Title ....
