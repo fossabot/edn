@@ -6,7 +6,7 @@ include $(CLEAR_VARS)
 include $(LOCAL_PATH)/file.mk
 
 LOCAL_MODULE := ednpackage
-LOCAL_STATIC_LIBRARIES := ewol etk tinyxml libzip libpng
+LOCAL_STATIC_LIBRARIES := ewol etk tinyxml libzip libpng libfreetype libparsersvg libagg
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH) $(addprefix $(LOCAL_PATH)/, $(sort $(dir $(FILE_LIST))))
 
