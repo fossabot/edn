@@ -8,7 +8,6 @@ include $(LOCAL_PATH)/file.mk
 # name of the librairy
 LOCAL_MODULE := ednn
 
-
 # get the tag of the current project : 
 LOCAL_VERSION_TAG=$(shell cd $(LOCAL_PATH) ; git describe --tags)
 LOCAL_VERSION_TAG_SHORT=$(shell cd $(LOCAL_PATH) ; git describe --tags --abbrev=0)

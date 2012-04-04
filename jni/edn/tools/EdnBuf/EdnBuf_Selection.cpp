@@ -158,6 +158,28 @@ void EdnBuf::GetSelectionText(selectionType_te select, etk::VectorType<int8_t> &
 		GetRange(start, end, text);
 	}
 }
+void EdnBuf::GetSelectionText(selectionType_te select, etk::UString &text)
+{
+	int32_t start, end, rectStart, rectEnd;
+	bool isRect;
+	// remove output data
+	text = "";
+	
+	bool isSelected = GetSelectionPos(select, start, end, isRect, rectStart, rectEnd);
+	
+	// No data selected ...
+	if (false == isSelected) {
+		return;
+	}
+	
+	// Rectangular selection
+	if (true == isRect) {
+		//GetTextInRect(start, end, rectStart, rectEnd, text);
+		// TODO : ...
+	} else {
+		GetRange(start, end, text);
+	}
+}
 
 
 /**
@@ -199,6 +221,26 @@ void EdnBuf::RemoveSelected(selectionType_te select)
  * 
  */
 void EdnBuf::ReplaceSelected(selectionType_te select, etk::VectorType<int8_t> &text)
+{
+	int32_t start, end, rectStart, rectEnd;
+	bool isRect;
+	bool isSelected = GetSelectionPos(select, start, end, isRect, rectStart, rectEnd);
+	
+	// No data selected ...
+	if (false == isSelected) {
+		return;
+	}
+	// Rectangular selection
+	if (true == isRect) {
+		//ReplaceRect(start, end, rectStart, rectEnd, text);
+		// TODO : ...
+	} else {
+		Replace(start, end, text);
+	}
+	// Clean selection
+	m_selectionList[select].selected = false;
+}
+void EdnBuf::ReplaceSelected(selectionType_te select, etk::UString &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;

@@ -32,7 +32,7 @@
 #include <CodeView.h>
 #include <BufferManager.h>
 #include <ColorizeManager.h>
-#include <ClipBoard.h>
+#include <ewol/ClipBoard.h>
 #include <SearchData.h>
 
 #include <ewol/WidgetManager.h>
@@ -68,6 +68,9 @@ CodeView::CodeView(void)
 	m_textColorBg.alpha = 0.25;
 	SetCanHaveFocus(true);
 	RegisterMultiCast(ednMsgBufferId);
+	RegisterMultiCast(ednMsgGuiCopy);
+	RegisterMultiCast(ednMsgGuiPaste);
+	RegisterMultiCast(ednMsgGuiCut);
 }
 
 CodeView::~CodeView(void)
@@ -222,7 +225,7 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 				MarkToReedraw();
 			} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 				m_buttunOneSelected = false;
-				BufferManager::Get(m_bufferID)->Copy(COPY_MIDDLE_BUTTON);
+				BufferManager::Get(m_bufferID)->Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
 				MarkToReedraw();
 			} else 
 		#endif
@@ -259,7 +262,7 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
-			BufferManager::Get(m_bufferID)->Paste(COPY_MIDDLE_BUTTON);
+			BufferManager::Get(m_bufferID)->Paste(ewol::clipBoard::CLIPBOARD_SELECTION);
 			MarkToReedraw();
 			ewol::widgetManager::FocusKeep(this);
 		}
@@ -289,59 +292,13 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 		EDN_INFO("Select a new Buffer ... " << bufferID);
 		m_bufferID = bufferID;
 		// TODO : need to update the state of the file and the filenames ...
+	} else if (eventId == ednMsgGuiCopy) {
+		BufferManager::Get(m_bufferID)->Copy(ewol::clipBoard::CLIPBOARD_STD);
+	} else if (eventId == ednMsgGuiCut) {
+		BufferManager::Get(m_bufferID)->Cut(ewol::clipBoard::CLIPBOARD_STD);
+	} else if (eventId == ednMsgGuiPaste) {
+		BufferManager::Get(m_bufferID)->Paste(ewol::clipBoard::CLIPBOARD_STD);
 	}
-	// old
-	/*
-	else if( ednMsgCodeViewCurrentChangeBufferId == generateEventId) {
-		int32_t bufferID = 0;
-		sscanf(data, "%d", &bufferID);
-		EDN_INFO("Select a new Buffer ... " << bufferID);
-		m_bufferID = bufferID;
-		BufferManager::Get(m_bufferID)->ForceReDraw(true);
-		// request the display of the curent Editor
-		ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferChangeCurrent, (char*)data);
-		
-	}
-	*/
-	/*
-	 else if (ednMsgCodeViewCurrentSave == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentSaveAs == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentSelectAll == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentRemoveLine == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentUnSelect == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentCopy == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentCut == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentPaste == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentFindPrevious == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentFindNext == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentFindOldNext == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentReplace == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentReplaceAll == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentClose == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentUndo == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentRedo == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentGotoLine == generateEventId) {
-	
-	} else if (ednMsgCodeViewCurrentSetCharset == generateEventId) {
-	
-	}
-	*/
 	else {
 	
 	}
@@ -370,24 +327,6 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 			break;
 		case EDN_MSG__CURRENT_UN_SELECT:
 			BufferManager::Get(m_bufferID)->SelectNone();
-			break;
-		case EDN_MSG__CURRENT_COPY:
-			if (dataID == -1) {
-				dataID = COPY_STD;
-			}
-			BufferManager::Get(m_bufferID)->Copy(dataID);
-			break;
-		case EDN_MSG__CURRENT_CUT:
-			if (dataID == -1) {
-				dataID = COPY_STD;
-			}
-			BufferManager::Get(m_bufferID)->Cut(dataID);
-			break;
-		case EDN_MSG__CURRENT_PASTE:
-			if (dataID == -1) {
-				dataID = COPY_STD;
-			}
-			BufferManager::Get(m_bufferID)->Paste(dataID);
 			break;
 		case EDN_MSG__CURRENT_FIND_PREVIOUS:
 			{

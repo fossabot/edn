@@ -85,12 +85,14 @@ class EdnBuf {
 		void    GetAll(                 etk::VectorType<int8_t> &text);
 		void    SetAll(                 etk::VectorType<int8_t> &text);
 		void    GetRange(               int32_t start, int32_t end, etk::VectorType<int8_t> &output);
+		void    GetRange(               int32_t start, int32_t end, etk::UString &output);
 		bool    DumpIn(                 FILE *myFile);
 		bool    DumpFrom(               FILE *myFile);
 		// replace with operator [] ...
 		int8_t  operator[] (int32_t);
 		void    Insert(                 int32_t pos, etk::VectorType<int8_t> &insertText);
-		void    Replace(                int32_t start, int32_t end, etk::VectorType<int8_t> &insertText);
+		void    Insert(                 int32_t pos, etk::UString &insertText);
+		void    Replace(                int32_t start, int32_t end, etk::UString &insertText);
 		void    Remove(                 int32_t start, int32_t end);
 		int32_t Indent(                 selectionType_te select);
 		int32_t UnIndent(               selectionType_te select);
@@ -132,8 +134,10 @@ class EdnBuf {
 		void        RectSelect(             selectionType_te select, int32_t start, int32_t end, int32_t rectStart, int32_t rectEnd);
 		bool        GetSelectionPos(        selectionType_te select, int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd);
 		void        GetSelectionText(       selectionType_te select, etk::VectorType<int8_t> &text);
+		void        GetSelectionText(       selectionType_te select, etk::UString &text);
 		void        RemoveSelected(         selectionType_te select);
 		void        ReplaceSelected(        selectionType_te select, etk::VectorType<int8_t> &text);
+		void        ReplaceSelected(        selectionType_te select, etk::UString &text);
 	private:
 		// current selection of the buffer
 		selection   m_selectionList[SELECTION_SIZE];    //!< Selection area of the buffer

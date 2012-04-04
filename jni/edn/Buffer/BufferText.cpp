@@ -25,7 +25,6 @@
  
 #include <tools_debug.h>
 #include <tools_globals.h>
-#include <ClipBoard.h>
 #include <BufferText.h>
 #include <toolsMemory.h>
 #include <etk/RegExp.h>
@@ -36,6 +35,7 @@
 #include <ewol/WidgetManager.h>
 #include <ewol/Widget.h>
 #include <ewol/Font.h>
+#include <ewol/ClipBoard.h>
 
 
 #undef __class__
@@ -1180,14 +1180,15 @@ void BufferText::Replace(etk::UString &data)
  */
 void BufferText::Copy(int8_t clipboardID)
 {
-	etk::VectorType<uniChar_t> mVect;
+	//etk::VectorType<uniChar_t> mVect;
+	etk::UString mVect;
 	// get the curent selected data
 	if (true == m_EdnBuf.SelectHasSelection(SELECTION_PRIMARY) ) {
-		//m_EdnBuf.GetSelectionText(SELECTION_PRIMARY, mVect);
+		m_EdnBuf.GetSelectionText(SELECTION_PRIMARY, mVect);
 		EDN_TODO("Remove for now ...");
 	}
 	// copy data in the click board : 
-	//ClipBoard::Set(clipboardID, mVect);
+	ewol::clipBoard::Set(clipboardID, mVect);
 	EDN_TODO("Remove for now ...");
 }
 
@@ -1230,12 +1231,12 @@ void BufferText::Cut(int8_t clipboardID)
  */
 void BufferText::Paste(int8_t clipboardID)
 {
-	etk::VectorType<uniChar_t> mVect;
-	
+	//etk::VectorType<uniChar_t> mVect;
+	etk::UString mVect;
 	EDN_TODO("Remove for now ...");
 	/*
-	// copy data from the click board : 
-	ClipBoard::Get(clipboardID, mVect);
+	// copy data from the click board :
+	ewol::clipBoard::Get(clipboardID, mVect);
 	
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;

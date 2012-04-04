@@ -164,6 +164,18 @@ void EdnBuf::GetRange(int32_t start, int32_t end, etk::VectorType<int8_t> &outpu
 	//EDN_DEBUG("request start=" << start << " end="<< end << " size="<< end-start << " result size=" << output.Size() );
 }
 
+void EdnBuf::GetRange(int32_t start, int32_t end, etk::Ustring &output)
+{
+	// Remove all data ...
+	output = "";
+	// import data : 
+	etk::VectorType<int8_t> &localOutput;
+	m_data.Get(start, end-start, localOutput);
+	// transcript in UNICODE ...
+	// TODO : ldkjqlsdjfqslkjd
+	//EDN_DEBUG("request start=" << start << " end="<< end << " size="<< end-start << " result size=" << output.Size() );
+}
+
 
 /**
  * @brief Get an element at the selected position
@@ -219,6 +231,17 @@ void EdnBuf::Replace(int32_t start, int32_t end, etk::VectorType<int8_t> &insert
 	m_data.Replace(start, end-start, insertText);
 	// update internal elements
 	eventModification(start, insertText.Size(), deletedText);
+}
+void EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
+{
+	etk::VectorType<int8_t> deletedText;
+	GetRange(start, end, deletedText);
+	etk::VectorType<int8_t> tmpInsertText;
+	insertText
+	// TODO : Unicode to utf8 ...
+	m_data.Replace(start, end-start, tmpInsertText);
+	// update internal elements
+	eventModification(start, tmpInsertText.Size(), deletedText);
 }
 
 
