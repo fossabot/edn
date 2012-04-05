@@ -400,6 +400,7 @@ void CodeView::OnLostFocus(void)
 void CodeView::SetFontSize(int32_t size)
 {
 	m_fontSize = size;
+	SetScrollingSize(m_fontSize*3.0*1.46); // 1.46 is a magic nmber ...
 }
 
 void CodeView::SetFontNameNormal(etk::UString fontName)

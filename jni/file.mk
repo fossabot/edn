@@ -25,7 +25,6 @@ FILE_LIST+=		edn/tools/EdnTemplate/EdnVectorBuf.cpp \
 
 # Tools internal:
 FILE_LIST+=		edn/tools/Display/Display.cpp \
-				edn/tools/ClipBoard/ClipBoard.cpp \
 				edn/tools/MsgBroadcast/MsgBroadcast.cpp
 
 # Gui:

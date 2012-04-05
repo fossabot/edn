@@ -26,7 +26,6 @@
 #include <tools_debug.h>
 #include <tools_globals.h>
 #include <CTagsManager.h>
-#include <ClipBoard.h>
 #include <BufferManager.h>
 #include <ewol/EObject.h>
 

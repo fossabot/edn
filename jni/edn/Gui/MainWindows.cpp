@@ -27,7 +27,6 @@
 #include <tools_globals.h>
 #include <MainWindows.h>
 #include <CodeView.h>
-#include <ClipBoard.h>
 #include <BufferView.h>
 
 #include <ewol/widget/Button.h>
