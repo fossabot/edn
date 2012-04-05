@@ -26,19 +26,6 @@
 #ifndef __CLIP_BOARD_H__
 #define __CLIP_BOARD_H__
 
-#include "tools_debug.h"
-#include "etk/VectorType.h"
-
-#define TOTAL_OF_CLICKBOARD			(11)
-#define COPY_MIDDLE_BUTTON			(10)
-#define COPY_STD					(0)
-
-namespace ClipBoard
-{
-	void	Init(void);
-	void	Set(uint8_t clipboardID, etk::VectorType<int8_t> &data);
-	void	Get(uint8_t clipboardID, etk::VectorType<int8_t> &data);
-}
 
 #endif
 

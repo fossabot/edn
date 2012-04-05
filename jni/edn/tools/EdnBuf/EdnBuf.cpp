@@ -164,15 +164,23 @@ void EdnBuf::GetRange(int32_t start, int32_t end, etk::VectorType<int8_t> &outpu
 	//EDN_DEBUG("request start=" << start << " end="<< end << " size="<< end-start << " result size=" << output.Size() );
 }
 
-void EdnBuf::GetRange(int32_t start, int32_t end, etk::Ustring &output)
+void EdnBuf::GetRange(int32_t start, int32_t end, etk::UString &output)
 {
 	// Remove all data ...
 	output = "";
 	// import data : 
-	etk::VectorType<int8_t> &localOutput;
+	etk::VectorType<int8_t> localOutput;
 	m_data.Get(start, end-start, localOutput);
 	// transcript in UNICODE ...
-	// TODO : ldkjqlsdjfqslkjd
+	if (true == m_isUtf8) {
+		localOutput.PushBack('\0');
+		output = (char*)&localOutput[0];
+	} else {
+		etk::VectorType<uniChar_t> tmpUnicodeData;
+		// transform in unicode :
+		convertIsoToUnicode(m_charsetType, localOutput, tmpUnicodeData);
+		output = tmpUnicodeData;
+	}
 	//EDN_DEBUG("request start=" << start << " end="<< end << " size="<< end-start << " result size=" << output.Size() );
 }
 
@@ -201,18 +209,30 @@ int8_t EdnBuf::operator[] (int32_t pos)
  * @return ---
  * 
  */
-void EdnBuf::Insert(int32_t pos, etk::VectorType<int8_t> &insertText)
+int32_t EdnBuf::Insert(int32_t pos, etk::VectorType<int8_t> &insertText)
 {
 	// if pos is not contiguous to existing text, make it
 	pos = edn_average(0, pos, m_data.Size() );
 	// insert Data
-	insert(pos, insertText);
+	int32_t sizeInsert=LocalInsert(pos, insertText);
 
 	// Call the redisplay ...
 	etk::VectorType<int8_t> deletedText;
 	eventModification(pos, insertText.Size(), deletedText);
+	return sizeInsert;
 }
+int32_t EdnBuf::Insert(int32_t pos, etk::UString &insertText)
+{
+	// if pos is not contiguous to existing text, make it
+	pos = edn_average(0, pos, m_data.Size() );
+	// insert Data
+	int32_t sizeInsert=LocalInsert(pos, insertText);
 
+	// Call the redisplay ...
+	etk::VectorType<int8_t> deletedText;
+	eventModification(pos, insertText.Size(), deletedText);
+	return sizeInsert;
+}
 
 /**
  * @brief Replace data in the buffer
@@ -221,27 +241,46 @@ void EdnBuf::Insert(int32_t pos, etk::VectorType<int8_t> &insertText)
  * @param[in] end Position ended in the buffer
  * @param[in] insertText Test to set in the range [start..end]
  * 
- * @return ---
+ * @return nb Octet inserted
  * 
  */
-void EdnBuf::Replace(int32_t start, int32_t end, etk::VectorType<int8_t> &insertText)
+int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::VectorType<int8_t> &insertText)
 {
 	etk::VectorType<int8_t> deletedText;
 	GetRange(start, end, deletedText);
 	m_data.Replace(start, end-start, insertText);
 	// update internal elements
 	eventModification(start, insertText.Size(), deletedText);
+	return insertText.Size();
 }
-void EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
+int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
 {
 	etk::VectorType<int8_t> deletedText;
 	GetRange(start, end, deletedText);
 	etk::VectorType<int8_t> tmpInsertText;
-	insertText
-	// TODO : Unicode to utf8 ...
+	if (true == m_isUtf8) {
+		char * tmpPointer = insertText.Utf8Data();
+		while (*tmpPointer != '\0') {
+			tmpInsertText.PushBack(*tmpPointer++);
+		}
+	} else {
+		etk::VectorType<unsigned int> tmppp = insertText.GetVector();
+		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
+	}
+	if (tmpInsertText.Size()>0) {
+		if (tmpInsertText[tmpInsertText.Size()-1] == '\0') {
+			tmpInsertText.PopBack();
+		}
+	}
+	if (tmpInsertText.Size()>0) {
+		if (tmpInsertText[tmpInsertText.Size()-1] == '\0') {
+			tmpInsertText.PopBack();
+		}
+	}
 	m_data.Replace(start, end-start, tmpInsertText);
 	// update internal elements
 	eventModification(start, tmpInsertText.Size(), deletedText);
+	return tmpInsertText.Size();
 }
 
 
@@ -1113,7 +1152,7 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
  * @return number of element inserted.
  * 
  */
-int32_t EdnBuf::insert(int32_t pos, etk::VectorType<int8_t> &insertText)
+int32_t EdnBuf::LocalInsert(int32_t pos, etk::VectorType<int8_t> &insertText)
 {
 	// Insert data in buffer
 	m_data.Insert(pos, insertText);
@@ -1121,6 +1160,25 @@ int32_t EdnBuf::insert(int32_t pos, etk::VectorType<int8_t> &insertText)
 	UpdateSelections(pos, 0, insertText.Size() );
 	// return the number of element inserted ...
 	return insertText.Size();
+}
+int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
+{
+	etk::VectorType<int8_t> tmpInsertText;
+	if (true == m_isUtf8) {
+		char * tmpPointer = insertText.Utf8Data();
+		while (*tmpPointer != '\0') {
+			tmpInsertText.PushBack(*tmpPointer++);
+		}
+	} else {
+		etk::VectorType<unsigned int> tmppp = insertText.GetVector();
+		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
+	}
+	if (tmpInsertText.Size()>0) {
+		if (tmpInsertText[tmpInsertText.Size()-1] == '\0') {
+			tmpInsertText.PopBack();
+		}
+	}
+	return LocalInsert(pos, tmpInsertText);
 }
 
 

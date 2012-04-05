@@ -32,7 +32,6 @@
 #include <BufferManager.h>
 #include <ColorizeManager.h>
 #include <HighlightManager.h>
-#include <ClipBoard.h>
 #include <Gui/Search.h>
 #include <unistd.h>
 #include <readtags.h>
@@ -83,7 +82,6 @@ void APP_Init(void)
 	
 	// init internal global value
 	globals::init();
-	ClipBoard::Init();
 	
 	
 	// init ALL Singleton :

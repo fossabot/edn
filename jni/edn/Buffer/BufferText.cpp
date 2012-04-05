@@ -589,6 +589,7 @@ void BufferText::MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t 
 			m_EdnBuf.Select(SELECTION_PRIMARY, selStart, m_cursorPos);
 		}
 	}
+	Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
 	RequestPositionUpdate();
 }
 
@@ -609,6 +610,7 @@ void BufferText::MouseEventDouble(void)
 		m_EdnBuf.Select(SELECTION_PRIMARY, beginPos, endPos);
 		m_cursorPos = endPos;
 	}
+	Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
 	// no else
 }
 
@@ -624,6 +626,7 @@ void BufferText::MouseEventTriple(void)
 {
 	m_EdnBuf.Select(SELECTION_PRIMARY, m_EdnBuf.StartOfLine(m_cursorPos), m_EdnBuf.EndOfLine(m_cursorPos));
 	m_cursorPos = m_EdnBuf.EndOfLine(m_cursorPos);
+	Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
 }
 
 void BufferText::RemoveLine(void)
@@ -632,13 +635,14 @@ void BufferText::RemoveLine(void)
 	int32_t stop = m_EdnBuf.EndOfLine(m_cursorPos);
 	m_EdnBuf.Remove(start, stop+1);
 	SetInsertPosition(start);
-		SetModify(true);
+	SetModify(true);
 }
 
 void BufferText::SelectAll(void)
 {
 	m_EdnBuf.Select(SELECTION_PRIMARY, 0, m_EdnBuf.Size());
 	m_cursorPos = m_EdnBuf.Size();
+	Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
 }
 
 void BufferText::SelectNone(void)
@@ -1161,10 +1165,8 @@ void BufferText::Replace(etk::UString &data)
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	if (true == haveSelectionActive) {
 		// Replace Data : 
-		etk::VectorType<uniChar_t> myData = data.GetVector();
-		EDN_TODO("Remove for now ...");
-		//m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, myData);
-		//SetInsertPosition(SelectionStart + myData.Size());
+		int32_t size = m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, data);
+		SetInsertPosition(SelectionStart + size);
 	}
 	SetModify(true);
 }
@@ -1180,16 +1182,13 @@ void BufferText::Replace(etk::UString &data)
  */
 void BufferText::Copy(int8_t clipboardID)
 {
-	//etk::VectorType<uniChar_t> mVect;
 	etk::UString mVect;
 	// get the curent selected data
 	if (true == m_EdnBuf.SelectHasSelection(SELECTION_PRIMARY) ) {
 		m_EdnBuf.GetSelectionText(SELECTION_PRIMARY, mVect);
-		EDN_TODO("Remove for now ...");
 	}
 	// copy data in the click board : 
 	ewol::clipBoard::Set(clipboardID, mVect);
-	EDN_TODO("Remove for now ...");
 }
 
 
@@ -1231,10 +1230,7 @@ void BufferText::Cut(int8_t clipboardID)
  */
 void BufferText::Paste(int8_t clipboardID)
 {
-	//etk::VectorType<uniChar_t> mVect;
 	etk::UString mVect;
-	EDN_TODO("Remove for now ...");
-	/*
 	// copy data from the click board :
 	ewol::clipBoard::Get(clipboardID, mVect);
 	
@@ -1244,14 +1240,13 @@ void BufferText::Paste(int8_t clipboardID)
 	
 	if (true == haveSelectionActive ) {
 		// replace data
-		m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, mVect );
-		m_cursorPos = SelectionStart + mVect.Size();
+		int32_t size = m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, mVect );
+		m_cursorPos = SelectionStart + size;
 	} else {
 		// insert data
-		m_EdnBuf.Insert(m_cursorPos, mVect);
-		m_cursorPos += mVect.Size();
+		int32_t size = m_EdnBuf.Insert(m_cursorPos, mVect);
+		m_cursorPos += size;
 	}
-	*/
 	RequestPositionUpdate();
 	SetModify(true);
 }
