@@ -71,6 +71,10 @@ CodeView::CodeView(void)
 	RegisterMultiCast(ednMsgGuiCopy);
 	RegisterMultiCast(ednMsgGuiPaste);
 	RegisterMultiCast(ednMsgGuiCut);
+	RegisterMultiCast(ednMsgGuiRedo);
+	RegisterMultiCast(ednMsgGuiUndo);
+	RegisterMultiCast(ednMsgGuiRm);
+	RegisterMultiCast(ednMsgGuiSelect);
 }
 
 CodeView::~CodeView(void)
@@ -298,36 +302,34 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 		BufferManager::Get(m_bufferID)->Cut(ewol::clipBoard::CLIPBOARD_STD);
 	} else if (eventId == ednMsgGuiPaste) {
 		BufferManager::Get(m_bufferID)->Paste(ewol::clipBoard::CLIPBOARD_STD);
+	} else if (eventId == ednMsgGuiUndo) {
+		BufferManager::Get(m_bufferID)->Undo();
+	} else if (eventId == ednMsgGuiRedo) {
+		BufferManager::Get(m_bufferID)->Redo();
+	} else if (eventId == ednMsgGuiRm) {
+		// data : "Word" "Line" "Paragraph"
+		if (data == "Word") {
+			EDN_WARNING(" on event " << eventId << " data=\"" << data << "\" ==> not coded" );
+		} else if (data == "Line") {
+			BufferManager::Get(m_bufferID)->RemoveLine();
+		} else if (data == "Paragraph") {
+			EDN_WARNING(" on event " << eventId << " data=\"" << data << "\" ==> not coded" );
+		} else {
+			EDN_ERROR(" on event " << eventId << " unknow data=\"" << data << "\"" );
+		}
+	} else if (eventId == ednMsgGuiSelect) {
+		// data : "ALL" "NONE"
+		if (data == "ALL") {
+			BufferManager::Get(m_bufferID)->SelectAll();
+		} else if (data == "NONE") {
+			BufferManager::Get(m_bufferID)->SelectNone();
+		} else {
+			EDN_ERROR(" on event " << eventId << " unknow data=\"" << data << "\"" );
+		}
 	}
-	else {
-	
-	}
-	
 	/*
 	switch (id)
 	{
-		case EDN_MSG__CURRENT_CHANGE_BUFFER_ID:
-			EDN_INFO("Select a new Buffer ... " << dataID);
-			m_bufferID = dataID;
-			BufferManager::Get(m_bufferID)->ForceReDraw(true);
-			// request the display of the curent Editor
-			SendMessage(EDN_MSG__BUFFER_CHANGE_CURRENT, m_bufferID);
-			break;
-		case EDN_MSG__CURRENT_SAVE:
-			SendMessage(EDN_MSG__BUFF_ID_SAVE, m_bufferID);
-			break;
-		case EDN_MSG__CURRENT_SAVE_AS:
-			SendMessage(EDN_MSG__GUI_SHOW_SAVE_AS, m_bufferID);
-			break;
-		case EDN_MSG__CURRENT_REMOVE_LINE:
-			BufferManager::Get(m_bufferID)->RemoveLine();
-			break;
-		case EDN_MSG__CURRENT_SELECT_ALL:
-			BufferManager::Get(m_bufferID)->SelectAll();
-			break;
-		case EDN_MSG__CURRENT_UN_SELECT:
-			BufferManager::Get(m_bufferID)->SelectNone();
-			break;
 		case EDN_MSG__CURRENT_FIND_PREVIOUS:
 			{
 				etk::UString myDataString;
@@ -353,12 +355,6 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 			break;
 		case EDN_MSG__CURRENT_CLOSE:
 			SendMessage(EDN_MSG__BUFF_ID_CLOSE, m_bufferID);
-			break;
-		case EDN_MSG__CURRENT_UNDO:
-			BufferManager::Get(m_bufferID)->Undo();
-			break;
-		case EDN_MSG__CURRENT_REDO:
-			BufferManager::Get(m_bufferID)->Redo();
 			break;
 		case EDN_MSG__CURRENT_GOTO_LINE:
 			if (dataID<0) {
