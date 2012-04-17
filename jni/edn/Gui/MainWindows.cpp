@@ -102,6 +102,13 @@ MainWindows::MainWindows(void)
 				(void)myMenu->Add(idMenuCTags, "ReLoad",    "", ednMsgGuiCtags, "ReLoad");
 				(void)myMenu->Add(idMenuCTags, "Jump",      "", ednMsgGuiCtags, "Jump");
 				(void)myMenu->Add(idMenuCTags, "Back",      "", ednMsgGuiCtags, "Back");
+			int32_t idMenugDisplay = myMenu->AddTitle("Display");
+				(void)myMenu->Add(idMenugDisplay, "Charset UTF-8",        "", ednMsgGuiChangeCharset, "UTF-8");
+				(void)myMenu->Add(idMenugDisplay, "Charset ISO-8859-1",   "", ednMsgGuiChangeCharset, "ISO-8859-1");
+				(void)myMenu->Add(idMenugDisplay, "Charset ISO-8859-15",  "", ednMsgGuiChangeCharset, "ISO-8859-15");
+				(void)myMenu->AddSpacer();
+				(void)myMenu->Add(idMenugDisplay, "Color Black",          "", ednMsgGuiChangeColor, "Black");
+				(void)myMenu->Add(idMenugDisplay, "Color White",          "", ednMsgGuiChangeColor, "White");
 			(void)myMenu->AddTitle("?", "", ednMsgGuiAbout);
 			
 			m_widgetLabelFileName = new ewol::Label("FileName");

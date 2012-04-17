@@ -93,6 +93,7 @@ class CodeView :public ewol::WidgetScrooled
 		virtual bool OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, coord2D_ts pos);
 		virtual bool OnEventKb(ewol::eventKbType_te typeEvent, uniChar_t unicodeData);
 		virtual bool OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveType_te moveTypeEvent);
+		
 		virtual void OnGetFocus(void);
 		virtual void OnLostFocus(void);
 	private:

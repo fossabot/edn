@@ -250,16 +250,16 @@ int32_t BufferText::GetLineNumberNumberOfElement(void)
 	int32_t nbColoneForLineNumber = 1;
 	// get the number of line in the buffer
 	int32_t maxNumberLine = m_EdnBuf.NumberOfLines();
-	if (10 > maxNumberLine) {				nbColoneForLineNumber = 1;
-	} else if (100 > maxNumberLine) {		nbColoneForLineNumber = 2;
-	} else if (1000 > maxNumberLine) {		nbColoneForLineNumber = 3;
-	} else if (10000 > maxNumberLine) {		nbColoneForLineNumber = 4;
-	} else if (100000 > maxNumberLine) {	nbColoneForLineNumber = 5;
-	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 6;
-	} else if (1000000 > maxNumberLine) {	nbColoneForLineNumber = 7;
-	} else if (10000000 > maxNumberLine) {	nbColoneForLineNumber = 8;
-	} else if (100000000 > maxNumberLine) {	nbColoneForLineNumber = 9;
-	} else {								nbColoneForLineNumber = 10;
+	if (10 > maxNumberLine) {					nbColoneForLineNumber = 1;
+	} else if (100 > maxNumberLine) {			nbColoneForLineNumber = 2;
+	} else if (1000 > maxNumberLine) {			nbColoneForLineNumber = 3;
+	} else if (10000 > maxNumberLine) {			nbColoneForLineNumber = 4;
+	} else if (100000 > maxNumberLine) {		nbColoneForLineNumber = 5;
+	} else if (1000000 > maxNumberLine) {		nbColoneForLineNumber = 6;
+	} else if (10000000 > maxNumberLine) {		nbColoneForLineNumber = 7;
+	} else if (100000000 > maxNumberLine) {		nbColoneForLineNumber = 8;
+	} else if (1000000000 > maxNumberLine) {	nbColoneForLineNumber = 9;
+	} else {									nbColoneForLineNumber = 10;
 	}
 	return nbColoneForLineNumber;
 }

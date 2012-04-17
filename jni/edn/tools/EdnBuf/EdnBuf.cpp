@@ -635,13 +635,13 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnico
 		unicode::Utf8_SizeElement(tmpString, 6 , size, baseValid);
 		currentChar = 0;
 		if (true == baseValid) {
-			uniChar_t *tmp = outUnicode;
-			for (int32_t k=0; k<size; k++) {
-				*tmp++ = tmpString[k];
+			char tmp[20];
+			for (int32_t kkk=0; kkk<size; kkk++) {
+				tmp[kkk] = tmpString[kkk];
+				tmp[kkk+1] = '\0';
 			}
-			*tmp = '\0';
-			unicode::convertIsoToUnicode(m_charsetType, c, outUnicode[0]);
-			
+			unicode::convertUtf8ToUnicode(tmp, outUnicode[0]);
+			outUnicode[1] = 0;
 		} else {
 			outUnicode[0] = '<';
 			outUnicode[1] = '?';

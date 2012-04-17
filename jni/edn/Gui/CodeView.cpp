@@ -75,6 +75,7 @@ CodeView::CodeView(void)
 	RegisterMultiCast(ednMsgGuiUndo);
 	RegisterMultiCast(ednMsgGuiRm);
 	RegisterMultiCast(ednMsgGuiSelect);
+	RegisterMultiCast(ednMsgGuiChangeCharset);
 }
 
 CodeView::~CodeView(void)
@@ -259,7 +260,7 @@ bool CodeView::OnEventInput(int32_t IdInput, ewol::eventInputType_te typeEvent, 
 					yyy = 0;
 				}
 				//EDN_INFO("mouse-motion BT1 %d, %d", xxx, yyy);
-				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(m_fontNormal, xxx, yyy);
+				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(m_fontNormal, xxx+m_originScrooled.x, yyy+m_originScrooled.y);
 				MarkToReedraw();
 			}
 		}
@@ -287,8 +288,6 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 {
 	ewol::WidgetScrooled::OnReceiveMessage(CallerObject, eventId, data);
 	EDN_DEBUG("Extern Event : " << CallerObject << "  type : " << eventId << "  data=\"" << data << "\"");
-	
-	
 	
 	if(eventId == ednMsgBufferId) {
 		int32_t bufferID = 0;
@@ -326,6 +325,17 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 		} else {
 			EDN_ERROR(" on event " << eventId << " unknow data=\"" << data << "\"" );
 		}
+	} else if (eventId == ednMsgGuiChangeCharset) {
+		// data : "UTF-8" "ISO-8859-1" "ISO-8859-15"
+		if (data == "UTF-8") {
+			BufferManager::Get(m_bufferID)->SetCharset(unicode::EDN_CHARSET_UTF8);
+		} else if (data == "ISO-8859-1") {
+			BufferManager::Get(m_bufferID)->SetCharset(unicode::EDN_CHARSET_ISO_8859_1);
+		} else if (data == "ISO-8859-15") {
+			BufferManager::Get(m_bufferID)->SetCharset(unicode::EDN_CHARSET_ISO_8859_15);
+		} else {
+			EDN_ERROR(" on event " << eventId << " unknow data=\"" << data << "\"" );
+		}
 	}
 	/*
 	switch (id)
@@ -353,22 +363,14 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 			break;
 		case EDN_MSG__CURRENT_REPLACE_ALL:
 			break;
-		case EDN_MSG__CURRENT_CLOSE:
-			SendMessage(EDN_MSG__BUFF_ID_CLOSE, m_bufferID);
-			break;
 		case EDN_MSG__CURRENT_GOTO_LINE:
 			if (dataID<0) {
 				dataID = 0;
 			}
 			BufferManager::Get(m_bufferID)->JumpAtLine(dataID);
 			break;
-		case EDN_MSG__REFRESH_DISPLAY:
-			break;
 		case EDN_MSG__CURRENT_SET_CHARSET:
 			BufferManager::Get(m_bufferID)->SetCharset((unicode::charset_te)dataID);
-			break;
-		case EDN_MSG__USER_DISPLAY_CHANGE:
-			// Redraw all the display ... Done under ...
 			break;
 	}
 	*/
