@@ -29,7 +29,6 @@
 #include <appl/Debug.h>
 #include <CodeView.h>
 #include <BufferManager.h>
-#include <Display.h>
 #include <MsgBroadcast.h>
 
 #include <etk/Types.h>

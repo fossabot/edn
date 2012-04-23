@@ -25,7 +25,6 @@
 
 #include <appl/Debug.h>
 #include <tools_globals.h>
-#include <toolsMemory.h>
 #include <EdnVectorBuf.h>
 
 #undef __class__
@@ -66,7 +65,7 @@ EdnVectorBuf::EdnVectorBuf(const EdnVectorBuf & Evb)
 	m_gapEnd = Evb.m_gapEnd;
 	
 	// allocate all same data
-	APPL_MALLOC(m_data, m_allocated, int8_t);
+	m_data = (int8_t *)malloc( m_allocated * sizeof(int8_t) );
 	APPL_ASSERT(NULL!=m_data, "Error in data allocation");
 	// Copy all data ...
 	memcpy(m_data, Evb.m_data, m_allocated * sizeof(int8_t) );
@@ -84,7 +83,7 @@ EdnVectorBuf::EdnVectorBuf(const EdnVectorBuf & Evb)
 EdnVectorBuf::~EdnVectorBuf()
 {
 	if (NULL!=m_data) {
-		APPL_FREE(m_data);
+		free(m_data);
 		m_data = NULL;
 		m_allocated = 0;
 		m_gapStart = 0;
@@ -173,7 +172,7 @@ EdnVectorBuf& EdnVectorBuf::operator=(const EdnVectorBuf & Evb)
 	if( this != &Evb ) // avoid copy to itself
 	{
 		if (NULL!=m_data) {
-			APPL_FREE(m_data);
+			free(m_data);
 			m_data = NULL;
 		}
 		// Set the new value
@@ -181,7 +180,7 @@ EdnVectorBuf& EdnVectorBuf::operator=(const EdnVectorBuf & Evb)
 		m_gapStart  = Evb.m_gapStart;
 		m_gapEnd    = Evb.m_gapEnd;
 		// allocate all same data
-		APPL_MALLOC(m_data, m_allocated, int8_t);
+		m_data = (int8_t *)malloc( m_allocated * sizeof(int8_t) );
 		APPL_ASSERT(NULL!=m_data, "Error in data allocation");
 		// Copy all data ...
 		memcpy(m_data, Evb.m_data, m_allocated * sizeof(int8_t) );
@@ -340,10 +339,10 @@ void EdnVectorBuf::ChangeAllocation(int32_t newSize)
 	// check if something is allocated : 
 	if (NULL == m_data) {
 		// no data allocated ==> request an allocation (might be the first)
-		APPL_MALLOC(m_data, newSize, int8_t);
+		m_data = (int8_t *)malloc( newSize * sizeof(int8_t) );
 	} else {
 		// move datas
-		APPL_REALLOC(m_data, newSize, int8_t);
+		m_data = (int8_t *)realloc( m_data, newSize* sizeof(int8_t) );
 	}
 	// Check result with assert : 
 	APPL_ASSERT(NULL!=m_data, "Error in data allocation");

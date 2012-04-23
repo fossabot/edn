@@ -26,7 +26,6 @@
 #ifndef __EDN_VECTOR_BUF_H__
 #define __EDN_VECTOR_BUF_H__
 
-#include <toolsMemory.h>
 #include <etk/VectorType.h>
 
 #undef __class__

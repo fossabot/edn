@@ -28,7 +28,6 @@
 
 #include <etk/UString.h>
 #include <etk/File.h>
-#include <Display.h>
 #include <etk/unicode.h>
 #include <ewol/ewol.h>
 

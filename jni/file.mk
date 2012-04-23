@@ -11,8 +11,7 @@ FILE_LIST+=		appl/ctags/readtags.cpp \
 
 # Globals debug tool:
 FILE_LIST+=		appl/Debug.cpp \
-				appl/tools/globals/tools_globals.cpp \
-				appl/tools/memory/toolsMemory.cpp
+				appl/tools/tools_globals.cpp
 
 # Buffers internal:
 FILE_LIST+=		appl/tools/EdnTemplate/EdnVectorBuf.cpp \
@@ -24,8 +23,7 @@ FILE_LIST+=		appl/tools/EdnTemplate/EdnVectorBuf.cpp \
 				
 
 # Tools internal:
-FILE_LIST+=		appl/tools/Display/Display.cpp \
-				appl/tools/MsgBroadcast/MsgBroadcast.cpp
+FILE_LIST+=		appl/tools/MsgBroadcast.cpp
 
 # Gui:
 FILE_LIST+=		appl/Gui/BufferView.cpp \

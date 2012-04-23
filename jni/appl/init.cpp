@@ -28,7 +28,6 @@
 #include <etk/File.h>
 #include <ewol/ewol.h>
 #include <Gui/MainWindows.h>
-#include <Display.h>
 #include <BufferManager.h>
 #include <ColorizeManager.h>
 #include <HighlightManager.h>
@@ -39,7 +38,7 @@
 #include <etk/UString.h>
 #include <ewol/EObject.h>
 #include <ewol/WidgetManager.h>
-#include <tools/MsgBroadcast/MsgBroadcast.h>
+#include <tools/MsgBroadcast.h>
 
 MainWindows * basicWindows = NULL;
 

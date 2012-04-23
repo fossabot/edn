@@ -25,7 +25,6 @@
 
 #include <appl/Debug.h>
 #include <tools_globals.h>
-#include <Display.h>
 #include <BufferView.h>
 #include <BufferManager.h>
 #include <ColorizeManager.h>

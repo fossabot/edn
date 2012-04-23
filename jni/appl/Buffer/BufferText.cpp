@@ -26,7 +26,6 @@
 #include <appl/Debug.h>
 #include <tools_globals.h>
 #include <BufferText.h>
-#include <toolsMemory.h>
 #include <etk/RegExp.h>
 #include <etk/unicode.h>
 
