@@ -35,42 +35,30 @@
 Colorize::Colorize(	etk::UString &newColorName)
 {
 
-	m_colorFG.red=0;
-	m_colorFG.green=0;
-	m_colorFG.blue=0;
-	m_colorFG.alpha=1;
-	m_colorBG.red=0;
-	m_colorBG.green=0;
-	m_colorBG.blue=0;
-	m_colorBG.alpha=1;
+	m_colorFG = etk::color::color_Black;
+	m_colorBG = etk::color::color_Black;
 	
 	italic	= false;
 	bold	= false;
 	haveFG	= false;
 	haveBG	= false;
 	SetName(newColorName);
-	//APPL_INFO("New(Colorise)");
+	APPL_VERBOSE("New(Colorise)");
 }
 
 Colorize::Colorize(void)
 {
 	ColorName = "no_name";
 	
-	m_colorFG.red=0;
-	m_colorFG.green=0;
-	m_colorFG.blue=0;
-	m_colorFG.alpha=1;
-	m_colorBG.red=0;
-	m_colorBG.green=0;
-	m_colorBG.blue=0;
-	m_colorBG.alpha=1;
+	m_colorFG = etk::color::color_Black;
+	m_colorBG = etk::color::color_Black;
 	
 	italic	= false;
 	bold	= false;
 	haveFG	= false;
 	haveBG	= false;
 	
-	//APPL_INFO("New(Colorise)");
+	APPL_VERBOSE("New(Colorise)");
 }
 
 Colorize::~Colorize(void)
@@ -81,13 +69,13 @@ Colorize::~Colorize(void)
 
 void Colorize::SetName(const char *newColorName)
 {
-	//APPL_INFO("color change name : \"%s\" ==> \"%s\"",ColorName.c_str(), newColorName);
+	APPL_VERBOSE("color change name : \"" << ColorName << "\" ==> \"" << newColorName << "\"");
 	ColorName = newColorName;
 }
 
 void Colorize::SetName(etk::UString &newColorName)
 {
-	//APPL_INFO("color change name : \"%s\" ==> \"%s\"",ColorName.c_str(), newColorName.c_str());
+	APPL_VERBOSE("color change name : \"" << ColorName << "\" ==> \"" << newColorName << "\"");
 	ColorName = newColorName;
 }
 
@@ -101,38 +89,15 @@ etk::UString Colorize::GetName(void)
 void Colorize::SetFgColor(const char *myColor)
 {
 	haveFG = true;
-	signed int r=0;
-	signed int v=0;
-	signed int b=0;
-	signed int a=-1;
-	sscanf(myColor, "#%02x%02x%02x%02x", &r, &v, &b, &a);
-	m_colorFG.red = (float)r/255.0;
-	m_colorFG.green = (float)v/255.0;
-	m_colorFG.blue = (float)b/255.0;
-	if (-1 == a) {
-		m_colorFG.alpha = 1;
-	} else {
-		m_colorFG.alpha = (float)a/255.0;
-	}
-	//APPL_INFO(myColor << " ==> r="<< r <<" v="<< v <<" b="<< b );
+	m_colorFG = etk::color::Parse(myColor);
+	APPL_VERBOSE(myColor << " ==> "<< m_colorFG );
 }
 
 void Colorize::SetBgColor(const char *myColor)
 {
 	haveBG = true;
-	signed int r=0;
-	signed int v=0;
-	signed int b=0;
-	signed int a=-1;
-	sscanf(myColor, "#%02x%02x%02x%02x", &r, &v, &b, &a);
-	m_colorBG.red = (float)r/255.0;
-	m_colorBG.green = (float)v/255.0;
-	m_colorBG.blue = (float)b/255.0;
-	if (-1 == a) {
-		m_colorBG.alpha = 1;
-	} else {
-		m_colorBG.alpha = (float)a/255.0;
-	}
+	m_colorBG = etk::color::Parse(myColor);
+	APPL_VERBOSE(myColor << " ==> "<< m_colorBG );
 }
 
 bool Colorize::HaveBg(void)
@@ -144,13 +109,11 @@ bool Colorize::HaveBg(void)
 void Colorize::SetItalic(bool enable)
 {
 	italic = enable;
-	/*
 	if (true == enable) {
-		APPL_INFO("color : \"%s\" enable italic", ColorName.c_str());
+		APPL_VERBOSE("color : \"" << ColorName << "\" enable italic");
 	} else {
-		APPL_INFO("color : \"%s\" disable italic", ColorName.c_str());
+		APPL_VERBOSE("color : \"" << ColorName << "\" disable italic");
 	}
-	*/
 }
 
 bool Colorize::GetItalic(void)
@@ -162,13 +125,11 @@ bool Colorize::GetItalic(void)
 void Colorize::SetBold(bool enable)
 {
 	bold = enable;
-	/*
 	if (true == enable) {
-		APPL_INFO("color : \"%s\" enable bold", ColorName.c_str());
+		APPL_VERBOSE("color : \"" << ColorName << "\" enable bold");
 	} else {
-		APPL_INFO("color : \"%s\" disable bold", ColorName.c_str());
+		APPL_VERBOSE("color : \"" << ColorName << "\" disable bold");
 	}
-	*/
 }
 
 bool Colorize::GetBold(void)

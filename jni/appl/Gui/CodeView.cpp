@@ -56,14 +56,9 @@ CodeView::CodeView(void)
 	m_bufferID = -1;
 	m_buttunOneSelected = false;
 	
-	m_textColorFg.red   = 0.0;
-	m_textColorFg.green = 0.0;
-	m_textColorFg.blue  = 0.0;
-	m_textColorFg.alpha = 1.0;
+	m_textColorFg = etk::color::color_Black;
 	
-	m_textColorBg.red   = 0.0;
-	m_textColorBg.green = 0.0;
-	m_textColorBg.blue  = 0.0;
+	m_textColorBg = etk::color::color_Black;
 	m_textColorBg.alpha = 0.25;
 	SetCanHaveFocus(true);
 	RegisterMultiCast(ednMsgBufferId);
@@ -91,7 +86,7 @@ CodeView::~CodeView(void)
 bool CodeView::CheckObjectType(const char * const objectType)
 {
 	if (NULL == objectType) {
-		EWOL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_CODE_VIEW << "\" != NULL(pointer) ");
+		APPL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_CODE_VIEW << "\" != NULL(pointer) ");
 		return false;
 	}
 	if (objectType == TYPE_EOBJECT_EDN_CODE_VIEW) {
@@ -100,7 +95,7 @@ bool CodeView::CheckObjectType(const char * const objectType)
 		if(true == ewol::WidgetScrooled::CheckObjectType(objectType)) {
 			return true;
 		}
-		EWOL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_CODE_VIEW << "\" != \"" << objectType << "\"");
+		APPL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_CODE_VIEW << "\" != \"" << objectType << "\"");
 		return false;
 	}
 }

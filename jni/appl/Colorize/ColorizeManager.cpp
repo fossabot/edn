@@ -165,8 +165,8 @@ void classColorManager::LoadFile(const char * xmlFilename)
 	m_fileColor = xmlFilename;
 	APPL_DEBUG("open file (COLOR) \"" << xmlFilename << "\" ? = \"" << m_fileColor << "\"");
 	errorColor = new Colorize();
-	errorColor->SetBgColor("#000000");
-	errorColor->SetFgColor("#FFFFFF");
+	errorColor->SetBgColor("#00FF00FF");
+	errorColor->SetFgColor("#FF00FFFF");
 
 	// allocate the document in the stack
 	TiXmlDocument XmlDocument;
@@ -253,24 +253,7 @@ void classColorManager::LoadFile(const char * xmlFilename)
 						}
 						const char *color = pGuiNode->ToElement()->Attribute("val");
 						if (NULL != color) {
-							int r=0;
-							int v=0;
-							int b=0;
-							int a=-1;
-							sscanf(color, "#%02x%02x%02x%02x", &r, &v, &b, &a);
-							basicColors[id].red = (float)r/255.0;
-							basicColors[id].green = (float)v/255.0;
-							basicColors[id].blue = (float)b/255.0;
-							if (-1 == a) {
-								basicColors[id].alpha = 1;
-							} else {
-								basicColors[id].alpha = (float)a/255.0;
-							}
-							/*
-							APPL_INFO(" Specify color for system ID="<< id );
-							APPL_INFO("    " << color << " ==> r="<< r <<" v="<< v <<" b="<< b );
-							APPL_INFO("    " << color << " ==> r="<< basicColors[id].red <<" v="<< basicColors[id].green <<" b="<< basicColors[id].blue );
-							*/
+							basicColors[id] = etk::color::Parse(color);
 						}
 					} else {
 						APPL_ERROR("(l "<<pGuiNode->Row()<<") node not suported : \""<<pGuiNode->Value()<<"\" must be [color]");
@@ -300,24 +283,20 @@ void classColorManager::LoadFile(const char * xmlFilename)
 							myNewColor->SetName(colorName);
 							//APPL_INFO(PFX"Add a new color in the panel : \"%s\"", colorName);
 						}
-
 						const char *colorBG = pGuiNode->ToElement()->Attribute("BG");
 						if (NULL != colorBG) {
 							myNewColor->SetBgColor(colorBG);
 						}
-
 						const char *colorFG = pGuiNode->ToElement()->Attribute("FG");
 						if (NULL != colorFG) {
 							myNewColor->SetFgColor(colorFG);
 						}
-
 						const char *bold = pGuiNode->ToElement()->Attribute("bold");
 						if (NULL != bold) {
 							if(0 == strcmp(bold, "yes") ) {
 								myNewColor->SetBold(true);
 							}
 						}
-
 						const char *italic = pGuiNode->ToElement()->Attribute("italic");
 						if (NULL != italic) {
 							if(0 == strcmp(italic, "yes") ) {
