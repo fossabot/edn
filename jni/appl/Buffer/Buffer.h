@@ -72,45 +72,57 @@ class Buffer {
 			return m_haveName;
 		}
 		
-		virtual void      Save(void);
+		virtual void      Save(void) {};
 				bool      IsModify(void);
 	protected:
 				void      SetModify(bool status);
 		virtual void      NameChange(void) { /*APPL_DEBUG("check name change ==> no HL change possible");*/};
 	public:
-		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate);
-		virtual void      SetLineDisplay(uint32_t lineNumber);
+		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate) {};
+		virtual void      SetLineDisplay(uint32_t lineNumber) {};
 		
 		virtual int32_t   Display(ewol::OObject2DTextColored& OOTextNormal,
 		                          ewol::OObject2DTextColored& OOTextBold,
 		                          ewol::OObject2DTextColored& OOTextItalic,
 		                          ewol::OObject2DTextColored& OOTextBoldItalic,
-		                          ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY);
-		virtual void      AddChar(uniChar_t unicodeData);
-		virtual void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);
-		virtual void      MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t height);
-		virtual void      MouseEvent(int32_t fontId, int32_t width, int32_t height);
-		virtual void      MouseEventDouble(void);
-		virtual void      MouseEventTriple(void);
-		virtual void      RemoveLine(void);
-		virtual void      SelectAll(void);
-		virtual void      SelectNone(void);
-		virtual void      Undo(void);
-		virtual void      Redo(void);
+		                          ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
+		{
+			return ERR_NONE;
+		}
+		virtual void      AddChar(uniChar_t unicodeData) {};
+		virtual void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent) {};
+		virtual void      MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t height) {};
+		virtual void      MouseEvent(int32_t fontId, int32_t width, int32_t height) {};
+		virtual void      MouseEventDouble(void) {};
+		virtual void      MouseEventTriple(void) {};
+		virtual void      RemoveLine(void) {};
+		virtual void      SelectAll(void) {};
+		virtual void      SelectNone(void) {};
+		virtual void      Undo(void) {};
+		virtual void      Redo(void) {};
 		virtual void      SetCharset(unicode::charset_te newCharset) {};
 
 		//virtual void	SelectAll(void);
-		virtual void      Copy(int8_t clipboardID);
-		virtual void      Cut(int8_t clipboardID);
-		virtual void      Paste(int8_t clipboardID);
-		virtual void      Search(etk::UString &data, bool back, bool caseSensitive, bool wrap, bool regExp);
-		virtual void      Replace(etk::UString &data);
-		virtual int32_t   FindLine(etk::UString &data);
-		virtual void      JumpAtLine(int32_t newLine);
-		virtual int32_t   GetCurrentLine(void);
+		virtual void      Copy(int8_t clipboardID) {};
+		virtual void      Cut(int8_t clipboardID) {};
+		virtual void      Paste(int8_t clipboardID) {};
+		virtual void      Search(etk::UString &data, bool back, bool caseSensitive, bool wrap, bool regExp) {};
+		virtual void      Replace(etk::UString &data) {};
+		virtual int32_t   FindLine(etk::UString &data) { return 0; };
+		virtual void      JumpAtLine(int32_t newLine) {};
+		virtual int32_t   GetCurrentLine(void) { return 0; };
 		
 		virtual int32_t   GetNumberOfLine(void) { return 1; };
 		
+		// moving with cursor change position:
+	private:
+		bool m_updatePositionRequested;
+	protected:
+		void RequestUpdateOfThePosition(void) { m_updatePositionRequested = true; };
+	public:
+		bool                NeedToUpdateDisplayPosition(void);
+		virtual coord2D_ts  GetBorderSize(void);               // this is to requested the minimum size for the buffer that is not consider as visible ...
+		virtual coord2D_ts  GetPosition(int32_t fontId, bool& centerRequested);
 	protected:
 		bool              m_fileModify;           //!< 
 		// naming

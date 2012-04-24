@@ -66,6 +66,7 @@ void BufferText::BasicInit(void)
 	//m_cursorMode = CURSOR_DISPLAY_MODE_NORMAL;
 	m_displaySize.x = 200;
 	m_displaySize.y = 20;
+	m_centerRequested = false;
 }
 
 
@@ -135,7 +136,7 @@ BufferText::BufferText(etk::File &fileName) : Buffer(fileName)
 		APPL_WARNING("No File ==> created a new one(" << GetFileName() << ")");
 		SetModify(true);
 	}
-	RequestPositionUpdate();
+	RequestUpdateOfThePosition();
 }
 
 
@@ -332,7 +333,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, displayStartBufferPos, m_displaySize.y);
 	
 	int64_t stopTime = GetCurrentTime();
-	APPL_DEBUG("Parsing Highlight = " << stopTime - startTime << " milli-s");
+	APPL_DEBUG("Parsing Highlight = " << stopTime - startTime << " micro-s");
 	
 	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
 	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
@@ -458,7 +459,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	}
 	
 	int64_t stopTime2 = GetCurrentTime();
-	APPL_DEBUG("DRAW text (brut) = " << stopTime2 - stopTime << " milli-s");
+	APPL_DEBUG("DRAW text (brut) = " << stopTime2 - stopTime << " micro-s");
 
 	return ERR_NONE;
 }
@@ -546,7 +547,7 @@ void BufferText::MouseEvent(int32_t fontId, int32_t width, int32_t height)
 		}*/
 		m_EdnBuf.Unselect(SELECTION_PRIMARY);
 
-		RequestPositionUpdate();
+		RequestUpdateOfThePosition();
 	}
 }
 
@@ -589,7 +590,7 @@ void BufferText::MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t 
 		}
 	}
 	Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
-	RequestPositionUpdate();
+	RequestUpdateOfThePosition();
 }
 
 
@@ -822,12 +823,12 @@ void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
 			SetInsertPosition(m_EdnBuf.EndOfLine(m_cursorPos) );
 			break;
 		default:
-			//LastUpDownCursorPosition = -1;
+			//LastUpDownoutputPosition = -1;
 			needUpdatePosition = false;
 			break;
 	}
 	if ( true == needUpdatePosition) {
-		RequestPositionUpdate();
+		RequestUpdateOfThePosition();
 	}
 }
 
@@ -840,81 +841,49 @@ void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
  * @return ---
  *
  */
-bool BufferText::RequestPositionRequest(coord2D_ts& newPos)
+coord2D_ts BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 {
-	if (-1 == m_requestDisplayPos.x || -1 == m_requestDisplayPos.y) {
-		return false;
-	}
-	newPos = m_requestDisplayPos;
-	m_requestDisplayPos.x = -1;
-	m_requestDisplayPos.y = -1;
-	return true;
-}
+	centerRequested = m_centerRequested;
+	m_centerRequested = false;
+	coord2D_ts outputPosition;
 
+	// Display position (Y mode):
+	APPL_INFO("change the position : " << m_cursorPos);
+	// get the line id of the curent position of the cursor :
+	outputPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
+	// get the first position of the current line
+	int32_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
+	// count the number of char in the line (real displayed char with whar like <kjkj>)
+	outputPosition.x = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
+	APPL_INFO("Curent cursor pos=" << outputPosition);
+	
+	// get font porperties :
+	// TODO : change this :
+	etkFloat_t letterWidth = ewol::GetWidth(fontId, "A");
+	etkFloat_t letterHeight = ewol::GetHeight(fontId);
+	outputPosition.x *= letterWidth;
+	outputPosition.y *= letterHeight;
+	return outputPosition;
 
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void BufferText::RequestPositionUpdate(bool centerPage)
-{
-	m_requestDisplayPos.x = -1;
-	m_requestDisplayPos.y = -1;
-#if 0
-	if (centerPage == false) {
-	/*
-		// Display position (Y mode):
-		//APPL_INFO("BufferText::RequestPositionUpdate() m_displayStart(" << m_displayStartPixelX << "px," << m_displayStartLineId << "id) m_displaySize(" << m_displaySize.x << "," <<m_displaySize.y << ")");
-		coord2D_ts cursorPosition;
-		cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
-		int32_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
-		cursorPosition.x = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
-		//APPL_INFO("BufferText::RequestPositionUpdate() curent cursor position : (" << cursorPosition.x << "," << cursorPosition.y << ")");
-		
-		if (m_displayStartLineId > (int32_t)cursorPosition.y - globals::getNbLineBorder() ) {
-			m_displayStartLineId = cursorPosition.y - globals::getNbLineBorder();
-			if (m_displayStartLineId < 0) {
-				m_displayStartLineId = 0;
-			}
-		} else if (m_displayStartLineId + m_displaySize.y <= (int32_t)cursorPosition.y + globals::getNbLineBorder() ) {
-			m_displayStartLineId = cursorPosition.y - m_displaySize.y + globals::getNbLineBorder() + 1;
-		}
-		// Display position (X mode):
-		//APPL_INFO("cursorPosition X : " << cursorPosition.y << " windows " << m_displayStartLineId << "=>" << m_displayStartPixelX + m_displaySize.x);
-		if (m_displayStartPixelX > cursorPosition.x - globals::getNbColoneBorder() ) {
-			m_displayStartPixelX = cursorPosition.x - globals::getNbColoneBorder();
-			if (m_displayStartPixelX < 0) {
-				m_displayStartPixelX = 0;
-			}
-		} else if (m_displayStartPixelX + m_displaySize.x <= cursorPosition.x + globals::getNbColoneBorder() ) {
-			m_displayStartPixelX = cursorPosition.x - m_displaySize.x + globals::getNbColoneBorder() + 1;
-		}
-		
-		//update the buffer position ID : 
-		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
-	*/
+	/* if we request a center : 
 	} else {
 		// center the line at the middle of the screen :
-		coord2D_ts cursorPosition;
+		coord2D_ts outputPosition;
 		//APPL_DEBUG(" -------------------------------------------------");
-		cursorPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
-		//APPL_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << cursorPosition.y);
-		cursorPosition.x = 0;
+		outputPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
+		//APPL_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << outputPosition.y);
+		outputPosition.x = 0;
 		
 		m_displayStartPixelX = 0;
 		//APPL_DEBUG(" display size : " << m_displaySize.y);
-		m_displayStartLineId = cursorPosition.y - m_displaySize.y/2;
+		m_displayStartLineId = outputPosition.y - m_displaySize.y/2;
 		m_displayStartLineId = edn_max(m_displayStartLineId, 0);
 		
 		m_displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, m_displayStartLineId);
 		//APPL_DEBUG(" display start : " << m_displayStartPixelX << "x" << m_displayStartLineId);
 		//APPL_DEBUG(" -------------------------------------------------");
 	}
-#endif
+	*/
 }
 
 
@@ -1039,7 +1008,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 	}
 
 	SetModify(true);
-	RequestPositionUpdate();
+	RequestUpdateOfThePosition();
 }
 
 
@@ -1073,7 +1042,8 @@ void BufferText::JumpAtLine(int32_t newLine)
 	m_EdnBuf.Unselect(SELECTION_PRIMARY);
 	APPL_DEBUG("jump at the line : " << newLine );
 	SetInsertPosition(positionLine);
-	RequestPositionUpdate(true);
+	m_centerRequested = true;
+	RequestUpdateOfThePosition();
 }
 
 /**
@@ -1132,7 +1102,6 @@ void BufferText::Search(etk::UString &data, bool back, bool caseSensitive, bool 
 			int32_t endSelectionPos = foundPos+mVectSearch.Size();
 			SetInsertPosition(endSelectionPos);
 			m_EdnBuf.Select(SELECTION_PRIMARY, foundPos, endSelectionPos);
-			RequestPositionUpdate();
 		}
 	} else {
 		//APPL_INFO("search data Backward : " << data.GetDirectPointer() );
@@ -1150,10 +1119,11 @@ void BufferText::Search(etk::UString &data, bool back, bool caseSensitive, bool 
 			int32_t endSelectionPos = foundPos+mVectSearch.Size();
 			SetInsertPosition(foundPos);
 			m_EdnBuf.Select(SELECTION_PRIMARY, foundPos, endSelectionPos);
-			RequestPositionUpdate();
 		}
 	}
 	*/
+	m_centerRequested = true;
+	RequestUpdateOfThePosition();
 }
 
 
@@ -1214,7 +1184,7 @@ void BufferText::Cut(int8_t clipboardID)
 		m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
 		m_cursorPos = SelectionStart;
 	}
-	RequestPositionUpdate();
+	RequestUpdateOfThePosition();
 	SetModify(true);
 }
 
@@ -1246,7 +1216,7 @@ void BufferText::Paste(int8_t clipboardID)
 		int32_t size = m_EdnBuf.Insert(m_cursorPos, mVect);
 		m_cursorPos += size;
 	}
-	RequestPositionUpdate();
+	RequestUpdateOfThePosition();
 	SetModify(true);
 }
 
@@ -1256,7 +1226,7 @@ void BufferText::Undo(void)
 	int32_t newPos = m_EdnBuf.Undo();
 	if (newPos >= 0) {
 		SetInsertPosition(newPos, true);
-		RequestPositionUpdate();
+		RequestUpdateOfThePosition();
 		SetModify(true);
 	}
 }
@@ -1266,7 +1236,7 @@ void BufferText::Redo(void)
 	int32_t newPos = m_EdnBuf.Redo();
 	if (newPos >= 0) {
 		SetInsertPosition(newPos, true);
-		RequestPositionUpdate();
+		RequestUpdateOfThePosition();
 		SetModify(true);
 	}
 }

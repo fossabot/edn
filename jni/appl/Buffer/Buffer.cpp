@@ -43,6 +43,7 @@
 Buffer::Buffer()
 {
 	static int32_t fileBasicID = 0;
+	m_updatePositionRequested = false;
 	m_fileModify = true;
 	m_haveName = false;
 	etk::UString mString = "Untitle - ";
@@ -100,20 +101,6 @@ void Buffer::SetModify(bool status)
 	}
 }
 
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
- // TODO : ne marche plus ...
-void Buffer::Save(void)
-{
-	// nothing to do
-}
-
 
 /**
  * @brief
@@ -123,215 +110,27 @@ void Buffer::Save(void)
  * @return ---
  *
  */
-void Buffer::GetInfo(infoStatBuffer_ts &infoToUpdate)
+bool Buffer::NeedToUpdateDisplayPosition(void)
 {
-	// nothing to do
+	bool tmpVal = m_updatePositionRequested;
+	m_updatePositionRequested = false;
+	return tmpVal;
 }
 
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void Buffer::SetLineDisplay(uint32_t lineNumber)
+coord2D_ts Buffer::GetBorderSize(void)
 {
-	// nothing to do
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-int32_t Buffer::Display(ewol::OObject2DTextColored& OOTextNormal,
-                        ewol::OObject2DTextColored& OOTextBold,
-                        ewol::OObject2DTextColored& OOTextItalic,
-                        ewol::OObject2DTextColored& OOTextBoldItalic, ewol::OObject2DColored& OOColored,
-                        int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
-{
-	return ERR_NONE;
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- * @todo : Set the move up and DOWN...
- *
- */
-void Buffer::MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t height)
-{
-	// nothing to do
+	coord2D_ts tmpVal;
+	tmpVal.x = 30;
+	tmpVal.y = 30;
+	return tmpVal;
 }
 
 
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void Buffer::MouseEvent(int32_t fontId, int32_t width, int32_t height)
+coord2D_ts Buffer::GetPosition(int32_t fontId,bool& centerRequested)
 {
-	// nothing to do
+	centerRequested = false;
+	coord2D_ts tmpVal;
+	tmpVal.x = 0;
+	tmpVal.y = 0;
+	return tmpVal;
 }
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void Buffer::MouseEventDouble(void)
-{
-	// nothing to do
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void Buffer::MouseEventTriple(void)
-{
-	// nothing to do
-}
-
-
-void Buffer::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
-{
-	// nothing to do
-}
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void Buffer::AddChar(uniChar_t unicodeData)
-{
-	// nothing to do
-}
-
-void Buffer::Search(etk::UString &data, bool back, bool caseSensitive, bool wrap, bool regExp)
-{
-	// nothing to do
-}
-
-void Buffer::Replace(etk::UString &data)
-{
-	// nothing to do
-}
-
-int32_t Buffer::FindLine(etk::UString &data)
-{
-	// nothing to do
-	return 0;
-}
-
-void Buffer::JumpAtLine(int32_t newLine)
-{
-	// nothing to do
-}
-
-
-/**
- * @brief Get the current line (to know where to jump)
- *
- * @param ---
- *
- * @return Return the current line number
- *
- */
-int32_t Buffer::GetCurrentLine(void)
-{
-	return 0;
-}
-
-
-/**
- * @brief request a copy of the selection in the named clipBoard ID
- *
- * @param[in] clipboardID		Id of the buffer we want to get data [0..10] (0 copy normal / 10 middle button)
- *
- * @return ---
- *
- */
-void Buffer::Copy(int8_t clipboardID)
-{
-	// nothing to do
-}
-
-
-/**
- * @brief Request a copy and a remove of the curent selection in the named clipBoard ID
- *
- * @param[in] clipboardID		Id of the buffer we want to get data [0..10] (0 copy normal / 10 middle button)
- *
- * @return ---
- *
- */
-void Buffer::Cut(int8_t clipboardID)
-{
-	// nothing to do
-}
-
-
-/**
- * @brief request the past of a specific clipboard on the curent position or selection
- *
- * @param[in] clipboardID		Id of the buffer we want to get data [0..10] (0 copy normal / 10 middle button)
- *
- * @return ---
- *
- */
-void Buffer::Paste(int8_t clipboardID)
-{
-	// nothing to do
-}
-
-void Buffer::RemoveLine(void)
-{
-	// nothing to do
-}
-
-void Buffer::SelectAll(void)
-{
-	// nothing to do
-}
-
-void Buffer::SelectNone(void)
-{
-	// nothing to do
-}
-
-void Buffer::Undo(void)
-{
-	// nothing to do
-}
-
-void Buffer::Redo(void)
-{
-	// nothing to do
-}
-

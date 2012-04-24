@@ -93,13 +93,10 @@ class BufferText : public Buffer {
 		
 		// internal function
 		void                    BasicInit(void);
-	// moving the current position of the display windows ...
 	private:
-		coord2D_ts              m_requestDisplayPos;        //!< number of char displayable in the screan
-		void                    RequestPositionUpdate(bool centerPage = false);
+		bool m_centerRequested;
 	public:
-		bool                    RequestPositionRequest(coord2D_ts& newPos);
-		
+		virtual coord2D_ts      GetPosition(int32_t fontId, bool& centerRequested);
 	private:
 		bool     TextDMoveUp(int32_t offset);
 		bool     TextDMoveDown(int32_t offset);
