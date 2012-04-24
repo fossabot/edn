@@ -116,13 +116,16 @@ class Buffer {
 		
 		// moving with cursor change position:
 	private:
-		bool m_updatePositionRequested;
+		bool       m_updatePositionRequested; //!< if a position xhange in the windows ...
+		coord2D_ts m_maximumSize;             //!< current maxSize of the buffer
 	protected:
 		void RequestUpdateOfThePosition(void) { m_updatePositionRequested = true; };
+		void SetMaximumSize(coord2D_ts maxSize) { m_maximumSize = maxSize; };
 	public:
 		bool                NeedToUpdateDisplayPosition(void);
 		virtual coord2D_ts  GetBorderSize(void);               // this is to requested the minimum size for the buffer that is not consider as visible ...
 		virtual coord2D_ts  GetPosition(int32_t fontId, bool& centerRequested);
+		coord2D_ts          GetMaxSize(void) { return m_maximumSize; };
 	protected:
 		bool              m_fileModify;           //!< 
 		// naming

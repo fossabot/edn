@@ -163,7 +163,6 @@ void CodeView::OnRegenerateDisplay(void)
 			bool centerRequested = false;
 			coord2D_ts currentPosition = BufferManager::Get(m_bufferID)->GetPosition(m_OObjectTextNormal[m_currentCreateId].GetFontID(), centerRequested);
 			SetScrollingPositionDynamic(borderWidth, currentPosition, centerRequested);
-			
 		} // else : nothing to do ...
 		
 		// generate the objects :
@@ -173,6 +172,8 @@ void CodeView::OnRegenerateDisplay(void)
 		                                        m_OObjectTextBoldItalic[m_currentCreateId],
 		                                        m_OObjectsColored[m_currentCreateId],
 		                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
+		// set the current size of the windows
+		SetMaxSize(BufferManager::Get(m_bufferID)->GetMaxSize());
 		
 		int64_t stopTime = GetCurrentTime();
 		APPL_DEBUG("Display Code Generation = " << stopTime - startTime << " micro-s");

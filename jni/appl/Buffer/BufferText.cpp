@@ -297,7 +297,9 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	
 	// update the display position with the scroll ofset : 
 	int32_t displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
-	
+	coord2D_ts maxSize;
+	maxSize.x = 0.0;
+	maxSize.y = m_EdnBuf.NumberOfLines() * letterHeight;
 	int32_t nbColoneForLineNumber = GetLineNumberNumberOfElement();
 	
 	// update the number of element that can be displayed
@@ -367,6 +369,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	OOTextBoldItalic.clippingSet(drawClippingTextArea);
 	OOColored.clippingSet(drawClippingTextArea);
 	
+	etkFloat_t lineMaxSize = 0.0;
 	for (iii=displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
 		//APPL_DEBUG("diplay element=" << iii);
 		int displaywidth;
@@ -438,9 +441,12 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 			// display the cursor:
 			DrawCursor(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
 		}
+		lineMaxSize += drawSize;
 		pixelX += drawSize;
 		// move to next line ...
 		if (currentChar=='\n') {
+			maxSize.x = etk_max(lineMaxSize, maxSize.x);
+			lineMaxSize = 0.0;
 			idX =0;
 			pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 			y += letterHeight;
@@ -457,7 +463,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	if (m_cursorPos == iii) {
 		DrawCursor(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
 	}
-	
+	// set the maximum size for the display ...
+	SetMaximumSize(maxSize);
 	int64_t stopTime2 = GetCurrentTime();
 	APPL_DEBUG("DRAW text (brut) = " << stopTime2 - stopTime << " micro-s");
 
