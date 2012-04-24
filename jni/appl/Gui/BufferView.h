@@ -28,7 +28,7 @@
 #include <appl/Debug.h>
 #include <CodeView.h>
 #include <BufferManager.h>
-#include <MsgBroadcast.h>
+#include <appl/globalMsg.h>
 #include <ewol/widget/List.h>
 
 //!< EObject name :

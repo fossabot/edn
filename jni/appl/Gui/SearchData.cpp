@@ -23,7 +23,7 @@
  *******************************************************************************
  */
 
-#include <tools_globals.h>
+#include <appl/global.h>
 #include <SearchData.h>
 
 

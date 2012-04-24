@@ -1,6 +1,6 @@
 /**
  *******************************************************************************
- * @file tools_globals.h
+ * @file appl/global.h
  * @brief Editeur De N'ours : Globals Values (header)
  * @author Edouard DUPIN
  * @date 05/12/2010

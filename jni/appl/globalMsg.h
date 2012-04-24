@@ -1,6 +1,6 @@
 /**
  *******************************************************************************
- * @file MsgBroadcast.h
+ * @file appl/globalMsg.h
  * @brief Editeur De N'ours : message beetween thread and GUI elements ... (header)
  * @author Edouard DUPIN
  * @date 04/02/2011

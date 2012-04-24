@@ -29,7 +29,7 @@
 #include <appl/Debug.h>
 #include <CodeView.h>
 #include <BufferManager.h>
-#include <MsgBroadcast.h>
+#include <appl/globalMsg.h>
 
 #include <etk/Types.h>
 #include <ewol/widget/WidgetScrolled.h>

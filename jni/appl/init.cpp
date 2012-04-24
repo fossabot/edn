@@ -23,10 +23,14 @@
  *******************************************************************************
  */
 
-#include <appl/Debug.h>
-#include <tools_globals.h>
-#include <etk/File.h>
+#include <etk/UString.h>
 #include <ewol/ewol.h>
+#include <ewol/EObject.h>
+#include <ewol/WidgetManager.h>
+
+#include <appl/Debug.h>
+#include <appl/global.h>
+#include <etk/File.h>
 #include <Gui/MainWindows.h>
 #include <BufferManager.h>
 #include <ColorizeManager.h>
@@ -35,10 +39,7 @@
 #include <unistd.h>
 #include <readtags.h>
 #include <CTagsManager.h>
-#include <etk/UString.h>
-#include <ewol/EObject.h>
-#include <ewol/WidgetManager.h>
-#include <tools/MsgBroadcast.h>
+#include <globalMsg.h>
 
 MainWindows * basicWindows = NULL;
 

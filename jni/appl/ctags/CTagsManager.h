@@ -28,7 +28,7 @@
 
 
 #include <ewol/Widget.h>
-#include "MsgBroadcast.h"
+#include "appl/globalMsg.h"
 #include "readtags.h"
 
 #define MAX_REG_EXP_SEARCH	(1024)

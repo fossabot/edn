@@ -27,7 +27,7 @@
 #define __COLORIZE_MANAGER_H__
 
 #include <Colorize.h>
-#include <MsgBroadcast.h>
+#include <appl/globalMsg.h>
 #include <ewol/Widget.h>
 
 typedef enum {

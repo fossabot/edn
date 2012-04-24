@@ -24,7 +24,7 @@
  */
 
 #include <appl/Debug.h>
-#include <tools_globals.h>
+#include <appl/global.h>
 #include <Highlight.h>
 #include <tinyXML/tinyxml.h>
 

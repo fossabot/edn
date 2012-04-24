@@ -25,7 +25,7 @@
 
 
 #include <appl/Debug.h>
-#include <tools_globals.h>
+#include <appl/global.h>
 #include <EdnBufHistory.h>
 
 

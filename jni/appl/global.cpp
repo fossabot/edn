@@ -23,9 +23,9 @@
  *******************************************************************************
  */
 
-#include <tools_globals.h>
+#include <appl/global.h>
 #include <ColorizeManager.h>
-#include <MsgBroadcast.h>
+#include <appl/globalMsg.h>
 #include <ewol/EObject.h>
 
 #undef __class__

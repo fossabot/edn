@@ -24,12 +24,12 @@
  */
 
 
-#include "tools_globals.h"
+#include "appl/global.h"
 #include "Search.h"
 #include "SearchData.h"
 #include "BufferManager.h"
 #include "MainWindows.h"
-#include "MsgBroadcast.h"
+#include "appl/globalMsg.h"
 
 #undef __class__
 #define __class__	"Search"

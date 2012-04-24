@@ -28,7 +28,7 @@
 
 
 #include <etk/UString.h>
-#include <MsgBroadcast.h>
+#include <appl/globalMsg.h>
 #include <Highlight.h>
 #include <ewol/Widget.h>
 

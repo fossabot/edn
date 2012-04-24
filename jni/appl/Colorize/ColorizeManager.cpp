@@ -23,7 +23,7 @@
  *******************************************************************************
  */
 #include <appl/Debug.h>
-#include <tools_globals.h>
+#include <appl/global.h>
 #include <ColorizeManager.h>
 #include <tinyXML/tinyxml.h>
 #include <ewol/EObject.h>

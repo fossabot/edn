@@ -26,7 +26,7 @@
 #define __MAIN_WINDOWS_H__
 
 #include <appl/Debug.h>
-#include <MsgBroadcast.h>
+#include <appl/globalMsg.h>
 
 #include <CodeView.h>
 #include <BufferView.h>

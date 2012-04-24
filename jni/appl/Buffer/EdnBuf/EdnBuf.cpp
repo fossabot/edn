@@ -26,7 +26,7 @@
 #include <etk/Types.h>
 #include <etk/unicode.h>
 #include <appl/Debug.h>
-#include <tools_globals.h>
+#include <appl/global.h>
 #include <EdnBuf.h>
 
 
