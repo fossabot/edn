@@ -23,10 +23,15 @@ LOCAL_SRC_FILES := $(FILE_LIST)
 
 LOCAL_LDLIBS    := 
 
+ifeq ($(DEBUG),1)
 LOCAL_CFLAGS    :=  -D__PLATFORM__Linux \
-                    -DEWOL_USE_FREE_TYPE \
                     -DETK_DEBUG_LEVEL=3 \
                     -DAPPL_DEBUG_LEVEL=3
+else
+LOCAL_CFLAGS    :=  -D__PLATFORM__Linux \
+                    -DETK_DEBUG_LEVEL=3 \
+                    -DAPPL_DEBUG_LEVEL=1
+endif
 
 include $(BUILD_EXECUTABLE)
 
