@@ -293,7 +293,9 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	int32_t letterWidth = ewol::GetWidth(fontId, "A");
 	int32_t letterHeight = ewol::GetHeight(fontId);
 	
-	int32_t displayStartLineId = offsetY / letterHeight;
+	int32_t displayStartLineId = offsetY / letterHeight - 1;
+	displayStartLineId = etk_max(0, displayStartLineId);
+	uint32_t y = - offsetY + displayStartLineId*letterHeight;
 	
 	// update the display position with the scroll ofset : 
 	int32_t displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
@@ -311,7 +313,6 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	
 	colorInformation_ts * HLColor = NULL;
 	
-	uint32_t y = 0;
 	int32_t iii, new_i;
 	// Get color : 
 	Colorize *  myColor           = ColorizeManager::Get("normal");

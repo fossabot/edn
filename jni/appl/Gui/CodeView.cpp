@@ -156,9 +156,7 @@ void CodeView::OnRegenerateDisplay(void)
 		m_OObjectTextBoldItalic[m_currentCreateId].Clear();
 		m_OObjectsColored[      m_currentCreateId].Clear();
 		
-		APPL_WARNING("plop");
 		if (true == BufferManager::Get(m_bufferID)->NeedToUpdateDisplayPosition() ) {
-			APPL_WARNING("ploppppppp");
 			coord2D_ts borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
 			bool centerRequested = false;
 			coord2D_ts currentPosition = BufferManager::Get(m_bufferID)->GetPosition(m_OObjectTextNormal[m_currentCreateId].GetFontID(), centerRequested);

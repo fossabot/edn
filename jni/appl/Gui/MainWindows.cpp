@@ -68,7 +68,7 @@ MainWindows::MainWindows(void)
 			myMenu = new ewol::Menu();
 			mySizerHori->SubWidgetAdd(myMenu);
 			int32_t idMenuFile = myMenu->AddTitle("File");
-				(void)myMenu->Add(idMenuFile, "New",          "iconEdn.bmp", ednMsgGuiNew);
+				(void)myMenu->Add(idMenuFile, "New",          "", ednMsgGuiNew);
 				(void)myMenu->AddSpacer();
 				(void)myMenu->Add(idMenuFile, "Open",         "icon/Load.svg", ednMsgGuiOpen);
 				(void)myMenu->Add(idMenuFile, "Close",        "icon/Close.svg", ednMsgGuiClose, "current");
@@ -214,7 +214,13 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		ewol::FileChooser* tmpWidget = new ewol::FileChooser();
 		tmpWidget->SetTitle("Open Files ...");
 		tmpWidget->SetValidateLabel("Open");
-		// TODO : Set the good folder ...
+		Buffer * myBuffer = BufferManager::Get(BufferManager::GetSelected());
+		if (NULL!=myBuffer) {
+			etk::File tmpFile = myBuffer->GetFileName();
+			tmpWidget->SetFolder(tmpFile.GetFolder());
+		} else {
+			// nothing to do : just open the basic folder
+		}
 		//tmpWidget->SetFolder("/");
 		PopUpWidgetPush(tmpWidget);
 		tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
