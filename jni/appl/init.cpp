@@ -49,13 +49,25 @@ MainWindows * basicWindows = NULL;
  */
 void APP_Init(void)
 {
-	APPL_INFO("==> Init Edn (START)");
+	#ifdef __PLATFORM__Linux
+		#ifdef MODE_RELEASE
+			APPL_CRITICAL("==> Init "PROJECT_NAME" (START) (Linux) (Release)");
+		#else
+			APPL_CRITICAL("==> Init "PROJECT_NAME" (START) (Linux) (Debug)");
+		#endif
+	#else
+		#ifdef MODE_RELEASE
+			APPL_CRITICAL("==> Init "PROJECT_NAME" (START) (Android) (Release)");
+		#else
+			APPL_CRITICAL("==> Init "PROJECT_NAME" (START) (Android) (Debug)");
+		#endif
+	#endif
 	ewol::ChangeSize(800, 600);
 
 	// set the default Path of the application : 
-	#ifdef PLATFORM_Linux
+	#ifdef __PLATFORM__Linux
 		etk::UString homedir;
-		#ifdef NDEBUG
+		#ifdef MODE_RELEASE
 			homedir = "/usr/share/"PROJECT_NAME"/";
 		#else
 			char cCurrentPath[FILENAME_MAX];
@@ -68,9 +80,9 @@ void APP_Init(void)
 			}
 		#endif
 		// TODO : Remove the Utf8Data
-		SetBaseFolderData(homedir.Utf8Data());
-		SetBaseFolderDataUser("~/."PROJECT_NAME"/");
-		SetBaseFolderCache("/tmp/"PROJECT_NAME"/");
+		etk::SetBaseFolderData(homedir.Utf8Data());
+		etk::SetBaseFolderDataUser("~/."PROJECT_NAME"/");
+		etk::SetBaseFolderCache("/tmp/"PROJECT_NAME"/");
 	#endif
 	ewol::SetFontFolder("Font");
 	
@@ -90,8 +102,8 @@ void APP_Init(void)
 	
 	// set color and other trucs...
 	ColorizeManager::Init();
-	etk::UString homedir = "color_white.xml";
-	ColorizeManager::LoadFile( homedir.Utf8Data() );
+	etk::UString corlorFile = "color_white.xml";
+	ColorizeManager::LoadFile( corlorFile.Utf8Data() );
 	ColorizeManager::DisplayListOfColor();
 	
 	HighlightManager::Init();

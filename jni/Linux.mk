@@ -30,7 +30,9 @@ LOCAL_CFLAGS    :=  -D__PLATFORM__Linux \
 else
 LOCAL_CFLAGS    :=  -D__PLATFORM__Linux \
                     -DETK_DEBUG_LEVEL=3 \
-                    -DAPPL_DEBUG_LEVEL=1
+                    -DAPPL_DEBUG_LEVEL=1 \
+                    -DMODE_RELEASE \
+                    -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" 
 endif
 
 include $(BUILD_EXECUTABLE)
