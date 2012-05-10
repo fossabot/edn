@@ -138,15 +138,20 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 	if (BufferManager::Exist(realID)) {
 		isModify = BufferManager::Get(realID)->IsModify();
 		name = BufferManager::Get(realID)->GetFileName();
-		char *tmpModify = (char*)" ";
-		if (true == isModify) {
-			tmpModify = (char*)"M";
-		}
-		myTextToWrite  = "[";
-		myTextToWrite += realID;
-		myTextToWrite += "](";
-		myTextToWrite += tmpModify;
-		myTextToWrite += ") ";
+		
+		#if 0
+			char *tmpModify = (char*)" ";
+			if (true == isModify) {
+				tmpModify = (char*)"M";
+			}
+			myTextToWrite  = "[";
+			myTextToWrite += realID;
+			myTextToWrite += "](";
+			myTextToWrite += tmpModify;
+			myTextToWrite += ") ";
+		#else
+			myTextToWrite = "";
+		#endif
 		myTextToWrite += name.GetShortFilename();
 		
 		if (true == isModify) {
