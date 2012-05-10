@@ -26,7 +26,8 @@ LOCAL_LDLIBS    :=
 ifeq ($(DEBUG),1)
 LOCAL_CFLAGS    :=  -D__PLATFORM__Linux \
                     -DETK_DEBUG_LEVEL=3 \
-                    -DAPPL_DEBUG_LEVEL=3
+                    -DAPPL_DEBUG_LEVEL=3 \
+                    -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" 
 else
 LOCAL_CFLAGS    :=  -D__PLATFORM__Linux \
                     -DETK_DEBUG_LEVEL=3 \

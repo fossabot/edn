@@ -64,13 +64,13 @@ void APP_Init(void)
 	#endif
 	ewol::ChangeSize(800, 600);
 
+	char cCurrentPath[FILENAME_MAX];
 	// set the default Path of the application : 
 	#ifdef __PLATFORM__Linux
 		etk::UString homedir;
 		#ifdef MODE_RELEASE
 			homedir = "/usr/share/"PROJECT_NAME"/";
 		#else
-			char cCurrentPath[FILENAME_MAX];
 			if (!getcwd(cCurrentPath, FILENAME_MAX)) {
 				homedir = "./assets/";
 			} else {
@@ -111,7 +111,6 @@ void APP_Init(void)
 
 	
 	// get the curent program folder
-	char cCurrentPath[FILENAME_MAX];
 	if (!getcwd(cCurrentPath, FILENAME_MAX)) {
 		return ;
 	}

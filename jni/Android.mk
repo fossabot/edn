@@ -23,12 +23,22 @@ LOCAL_SRC_FILES := ewolAndroidAbstraction.cpp \
 
 LOCAL_LDLIBS    := -llog -landroid
 
+# -frtti
+ifeq ($(DEBUG),1)
 LOCAL_CFLAGS    :=  -D__PLATFORM__Android \
                     -D__MODE__Touch \
                     -DETK_DEBUG_LEVEL=3 \
                     -DAPPL_DEBUG_LEVEL=3 \
-                    -DDATA_IN_APK \
-                    -frtti
+                    -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" 
+else
+LOCAL_CFLAGS    :=  -D__PLATFORM__Android \
+                    -D__MODE__Touch \
+                    -DETK_DEBUG_LEVEL=1 \
+                    -DAPPL_DEBUG_LEVEL=1 \
+
+                    -DMODE_RELEASE \
+                    -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" 
+endif
 
 
 include $(BUILD_SHARED_LIBRARY)
