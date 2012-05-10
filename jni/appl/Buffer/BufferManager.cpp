@@ -200,6 +200,9 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 				m_idSelected = newOne;
 				SendMultiCast(ednMsgBufferId, m_idSelected);
 				SendMultiCast(ednMsgBufferListChange);
+			} else {
+				// TODO : notify user that we can not open the request file...
+				APPL_ERROR("Can not open the file : \"" << myFile << "\"");
 			}
 		}
 	} else if (eventId == ednMsgGuiSave) {
@@ -370,12 +373,16 @@ int32_t	classBufferManager::Create(void)
  */
 int32_t classBufferManager::Open(etk::File &myFile)
 {
-	// TODO : Check here if the file is already open ==> and display it if needed
-	// allocate a new Buffer
-	Buffer *myBuffer = new BufferText(myFile);
-	// Add at the list of element
-	listBuffer.PushBack(myBuffer);
-	return listBuffer.Size() - 1;
+	if (false == Exist(myFile)) {
+		// allocate a new Buffer
+		Buffer *myBuffer = new BufferText(myFile);
+		// Add at the list of element
+		listBuffer.PushBack(myBuffer);
+		return listBuffer.Size() - 1;
+	} else {
+		// the buffer already existed ==> we open it ...
+		return GetId(myFile);
+	}
 }
 
 
