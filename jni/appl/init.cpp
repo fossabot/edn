@@ -51,15 +51,15 @@ void APP_Init(void)
 {
 	#ifdef __PLATFORM__Linux
 		#ifdef MODE_RELEASE
-			APPL_CRITICAL("==> Init "PROJECT_NAME" (START) (Linux) (Release)");
+			APPL_INFO("==> Init "PROJECT_NAME" (START) (Linux) (Release)");
 		#else
-			APPL_CRITICAL("==> Init "PROJECT_NAME" (START) (Linux) (Debug)");
+			APPL_INFO("==> Init "PROJECT_NAME" (START) (Linux) (Debug)");
 		#endif
 	#else
 		#ifdef MODE_RELEASE
-			APPL_CRITICAL("==> Init "PROJECT_NAME" (START) (Android) (Release)");
+			APPL_INFO("==> Init "PROJECT_NAME" (START) (Android) (Release)");
 		#else
-			APPL_CRITICAL("==> Init "PROJECT_NAME" (START) (Android) (Debug)");
+			APPL_INFO("==> Init "PROJECT_NAME" (START) (Android) (Debug)");
 		#endif
 	#endif
 	ewol::ChangeSize(800, 600);

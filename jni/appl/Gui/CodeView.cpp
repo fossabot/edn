@@ -56,6 +56,8 @@ CodeView::CodeView(void)
 	m_bufferID = -1;
 	m_buttunOneSelected = false;
 	
+	m_lineNumberList.Clear();
+	
 	m_textColorFg = etk::color::color_Black;
 	
 	m_textColorBg = etk::color::color_Black;
@@ -76,6 +78,27 @@ CodeView::~CodeView(void)
 {
 	
 }
+
+
+/**
+ * @brief Check if the number of reference buffer is good or not ...
+ * @param[in] bufferID id of the current Buffer that needed to have a reference
+ * @return ---
+ */
+void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
+{
+	coord2D_ts tmpCoord;
+	tmpCoord.x = 0;
+	tmpCoord.y = 0;
+	if (m_lineNumberList.Size()<=bufferID) {
+		// update the number of elements : 
+		for (int32_t iii=m_lineNumberList.Size(); iii <= bufferID; iii++) {
+			// add start line at 0 :
+			m_lineNumberList.PushBack(tmpCoord);
+		}
+	}
+}
+
 
 /**
  * @brief Check if the object has the specific type.
@@ -156,7 +179,8 @@ void CodeView::OnRegenerateDisplay(void)
 		m_OObjectTextBoldItalic[m_currentCreateId].Clear();
 		m_OObjectsColored[      m_currentCreateId].Clear();
 		
-		if (true == BufferManager::Get(m_bufferID)->NeedToUpdateDisplayPosition() ) {
+		
+		if(true == BufferManager::Get(m_bufferID)->NeedToUpdateDisplayPosition() ) {
 			coord2D_ts borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
 			bool centerRequested = false;
 			coord2D_ts currentPosition = BufferManager::Get(m_bufferID)->GetPosition(m_OObjectTextNormal[m_currentCreateId].GetFontID(), centerRequested);
@@ -292,11 +316,23 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 	APPL_DEBUG("Extern Event : " << CallerObject << "  type : " << eventId << "  data=\"" << data << "\"");
 	
 	if(eventId == ednMsgBufferId) {
+		//keep the reference of the display offset :
+		if(    m_bufferID >=0
+		    && m_bufferID < m_lineNumberList.Size()) {
+			m_lineNumberList[m_bufferID] = m_originScrooled;
+		}
 		int32_t bufferID = 0;
 		sscanf(data.Utf8Data(), "%d", &bufferID);
 		APPL_INFO("Select a new Buffer ... " << bufferID);
+		// set the new buffer ID
 		m_bufferID = bufferID;
-		// TODO : need to update the state of the file and the filenames ...
+		// update the start display position...
+		UpdateNumberOfLineReference(m_bufferID);
+		// set back if needed the display position ...
+		if(    m_bufferID >=0
+		    && m_bufferID < m_lineNumberList.Size()) {
+			m_originScrooled = m_lineNumberList[m_bufferID];
+		}
 	} else if (eventId == ednMsgGuiCopy) {
 		BufferManager::Get(m_bufferID)->Copy(ewol::clipBoard::CLIPBOARD_STD);
 	} else if (eventId == ednMsgGuiCut) {

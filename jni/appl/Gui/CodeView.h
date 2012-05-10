@@ -63,6 +63,8 @@ class CodeView :public ewol::WidgetScrooled
 		color_ts                     m_textColorBg;  //!< Background color
 		int32_t                      m_bufferID;
 		bool                         m_buttunOneSelected;
+		etk::VectorType<coord2D_ts>  m_lineNumberList;
+		void                         UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
 		ewol::OObject2DTextColored   m_OObjectTextNormal[NB_BOUBLE_BUFFER];
 		ewol::OObject2DTextColored   m_OObjectTextBold[NB_BOUBLE_BUFFER];
