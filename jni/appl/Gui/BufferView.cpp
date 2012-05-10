@@ -44,6 +44,7 @@ BufferView::BufferView(void)
 	RegisterMultiCast(ednMsgBufferState);
 	RegisterMultiCast(ednMsgBufferId);
 	m_selectedID = -1;
+	m_selectedIdRequested = -1;
 }
 
 BufferView::~BufferView(void)
@@ -98,6 +99,7 @@ void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eve
 	if (eventId == ednMsgBufferListChange) {
 		MarkToReedraw();
 	}else if (eventId == ednMsgBufferId) {
+		m_selectedIdRequested = BufferManager::GetSelected();
 		MarkToReedraw();
 	}else if (eventId == ednMsgBufferState) {
 		MarkToReedraw();
@@ -132,7 +134,10 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 	bool isModify;
 	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;
 	basicColor_te selectBG = COLOR_LIST_BG_1;
-	
+	// when requested a new display selection ==> reset the previous one ...
+	if (m_selectedIdRequested != -1) {
+		m_selectedID = -1;
+	}
 	// transforme the ID in the real value ...
 	int32_t realID = BufferManager::WitchBuffer(raw+1);
 	if (BufferManager::Exist(realID)) {
@@ -163,6 +168,12 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 			selectBG = COLOR_LIST_BG_1;
 		} else {
 			selectBG = COLOR_LIST_BG_2;
+		}
+		// the buffer change of selection ...
+		if (m_selectedIdRequested == realID) {
+			m_selectedID = raw;
+			// stop searching
+			m_selectedIdRequested = -1;
 		}
 		if (m_selectedID == raw) {
 			selectBG = COLOR_LIST_BG_SELECTED;
