@@ -91,7 +91,7 @@ MainWindows::MainWindows(void)
 				(void)myMenu->Add(idMenuEdit, "Goto line ...","", ednMsgGuiGotoLine, "???");
 			int32_t idMenuSearch = myMenu->AddTitle("Search");
 				(void)myMenu->Add(idMenuSearch, "Search",         "icon/Search.svg", ednMsgGuiSearch);
-				(void)myMenu->Add(idMenuSearch, "Replace",        "", ednMsgGuiReplace);
+				(void)myMenu->Add(idMenuSearch, "Replace",        "icon/Replace.svg", ednMsgGuiReplace);
 				(void)myMenu->AddSpacer();
 				(void)myMenu->Add(idMenuSearch, "Find (previous)","", ednMsgGuiFind, "Previous");
 				(void)myMenu->Add(idMenuSearch, "Find (next)",    "", ednMsgGuiFind, "Next");
