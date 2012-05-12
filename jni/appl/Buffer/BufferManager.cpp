@@ -272,8 +272,8 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 							}
 						}
 						// set it to the currect display
-						SendMultiCast(ednMsgBufferId, destBuffer);
 						m_idSelected = destBuffer;
+						SendMultiCast(ednMsgBufferId, destBuffer);
 					}
 					// Remove requested buffer
 					Remove(closeID);
