@@ -695,13 +695,13 @@ void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 		return;
 	}
 	
-	if(		false == haveSelectionActive
-		&&	true  == ewol::IsSetShift() )
+	if(    false == haveSelectionActive
+	    && true  == ewol::IsSetShift() )
 	{
 		// new selection
 		m_EdnBuf.Select(SELECTION_PRIMARY, rememberCursorPos, m_cursorPos);
-	} else if(		true == ewol::IsSetShift()
-				&&	true == haveSelectionActive)
+	} else if(    true == ewol::IsSetShift()
+	           && true == haveSelectionActive)
 	{
 		// update selection
 		if (rememberCursorPos == SelectionStart) {
