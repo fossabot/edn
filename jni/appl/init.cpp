@@ -63,27 +63,9 @@ void APP_Init(void)
 		#endif
 	#endif
 	ewol::ChangeSize(800, 600);
+	etk::InitDefaultFolder(PROJECT_NAME);
 
-	char cCurrentPath[FILENAME_MAX];
-	// set the default Path of the application : 
-	#ifdef __PLATFORM__Linux
-		etk::UString homedir;
-		#ifdef MODE_RELEASE
-			homedir = "/usr/share/"PROJECT_NAME"/";
-		#else
-			if (!getcwd(cCurrentPath, FILENAME_MAX)) {
-				homedir = "./assets/";
-			} else {
-				cCurrentPath[FILENAME_MAX - 1] = '\0';
-				homedir = cCurrentPath;
-				homedir += "/assets/";
-			}
-		#endif
-		// TODO : Remove the Utf8Data
-		etk::SetBaseFolderData(homedir.Utf8Data());
-		etk::SetBaseFolderDataUser("~/."PROJECT_NAME"/");
-		etk::SetBaseFolderCache("/tmp/"PROJECT_NAME"/");
-	#endif
+
 	ewol::SetFontFolder("Font");
 	
 	#ifdef __PLATFORM__Android
@@ -109,7 +91,7 @@ void APP_Init(void)
 	HighlightManager::Init();
 	HighlightManager::loadLanguages();
 
-	
+	char cCurrentPath[FILENAME_MAX];
 	// get the curent program folder
 	if (!getcwd(cCurrentPath, FILENAME_MAX)) {
 		return ;

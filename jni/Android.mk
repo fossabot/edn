@@ -35,7 +35,6 @@ LOCAL_CFLAGS    :=  -D__PLATFORM__Android \
                     -D__MODE__Touch \
                     -DETK_DEBUG_LEVEL=1 \
                     -DAPPL_DEBUG_LEVEL=1 \
-
                     -DMODE_RELEASE \
                     -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" 
 endif
