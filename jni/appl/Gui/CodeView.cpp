@@ -157,6 +157,7 @@ void CodeView::OnDraw(void)
 	m_OObjectTextBold[      m_currentDrawId].Draw();
 	m_OObjectTextItalic[    m_currentDrawId].Draw();
 	m_OObjectTextBoldItalic[m_currentDrawId].Draw();
+	WidgetScrooled::OnDraw();
 }
 
 void CodeView::OnRegenerateDisplay(void)
