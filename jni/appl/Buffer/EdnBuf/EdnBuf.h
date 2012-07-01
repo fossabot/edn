@@ -115,8 +115,8 @@ class EdnBuf {
 		int32_t CountForwardNLines(     int32_t startPos, int32_t nLines);
 		int32_t CountBackwardNLines(    int32_t startPos, int32_t nLines);
 		
-		bool    SearchForward(          int32_t startPos, etk::VectorType<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive = true);
-		bool    SearchBackward(         int32_t startPos, etk::VectorType<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive = true);
+		bool    SearchForward(          int32_t startPos, etk::UString &search, int32_t *foundPos, int32_t *foundPosEnd, bool caseSensitive = true);
+		bool    SearchBackward(         int32_t startPos, etk::UString &search, int32_t *foundPos, int32_t *foundPosEnd, bool caseSensitive = true);
 		bool    SearchForward(          int32_t startPos, char searchChar, int32_t *foundPos);
 		bool    SearchBackward(         int32_t startPos, char searchChar, int32_t *foundPos);
 		bool    SelectAround(           int32_t startPos, int32_t &beginPos, int32_t &endPos);

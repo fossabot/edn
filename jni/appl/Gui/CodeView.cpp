@@ -72,6 +72,8 @@ CodeView::CodeView(void)
 	RegisterMultiCast(ednMsgGuiRm);
 	RegisterMultiCast(ednMsgGuiSelect);
 	RegisterMultiCast(ednMsgGuiChangeCharset);
+	RegisterMultiCast(ednMsgGuiFind);
+	RegisterMultiCast(ednMsgGuiReplace);
 }
 
 CodeView::~CodeView(void)
@@ -376,33 +378,26 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 		} else {
 			APPL_ERROR(" on event " << eventId << " unknow data=\"" << data << "\"" );
 		}
+	} else if (eventId == ednMsgGuiFind) {
+		etk::UString myDataString;
+		SearchData::GetSearch(myDataString);
+		if (data == "Next") {
+			BufferManager::Get(m_bufferID)->Search(myDataString, false, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
+		} else if (data == "Previous") {
+			BufferManager::Get(m_bufferID)->Search(myDataString, true, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
+		}
+	} else if (eventId == ednMsgGuiReplace) {
+		etk::UString myDataString;
+		SearchData::GetReplace(myDataString);
+		if (data == "Normal") {
+			BufferManager::Get(m_bufferID)->Replace(myDataString);
+		} else if (data == "All") {
+			
+		}
 	}
 	/*
 	switch (id)
 	{
-		case APPL_MSG__CURRENT_FIND_PREVIOUS:
-			{
-				etk::UString myDataString;
-				SearchData::GetSearch(myDataString);
-				BufferManager::Get(m_bufferID)->Search(myDataString, true, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
-			}
-			break;
-		case APPL_MSG__CURRENT_FIND_NEXT:
-			{
-				etk::UString myDataString;
-				SearchData::GetSearch(myDataString);
-				BufferManager::Get(m_bufferID)->Search(myDataString, false, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
-			}
-			break;
-		case APPL_MSG__CURRENT_REPLACE:
-			{
-				etk::UString myDataString;
-				SearchData::GetReplace(myDataString);
-				BufferManager::Get(m_bufferID)->Replace(myDataString);
-			}
-			break;
-		case APPL_MSG__CURRENT_REPLACE_ALL:
-			break;
 		case APPL_MSG__CURRENT_GOTO_LINE:
 			if (dataID<0) {
 				dataID = 0;

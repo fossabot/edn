@@ -27,54 +27,43 @@
 #define __SEARCH_H__
 
 #include <appl/Debug.h>
+#include <ewol/widget/SizerHori.h>
 
+extern const char * const TYPE_EOBJECT_APPL_SEARCH;
 
-class Search
+class Search : public ewol::SizerHori
 {
 	public:
 		// Constructeur
 		Search(void);
 		~Search(void);
-
-	public:
-		void Destroy(void);
-		//void Display(GtkWindow *parent);
-		void Hide(void);
-/*
+		/**
+		 * @brief Check if the object has the specific type.
+		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
+		 * @param[in] objectType type of the object we want to check
+		 * @return true if the object is compatible, otherwise false
+		 */
+		bool CheckObjectType(const char * const objectType);
+		/**
+		 * @brief Get the current Object type of the EObject
+		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
+		 * @param[in] objectType type description
+		 * @return true if the object is compatible, otherwise false
+		 */
+		const char * const GetObjectType(void);
+		/**
+		 * @brief Receive a message from an other EObject with a specific eventId and data
+		 * @param[in] CallerObject Pointer on the EObject that information came from
+		 * @param[in] eventId Message registered by this class
+		 * @param[in] data Data registered by this class
+		 * @return ---
+		 */
+		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
 	private:
-		GtkWidget * m_localDialog;          //!< local dialog element
-		// entry
-		GtkWidget * m_searchLabel;          //!< gtk label of the search section
-		GtkWidget * m_searchEntry;          //!< gtk entry of the search section
-		GtkWidget * m_replaceLabel;         //!< gtk label of the replace section
-		GtkWidget * m_replaceEntry;         //!< gtk entry of the replace section
-		// checkbox
-		GtkWidget * m_CkMatchCase;          //!< tick of the case matching
-		GtkWidget * m_CkWrapAround;         //!< tick of the wrap the file
-		GtkWidget * m_CkRegularExpression;  //!< the test is a regular expression
-		// button
-		GtkWidget * m_BtPrevious;           //!< Button Previous
-		GtkWidget * m_BtNext;               //!< Button Next
-		GtkWidget * m_BtReplace;            //!< Button Replace
-		GtkWidget * m_BtReplaceAndNext;     //!< Button Replace and find next
-		GtkWidget * m_BtQuit;               //!< Button Quit
-		bool m_haveSearchData;
-		bool m_haveReplaceData;
-	// CallBack for GTK+ gui
-	private :
-		static void OnButtonPrevious(GtkWidget *widget, gpointer user_data);
-		static void OnButtonNext(GtkWidget *widget, gpointer user_data);
-		static void OnButtonReplace(GtkWidget *widget, gpointer user_data);
-		static void OnButtonReplaceAndNext(GtkWidget *widget, gpointer user_data);
-		static void OnButtonQuit(GtkWidget *widget, gpointer user_data);
-		static void OnCheckBoxEventCase(GtkWidget *widget, gpointer user_data);
-		static void OnCheckBoxEventWrap(GtkWidget *widget, gpointer user_data);
-		static void OnCheckBoxEventRegExp(GtkWidget *widget, gpointer user_data);
-		static void OnEntrySearchChange(GtkWidget *widget, gpointer user_data);
-		static void OnEntryReplaceChange(GtkWidget *widget, gpointer user_data);
-*/
+		bool    m_forward;
 };
 
+#define EDN_CAST_APPL_SEARCH(curentPointer) EWOL_CAST(TYPE_EOBJECT_APPL_SEARCH,Search,curentPointer)
 
 #endif
 

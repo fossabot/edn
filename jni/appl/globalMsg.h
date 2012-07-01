@@ -45,7 +45,7 @@
 	extern const char* const ednMsgGuiGotoLine;   // data : "???" / "1" ... "999999999999"
 	
 	extern const char* const ednMsgGuiSearch;     // data : ""
-	extern const char* const ednMsgGuiReplace;    // data : ""
+	extern const char* const ednMsgGuiReplace;    // data : "Normal" "All"
 	extern const char* const ednMsgGuiFind;       // data : "Next" "Previous" "All" "None"
 	
 	extern const char* const ednMsgGuiChangeColor;   // data : "Black" "White"

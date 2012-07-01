@@ -1090,46 +1090,41 @@ void BufferText::Search(etk::UString &data, bool back, bool caseSensitive, bool 
 		APPL_WARNING("no search data");
 		return;
 	}
-	etk::VectorType<uniChar_t> mVectSearch;
-	mVectSearch = data.GetVector();
-	APPL_TODO("Remove for now ...");
-	/*
 	if (false == back) {
 		//APPL_INFO("search data Forward : startSearchPos=" << startSearchPos );
 		int32_t foundPos;
-		bool findSomething = m_EdnBuf.SearchForward(startSearchPos, mVectSearch, &foundPos, caseSensitive);
+		int32_t foundPosEnd;
+		bool findSomething = m_EdnBuf.SearchForward(startSearchPos, data, &foundPos, &foundPosEnd, caseSensitive);
 		if(		false == findSomething
 			&&	true == wrap)
 		{
 			//APPL_INFO("WrapMode !!! 0 ==> end");
-			findSomething = m_EdnBuf.SearchForward(0, mVectSearch, &foundPos, caseSensitive);
+			findSomething = m_EdnBuf.SearchForward(0, data, &foundPos, &foundPosEnd, caseSensitive);
 		}
 		// if find data : 
 		if (true == findSomething) {
 			// select new position
-			int32_t endSelectionPos = foundPos+mVectSearch.Size();
-			SetInsertPosition(endSelectionPos);
-			m_EdnBuf.Select(SELECTION_PRIMARY, foundPos, endSelectionPos);
+			SetInsertPosition(foundPosEnd);
+			m_EdnBuf.Select(SELECTION_PRIMARY, foundPos, foundPosEnd);
 		}
 	} else {
 		//APPL_INFO("search data Backward : " << data.GetDirectPointer() );
 		int32_t foundPos;
-		bool findSomething = m_EdnBuf.SearchBackward(startSearchPos, mVectSearch, &foundPos, caseSensitive);
+		int32_t foundPosEnd;
+		bool findSomething = m_EdnBuf.SearchBackward(startSearchPos, data, &foundPos, &foundPosEnd, caseSensitive);
 		if(		false == findSomething
 			&&	true == wrap)
 		{
 			//APPL_INFO("WrapMode !!! end ==> 0");
-			findSomething = m_EdnBuf.SearchBackward(m_EdnBuf.Size(), mVectSearch, &foundPos, caseSensitive);
+			findSomething = m_EdnBuf.SearchBackward(m_EdnBuf.Size(), data, &foundPos, &foundPosEnd, caseSensitive);
 		}
 		// if find data : 
 		if (true == findSomething) {
 			// select new position
-			int32_t endSelectionPos = foundPos+mVectSearch.Size();
 			SetInsertPosition(foundPos);
-			m_EdnBuf.Select(SELECTION_PRIMARY, foundPos, endSelectionPos);
+			m_EdnBuf.Select(SELECTION_PRIMARY, foundPos, foundPosEnd);
 		}
 	}
-	*/
 	m_centerRequested = true;
 	RequestUpdateOfThePosition();
 }

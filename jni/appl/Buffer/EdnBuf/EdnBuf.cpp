@@ -986,13 +986,25 @@ bool EdnBuf::charMatch(char first, char second, bool caseSensitive)
  * @return false ==> not found data
  * 
  */
-bool EdnBuf::SearchForward(int32_t startPos, etk::VectorType<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive)
+bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foundPos, int32_t *foundPosEnd, bool caseSensitive)
 {
+	etk::VectorType<int8_t> searchVect;
+	if (true == m_isUtf8) {
+		char * tmpPointer = search.Utf8Data();
+		while (*tmpPointer != '\0') {
+			searchVect.PushBack(*tmpPointer++);
+		}
+	} else {
+		etk::VectorType<unsigned int> tmppp = search.GetVector();
+		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
+	}
+	// remove the '\0' at the end of the string ...
+	searchVect.PopBack();
 	int32_t position;
 	int32_t searchLen = searchVect.Size();
 	int32_t dataLen   = m_data.Size();
 	char currentChar = '\0';
-	//APPL_INFO(" startPos=" << startPos << " searchLen=" << searchLen);
+	APPL_INFO(" startPos=" << startPos << " searchLen=" << searchLen);
 	for (position=startPos; position<dataLen - (searchLen-1); position++) {
 		currentChar = m_data[position];
 		if (true == charMatch(currentChar, searchVect[0], caseSensitive)) {
@@ -1007,11 +1019,13 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::VectorType<int8_t> &searchVect
 			}
 			if (true == found) {
 				*foundPos = position;
+				*foundPosEnd = position + searchVect.Size();
 				return true;
 			}
 		}
 	}
 	*foundPos = m_data.Size();
+	*foundPosEnd = m_data.Size();
 	return false;
 }
 
@@ -1027,8 +1041,21 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::VectorType<int8_t> &searchVect
  * @return false ==> not found data
  * 
  */
-bool EdnBuf::SearchBackward(int32_t startPos, etk::VectorType<int8_t> &searchVect, int32_t *foundPos, bool caseSensitive)
+bool EdnBuf::SearchBackward(int32_t startPos, etk::UString &search, int32_t *foundPos, int32_t *foundPosEnd, bool caseSensitive)
 {
+	etk::VectorType<int8_t> searchVect;
+	if (true == m_isUtf8) {
+		char * tmpPointer = search.Utf8Data();
+		while (*tmpPointer != '\0') {
+			searchVect.PushBack(*tmpPointer++);
+		}
+	} else {
+		etk::VectorType<unsigned int> tmppp = search.GetVector();
+		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
+	}
+	// remove the '\0' at the end of the string ...
+	searchVect.PopBack();
+	
 	int32_t position;
 	int32_t searchLen = searchVect.Size();
 	char currentChar = '\0';
@@ -1047,11 +1074,13 @@ bool EdnBuf::SearchBackward(int32_t startPos, etk::VectorType<int8_t> &searchVec
 			}
 			if (true == found) {
 				*foundPos = position - (searchLen-1);
+				*foundPosEnd = position + searchVect.Size();
 				return true;
 			}
 		}
 	}
 	*foundPos = m_data.Size();
+	*foundPosEnd = m_data.Size();
 	return false;
 }
 

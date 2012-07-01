@@ -28,6 +28,7 @@
 #include <MainWindows.h>
 #include <CodeView.h>
 #include <BufferView.h>
+#include <Search.h>
 
 #include <ewol/widget/Button.h>
 #include <ewol/widget/CheckBox.h>
@@ -47,12 +48,13 @@
 #undef __class__
 #define __class__	"MainWindows"
 
-extern const char * const TYPE_EOBJECT_EDN_MAIN_WINDOWS = "MainWindows";
+extern const char * const TYPE_EOBJECT_EDN_MAIN_WINDOWS = __class__;
 
 MainWindows::MainWindows(void)
 {
 	APPL_DEBUG("CREATE WINDOWS ... ");
 	ewol::SizerVert * mySizerVert = NULL;
+	ewol::SizerVert * mySizerVert2 = NULL;
 	ewol::SizerHori * mySizerHori = NULL;
 	//ewol::Button * myButton = NULL;
 	CodeView * myCodeView = NULL;
@@ -124,25 +126,25 @@ MainWindows::MainWindows(void)
 			myBufferView->SetFillX(true);
 			myBufferView->SetFillY(true);
 			mySizerHori->SubWidgetAdd(myBufferView);
-			myCodeView = new CodeView();
-			myCodeView->SetExpendX(true);
-			myCodeView->SetExpendY(true);
-			myCodeView->SetFillX(true);
-			myCodeView->SetFillY(true);
 			
-			myCodeView->SetFontSize(11);
-			myCodeView->SetFontNameNormal(    "freefont/FreeMono.ttf");
-			myCodeView->SetFontNameBold(      "freefont/FreeMonoBold.ttf");
-			myCodeView->SetFontNameItalic(    "freefont/FreeMonoOblique.ttf");
-			myCodeView->SetFontNameBoldItalic("freefont/FreeMonoBoldOblique.ttf");
-			/*
-			myCodeView->SetFontSize(11);
-			myCodeView->SetFontNameNormal(    "ubuntu/UbuntuMono-R.ttf");
-			myCodeView->SetFontNameBold(      "ubuntu/UbuntuMono-B.ttf");
-			myCodeView->SetFontNameItalic(    "ubuntu/UbuntuMono-RI.ttf");
-			myCodeView->SetFontNameBoldItalic("ubuntu/UbuntuMono-BI.ttf");
-			*/
-			mySizerHori->SubWidgetAdd(myCodeView);
+			mySizerVert2 = new ewol::SizerVert();
+			mySizerHori->SubWidgetAdd(mySizerVert2);
+				// search area : 
+				Search * mySearch = new Search();
+				mySizerVert2->SubWidgetAdd(mySearch);
+				
+				// main buffer Area :
+				myCodeView = new CodeView();
+				myCodeView->SetExpendX(true);
+				myCodeView->SetExpendY(true);
+				myCodeView->SetFillX(true);
+				myCodeView->SetFillY(true);
+				myCodeView->SetFontSize(11);
+				myCodeView->SetFontNameNormal(    "freefont/FreeMono.ttf");
+				myCodeView->SetFontNameBold(      "freefont/FreeMonoBold.ttf");
+				myCodeView->SetFontNameItalic(    "freefont/FreeMonoOblique.ttf");
+				myCodeView->SetFontNameBoldItalic("freefont/FreeMonoBoldOblique.ttf");
+				mySizerVert2->SubWidgetAdd(myCodeView);
 			
 	// Generic event ...
 	RegisterMultiCast(ednMsgGuiSaveAs);
