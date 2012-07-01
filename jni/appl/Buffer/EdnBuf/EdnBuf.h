@@ -58,14 +58,6 @@ typedef struct {
 	int32_t rectEnd;        //!< Indent of right edge of rect. selection
 } selection;
 
-typedef enum{
-	SELECTION_PRIMARY,
-	SELECTION_SECONDARY,
-	SELECTION_HIGHTLIGHT,
-	SELECTION_SIZE
-}selectionType_te;
-
-
 typedef struct {
 	etk::VectorType<colorInformation_ts>    HLData;
 	int32_t                                 posHLPass1;
@@ -95,8 +87,8 @@ class EdnBuf {
 		int32_t Replace(                int32_t start, int32_t end, etk::VectorType<int8_t> &insertText);
 		int32_t Replace(                int32_t start, int32_t end, etk::UString &insertText);
 		void    Remove(                 int32_t start, int32_t end);
-		int32_t Indent(                 selectionType_te select);
-		int32_t UnIndent(               selectionType_te select);
+		int32_t Indent(                 void);
+		int32_t UnIndent(               void);
 		
 		
 		void    GetLineText(            int32_t pos, etk::VectorType<int8_t> &text);
@@ -123,27 +115,26 @@ class EdnBuf {
 
 		// Buffer Size system :
 		int32_t Size(void)              { return m_data.Size(); };
-		int32_t NumberOfLines(void)     {return m_nbLine;};
+		int32_t NumberOfLines(void)     { return m_nbLine; };
 
 	// -----------------------------------------
 	// selection remember...
 	// -----------------------------------------
 	public:
-		bool        SelectHasSelection(     selectionType_te select);
-		void        Select(                 selectionType_te select, int32_t start, int32_t end);
-		void        Unselect(               selectionType_te select);
-		void        RectSelect(             selectionType_te select, int32_t start, int32_t end, int32_t rectStart, int32_t rectEnd);
-		bool        GetSelectionPos(        selectionType_te select, int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd);
-		void        GetSelectionText(       selectionType_te select, etk::VectorType<int8_t> &text);
-		void        GetSelectionText(       selectionType_te select, etk::UString &text);
-		void        RemoveSelected(         selectionType_te select);
-		int32_t     ReplaceSelected(        selectionType_te select, etk::VectorType<int8_t> &text);
-		int32_t     ReplaceSelected(        selectionType_te select, etk::UString &text);
+		bool        SelectHasSelection(void);
+		void        Select(            int32_t start, int32_t end);
+		void        Unselect(          void);
+		void        RectSelect(        int32_t start, int32_t end, int32_t rectStart, int32_t rectEnd);
+		bool        GetSelectionPos(   int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd);
+		void        GetSelectionText(  etk::VectorType<int8_t> &text);
+		void        GetSelectionText(  etk::UString &text);
+		void        RemoveSelected(    void);
+		int32_t     ReplaceSelected(   etk::VectorType<int8_t> &text);
+		int32_t     ReplaceSelected(   etk::UString &text);
 	private:
 		// current selection of the buffer
-		selection   m_selectionList[SELECTION_SIZE];    //!< Selection area of the buffer
-		void        UpdateSelection(        selectionType_te select, int32_t pos, int32_t nDeleted, int32_t nInserted);
-		void        UpdateSelections(       int32_t pos, int32_t nDeleted, int32_t nInserted);
+		selection   m_selectionList;   //!< Selection area of the buffer
+		void        UpdateSelection(   int32_t pos, int32_t nDeleted, int32_t nInserted);
 
 	// -----------------------------------------
 	// History section : 

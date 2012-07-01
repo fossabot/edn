@@ -56,18 +56,10 @@ EdnBuf::EdnBuf(void)
 	m_useTabs = true;
 
 	// Current selection
-	m_selectionList[SELECTION_PRIMARY].selected = false;
-	m_selectionList[SELECTION_PRIMARY].zeroWidth = false;
-	m_selectionList[SELECTION_PRIMARY].rectangular = false;
-	m_selectionList[SELECTION_PRIMARY].start = m_selectionList[SELECTION_PRIMARY].end = 0;
-	m_selectionList[SELECTION_SECONDARY].selected = false;
-	m_selectionList[SELECTION_SECONDARY].zeroWidth = false;
-	m_selectionList[SELECTION_SECONDARY].rectangular = false;
-	m_selectionList[SELECTION_SECONDARY].start = m_selectionList[SELECTION_SECONDARY].end = 0;
-	m_selectionList[SELECTION_HIGHTLIGHT].selected = false;
-	m_selectionList[SELECTION_HIGHTLIGHT].zeroWidth = false;
-	m_selectionList[SELECTION_HIGHTLIGHT].rectangular = false;
-	m_selectionList[SELECTION_HIGHTLIGHT].start = m_selectionList[SELECTION_HIGHTLIGHT].end = 0;
+	m_selectionList.selected = false;
+	m_selectionList.zeroWidth = false;
+	m_selectionList.rectangular = false;
+	m_selectionList.start = m_selectionList.end = 0;
 
 	// charset : 
 	m_isUtf8 = false;
@@ -116,7 +108,7 @@ bool EdnBuf::DumpFrom(FILE *myFile)
 {
 	if (true == m_data.DumpFrom(myFile) ) {
 		// set no selection
-		UpdateSelections(0, 0, m_data.Size() );
+		UpdateSelection(0, 0, m_data.Size() );
 		// generate HighLight
 		CleanHighLight();
 		GenerateHighLightAt(0, m_data.Size());
@@ -150,7 +142,7 @@ void EdnBuf::SetAll(etk::VectorType<int8_t> &text)
 	m_data.Insert(0, text);
 	
 	// Zero all of the existing selections
-	UpdateSelections(0, deletedText.Size(), 0);
+	UpdateSelection(0, deletedText.Size(), 0);
 	
 	// Call the modification Event Manager
 	eventModification(0, m_data.Size(), deletedText); 
@@ -247,6 +239,9 @@ int32_t EdnBuf::Insert(int32_t pos, etk::UString &insertText)
  */
 int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::VectorType<int8_t> &insertText)
 {
+	if (end-start == 0) {
+		return 0;
+	}
 	etk::VectorType<int8_t> deletedText;
 	GetRange(start, end, deletedText);
 	m_data.Replace(start, end-start, insertText);
@@ -254,8 +249,12 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::VectorType<int8_t> &ins
 	eventModification(start, insertText.Size(), deletedText);
 	return insertText.Size();
 }
+
 int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
 {
+	if (end-start == 0) {
+		return 0;
+	}
 	etk::VectorType<int8_t> deletedText;
 	GetRange(start, end, deletedText);
 	etk::VectorType<int8_t> tmpInsertText;
@@ -314,17 +313,17 @@ void EdnBuf::Remove(int32_t start, int32_t end)
 }
 
 
-int32_t EdnBuf::Indent(selectionType_te select)
+int32_t EdnBuf::Indent(void)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
-	bool haveSelectionActive = GetSelectionPos(select, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+	bool haveSelectionActive = GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	
 	if (false == haveSelectionActive) {
 		return SelectionEnd;
 	}
 	// Disable selection:
-	Unselect(select);
+	Unselect();
 	// Get Range :
 	int32_t l_start = StartOfLine(SelectionStart);
 	int32_t l_end = EndOfLine(SelectionEnd);
@@ -348,22 +347,22 @@ int32_t EdnBuf::Indent(selectionType_te select)
 	Replace(l_start, l_end, l_tmpData);
 	// Set the new selection :
 	l_end = l_start + l_tmpData.Size();
-	Select(select, l_start, l_end);
+	Select(l_start, l_end);
 	// Return the position of the cursor
 	return l_end;
 }
 
-int32_t EdnBuf::UnIndent(selectionType_te select)
+int32_t EdnBuf::UnIndent(void)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
-	bool haveSelectionActive = GetSelectionPos(select, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+	bool haveSelectionActive = GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	
 	if (false == haveSelectionActive) {
 		return SelectionEnd;
 	}
 	// Disable selection:
-	Unselect(select);
+	Unselect();
 	// Get Range :
 	int32_t l_start = StartOfLine(SelectionStart);
 	int32_t l_end = EndOfLine(SelectionEnd);
@@ -394,7 +393,7 @@ int32_t EdnBuf::UnIndent(selectionType_te select)
 	Replace(l_start, l_end, l_tmpData);
 	// Set the new selection :
 	l_end = l_start + l_tmpData.Size();
-	Select(select, l_start, l_end);
+	Select(l_start, l_end);
 	// Return the position of the cursor
 	return l_end;
 }
@@ -1187,7 +1186,7 @@ int32_t EdnBuf::LocalInsert(int32_t pos, etk::VectorType<int8_t> &insertText)
 	// Insert data in buffer
 	m_data.Insert(pos, insertText);
 	// update the current selected area
-	UpdateSelections(pos, 0, insertText.Size() );
+	UpdateSelection(pos, 0, insertText.Size() );
 	// return the number of element inserted ...
 	return insertText.Size();
 }

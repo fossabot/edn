@@ -41,9 +41,9 @@
  * @return ---
  * 
  */
-bool EdnBuf::SelectHasSelection(selectionType_te select)
+bool EdnBuf::SelectHasSelection(void)
 {
-	return m_selectionList[select].selected;
+	return m_selectionList.selected;
 }
 
 
@@ -56,30 +56,14 @@ bool EdnBuf::SelectHasSelection(selectionType_te select)
  * @return ---
  * 
  */
-void EdnBuf::Select(selectionType_te select, int32_t start, int32_t end)
-{
-	//selection oldSelection = m_selectionList[select];
-	m_selectionList[select].selected = start != end;
-	m_selectionList[select].zeroWidth = (start == end) ? true : false;
-	m_selectionList[select].rectangular = false;
-	m_selectionList[select].start = etk_min(start, end);
-	m_selectionList[select].end = etk_max(start, end);
-}
-
-
-/**
- * @brief 
- * 
- * @param[in,out] ---
- * 
- * @return ---
- * 
- */
-void EdnBuf::Unselect(selectionType_te select)
+void EdnBuf::Select(int32_t start, int32_t end)
 {
 	//selection oldSelection = m_selectionList[select];
-	m_selectionList[select].selected = false;
-	m_selectionList[select].zeroWidth = false;
+	m_selectionList.selected = start != end;
+	m_selectionList.zeroWidth = (start == end) ? true : false;
+	m_selectionList.rectangular = false;
+	m_selectionList.start = etk_min(start, end);
+	m_selectionList.end = etk_max(start, end);
 }
 
 
@@ -87,22 +71,38 @@ void EdnBuf::Unselect(selectionType_te select)
  * @brief 
  * 
  * @param[in,out] ---
- * @param[in,out] ---
- * @param[in,out] ---
- * @param[in,out] ---
  * 
  * @return ---
  * 
  */
-void EdnBuf::RectSelect(selectionType_te select, int32_t start, int32_t end, int32_t rectStart, int32_t rectEnd)
+void EdnBuf::Unselect(void)
 {
-	m_selectionList[select].selected = rectStart < rectEnd;
-	m_selectionList[select].zeroWidth = (rectStart == rectEnd) ? false : true;
-	m_selectionList[select].rectangular = true;
-	m_selectionList[select].start = start;
-	m_selectionList[select].end = end;
-	m_selectionList[select].rectStart = rectStart;
-	m_selectionList[select].rectEnd = rectEnd;
+	//selection oldSelection = m_selectionList[select];
+	m_selectionList.selected = false;
+	m_selectionList.zeroWidth = false;
+}
+
+
+/**
+ * @brief 
+ * 
+ * @param[in,out] ---
+ * @param[in,out] ---
+ * @param[in,out] ---
+ * @param[in,out] ---
+ * 
+ * @return ---
+ * 
+ */
+void EdnBuf::RectSelect(int32_t start, int32_t end, int32_t rectStart, int32_t rectEnd)
+{
+	m_selectionList.selected = rectStart < rectEnd;
+	m_selectionList.zeroWidth = (rectStart == rectEnd) ? false : true;
+	m_selectionList.rectangular = true;
+	m_selectionList.start = start;
+	m_selectionList.end = end;
+	m_selectionList.rectStart = rectStart;
+	m_selectionList.rectEnd = rectEnd;
 }
 
 
@@ -114,17 +114,17 @@ void EdnBuf::RectSelect(selectionType_te select, int32_t start, int32_t end, int
  * @return ---
  * 
  */
-bool EdnBuf::GetSelectionPos(selectionType_te select, int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd)
+bool EdnBuf::GetSelectionPos(int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd)
 {
 	/* Always fill in the parameters (zero-width can be requested too). */
-	isRect = m_selectionList[select].rectangular;
-	start = m_selectionList[select].start;
-	end = m_selectionList[select].end;
-	if (m_selectionList[select].rectangular) {
-		rectStart = m_selectionList[select].rectStart;
-		rectEnd = m_selectionList[select].rectEnd;
+	isRect = m_selectionList.rectangular;
+	start = m_selectionList.start;
+	end = m_selectionList.end;
+	if (m_selectionList.rectangular) {
+		rectStart = m_selectionList.rectStart;
+		rectEnd = m_selectionList.rectEnd;
 	}
-	return m_selectionList[select].selected;
+	return m_selectionList.selected;
 }
 
 
@@ -136,14 +136,14 @@ bool EdnBuf::GetSelectionPos(selectionType_te select, int32_t &start, int32_t &e
  * @return ---
  * 
  */
-void EdnBuf::GetSelectionText(selectionType_te select, etk::VectorType<int8_t> &text)
+void EdnBuf::GetSelectionText(etk::VectorType<int8_t> &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;
 	// remove output data
 	text.Clear();
 	
-	bool isSelected = GetSelectionPos(select, start, end, isRect, rectStart, rectEnd);
+	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
 	// No data selected ...
 	if (false == isSelected) {
@@ -158,14 +158,14 @@ void EdnBuf::GetSelectionText(selectionType_te select, etk::VectorType<int8_t> &
 		GetRange(start, end, text);
 	}
 }
-void EdnBuf::GetSelectionText(selectionType_te select, etk::UString &text)
+void EdnBuf::GetSelectionText(etk::UString &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;
 	// remove output data
 	text = "";
 	
-	bool isSelected = GetSelectionPos(select, start, end, isRect, rectStart, rectEnd);
+	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
 	// No data selected ...
 	if (false == isSelected) {
@@ -190,12 +190,12 @@ void EdnBuf::GetSelectionText(selectionType_te select, etk::UString &text)
  * @return ---
  * 
  */
-void EdnBuf::RemoveSelected(selectionType_te select)
+void EdnBuf::RemoveSelected(void)
 {
 	int32_t start, end;
 	int32_t rectStart, rectEnd;
 	bool isRect;
-	bool isSelected = GetSelectionPos(select, start, end, isRect, rectStart, rectEnd);
+	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
 	// No data selected ...
 	if (false == isSelected) {
@@ -208,7 +208,7 @@ void EdnBuf::RemoveSelected(selectionType_te select)
 	} else {
 		Remove(start, end);
 	}
-	Unselect(select);
+	Unselect();
 }
 
 
@@ -220,11 +220,11 @@ void EdnBuf::RemoveSelected(selectionType_te select)
  * @return ---
  * 
  */
-int32_t EdnBuf::ReplaceSelected(selectionType_te select, etk::VectorType<int8_t> &text)
+int32_t EdnBuf::ReplaceSelected(etk::VectorType<int8_t> &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;
-	bool isSelected = GetSelectionPos(select, start, end, isRect, rectStart, rectEnd);
+	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
 	// No data selected ...
 	if (false == isSelected) {
@@ -239,14 +239,14 @@ int32_t EdnBuf::ReplaceSelected(selectionType_te select, etk::VectorType<int8_t>
 		returnSize = Replace(start, end, text);
 	}
 	// Clean selection
-	m_selectionList[select].selected = false;
+	m_selectionList.selected = false;
 	return returnSize;
 }
-int32_t EdnBuf::ReplaceSelected(selectionType_te select, etk::UString &text)
+int32_t EdnBuf::ReplaceSelected(etk::UString &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;
-	bool isSelected = GetSelectionPos(select, start, end, isRect, rectStart, rectEnd);
+	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
 	// No data selected ...
 	if (false == isSelected) {
@@ -261,28 +261,8 @@ int32_t EdnBuf::ReplaceSelected(selectionType_te select, etk::UString &text)
 		returnSize = Replace(start, end, text);
 	}
 	// Clean selection
-	m_selectionList[select].selected = false;
+	m_selectionList.selected = false;
 	return returnSize;
-}
-
-
-
-/*
-** Update all of the selections in "buf" for changes in the buffer's text
-*/
-/**
- * @brief 
- * 
- * @param[in,out] ---
- * 
- * @return ---
- * 
- */
-void EdnBuf::UpdateSelections(int32_t pos, int32_t nDeleted, int32_t nInserted)
-{
-	UpdateSelection(SELECTION_PRIMARY   , pos, nDeleted, nInserted);
-	UpdateSelection(SELECTION_SECONDARY , pos, nDeleted, nInserted);
-	UpdateSelection(SELECTION_HIGHTLIGHT, pos, nDeleted, nInserted);
 }
 
 
@@ -297,33 +277,33 @@ void EdnBuf::UpdateSelections(int32_t pos, int32_t nDeleted, int32_t nInserted)
  * @return ---
  * 
  */
-void EdnBuf::UpdateSelection(selectionType_te select, int32_t pos, int32_t nDeleted, int32_t nInserted)
+void EdnBuf::UpdateSelection(int32_t pos, int32_t nDeleted, int32_t nInserted)
 {
-	if(		(		false == m_selectionList[select].selected
-				&&	false == m_selectionList[select].zeroWidth)
-		||	pos > m_selectionList[select].end )
+	if(		(		false == m_selectionList.selected
+				&&	false == m_selectionList.zeroWidth)
+		||	pos > m_selectionList.end )
 	{
 		return;
 	}
-	if (pos+nDeleted <= m_selectionList[select].start) {
-		m_selectionList[select].start += nInserted - nDeleted;
-		m_selectionList[select].end += nInserted - nDeleted;
-	} else if(		pos <= m_selectionList[select].start
-				&&	pos+nDeleted >= m_selectionList[select].end)
+	if (pos+nDeleted <= m_selectionList.start) {
+		m_selectionList.start += nInserted - nDeleted;
+		m_selectionList.end += nInserted - nDeleted;
+	} else if(		pos <= m_selectionList.start
+				&&	pos+nDeleted >= m_selectionList.end)
 	{
-		m_selectionList[select].start = pos;
-		m_selectionList[select].end = pos;
-		m_selectionList[select].selected = false;
-		m_selectionList[select].zeroWidth = false;
-	} else if(		pos <= m_selectionList[select].start
-				&&	pos+nDeleted < m_selectionList[select].end)
+		m_selectionList.start = pos;
+		m_selectionList.end = pos;
+		m_selectionList.selected = false;
+		m_selectionList.zeroWidth = false;
+	} else if(		pos <= m_selectionList.start
+				&&	pos+nDeleted < m_selectionList.end)
 	{
-		m_selectionList[select].start = pos;
-		m_selectionList[select].end = nInserted + m_selectionList[select].end - nDeleted;
-	} else if(pos < m_selectionList[select].end) {
-		m_selectionList[select].end += nInserted - nDeleted;
-		if (m_selectionList[select].end <= m_selectionList[select].start) {
-			m_selectionList[select].selected = false;
+		m_selectionList.start = pos;
+		m_selectionList.end = nInserted + m_selectionList.end - nDeleted;
+	} else if(pos < m_selectionList.end) {
+		m_selectionList.end += nInserted - nDeleted;
+		if (m_selectionList.end <= m_selectionList.start) {
+			m_selectionList.selected = false;
 		}
 	}
 }

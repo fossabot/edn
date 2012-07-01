@@ -309,7 +309,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	m_displaySize.y = (sizeY/letterHeight) + 1;
 	APPL_VERBOSE("main DIPLAY " << m_displaySize.x << " char * " << m_displaySize.y << " char");
 	
-	selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
+	selHave = m_EdnBuf.GetSelectionPos(selStart, selEnd, selIsRect, selRectStart, selRectEnd);
 	
 	colorInformation_ts * HLColor = NULL;
 	
@@ -553,7 +553,7 @@ void BufferText::MouseEvent(int32_t fontId, int32_t width, int32_t height)
 		/*if (m_cursorPreferredCol < 0) {
 			m_cursorPreferredCol = posX;
 		}*/
-		m_EdnBuf.Unselect(SELECTION_PRIMARY);
+		m_EdnBuf.Unselect();
 
 		RequestUpdateOfThePosition();
 	}
@@ -577,7 +577,7 @@ void BufferText::MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t 
 	
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
-	int32_t selHave = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, selStart, selEnd, selIsRect, selRectStart, selRectEnd);
+	int32_t selHave = m_EdnBuf.GetSelectionPos(selStart, selEnd, selIsRect, selRectStart, selRectEnd);
 	//APPL_DEBUG("BufferText:: " << selHave << " = BufGetSelectionPos(SELECTION_PRIMARY," << selStart << "," << selEnd << "," << selIsRect << "," << selRectStart << "," << selRectEnd << ");" );
 	int32_t rememberCursorPos = m_cursorPos;
 	// move the cursor
@@ -589,12 +589,12 @@ void BufferText::MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t 
 	}*/
 	
 	if (false == selHave) {
-		m_EdnBuf.Select(SELECTION_PRIMARY, rememberCursorPos, m_cursorPos);
+		m_EdnBuf.Select(rememberCursorPos, m_cursorPos);
 	} else {
 		if (rememberCursorPos == selStart) {
-			m_EdnBuf.Select(SELECTION_PRIMARY, m_cursorPos, selEnd);
+			m_EdnBuf.Select(m_cursorPos, selEnd);
 		} else {
-			m_EdnBuf.Select(SELECTION_PRIMARY, selStart, m_cursorPos);
+			m_EdnBuf.Select(selStart, m_cursorPos);
 		}
 	}
 	Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
@@ -615,7 +615,7 @@ void BufferText::MouseEventDouble(void)
 {
 	int32_t beginPos, endPos;
 	if (true == m_EdnBuf.SelectAround(m_cursorPos, beginPos, endPos)) {
-		m_EdnBuf.Select(SELECTION_PRIMARY, beginPos, endPos);
+		m_EdnBuf.Select(beginPos, endPos);
 		m_cursorPos = endPos;
 	}
 	Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
@@ -632,7 +632,7 @@ void BufferText::MouseEventDouble(void)
  */
 void BufferText::MouseEventTriple(void)
 {
-	m_EdnBuf.Select(SELECTION_PRIMARY, m_EdnBuf.StartOfLine(m_cursorPos), m_EdnBuf.EndOfLine(m_cursorPos));
+	m_EdnBuf.Select(m_EdnBuf.StartOfLine(m_cursorPos), m_EdnBuf.EndOfLine(m_cursorPos));
 	m_cursorPos = m_EdnBuf.EndOfLine(m_cursorPos);
 	Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
 }
@@ -648,14 +648,14 @@ void BufferText::RemoveLine(void)
 
 void BufferText::SelectAll(void)
 {
-	m_EdnBuf.Select(SELECTION_PRIMARY, 0, m_EdnBuf.Size());
+	m_EdnBuf.Select(0, m_EdnBuf.Size());
 	m_cursorPos = m_EdnBuf.Size();
 	Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
 }
 
 void BufferText::SelectNone(void)
 {
-	m_EdnBuf.Unselect(SELECTION_PRIMARY);
+	m_EdnBuf.Unselect();
 }
 
 
@@ -671,13 +671,13 @@ void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
-	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	int32_t rememberCursorPos = m_cursorPos;
 
 	//APPL_DEBUG("newPos=" << newPos);
 
 	// unselect buffer:
-	m_EdnBuf.Unselect(SELECTION_PRIMARY);
+	m_EdnBuf.Unselect();
 	/* make sure new position is ok, do nothing if it hasn't changed */
 	if (newPos != m_cursorPos) {
 		if (newPos < 0){
@@ -699,15 +699,15 @@ void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 	    && true  == ewol::IsSetShift() )
 	{
 		// new selection
-		m_EdnBuf.Select(SELECTION_PRIMARY, rememberCursorPos, m_cursorPos);
+		m_EdnBuf.Select(rememberCursorPos, m_cursorPos);
 	} else if(    true == ewol::IsSetShift()
 	           && true == haveSelectionActive)
 	{
 		// update selection
 		if (rememberCursorPos == SelectionStart) {
-			m_EdnBuf.Select(SELECTION_PRIMARY, m_cursorPos, SelectionEnd);
+			m_EdnBuf.Select(m_cursorPos, SelectionEnd);
 		} else {
-			m_EdnBuf.Select(SELECTION_PRIMARY, SelectionStart, m_cursorPos);
+			m_EdnBuf.Select(SelectionStart, m_cursorPos);
 		}
 	}
 }
@@ -907,7 +907,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
-	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	if (unicodeData == 0x09) {
 		if (false == haveSelectionActive) {
 			etk::VectorType<int8_t> tmpVect;
@@ -921,13 +921,13 @@ void BufferText::AddChar(uniChar_t unicodeData)
 			if (0 == nbSelectedLines) {
 				etk::VectorType<int8_t> tmpVect;
 				tmpVect.PushBack(0x09);
-				m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
+				m_EdnBuf.ReplaceSelected(tmpVect);
 				SetInsertPosition(SelectionStart+tmpVect.Size(), true);
 			} else {
 				if (true == ewol::IsSetShift() ) {
-					m_cursorPos = m_EdnBuf.UnIndent(SELECTION_PRIMARY);
+					m_cursorPos = m_EdnBuf.UnIndent();
 				} else {
-					m_cursorPos = m_EdnBuf.Indent(SELECTION_PRIMARY);
+					m_cursorPos = m_EdnBuf.Indent();
 				}
 			}
 		}
@@ -963,7 +963,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 			m_EdnBuf.Insert(m_cursorPos, tmpVect);
 			SetInsertPosition(m_cursorPos+tmpVect.Size(), true);
 		} else {
-			m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
+			m_EdnBuf.ReplaceSelected(tmpVect);
 			SetInsertPosition(SelectionStart+tmpVect.Size(), true);
 		}
 	} else if (unicodeData == 0x7F ) {
@@ -971,7 +971,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 		if (false == haveSelectionActive) {
 			m_EdnBuf.Remove(m_cursorPos, m_cursorPos+1);
 		} else {
-			m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
+			m_EdnBuf.RemoveSelected();
 			SetInsertPosition(SelectionStart, true);
 		}
 	} else if (unicodeData == 0x08) {
@@ -980,7 +980,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 			m_EdnBuf.Remove(m_cursorPos-1, m_cursorPos);
 			SetInsertPosition(m_cursorPos-1, true);
 		} else {
-			m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
+			m_EdnBuf.RemoveSelected();
 			SetInsertPosition(SelectionStart, true);
 		}
 	} else {
@@ -995,7 +995,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
 				SetInsertPosition(m_cursorPos+localOfset, true);
 			} else {
-				m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
+				m_EdnBuf.ReplaceSelected(tmpVect);
 				SetInsertPosition(SelectionStart+localOfset, true);
 			}
 		} else {
@@ -1009,7 +1009,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
 				SetInsertPosition(m_cursorPos+1, true);
 			} else {
-				m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, tmpVect);
+				m_EdnBuf.ReplaceSelected(tmpVect);
 				SetInsertPosition(SelectionStart+1, true);
 			}
 		}
@@ -1047,7 +1047,7 @@ int32_t BufferText::FindLine(etk::UString &data)
 void BufferText::JumpAtLine(int32_t newLine)
 {
 	int32_t positionLine = m_EdnBuf.CountForwardNLines(0, newLine);
-	m_EdnBuf.Unselect(SELECTION_PRIMARY);
+	m_EdnBuf.Unselect();
 	APPL_DEBUG("jump at the line : " << newLine );
 	SetInsertPosition(positionLine);
 	m_centerRequested = true;
@@ -1075,7 +1075,7 @@ void BufferText::Search(etk::UString &data, bool back, bool caseSensitive, bool 
 	
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
-	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	
 	int32_t startSearchPos = m_cursorPos;
 	if (true == haveSelectionActive) {
@@ -1105,7 +1105,7 @@ void BufferText::Search(etk::UString &data, bool back, bool caseSensitive, bool 
 		if (true == findSomething) {
 			// select new position
 			SetInsertPosition(foundPosEnd);
-			m_EdnBuf.Select(SELECTION_PRIMARY, foundPos, foundPosEnd);
+			m_EdnBuf.Select(foundPos, foundPosEnd);
 		}
 	} else {
 		//APPL_INFO("search data Backward : " << data.GetDirectPointer() );
@@ -1122,7 +1122,7 @@ void BufferText::Search(etk::UString &data, bool back, bool caseSensitive, bool 
 		if (true == findSomething) {
 			// select new position
 			SetInsertPosition(foundPos);
-			m_EdnBuf.Select(SELECTION_PRIMARY, foundPos, foundPosEnd);
+			m_EdnBuf.Select(foundPos, foundPosEnd);
 		}
 	}
 	m_centerRequested = true;
@@ -1134,10 +1134,10 @@ void BufferText::Replace(etk::UString &data)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
-	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	if (true == haveSelectionActive) {
 		// Replace Data : 
-		int32_t size = m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, data);
+		int32_t size = m_EdnBuf.ReplaceSelected(data);
 		SetInsertPosition(SelectionStart + size);
 	}
 	SetModify(true);
@@ -1156,8 +1156,8 @@ void BufferText::Copy(int8_t clipboardID)
 {
 	etk::UString mVect;
 	// get the curent selected data
-	if (true == m_EdnBuf.SelectHasSelection(SELECTION_PRIMARY) ) {
-		m_EdnBuf.GetSelectionText(SELECTION_PRIMARY, mVect);
+	if (true == m_EdnBuf.SelectHasSelection() ) {
+		m_EdnBuf.GetSelectionText(mVect);
 	}
 	// copy data in the click board : 
 	ewol::clipBoard::Set(clipboardID, mVect);
@@ -1177,14 +1177,14 @@ void BufferText::Cut(int8_t clipboardID)
 
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
-	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	
 	// copy data
 	Copy(clipboardID);
 	// remove data : 
 	if (true == haveSelectionActive ) {
 		APPL_INFO("REMOVE SELECTION");
-		m_EdnBuf.RemoveSelected(SELECTION_PRIMARY);
+		m_EdnBuf.RemoveSelected();
 		m_cursorPos = SelectionStart;
 	}
 	RequestUpdateOfThePosition();
@@ -1208,11 +1208,11 @@ void BufferText::Paste(int8_t clipboardID)
 	
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
-	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SELECTION_PRIMARY, SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	
 	if (true == haveSelectionActive ) {
 		// replace data
-		int32_t size = m_EdnBuf.ReplaceSelected(SELECTION_PRIMARY, mVect );
+		int32_t size = m_EdnBuf.ReplaceSelected(mVect );
 		m_cursorPos = SelectionStart + size;
 	} else {
 		// insert data
