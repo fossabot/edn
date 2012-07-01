@@ -87,7 +87,7 @@ CodeView::~CodeView(void)
  */
 void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
 {
-	coord2D_ts tmpCoord;
+	Vector2D<float>  tmpCoord;
 	tmpCoord.x = 0;
 	tmpCoord.y = 0;
 	if (m_lineNumberList.Size()<=bufferID) {
@@ -182,9 +182,9 @@ void CodeView::OnRegenerateDisplay(void)
 		
 		
 		if(true == BufferManager::Get(m_bufferID)->NeedToUpdateDisplayPosition() ) {
-			coord2D_ts borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
+			Vector2D<float>  borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
 			bool centerRequested = false;
-			coord2D_ts currentPosition = BufferManager::Get(m_bufferID)->GetPosition(m_OObjectTextNormal[m_currentCreateId].GetFontID(), centerRequested);
+			Vector2D<float>  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(m_OObjectTextNormal[m_currentCreateId].GetFontID(), centerRequested);
 			SetScrollingPositionDynamic(borderWidth, currentPosition, centerRequested);
 		} // else : nothing to do ...
 		
@@ -238,9 +238,9 @@ bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveTy
  * @return true the event is used
  * @return false the event is not used
  */
-bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::eventInputType_te typeEvent, coord2D_ts pos)
+bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::eventInputType_te typeEvent, Vector2D<float>  pos)
 {
-	coord2D_ts relativePos = RelativePosition(pos);
+	Vector2D<float>  relativePos = RelativePosition(pos);
 	if (m_bufferID < 0) {
 		return false;
 	}

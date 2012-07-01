@@ -186,7 +186,7 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 	return true;
 }
 
-bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, etkFloat_t x, etkFloat_t y)
+bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, float x, float y)
 {
 	if (1 == IdInput && typeEvent == ewol::EVENT_INPUT_TYPE_SINGLE) {
 		APPL_INFO("Event on List : IdInput=" << IdInput << " colomn=" << colomn << " raw=" << raw );

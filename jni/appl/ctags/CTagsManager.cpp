@@ -93,7 +93,7 @@ etk::UString CTagsManager::GetFolder(etk::UString &inputString)
 	return out;
 }
 
-bool CTagsManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y)
+bool CTagsManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, float x, float y)
 {
 	/*
 	switch (id)
@@ -348,7 +348,7 @@ void CTagsManager::JumpTo(void)
 		// get the middle button of the clipboard ==> represent the current selection ...
 		ClipBoard::Get(COPY_MIDDLE_BUTTON, data);
 		if (data.Size() == 0) {
-			APPL_INFO("No current Sélection");
+			APPL_INFO("No current S\E9lection");
 		}
 		tagEntry entry;
 		data.PushBack('\0');

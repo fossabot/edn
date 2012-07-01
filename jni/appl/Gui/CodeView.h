@@ -63,7 +63,7 @@ class CodeView :public ewol::WidgetScrooled
 		color_ts                     m_textColorBg;  //!< Background color
 		int32_t                      m_bufferID;
 		bool                         m_buttunOneSelected;
-		etk::VectorType<coord2D_ts>  m_lineNumberList;
+		etk::VectorType<Vector2D<float> >  m_lineNumberList;
 		void                         UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
 		ewol::OObject2DTextColored   m_OObjectTextNormal[NB_BOUBLE_BUFFER];
@@ -92,7 +92,7 @@ class CodeView :public ewol::WidgetScrooled
 		 * @return true the event is used
 		 * @return false the event is not used
 		 */
-		virtual bool OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::eventInputType_te typeEvent, coord2D_ts pos);
+		virtual bool OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::eventInputType_te typeEvent, Vector2D<float>  pos);
 		virtual bool OnEventKb(ewol::eventKbType_te typeEvent, uniChar_t unicodeData);
 		virtual bool OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveType_te moveTypeEvent);
 		

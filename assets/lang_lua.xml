@@ -54,7 +54,7 @@
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>
-			<start>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</start>
+			<start>==|&lt;=|&gt;=|~=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</start>
 		</rule>
 	</pass2>
 </EdnLang>

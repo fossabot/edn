@@ -85,7 +85,7 @@ class BufferText : public Buffer {
 		
 		// Direct buffer IO
 		EdnBuf                  m_EdnBuf;                   //!< buffer associated on this displayer
-		coord2D_ts              m_displaySize;              //!< number of char displayable in the screan
+		Vector2D<float>         m_displaySize;              //!< number of char displayable in the screan
 		// Cursor :
 		int32_t                 m_cursorPos;                //!< position in the buffer of the cursor
 		int32_t                 m_cursorPreferredCol;       //!< colomn of the last up and down ...
@@ -96,7 +96,7 @@ class BufferText : public Buffer {
 	private:
 		bool m_centerRequested;
 	public:
-		virtual coord2D_ts      GetPosition(int32_t fontId, bool& centerRequested);
+		virtual Vector2D<float> GetPosition(int32_t fontId, bool& centerRequested);
 	private:
 		bool     TextDMoveUp(int32_t offset);
 		bool     TextDMoveDown(int32_t offset);

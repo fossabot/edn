@@ -69,7 +69,7 @@ class BufferView : public ewol::List
 		virtual bool GetTitle(int32_t colomn, etk::UString &myTitle, color_ts &fg, color_ts &bg);
 		virtual uint32_t GetNuberOfRaw(void);
 		virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, color_ts &fg, color_ts &bg);
-		virtual bool OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, etkFloat_t x, etkFloat_t y);
+		virtual bool OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, float x, float y);
 	private:
 		int32_t               m_selectedIdRequested;
 		int32_t               m_selectedID;

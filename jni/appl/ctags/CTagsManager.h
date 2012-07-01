@@ -50,7 +50,7 @@ class CTagsManager: public etk::Singleton<CTagsManager>, public ewol::Widget
 		~CTagsManager(void);
 
 	public:
-		virtual bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, etkFloat_t x, etkFloat_t y);
+		virtual bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, float x, float y);
 	private:
 		int32_t                    m_currentSelectedID;
 		void                       LoadTagFile(void);

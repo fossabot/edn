@@ -79,7 +79,7 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
 	int32_t fontId = OOTextNormal.GetFontID();
 	int32_t letterHeight = ewol::GetHeight(fontId);
 	
-	coord2D_ts textPos;
+	Vector2D<float>  textPos;
 	textPos.x = 20;
 	textPos.y = 20;
 	

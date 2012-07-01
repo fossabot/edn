@@ -214,7 +214,7 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 	OOColored->Rectangle( 0, positionY, sizeX+0.5*SEPARATION_SIZE_LINE_NUMBER, sizeY);
 	OOText->SetColor(ColorizeManager::Get(COLOR_CODE_LINE_NUMBER));
 	
-	coord2D_ts textPos;
+	Vector2D<float>  textPos;
 	textPos.x = 1;
 	textPos.y = positionY;
 	etk::UString tmppp = tmpLineNumber;
@@ -299,7 +299,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	
 	// update the display position with the scroll ofset : 
 	int32_t displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
-	coord2D_ts maxSize;
+	Vector2D<float>  maxSize;
 	maxSize.x = 0.0;
 	maxSize.y = m_EdnBuf.NumberOfLines() * letterHeight;
 	int32_t nbColoneForLineNumber = GetLineNumberNumberOfElement();
@@ -370,7 +370,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	OOTextBoldItalic.clippingSet(drawClippingTextArea);
 	OOColored.clippingSet(drawClippingTextArea);
 	
-	etkFloat_t lineMaxSize = 0.0;
+	float lineMaxSize = 0.0;
 	for (iii=displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
 		//APPL_DEBUG("diplay element=" << iii);
 		int displaywidth;
@@ -411,7 +411,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 					haveBg = selectColor->HaveBg();
 				}
 			}
-			coord2D_ts textPos;
+			Vector2D<float>  textPos;
 			textPos.x = pixelX-offsetX;
 			textPos.y = y;
 			if (true == selectColor->GetItalic() ) {
@@ -849,11 +849,11 @@ void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
  * @return ---
  *
  */
-coord2D_ts BufferText::GetPosition(int32_t fontId, bool& centerRequested)
+Vector2D<float>  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 {
 	centerRequested = m_centerRequested;
 	m_centerRequested = false;
-	coord2D_ts outputPosition;
+	Vector2D<float>  outputPosition;
 
 	// Display position (Y mode):
 	APPL_INFO("change the position : " << m_cursorPos);
@@ -867,8 +867,8 @@ coord2D_ts BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 	
 	// get font porperties :
 	// TODO : change this :
-	etkFloat_t letterWidth = ewol::GetWidth(fontId, "A");
-	etkFloat_t letterHeight = ewol::GetHeight(fontId);
+	float letterWidth = ewol::GetWidth(fontId, "A");
+	float letterHeight = ewol::GetHeight(fontId);
 	outputPosition.x *= letterWidth;
 	outputPosition.y *= letterHeight;
 	return outputPosition;
@@ -876,7 +876,7 @@ coord2D_ts BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 	/* if we request a center : 
 	} else {
 		// center the line at the middle of the screen :
-		coord2D_ts outputPosition;
+		Vector2D<float>  outputPosition;
 		//APPL_DEBUG(" -------------------------------------------------");
 		outputPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
 		//APPL_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << outputPosition.y);

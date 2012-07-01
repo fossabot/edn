@@ -117,19 +117,19 @@ bool Buffer::NeedToUpdateDisplayPosition(void)
 	return tmpVal;
 }
 
-coord2D_ts Buffer::GetBorderSize(void)
+Vector2D<float>  Buffer::GetBorderSize(void)
 {
-	coord2D_ts tmpVal;
+	Vector2D<float>  tmpVal;
 	tmpVal.x = 30;
 	tmpVal.y = 30;
 	return tmpVal;
 }
 
 
-coord2D_ts Buffer::GetPosition(int32_t fontId,bool& centerRequested)
+Vector2D<float>  Buffer::GetPosition(int32_t fontId,bool& centerRequested)
 {
 	centerRequested = false;
-	coord2D_ts tmpVal;
+	Vector2D<float>  tmpVal;
 	tmpVal.x = 0;
 	tmpVal.y = 0;
 	return tmpVal;
