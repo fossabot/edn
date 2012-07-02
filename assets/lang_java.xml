@@ -45,23 +45,23 @@
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<start>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof\@</start>
+			<start>\@return|goto|if|else|case|default|switch|break|continue|while|do|for\@</start>
 		</rule>
 		<rule name="my function keyword">
 			<color>systemFunction</color>
-			<start>\@new|delete|try|catch|memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf|calloc|malloc|realloc|(cyg|sup)_([a-z]|[A-Z]|[0-9]|_)+\@</start>
+			<start>\@new|try|catch|print\@</start>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<start>\@bool|char|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128)\@</start>
+			<start>\@boolean|byte|char|double|float|int|long|short|String|Object|Thread|void|enum\@</start>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<start>\@import|package|extends|Override|const|class|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum\@</start>
+			<start>\@import|package|extends|Override|implements|const|class|abstract|private|public|protected|final|const|static|transiant|volatile|interface@</start>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
-			<start>\@NULL|MAX|MIN|__LINE__|__DATA__|__FILE__|__func__|__TIME__|__STDC__\@</start>
+			<start>\@null\@</start>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
@@ -69,7 +69,7 @@
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<start>\@true|TRUE|false|FALSE\@</start>
+			<start>\@true|false\@</start>
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>

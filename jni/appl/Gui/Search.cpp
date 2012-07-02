@@ -32,6 +32,7 @@
 #include "appl/globalMsg.h"
 
 #include <ewol/widget/Button.h>
+#include <ewol/widget/ButtonImage.h>
 #include <ewol/widget/CheckBox.h>
 #include <ewol/widget/SizerHori.h>
 #include <ewol/widget/SizerVert.h>
@@ -69,6 +70,7 @@ Search::Search(void)
 	ewol::Entry * myEntry = NULL;
 	ewol::Button * myButton = NULL;
 	ewol::CheckBox * mycheckbox = NULL;
+	ewol::ButtonImage * myButtonImage = NULL;
 	
 	myEntry = new ewol::Entry();
 	myEntry->RegisterOnEvent(this, ewolEventEntryModify, l_eventSearchEntry);
@@ -76,27 +78,33 @@ Search::Search(void)
 	myEntry->SetFillX(true);
 	SubWidgetAdd(myEntry);
 	
+	myButtonImage = new ewol::ButtonImage("icon/Search.svg");
+	myButtonImage->SetMinSize(32,32);
+	myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventSearchBt);
+	SubWidgetAdd(myButtonImage);
+	
 	myEntry = new ewol::Entry();
 	myEntry->RegisterOnEvent(this, ewolEventEntryModify, l_eventReplaceEntry);
 	myEntry->SetExpendX(true);
 	myEntry->SetFillX(true);
 	SubWidgetAdd(myEntry);
 	
-	myButton = new ewol::Button("Search");
-	myButton->RegisterOnEvent(this, ewolEventButtonPressed, l_eventSearchBt);
-	SubWidgetAdd(myButton);
+	myButtonImage = new ewol::ButtonImage("icon/Replace.svg");
+	myButtonImage->SetMinSize(32,32);
+	myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventReplaceBt);
+	SubWidgetAdd(myButtonImage);
 	
-	myButton = new ewol::Button("Replace");
-	myButton->RegisterOnEvent(this, ewolEventButtonPressed, l_eventReplaceBt);
-	SubWidgetAdd(myButton);
+	myButtonImage = new ewol::ButtonImage("icon/CaseSensitive.svg");
+	myButtonImage->SetMinSize(32,32);
+	myButtonImage->SetToggleMode(true);
+	myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventCaseCb);
+	SubWidgetAdd(myButtonImage);
 	
-	mycheckbox = new ewol::CheckBox("Aa");
-	mycheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_eventCaseCb);
-	SubWidgetAdd(mycheckbox);
-	
-	mycheckbox = new ewol::CheckBox("Wrap");
-	mycheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_eventWrapCb);
-	SubWidgetAdd(mycheckbox);
+	myButtonImage = new ewol::ButtonImage("icon/WrapAround.svg");
+	myButtonImage->SetMinSize(32,32);
+	myButtonImage->SetToggleMode(true);
+	myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventWrapCb);
+	SubWidgetAdd(myButtonImage);
 	
 	mycheckbox = new ewol::CheckBox("Forward");
 	mycheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_eventForwardCb);
