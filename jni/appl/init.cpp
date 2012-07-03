@@ -133,6 +133,8 @@ void APP_Init(void)
 	
 	ewol::shortCut::Add("ctrl+l",       ednMsgGuiGotoLine, "???");
 	
+	ewol::shortCut::Add("ctrl+f",       ednMsgGuiSearch, "");
+	
 	
 	// add files
 	APPL_INFO("show list of files : ");

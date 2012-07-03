@@ -68,8 +68,6 @@ Search::Search(void)
 	m_forward = false;
 	
 	ewol::Entry * myEntry = NULL;
-	ewol::Button * myButton = NULL;
-	ewol::CheckBox * mycheckbox = NULL;
 	ewol::ButtonImage * myButtonImage = NULL;
 	
 	myEntry = new ewol::Entry();
@@ -95,29 +93,37 @@ Search::Search(void)
 	SubWidgetAdd(myButtonImage);
 	
 	myButtonImage = new ewol::ButtonImage("icon/CaseSensitive.svg");
+	myButtonImage->SetImageSelected("icon/CaseSensitive.svg", 0xFFFFFF5F);
 	myButtonImage->SetMinSize(32,32);
 	myButtonImage->SetToggleMode(true);
+	myButtonImage->SetValue(SearchData::GetCase());
 	myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventCaseCb);
 	SubWidgetAdd(myButtonImage);
 	
 	myButtonImage = new ewol::ButtonImage("icon/WrapAround.svg");
+	myButtonImage->SetImageSelected("icon/WrapAround.svg", 0xFFFFFF5F);
 	myButtonImage->SetMinSize(32,32);
 	myButtonImage->SetToggleMode(true);
+	myButtonImage->SetValue(SearchData::GetWrap());
 	myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventWrapCb);
 	SubWidgetAdd(myButtonImage);
 	
-	mycheckbox = new ewol::CheckBox("Forward");
-	mycheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_eventForwardCb);
-	SubWidgetAdd(mycheckbox);
+	myButtonImage = new ewol::ButtonImage("icon/Up.svg");
+	myButtonImage->SetImageSelected("icon/Down.svg");
+	myButtonImage->SetMinSize(32,32);
+	myButtonImage->SetToggleMode(true);
+	myButtonImage->SetValue(m_forward);
+	myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventForwardCb);
+	SubWidgetAdd(myButtonImage);
 	
-	myButton = new ewol::Button("Hide");
-	myButton->RegisterOnEvent(this, ewolEventButtonPressed, l_eventHideBt);
-	SubWidgetAdd(myButton);
+	myButtonImage = new ewol::ButtonImage("icon/Forbidden.svg");
+	myButtonImage->SetMinSize(32,32);
+	myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventHideBt);
+	SubWidgetAdd(myButtonImage);
 	
 	RegisterMultiCast(ednMsgGuiSearch);
-	RegisterMultiCast(ednMsgGuiReplace);
-	
-	
+	// basicly hiden ...
+	Hide();
 }
 
 Search::~Search(void)
@@ -206,123 +212,14 @@ void Search::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId
 			m_forward = false;
 		}
 	} else if ( eventId == l_eventHideBt) {
-		
-	}
-}
-
-/*
-void Search::OnButtonPrevious(GtkWidget *widget, gpointer data)
-{
-	//APPL_INFO("CALLBACK");
-	GeneralSendMessage(APPL_MSG__CURRENT_FIND_PREVIOUS);
-}
-
-void Search::OnButtonNext(GtkWidget *widget, gpointer data)
-{
-	//APPL_INFO("CALLBACK");
-	GeneralSendMessage(APPL_MSG__CURRENT_FIND_NEXT);
-}
-
-void Search::OnButtonReplace(GtkWidget *widget, gpointer data)
-{
-	//APPL_INFO("CALLBACK");
-	GeneralSendMessage(APPL_MSG__CURRENT_REPLACE);
-}
-
-void Search::OnButtonReplaceAndNext(GtkWidget *widget, gpointer data)
-{
-	//APPL_INFO("CALLBACK");
-	GeneralSendMessage(APPL_MSG__CURRENT_REPLACE);
-	GeneralSendMessage(APPL_MSG__CURRENT_FIND_NEXT);
-}
-
-void Search::OnButtonQuit(GtkWidget *widget, gpointer data)
-{
-	//APPL_INFO("CALLBACK");
-	Search * self = static_cast<Search*>(data);
-	self->Destroy();
-}
-
-void Search::OnCheckBoxEventWrap(GtkWidget *widget, gpointer data)
-{
-	//APPL_INFO("CALLBACK");
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
-		SearchData::SetWrap(true);
-	} else {
-		SearchData::SetWrap(false);
-	}
-}
-
-void Search::OnCheckBoxEventCase(GtkWidget *widget, gpointer data)
-{
-	//APPL_INFO("CALLBACK");
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
-		SearchData::SetCase(true);
-	} else {
-		SearchData::SetCase(false);
-	}
-}
-
-void Search::OnCheckBoxEventRegExp(GtkWidget *widget, gpointer data)
-{
-	//APPL_INFO("CALLBACK");
-	Search * self = static_cast<Search*>(data);
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
-		SearchData::SetRegExp(true);
-		gtk_widget_set_sensitive(self->m_CkMatchCase, false);
-	} else {
-		SearchData::SetRegExp(false);
-		gtk_widget_set_sensitive(self->m_CkMatchCase, true);
-	}
-}
-
-void Search::OnEntrySearchChange(GtkWidget *widget, gpointer data)
-{
-	//APPL_INFO("CALLBACK");
-	Search * self = static_cast<Search*>(data);
-	// update research data
-	const char *testData = gtk_entry_get_text(GTK_ENTRY(widget));
-	if (NULL !=  testData) {
-		etk::UString myDataString = testData;
-		SearchData::SetSearch(myDataString);
-		if (0 == strlen(testData)) {
-			self->m_haveSearchData = false;
+		Hide();
+	} else if ( eventId == ednMsgGuiSearch) {
+		if (true == IsHide()) {
+			Show();
 		} else {
-			self->m_haveSearchData = true;
-		}
-		gtk_widget_set_sensitive(self->m_BtPrevious, self->m_haveSearchData);
-		gtk_widget_set_sensitive(self->m_BtNext, self->m_haveSearchData);
-		if (false == self->m_haveSearchData) {
-			gtk_widget_set_sensitive(self->m_BtReplace, false);
-			gtk_widget_set_sensitive(self->m_BtReplaceAndNext, false);
-		} else {
-			gtk_widget_set_sensitive(self->m_BtReplace, true);
-			gtk_widget_set_sensitive(self->m_BtReplaceAndNext, true);
+			Hide();
 		}
 	}
 }
 
-void Search::OnEntryReplaceChange(GtkWidget *widget, gpointer data)
-{
-	//APPL_INFO("CALLBACK");
-	Search * self = static_cast<Search*>(data);
-	// update replace data
-	const char *testData = gtk_entry_get_text(GTK_ENTRY(widget));
-	if (NULL !=  testData) {
-		etk::UString myDataString = testData;
-		SearchData::SetReplace(myDataString);
-		if (0 == strlen(testData)) {
-			self->m_haveReplaceData = false;
-		} else {
-			self->m_haveReplaceData = true;
-		}
-		if (false == self->m_haveSearchData) {
-			gtk_widget_set_sensitive(self->m_BtReplace, false);
-			gtk_widget_set_sensitive(self->m_BtReplaceAndNext, false);
-		} else {
-			gtk_widget_set_sensitive(self->m_BtReplace, true);
-			gtk_widget_set_sensitive(self->m_BtReplaceAndNext, true);
-		}
-	}
-}
-*/
+
