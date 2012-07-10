@@ -178,6 +178,10 @@ class localClassHighlightManager: public ewol::EObject
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
+			xmlFilename = "lang_in.xml";
+			myHightline = new Highlight(xmlFilename);
+			listHighlight.PushBack(myHightline);
+			
 			//myHightline->Display();
 		}
 

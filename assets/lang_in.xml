@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EdnLang version="0.1" lang="qconf configuration file">
+	<ext>*.in</ext>
+	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
+		<rule name="my preprocesseur">
+			<color>preprocesseur</color>
+			<start>#</start>
+			<end>\n</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+		<rule name="doubleQuteText">
+			<color>doubleQuoteText</color>
+			<start>"</start>
+			<end>"</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+		<rule name="simpleQuteText">
+			<color>doubleQuoteText</color>
+			<start>'</start>
+			<end>'</end>
+			<!--<EscapeChar>\</EscapeChar>-->
+		</rule>
+	</pass1>
+	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
+		<rule name="my keyword">
+			<color>keyword</color>
+			<start>\@menu|endmenu|comment|if|endif|help|default|choice|endchoice|prompt|depends on|config\@</start>
+		</rule>
+		<rule name="my type">
+			<color>type</color>
+			<start>\@int|hex|bool|string\@</start>
+		</rule>
+		<rule name="numeric constant">
+			<color>number</color>
+			<start>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</start>
+		</rule>
+		<rule name="BIG LETTER">
+			<color>macro</color>
+			<start>\@[A-Z_][A-Z_0-9]{3,500}\@</start>
+		</rule>
+		<rule name="condition">
+			<color>boolean</color>
+			<start>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</start>
+		</rule>
+	</pass2>
+</EdnLang>
