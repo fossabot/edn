@@ -66,7 +66,6 @@ void APP_Init(void)
 	ewol::ChangeSize(800, 600);
 	etk::InitDefaultFolder(PROJECT_NAME);
 
-	etk::tool::frand(0,1);
 	ewol::SetFontFolder("Font");
 	
 	#ifdef __PLATFORM__Android

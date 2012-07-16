@@ -8,6 +8,8 @@ PROJECT_VENDOR=heeroyui
 # Binary name ... (no dot, no MAJ no Numerical char)
 PROJECT_NAME=edn
 
+USER_PACKAGES=$(shell pwd)/jni/
+
 # include basic makefile for EWOL 
 include $(shell pwd)/../ewol/Build/Makefile.mk
 
