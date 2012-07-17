@@ -59,6 +59,15 @@ Search::Search(void) :
 	
 	ewol::ButtonImage * myButtonImage = NULL;
 	
+	myButtonImage = new ewol::ButtonImage("icon/Remove.svg");
+	if (NULL == myButtonImage) {
+		APPL_ERROR("Widget allocation error ==> it will missing in the display");
+	} else {
+		myButtonImage->SetMinSize(32,32);
+		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventHideBt);
+		SubWidgetAdd(myButtonImage);
+	}
+	
 	m_searchEntry = new ewol::Entry();
 	if (NULL == m_searchEntry) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
@@ -132,15 +141,6 @@ Search::Search(void) :
 		myButtonImage->SetToggleMode(true);
 		myButtonImage->SetValue(m_forward);
 		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventForwardCb);
-		SubWidgetAdd(myButtonImage);
-	}
-	
-	myButtonImage = new ewol::ButtonImage("icon/Forbidden.svg");
-	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error ==> it will missing in the display");
-	} else {
-		myButtonImage->SetMinSize(32,32);
-		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventHideBt);
 		SubWidgetAdd(myButtonImage);
 	}
 	
