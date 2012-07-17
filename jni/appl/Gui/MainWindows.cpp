@@ -341,3 +341,17 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 	return;
 }
 
+
+/**
+* @brief Inform object that an other object is removed ...
+* @param[in] removeObject Pointer on the EObject remeved ==> the user must remove all reference on this EObject
+* @note : Sub classes must call this class
+* @return ---
+*/
+void MainWindows::OnObjectRemove(ewol::EObject * removeObject)
+{
+	ewol::Windows::OnObjectRemove(removeObject);
+	if (m_widgetLabelFileName == removeObject) {
+		m_widgetLabelFileName = NULL;
+	}
+}

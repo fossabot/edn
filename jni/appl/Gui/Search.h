@@ -28,6 +28,7 @@
 
 #include <appl/Debug.h>
 #include <ewol/widget/SizerHori.h>
+#include <ewol/widget/Entry.h>
 
 extern const char * const TYPE_EOBJECT_APPL_SEARCH;
 
@@ -59,8 +60,17 @@ class Search : public ewol::SizerHori
 		 * @return ---
 		 */
 		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
+		/**
+		 * @brief Inform object that an other object is removed ...
+		 * @param[in] removeObject Pointer on the EObject remeved ==> the user must remove all reference on this EObject
+		 * @note : Sub classes must call this class
+		 * @return ---
+		 */
+		virtual void OnObjectRemove(ewol::EObject * removeObject);
 	private:
 		bool    m_forward;
+		ewol::Entry * m_searchEntry;
+		ewol::Entry * m_replaceEntry;
 };
 
 #define EDN_CAST_APPL_SEARCH(curentPointer) EWOL_CAST(TYPE_EOBJECT_APPL_SEARCH,Search,curentPointer)
