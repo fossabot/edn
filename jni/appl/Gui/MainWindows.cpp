@@ -42,6 +42,7 @@
 #include <ewol/widget/Spacer.h>
 #include <ewol/widget/Menu.h>
 #include <ewol/widgetMeta/FileChooser.h>
+#include <ewol/widgetMeta/Parameter.h>
 #include <ewol/WidgetManager.h>
 #include <ewol/EObject.h>
 
@@ -79,6 +80,8 @@ MainWindows::MainWindows(void)
 				(void)myMenu->Add(idMenuFile, "Save As ...",  "", ednMsgGuiSaveAs);
 				(void)myMenu->AddSpacer();
 				//(void)myMenu->Add(idMenuFile, "Exit", "", ednMsgGuiExit);
+				(void)myMenu->AddSpacer();
+				(void)myMenu->Add(idMenuFile, "Properties",   "icon/Parameter.svg", ednMsgProperties);
 			int32_t idMenuEdit = myMenu->AddTitle("Edit");
 				(void)myMenu->Add(idMenuEdit, "Undo",         "icon/Undo.svg", ednMsgGuiUndo);
 				(void)myMenu->Add(idMenuEdit, "Redo",         "icon/Redo.svg", ednMsgGuiRedo);
@@ -111,7 +114,6 @@ MainWindows::MainWindows(void)
 				(void)myMenu->AddSpacer();
 				(void)myMenu->Add(idMenugDisplay, "Color Black",          "", ednMsgGuiChangeColor, "Black");
 				(void)myMenu->Add(idMenugDisplay, "Color White",          "", ednMsgGuiChangeColor, "White");
-			(void)myMenu->AddTitle("?", "", ednMsgGuiAbout);
 			
 			m_widgetLabelFileName = new ewol::Label("FileName");
 			m_widgetLabelFileName->SetExpendX(true);
@@ -148,8 +150,8 @@ MainWindows::MainWindows(void)
 			
 	// Generic event ...
 	RegisterMultiCast(ednMsgGuiSaveAs);
+	RegisterMultiCast(ednMsgProperties);
 	RegisterMultiCast(ednMsgGuiOpen);
-	RegisterMultiCast(ednMsgGuiAbout);
 	// to update the title ... 
 	RegisterMultiCast(ednMsgBufferState);
 	RegisterMultiCast(ednMsgBufferId);
@@ -253,19 +255,23 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			} else {
 				Buffer * myBuffer = BufferManager::Get(m_currentSavingAsIdBuffer);
 				ewol::FileChooser* tmpWidget = new ewol::FileChooser();
-				tmpWidget->SetTitle("Save Files As...");
-				tmpWidget->SetValidateLabel("Save");
-				etk::UString folder = "/home/";
-				etk::UString fileName = "";
-				if (true == myBuffer->HaveName()) {
-					etk::File tmpName = myBuffer->GetFileName();
-					folder = tmpName.GetFolder();
-					fileName = tmpName.GetShortFilename();
+				if (NULL == tmpWidget) {
+					APPL_ERROR("Can not allocate widget ==> display might be in error");
+				} else {
+					tmpWidget->SetTitle("Save Files As...");
+					tmpWidget->SetValidateLabel("Save");
+					etk::UString folder = "/home/";
+					etk::UString fileName = "";
+					if (true == myBuffer->HaveName()) {
+						etk::File tmpName = myBuffer->GetFileName();
+						folder = tmpName.GetFolder();
+						fileName = tmpName.GetShortFilename();
+					}
+					tmpWidget->SetFolder(folder);
+					tmpWidget->SetFileName(fileName);
+					PopUpWidgetPush(tmpWidget);
+					tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
 				}
-				tmpWidget->SetFolder(folder);
-				tmpWidget->SetFileName(fileName);
-				PopUpWidgetPush(tmpWidget);
-				tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
 			}
 		}
 	} else if (eventId == ednEventPopUpFileSaveAs) {
@@ -306,7 +312,24 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		}
 		return;
 		// TODO : Set the Title ....
-	} else if (eventId == ednMsgGuiAbout) {
+	} else if (eventId == ednMsgProperties) {
+		// Request the parameter GUI
+		ewol::Parameter* tmpWidget = new ewol::Parameter();
+		if (NULL == tmpWidget) {
+			APPL_ERROR("Can not allocate widget ==> display might be in error");
+		} else {
+			tmpWidget->SetTitle("Properties");
+			PopUpWidgetPush(tmpWidget);
+			tmpWidget->MenuAdd("Affichage",       "", NULL);
+			tmpWidget->MenuAdd("Editor",          "", NULL);
+			tmpWidget->MenuAdd("Polices & Color", "", NULL);
+			tmpWidget->MenuAdd("Highlight",       "", NULL);
+			tmpWidget->MenuAdd("About",           "", NULL);
+		}
+	} 
+		// request a sub element parameter GUI
+		
+	
 	/*
 		//Title 
 			"Edn"
@@ -336,7 +359,6 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			"    * Use it to travel in the space with a toaster.\n\n"
 			"I reserve the right to change this licence. If it change the version of the copy you have keep its own license."
 		*/
-	}
 	
 	return;
 }

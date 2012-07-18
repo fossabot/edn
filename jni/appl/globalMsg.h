@@ -34,6 +34,7 @@
 	extern const char* const ednMsgGuiClose;      // data : "current" "All"
 	extern const char* const ednMsgGuiSave;       // data : ""
 	extern const char* const ednMsgGuiSaveAs;     // data : ""
+	extern const char* const ednMsgProperties;    // data : ""
 	
 	extern const char* const ednMsgGuiUndo;       // data : ""
 	extern const char* const ednMsgGuiRedo;       // data : ""
@@ -55,7 +56,6 @@
 	
 	extern const char* const ednMsgGuiCtags;         // data : "Load" "ReLoad" "Jump" "Back"
 	
-	extern const char* const ednMsgGuiAbout;         // data : ""
 
 
 ////////////////////////////////////////////////////////////////////////
