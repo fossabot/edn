@@ -113,7 +113,7 @@ class CodeView :public ewol::WidgetScrooled
 	private:
 		void CalculateMaxSize(void);
 	protected:
-		virtual void OnDraw(void);
+		virtual void OnDraw(ewol::DrawProperty& displayProp);
 };
 
 #define EDN_CAST_CODE_VIEW(curentPointer) EWOL_CAST(TYPE_EOBJECT_EDN_CODE_VIEW,CodeView,curentPointer)

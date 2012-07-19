@@ -152,14 +152,14 @@ void CodeView::CalculateMaxSize(void)
 }
 
 
-void CodeView::OnDraw(void)
+void CodeView::OnDraw(ewol::DrawProperty& displayProp)
 {
 	m_OObjectsColored[      m_currentDrawId].Draw();
 	m_OObjectTextNormal[    m_currentDrawId].Draw();
 	m_OObjectTextBold[      m_currentDrawId].Draw();
 	m_OObjectTextItalic[    m_currentDrawId].Draw();
 	m_OObjectTextBoldItalic[m_currentDrawId].Draw();
-	WidgetScrooled::OnDraw();
+	WidgetScrooled::OnDraw(displayProp);
 }
 
 void CodeView::OnRegenerateDisplay(void)
