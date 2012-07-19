@@ -67,6 +67,35 @@ MainWindows::MainWindows(void)
 	
 		mySizerHori = new ewol::SizerHori();
 		mySizerVert->SubWidgetAdd(mySizerHori);
+			myBufferView = new BufferView();
+			myBufferView->SetExpendX(false);
+			myBufferView->SetExpendY(true);
+			myBufferView->SetFillX(true);
+			myBufferView->SetFillY(true);
+			mySizerHori->SubWidgetAdd(myBufferView);
+			
+			mySizerVert2 = new ewol::SizerVert();
+			mySizerHori->SubWidgetAdd(mySizerVert2);
+				
+				// main buffer Area :
+				myCodeView = new CodeView();
+				myCodeView->SetExpendX(true);
+				myCodeView->SetExpendY(true);
+				myCodeView->SetFillX(true);
+				myCodeView->SetFillY(true);
+				myCodeView->SetFontSize(11);
+				myCodeView->SetFontNameNormal(    "freefont/FreeMono.ttf");
+				myCodeView->SetFontNameBold(      "freefont/FreeMonoBold.ttf");
+				myCodeView->SetFontNameItalic(    "freefont/FreeMonoOblique.ttf");
+				myCodeView->SetFontNameBoldItalic("freefont/FreeMonoBoldOblique.ttf");
+				mySizerVert2->SubWidgetAdd(myCodeView);
+				
+				// search area : 
+				Search * mySearch = new Search();
+				mySizerVert2->SubWidgetAdd(mySearch);
+			
+		mySizerHori = new ewol::SizerHori();
+		mySizerVert->SubWidgetAdd(mySizerHori);
 			
 			myMenu = new ewol::Menu();
 			mySizerHori->SubWidgetAdd(myMenu);
@@ -120,34 +149,6 @@ MainWindows::MainWindows(void)
 			m_widgetLabelFileName->SetFillY(true);
 			mySizerHori->SubWidgetAdd(m_widgetLabelFileName);
 		
-		mySizerHori = new ewol::SizerHori();
-		mySizerVert->SubWidgetAdd(mySizerHori);
-			myBufferView = new BufferView();
-			myBufferView->SetExpendX(false);
-			myBufferView->SetExpendY(true);
-			myBufferView->SetFillX(true);
-			myBufferView->SetFillY(true);
-			mySizerHori->SubWidgetAdd(myBufferView);
-			
-			mySizerVert2 = new ewol::SizerVert();
-			mySizerHori->SubWidgetAdd(mySizerVert2);
-				// search area : 
-				Search * mySearch = new Search();
-				mySizerVert2->SubWidgetAdd(mySearch);
-				
-				// main buffer Area :
-				myCodeView = new CodeView();
-				myCodeView->SetExpendX(true);
-				myCodeView->SetExpendY(true);
-				myCodeView->SetFillX(true);
-				myCodeView->SetFillY(true);
-				myCodeView->SetFontSize(11);
-				myCodeView->SetFontNameNormal(    "freefont/FreeMono.ttf");
-				myCodeView->SetFontNameBold(      "freefont/FreeMonoBold.ttf");
-				myCodeView->SetFontNameItalic(    "freefont/FreeMonoOblique.ttf");
-				myCodeView->SetFontNameBoldItalic("freefont/FreeMonoBoldOblique.ttf");
-				mySizerVert2->SubWidgetAdd(myCodeView);
-			
 	// Generic event ...
 	RegisterMultiCast(ednMsgGuiSaveAs);
 	RegisterMultiCast(ednMsgProperties);
