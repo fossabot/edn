@@ -81,7 +81,7 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
 	
 	Vector2D<float>  textPos;
 	textPos.x = 20;
-	textPos.y = 20;
+	textPos.y = sizeY - 20 - letterHeight;
 	
 	myColor = ColorizeManager::Get("normal");
 	OOTextBold.SetColor(myColor->GetFG());
@@ -90,7 +90,7 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
 	
 	myColor = ColorizeManager::Get("commentDoxygen");
 	OOTextNormal.SetColor(myColor->GetFG());
-	textPos.y = (int32_t)(textPos.y + letterHeight*1.30);
+	textPos.y = (int32_t)(textPos.y - letterHeight*1.30);
 	tmpDisplay = "No Buffer Availlable to display";
 	OOTextNormal.Text(textPos, tmpDisplay);
 	

@@ -74,6 +74,7 @@ CodeView::CodeView(void)
 	RegisterMultiCast(ednMsgGuiChangeCharset);
 	RegisterMultiCast(ednMsgGuiFind);
 	RegisterMultiCast(ednMsgGuiReplace);
+	SetLimitScrolling(0.2);
 }
 
 CodeView::~CodeView(void)
@@ -243,6 +244,9 @@ bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveTy
 bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::eventInputType_te typeEvent, Vector2D<float>  pos)
 {
 	Vector2D<float>  relativePos = RelativePosition(pos);
+	// corection for the openGl abstraction
+	relativePos.y = m_size.y - relativePos.y;
+	
 	if (m_bufferID < 0) {
 		return false;
 	}

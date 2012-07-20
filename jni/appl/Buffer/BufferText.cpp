@@ -346,6 +346,9 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	APPL_VERBOSE("Start display of text buffer [" << displayStartBufferPos<< ".." << mylen << "]");
 	APPL_VERBOSE("cursor Pos : " << m_cursorPos << "start at pos=" << displayStartBufferPos);
 	
+	// note corection of the openGl invertion system :
+	y = sizeY - y;
+	y -= letterHeight;
 	
 	OOTextNormal.clippingDisable();
 	OOColored.clippingDisable();
@@ -450,7 +453,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 			lineMaxSize = 0.0;
 			idX =0;
 			pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
-			y += letterHeight;
+			y -= letterHeight;
 			displayLines++;
 			currentLineID++;
 			OOTextNormal.clippingDisable();

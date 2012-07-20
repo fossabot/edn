@@ -321,10 +321,12 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		} else {
 			tmpWidget->SetTitle("Properties");
 			PopUpWidgetPush(tmpWidget);
-			tmpWidget->MenuAdd("Affichage",       "", NULL);
+			tmpWidget->MenuAddGroup("Editor");
 			tmpWidget->MenuAdd("Editor",          "", NULL);
 			tmpWidget->MenuAdd("Polices & Color", "", NULL);
 			tmpWidget->MenuAdd("Highlight",       "", NULL);
+			tmpWidget->MenuAddGroup("Genral");
+			tmpWidget->MenuAdd("Affichage",       "", NULL);
 			tmpWidget->MenuAdd("About",           "", NULL);
 		}
 	} 
