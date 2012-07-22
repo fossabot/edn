@@ -1,18 +1,16 @@
 # action a faire (ordonner par révision) :
 
 dans la liste des truc important a refaire
-	retirer tout les singleton ==> passer par des namespace ==> fonctionnera mieux ...
 	finir de netoyer la classe widget
 	netoyer les classe text ...
-	mettre en pla ce le repositionnement automatique quand on change de buffer
+	mettre en place le repositionnement automatique quand on change de buffer
 	Curseur au bon endroit
 	
 
+* 0.3.6 ...
 
 * 0.2.X :
 	- gui : Amelioration du full-screen et du display de base (sans l'entete de la fenetre)
-	- gui : Mise en place d'un display ligne par ligne
-	- gui : ascenceur quand nécessaire
 	- gui : Demander la création de nouveaux fichier quand il n'existe pas (a l'ouverture en ligne de commande)
 	- sys : Mise en place des colorisation de base pour le
 			* java script
@@ -21,12 +19,9 @@ dans la liste des truc important a refaire
 	- sys : Catch F[1-12] ==> for user personal event
 	- BUG : Correction du bug des entré bizard tel que les chapot et les guillemets
 	- BUG : de sélection quand la ligne est pleine et la première ligne séctionnée. ==> regarder après avoir fait le display ligne par ligne...
-	- BUG : de copier coller sur les éàè ...
+	- BUG : de copier coller sur les éàè Ã¨ ...
 	- BUG : les caractère multiples type chapot ...
-	- BUG : italique non généré
 * 0.3.X :
-	- SEARCH : get selected text in the search windows
-	- SEARCH : Select the search windows when call crtl+F
 	- sys : personal property file in the ~/.edn ou ~/.gnome/edn
 	- gui : Ordonner les fichier ouvert par nom ...
 	- gui : parameter gui : et en autre la taille de la police ... et voir pour la récupérer sur le system... et ce serait cool...
@@ -77,4 +72,4 @@ dans la liste des truc important a refaire
 
 # note utiles : 
 http://majutsushi.github.com/tagbar/		==> je devrais regarder ca pour savoir ce que je peux faire avec du ctags
-CTags : Set the parsing methode : "ctags -R --fields=+n Sources/ /usr/include/gtk-3.0/"
+CTags : Set the parsing methode : "ctags -R --fields=+n jni ../ewol/Sources/"
