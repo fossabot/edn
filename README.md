@@ -10,19 +10,45 @@ Instructions
 
 download the software :
 
+	mkdir yourDevFolder
+	cd yourDevFolder
+	git clone git://github.com/HeeroYui/ewol.git
+	cd ewol
+	git submodule init
+	git submodule update
+	cd ..
 	git clone git://github.com/HeeroYui/edn.git
 	cd edn
 
-Compile software and install :
+(debug) Compile software & Run debug version:
 
-	sudo make DEBUG=0 install
+	make DEBUG=1
+	or
+	make CLANG=1 DEBUG=1
+	./out_LINUX/debug/obj/usr/bin/edn -l6 yourFile.txt
+	Note : -l6 corespond at the LOG level to display
 
-Run Software :
+(release) Compile software & install & run:
 
+	make
+	./install.sh
 	edn exemple.txt
 
-License
-=======
+(Android) Compile software & install
+
+	cd yourDevFolder
+	mkdir andoid
+	cd android
+	download here in "sdk" and "ndk" the coresponding SDK and NDK of Android:
+		http://developer.android.com/tools/sdk/ndk/index.html
+		http://developer.android.com/sdk/index.html
+		==> you need to download sub package of the NDK (refer to the NDK doccumentation) but only supported android version >4.0
+	cd ../edn
+	make PLATFORM=Android
+	make PLATFORM=Android install
+
+License (like GPL)
+==================
 
 	You can:
 		- Redistribute the sources code and binaries.
