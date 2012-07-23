@@ -28,6 +28,7 @@
 
 #include <appl/Debug.h>
 #include <etk/Types.h>
+#include <ewol/widget/SizerVert.h>
 
 
 namespace globals
@@ -42,10 +43,29 @@ namespace globals
 	bool    IsSetDisplaySpaceChar(void);
 	void    SetDisplaySpaceChar(bool newVal);
 	
+	bool    IsSetDisplayTabChar(void);
+	void    SetDisplayTabChar(bool newVal);
+	
 	bool    IsSetAutoIndent(void);
 	void    SetAutoIndent(bool newVal);
 
 	void    init2(void);
+	
+	
+	class ParameterGlobalsGui : public ewol::SizerVert
+	{
+		public :
+			ParameterGlobalsGui(void);
+			~ParameterGlobalsGui(void);
+			/**
+			 * @brief Receive a message from an other EObject with a specific eventId and data
+			 * @param[in] CallerObject Pointer on the EObject that information came from
+			 * @param[in] eventId Message registered by this class
+			 * @param[in] data Data registered by this class
+			 * @return ---
+			 */
+			virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
+	};
 
 }
 

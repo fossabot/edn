@@ -71,7 +71,19 @@ void globals::SetDisplaySpaceChar(bool newVal)
 	displaySpaceChar = newVal;
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
+// -----------------------------------------------------------
+static bool displayTabChar = true;
+bool globals::IsSetDisplayTabChar(void)
+{
+	return displayTabChar;
+}
 
+void globals::SetDisplayTabChar(bool newVal)
+{
+	APPL_INFO("Set SpaceChar " << newVal);
+	displayTabChar = newVal;
+	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
+}
 
 // -----------------------------------------------------------
 static bool AutoIndent = true;
@@ -102,5 +114,105 @@ int32_t globals::getNbLineBorder(void)
 }
 
 
+#include <ewol/widget/CheckBox.h>
+#include <ewol/widget/Spacer.h>
+static const char * const l_changeIndentation = "edn-event-change-indentation";
+static const char * const l_changeSpace       = "edn-event-change-spaces";
+static const char * const l_changeTabulation  = "edn-event-change-tabulation";
+static const char * const l_changeEndOfLine   = "edn-event-change-endOfLine";
+
+globals::ParameterGlobalsGui::ParameterGlobalsGui(void) 
+{
+	ewol::CheckBox* myCheckbox = NULL;
+	ewol::Spacer* mySpacer = NULL;
+	
+	mySpacer = new ewol::Spacer();
+	if (NULL == mySpacer) {
+		APPL_ERROR("Can not allocate widget ==> display might be in error");
+	} else {
+		mySpacer->SetExpendX(true);
+		mySpacer->SetExpendY(true);
+		SubWidgetAdd(mySpacer);
+	}
+	myCheckbox = new ewol::CheckBox("Automatic Indentation");
+	if (NULL == myCheckbox) {
+		APPL_ERROR("Can not allocate widget ==> display might be in error");
+	} else {
+		myCheckbox->SetExpendX(true);
+		myCheckbox->SetValue(IsSetAutoIndent());
+		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeIndentation);
+		SubWidgetAdd(myCheckbox);
+	}
+	myCheckbox = new ewol::CheckBox("Display space char (' ')");
+	if (NULL == myCheckbox) {
+		APPL_ERROR("Can not allocate widget ==> display might be in error");
+	} else {
+		myCheckbox->SetExpendX(true);
+		myCheckbox->SetValue(IsSetDisplaySpaceChar());
+		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeSpace);
+		SubWidgetAdd(myCheckbox);
+	}
+	myCheckbox = new ewol::CheckBox("Display tabulation char ('\\t')");
+	if (NULL == myCheckbox) {
+		APPL_ERROR("Can not allocate widget ==> display might be in error");
+	} else {
+		myCheckbox->SetExpendX(true);
+		myCheckbox->SetValue(IsSetDisplayTabChar());
+		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeTabulation);
+		SubWidgetAdd(myCheckbox);
+	}
+	myCheckbox = new ewol::CheckBox("Display end of line ('\\n')");
+	if (NULL == myCheckbox) {
+		APPL_ERROR("Can not allocate widget ==> display might be in error");
+	} else {
+		myCheckbox->SetExpendX(true);
+		myCheckbox->SetValue(IsSetDisplayEndOfLine());
+		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeEndOfLine);
+		SubWidgetAdd(myCheckbox);
+	}
+}
+
+globals::ParameterGlobalsGui::~ParameterGlobalsGui(void) 
+{
+	
+}
 
 
+/**
+ * @brief Receive a message from an other EObject with a specific eventId and data
+ * @param[in] CallerObject Pointer on the EObject that information came from
+ * @param[in] eventId Message registered by this class
+ * @param[in] data Data registered by this class
+ * @return ---
+ */
+void globals::ParameterGlobalsGui::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
+{
+	ewol::SizerVert::OnReceiveMessage(CallerObject, eventId, data);
+	
+	if (eventId == l_changeEndOfLine) {
+		if (data == "true") {
+			SetDisplayEndOfLine(true);
+		} else {
+			SetDisplayEndOfLine(false);
+		}
+	} else if (eventId == l_changeIndentation) {
+		if (data == "true") {
+			SetAutoIndent(true);
+		} else {
+			SetAutoIndent(false);
+		}
+	} else if (eventId == l_changeSpace) {
+		if (data == "true") {
+			SetDisplaySpaceChar(true);
+		} else {
+			SetDisplaySpaceChar(false);
+		}
+	} else if (eventId == l_changeTabulation) {
+		if (data == "true") {
+			SetDisplayTabChar(true);
+		} else {
+			SetDisplayTabChar(false);
+		}
+	}
+	
+}

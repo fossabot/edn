@@ -322,7 +322,8 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			tmpWidget->SetTitle("Properties");
 			PopUpWidgetPush(tmpWidget);
 			tmpWidget->MenuAddGroup("Editor");
-			tmpWidget->MenuAdd("Editor",          "", NULL);
+			ewol::Widget* tmpSubWidget = new globals::ParameterGlobalsGui();
+			tmpWidget->MenuAdd("Editor",          "", tmpSubWidget);
 			tmpWidget->MenuAdd("Polices & Color", "", NULL);
 			tmpWidget->MenuAdd("Highlight",       "", NULL);
 			tmpWidget->MenuAddGroup("Genral");
