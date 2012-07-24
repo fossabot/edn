@@ -34,28 +34,18 @@
 #include <etk/Types.h>
 #include <ewol/widget/WidgetScrolled.h>
 
-//!< EObject name :
-extern const char * const TYPE_EOBJECT_EDN_CODE_VIEW;
-
 class CodeView :public ewol::WidgetScrooled
 {
 	public:
 		         CodeView(void);
 		virtual ~CodeView(void);
 		/**
-		 * @brief Check if the object has the specific type.
-		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
-		 * @param[in] objectType type of the object we want to check
-		 * @return true if the object is compatible, otherwise false
-		 */
-		bool CheckObjectType(const char * const objectType);
-		/**
 		 * @brief Get the current Object type of the EObject
 		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
 		 * @param[in] objectType type description
 		 * @return true if the object is compatible, otherwise false
 		 */
-		const char * const GetObjectType(void);
+		const char * const GetObjectType(void) { return "ApplCodeView"; };
 		virtual bool   CalculateMinSize(void);
 	private:
 		etk::UString                 m_label;
@@ -115,8 +105,6 @@ class CodeView :public ewol::WidgetScrooled
 	protected:
 		virtual void OnDraw(ewol::DrawProperty& displayProp);
 };
-
-#define EDN_CAST_CODE_VIEW(curentPointer) EWOL_CAST(TYPE_EOBJECT_EDN_CODE_VIEW,CodeView,curentPointer)
 
 #endif
 

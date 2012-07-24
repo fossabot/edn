@@ -30,8 +30,6 @@
 #include <ewol/widget/SizerHori.h>
 #include <ewol/widget/Entry.h>
 
-extern const char * const TYPE_EOBJECT_APPL_SEARCH;
-
 class Search : public ewol::SizerHori
 {
 	public:
@@ -39,19 +37,12 @@ class Search : public ewol::SizerHori
 		Search(void);
 		~Search(void);
 		/**
-		 * @brief Check if the object has the specific type.
-		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
-		 * @param[in] objectType type of the object we want to check
-		 * @return true if the object is compatible, otherwise false
-		 */
-		bool CheckObjectType(const char * const objectType);
-		/**
 		 * @brief Get the current Object type of the EObject
 		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
 		 * @param[in] objectType type description
 		 * @return true if the object is compatible, otherwise false
 		 */
-		const char * const GetObjectType(void);
+		const char * const GetObjectType(void) { return "ApplSearch"; };
 		/**
 		 * @brief Receive a message from an other EObject with a specific eventId and data
 		 * @param[in] CallerObject Pointer on the EObject that information came from
@@ -72,8 +63,6 @@ class Search : public ewol::SizerHori
 		ewol::Entry * m_searchEntry;
 		ewol::Entry * m_replaceEntry;
 };
-
-#define EDN_CAST_APPL_SEARCH(curentPointer) EWOL_CAST(TYPE_EOBJECT_APPL_SEARCH,Search,curentPointer)
 
 #endif
 

@@ -116,8 +116,6 @@ class ParameterAboutGui : public ewol::SizerVert
 #undef __class__
 #define __class__	"MainWindows"
 
-extern const char * const TYPE_EOBJECT_EDN_MAIN_WINDOWS = __class__;
-
 MainWindows::MainWindows(void)
 {
 	APPL_DEBUG("CREATE WINDOWS ... ");
@@ -231,40 +229,6 @@ MainWindows::~MainWindows(void)
 	
 }
 
-/**
- * @brief Check if the object has the specific type.
- * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
- * @param[in] objectType type of the object we want to check
- * @return true if the object is compatible, otherwise false
- */
-bool MainWindows::CheckObjectType(const char * const objectType)
-{
-	if (NULL == objectType) {
-		APPL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_MAIN_WINDOWS << "\" != NULL(pointer) ");
-		return false;
-	}
-	if (objectType == TYPE_EOBJECT_EDN_MAIN_WINDOWS) {
-		return true;
-	} else {
-		if(true == ewol::Windows::CheckObjectType(objectType)) {
-			return true;
-		}
-		APPL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_MAIN_WINDOWS << "\" != \"" << objectType << "\"");
-		return false;
-	}
-}
-
-/**
- * @brief Get the current Object type of the EObject
- * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
- * @param[in] objectType type description
- * @return true if the object is compatible, otherwise false
- */
-const char * const MainWindows::GetObjectType(void)
-{
-	return TYPE_EOBJECT_EDN_MAIN_WINDOWS;
-}
-
 
 const char *const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
 const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
@@ -297,14 +261,8 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		PopUpWidgetPush(tmpWidget);
 		tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
 	} else if (eventId == ednEventPopUpFileSelected) {
-		// get widget:
-		ewol::FileChooser * tmpWidget = EWOL_CAST_WIDGET_FILE_CHOOSER(CallerObject);
-		if (NULL == tmpWidget) {
-			APPL_ERROR("impossible to get pop_upWidget " << CallerObject);
-			return;
-		}
 		// get the filename : 
-		etk::UString tmpData = tmpWidget->GetCompleateFileName();
+		etk::UString tmpData = data;
 		APPL_DEBUG("Request opening the file : " << tmpData);
 		SendMultiCast(ednMsgOpenFile, tmpData);
 	} else if (eventId == ednMsgGuiSaveAs) {
@@ -343,14 +301,8 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			}
 		}
 	} else if (eventId == ednEventPopUpFileSaveAs) {
-		// get widget:
-		ewol::FileChooser * tmpWidget = EWOL_CAST_WIDGET_FILE_CHOOSER(CallerObject);
-		if (NULL == tmpWidget) {
-			APPL_ERROR("impossible to get pop_upWidget " << CallerObject);
-			return;
-		}
 		// get the filename : 
-		etk::UString tmpData = tmpWidget->GetCompleateFileName();
+		etk::UString tmpData = data;
 		APPL_DEBUG("Request Saving As file : " << tmpData);
 		
 		BufferManager::Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);

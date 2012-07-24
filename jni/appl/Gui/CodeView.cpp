@@ -42,8 +42,6 @@
 #define __class__	"CodeView"
 
 
-extern const char * const TYPE_EOBJECT_EDN_CODE_VIEW = "CodeView";
-
 CodeView::CodeView(void)
 {
 	m_label = "CodeView is disable ...";
@@ -100,41 +98,6 @@ void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
 			m_lineNumberList.PushBack(tmpCoord);
 		}
 	}
-}
-
-
-/**
- * @brief Check if the object has the specific type.
- * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
- * @param[in] objectType type of the object we want to check
- * @return true if the object is compatible, otherwise false
- */
-bool CodeView::CheckObjectType(const char * const objectType)
-{
-	if (NULL == objectType) {
-		APPL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_CODE_VIEW << "\" != NULL(pointer) ");
-		return false;
-	}
-	if (objectType == TYPE_EOBJECT_EDN_CODE_VIEW) {
-		return true;
-	} else {
-		if(true == ewol::WidgetScrooled::CheckObjectType(objectType)) {
-			return true;
-		}
-		APPL_ERROR("check error : \"" << TYPE_EOBJECT_EDN_CODE_VIEW << "\" != \"" << objectType << "\"");
-		return false;
-	}
-}
-
-/**
- * @brief Get the current Object type of the EObject
- * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
- * @param[in] objectType type description
- * @return true if the object is compatible, otherwise false
- */
-const char * const CodeView::GetObjectType(void)
-{
-	return TYPE_EOBJECT_EDN_CODE_VIEW;
 }
 
 

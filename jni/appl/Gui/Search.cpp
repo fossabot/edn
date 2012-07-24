@@ -37,9 +37,6 @@
 #undef __class__
 #define __class__	"Search"
 
-extern const char * const TYPE_EOBJECT_APPL_SEARCH = __class__;
-
-
 const char* const l_eventSearchEntry        = "appl-search-entry";
 const char* const l_eventSearchEntryEnter   = "appl-search-entry-enter";
 const char* const l_eventReplaceEntry       = "appl-replace-entry";
@@ -154,39 +151,6 @@ Search::~Search(void)
 	
 }
 
-/**
- * @brief Check if the object has the specific type.
- * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
- * @param[in] objectType type of the object we want to check
- * @return true if the object is compatible, otherwise false
- */
-bool Search::CheckObjectType(const char * const objectType)
-{
-	if (NULL == objectType) {
-		APPL_ERROR("check error : \"" << TYPE_EOBJECT_APPL_SEARCH << "\" != NULL(pointer) ");
-		return false;
-	}
-	if (objectType == TYPE_EOBJECT_APPL_SEARCH) {
-		return true;
-	} else {
-		if(true == ewol::SizerHori::CheckObjectType(objectType)) {
-			return true;
-		}
-		APPL_ERROR("check error : \"" << TYPE_EOBJECT_APPL_SEARCH << "\" != \"" << objectType << "\"");
-		return false;
-	}
-}
-
-/**
- * @brief Get the current Object type of the EObject
- * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
- * @param[in] objectType type description
- * @return true if the object is compatible, otherwise false
- */
-const char * const Search::GetObjectType(void)
-{
-	return TYPE_EOBJECT_APPL_SEARCH;
-}
 
 /**
  * @brief Receive a message from an other EObject with a specific eventId and data
