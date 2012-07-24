@@ -29,14 +29,18 @@ LOCAL_CFLAGS    :=  -D__PLATFORM__Android \
                     -D__MODE__Touch \
                     -DETK_DEBUG_LEVEL=3 \
                     -DAPPL_DEBUG_LEVEL=3 \
-                    -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" 
+                    -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" \
+                    -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION_TAG_SHORT)-debug\"" \
+                    -DBUILD_TIME="\"$(BUILD_TIME)\""
 else
 LOCAL_CFLAGS    :=  -D__PLATFORM__Android \
                     -D__MODE__Touch \
                     -DETK_DEBUG_LEVEL=1 \
                     -DAPPL_DEBUG_LEVEL=1 \
                     -DMODE_RELEASE \
-                    -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" 
+                    -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" \
+                    -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION_TAG_SHORT)-release\"" \
+                    -DBUILD_TIME="\"$(BUILD_TIME)\""
 endif
 
 

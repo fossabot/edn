@@ -46,6 +46,73 @@
 #include <ewol/WidgetManager.h>
 #include <ewol/EObject.h>
 
+
+
+
+#undef __class__
+#define __class__	"AboutGui"
+
+#include <ewol/widget/Label.h>
+#include <ewol/widget/Spacer.h>
+
+class ParameterAboutGui : public ewol::SizerVert
+{
+	public :
+		ParameterAboutGui(void)
+		{
+			ewol::Spacer* mySpacer = NULL;
+			
+			mySpacer = new ewol::Spacer();
+			if (NULL == mySpacer) {
+				APPL_ERROR("Can not allocate widget ==> display might be in error");
+			} else {
+				mySpacer->SetExpendX(true);
+				mySpacer->SetExpendY(true);
+				SubWidgetAdd(mySpacer);
+			}
+			AddElement("        libPng");
+			AddElement("        ogg-tremor");
+			AddElement("        portaudio");
+			AddElement("        libZip");
+			AddElement("        tinyXml");
+			AddElement("        freetype");
+			AddElement("        agg2.4");
+			AddElement("        etk (BSD)");
+			AddElement("    ewol is based on");
+			AddElement("    Website : https://github.com/HeeroYui/ewol");
+			AddElement("    Licence : BSD like");
+			AddElement("    Copyright 2010 Edouard DUPIN, all right reserved");
+			AddElement("    Supported OS : Linux, Android" );
+			AddElement(etk::UString("    OpenGl librairy : v") + ewol::GetVersion() );
+			AddElement("Ewol", true);
+			AddElement("");
+			AddElement("    Website : https://github.com/HeeroYui/edn");
+			AddElement("    Licence : GPL");
+			AddElement("    Copyright 2010 Edouard DUPIN, all right reserved");
+			AddElement(etk::UString("    Build Time : ") + etk::UString(BUILD_TIME));
+			AddElement("    Source Code Editor");
+			AddElement(etk::UString("    Editeur De N'ours : v") + etk::UString(APPL_VERSION_TAG_NAME));
+			AddElement("Edn", true);
+			
+		};
+		
+		~ParameterAboutGui(void) { };
+		
+		void AddElement(etk::UString label, bool bold=false, bool italic=false)
+		{
+			ewol::Label* myLabel = new ewol::Label(label);
+			if (NULL == myLabel) {
+				APPL_ERROR("Can not allocate widget ==> display might be in error");
+			} else {
+				myLabel->SetExpendX(true);
+				SubWidgetAdd(myLabel);
+			}
+		};
+		
+};
+
+
+
 #undef __class__
 #define __class__	"MainWindows"
 
@@ -328,41 +395,11 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			tmpWidget->MenuAdd("Highlight",       "", NULL);
 			tmpWidget->MenuAddGroup("Genral");
 			tmpWidget->MenuAdd("Affichage",       "", NULL);
-			tmpWidget->MenuAdd("About",           "", NULL);
+			tmpSubWidget = new ParameterAboutGui();
+			tmpWidget->MenuAdd("About",           "", tmpSubWidget);
 		}
-	} 
-		// request a sub element parameter GUI
-		
+	}
 	
-	/*
-		//Title 
-			"Edn"
-		// version
-			VERSION_TAG_NAME
-		// comments:
-			"Editeur De N'ours\n"
-			"L'Editeur Desoxyribo-Nucleique.\n"
-			"Source Code Editor\n"
-			"Build Time : " VERSION_BUILD_TIME;
-		// copyright
-			"Copyright 2010 Edouard DUPIN, all right reserved";
-		// licence
-			"This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY\n\n"
-			"You can:\n"
-			"    * Redistribute the sources code and binaries.\n"
-			"    * Modify the Sources code.\n"
-			"    * Use a part of the sources (less than 50%) in an other software, just write somewhere \"Edn is great\" visible by the user (on your product or on your website with a link to my page).\n"
-			"    * Redistribute the modification only if you want.\n"
-			"    * Send me the bug-fix (it could be great).\n"
-			"    * Pay me a beer or some other things.\n"
-			"    * Print the source code on WC paper ...\n\n"
-			"You can NOT:\n"
-			"    * Earn money with this Software (But I can).\n"
-			"    * Add malware in the Sources.\n"
-			"    * Do something bad with the sources.\n"
-			"    * Use it to travel in the space with a toaster.\n\n"
-			"I reserve the right to change this licence. If it change the version of the copy you have keep its own license."
-		*/
 	
 	return;
 }
