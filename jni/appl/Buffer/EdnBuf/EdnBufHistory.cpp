@@ -39,7 +39,7 @@ EdnBufHistory::EdnBufHistory(void)
 	m_nInserted = 0;
 }
 
-EdnBufHistory::EdnBufHistory(int32_t pos, int32_t nInserted, etk::VectorType<int8_t> &deletedText)
+EdnBufHistory::EdnBufHistory(int32_t pos, int32_t nInserted, std::vector<int8_t> &deletedText)
 {
 	//APPL_INFO("EdnBufHistory new + data");
 	m_pos = pos;
@@ -47,7 +47,7 @@ EdnBufHistory::EdnBufHistory(int32_t pos, int32_t nInserted, etk::VectorType<int
 	m_deletedText = deletedText;
 }
 
-void EdnBufHistory::Set(int32_t pos, int32_t nInserted, etk::VectorType<int8_t> &deletedText)
+void EdnBufHistory::Set(int32_t pos, int32_t nInserted, std::vector<int8_t> &deletedText)
 {
 	//APPL_INFO("EdnBufHistory new + data");
 	m_pos = pos;
@@ -67,7 +67,7 @@ int32_t EdnBufHistory::getPos(void)
 
 int32_t EdnBufHistory::getnbDeleted(void)
 {
-	return m_deletedText.Size();
+	return m_deletedText.size();
 }
 
 int32_t EdnBufHistory::getnbInserted(void)
@@ -75,7 +75,7 @@ int32_t EdnBufHistory::getnbInserted(void)
 	return m_nInserted;
 }
 
-void EdnBufHistory::getData(etk::VectorType<int8_t> &deletedText)
+void EdnBufHistory::getData(std::vector<int8_t> &deletedText)
 {
 	deletedText = m_deletedText;
 }

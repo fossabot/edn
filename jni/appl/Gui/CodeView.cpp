@@ -54,7 +54,7 @@ CodeView::CodeView(void)
 	m_bufferID = -1;
 	m_buttunOneSelected = false;
 	
-	m_lineNumberList.Clear();
+	m_lineNumberList.clear();
 	
 	m_textColorFg = etk::color::color_Black;
 	
@@ -91,11 +91,11 @@ void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
 	Vector2D<float>  tmpCoord;
 	tmpCoord.x = 0;
 	tmpCoord.y = 0;
-	if (m_lineNumberList.Size()<=bufferID) {
+	if (m_lineNumberList.size()<=bufferID) {
 		// update the number of elements : 
-		for (int32_t iii=m_lineNumberList.Size(); iii <= bufferID; iii++) {
+		for (int32_t iii=m_lineNumberList.size(); iii <= bufferID; iii++) {
 			// add start line at 0 :
-			m_lineNumberList.PushBack(tmpCoord);
+			m_lineNumberList.push_back(tmpCoord);
 		}
 	}
 }
@@ -289,7 +289,7 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 	if(eventId == ednMsgBufferId) {
 		//keep the reference of the display offset :
 		if(    m_bufferID >=0
-		    && m_bufferID < m_lineNumberList.Size()) {
+		    && m_bufferID < m_lineNumberList.size()) {
 			m_lineNumberList[m_bufferID] = m_originScrooled;
 		}
 		int32_t bufferID = 0;
@@ -301,7 +301,7 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 		UpdateNumberOfLineReference(m_bufferID);
 		// set back if needed the display position ...
 		if(    m_bufferID >=0
-		    && m_bufferID < m_lineNumberList.Size()) {
+		    && m_bufferID < m_lineNumberList.size()) {
 			m_originScrooled = m_lineNumberList[m_bufferID];
 		}
 	} else if (eventId == ednMsgGuiCopy) {

@@ -80,7 +80,7 @@ class classBufferManager: public ewol::EObject
 
 	private:
 		
-		etk::VectorType<Buffer*> listBuffer;  //!< element List of the char Elements
+		std::vector<Buffer*> listBuffer;  //!< element List of the char Elements
 		
 		void        RemoveAll(void);          //!< remove all buffer
 		int32_t     m_idSelected;
@@ -125,7 +125,7 @@ classBufferManager::~classBufferManager(void)
 	RemoveAll();
 	// clear The list of Buffer
 	APPL_INFO("~classBufferManager::listBuffer.Clear();");
-	listBuffer.Clear();
+	listBuffer.clear();
 	APPL_INFO("~classBufferManager::delete(BufferNotExiste);");
 	delete(BufferNotExiste);
 }
@@ -235,7 +235,7 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 						}
 						// try next buffer
 						if (-1 == destBuffer) {
-							for(int32_t ii=closeID+1; ii < listBuffer.Size(); ii++) {
+							for(int32_t ii=closeID+1; ii < listBuffer.size(); ii++) {
 								if (true == Exist(ii) ) {
 									destBuffer = ii;
 									break;
@@ -305,7 +305,7 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 void classBufferManager::RemoveAll(void)
 {
 	int32_t i;
-	for (i=0; i<listBuffer.Size(); i++) {
+	for (i=0; i<listBuffer.size(); i++) {
 		Remove(i);
 	}
 	SendMultiCast(ednMsgGuiClose, "All");
@@ -326,8 +326,8 @@ int32_t	classBufferManager::Create(void)
 	// allocate a new Buffer
 	Buffer *myBuffer = new BufferText();
 	// Add at the list of element
-	listBuffer.PushBack(myBuffer);
-	int32_t basicID = listBuffer.Size() - 1;
+	listBuffer.push_back(myBuffer);
+	int32_t basicID = listBuffer.size() - 1;
 	return basicID;
 }
 
@@ -348,8 +348,8 @@ int32_t classBufferManager::Open(etk::File &myFile)
 		// allocate a new Buffer
 		Buffer *myBuffer = new BufferText(myFile);
 		// Add at the list of element
-		listBuffer.PushBack(myBuffer);
-		return listBuffer.Size() - 1;
+		listBuffer.push_back(myBuffer);
+		return listBuffer.size() - 1;
 	} else {
 		// the buffer already existed ==> we open it ...
 		return GetId(myFile);
@@ -365,7 +365,7 @@ Buffer * classBufferManager::Get(int32_t BufferID)
 		return BufferNotExiste;
 	}
 	// check if the Buffer existed
-	if (BufferID < listBuffer.Size()) {
+	if (BufferID < listBuffer.size()) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[BufferID]) {
 			return listBuffer[BufferID];
@@ -373,7 +373,7 @@ Buffer * classBufferManager::Get(int32_t BufferID)
 			APPL_ERROR("non existing Buffer " << BufferID);
 		}
 	} else {
-		APPL_ERROR("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.Size());
+		APPL_ERROR("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.size());
 	}
 	return BufferNotExiste;
 }
@@ -385,7 +385,7 @@ bool classBufferManager::Exist(int32_t BufferID)
 		return false;
 	}
 	// check if the Buffer existed
-	if (BufferID < listBuffer.Size()) {
+	if (BufferID < listBuffer.size()) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[BufferID]) {
 			return true;
@@ -408,7 +408,7 @@ int32_t classBufferManager::GetId(etk::File &myFile)
 {
 	int32_t iii;
 	// check if the Buffer existed
-	for (iii=0; iii < listBuffer.Size(); iii++) {
+	for (iii=0; iii < listBuffer.size(); iii++) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[iii]) {
 			if ( listBuffer[iii]->GetFileName() == myFile) {
@@ -423,7 +423,7 @@ int32_t classBufferManager::GetId(etk::File &myFile)
 // return the number of buffer (open in the past) if 5 buffer open and 4 close ==> return 5
 uint32_t classBufferManager::Size(void)
 {
-	return listBuffer.Size();
+	return listBuffer.size();
 }
 
 // nb of opens file Now ...
@@ -431,7 +431,7 @@ uint32_t classBufferManager::SizeOpen(void)
 {
 	uint32_t jjj = 0;
 	// check if the Buffer existed
-	for (int32_t iii=0; iii<listBuffer.Size(); iii++) {
+	for (int32_t iii=0; iii<listBuffer.size(); iii++) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[iii]) {
 			jjj++;
@@ -454,7 +454,7 @@ bool classBufferManager::Remove(int32_t BufferID)
 		return false;
 	}
 	// check if the Buffer existed
-	if (BufferID < listBuffer.Size()) {
+	if (BufferID < listBuffer.size()) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[BufferID]) {
 			// TODO : Check if it saved...
@@ -475,7 +475,7 @@ bool classBufferManager::Remove(int32_t BufferID)
 			return false;
 		}
 	} else {
-		APPL_INFO("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.Size());
+		APPL_INFO("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.size());
 		return false;
 	}
 }
@@ -491,7 +491,7 @@ bool classBufferManager::Remove(int32_t BufferID)
 int32_t classBufferManager::WitchBuffer(int32_t iEmeElement)
 {
 	int32_t i;
-	for (i=0; i<listBuffer.Size(); i++) {
+	for (i=0; i<listBuffer.size(); i++) {
 		if (NULL != listBuffer[i]) {
 			iEmeElement--;
 			// find the element : 

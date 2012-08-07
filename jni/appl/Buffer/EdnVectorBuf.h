@@ -26,7 +26,7 @@
 #ifndef __EDN_VECTOR_BUF_H__
 #define __EDN_VECTOR_BUF_H__
 
-#include <etk/VectorType.h>
+#include <vector>
 
 #undef __class__
 #define __class__	"EdnVectorBuf"
@@ -271,14 +271,14 @@ class EdnVectorBuf
 		EdnVectorBuf &					operator=(	const EdnVectorBuf & Evb);
 		int8_t							operator[] (int32_t pos);
 		int8_t &						Get(		int32_t pos);
-		void							Get(		int32_t pos, int32_t nbElement, etk::VectorType<int8_t> &tmpBuffer);
+		void							Get(		int32_t pos, int32_t nbElement, std::vector<int8_t> &tmpBuffer);
 		// insert functions
 		void							PushBack(	const int8_t& item);
 		void							Insert(		int32_t pos, const int8_t& item);
-		void							Insert(		int32_t pos, etk::VectorType<int8_t>& items);
+		void							Insert(		int32_t pos, std::vector<int8_t>& items);
 		// Remove and insert functions
 		void							Replace(	int32_t pos, const int8_t& item);
-		void							Replace(	int32_t pos, int32_t nbRemoveElement, etk::VectorType<int8_t>& items);
+		void							Replace(	int32_t pos, int32_t nbRemoveElement, std::vector<int8_t>& items);
 		// Revove fonctions
 		void							Remove(		int32_t pos, int32_t nbRemoveElement = 1);
 		void							PopBack(	void);
@@ -300,6 +300,7 @@ class EdnVectorBuf
 		 * @return The number requested
 		 */
 		int32_t		Size(void) { return m_allocated - GapSize(); };
+		int32_t		size(void) { return m_allocated - GapSize(); };
 
 		Iterator Position(int32_t pos)
 		{
@@ -336,6 +337,5 @@ class EdnVectorBuf
 #undef __class__
 #define __class__	NULL
 
-void TestEdnVectorBuf(void);
 
 #endif

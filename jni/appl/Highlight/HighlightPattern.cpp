@@ -118,7 +118,7 @@ void HighlightPattern::Display(void)
 	}
 	*/
 	// Display all elements
-	for (int32_t i=0; i< m_subPatern.Size(); i++) {
+	for (int32_t i=0; i< m_subPatern.size(); i++) {
 		APPL_INFO("        " << i << " SubPattern : " << m_subPatern[i]->GetName() );
 		m_subPatern[i]->Display();
 	}

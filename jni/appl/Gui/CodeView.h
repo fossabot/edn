@@ -48,19 +48,19 @@ class CodeView :public ewol::WidgetScrooled
 		const char * const GetObjectType(void) { return "ApplCodeView"; };
 		virtual bool   CalculateMinSize(void);
 	private:
-		etk::UString                 m_label;
-		color_ts                     m_textColorFg;  //!< Text color
-		color_ts                     m_textColorBg;  //!< Background color
-		int32_t                      m_bufferID;
-		bool                         m_buttunOneSelected;
-		etk::VectorType<Vector2D<float> >  m_lineNumberList;
-		void                         UpdateNumberOfLineReference(int32_t bufferID);
+		etk::UString                   m_label;
+		color_ts                       m_textColorFg;  //!< Text color
+		color_ts                       m_textColorBg;  //!< Background color
+		int32_t                        m_bufferID;
+		bool                           m_buttunOneSelected;
+		std::vector<Vector2D<float> >  m_lineNumberList;
+		void                           UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
-		ewol::OObject2DTextColored   m_OObjectTextNormal[NB_BOUBLE_BUFFER];
-		ewol::OObject2DTextColored   m_OObjectTextBold[NB_BOUBLE_BUFFER];
-		ewol::OObject2DTextColored   m_OObjectTextItalic[NB_BOUBLE_BUFFER];
-		ewol::OObject2DTextColored   m_OObjectTextBoldItalic[NB_BOUBLE_BUFFER];
-		ewol::OObject2DColored       m_OObjectsColored[NB_BOUBLE_BUFFER];
+		ewol::OObject2DTextColored     m_OObjectTextNormal[NB_BOUBLE_BUFFER];
+		ewol::OObject2DTextColored     m_OObjectTextBold[NB_BOUBLE_BUFFER];
+		ewol::OObject2DTextColored     m_OObjectTextItalic[NB_BOUBLE_BUFFER];
+		ewol::OObject2DTextColored     m_OObjectTextBoldItalic[NB_BOUBLE_BUFFER];
+		ewol::OObject2DColored         m_OObjectsColored[NB_BOUBLE_BUFFER];
 		
 	public:
 		virtual void   OnRegenerateDisplay(void);

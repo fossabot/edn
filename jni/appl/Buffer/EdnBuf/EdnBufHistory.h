@@ -27,22 +27,22 @@
 #define __EDN_BUFFER_HISTORY_H__
 
 
-#include <etk/VectorType.h>
+#include <vector>
 
 class EdnBufHistory{
 	public:
 					 EdnBufHistory(void);
-					 EdnBufHistory(int32_t pos, int32_t nInserted, etk::VectorType<int8_t> &deletedText);
+					 EdnBufHistory(int32_t pos, int32_t nInserted, std::vector<int8_t> &deletedText);
 					~EdnBufHistory(void);
-		void		 Set(int32_t pos, int32_t nInserted, etk::VectorType<int8_t> &deletedText);
+		void		 Set(int32_t pos, int32_t nInserted, std::vector<int8_t> &deletedText);
 		int32_t		 getPos(void);
 		int32_t		 getnbDeleted(void);
 		int32_t		 getnbInserted(void);
-		void		 getData(etk::VectorType<int8_t> &deletedText);
+		void		 getData(std::vector<int8_t> &deletedText);
 	private:
 		int32_t m_pos;
 		int32_t m_nInserted;
-		etk::VectorType<int8_t> m_deletedText;
+		std::vector<int8_t> m_deletedText;
 };
 
 #endif

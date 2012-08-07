@@ -225,18 +225,26 @@ int8_t& EdnVectorBuf::Get(int32_t pos)
  * @return ---
  * 
  */
-void EdnVectorBuf::Get(int32_t pos, int32_t nbElement, etk::VectorType<int8_t> &tmpBuffer)
+void EdnVectorBuf::Get(int32_t pos, int32_t nbElement, std::vector<int8_t> &tmpBuffer)
 {
-	tmpBuffer.Clear();
+	tmpBuffer.clear();
 	if (pos < m_gapStart) {
 		if (pos + nbElement < m_gapStart) {
-			tmpBuffer.PushBack(&m_data[pos], nbElement);
+			for (int32_t iii = 0 ; iii < nbElement; iii++) {
+				tmpBuffer.push_back(m_data[pos + iii]);
+			}
 		} else {
-			tmpBuffer.PushBack(&m_data[pos], m_gapStart - pos);
-			tmpBuffer.PushBack(&m_data[m_gapEnd], nbElement - (m_gapStart - pos) );
+			for (int32_t iii = 0 ; iii < m_gapStart-pos; iii++) {
+				tmpBuffer.push_back(m_data[pos + iii]);
+			}
+			for (int32_t iii = 0 ; iii < nbElement - (m_gapStart - pos); iii++) {
+				tmpBuffer.push_back(m_data[m_gapEnd + iii]);
+			}
 		}
 	} else {
-		tmpBuffer.PushBack(&m_data[pos+(m_gapEnd-m_gapStart)], nbElement);
+		for (int32_t iii = 0 ; iii < nbElement; iii++) {
+			tmpBuffer.push_back(m_data[pos+(m_gapEnd-m_gapStart)+iii]);
+		}
 	}
 }
 
@@ -397,15 +405,15 @@ void EdnVectorBuf::Insert(int32_t pos, const int8_t& item)
  * @return ---
  * 
  */
-void EdnVectorBuf::Insert(int32_t pos, etk::VectorType<int8_t>& items)
+void EdnVectorBuf::Insert(int32_t pos, std::vector<int8_t>& items)
 {
 	if(		pos > Size()
 		||	pos < 0 ) {
 		APPL_ERROR("Request higher than buffer size : pos="<<pos<< " bufferSize="<<Size());
 		return;
 	}
-	if( items.Size() > GapSize() ) {
-		if (false == GapResize(pos, GAP_SIZE_MIN + items.Size()) ) {
+	if( items.size() > GapSize() ) {
+		if (false == GapResize(pos, GAP_SIZE_MIN + items.size()) ) {
 			return;
 		}
 	} else {
@@ -414,10 +422,10 @@ void EdnVectorBuf::Insert(int32_t pos, etk::VectorType<int8_t>& items)
 		}
 	}
 	int32_t i;
-	for(i=0; i<items.Size(); i++) {
+	for(i=0; i<items.size(); i++) {
 		m_data[m_gapStart+i] = items[i];
 	}
-	m_gapStart += items.Size();
+	m_gapStart += items.size();
 }
 
 
@@ -453,7 +461,7 @@ void EdnVectorBuf::Replace(int32_t pos, const int8_t& item)
  * @return ---
  * 
  */
-void EdnVectorBuf::Replace(int32_t pos, int32_t nbRemoveElement, etk::VectorType<int8_t>& items)
+void EdnVectorBuf::Replace(int32_t pos, int32_t nbRemoveElement, std::vector<int8_t>& items)
 {
 	if(		pos > Size()
 		||	pos < 0 ) {
@@ -597,108 +605,6 @@ void EdnVectorBuf::Display(void)
 			APPL_INFO( "Element " << i << " : " << m_data[i]);
 		}
 	}
-}
-
-
-
-/**
- * @brief 
- * 
- * @param[in,out] ---
- * 
- * @return ---
- * 
- */
-void TestEdnVectorBuf(void)
-{
-	EdnVectorBuf myBufferTmp;
-	int32_t i;
-	
-	//invert data
-	for (i=0; i<50; i++) {
-		myBufferTmp.Insert(0, 'a' + i%26);
-	}
-	myBufferTmp.Display();
-	myBufferTmp.Clear();
-	myBufferTmp.Display();
-	
-	myBufferTmp.Remove(2, 300);
-	/*
-	char plop='a';
-	myBufferTmp.Insert(0, plop);
-	myBufferTmp.Display();
-	plop='b';
-	myBufferTmp.Insert(0, plop);
-	myBufferTmp.Display();
-	plop='c';
-	myBufferTmp.Insert(0, plop);
-	myBufferTmp.Display();
-	plop='d';
-	myBufferTmp.Insert(0, plop);
-	myBufferTmp.Display();
-	plop='e';
-	myBufferTmp.Insert(0, plop);
-	myBufferTmp.Display();
-	plop='f';
-	myBufferTmp.Insert(0, plop);
-	myBufferTmp.Display();
-	plop='g';
-	myBufferTmp.Insert(0, plop);
-	myBufferTmp.Display();
-	plop='h';
-	myBufferTmp.Insert(0, plop);
-	myBufferTmp.Display();
-	plop='m';
-	
-	etk::VectorType<int8_t> items;
-	items.PushBack('i');
-	items.PushBack('j');
-	items.PushBack('k');
-	items.PushBack('l');
-	items.PushBack('m');
-	items.PushBack('n');
-	items.PushBack('o');
-	items.PushBack('p');
-	
-	
-	
-	myBufferTmp.Insert(3, items);
-	myBufferTmp.Display();
-	
-	
-	
-	plop='7';
-	myBufferTmp.Insert(7, plop);
-	myBufferTmp.Display();
-	
-	myBufferTmp.Replace(8, 'z');
-	myBufferTmp.Display();
-	
-	items.Clear();
-	items.PushBack('1');
-	items.PushBack('2');
-	items.PushBack('3');
-	myBufferTmp.Replace(10, 4, items);
-	myBufferTmp.Display();
-
-	
-	myBufferTmp.PushBack('a');
-	myBufferTmp.PushBack('a');
-	myBufferTmp.PushBack('a');
-	myBufferTmp.PushBack('a');
-	myBufferTmp.Display();
-	
-	
-	myBufferTmp.PopBack();
-	myBufferTmp.PopBack();
-	myBufferTmp.PopBack();
-	myBufferTmp.PopBack();
-	myBufferTmp.Display();
-	
-	myBufferTmp.Remove(2, 3);
-	myBufferTmp.Display();
-	*/
-	
 }
 
 

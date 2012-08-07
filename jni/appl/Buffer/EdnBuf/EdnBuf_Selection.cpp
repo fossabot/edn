@@ -136,12 +136,12 @@ bool EdnBuf::GetSelectionPos(int32_t &start, int32_t &end, bool &isRect, int32_t
  * @return ---
  * 
  */
-void EdnBuf::GetSelectionText(etk::VectorType<int8_t> &text)
+void EdnBuf::GetSelectionText(std::vector<int8_t> &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;
 	// remove output data
-	text.Clear();
+	text.clear();
 	
 	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
@@ -220,7 +220,7 @@ void EdnBuf::RemoveSelected(void)
  * @return ---
  * 
  */
-int32_t EdnBuf::ReplaceSelected(etk::VectorType<int8_t> &text)
+int32_t EdnBuf::ReplaceSelected(std::vector<int8_t> &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;

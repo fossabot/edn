@@ -33,7 +33,7 @@ class HighlightPattern;
 
 #include <etk/RegExp.h>
 #include <Colorize.h>
-#include <etk/VectorType.h>
+#include <vector>
 #include <tinyXML/tinyxml.h>
 #include <EdnVectorBuf.h>
 
@@ -72,17 +72,17 @@ class HighlightPattern {
 		void            ReloadColor(void);
 
 	private:
-		int32_t                             m_level;                    //!< Level of the pattern ==> this is to overwrite next pattern when we create an higher ....
-		etk::UString                        m_paternName;               //!< Current style name (like "c++" or "c" or "script Bash")
-		etk::UString                        m_colorName;                //!< Current color name
-		Colorize *                          m_color;                    //!< Link to the color manager
-		etk::RegExp<EdnVectorBuf> *         m_regExpStart;              //!< Start of Regular expression
-		etk::RegExp<EdnVectorBuf> *         m_regExpStop;               //!< Stop of Regular Expression
-		bool                                m_haveStopPatern;           //!< Stop patern presence
-		bool                                m_multiline;                //!< The patern is multiline
-		uniChar_t                           m_escapeChar;               //!< Escape char to prevent exeit of patern ....
-		etk::VectorType<HighlightPattern *> m_subPatern;                //!< Under patern of this one
-//		etk::VectorType<HighlightPattern *> m_subColor;                 //!< Under Color in the start RegExp ...
+		int32_t                         m_level;                    //!< Level of the pattern ==> this is to overwrite next pattern when we create an higher ....
+		etk::UString                    m_paternName;               //!< Current style name (like "c++" or "c" or "script Bash")
+		etk::UString                    m_colorName;                //!< Current color name
+		Colorize *                      m_color;                    //!< Link to the color manager
+		etk::RegExp<EdnVectorBuf> *     m_regExpStart;              //!< Start of Regular expression
+		etk::RegExp<EdnVectorBuf> *     m_regExpStop;               //!< Stop of Regular Expression
+		bool                            m_haveStopPatern;           //!< Stop patern presence
+		bool                            m_multiline;                //!< The patern is multiline
+		uniChar_t                       m_escapeChar;               //!< Escape char to prevent exeit of patern ....
+		std::vector<HighlightPattern *> m_subPatern;                //!< Under patern of this one
+//		std::vector<HighlightPattern *> m_subColor;                 //!< Under Color in the start RegExp ...
 };
 
 #endif

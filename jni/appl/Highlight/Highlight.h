@@ -59,19 +59,19 @@ class Highlight {
 		void ReloadColor(void);
 		void Parse(int32_t start,
 		           int32_t stop,
-		           etk::VectorType<colorInformation_ts> &metaData,
+		           std::vector<colorInformation_ts> &metaData,
 		           int32_t addingPos,
 		           EdnVectorBuf &buffer);
 		void Parse2(int32_t start,
 		            int32_t stop,
-		            etk::VectorType<colorInformation_ts> &metaData,
+		            std::vector<colorInformation_ts> &metaData,
 		            EdnVectorBuf &buffer);
 	private:
-		void                                ParseRules(TiXmlNode *child, etk::VectorType<HighlightPattern*> &mListPatern, int32_t level);
-		etk::UString                        m_styleName;               //!< curent style name (like "c++" or "c" or "script Bash")
-		etk::VectorType<etk::UString*>      m_listExtentions;          //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
-		etk::VectorType<HighlightPattern*>  m_listHighlightPass1;      //!< List of ALL hightlight modules (pass 1 ==> when we load and wride data on the buffer)
-		etk::VectorType<HighlightPattern*>  m_listHighlightPass2;      //!< List of ALL hightlight modules (pass 2 ==> When we display the buffer( only the display area (100 lines)) )
+		void ParseRules(TiXmlNode *child, std::vector<HighlightPattern*> &mListPatern, int32_t level);
+		etk::UString                    m_styleName;               //!< curent style name (like "c++" or "c" or "script Bash")
+		std::vector<etk::UString*>      m_listExtentions;          //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
+		std::vector<HighlightPattern*>  m_listHighlightPass1;      //!< List of ALL hightlight modules (pass 1 ==> when we load and wride data on the buffer)
+		std::vector<HighlightPattern*>  m_listHighlightPass2;      //!< List of ALL hightlight modules (pass 2 ==> When we display the buffer( only the display area (100 lines)) )
 };
 
 

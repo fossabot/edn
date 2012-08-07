@@ -59,9 +59,9 @@ typedef struct {
 } selection;
 
 typedef struct {
-	etk::VectorType<colorInformation_ts>    HLData;
-	int32_t                                 posHLPass1;
-	int32_t                                 posHLPass2;
+	std::vector<colorInformation_ts>    HLData;
+	int32_t                             posHLPass1;
+	int32_t                             posHLPass2;
 }displayHLData_ts;
 
 
@@ -74,24 +74,24 @@ class EdnBuf {
 		// destructer
 		~EdnBuf(void);
 		// public function :
-		void    GetAll(                 etk::VectorType<int8_t> &text);
-		void    SetAll(                 etk::VectorType<int8_t> &text);
-		void    GetRange(               int32_t start, int32_t end, etk::VectorType<int8_t> &output);
+		void    GetAll(                 std::vector<int8_t> &text);
+		void    SetAll(                 std::vector<int8_t> &text);
+		void    GetRange(               int32_t start, int32_t end, std::vector<int8_t> &output);
 		void    GetRange(               int32_t start, int32_t end, etk::UString &output);
 		bool    DumpIn(                 FILE *myFile);
 		bool    DumpFrom(               FILE *myFile);
 		// replace with operator [] ...
 		int8_t  operator[] (int32_t);
-		int32_t Insert(                 int32_t pos, etk::VectorType<int8_t> &insertText);
+		int32_t Insert(                 int32_t pos, std::vector<int8_t> &insertText);
 		int32_t Insert(                 int32_t pos, etk::UString &insertText);
-		int32_t Replace(                int32_t start, int32_t end, etk::VectorType<int8_t> &insertText);
+		int32_t Replace(                int32_t start, int32_t end, std::vector<int8_t> &insertText);
 		int32_t Replace(                int32_t start, int32_t end, etk::UString &insertText);
 		void    Remove(                 int32_t start, int32_t end);
 		int32_t Indent(                 void);
 		int32_t UnIndent(               void);
 		
 		
-		void    GetLineText(            int32_t pos, etk::VectorType<int8_t> &text);
+		void    GetLineText(            int32_t pos, std::vector<int8_t> &text);
 		int32_t StartOfLine(            int32_t pos);
 		int32_t EndOfLine(              int32_t pos);
 		
@@ -103,7 +103,7 @@ class EdnBuf {
 		int32_t CountForwardDispChars(  int32_t lineStartPos, int32_t nChars);
 		int32_t CountLines(             int32_t startPos, int32_t endPos);
 		int32_t CountLines(             void);
-		int32_t CountLines(             etk::VectorType<int8_t> &data);
+		int32_t CountLines(             std::vector<int8_t> &data);
 		int32_t CountForwardNLines(     int32_t startPos, int32_t nLines);
 		int32_t CountBackwardNLines(    int32_t startPos, int32_t nLines);
 		
@@ -126,10 +126,10 @@ class EdnBuf {
 		void        Unselect(          void);
 		void        RectSelect(        int32_t start, int32_t end, int32_t rectStart, int32_t rectEnd);
 		bool        GetSelectionPos(   int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd);
-		void        GetSelectionText(  etk::VectorType<int8_t> &text);
+		void        GetSelectionText(  std::vector<int8_t> &text);
 		void        GetSelectionText(  etk::UString &text);
 		void        RemoveSelected(    void);
-		int32_t     ReplaceSelected(   etk::VectorType<int8_t> &text);
+		int32_t     ReplaceSelected(   std::vector<int8_t> &text);
 		int32_t     ReplaceSelected(   etk::UString &text);
 	private:
 		// current selection of the buffer
@@ -140,20 +140,20 @@ class EdnBuf {
 	// History section : 
 	// -----------------------------------------
 	public:
-		int32_t                                 Undo(void);
-		int32_t                                 Redo(void);
+		int32_t                             Undo(void);
+		int32_t                             Redo(void);
 	private:
-		bool                                    m_isUndoProcessing;
-		bool                                    m_isRedoProcessing;
-		etk::VectorType<EdnBufHistory*>         m_historyUndo;
-		etk::VectorType<EdnBufHistory*>         m_historyRedo;
+		bool                                m_isUndoProcessing;
+		bool                                m_isRedoProcessing;
+		std::vector<EdnBufHistory*>         m_historyUndo;
+		std::vector<EdnBufHistory*>         m_historyRedo;
 
 	// -----------------------------------------
 	// hightlight section : 
 	// -----------------------------------------
 	private:
 		Highlight *                             m_Highlight;         //!< internal link with the Highlight system
-		etk::VectorType<colorInformation_ts>    m_HLDataPass1;       //!< colorisation position in the current buffer pass 1
+		std::vector<colorInformation_ts>    m_HLDataPass1;       //!< colorisation position in the current buffer pass 1
 		void                                    RegenerateHighLightAt(int32_t pos, int32_t nbDeleted, int32_t nbAdded);
 		void                                    GenerateHighLightAt(int32_t pos, int32_t endPos, int32_t addinPos=0);
 		void                                    CleanHighLight(void);
@@ -197,10 +197,10 @@ class EdnBuf {
 		void    removeSelected(                 selection &sel);
 		void    replaceSelected(                selection &sel, const char *text);
 
-		void    eventModification(              int32_t pos, int32_t nInserted, etk::VectorType<int8_t> &deletedText);
+		void    eventModification(              int32_t pos, int32_t nInserted, std::vector<int8_t> &deletedText);
 
 
-		int32_t LocalInsert(                    int32_t pos, etk::VectorType<int8_t> &insertText);
+		int32_t LocalInsert(                    int32_t pos, std::vector<int8_t> &insertText);
 		int32_t LocalInsert(                    int32_t pos, etk::UString &insertText);
 		
 		bool    charMatch(                      char first, char second, bool caseSensitive = true);
