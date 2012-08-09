@@ -119,18 +119,18 @@ bool EdnBuf::DumpFrom(FILE *myFile)
 }
 
 
-void EdnBuf::GetAll(std::vector<int8_t> &text)
+void EdnBuf::GetAll(etk::VectorType<int8_t> &text)
 {
 	// Clean output vector
-	text.clear();
+	text.Clear();
 	// Set data on the vector
 	m_data.Get(0, m_data.Size(), text);
 }
 
 
-void EdnBuf::SetAll(std::vector<int8_t> &text)
+void EdnBuf::SetAll(etk::VectorType<int8_t> &text)
 {
-	std::vector<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	
 	// extract all data of the buffer :
 	GetAll(deletedText);
@@ -142,16 +142,16 @@ void EdnBuf::SetAll(std::vector<int8_t> &text)
 	m_data.Insert(0, text);
 	
 	// Zero all of the existing selections
-	UpdateSelection(0, deletedText.size(), 0);
+	UpdateSelection(0, deletedText.Size(), 0);
 	
 	// Call the modification Event Manager
 	eventModification(0, m_data.Size(), deletedText); 
 }
 
-void EdnBuf::GetRange(int32_t start, int32_t end, std::vector<int8_t> &output)
+void EdnBuf::GetRange(int32_t start, int32_t end, etk::VectorType<int8_t> &output)
 {
 	// Remove all data ...
-	output.clear();
+	output.Clear();
 	// import data : 
 	m_data.Get(start, end-start, output);
 	//APPL_DEBUG("request start=" << start << " end="<< end << " size="<< end-start << " result size=" << output.Size() );
@@ -162,14 +162,14 @@ void EdnBuf::GetRange(int32_t start, int32_t end, etk::UString &output)
 	// Remove all data ...
 	output = "";
 	// import data : 
-	std::vector<int8_t> localOutput;
+	etk::VectorType<int8_t> localOutput;
 	m_data.Get(start, end-start, localOutput);
 	// transcript in UNICODE ...
 	if (true == m_isUtf8) {
-		localOutput.push_back('\0');
+		localOutput.PushBack('\0');
 		output = (char*)&localOutput[0];
 	} else {
-		std::vector<uniChar_t> tmpUnicodeData;
+		etk::VectorType<uniChar_t> tmpUnicodeData;
 		// transform in unicode :
 		convertIsoToUnicode(m_charsetType, localOutput, tmpUnicodeData);
 		output = tmpUnicodeData;
@@ -202,7 +202,7 @@ int8_t EdnBuf::operator[] (int32_t pos)
  * @return ---
  * 
  */
-int32_t EdnBuf::Insert(int32_t pos, std::vector<int8_t> &insertText)
+int32_t EdnBuf::Insert(int32_t pos, etk::VectorType<int8_t> &insertText)
 {
 	// if pos is not contiguous to existing text, make it
 	pos = etk_avg(0, pos, m_data.Size() );
@@ -210,8 +210,8 @@ int32_t EdnBuf::Insert(int32_t pos, std::vector<int8_t> &insertText)
 	int32_t sizeInsert=LocalInsert(pos, insertText);
 
 	// Call the redisplay ...
-	std::vector<int8_t> deletedText;
-	eventModification(pos, insertText.size(), deletedText);
+	etk::VectorType<int8_t> deletedText;
+	eventModification(pos, insertText.Size(), deletedText);
 	return sizeInsert;
 }
 int32_t EdnBuf::Insert(int32_t pos, etk::UString &insertText)
@@ -222,7 +222,7 @@ int32_t EdnBuf::Insert(int32_t pos, etk::UString &insertText)
 	int32_t sizeInsert=LocalInsert(pos, insertText);
 
 	// Call the redisplay ...
-	std::vector<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	eventModification(pos, insertText.Size(), deletedText);
 	return sizeInsert;
 }
@@ -237,17 +237,17 @@ int32_t EdnBuf::Insert(int32_t pos, etk::UString &insertText)
  * @return nb Octet inserted
  * 
  */
-int32_t EdnBuf::Replace(int32_t start, int32_t end, std::vector<int8_t> &insertText)
+int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::VectorType<int8_t> &insertText)
 {
 	if (end-start == 0) {
 		return 0;
 	}
-	std::vector<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	GetRange(start, end, deletedText);
 	m_data.Replace(start, end-start, insertText);
 	// update internal elements
-	eventModification(start, insertText.size(), deletedText);
-	return insertText.size();
+	eventModification(start, insertText.Size(), deletedText);
+	return insertText.Size();
 }
 
 int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
@@ -255,32 +255,32 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
 	if (end-start == 0) {
 		return 0;
 	}
-	std::vector<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	GetRange(start, end, deletedText);
-	std::vector<int8_t> tmpInsertText;
+	etk::VectorType<int8_t> tmpInsertText;
 	if (true == m_isUtf8) {
 		char * tmpPointer = insertText.Utf8Data();
 		while (*tmpPointer != '\0') {
-			tmpInsertText.push_back(*tmpPointer++);
+			tmpInsertText.PushBack(*tmpPointer++);
 		}
 	} else {
-		std::vector<unsigned int> tmppp = insertText.GetVector();
+		etk::VectorType<unsigned int> tmppp = insertText.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
 	}
-	if (tmpInsertText.size()>0) {
-		if (tmpInsertText[tmpInsertText.size()-1] == '\0') {
-			tmpInsertText.pop_back();
+	if (tmpInsertText.Size()>0) {
+		if (tmpInsertText[tmpInsertText.Size()-1] == '\0') {
+			tmpInsertText.PopBack();
 		}
 	}
-	if (tmpInsertText.size()>0) {
-		if (tmpInsertText[tmpInsertText.size()-1] == '\0') {
-			tmpInsertText.pop_back();
+	if (tmpInsertText.Size()>0) {
+		if (tmpInsertText[tmpInsertText.Size()-1] == '\0') {
+			tmpInsertText.PopBack();
 		}
 	}
 	m_data.Replace(start, end-start, tmpInsertText);
 	// update internal elements
-	eventModification(start, tmpInsertText.size(), deletedText);
-	return tmpInsertText.size();
+	eventModification(start, tmpInsertText.Size(), deletedText);
+	return tmpInsertText.Size();
 }
 
 
@@ -296,7 +296,7 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
 void EdnBuf::Remove(int32_t start, int32_t end)
 {
 
-	std::vector<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	// Make sure the arguments make sense
 	if (start > end) {
 		int32_t temp = start;
@@ -327,26 +327,26 @@ int32_t EdnBuf::Indent(void)
 	// Get Range :
 	int32_t l_start = StartOfLine(SelectionStart);
 	int32_t l_end = EndOfLine(SelectionEnd);
-	std::vector<int8_t> l_tmpData;
+	etk::VectorType<int8_t> l_tmpData;
 	GetRange(l_start, l_end, l_tmpData);
 	
-	l_tmpData.insert(l_tmpData.begin(), '\n');
-	for (int32_t i=1; i<l_tmpData.size(); i++) {
+	l_tmpData.Insert(0, '\n');
+	for (int32_t i=1; i<l_tmpData.Size(); i++) {
 		if ('\n' == l_tmpData[i-1]) {
 			if (true == m_useTabs) {
-				l_tmpData.insert(l_tmpData.begin()+i, '\t');
+				l_tmpData.Insert(i, '\t');
 			} else {
 				for (int32_t j=0; j<m_tabDist; j++) {
-					l_tmpData.insert(l_tmpData.begin()+i, ' ');
+					l_tmpData.Insert(i, ' ');
 				}
 			}
 		}
 	}
-	l_tmpData.erase(l_tmpData.begin());
+	l_tmpData.Erase(0);
 	// Real replace of DATA :
 	Replace(l_start, l_end, l_tmpData);
 	// Set the new selection :
-	l_end = l_start + l_tmpData.size();
+	l_end = l_start + l_tmpData.Size();
 	Select(l_start, l_end);
 	// Return the position of the cursor
 	return l_end;
@@ -366,20 +366,20 @@ int32_t EdnBuf::UnIndent(void)
 	// Get Range :
 	int32_t l_start = StartOfLine(SelectionStart);
 	int32_t l_end = EndOfLine(SelectionEnd);
-	std::vector<int8_t> l_tmpData;
+	etk::VectorType<int8_t> l_tmpData;
 	GetRange(l_start, l_end, l_tmpData);
 	
-	l_tmpData.insert(l_tmpData.begin(), '\n');
-	for (int32_t i=1; i<l_tmpData.size(); i++) {
+	l_tmpData.Insert(0, '\n');
+	for (int32_t i=1; i<l_tmpData.Size(); i++) {
 		if ('\n' == l_tmpData[i-1]) {
 			if('\t' == l_tmpData[i]) {
-				l_tmpData.erase(l_tmpData.begin()+i);
+				l_tmpData.Erase(i);
 			} else if(' ' == l_tmpData[i]) {
-				for (int32_t j=0; j<m_tabDist && j+i<l_tmpData.size() ; j++) {
+				for (int32_t j=0; j<m_tabDist && j+i<l_tmpData.Size() ; j++) {
 					if(' ' == l_tmpData[i]) {
-						l_tmpData.erase(l_tmpData.begin()+i);
+						l_tmpData.Erase(i);
 					} else if('\t' == l_tmpData[i]) {
-						l_tmpData.erase(l_tmpData.begin()+i);
+						l_tmpData.Erase(i);
 						break;
 					} else {
 						break;
@@ -388,11 +388,11 @@ int32_t EdnBuf::UnIndent(void)
 			}
 		}
 	}
-	l_tmpData.erase(l_tmpData.begin());
+	l_tmpData.Erase(0);
 	// Real replace of DATA :
 	Replace(l_start, l_end, l_tmpData);
 	// Set the new selection :
-	l_end = l_start + l_tmpData.size();
+	l_end = l_start + l_tmpData.Size();
 	Select(l_start, l_end);
 	// Return the position of the cursor
 	return l_end;
@@ -408,7 +408,7 @@ int32_t EdnBuf::UnIndent(void)
  * @return ---
  * 
  */
-void EdnBuf::GetLineText(int32_t pos, std::vector<int8_t> &text)
+void EdnBuf::GetLineText(int32_t pos, etk::VectorType<int8_t> &text)
 {
 	GetRange( StartOfLine(pos), EndOfLine(pos), text);
 }
@@ -841,12 +841,12 @@ int32_t EdnBuf::CountLines(int32_t startPos, int32_t endPos)
  * @return number of line found
  * 
  */
-int32_t EdnBuf::CountLines(std::vector<int8_t> &data)
+int32_t EdnBuf::CountLines(etk::VectorType<int8_t> &data)
 {
-	std::vector<int8_t>::iterator myPosIt = data.begin();
+	etk::VectorType<int8_t>::Iterator myPosIt = data.Begin();
 	int32_t lineCount = 0;
 	
-	while(myPosIt < data.end()) {
+	while(myPosIt) {
 		if ('\n' == *myPosIt) {
 			lineCount++;
 		}
@@ -987,20 +987,20 @@ bool EdnBuf::charMatch(char first, char second, bool caseSensitive)
  */
 bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foundPos, int32_t *foundPosEnd, bool caseSensitive)
 {
-	std::vector<int8_t> searchVect;
+	etk::VectorType<int8_t> searchVect;
 	if (true == m_isUtf8) {
 		char * tmpPointer = search.Utf8Data();
 		while (*tmpPointer != '\0') {
-			searchVect.push_back(*tmpPointer++);
+			searchVect.PushBack(*tmpPointer++);
 		}
 	} else {
-		std::vector<unsigned int> tmppp = search.GetVector();
+		etk::VectorType<unsigned int> tmppp = search.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
 	}
 	// remove the '\0' at the end of the string ...
-	searchVect.pop_back();
+	searchVect.PopBack();
 	int32_t position;
-	int32_t searchLen = searchVect.size();
+	int32_t searchLen = searchVect.Size();
 	int32_t dataLen   = m_data.Size();
 	char currentChar = '\0';
 	APPL_INFO(" startPos=" << startPos << " searchLen=" << searchLen);
@@ -1018,7 +1018,7 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foun
 			}
 			if (true == found) {
 				*foundPos = position;
-				*foundPosEnd = position + searchVect.size();
+				*foundPosEnd = position + searchVect.Size();
 				return true;
 			}
 		}
@@ -1042,21 +1042,21 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foun
  */
 bool EdnBuf::SearchBackward(int32_t startPos, etk::UString &search, int32_t *foundPos, int32_t *foundPosEnd, bool caseSensitive)
 {
-	std::vector<int8_t> searchVect;
+	etk::VectorType<int8_t> searchVect;
 	if (true == m_isUtf8) {
 		char * tmpPointer = search.Utf8Data();
 		while (*tmpPointer != '\0') {
-			searchVect.push_back(*tmpPointer++);
+			searchVect.PushBack(*tmpPointer++);
 		}
 	} else {
-		std::vector<unsigned int> tmppp = search.GetVector();
+		etk::VectorType<unsigned int> tmppp = search.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
 	}
 	// remove the '\0' at the end of the string ...
-	searchVect.pop_back();
+	searchVect.PopBack();
 	
 	int32_t position;
-	int32_t searchLen = searchVect.size();
+	int32_t searchLen = searchVect.Size();
 	char currentChar = '\0';
 	//APPL_INFO(" startPos=" << startPos << " searchLen=" << searchLen);
 	for (position=startPos; position>=searchLen-1; position--) {
@@ -1073,7 +1073,7 @@ bool EdnBuf::SearchBackward(int32_t startPos, etk::UString &search, int32_t *fou
 			}
 			if (true == found) {
 				*foundPos = position - (searchLen-1);
-				*foundPosEnd = position + searchVect.size();
+				*foundPosEnd = position + searchVect.Size();
 				return true;
 			}
 		}
@@ -1181,30 +1181,30 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
  * @return number of element inserted.
  * 
  */
-int32_t EdnBuf::LocalInsert(int32_t pos, std::vector<int8_t> &insertText)
+int32_t EdnBuf::LocalInsert(int32_t pos, etk::VectorType<int8_t> &insertText)
 {
 	// Insert data in buffer
 	m_data.Insert(pos, insertText);
 	// update the current selected area
-	UpdateSelection(pos, 0, insertText.size() );
+	UpdateSelection(pos, 0, insertText.Size() );
 	// return the number of element inserted ...
-	return insertText.size();
+	return insertText.Size();
 }
 int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
 {
-	std::vector<int8_t> tmpInsertText;
+	etk::VectorType<int8_t> tmpInsertText;
 	if (true == m_isUtf8) {
 		char * tmpPointer = insertText.Utf8Data();
 		while (*tmpPointer != '\0') {
-			tmpInsertText.push_back(*tmpPointer++);
+			tmpInsertText.PushBack(*tmpPointer++);
 		}
 	} else {
-		std::vector<unsigned int> tmppp = insertText.GetVector();
+		etk::VectorType<unsigned int> tmppp = insertText.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
 	}
-	if (tmpInsertText.size()>0) {
-		if (tmpInsertText[tmpInsertText.size()-1] == '\0') {
-			tmpInsertText.pop_back();
+	if (tmpInsertText.Size()>0) {
+		if (tmpInsertText[tmpInsertText.Size()-1] == '\0') {
+			tmpInsertText.PopBack();
 		}
 	}
 	return LocalInsert(pos, tmpInsertText);
@@ -1221,15 +1221,15 @@ int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
  * @return ---
  * 
  */
-void EdnBuf::eventModification(int32_t pos, int32_t nInserted, std::vector<int8_t> &deletedText)
+void EdnBuf::eventModification(int32_t pos, int32_t nInserted, etk::VectorType<int8_t> &deletedText)
 {
-	if(		0 == deletedText.size()
+	if(		0 == deletedText.Size()
 		&&	0 == nInserted)
 	{
 		// we do nothing ...
 		//APPL_INFO("EdnBuf::eventModification(pos="<<pos<<", ... , nRestyled=" << nRestyled << ", deletedText=\"" << textDisplay << "\");");
 	} else {
-		APPL_INFO("(pos="<<pos<<", nDeleted="<<deletedText.size()<<", nInserted=" << nInserted << ", deletedText=\"xx???xx\");");
+		APPL_INFO("(pos="<<pos<<", nDeleted="<<deletedText.Size()<<", nInserted=" << nInserted << ", deletedText=\"xx???xx\");");
 		// update the number of lines : 
 		//CountNumberOfLines(); 	//==> not efficent methode ...
 		// ==> better methode : just update the number of line added and removed ...
@@ -1239,24 +1239,24 @@ void EdnBuf::eventModification(int32_t pos, int32_t nInserted, std::vector<int8_
 		if (false == m_isUndoProcessing) {
 			// normal or Redo processing
 			EdnBufHistory *exempleHistory = new EdnBufHistory(pos, nInserted, deletedText);
-			m_historyUndo.push_back(exempleHistory);
+			m_historyUndo.PushBack(exempleHistory);
 			if (false == m_isRedoProcessing) {
 				// remove all element in the redo system ...
 				int32_t i;
-				for (i=m_historyRedo.size()-1; i>=0; i--) {
+				for (i=m_historyRedo.Size()-1; i>=0; i--) {
 					if (NULL != m_historyRedo[i]) {
 						delete(m_historyRedo[i]);
 					}
-					m_historyRedo.pop_back();
+					m_historyRedo.PopBack();
 				}
 			}
 		} else {
 			// undo processing ==> add element in Redo vector ...
 			EdnBufHistory *exempleHistory = new EdnBufHistory(pos, nInserted, deletedText);
-			m_historyRedo.push_back(exempleHistory);
+			m_historyRedo.PushBack(exempleHistory);
 		}
 		// Regenerate the Highlight : 
-		RegenerateHighLightAt(pos, deletedText.size(), nInserted);
+		RegenerateHighLightAt(pos, deletedText.Size(), nInserted);
 	}
 }
 

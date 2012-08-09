@@ -35,7 +35,7 @@
 class localClassHighlightManager: public ewol::EObject
 {
 	private:
-		std::vector<Highlight*> listHighlight;		//!< List of ALL hightlight modules
+		etk::VectorType<Highlight*> listHighlight;		//!< List of ALL hightlight modules
 	public:
 		// Constructeur
 		localClassHighlightManager(void) {
@@ -44,14 +44,14 @@ class localClassHighlightManager: public ewol::EObject
 		~localClassHighlightManager(void) {
 			int32_t i;
 			// clean all Element
-			for (i=0; i< listHighlight.size(); i++) {
+			for (i=0; i< listHighlight.Size(); i++) {
 				if (NULL != listHighlight[i]) {
 					delete(listHighlight[i]);
 					listHighlight[i] = NULL;
 				}
 			}
 			// clear the compleate list
-			listHighlight.clear();
+			listHighlight.Clear();
 		};
 		
 		/**
@@ -92,7 +92,7 @@ class localClassHighlightManager: public ewol::EObject
 		Highlight* Get(etk::File &fileName)
 		{
 			int32_t i;
-			for (i=0; i<listHighlight.size(); i++) {
+			for (i=0; i<listHighlight.Size(); i++) {
 				if (true == listHighlight[i]->FileNameCompatible(fileName) ) {
 					return listHighlight[i];
 				}
@@ -113,47 +113,47 @@ class localClassHighlightManager: public ewol::EObject
 		{
 			etk::UString xmlFilename = "lang_c.xml";
 			Highlight *myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			xmlFilename = "lang_boo.xml";
 			myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			xmlFilename = "lang_Makefile.xml";
 			myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			xmlFilename = "lang_asm.xml";
 			myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			xmlFilename = "lang_xml.xml";
 			myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			xmlFilename = "lang_php.xml";
 			myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			xmlFilename = "lang_bash.xml";
 			myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			xmlFilename = "lang_matlab.xml";
 			myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			xmlFilename = "lang_java.xml";
 			myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			xmlFilename = "lang_lua.xml";
 			myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			xmlFilename = "lang_in.xml";
 			myHightline = new Highlight(xmlFilename);
-			listHighlight.push_back(myHightline);
+			listHighlight.PushBack(myHightline);
 			
 			//myHightline->Display();
 		}

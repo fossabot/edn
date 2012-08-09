@@ -913,8 +913,8 @@ void BufferText::AddChar(uniChar_t unicodeData)
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	if (unicodeData == 0x09) {
 		if (false == haveSelectionActive) {
-			std::vector<int8_t> tmpVect;
-			tmpVect.push_back(0x09);
+			etk::VectorType<int8_t> tmpVect;
+			tmpVect.PushBack(0x09);
 			m_EdnBuf.Insert(m_cursorPos, tmpVect);
 			SetInsertPosition(m_cursorPos+1, true);
 		} else {
@@ -922,10 +922,10 @@ void BufferText::AddChar(uniChar_t unicodeData)
 			// count the number of line : 
 			int32_t nbSelectedLines = m_EdnBuf.CountLines(SelectionStart, SelectionEnd);
 			if (0 == nbSelectedLines) {
-				std::vector<int8_t> tmpVect;
-				tmpVect.push_back(0x09);
+				etk::VectorType<int8_t> tmpVect;
+				tmpVect.PushBack(0x09);
 				m_EdnBuf.ReplaceSelected(tmpVect);
-				SetInsertPosition(SelectionStart+tmpVect.size(), true);
+				SetInsertPosition(SelectionStart+tmpVect.Size(), true);
 			} else {
 				if (true == ewol::IsSetShift() ) {
 					m_cursorPos = m_EdnBuf.UnIndent();
@@ -935,11 +935,11 @@ void BufferText::AddChar(uniChar_t unicodeData)
 			}
 		}
 	} else if (unicodeData == '\n') {
-		std::vector<int8_t> tmpVect;
+		etk::VectorType<int8_t> tmpVect;
 		if (true == ewol::IsSetShift()) {
-			tmpVect.push_back('\r');
+			tmpVect.PushBack('\r');
 		} else {
-			tmpVect.push_back('\n');
+			tmpVect.PushBack('\n');
 			// if Auto indent Enable ==> we get the start of the previous line and add it to tne new one
 			if (true == globals::IsSetAutoIndent() ) {
 				int32_t l_lineStart;
@@ -952,9 +952,9 @@ void BufferText::AddChar(uniChar_t unicodeData)
 				// add same characters in the temporar buffer
 				for (int32_t kk=l_lineStart; kk<m_cursorPos; kk++) {
 					if (' ' == m_EdnBuf[kk]) {
-						tmpVect.push_back(' ');
+						tmpVect.PushBack(' ');
 					} else if('\t' == m_EdnBuf[kk]) {
-						tmpVect.push_back('\t');
+						tmpVect.PushBack('\t');
 					} else {
 						break;
 					}
@@ -964,10 +964,10 @@ void BufferText::AddChar(uniChar_t unicodeData)
 		// Set temporary buffer in the real buffer
 		if (false == haveSelectionActive) {
 			m_EdnBuf.Insert(m_cursorPos, tmpVect);
-			SetInsertPosition(m_cursorPos+tmpVect.size(), true);
+			SetInsertPosition(m_cursorPos+tmpVect.Size(), true);
 		} else {
 			m_EdnBuf.ReplaceSelected(tmpVect);
-			SetInsertPosition(SelectionStart+tmpVect.size(), true);
+			SetInsertPosition(SelectionStart+tmpVect.Size(), true);
 		}
 	} else if (unicodeData == 0x7F ) {
 		//APPL_INFO("keyEvent : <Suppr>	pos=" << m_cursorPos);
@@ -991,11 +991,9 @@ void BufferText::AddChar(uniChar_t unicodeData)
 		if (true == m_EdnBuf.GetUTF8Mode()) {
 			char tmpUTF8[16];
 			unicode::convertUnicodeToUtf8(unicodeData, tmpUTF8);
-			std::vector<int8_t> tmpVect;
+			etk::VectorType<int8_t> tmpVect;
 			int32_t localOfset = strlen(tmpUTF8);
-			for (int32_t iii=0; iii<localOfset ; iii++) {
-				tmpVect.push_back(tmpUTF8[iii]);
-			}
+			tmpVect.PushBack((int8_t*)tmpUTF8, localOfset);
 			if (false == haveSelectionActive) {
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
 				SetInsertPosition(m_cursorPos+localOfset, true);
@@ -1008,8 +1006,8 @@ void BufferText::AddChar(uniChar_t unicodeData)
 			char output_ISO;
 			unicode::convertUnicodeToIso(m_EdnBuf.GetCharsetType(), unicodeData, output_ISO);
 			//printf(" insert : \"%s\"==> 0x%08x=%d ", UTF8data, (unsigned int)output_ISO, (int)output_ISO);
-			std::vector<int8_t> tmpVect;
-			tmpVect.push_back(output_ISO);
+			etk::VectorType<int8_t> tmpVect;
+			tmpVect.PushBack(output_ISO);
 			if (false == haveSelectionActive) {
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
 				SetInsertPosition(m_cursorPos+1, true);
@@ -1032,7 +1030,7 @@ int32_t BufferText::FindLine(etk::UString &data)
 		return 0;
 	}
 	APPL_INFO("Search data line : \"" << data << "\"");
-	std::vector<uniChar_t> mVectSearch;
+	etk::VectorType<uniChar_t> mVectSearch;
 	mVectSearch = data.GetVector();
 	//APPL_INFO("search data Forward : startSearchPos=" << startSearchPos );
 	/*

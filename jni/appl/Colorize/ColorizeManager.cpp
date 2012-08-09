@@ -67,10 +67,10 @@ class classColorManager: public ewol::EObject
 		void        DisplayListOfColor(void);
 
 	private:
-		etk::UString            m_fileColor;
-		std::vector<Colorize*>  listMyColor;		//!< List of ALL Color
-		Colorize *              errorColor;
-		color_ts                basicColors[COLOR_NUMBER_MAX];
+		etk::UString                 m_fileColor;
+		etk::VectorType<Colorize*>  listMyColor;		//!< List of ALL Color
+		Colorize *                  errorColor;
+		color_ts                    basicColors[COLOR_NUMBER_MAX];
 };
 
 
@@ -85,14 +85,14 @@ classColorManager::~classColorManager(void)
 
 	int32_t i;
 	// clean all Element
-	for (i=0; i< listMyColor.size(); i++) {
+	for (i=0; i< listMyColor.Size(); i++) {
 		if (NULL != listMyColor[i]) {
 			delete(listMyColor[i]);
 			listMyColor[i] = NULL;
 		}
 	}
 	// clear the compleate list
-	listMyColor.clear();
+	listMyColor.Clear();
 }
 
 void classColorManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
@@ -125,14 +125,14 @@ void classColorManager::LoadFile(const char * xmlFilename)
 	// Remove all old color : 
 	int32_t i;
 	// clean all Element
-	for (i=0; i< listMyColor.size(); i++) {
+	for (i=0; i< listMyColor.Size(); i++) {
 		if (NULL != listMyColor[i]) {
 			delete(listMyColor[i]);
 			listMyColor[i] = NULL;
 		}
 	}
 	// clear the compleate list
-	listMyColor.clear();
+	listMyColor.Clear();
 
 	m_fileColor = xmlFilename;
 	APPL_DEBUG("open file (COLOR) \"" << xmlFilename << "\" ? = \"" << m_fileColor << "\"");
@@ -275,7 +275,7 @@ void classColorManager::LoadFile(const char * xmlFilename)
 								myNewColor->SetItalic(true);
 							}
 						}
-						listMyColor.push_back(myNewColor);
+						listMyColor.PushBack(myNewColor);
 					} else {
 						APPL_ERROR(PFX"(l "<<pNode->Row()<<") node not suported : \""<<pNode->Value()<<"\" must be [color]");
 					}
@@ -299,7 +299,7 @@ void classColorManager::LoadFile(const char * xmlFilename)
 Colorize *classColorManager::Get(const char *colorName)
 {
 	int32_t i;
-	for (i=0; i<listMyColor.size(); i++) {
+	for (i=0; i<listMyColor.Size(); i++) {
 		etk::UString elementName = listMyColor[i]->GetName();
 		if (elementName == colorName) {
 			return listMyColor[i];
@@ -330,7 +330,7 @@ color_ts & classColorManager::Get(basicColor_te myColor)
 bool classColorManager::Exist(const char *colorName)
 {
 	int32_t i;
-	for (i=0; i<listMyColor.size(); i++) {
+	for (i=0; i<listMyColor.Size(); i++) {
 		etk::UString elementName = listMyColor[i]->GetName();
 		if (elementName == colorName) {
 			return true;
@@ -349,7 +349,7 @@ void classColorManager::DisplayListOfColor(void)
 {
 	int32_t i;
 	APPL_INFO(PFX"List of ALL COLOR : ");
-	for (i=0; i<listMyColor.size(); i++) {
+	for (i=0; i<listMyColor.Size(); i++) {
 		//etk::UString elementName = listMyColor[i]->GetName();
 		//APPL_INFO(i << " : \"" <<  elementName.c_str() << "\"" );
 		listMyColor[i]->Display(i);

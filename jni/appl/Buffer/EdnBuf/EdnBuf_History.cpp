@@ -36,7 +36,7 @@
 
 int32_t EdnBuf::Undo(void)
 {
-	int32_t nbElement = m_historyUndo.size();
+	int32_t nbElement = m_historyUndo.Size();
 	//APPL_DEBUG("EdnBuf::Undo Request id="<<nbElement);
 	int32_t posDest = -1;
 	if (0 == nbElement) {
@@ -47,13 +47,13 @@ int32_t EdnBuf::Undo(void)
 	nbElement--;
 	if (m_historyUndo[nbElement] == NULL) {
 		APPL_ERROR("EdnBuf::Undo Find empty history ==> remove it");
-		m_historyUndo.pop_back();
+		m_historyUndo.PopBack();
 		return -1;
 	}
 	int32_t pos        = m_historyUndo[nbElement]->getPos();
 	int32_t nbDeleted  = m_historyUndo[nbElement]->getnbDeleted();
 	int32_t nbInserted = m_historyUndo[nbElement]->getnbInserted();
-	std::vector<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	m_historyUndo[nbElement]->getData(deletedText);
 	m_isUndoProcessing = true;
 	if (0 == nbInserted) {
@@ -77,14 +77,14 @@ int32_t EdnBuf::Undo(void)
 	}
 	// remove element in the list :
 	delete(m_historyUndo[nbElement]);
-	m_historyUndo.pop_back();
+	m_historyUndo.PopBack();
 	m_isUndoProcessing = false;
 	return posDest;
 }
 
 int32_t EdnBuf::Redo(void)
 {
-	int32_t nbElement = m_historyRedo.size();
+	int32_t nbElement = m_historyRedo.Size();
 	//APPL_DEBUG("EdnBuf::Redo Request id="<<nbElement);
 	int32_t posDest = -1;
 	if (0 == nbElement) {
@@ -95,13 +95,13 @@ int32_t EdnBuf::Redo(void)
 	nbElement--;
 	if (m_historyRedo[nbElement] == NULL) {
 		APPL_ERROR("EdnBuf::Redo Find empty history ==> remove it");
-		m_historyRedo.pop_back();
+		m_historyRedo.PopBack();
 		return -1;
 	}
 	int32_t pos        = m_historyRedo[nbElement]->getPos();
 	int32_t nbDeleted  = m_historyRedo[nbElement]->getnbDeleted();
 	int32_t nbInserted = m_historyRedo[nbElement]->getnbInserted();
-	std::vector<int8_t> deletedText;
+	etk::VectorType<int8_t> deletedText;
 	m_historyRedo[nbElement]->getData(deletedText);
 	m_isRedoProcessing = true;
 	if (0 == nbInserted) {
@@ -125,7 +125,7 @@ int32_t EdnBuf::Redo(void)
 	}
 	// remove element in the list :
 	delete(m_historyRedo[nbElement]);
-	m_historyRedo.pop_back();
+	m_historyRedo.PopBack();
 	m_isRedoProcessing = false;
 	return posDest;
 }

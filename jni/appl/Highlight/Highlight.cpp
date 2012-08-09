@@ -33,14 +33,14 @@
 #define __class__	"Highlight"
 
 
-void Highlight::ParseRules(TiXmlNode *child, std::vector<HighlightPattern*> &mListPatern, int32_t level)
+void Highlight::ParseRules(TiXmlNode *child, etk::VectorType<HighlightPattern*> &mListPatern, int32_t level)
 {
 	// Create the patern ...
 	HighlightPattern *myPattern = new HighlightPattern();
 	// parse under Element
 	myPattern->ParseRules(child, level);
 	// add element in the list
-	mListPatern.push_back(myPattern);
+	mListPatern.PushBack(myPattern);
 }
 
 
@@ -100,7 +100,7 @@ Highlight::Highlight(etk::UString &xmlFilename)
 			if (NULL != myData) {
 				//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
 				etk::UString * myEdnData = new etk::UString(myData);
-				m_listExtentions.push_back(myEdnData);
+				m_listExtentions.PushBack(myEdnData);
 			}
 		} else if (!strcmp(child->Value(), "pass1")) {
 			// Get sub Nodes ...
@@ -145,35 +145,35 @@ Highlight::~Highlight(void)
 {
 	int32_t i;
 	// clean all Element
-	for (i=0; i< m_listHighlightPass1.size(); i++) {
+	for (i=0; i< m_listHighlightPass1.Size(); i++) {
 		if (NULL != m_listHighlightPass1[i]) {
 			delete(m_listHighlightPass1[i]);
 			m_listHighlightPass1[i] = NULL;
 		}
 	}
 	// clear the compleate list
-	m_listHighlightPass1.clear();
+	m_listHighlightPass1.Clear();
 
 	// clean all Element
-	for (i=0; i< m_listExtentions.size(); i++) {
+	for (i=0; i< m_listExtentions.Size(); i++) {
 		if (NULL != m_listExtentions[i]) {
 			delete(m_listExtentions[i]);
 			m_listExtentions[i] = NULL;
 		}
 	}
 	// clear the compleate list
-	m_listExtentions.clear();
+	m_listExtentions.Clear();
 }
 
 void Highlight::ReloadColor(void)
 {
 	int32_t i;
-	for (i=0; i< m_listHighlightPass1.size(); i++) {
+	for (i=0; i< m_listHighlightPass1.Size(); i++) {
 		if (NULL != m_listHighlightPass1[i]) {
 			m_listHighlightPass1[i]->ReloadColor();
 		}
 	}
-	for (i=0; i< m_listHighlightPass2.size(); i++) {
+	for (i=0; i< m_listHighlightPass2.Size(); i++) {
 		if (NULL != m_listHighlightPass2[i]) {
 			m_listHighlightPass2[i]->ReloadColor();
 		}
@@ -183,7 +183,7 @@ void Highlight::ReloadColor(void)
 bool Highlight::HasExtention(etk::UString &ext)
 {
 	int32_t i;
-	for (i=0; i<m_listExtentions.size(); i++) {
+	for (i=0; i<m_listExtentions.Size(); i++) {
 		if (ext == *m_listExtentions[i] ) {
 			return true;
 		}
@@ -203,7 +203,7 @@ bool Highlight::FileNameCompatible(etk::File &fileName)
 	}
 	APPL_DEBUG(" try to find : in \"" << fileName << "\" extention:\"" << extention << "\" ");
 
-	for (i=0; i<m_listExtentions.size(); i++) {
+	for (i=0; i<m_listExtentions.Size(); i++) {
 		if (extention == *m_listExtentions[i] ) {
 			return true;
 		}
@@ -216,16 +216,16 @@ void Highlight::Display(void)
 {
 	int32_t i;
 	APPL_INFO("List of ALL Highlight : ");
-	for (i=0; i< m_listExtentions.size(); i++) {
+	for (i=0; i< m_listExtentions.Size(); i++) {
 		APPL_INFO("        Extention : " << i << " : " << *m_listExtentions[i] );
 	}
 	// Display all elements
-	for (i=0; i< m_listHighlightPass1.size(); i++) {
+	for (i=0; i< m_listHighlightPass1.Size(); i++) {
 		APPL_INFO("        " << i << " Pass 1 : " << m_listHighlightPass1[i]->GetName() );
 		//m_listHighlightPass1[i]->Display();
 	}
 	// Display all elements
-	for (i=0; i< m_listHighlightPass2.size(); i++) {
+	for (i=0; i< m_listHighlightPass2.Size(); i++) {
 		APPL_INFO("        " << i << " Pass 2 : " << m_listHighlightPass2[i]->GetName() );
 		//m_listHighlightPass2[i]->Display();
 	}
@@ -236,7 +236,7 @@ void Highlight::Display(void)
 // TODO : Celui qui appelle suprime des element pour rien ... Enfin c'est pas trègrave... Il suffirait juste de suprimer celuis d'avant si il n'est pas terminer...
 void Highlight::Parse(int32_t start,
                       int32_t stop,
-                      std::vector<colorInformation_ts> &metaData,
+                      etk::VectorType<colorInformation_ts> &metaData,
                       int32_t addingPos,
                       EdnVectorBuf &buffer)
 {
@@ -250,27 +250,27 @@ void Highlight::Parse(int32_t start,
 	while (elementStart<elementStop) {
 		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have
-		for (int32_t jjj=0; jjj<m_listHighlightPass1.size(); jjj++){
+		for (int32_t jjj=0; jjj<m_listHighlightPass1.Size(); jjj++){
 			resultFind_te ret = HLP_FIND_OK;
 			//APPL_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.Size() << ")" );
 			// Stop the search to the end (to get the end of the pattern)
-			ret = m_listHighlightPass1[jjj]->Find(elementStart, buffer.size(), resultat, buffer);
+			ret = m_listHighlightPass1[jjj]->Find(elementStart, buffer.Size(), resultat, buffer);
 			if (HLP_FIND_ERROR != ret) {
 				//APPL_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
 				// Remove element in the current List where the current Element have a end inside the next...
 				int32_t kkk=addingPos;
-				while(kkk < metaData.size() ) {
+				while(kkk < metaData.Size() ) {
 					if (metaData[kkk].beginStart <= resultat.endStop) {
 						// Remove element
 						//APPL_INFO("Erase element=" << kkk);
-						metaData.erase(metaData.begin()+kkk, metaData.begin()+kkk+1);
+						metaData.EraseLen(kkk, kkk+1);
 						// Increase the end of search
-						if (kkk < metaData.size()) {
+						if (kkk < metaData.Size()) {
 							// just befor the end of the next element
 							elementStop = metaData[kkk].beginStart-1;
 						} else {
 							// end of the buffer
-							elementStop = buffer.size();
+							elementStop = buffer.Size();
 						}
 					} else {
 						// Not find ==> exit the cycle : 
@@ -278,7 +278,7 @@ void Highlight::Parse(int32_t start,
 					}
 				}
 				// Add curent element in the list ...
-				metaData.insert(metaData.begin()+addingPos, resultat);
+				metaData.Insert(addingPos, resultat);
 				//APPL_DEBUG("INSERT at "<< addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
 				// Update the current research starting element: (Set position at the end of the current element
 				elementStart = resultat.endStop-1;
@@ -300,7 +300,7 @@ void Highlight::Parse(int32_t start,
  */
 void Highlight::Parse2(int32_t start,
                        int32_t stop,
-                       std::vector<colorInformation_ts> &metaData,
+                       etk::VectorType<colorInformation_ts> &metaData,
                        EdnVectorBuf &buffer)
 {
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << " ==> position search: (" << start << "," << stop << ")" );
@@ -311,7 +311,7 @@ void Highlight::Parse2(int32_t start,
 		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have
 		int32_t jjj;
-		for (jjj=0; jjj<m_listHighlightPass2.size(); jjj++){
+		for (jjj=0; jjj<m_listHighlightPass2.Size(); jjj++){
 			resultFind_te ret = HLP_FIND_OK;
 			//APPL_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.Size() << ")" );
 			// Stop the search to the end (to get the end of the pattern)
@@ -319,7 +319,7 @@ void Highlight::Parse2(int32_t start,
 			if (HLP_FIND_ERROR != ret) {
 				//APPL_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
 				// Add curent element in the list ...
-				metaData.push_back(resultat);
+				metaData.PushBack(resultat);
 				elementStart = resultat.endStop-1;
 				// Exit current cycle
 				break;
