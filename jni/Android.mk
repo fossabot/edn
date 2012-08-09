@@ -23,7 +23,6 @@ LOCAL_SRC_FILES := ewolAndroidAbstraction.cpp \
 
 LOCAL_LDLIBS    := -llog -landroid
 
-# -frtti
 ifeq ($(DEBUG),1)
 LOCAL_CFLAGS    :=  -D__PLATFORM__Android \
                     -D__MODE__Touch \
