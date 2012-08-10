@@ -118,11 +118,11 @@ void CodeView::CalculateMaxSize(void)
 
 void CodeView::OnDraw(ewol::DrawProperty& displayProp)
 {
-	m_OObjectsColored[      m_currentDrawId].Draw();
-	m_OObjectTextNormal[    m_currentDrawId].Draw();
-	m_OObjectTextBold[      m_currentDrawId].Draw();
-	m_OObjectTextItalic[    m_currentDrawId].Draw();
-	m_OObjectTextBoldItalic[m_currentDrawId].Draw();
+	m_OObjectsColored.Draw();
+	m_OObjectTextNormal.Draw();
+	m_OObjectTextBold.Draw();
+	m_OObjectTextItalic.Draw();
+	m_OObjectTextBoldItalic.Draw();
 	WidgetScrooled::OnDraw(displayProp);
 }
 
@@ -135,31 +135,31 @@ void CodeView::OnRegenerateDisplay(void)
 		CalculateMaxSize();
 		
 		// clean internal elements ...
-		m_OObjectTextNormal[    m_currentCreateId].SetFontID(m_fontNormal);
-		m_OObjectTextBold[      m_currentCreateId].SetFontID(m_fontBold);
-		m_OObjectTextItalic[    m_currentCreateId].SetFontID(m_fontItalic);
-		m_OObjectTextBoldItalic[m_currentCreateId].SetFontID(m_fontBoldItalic);
+		m_OObjectTextNormal.SetFontID(m_fontNormal);
+		m_OObjectTextBold.SetFontID(m_fontBold);
+		m_OObjectTextItalic.SetFontID(m_fontItalic);
+		m_OObjectTextBoldItalic.SetFontID(m_fontBoldItalic);
 		
-		m_OObjectTextNormal[    m_currentCreateId].Clear();
-		m_OObjectTextBold[      m_currentCreateId].Clear();
-		m_OObjectTextItalic[    m_currentCreateId].Clear();
-		m_OObjectTextBoldItalic[m_currentCreateId].Clear();
-		m_OObjectsColored[      m_currentCreateId].Clear();
+		m_OObjectTextNormal.Clear();
+		m_OObjectTextBold.Clear();
+		m_OObjectTextItalic.Clear();
+		m_OObjectTextBoldItalic.Clear();
+		m_OObjectsColored.Clear();
 		
 		
 		if(true == BufferManager::Get(m_bufferID)->NeedToUpdateDisplayPosition() ) {
 			Vector2D<float>  borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
 			bool centerRequested = false;
-			Vector2D<float>  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(m_OObjectTextNormal[m_currentCreateId].GetFontID(), centerRequested);
+			Vector2D<float>  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(m_OObjectTextNormal.GetFontID(), centerRequested);
 			SetScrollingPositionDynamic(borderWidth, currentPosition, centerRequested);
 		} // else : nothing to do ...
 		
 		// generate the objects :
-		BufferManager::Get(m_bufferID)->Display(m_OObjectTextNormal[m_currentCreateId],
-		                                        m_OObjectTextBold[m_currentCreateId],
-		                                        m_OObjectTextItalic[m_currentCreateId],
-		                                        m_OObjectTextBoldItalic[m_currentCreateId],
-		                                        m_OObjectsColored[m_currentCreateId],
+		BufferManager::Get(m_bufferID)->Display(m_OObjectTextNormal,
+		                                        m_OObjectTextBold,
+		                                        m_OObjectTextItalic,
+		                                        m_OObjectTextBoldItalic,
+		                                        m_OObjectsColored,
 		                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
 		// set the current size of the windows
 		SetMaxSize(BufferManager::Get(m_bufferID)->GetMaxSize());
@@ -169,7 +169,6 @@ void CodeView::OnRegenerateDisplay(void)
 		
 		// call the herited class...
 		WidgetScrooled::OnRegenerateDisplay();
-		m_needFlipFlop = true;
 	}
 }
 
