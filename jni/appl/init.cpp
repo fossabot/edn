@@ -50,7 +50,7 @@ MainWindows * basicWindows = NULL;
  */
 void APP_Init(void)
 {
-	#ifdef __PLATFORM__Linux
+	#ifdef __TARGET_OS__Linux
 		#ifdef MODE_RELEASE
 			APPL_INFO("==> Init "PROJECT_NAME" (START) (Linux) (Release)");
 		#else
@@ -68,7 +68,7 @@ void APP_Init(void)
 
 	ewol::SetFontFolder("Font");
 	
-	#ifdef __PLATFORM__Android
+	#ifdef __TARGET_OS__Android
 		ewol::SetDefaultFont("freefont/FreeSerif.ttf", 19);
 	#else
 		ewol::SetDefaultFont("freefont/FreeSerif.ttf", 14);

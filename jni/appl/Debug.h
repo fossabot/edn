@@ -31,48 +31,14 @@
 
 extern const char * applLog;
 
-#define APPL_CRITICAL(data)         ETK_CRITICAL(applLog, data)
-// General 
-#if APPL_DEBUG_LEVEL > 0
-#	define APPL_WARNING(data)       ETK_WARNING(applLog, data)
-#	define APPL_ERROR(data)         ETK_ERROR(applLog, data)
-#else
-#	define APPL_WARNING(data)       do {}while(0)
-#	define APPL_ERROR(data)         do {}while(0)
-#endif
-
-#if APPL_DEBUG_LEVEL > 1
-#	define APPL_INFO(data)          ETK_INFO(applLog, data)
-#else
-#	define APPL_INFO(data)          do {}while(0)
-#endif
-
-#if APPL_DEBUG_LEVEL > 2
-#	define APPL_DEBUG(data)         ETK_DEBUG(applLog, data)
-#else
-#	define APPL_DEBUG(data)         do {}while(0)
-#endif
-
-#if APPL_DEBUG_LEVEL > 3
-#	define APPL_VERBOSE(data)         ETK_VERBOSE(applLog, data)
-#else
-#	define APPL_VERBOSE(data)         do {}while(0)
-#endif
-
-#define APPL_TODO(data)             ETK_WARNING(applLog, "TODO : " << data)
-
-#define APPL_ASSERT(cond, data)     ETK_ASSERT(applLog, cond, data)
-
-#if APPL_DEBUG_LEVEL > 1
-#	define APPL_CHECK_INOUT(cond)   ETK_CHECK_INOUT_ASSERT(applLog, cond)
-#elif APPL_DEBUG_LEVEL > 0
-#	define APPL_CHECK_INOUT(cond)   ETK_CHECK_INOUT_WARNING(applLog, cond)
-#else
-#	define APPL_CHECK_INOUT(cond)   do { } while (0)
-#endif
-
-
-
-
+#define APPL_CRITICAL(data)			ETK_CRITICAL(applLog, data)
+#define APPL_WARNING(data)			ETK_WARNING(applLog, data)
+#define APPL_ERROR(data)			ETK_ERROR(applLog, data)
+#define APPL_INFO(data)				ETK_INFO(applLog, data)
+#define APPL_DEBUG(data)			ETK_DEBUG(applLog, data)
+#define APPL_VERBOSE(data)			ETK_VERBOSE(applLog, data)
+#define APPL_ASSERT(cond, data)		ETK_ASSERT(applLog, cond, data)
+#define APPL_CHECK_INOUT(cond)		ETK_CHECK_INOUT(applLog, cond)
+#define APPL_TODO(cond)				ETK_TODO(applLog, cond)
 
 #endif

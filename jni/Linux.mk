@@ -24,20 +24,12 @@ LOCAL_SRC_FILES := $(FILE_LIST)
 LOCAL_LDLIBS    := 
 
 ifeq ($(DEBUG),1)
-LOCAL_CFLAGS    :=  -D__PLATFORM__Linux \
-                    -DETK_DEBUG_LEVEL=3 \
-                    -DAPPL_DEBUG_LEVEL=3 \
-                    -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" \
-                    -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION_TAG_SHORT)-debug\"" \
-                    -DBUILD_TIME="\"$(BUILD_TIME)\""
+LOCAL_CFLAGS    :=  -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" \
+                    -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION_TAG_SHORT)-$(BUILD_DIRECTORY_MODE)\""
 else
-LOCAL_CFLAGS    :=  -D__PLATFORM__Linux \
-                    -DETK_DEBUG_LEVEL=3 \
-                    -DAPPL_DEBUG_LEVEL=1 \
-                    -DMODE_RELEASE \
+LOCAL_CFLAGS    :=  -DMODE_RELEASE \
                     -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" \
-                    -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION_TAG_SHORT)-release\"" \
-                    -DBUILD_TIME="\"$(BUILD_TIME)\""
+                    -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION_TAG_SHORT)-$(BUILD_DIRECTORY_MODE)\""
 endif
 
 include $(BUILD_EXECUTABLE)
