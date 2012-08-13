@@ -380,7 +380,7 @@ void ColorizeManager::UnInit(void)
 		EWOL_ERROR("ColorizeManager ==> request UnInit, but does not exist ...");
 		return;
 	}
-	ewol::EObjectManager::MarkToRemoved(localManager);
+	delete(localManager);
 	localManager = NULL;
 }
 

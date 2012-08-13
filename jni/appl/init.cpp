@@ -177,7 +177,7 @@ void APP_UnInit(void)
 	//AccelKey::Kill();
 	
 	if (NULL != basicWindows) {
-		basicWindows->MarkToRemove();
+		delete(basicWindows);
 		basicWindows = NULL;
 	}
 	APPL_INFO("==> Un-Init Edn (END)");

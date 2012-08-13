@@ -529,7 +529,7 @@ void BufferManager::UnInit(void)
 		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
 		return;
 	}
-	ewol::EObjectManager::MarkToRemoved(localManager);
+	delete(localManager);
 	localManager = NULL;
 }
 

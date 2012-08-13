@@ -185,7 +185,7 @@ void HighlightManager::UnInit(void)
 		APPL_ERROR("HighlightManager ==> request UnInit, but does not exist ...");
 		return;
 	}
-	ewol::EObjectManager::MarkToRemoved(localManager);
+	delete(localManager);
 	localManager = NULL;
 }
 
