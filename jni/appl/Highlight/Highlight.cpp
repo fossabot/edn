@@ -33,7 +33,7 @@
 #define __class__	"Highlight"
 
 
-void Highlight::ParseRules(TiXmlNode *child, etk::VectorType<HighlightPattern*> &mListPatern, int32_t level)
+void Highlight::ParseRules(TiXmlNode *child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level)
 {
 	// Create the patern ...
 	HighlightPattern *myPattern = new HighlightPattern();
@@ -236,7 +236,7 @@ void Highlight::Display(void)
 // TODO : Celui qui appelle suprime des element pour rien ... Enfin c'est pas trègrave... Il suffirait juste de suprimer celuis d'avant si il n'est pas terminer...
 void Highlight::Parse(int32_t start,
                       int32_t stop,
-                      etk::VectorType<colorInformation_ts> &metaData,
+                      etk::Vector<colorInformation_ts> &metaData,
                       int32_t addingPos,
                       EdnVectorBuf &buffer)
 {
@@ -300,7 +300,7 @@ void Highlight::Parse(int32_t start,
  */
 void Highlight::Parse2(int32_t start,
                        int32_t stop,
-                       etk::VectorType<colorInformation_ts> &metaData,
+                       etk::Vector<colorInformation_ts> &metaData,
                        EdnVectorBuf &buffer)
 {
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << " ==> position search: (" << start << "," << stop << ")" );

@@ -35,8 +35,8 @@
 Colorize::Colorize(	etk::UString &newColorName)
 {
 
-	m_colorFG = etk::color::color_Black;
-	m_colorBG = etk::color::color_Black;
+	m_colorFG = etk::color::black;
+	m_colorBG = etk::color::black;
 	
 	italic	= false;
 	bold	= false;
@@ -50,8 +50,8 @@ Colorize::Colorize(void)
 {
 	ColorName = "no_name";
 	
-	m_colorFG = etk::color::color_Black;
-	m_colorBG = etk::color::color_Black;
+	m_colorFG = etk::color::black;
+	m_colorBG = etk::color::black;
 	
 	italic	= false;
 	bold	= false;
@@ -89,14 +89,14 @@ etk::UString Colorize::GetName(void)
 void Colorize::SetFgColor(const char *myColor)
 {
 	haveFG = true;
-	m_colorFG = etk::color::Parse(myColor);
+	m_colorFG = myColor;
 	APPL_VERBOSE(myColor << " ==> "<< m_colorFG );
 }
 
 void Colorize::SetBgColor(const char *myColor)
 {
 	haveBG = true;
-	m_colorBG = etk::color::Parse(myColor);
+	m_colorBG = myColor;
 	APPL_VERBOSE(myColor << " ==> "<< m_colorBG );
 }
 

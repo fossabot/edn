@@ -119,7 +119,7 @@ bool EdnBuf::DumpFrom(FILE *myFile)
 }
 
 
-void EdnBuf::GetAll(etk::VectorType<int8_t> &text)
+void EdnBuf::GetAll(etk::Vector<int8_t> &text)
 {
 	// Clean output vector
 	text.Clear();
@@ -128,9 +128,9 @@ void EdnBuf::GetAll(etk::VectorType<int8_t> &text)
 }
 
 
-void EdnBuf::SetAll(etk::VectorType<int8_t> &text)
+void EdnBuf::SetAll(etk::Vector<int8_t> &text)
 {
-	etk::VectorType<int8_t> deletedText;
+	etk::Vector<int8_t> deletedText;
 	
 	// extract all data of the buffer :
 	GetAll(deletedText);
@@ -148,7 +148,7 @@ void EdnBuf::SetAll(etk::VectorType<int8_t> &text)
 	eventModification(0, m_data.Size(), deletedText); 
 }
 
-void EdnBuf::GetRange(int32_t start, int32_t end, etk::VectorType<int8_t> &output)
+void EdnBuf::GetRange(int32_t start, int32_t end, etk::Vector<int8_t> &output)
 {
 	// Remove all data ...
 	output.Clear();
@@ -162,14 +162,14 @@ void EdnBuf::GetRange(int32_t start, int32_t end, etk::UString &output)
 	// Remove all data ...
 	output = "";
 	// import data : 
-	etk::VectorType<int8_t> localOutput;
+	etk::Vector<int8_t> localOutput;
 	m_data.Get(start, end-start, localOutput);
 	// transcript in UNICODE ...
 	if (true == m_isUtf8) {
 		localOutput.PushBack('\0');
 		output = (char*)&localOutput[0];
 	} else {
-		etk::VectorType<uniChar_t> tmpUnicodeData;
+		etk::Vector<uniChar_t> tmpUnicodeData;
 		// transform in unicode :
 		convertIsoToUnicode(m_charsetType, localOutput, tmpUnicodeData);
 		output = tmpUnicodeData;
@@ -202,7 +202,7 @@ int8_t EdnBuf::operator[] (int32_t pos)
  * @return ---
  * 
  */
-int32_t EdnBuf::Insert(int32_t pos, etk::VectorType<int8_t> &insertText)
+int32_t EdnBuf::Insert(int32_t pos, etk::Vector<int8_t> &insertText)
 {
 	// if pos is not contiguous to existing text, make it
 	pos = etk_avg(0, pos, m_data.Size() );
@@ -210,7 +210,7 @@ int32_t EdnBuf::Insert(int32_t pos, etk::VectorType<int8_t> &insertText)
 	int32_t sizeInsert=LocalInsert(pos, insertText);
 
 	// Call the redisplay ...
-	etk::VectorType<int8_t> deletedText;
+	etk::Vector<int8_t> deletedText;
 	eventModification(pos, insertText.Size(), deletedText);
 	return sizeInsert;
 }
@@ -222,7 +222,7 @@ int32_t EdnBuf::Insert(int32_t pos, etk::UString &insertText)
 	int32_t sizeInsert=LocalInsert(pos, insertText);
 
 	// Call the redisplay ...
-	etk::VectorType<int8_t> deletedText;
+	etk::Vector<int8_t> deletedText;
 	eventModification(pos, insertText.Size(), deletedText);
 	return sizeInsert;
 }
@@ -237,12 +237,12 @@ int32_t EdnBuf::Insert(int32_t pos, etk::UString &insertText)
  * @return nb Octet inserted
  * 
  */
-int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::VectorType<int8_t> &insertText)
+int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::Vector<int8_t> &insertText)
 {
 	if (end-start == 0) {
 		return 0;
 	}
-	etk::VectorType<int8_t> deletedText;
+	etk::Vector<int8_t> deletedText;
 	GetRange(start, end, deletedText);
 	m_data.Replace(start, end-start, insertText);
 	// update internal elements
@@ -255,16 +255,16 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
 	if (end-start == 0) {
 		return 0;
 	}
-	etk::VectorType<int8_t> deletedText;
+	etk::Vector<int8_t> deletedText;
 	GetRange(start, end, deletedText);
-	etk::VectorType<int8_t> tmpInsertText;
+	etk::Vector<int8_t> tmpInsertText;
 	if (true == m_isUtf8) {
-		char * tmpPointer = insertText.Utf8Data();
+		char * tmpPointer = insertText.c_str();
 		while (*tmpPointer != '\0') {
 			tmpInsertText.PushBack(*tmpPointer++);
 		}
 	} else {
-		etk::VectorType<unsigned int> tmppp = insertText.GetVector();
+		etk::Vector<unsigned int> tmppp = insertText.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
 	}
 	if (tmpInsertText.Size()>0) {
@@ -296,7 +296,7 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
 void EdnBuf::Remove(int32_t start, int32_t end)
 {
 
-	etk::VectorType<int8_t> deletedText;
+	etk::Vector<int8_t> deletedText;
 	// Make sure the arguments make sense
 	if (start > end) {
 		int32_t temp = start;
@@ -327,7 +327,7 @@ int32_t EdnBuf::Indent(void)
 	// Get Range :
 	int32_t l_start = StartOfLine(SelectionStart);
 	int32_t l_end = EndOfLine(SelectionEnd);
-	etk::VectorType<int8_t> l_tmpData;
+	etk::Vector<int8_t> l_tmpData;
 	GetRange(l_start, l_end, l_tmpData);
 	
 	l_tmpData.Insert(0, '\n');
@@ -366,7 +366,7 @@ int32_t EdnBuf::UnIndent(void)
 	// Get Range :
 	int32_t l_start = StartOfLine(SelectionStart);
 	int32_t l_end = EndOfLine(SelectionEnd);
-	etk::VectorType<int8_t> l_tmpData;
+	etk::Vector<int8_t> l_tmpData;
 	GetRange(l_start, l_end, l_tmpData);
 	
 	l_tmpData.Insert(0, '\n');
@@ -408,7 +408,7 @@ int32_t EdnBuf::UnIndent(void)
  * @return ---
  * 
  */
-void EdnBuf::GetLineText(int32_t pos, etk::VectorType<int8_t> &text)
+void EdnBuf::GetLineText(int32_t pos, etk::Vector<int8_t> &text)
 {
 	GetRange( StartOfLine(pos), EndOfLine(pos), text);
 }
@@ -841,9 +841,9 @@ int32_t EdnBuf::CountLines(int32_t startPos, int32_t endPos)
  * @return number of line found
  * 
  */
-int32_t EdnBuf::CountLines(etk::VectorType<int8_t> &data)
+int32_t EdnBuf::CountLines(etk::Vector<int8_t> &data)
 {
-	etk::VectorType<int8_t>::Iterator myPosIt = data.Begin();
+	etk::Vector<int8_t>::Iterator myPosIt = data.Begin();
 	int32_t lineCount = 0;
 	
 	while(myPosIt) {
@@ -987,14 +987,14 @@ bool EdnBuf::charMatch(char first, char second, bool caseSensitive)
  */
 bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foundPos, int32_t *foundPosEnd, bool caseSensitive)
 {
-	etk::VectorType<int8_t> searchVect;
+	etk::Vector<int8_t> searchVect;
 	if (true == m_isUtf8) {
-		char * tmpPointer = search.Utf8Data();
+		char * tmpPointer = search.c_str();
 		while (*tmpPointer != '\0') {
 			searchVect.PushBack(*tmpPointer++);
 		}
 	} else {
-		etk::VectorType<unsigned int> tmppp = search.GetVector();
+		etk::Vector<unsigned int> tmppp = search.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
 	}
 	// remove the '\0' at the end of the string ...
@@ -1042,14 +1042,14 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foun
  */
 bool EdnBuf::SearchBackward(int32_t startPos, etk::UString &search, int32_t *foundPos, int32_t *foundPosEnd, bool caseSensitive)
 {
-	etk::VectorType<int8_t> searchVect;
+	etk::Vector<int8_t> searchVect;
 	if (true == m_isUtf8) {
-		char * tmpPointer = search.Utf8Data();
+		char * tmpPointer = search.c_str();
 		while (*tmpPointer != '\0') {
 			searchVect.PushBack(*tmpPointer++);
 		}
 	} else {
-		etk::VectorType<unsigned int> tmppp = search.GetVector();
+		etk::Vector<unsigned int> tmppp = search.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
 	}
 	// remove the '\0' at the end of the string ...
@@ -1181,7 +1181,7 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
  * @return number of element inserted.
  * 
  */
-int32_t EdnBuf::LocalInsert(int32_t pos, etk::VectorType<int8_t> &insertText)
+int32_t EdnBuf::LocalInsert(int32_t pos, etk::Vector<int8_t> &insertText)
 {
 	// Insert data in buffer
 	m_data.Insert(pos, insertText);
@@ -1192,14 +1192,14 @@ int32_t EdnBuf::LocalInsert(int32_t pos, etk::VectorType<int8_t> &insertText)
 }
 int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
 {
-	etk::VectorType<int8_t> tmpInsertText;
+	etk::Vector<int8_t> tmpInsertText;
 	if (true == m_isUtf8) {
-		char * tmpPointer = insertText.Utf8Data();
+		char * tmpPointer = insertText.c_str();
 		while (*tmpPointer != '\0') {
 			tmpInsertText.PushBack(*tmpPointer++);
 		}
 	} else {
-		etk::VectorType<unsigned int> tmppp = insertText.GetVector();
+		etk::Vector<unsigned int> tmppp = insertText.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
 	}
 	if (tmpInsertText.Size()>0) {
@@ -1221,7 +1221,7 @@ int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
  * @return ---
  * 
  */
-void EdnBuf::eventModification(int32_t pos, int32_t nInserted, etk::VectorType<int8_t> &deletedText)
+void EdnBuf::eventModification(int32_t pos, int32_t nInserted, etk::Vector<int8_t> &deletedText)
 {
 	if(		0 == deletedText.Size()
 		&&	0 == nInserted)

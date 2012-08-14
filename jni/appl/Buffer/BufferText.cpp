@@ -125,7 +125,7 @@ BufferText::BufferText(etk::File &fileName) : Buffer(fileName)
 	FILE * myFile = NULL;
 	// try to open the file. if not existed, new file
 	
-	myFile = fopen(fileName.GetCompleateName().Utf8Data(), "r");
+	myFile = fopen(fileName.GetCompleateName().c_str(), "r");
 	if (NULL != myFile) {
 		m_EdnBuf.DumpFrom(myFile);
 		// close the input file
@@ -152,7 +152,7 @@ void BufferText::Save(void)
 {
 	APPL_INFO("Save File : \"" <<  GetFileName() << "\"" );
 	FILE * myFile = NULL;
-	myFile = fopen(GetFileName().GetCompleateName().Utf8Data(), "w");
+	myFile = fopen(GetFileName().GetCompleateName().c_str(), "w");
 	if (NULL != myFile) {
 		m_EdnBuf.DumpIn(myFile);
 		fclose(myFile);
@@ -225,7 +225,7 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 #define CURSOR_THICKNESS       (1.2)
 void BufferText::DrawCursor(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip)
 {
-	color_ts & tmpppppp = ColorizeManager::Get(COLOR_CODE_CURSOR);
+	etk::Color & tmpppppp = ColorizeManager::Get(COLOR_CODE_CURSOR);
 	OOColored->SetColor(tmpppppp);
 	if (true == ewol::IsSetInsert()) {
 		OOColored->Rectangle( x, y, letterWidth, letterHeight);
@@ -317,8 +317,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	// Get color : 
 	Colorize *  myColor           = ColorizeManager::Get("normal");
 	Colorize *  myColorSel        = ColorizeManager::Get("SelectedText");
-	color_ts &  myColorSpace      = ColorizeManager::Get(COLOR_CODE_SPACE);
-	color_ts &  myColorTab        = ColorizeManager::Get(COLOR_CODE_TAB);
+	etk::Color &  myColorSpace    = ColorizeManager::Get(COLOR_CODE_SPACE);
+	etk::Color &  myColorTab      = ColorizeManager::Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
 	ewol::OObject2DTextColored* OOTextSelected = NULL;
 	
@@ -913,7 +913,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 	bool haveSelectionActive = m_EdnBuf.GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	if (unicodeData == 0x09) {
 		if (false == haveSelectionActive) {
-			etk::VectorType<int8_t> tmpVect;
+			etk::Vector<int8_t> tmpVect;
 			tmpVect.PushBack(0x09);
 			m_EdnBuf.Insert(m_cursorPos, tmpVect);
 			SetInsertPosition(m_cursorPos+1, true);
@@ -922,7 +922,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 			// count the number of line : 
 			int32_t nbSelectedLines = m_EdnBuf.CountLines(SelectionStart, SelectionEnd);
 			if (0 == nbSelectedLines) {
-				etk::VectorType<int8_t> tmpVect;
+				etk::Vector<int8_t> tmpVect;
 				tmpVect.PushBack(0x09);
 				m_EdnBuf.ReplaceSelected(tmpVect);
 				SetInsertPosition(SelectionStart+tmpVect.Size(), true);
@@ -935,7 +935,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 			}
 		}
 	} else if (unicodeData == '\n') {
-		etk::VectorType<int8_t> tmpVect;
+		etk::Vector<int8_t> tmpVect;
 		if (true == ewol::IsSetShift()) {
 			tmpVect.PushBack('\r');
 		} else {
@@ -991,7 +991,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 		if (true == m_EdnBuf.GetUTF8Mode()) {
 			char tmpUTF8[16];
 			unicode::convertUnicodeToUtf8(unicodeData, tmpUTF8);
-			etk::VectorType<int8_t> tmpVect;
+			etk::Vector<int8_t> tmpVect;
 			int32_t localOfset = strlen(tmpUTF8);
 			tmpVect.PushBack((int8_t*)tmpUTF8, localOfset);
 			if (false == haveSelectionActive) {
@@ -1006,7 +1006,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 			char output_ISO;
 			unicode::convertUnicodeToIso(m_EdnBuf.GetCharsetType(), unicodeData, output_ISO);
 			//printf(" insert : \"%s\"==> 0x%08x=%d ", UTF8data, (unsigned int)output_ISO, (int)output_ISO);
-			etk::VectorType<int8_t> tmpVect;
+			etk::Vector<int8_t> tmpVect;
 			tmpVect.PushBack(output_ISO);
 			if (false == haveSelectionActive) {
 				m_EdnBuf.Insert(m_cursorPos, tmpVect);
@@ -1030,7 +1030,7 @@ int32_t BufferText::FindLine(etk::UString &data)
 		return 0;
 	}
 	APPL_INFO("Search data line : \"" << data << "\"");
-	etk::VectorType<uniChar_t> mVectSearch;
+	etk::Vector<uniChar_t> mVectSearch;
 	mVectSearch = data.GetVector();
 	//APPL_INFO("search data Forward : startSearchPos=" << startSearchPos );
 	/*

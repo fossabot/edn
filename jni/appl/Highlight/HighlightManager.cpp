@@ -35,7 +35,7 @@
 class localClassHighlightManager: public ewol::EObject
 {
 	private:
-		etk::VectorType<Highlight*> listHighlight;		//!< List of ALL hightlight modules
+		etk::Vector<Highlight*> listHighlight;		//!< List of ALL hightlight modules
 	public:
 		// Constructeur
 		localClassHighlightManager(void) {

@@ -80,7 +80,7 @@ class classBufferManager: public ewol::EObject
 
 	private:
 		
-		etk::VectorType<Buffer*> listBuffer;  //!< element List of the char Elements
+		etk::Vector<Buffer*> listBuffer;  //!< element List of the char Elements
 		
 		void        RemoveAll(void);          //!< remove all buffer
 		int32_t     m_idSelected;
@@ -148,7 +148,7 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 			APPL_ERROR("Request select buffer ID = \"\" ");
 		} else {
 			int32_t newID = -1;
-			sscanf(data.Utf8Data(), "%d", &newID);
+			sscanf(data.c_str(), "%d", &newID);
 			if(true == Exist(newID)) {
 				m_idSelected = newID;
 			} else {
@@ -192,7 +192,7 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 				}
 			} else {
 				int32_t newId;
-				sscanf(data.Utf8Data(), "%d", &newId);
+				sscanf(data.c_str(), "%d", &newId);
 				if (false == Exist(newId)) {
 					APPL_ERROR("Request a save As with a non existant ID=" << newId);
 				} else {
@@ -219,7 +219,7 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 					APPL_DEBUG("Close specific buffer ID" << closeID);
 				} else {
 					// close specific buffer ...
-					sscanf(data.Utf8Data(), "%d", &closeID);
+					sscanf(data.c_str(), "%d", &closeID);
 					APPL_DEBUG("Close specific buffer ID="<< closeID);
 				}
 				if(true == Exist(closeID)) {
@@ -260,7 +260,7 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 			APPL_ERROR("Null data for changing buffer ID file ... ");
 		} else {
 			int32_t newId;
-			sscanf(data.Utf8Data(), "%d", &newId);
+			sscanf(data.c_str(), "%d", &newId);
 			if (true == Exist(newId)) {
 				m_idSelected = newId;
 			} else {

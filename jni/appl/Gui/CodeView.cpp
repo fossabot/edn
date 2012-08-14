@@ -56,10 +56,10 @@ CodeView::CodeView(void)
 	
 	m_lineNumberList.Clear();
 	
-	m_textColorFg = etk::color::color_Black;
+	m_textColorFg = etk::color::black;
 	
-	m_textColorBg = etk::color::color_Black;
-	m_textColorBg.alpha = 0.25;
+	m_textColorBg = etk::color::black;
+	m_textColorBg.alpha = 0x40;
 	SetCanHaveFocus(true);
 	RegisterMultiCast(ednMsgBufferId);
 	RegisterMultiCast(ednMsgGuiCopy);
@@ -292,7 +292,7 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 			m_lineNumberList[m_bufferID] = m_originScrooled;
 		}
 		int32_t bufferID = 0;
-		sscanf(data.Utf8Data(), "%d", &bufferID);
+		sscanf(data.c_str(), "%d", &bufferID);
 		APPL_INFO("Select a new Buffer ... " << bufferID);
 		// set the new buffer ID
 		m_bufferID = bufferID;

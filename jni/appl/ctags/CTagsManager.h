@@ -64,8 +64,8 @@ class CTagsManager: public etk::Singleton<CTagsManager>, public ewol::Widget
 		// history system
 		void                       AddToHistory(int32_t bufferID);
 		int32_t                    m_historyPos;
-		etk::VectorType<etk::File*>   m_historyList;
-		etk::VectorType<TagListFind_ts> m_currentList;
+		etk::Vector<etk::File*>   m_historyList;
+		etk::Vector<TagListFind_ts> m_currentList;
 		void                       JumpAtID(int32_t selectID);
 };
 */

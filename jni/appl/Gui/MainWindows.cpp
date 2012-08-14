@@ -273,7 +273,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			if (data == "current") {
 				m_currentSavingAsIdBuffer = BufferManager::GetSelected();
 			} else {
-				sscanf(data.Utf8Data(), "%d", &m_currentSavingAsIdBuffer);
+				sscanf(data.c_str(), "%d", &m_currentSavingAsIdBuffer);
 			}
 			
 			if (false == BufferManager::Exist(m_currentSavingAsIdBuffer)) {

@@ -94,7 +94,7 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
 	tmpDisplay = "No Buffer Availlable to display";
 	OOTextNormal.Text(textPos, tmpDisplay);
 	
-	OOColored.SetColor(etk::color::color_White);
+	OOColored.SetColor(etk::color::white);
 	OOColored.Rectangle( 0, 0, sizeX, sizeY);
 	
 	return ERR_NONE;

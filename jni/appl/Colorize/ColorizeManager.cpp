@@ -61,16 +61,16 @@ class classColorManager: public ewol::EObject
 		void        LoadFile(const char * xmlFilename);
 		Colorize *  Get(const char *colorName);
 		Colorize *  Get(etk::UString &colorName);
-		color_ts &  Get(basicColor_te myColor);
+		etk::Color& Get(basicColor_te myColor);
 		bool        Exist(etk::UString &colorName);
 		bool        Exist(const char *colorName);
 		void        DisplayListOfColor(void);
 
 	private:
-		etk::UString                 m_fileColor;
-		etk::VectorType<Colorize*>  listMyColor;		//!< List of ALL Color
+		etk::UString                m_fileColor;
+		etk::Vector<Colorize*>  listMyColor;		//!< List of ALL Color
 		Colorize *                  errorColor;
-		color_ts                    basicColors[COLOR_NUMBER_MAX];
+		etk::Color                  basicColors[COLOR_NUMBER_MAX];
 };
 
 
@@ -116,7 +116,7 @@ void classColorManager::OnReceiveMessage(ewol::EObject * CallerObject, const cha
 void classColorManager::LoadFile(etk::UString &xmlFilename)
 {
 	// TODO : Remove this
-	LoadFile(xmlFilename.Utf8Data());
+	LoadFile(xmlFilename.c_str());
 }
 
 // TODO : Remove this ...
@@ -225,7 +225,7 @@ void classColorManager::LoadFile(const char * xmlFilename)
 						}
 						const char *color = pGuiNode->ToElement()->Attribute("val");
 						if (NULL != color) {
-							basicColors[id] = etk::color::Parse(color);
+							basicColors[id] = color;
 						}
 					} else {
 						APPL_ERROR("(l "<<pGuiNode->Row()<<") node not suported : \""<<pGuiNode->Value()<<"\" must be [color]");
@@ -313,10 +313,10 @@ Colorize *classColorManager::Get(const char *colorName)
 Colorize *classColorManager::Get(etk::UString &colorName)
 {
 	// TODO : Remove this
-	return Get(colorName.Utf8Data());
+	return Get(colorName.c_str());
 }
 
-color_ts & classColorManager::Get(basicColor_te myColor)
+etk::Color & classColorManager::Get(basicColor_te myColor)
 {
 	if (myColor < COLOR_NUMBER_MAX) {
 		return basicColors[myColor];
@@ -342,7 +342,7 @@ bool classColorManager::Exist(const char *colorName)
 bool classColorManager::Exist(etk::UString &colorName)
 {
 	// TODO : Remove this
-	return Exist(colorName.Utf8Data());
+	return Exist(colorName.c_str());
 }
 
 void classColorManager::DisplayListOfColor(void)
@@ -417,9 +417,9 @@ Colorize* ColorizeManager::Get(etk::UString &colorName)
 	return localManager->Get(colorName);
 }
 
-color_ts errorColor;
+etk::Color errorColor;
 
-color_ts& ColorizeManager::Get(basicColor_te myColor)
+etk::Color& ColorizeManager::Get(basicColor_te myColor)
 {
 	if (NULL == localManager) {
 		return errorColor;

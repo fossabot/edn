@@ -33,7 +33,7 @@ class HighlightPattern;
 
 #include <etk/RegExp.h>
 #include <Colorize.h>
-#include <etk/VectorType.h>
+#include <etk/Vector.h>
 #include <tinyXML/tinyxml.h>
 #include <EdnVectorBuf.h>
 
@@ -81,8 +81,8 @@ class HighlightPattern {
 		bool                                m_haveStopPatern;           //!< Stop patern presence
 		bool                                m_multiline;                //!< The patern is multiline
 		uniChar_t                           m_escapeChar;               //!< Escape char to prevent exeit of patern ....
-		etk::VectorType<HighlightPattern *> m_subPatern;                //!< Under patern of this one
-//		etk::VectorType<HighlightPattern *> m_subColor;                 //!< Under Color in the start RegExp ...
+		etk::Vector<HighlightPattern *> m_subPatern;                //!< Under patern of this one
+//		etk::Vector<HighlightPattern *> m_subColor;                 //!< Under Color in the start RegExp ...
 };
 
 #endif

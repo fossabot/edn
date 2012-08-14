@@ -49,11 +49,11 @@ class CodeView :public ewol::WidgetScrooled
 		virtual bool   CalculateMinSize(void);
 	private:
 		etk::UString                 m_label;
-		color_ts                     m_textColorFg;  //!< Text color
-		color_ts                     m_textColorBg;  //!< Background color
+		etk::Color                   m_textColorFg;  //!< Text color
+		etk::Color                   m_textColorBg;  //!< Background color
 		int32_t                      m_bufferID;
 		bool                         m_buttunOneSelected;
-		etk::VectorType<Vector2D<float> >  m_lineNumberList;
+		etk::Vector<Vector2D<float> >  m_lineNumberList;
 		void                         UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
 		ewol::OObject2DTextColored   m_OObjectTextNormal;

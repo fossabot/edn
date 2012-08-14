@@ -344,7 +344,7 @@ void CTagsManager::JumpTo(void)
 /*
 	m_currentList.Clear();
 	if (NULL != m_ctagFile) {
-		etk::VectorType<int8_t> data;
+		etk::Vector<int8_t> data;
 		// get the middle button of the clipboard ==> represent the current selection ...
 		ClipBoard::Get(COPY_MIDDLE_BUTTON, data);
 		if (data.Size() == 0) {

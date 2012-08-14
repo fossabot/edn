@@ -53,7 +53,7 @@ int32_t EdnBuf::Undo(void)
 	int32_t pos        = m_historyUndo[nbElement]->getPos();
 	int32_t nbDeleted  = m_historyUndo[nbElement]->getnbDeleted();
 	int32_t nbInserted = m_historyUndo[nbElement]->getnbInserted();
-	etk::VectorType<int8_t> deletedText;
+	etk::Vector<int8_t> deletedText;
 	m_historyUndo[nbElement]->getData(deletedText);
 	m_isUndoProcessing = true;
 	if (0 == nbInserted) {
@@ -101,7 +101,7 @@ int32_t EdnBuf::Redo(void)
 	int32_t pos        = m_historyRedo[nbElement]->getPos();
 	int32_t nbDeleted  = m_historyRedo[nbElement]->getnbDeleted();
 	int32_t nbInserted = m_historyRedo[nbElement]->getnbInserted();
-	etk::VectorType<int8_t> deletedText;
+	etk::Vector<int8_t> deletedText;
 	m_historyRedo[nbElement]->getData(deletedText);
 	m_isRedoProcessing = true;
 	if (0 == nbInserted) {
