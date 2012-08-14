@@ -178,7 +178,7 @@ bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, uniChar_t unicodeData)
 	//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
 	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
 		BufferManager::Get(m_bufferID)->AddChar(unicodeData);
-		MarkToReedraw();
+		MarkToRedraw();
 	}
 	return true;
 }
@@ -188,7 +188,7 @@ bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveTy
 {
 	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
 		BufferManager::Get(m_bufferID)->cursorMove(moveTypeEvent);
-		MarkToReedraw();
+		MarkToRedraw();
 	}
 	return true;
 }
@@ -223,27 +223,27 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 				m_buttunOneSelected = true;
 				ewol::widgetManager::FocusKeep(this);
 				BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
-				MarkToReedraw();
+				MarkToRedraw();
 			} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 				m_buttunOneSelected = false;
 				BufferManager::Get(m_bufferID)->Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
-				MarkToReedraw();
+				MarkToRedraw();
 			} else 
 		#endif
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			#ifdef __MODE__Touch
 				ewol::widgetManager::FocusKeep(this);
 				BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
-				MarkToReedraw();
+				MarkToRedraw();
 			#else
 				// nothing to do ...
 			#endif
 		} else if (ewol::EVENT_INPUT_TYPE_DOUBLE == typeEvent) {
 			BufferManager::Get(m_bufferID)->MouseEventDouble();
-			MarkToReedraw();
+			MarkToRedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_TRIPLE == typeEvent) {
 			BufferManager::Get(m_bufferID)->MouseEventTriple();
-			MarkToReedraw();
+			MarkToRedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_MOVE == typeEvent) {
 			if (true == m_buttunOneSelected) {
 				int xxx, yyy;
@@ -257,14 +257,14 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 				}
 				//APPL_INFO("mouse-motion BT1 %d, %d", xxx, yyy);
 				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(m_fontNormal, xxx+m_originScrooled.x, yyy+m_originScrooled.y);
-				MarkToReedraw();
+				MarkToRedraw();
 			}
 		}
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
 			BufferManager::Get(m_bufferID)->Paste(ewol::clipBoard::CLIPBOARD_SELECTION);
-			MarkToReedraw();
+			MarkToRedraw();
 			ewol::widgetManager::FocusKeep(this);
 		}
 	}
@@ -376,7 +376,7 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 	}
 	*/
 	// Force redraw of the widget
-	MarkToReedraw();
+	MarkToRedraw();
 }
 
 

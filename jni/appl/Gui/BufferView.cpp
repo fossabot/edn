@@ -62,12 +62,12 @@ void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eve
 {
 	ewol::List::OnReceiveMessage(CallerObject, eventId, data);
 	if (eventId == ednMsgBufferListChange) {
-		MarkToReedraw();
+		MarkToRedraw();
 	}else if (eventId == ednMsgBufferId) {
 		m_selectedIdRequested = BufferManager::GetSelected();
-		MarkToReedraw();
+		MarkToRedraw();
 	}else if (eventId == ednMsgBufferState) {
-		MarkToReedraw();
+		MarkToRedraw();
 	}
 }
 
@@ -161,7 +161,7 @@ bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,
 			SendMultiCast(ednMsgBufferId, selectBuf);
 		}
 	}
-	MarkToReedraw();
+	MarkToRedraw();
 	return false;
 }
 
