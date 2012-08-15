@@ -2,16 +2,9 @@
 ###################################
 # folders
 ###################################
-CVS
-.svn
 .gitk-tmp.*
-Object/
-doxygen/API/
-doxygen/ALL/
-bin/
-gen/
-linux/
-obj/
+out/
+Sources/ewolAndroidAbstraction.cpp
 
 ###################################
 # backup files
@@ -32,10 +25,6 @@ obj/
 *.so
 *.pyc
 tags
-edn
-out
-edn_debug
-edn_release
 
 ###################################
 # Packages #
