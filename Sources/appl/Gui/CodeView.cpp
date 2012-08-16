@@ -129,7 +129,7 @@ void CodeView::OnDraw(ewol::DrawProperty& displayProp)
 void CodeView::OnRegenerateDisplay(void)
 {
 	if (true == NeedRedraw()) {
-		int64_t startTime = GetCurrentTime();
+		int64_t startTime = ewol::GetTime();
 		
 		// For the scrooling windows
 		CalculateMaxSize();
@@ -164,7 +164,7 @@ void CodeView::OnRegenerateDisplay(void)
 		// set the current size of the windows
 		SetMaxSize(BufferManager::Get(m_bufferID)->GetMaxSize());
 		
-		int64_t stopTime = GetCurrentTime();
+		int64_t stopTime = ewol::GetTime();
 		APPL_DEBUG("Display Code Generation = " << stopTime - startTime << " micro-s");
 		
 		// call the herited class...

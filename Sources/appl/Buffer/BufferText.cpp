@@ -329,13 +329,13 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	OOColored.SetColor(ColorizeManager::Get(COLOR_CODE_BASIC_BG));
 	OOColored.Rectangle( 0, 0, sizeX, sizeY);
 	
-	int64_t startTime = GetCurrentTime();
+	int64_t startTime = ewol::GetTime();
 	int displayLines = 0;
 	// Regenerate the colorizing if necessary ...
 	displayHLData_ts m_displayLocalSyntax;
 	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, displayStartBufferPos, m_displaySize.y);
 	
-	int64_t stopTime = GetCurrentTime();
+	int64_t stopTime = ewol::GetTime();
 	APPL_DEBUG("Parsing Highlight = " << stopTime - startTime << " micro-s");
 	
 	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
@@ -469,7 +469,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	}
 	// set the maximum size for the display ...
 	SetMaximumSize(maxSize);
-	int64_t stopTime2 = GetCurrentTime();
+	int64_t stopTime2 = ewol::GetTime();
 	APPL_DEBUG("DRAW text (brut) = " << stopTime2 - stopTime << " micro-s");
 
 	return ERR_NONE;
