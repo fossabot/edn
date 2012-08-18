@@ -85,6 +85,13 @@ class CodeView :public ewol::WidgetScrooled
 		virtual bool OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::eventInputType_te typeEvent, Vector2D<float>  pos);
 		virtual bool OnEventKb(ewol::eventKbType_te typeEvent, uniChar_t unicodeData);
 		virtual bool OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveType_te moveTypeEvent);
+		/**
+		 * @brief Event on a past event ==> this event is asynchronous due to all system does not support direct getting datas
+		 * @note : need to have focus ...
+		 * @param[in] mode Mode of data requested
+		 * @return ---
+		 */
+		virtual void OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
 		
 		virtual void OnGetFocus(void);
 		virtual void OnLostFocus(void);

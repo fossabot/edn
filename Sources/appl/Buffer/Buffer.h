@@ -103,9 +103,9 @@ class Buffer {
 		virtual void      SetCharset(unicode::charset_te newCharset) {};
 
 		//virtual void	SelectAll(void);
-		virtual void      Copy(int8_t clipboardID) {};
-		virtual void      Cut(int8_t clipboardID) {};
-		virtual void      Paste(int8_t clipboardID) {};
+		virtual void      Copy(ewol::clipBoard::clipboardListe_te clipboardID) {};
+		virtual void      Cut(ewol::clipBoard::clipboardListe_te clipboardID) {};
+		virtual void      Paste(ewol::clipBoard::clipboardListe_te clipboardID) {};
 		virtual void      Search(etk::UString &data, bool back, bool caseSensitive, bool wrap, bool regExp) {};
 		virtual void      Replace(etk::UString &data) {};
 		virtual int32_t   FindLine(etk::UString &data) { return 0; };

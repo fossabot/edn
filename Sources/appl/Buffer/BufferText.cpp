@@ -1155,7 +1155,7 @@ void BufferText::Replace(etk::UString &data)
  * @return ---
  *
  */
-void BufferText::Copy(int8_t clipboardID)
+void BufferText::Copy(ewol::clipBoard::clipboardListe_te clipboardID)
 {
 	etk::UString mVect;
 	// get the curent selected data
@@ -1175,7 +1175,7 @@ void BufferText::Copy(int8_t clipboardID)
  * @return ---
  *
  */
-void BufferText::Cut(int8_t clipboardID)
+void BufferText::Cut(ewol::clipBoard::clipboardListe_te clipboardID)
 {
 
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
@@ -1203,11 +1203,11 @@ void BufferText::Cut(int8_t clipboardID)
  * @return ---
  *
  */
-void BufferText::Paste(int8_t clipboardID)
+void BufferText::Paste(ewol::clipBoard::clipboardListe_te clipboardID)
 {
 	etk::UString mVect;
 	// copy data from the click board :
-	ewol::clipBoard::Get(clipboardID, mVect);
+	mVect = ewol::clipBoard::Get(clipboardID);
 	
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;

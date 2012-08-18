@@ -60,9 +60,9 @@ class BufferText : public Buffer {
 		void      MouseEventDouble(void);
 		void      MouseEventTriple(void);
 
-		void      Copy(int8_t clipboardID);
-		void      Cut(int8_t clipboardID);
-		void      Paste(int8_t clipboardID);
+		void      Copy(ewol::clipBoard::clipboardListe_te clipboardID);
+		void      Cut(ewol::clipBoard::clipboardListe_te clipboardID);
+		void      Paste(ewol::clipBoard::clipboardListe_te clipboardID);
 
 		void      Search(etk::UString &data, bool back, bool caseSensitive, bool wrap, bool regExp);
 		void      Replace(etk::UString &data);

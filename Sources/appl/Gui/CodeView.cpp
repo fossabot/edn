@@ -193,6 +193,17 @@ bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveTy
 	return true;
 }
 
+/**
+ * @brief Event on a past event ==> this event is asynchronous due to all system does not support direct getting datas
+ * @note : need to have focus ...
+ * @param[in] mode Mode of data requested
+ * @return ---
+ */
+void CodeView::OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID)
+{
+	BufferManager::Get(m_bufferID)->Paste(clipboardID);
+	MarkToRedraw();
+}
 
 /**
  * @brief Event on an input of this Widget
@@ -263,8 +274,7 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
-			BufferManager::Get(m_bufferID)->Paste(ewol::clipBoard::CLIPBOARD_SELECTION);
-			MarkToRedraw();
+			ewol::clipBoard::Request(ewol::clipBoard::CLIPBOARD_SELECTION);
 			ewol::widgetManager::FocusKeep(this);
 		}
 	}
@@ -308,7 +318,7 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 	} else if (eventId == ednMsgGuiCut) {
 		BufferManager::Get(m_bufferID)->Cut(ewol::clipBoard::CLIPBOARD_STD);
 	} else if (eventId == ednMsgGuiPaste) {
-		BufferManager::Get(m_bufferID)->Paste(ewol::clipBoard::CLIPBOARD_STD);
+		ewol::clipBoard::Request(ewol::clipBoard::CLIPBOARD_STD);
 	} else if (eventId == ednMsgGuiUndo) {
 		BufferManager::Get(m_bufferID)->Undo();
 	} else if (eventId == ednMsgGuiRedo) {
