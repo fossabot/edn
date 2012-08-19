@@ -395,7 +395,7 @@ void CodeView::OnGetFocus(void)
 	/*
 	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, m_bufferID);
 	*/
-	ewol::KeyboardShow(ewol::KEYBOARD_MODE_CODE);
+	ewol::KeyboardShow();
 	APPL_INFO("Focus - In");
 }
 

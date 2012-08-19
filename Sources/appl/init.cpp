@@ -63,7 +63,7 @@ void APP_Init(void)
 			APPL_INFO("==> Init "PROJECT_NAME" (START) (Android) (Debug)");
 		#endif
 	#endif
-	ewol::ChangeSize(800, 600);
+	ewol::ChangeSize(Vector2D<int32_t>(800, 600));
 	etk::InitDefaultFolder(PROJECT_NAME);
 
 	ewol::SetFontFolder("Font");
@@ -139,9 +139,9 @@ void APP_Init(void)
 	// add files
 	APPL_INFO("show list of files : ");
 	
-	for( int32_t iii=0 ; iii<ewol::CmdLineNb(); iii++) {
-		APPL_INFO("need load file : \"" << ewol::CmdLineGet(iii) << "\"" );
-		etk::UString tmpppp = ewol::CmdLineGet(iii);
+	for( int32_t iii=0 ; iii<ewol::CmdLine::Nb(); iii++) {
+		APPL_INFO("need load file : \"" << ewol::CmdLine::Get(iii) << "\"" );
+		etk::UString tmpppp = ewol::CmdLine::Get(iii);
 		ewol::EObjectMessageMultiCast::AnonymousSend(ednMsgOpenFile, tmpppp);
 	}
 	

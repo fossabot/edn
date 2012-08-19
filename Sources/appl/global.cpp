@@ -216,3 +216,4 @@ void globals::ParameterGlobalsGui::OnReceiveMessage(ewol::EObject * CallerObject
 	}
 	
 }
+
