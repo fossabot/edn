@@ -27,7 +27,7 @@
 #include <appl/global.h>
 #include <Buffer.h>
 #include <BufferManager.h>
-#include <ewol/EObject.h>
+#include <ewol/eObject/EObject.h>
 
 #undef __class__
 #define __class__	"Buffer"

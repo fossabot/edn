@@ -30,10 +30,10 @@
 #include <etk/unicode.h>
 
 #include <ewol/ewol.h>
-#include <ewol/OObject.h>
-#include <ewol/WidgetManager.h>
-#include <ewol/Widget.h>
-#include <ewol/Font.h>
+#include <ewol/oObject/OObject.h>
+#include <ewol/widget/WidgetManager.h>
+#include <ewol/widget/Widget.h>
+#include <ewol/font/Font.h>
 #include <ewol/ClipBoard.h>
 
 

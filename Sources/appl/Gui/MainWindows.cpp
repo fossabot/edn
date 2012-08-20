@@ -41,10 +41,10 @@
 #include <ewol/widget/PopUp.h>
 #include <ewol/widget/Spacer.h>
 #include <ewol/widget/Menu.h>
-#include <ewol/widgetMeta/FileChooser.h>
-#include <ewol/widgetMeta/Parameter.h>
-#include <ewol/WidgetManager.h>
-#include <ewol/EObject.h>
+#include <ewol/widget/meta/FileChooser.h>
+#include <ewol/widget/meta/Parameter.h>
+#include <ewol/widget/WidgetManager.h>
+#include <ewol/eObject/EObject.h>
 
 
 

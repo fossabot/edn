@@ -27,7 +27,7 @@
 #include <appl/global.h>
 #include <CTagsManager.h>
 #include <BufferManager.h>
-#include <ewol/EObject.h>
+#include <ewol/eObject/EObject.h>
 
 
 

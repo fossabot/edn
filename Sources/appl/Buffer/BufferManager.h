@@ -30,7 +30,7 @@
 #include <BufferText.h>
 #include <BufferEmpty.h>
 #include <appl/globalMsg.h>
-#include <ewol/Widget.h>
+#include <ewol/widget/Widget.h>
 
 namespace BufferManager
 {

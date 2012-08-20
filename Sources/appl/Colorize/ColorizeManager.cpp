@@ -26,8 +26,8 @@
 #include <appl/global.h>
 #include <ColorizeManager.h>
 #include <tinyXML/tinyxml.h>
-#include <ewol/EObject.h>
-#include <ewol/EObjectManager.h>
+#include <ewol/eObject/EObject.h>
+#include <ewol/eObject/EObjectManager.h>
 
 #define PFX	"ColorizeManager "
 

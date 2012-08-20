@@ -28,7 +28,7 @@
 
 #include <Colorize.h>
 #include <appl/globalMsg.h>
-#include <ewol/Widget.h>
+#include <ewol/widget/Widget.h>
 
 typedef enum {
 	// BASIC color for codeViewer

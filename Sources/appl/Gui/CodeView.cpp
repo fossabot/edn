@@ -34,8 +34,8 @@
 #include <ewol/ClipBoard.h>
 #include <SearchData.h>
 
-#include <ewol/WidgetManager.h>
-#include <ewol/EObject.h>
+#include <ewol/widget/WidgetManager.h>
+#include <ewol/eObject/EObject.h>
 
 
 #undef __class__

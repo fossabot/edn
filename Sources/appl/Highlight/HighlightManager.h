@@ -30,7 +30,7 @@
 #include <etk/UString.h>
 #include <appl/globalMsg.h>
 #include <Highlight.h>
-#include <ewol/Widget.h>
+#include <ewol/widget/Widget.h>
 
 namespace HighlightManager{
 	void       Init(void);

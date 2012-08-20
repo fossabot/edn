@@ -27,7 +27,7 @@
 #define __C_TAGS_MANAGER_H__
 
 
-#include <ewol/Widget.h>
+#include <ewol/widget/Widget.h>
 #include "appl/globalMsg.h"
 #include "readtags.h"
 

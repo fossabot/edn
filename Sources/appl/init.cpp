@@ -25,8 +25,8 @@
 
 #include <etk/UString.h>
 #include <ewol/ewol.h>
-#include <ewol/EObject.h>
-#include <ewol/WidgetManager.h>
+#include <ewol/eObject/EObject.h>
+#include <ewol/widget/WidgetManager.h>
 
 #include <appl/Debug.h>
 #include <appl/global.h>
