@@ -49,8 +49,8 @@ class CodeView :public ewol::WidgetScrooled
 		virtual bool   CalculateMinSize(void);
 	private:
 		etk::UString                 m_label;
-		etk::Color                   m_textColorFg;  //!< Text color
-		etk::Color                   m_textColorBg;  //!< Background color
+		draw::Color                   m_textColorFg;  //!< Text color
+		draw::Color                   m_textColorBg;  //!< Background color
 		int32_t                      m_bufferID;
 		bool                         m_buttunOneSelected;
 		etk::Vector<Vector2D<float> >  m_lineNumberList;

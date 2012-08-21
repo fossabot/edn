@@ -54,11 +54,11 @@ class BufferView : public ewol::List
 		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
 	protected:
 		// function call to display the list :
-		virtual etk::Color GetBasicBG(void);
+		virtual draw::Color GetBasicBG(void);
 		virtual uint32_t GetNuberOfColomn(void);
-		virtual bool GetTitle(int32_t colomn, etk::UString &myTitle, etk::Color &fg, etk::Color &bg);
+		virtual bool GetTitle(int32_t colomn, etk::UString &myTitle, draw::Color &fg, draw::Color &bg);
 		virtual uint32_t GetNuberOfRaw(void);
-		virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, etk::Color &fg, etk::Color &bg);
+		virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg);
 		virtual bool OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, float x, float y);
 	private:
 		int32_t               m_selectedIdRequested;

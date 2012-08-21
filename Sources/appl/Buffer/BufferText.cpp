@@ -225,7 +225,7 @@ void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObjec
 #define CURSOR_THICKNESS       (1.2)
 void BufferText::DrawCursor(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip)
 {
-	etk::Color & tmpppppp = ColorizeManager::Get(COLOR_CODE_CURSOR);
+	draw::Color & tmpppppp = ColorizeManager::Get(COLOR_CODE_CURSOR);
 	OOColored->SetColor(tmpppppp);
 	if (true == ewol::IsSetInsert()) {
 		OOColored->Rectangle( x, y, letterWidth, letterHeight);
@@ -317,8 +317,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	// Get color : 
 	Colorize *  myColor           = ColorizeManager::Get("normal");
 	Colorize *  myColorSel        = ColorizeManager::Get("SelectedText");
-	etk::Color &  myColorSpace    = ColorizeManager::Get(COLOR_CODE_SPACE);
-	etk::Color &  myColorTab      = ColorizeManager::Get(COLOR_CODE_TAB);
+	draw::Color &  myColorSpace    = ColorizeManager::Get(COLOR_CODE_SPACE);
+	draw::Color &  myColorTab      = ColorizeManager::Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
 	ewol::OObject2DTextColored* OOTextSelected = NULL;
 	

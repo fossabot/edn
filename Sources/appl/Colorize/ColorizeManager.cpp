@@ -61,7 +61,7 @@ class classColorManager: public ewol::EObject
 		void        LoadFile(const char * xmlFilename);
 		Colorize *  Get(const char *colorName);
 		Colorize *  Get(etk::UString &colorName);
-		etk::Color& Get(basicColor_te myColor);
+		draw::Color& Get(basicColor_te myColor);
 		bool        Exist(etk::UString &colorName);
 		bool        Exist(const char *colorName);
 		void        DisplayListOfColor(void);
@@ -70,7 +70,7 @@ class classColorManager: public ewol::EObject
 		etk::UString                m_fileColor;
 		etk::Vector<Colorize*>  listMyColor;		//!< List of ALL Color
 		Colorize *                  errorColor;
-		etk::Color                  basicColors[COLOR_NUMBER_MAX];
+		draw::Color                  basicColors[COLOR_NUMBER_MAX];
 };
 
 
@@ -316,7 +316,7 @@ Colorize *classColorManager::Get(etk::UString &colorName)
 	return Get(colorName.c_str());
 }
 
-etk::Color & classColorManager::Get(basicColor_te myColor)
+draw::Color & classColorManager::Get(basicColor_te myColor)
 {
 	if (myColor < COLOR_NUMBER_MAX) {
 		return basicColors[myColor];
@@ -417,9 +417,9 @@ Colorize* ColorizeManager::Get(etk::UString &colorName)
 	return localManager->Get(colorName);
 }
 
-etk::Color errorColor;
+draw::Color errorColor;
 
-etk::Color& ColorizeManager::Get(basicColor_te myColor)
+draw::Color& ColorizeManager::Get(basicColor_te myColor)
 {
 	if (NULL == localManager) {
 		return errorColor;

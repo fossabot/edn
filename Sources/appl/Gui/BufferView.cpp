@@ -72,7 +72,7 @@ void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eve
 }
 
 
-etk::Color BufferView::GetBasicBG(void)
+draw::Color BufferView::GetBasicBG(void)
 {
 	return ColorizeManager::Get(COLOR_LIST_BG_1);
 }
@@ -82,7 +82,7 @@ uint32_t BufferView::GetNuberOfColomn(void)
 	return 1;
 }
 
-bool BufferView::GetTitle(int32_t colomn, etk::UString &myTitle, etk::Color &fg, etk::Color &bg)
+bool BufferView::GetTitle(int32_t colomn, etk::UString &myTitle, draw::Color &fg, draw::Color &bg)
 {
 	myTitle = "Buffers : ";
 	return true;
@@ -93,7 +93,7 @@ uint32_t BufferView::GetNuberOfRaw(void)
 	return BufferManager::SizeOpen();
 }
 
-bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, etk::Color &fg, etk::Color &bg)
+bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg)
 {
 	etk::File name;
 	bool isModify;

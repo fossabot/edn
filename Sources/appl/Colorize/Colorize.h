@@ -40,8 +40,8 @@ class Colorize {
 		void SetFgColor(const char *myColor);
 		void SetBgColor(const char *myColor);
 		
-		etk::Color & GetFG(void) { return m_colorFG; };
-		etk::Color & GetBG(void) { return m_colorBG; };
+		draw::Color & GetFG(void) { return m_colorFG; };
+		draw::Color & GetBG(void) { return m_colorBG; };
 
 		bool HaveBg(void);
 		
@@ -54,8 +54,8 @@ class Colorize {
 
 	private:
 		etk::UString ColorName;						//!< curent color Name
-		etk::Color m_colorFG;
-		etk::Color m_colorBG;
+		draw::Color m_colorFG;
+		draw::Color m_colorBG;
 		
 		bool italic;
 		bool bold;

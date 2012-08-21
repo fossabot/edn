@@ -35,8 +35,8 @@
 Colorize::Colorize(	etk::UString &newColorName)
 {
 
-	m_colorFG = etk::color::black;
-	m_colorBG = etk::color::black;
+	m_colorFG = draw::color::black;
+	m_colorBG = draw::color::black;
 	
 	italic	= false;
 	bold	= false;
@@ -50,8 +50,8 @@ Colorize::Colorize(void)
 {
 	ColorName = "no_name";
 	
-	m_colorFG = etk::color::black;
-	m_colorBG = etk::color::black;
+	m_colorFG = draw::color::black;
+	m_colorBG = draw::color::black;
 	
 	italic	= false;
 	bold	= false;
