@@ -41,6 +41,7 @@
 #include <readtags.h>
 #include <CTagsManager.h>
 #include <globalMsg.h>
+#include <ewol/font/FontManager.h>
 
 MainWindows * basicWindows = NULL;
 
@@ -66,14 +67,13 @@ void APP_Init(void)
 	ewol::ChangeSize(Vector2D<int32_t>(800, 600));
 	etk::InitDefaultFolder(PROJECT_NAME);
 
-	ewol::SetFontFolder("Font");
-	
+	ewol::font::SetFontFolder("Font");
+	ewol::font::SetDefaultFont("freefont/FreeSerif.ttf");
 	#ifdef __TARGET_OS__Android
-		ewol::SetDefaultFont("freefont/FreeSerif.ttf", 19);
+		ewol::font::SetDefaultSize(19);
 	#else
-		ewol::SetDefaultFont("freefont/FreeSerif.ttf", 14);
+		ewol::font::SetDefaultSize(14);
 	#endif
-	
 	// init internal global value
 	globals::init();
 	

@@ -33,6 +33,7 @@
 
 #include <etk/Types.h>
 #include <ewol/widget/WidgetScrolled.h>
+#include <ewol/font/FontManager.h>
 
 class CodeView :public ewol::WidgetScrooled
 {
@@ -48,13 +49,13 @@ class CodeView :public ewol::WidgetScrooled
 		const char * const GetObjectType(void) { return "ApplCodeView"; };
 		virtual bool   CalculateMinSize(void);
 	private:
-		etk::UString                 m_label;
-		draw::Color                   m_textColorFg;  //!< Text color
-		draw::Color                   m_textColorBg;  //!< Background color
-		int32_t                      m_bufferID;
-		bool                         m_buttunOneSelected;
+		etk::UString                   m_label;
+		draw::Color                    m_textColorFg;  //!< Text color
+		draw::Color                    m_textColorBg;  //!< Background color
+		int32_t                        m_bufferID;
+		bool                           m_buttunOneSelected;
 		etk::Vector<Vector2D<float> >  m_lineNumberList;
-		void                         UpdateNumberOfLineReference(int32_t bufferID);
+		void UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
 		ewol::OObject2DTextColored   m_OObjectTextNormal;
 		ewol::OObject2DTextColored   m_OObjectTextBold;
@@ -95,12 +96,6 @@ class CodeView :public ewol::WidgetScrooled
 		
 		virtual void OnGetFocus(void);
 		virtual void OnLostFocus(void);
-	private:
-		int32_t m_fontSize;
-		int32_t m_fontNormal;
-		int32_t m_fontBold;
-		int32_t m_fontItalic;
-		int32_t m_fontBoldItalic;
 	public:
 		void SetFontSize(int32_t size);
 		void SetFontNameNormal(etk::UString fontName);

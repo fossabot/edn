@@ -76,8 +76,7 @@ int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
 	// Get color : 
 	Colorize	*myColor = NULL;
 	
-	int32_t fontId = OOTextNormal.GetFontID();
-	int32_t letterHeight = ewol::GetHeight(fontId);
+	int32_t letterHeight = OOTextNormal.GetHeight();
 	
 	Vector2D<float>  textPos;
 	textPos.x = 20;

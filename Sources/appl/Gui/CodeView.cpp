@@ -45,11 +45,6 @@
 CodeView::CodeView(void)
 {
 	m_label = "CodeView is disable ...";
-	m_fontNormal = -1;
-	m_fontBold = -1;
-	m_fontItalic = -1;
-	m_fontBoldItalic = -1;
-	m_fontSize = 15;
 	
 	m_bufferID = -1;
 	m_buttunOneSelected = false;
@@ -111,7 +106,7 @@ bool CodeView::CalculateMinSize(void)
 void CodeView::CalculateMaxSize(void)
 {
 	m_maxSize.x = 2048;
-	int32_t letterHeight = ewol::GetHeight(m_fontNormal);
+	int32_t letterHeight = m_OObjectTextNormal.GetHeight();
 	m_maxSize.y = BufferManager::Get(m_bufferID)->GetNumberOfLine() * letterHeight;
 }
 
@@ -134,12 +129,6 @@ void CodeView::OnRegenerateDisplay(void)
 		// For the scrooling windows
 		CalculateMaxSize();
 		
-		// clean internal elements ...
-		m_OObjectTextNormal.SetFontID(m_fontNormal);
-		m_OObjectTextBold.SetFontID(m_fontBold);
-		m_OObjectTextItalic.SetFontID(m_fontItalic);
-		m_OObjectTextBoldItalic.SetFontID(m_fontBoldItalic);
-		
 		m_OObjectTextNormal.Clear();
 		m_OObjectTextBold.Clear();
 		m_OObjectTextItalic.Clear();
@@ -150,7 +139,8 @@ void CodeView::OnRegenerateDisplay(void)
 		if(true == BufferManager::Get(m_bufferID)->NeedToUpdateDisplayPosition() ) {
 			Vector2D<float>  borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
 			bool centerRequested = false;
-			Vector2D<float>  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(m_OObjectTextNormal.GetFontID(), centerRequested);
+			// TODO : set it back ...
+			Vector2D<float>  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(999/*m_OObjectTextNormal.GetFontID()*/, centerRequested);
 			SetScrollingPositionDynamic(borderWidth, currentPosition, centerRequested);
 		} // else : nothing to do ...
 		
@@ -233,7 +223,8 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 			if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
 				m_buttunOneSelected = true;
 				ewol::widgetManager::FocusKeep(this);
-				BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
+				// TODO : Set something good
+				BufferManager::Get(m_bufferID)->MouseEvent(999/*m_fontNormal*/, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
 				MarkToRedraw();
 			} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 				m_buttunOneSelected = false;
@@ -267,13 +258,15 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 					yyy = 0;
 				}
 				//APPL_INFO("mouse-motion BT1 %d, %d", xxx, yyy);
-				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(m_fontNormal, xxx+m_originScrooled.x, yyy+m_originScrooled.y);
+				// TODO : Set something good
+				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(999/*m_fontNormal*/, xxx+m_originScrooled.x, yyy+m_originScrooled.y);
 				MarkToRedraw();
 			}
 		}
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
-			BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
+			// TODO : Set something good
+			BufferManager::Get(m_bufferID)->MouseEvent(999/*m_fontNormal*/, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
 			ewol::clipBoard::Request(ewol::clipBoard::CLIPBOARD_SELECTION);
 			ewol::widgetManager::FocusKeep(this);
 		}
@@ -408,38 +401,29 @@ void CodeView::OnLostFocus(void)
 
 void CodeView::SetFontSize(int32_t size)
 {
-	m_fontSize = size;
-	SetScrollingSize(m_fontSize*3.0*1.46); // 1.46 is a magic nmber ...
+	m_OObjectTextNormal.SetSize(size);
+	m_OObjectTextBold.SetSize(size);
+	m_OObjectTextItalic.SetSize(size);
+	m_OObjectTextBoldItalic.SetSize(size);
+	SetScrollingSize(size*3.0*1.46); // 1.46 is a magic nmber ...
 }
 
 void CodeView::SetFontNameNormal(etk::UString fontName)
 {
-	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
-	if (fontID >= 0) {
-		m_fontNormal = fontID;
-	}
+	m_OObjectTextNormal.SetFont(fontName);
 }
 
 void CodeView::SetFontNameBold(etk::UString fontName)
 {
-	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
-	if (fontID >= 0) {
-		m_fontBold = fontID;
-	}
+	m_OObjectTextBold.SetFont(fontName);
 }
 
 void CodeView::SetFontNameItalic(etk::UString fontName)
 {
-	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
-	if (fontID >= 0) {
-		m_fontItalic = fontID;
-	}
+	m_OObjectTextItalic.SetFont(fontName);
 }
 
 void CodeView::SetFontNameBoldItalic(etk::UString fontName)
 {
-	int32_t fontID = ewol::LoadFont(fontName, m_fontSize);
-	if (fontID >= 0) {
-		m_fontBoldItalic = fontID;
-	}
+	m_OObjectTextBoldItalic.SetFont(fontName);
 }

@@ -289,9 +289,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	bool selIsRect;
 	int32_t selHave;
 	
-	int32_t fontId = OOTextNormal.GetFontID();
-	int32_t letterWidth = ewol::GetWidth(fontId, "A");
-	int32_t letterHeight = ewol::GetHeight(fontId);
+	int32_t letterWidth = OOTextNormal.GetSize("A").x;
+	int32_t letterHeight = OOTextNormal.GetHeight();
 	
 	int32_t displayStartLineId = offsetY / letterHeight - 1;
 	displayStartLineId = etk_max(0, displayStartLineId);
@@ -479,9 +478,18 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 
 int32_t BufferText::GetMousePosition(int32_t fontId, int32_t width, int32_t height)
 {
+	// TODO : Set it back ...
+	#if 1
+	int32_t letterWidth = 8;
+	int32_t letterHeight = 15;
+	#else
 	int32_t letterWidth = ewol::GetWidth(fontId, "9");
 	int32_t letterHeight = ewol::GetHeight(fontId);
-	
+	/*
+	int32_t letterWidth = OOTextNormal.GetSize("A").x;
+	int32_t letterHeight = OOTextNormal.GetHeight();
+	*/
+	#endif
 	int32_t lineOffset = height / letterHeight;
 	
 	//*******************************    get the X position :    *******************************************
@@ -513,7 +521,9 @@ int32_t BufferText::GetMousePosition(int32_t fontId, int32_t width, int32_t heig
 		new_i = iii;
 		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
 		if (currentChar!='\n') {
-			int32_t drawSize = ewol::GetWidth(fontId, displayChar);
+			// TODO : Set it back ...
+			//int32_t drawSize = ewol::GetWidth(fontId, displayChar);
+			int32_t drawSize = 50;
 			APPL_VERBOSE("    Element : " << currentChar << "=\"" << (char)currentChar << "\" display offset=" << pixelX << "px  width=" << drawSize << "px");
 			pixelX += drawSize;
 			if (width <= pixelX) {
@@ -870,8 +880,13 @@ Vector2D<float>  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 	
 	// get font porperties :
 	// TODO : change this :
+	// TODO : Set it back ...
+	/*
 	float letterWidth = ewol::GetWidth(fontId, "A");
 	float letterHeight = ewol::GetHeight(fontId);
+	*/
+	float letterWidth = 10;
+	float letterHeight = 15;
 	outputPosition.x *= letterWidth;
 	outputPosition.y *= letterHeight;
 	return outputPosition;
