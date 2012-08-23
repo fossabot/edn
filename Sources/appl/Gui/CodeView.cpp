@@ -235,7 +235,7 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			#ifdef __MODE__Touch
 				ewol::widgetManager::FocusKeep(this);
-				BufferManager::Get(m_bufferID)->MouseEvent(m_fontNormal, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
+				BufferManager::Get(m_bufferID)->MouseEvent(999/*m_fontNormal*/, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
 				MarkToRedraw();
 			#else
 				// nothing to do ...
