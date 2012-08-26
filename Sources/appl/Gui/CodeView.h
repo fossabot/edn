@@ -33,7 +33,7 @@
 
 #include <etk/Types.h>
 #include <ewol/widget/WidgetScrolled.h>
-#include <ewol/font/FontManager.h>
+#include <ewol/ResourceManager.h>
 
 class CodeView :public ewol::WidgetScrooled
 {

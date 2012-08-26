@@ -149,10 +149,10 @@ MainWindows::MainWindows(void)
 				myCodeView->SetFillX(true);
 				myCodeView->SetFillY(true);
 				myCodeView->SetFontSize(11);
-				myCodeView->SetFontNameNormal(    "freefont/FreeMono.ttf");
-				myCodeView->SetFontNameBold(      "freefont/FreeMonoBold.ttf");
-				myCodeView->SetFontNameItalic(    "freefont/FreeMonoOblique.ttf");
-				myCodeView->SetFontNameBoldItalic("freefont/FreeMonoBoldOblique.ttf");
+				myCodeView->SetFontNameNormal(    "Font/freefont/FreeMono.ttf");
+				myCodeView->SetFontNameBold(      "Font/freefont/FreeMonoBold.ttf");
+				myCodeView->SetFontNameItalic(    "Font/freefont/FreeMonoOblique.ttf");
+				myCodeView->SetFontNameBoldItalic("Font/freefont/FreeMonoBoldOblique.ttf");
 				mySizerVert2->SubWidgetAdd(myCodeView);
 				
 				// search area : 

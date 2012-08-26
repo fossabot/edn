@@ -67,8 +67,7 @@ void APP_Init(void)
 	ewol::ChangeSize(Vector2D<int32_t>(800, 600));
 	etk::InitDefaultFolder(PROJECT_NAME);
 
-	ewol::font::SetFontFolder("Font");
-	ewol::font::SetDefaultFont("freefont/FreeSerif.ttf");
+	ewol::font::SetDefaultFont("Font/freefont/FreeSerif.ttf");
 	#ifdef __TARGET_OS__Android
 		ewol::font::SetDefaultSize(19);
 	#else
