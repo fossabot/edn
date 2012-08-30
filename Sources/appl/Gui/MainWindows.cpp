@@ -250,14 +250,13 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		ewol::FileChooser* tmpWidget = new ewol::FileChooser();
 		tmpWidget->SetTitle("Open Files ...");
 		tmpWidget->SetValidateLabel("Open");
-		Buffer * myBuffer = BufferManager::Get(BufferManager::GetSelected());
-		if (NULL!=myBuffer) {
-			etk::File tmpFile = myBuffer->GetFileName();
-			tmpWidget->SetFolder(tmpFile.GetFolder());
-		} else {
-			// nothing to do : just open the basic folder
+		if (BufferManager::GetSelected()!=-1) {
+			Buffer * myBuffer = BufferManager::Get(BufferManager::GetSelected());
+			if (NULL!=myBuffer) {
+				etk::File tmpFile = myBuffer->GetFileName();
+				tmpWidget->SetFolder(tmpFile.GetFolder());
+			}
 		}
-		//tmpWidget->SetFolder("/");
 		PopUpWidgetPush(tmpWidget);
 		tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
 	} else if (eventId == ednEventPopUpFileSelected) {

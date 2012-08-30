@@ -166,6 +166,7 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 	} else if (eventId == ednMsgOpenFile) {
 		if (data != "" ) {
 			etk::File myFile(data, etk::FILE_TYPE_DIRECT);
+			APPL_DEBUG("request open file = \"" <<data << "\" ?= \"" << myFile << "\"");
 			int32_t newOne = Open(myFile);
 			if (-1 != newOne) {
 				m_idSelected = newOne;
