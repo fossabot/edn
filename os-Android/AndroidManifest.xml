@@ -4,14 +4,12 @@
           android:versionCode="1"
           android:versionName="1.0">
     <!-- Use openGl ES 2 -->
-    <uses-feature android:glEsVersion="0x00020000"></uses-feature>
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" ></uses-feature>
     <!-- This is the platform API where NativeActivity was introduced. -->
     <uses-sdk android:minSdkVersion="9" />
 
 	<application android:label="Edn"
 	             android:icon="@drawable/ic_luncher_edn">
-	             <!--android:hasCode="false"-->
-	             <!-- classpath-->
 		<activity android:name=".edn"
 		          android:label="Edn Text-Editor"
 		          android:icon="@drawable/ic_luncher_edn"
@@ -22,6 +20,5 @@
 			</intent-filter>
 		</activity>
 	</application>
-	<uses-sdk android:minSdkVersion="4" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest> 
