@@ -91,8 +91,8 @@ class Buffer {
 		}
 		virtual void      AddChar(uniChar_t unicodeData) {};
 		virtual void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent) {};
-		virtual void      MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t height) {};
-		virtual void      MouseEvent(int32_t fontId, int32_t width, int32_t height) {};
+		virtual void      MouseSelectFromCursorTo(Vector2D<float> pos) {};
+		virtual void      MouseEvent(Vector2D<float> pos) {};
 		virtual void      MouseEventDouble(void) {};
 		virtual void      MouseEventTriple(void) {};
 		virtual void      RemoveLine(void) {};

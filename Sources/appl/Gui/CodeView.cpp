@@ -208,7 +208,11 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 {
 	Vector2D<float>  relativePos = RelativePosition(pos);
 	// corection for the openGl abstraction
-	relativePos.y = m_size.y - relativePos.y;
+	//relativePos.y = m_size.y - relativePos.y;
+	
+	Vector2D<float>  limitedPos = relativePos;
+	limitedPos.x = etk_avg(1, limitedPos.x, m_size.x-1);
+	limitedPos.y = etk_avg(1, limitedPos.y, m_size.y-1);
 	
 	if (m_bufferID < 0) {
 		return false;
@@ -224,7 +228,7 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 				m_buttunOneSelected = true;
 				ewol::widgetManager::FocusKeep(this);
 				// TODO : Set something good
-				BufferManager::Get(m_bufferID)->MouseEvent(999/*m_fontNormal*/, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
+				BufferManager::Get(m_bufferID)->MouseEvent(limitedPos);
 				MarkToRedraw();
 			} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 				m_buttunOneSelected = false;
@@ -235,7 +239,7 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			#ifdef __MODE__Touch
 				ewol::widgetManager::FocusKeep(this);
-				BufferManager::Get(m_bufferID)->MouseEvent(999/*m_fontNormal*/, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
+				BufferManager::Get(m_bufferID)->MouseEvent(limitedPos);
 				MarkToRedraw();
 			#else
 				// nothing to do ...
@@ -259,14 +263,14 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 				}
 				//APPL_INFO("mouse-motion BT1 %d, %d", xxx, yyy);
 				// TODO : Set something good
-				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(999/*m_fontNormal*/, xxx+m_originScrooled.x, yyy+m_originScrooled.y);
+				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(limitedPos);
 				MarkToRedraw();
 			}
 		}
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			// TODO : Set something good
-			BufferManager::Get(m_bufferID)->MouseEvent(999/*m_fontNormal*/, relativePos.x+m_originScrooled.x, relativePos.y+m_originScrooled.y);
+			BufferManager::Get(m_bufferID)->MouseEvent(limitedPos);
 			ewol::clipBoard::Request(ewol::clipBoard::CLIPBOARD_SELECTION);
 			ewol::widgetManager::FocusKeep(this);
 		}

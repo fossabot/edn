@@ -372,14 +372,35 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	OOTextBoldItalic.clippingSet(drawClippingTextArea);
 	OOColored.clippingSet(drawClippingTextArea);
 	
+	// Clear the line intexation :
+	m_elmentList.Clear();
+	// every char element is register to find the diplay pos when mouse event arrive
+	CharElement tmpElementProperty;
+	tmpElementProperty.m_yOffset = y;
+	tmpElementProperty.m_xOffset = 0;
+	tmpElementProperty.m_ySize = 10;
+	tmpElementProperty.m_bufferPos = displayStartBufferPos;
+	m_elmentList.PushBack(tmpElementProperty);
+	
 	float lineMaxSize = 0.0;
-	for (iii=displayStartBufferPos; iii<mylen && displayLines < m_displaySize.y ; iii = new_i) {
+	for (iii=displayStartBufferPos; iii<mylen && displayLines >=0 ; iii = new_i) {
 		//APPL_DEBUG("diplay element=" << iii);
 		int displaywidth;
 		uint32_t currentChar = '\0';
 		new_i = iii;
+		// update the element buffer pos:
+		tmpElementProperty.m_bufferPos = new_i;
 		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
 		int32_t drawSize = 0;
+		
+		// update display position :
+		Vector2D<float>  textPos;
+		textPos.x = pixelX-offsetX;
+		textPos.y = y;
+		// update X pos
+		tmpElementProperty.m_xOffset = textPos.x;
+		tmpElementProperty.m_yOffset = textPos.y;
+		
 		//APPL_INFO("diplay element=" << new_i);
 		if (currentChar!='\n') {
 			selectColor = myColor;
@@ -413,9 +434,6 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 					haveBg = selectColor->HaveBg();
 				}
 			}
-			Vector2D<float>  textPos;
-			textPos.x = pixelX-offsetX;
-			textPos.y = y;
 			if (true == selectColor->GetItalic() ) {
 				if (true == selectColor->GetBold() ) {
 					OOTextSelected = &OOTextBoldItalic;
@@ -429,10 +447,14 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 					OOTextSelected = &OOTextNormal;
 				}
 			}
+			tmpElementProperty.m_ySize = OOTextSelected->GetHeight();
+			//tmpElementProperty.m_yOffset += tmpElementProperty.m_ySize;
 			OOTextSelected->SetColor(selectColor->GetFG());
 			// TODO : Remove this unreallistic leak of time
 			myStringToDisplay = displayChar;
 			drawSize = OOTextSelected->Text(textPos, myStringToDisplay);
+			//APPL_DEBUG("add element : " << tmpElementProperty.m_yOffset << "," << tmpElementProperty.m_xOffset);
+			m_elmentList.PushBack(tmpElementProperty);
 			
 			if (true == haveBg ) {
 				OOColored.Rectangle(textPos.x, y, drawSize, letterHeight);
@@ -460,6 +482,8 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 			DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
 			OOTextNormal.clippingEnable();
 			OOColored.clippingEnable();
+			// add elements : 
+			m_elmentList.PushBack(tmpElementProperty);
 		}
 	}
 	// special case : the cursor is at the end of the buffer...
@@ -476,70 +500,45 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 
 
 
-int32_t BufferText::GetMousePosition(int32_t fontId, int32_t width, int32_t height)
+int32_t BufferText::GetMousePosition(Vector2D<float> pos)
 {
-	// TODO : Set it back ...
-	#if 1
-	int32_t letterWidth = 8;
-	int32_t letterHeight = 15;
-	#else
-	int32_t letterWidth = ewol::GetWidth(fontId, "9");
-	int32_t letterHeight = ewol::GetHeight(fontId);
-	/*
-	int32_t letterWidth = OOTextNormal.GetSize("A").x;
-	int32_t letterHeight = OOTextNormal.GetHeight();
-	*/
-	#endif
-	int32_t lineOffset = height / letterHeight;
-	
-	//*******************************    get the X position :    *******************************************
-	
-	int32_t iii, new_i;
-	
-	int mylen = m_EdnBuf.Size();
-	int32_t x_base=GetLineNumberNumberOfElement()*letterWidth + SEPARATION_SIZE_LINE_NUMBER;
-	width -= x_base;
-	if (width < 0) {
-		width = 0;
-	}
-	int32_t idX = 0;
-	
-	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
-	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
-	
-	int32_t pixelX = 0;
-	int32_t startLinePosition = m_EdnBuf.CountForwardNLines(0, lineOffset);
-	if (width <= 0) {
-		APPL_DEBUG("    Element : Befor the start of the line ... ==> END");
-		return startLinePosition;
-	}
-	APPL_VERBOSE("Get id element : x=" << width << "px y=" << height << "px");
-	APPL_VERBOSE("    line offset  = " << lineOffset);
-	for (iii=startLinePosition; iii<mylen; iii = new_i) {
-		int displaywidth;
-		uint32_t currentChar = '\0';
-		new_i = iii;
-		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
-		if (currentChar!='\n') {
-			// TODO : Set it back ...
-			//int32_t drawSize = ewol::GetWidth(fontId, displayChar);
-			int32_t drawSize = 50;
-			APPL_VERBOSE("    Element : " << currentChar << "=\"" << (char)currentChar << "\" display offset=" << pixelX << "px  width=" << drawSize << "px");
-			pixelX += drawSize;
-			if (width <= pixelX) {
-				APPL_VERBOSE("        Find IT ==> END");
-				// find position ...
-				break;
+	bool inLineDone=false;
+	//APPL_DEBUG("try to find in : " << width << "," << height);
+	for(int32_t iii=0; iii<m_elmentList.Size()-1; iii++) {
+		//APPL_DEBUG("check element : " << m_elmentList[iii].m_yOffset << "<= " << pos.y << " <" << (m_elmentList[iii].m_yOffset + m_elmentList[iii].m_ySize));
+		if(false == inLineDone) {
+			if(    pos.y>=m_elmentList[iii].m_yOffset
+			    && pos.y<m_elmentList[iii].m_yOffset + m_elmentList[iii].m_ySize ) {
+				// we find the line (int theory) ==> note : Some problem can appear here when the size are not the same ...
+				// this is to prevent multiple size font ...
+				inLineDone = true;
+				//APPL_DEBUG("        ==> " << m_elmentList[iii+1].m_xOffset << "> " << pos.x << " >=" << m_elmentList[iii].m_xOffset);
 			}
-		} else {
-			APPL_VERBOSE("    Element : \"\\n\" display width=---px ==> end of line ==> END");
-			// end of line ... exit cycle
-			break;
 		}
-		idX += displaywidth;
+		// we detected the line
+		if(true == inLineDone) {
+			if(    pos.x>=m_elmentList[iii].m_xOffset
+			    && pos.x<m_elmentList[iii+1].m_xOffset ) {
+				// we get the position ...
+				return m_elmentList[iii].m_bufferPos;
+			} else if (m_elmentList[iii].m_xOffset>=m_elmentList[iii+1].m_xOffset) {
+				// prevent "end of line" cursor pos ...
+				return m_elmentList[iii].m_bufferPos;
+			}
+		}
 	}
-	APPL_VERBOSE("BufferText::GetMousePosition(" << width << "," << height << "); ==> " << iii );
-	return iii;
+	if (m_elmentList.Size()>0) {
+		if(pos.y<m_elmentList[m_elmentList.Size()/2].m_yOffset) {
+			//APPL_DEBUG("Error to get position (return Last)");
+			return m_elmentList[m_elmentList.Size()-1].m_bufferPos;
+		} else {
+			//APPL_DEBUG("Error to get position (return begin)");
+			return m_elmentList[0].m_bufferPos;
+		}
+	} else {
+		APPL_CRITICAL("Error to get position (very bad)");
+		return 0;
+	}
 }
 
 
@@ -552,13 +551,13 @@ int32_t BufferText::GetMousePosition(int32_t fontId, int32_t width, int32_t heig
  *
  */
 // TODO : Simplify selection ....
-void BufferText::MouseEvent(int32_t fontId, int32_t width, int32_t height)
+void BufferText::MouseEvent(Vector2D<float> pos)
 {
 	if (true == ewol::IsSetShift() ) {
-		MouseSelectFromCursorTo(fontId, width, height);
+		MouseSelectFromCursorTo(pos);
 	} else {
 		// Get the caracter mouse position
-		int32_t newPos = GetMousePosition(fontId, width, height);
+		int32_t newPos = GetMousePosition(pos);
 		// move the cursor
 		SetInsertPosition(newPos);
 
@@ -582,11 +581,10 @@ void BufferText::MouseEvent(int32_t fontId, int32_t width, int32_t height)
  * @todo : Set the move up and DOWN...
  *
  */
-// TODO : Simplify selection ....
-void BufferText::MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t height)
+void BufferText::MouseSelectFromCursorTo(Vector2D<float> pos)
 {
 	// Get the caracter mouse position
-	int32_t newPos = GetMousePosition(fontId, width, height);
+	int32_t newPos = GetMousePosition(pos);
 	
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;

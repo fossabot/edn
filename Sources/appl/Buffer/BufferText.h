@@ -36,6 +36,15 @@ typedef enum {
 	CURSOR_DISPLAY_MODE_NOT_FOCUS,
 } cursorDisplayMode_te;
 
+class CharElement
+{
+	public:
+		int16_t m_yOffset;
+		int16_t m_xOffset;
+		int16_t m_ySize;
+		int32_t m_bufferPos;
+};
+
 class BufferText : public Buffer {
 	public:
 		          BufferText(void);
@@ -55,8 +64,8 @@ class BufferText : public Buffer {
 		                  int32_t sizeX, int32_t sizeY);
 		void      AddChar(uniChar_t unicodeData);
 		void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);
-		void      MouseSelectFromCursorTo(int32_t fontId, int32_t width, int32_t height);
-		void      MouseEvent(int32_t fontId, int32_t width, int32_t height);
+		void      MouseSelectFromCursorTo(Vector2D<float> pos);
+		void      MouseEvent(Vector2D<float> pos);
 		void      MouseEventDouble(void);
 		void      MouseEventTriple(void);
 
@@ -84,12 +93,13 @@ class BufferText : public Buffer {
 		int32_t   GetLineNumberNumberOfElement(void);
 		
 		// Direct buffer IO
-		EdnBuf                  m_EdnBuf;                   //!< buffer associated on this displayer
-		Vector2D<float>         m_displaySize;              //!< number of char displayable in the screan
+		EdnBuf                          m_EdnBuf;             //!< buffer associated on this displayer
+		Vector2D<float>                 m_displaySize;        //!< number of char displayable in the screan
 		// Cursor :
-		int32_t                 m_cursorPos;                //!< position in the buffer of the cursor
-		int32_t                 m_cursorPreferredCol;       //!< colomn of the last up and down ...
-		cursorDisplayMode_te    m_cursorMode;               //!< type of cursor Selected
+		int32_t                         m_cursorPos;          //!< position in the buffer of the cursor
+		int32_t                         m_cursorPreferredCol; //!< colomn of the last up and down ...
+		cursorDisplayMode_te            m_cursorMode;         //!< type of cursor Selected
+		etk::Vector<CharElement>        m_elmentList;         //!< Elemnt position for every char displayed
 		
 		// internal function
 		void                    BasicInit(void);
@@ -102,7 +112,7 @@ class BufferText : public Buffer {
 		bool     TextDMoveDown(int32_t offset);
 		void     SetInsertPosition(int32_t newPosition, bool insertChar = false);
 		
-		int32_t  GetMousePosition(int32_t fontId, int32_t width, int32_t height);
+		int32_t  GetMousePosition(Vector2D<float> pos);
 		
 		void     DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
 		void     DrawCursor(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip);
