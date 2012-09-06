@@ -81,12 +81,13 @@ int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	Vector2D<float>  textPos;
 	textPos.x = 20;
 	textPos.y = sizeY - 20 - letterHeight;
-	
+	etk::UString tmpDisplay ;
+		/*
 	myColor = ColorizeManager::Get("normal");
 	OOTextBold.SetColor(myColor->GetFG());
 	etk::UString tmpDisplay = "edn - Editeur De N'ours";
 	OOTextBold.Text(textPos, tmpDisplay);
-	
+	*/
 	myColor = ColorizeManager::Get("commentDoxygen");
 	OOTextNormal.SetColor(myColor->GetFG());
 	textPos.y = (int32_t)(textPos.y - letterHeight*1.30);
