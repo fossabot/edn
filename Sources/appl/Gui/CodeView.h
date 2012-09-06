@@ -57,10 +57,10 @@ class CodeView :public ewol::WidgetScrooled
 		etk::Vector<Vector2D<float> >  m_lineNumberList;
 		void UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
-		ewol::OObject2DTextColored   m_OObjectTextNormal;
-		ewol::OObject2DTextColored   m_OObjectTextBold;
-		ewol::OObject2DTextColored   m_OObjectTextItalic;
-		ewol::OObject2DTextColored   m_OObjectTextBoldItalic;
+		ewol::TEXT_DISPLAY_TYPE   m_OObjectTextNormal;
+		ewol::TEXT_DISPLAY_TYPE   m_OObjectTextBold;
+		ewol::TEXT_DISPLAY_TYPE   m_OObjectTextItalic;
+		ewol::TEXT_DISPLAY_TYPE   m_OObjectTextBoldItalic;
 		ewol::OObject2DColored       m_OObjectsColored;
 		
 	public:

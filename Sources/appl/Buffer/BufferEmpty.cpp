@@ -67,10 +67,10 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
-int32_t BufferEmpty::Display(ewol::OObject2DTextColored& OOTextNormal,
-                             ewol::OObject2DTextColored& OOTextBold,
-                             ewol::OObject2DTextColored& OOTextItalic,
-                             ewol::OObject2DTextColored& OOTextBoldItalic,
+int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
+                             ewol::TEXT_DISPLAY_TYPE& OOTextBold,
+                             ewol::TEXT_DISPLAY_TYPE& OOTextItalic,
+                             ewol::TEXT_DISPLAY_TYPE& OOTextBoldItalic,
                              ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
 {
 	// Get color : 

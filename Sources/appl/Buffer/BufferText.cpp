@@ -206,7 +206,7 @@ void BufferText::SetLineDisplay(uint32_t lineNumber)
 
 #define SEPARATION_SIZE_LINE_NUMBER         (3)
 
-void BufferText::DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn,  int32_t lineNumber, int32_t positionY)
+void BufferText::DrawLineNumber(ewol::TEXT_DISPLAY_TYPE* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn,  int32_t lineNumber, int32_t positionY)
 {
 	char tmpLineNumber[50];
 	sprintf(tmpLineNumber, "%*d", nbColomn, lineNumber);
@@ -277,10 +277,10 @@ int32_t BufferText::GetNumberOfLine(void)
  * @return 
  *
  */
-int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
-                            ewol::OObject2DTextColored& OOTextBold,
-                            ewol::OObject2DTextColored& OOTextItalic,
-                            ewol::OObject2DTextColored& OOTextBoldItalic,
+int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
+                            ewol::TEXT_DISPLAY_TYPE& OOTextBold,
+                            ewol::TEXT_DISPLAY_TYPE& OOTextItalic,
+                            ewol::TEXT_DISPLAY_TYPE& OOTextBoldItalic,
                             ewol::OObject2DColored& OOColored,
                             int32_t offsetX, int32_t offsetY,
                             int32_t sizeX, int32_t sizeY)
@@ -319,7 +319,7 @@ int32_t BufferText::Display(ewol::OObject2DTextColored& OOTextNormal,
 	draw::Color &  myColorSpace    = ColorizeManager::Get(COLOR_CODE_SPACE);
 	draw::Color &  myColorTab      = ColorizeManager::Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
-	ewol::OObject2DTextColored* OOTextSelected = NULL;
+	ewol::TEXT_DISPLAY_TYPE* OOTextSelected = NULL;
 	
 	int mylen = m_EdnBuf.Size();
 	int32_t x_base=nbColoneForLineNumber*letterWidth;

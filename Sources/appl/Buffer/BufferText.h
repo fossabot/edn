@@ -55,10 +55,10 @@ class BufferText : public Buffer {
 		void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		void      SetLineDisplay(uint32_t lineNumber);
 		
-		int32_t   Display(ewol::OObject2DTextColored& OOTextNormal,
-		                  ewol::OObject2DTextColored& OOTextBold,
-		                  ewol::OObject2DTextColored& OOTextItalic,
-		                  ewol::OObject2DTextColored& OOTextBoldItalic,
+		int32_t   Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
+		                  ewol::TEXT_DISPLAY_TYPE& OOTextBold,
+		                  ewol::TEXT_DISPLAY_TYPE& OOTextItalic,
+		                  ewol::TEXT_DISPLAY_TYPE& OOTextBoldItalic,
 		                  ewol::OObject2DColored& OOColored,
 		                  int32_t offsetX, int32_t offsetY,
 		                  int32_t sizeX, int32_t sizeY);
@@ -114,7 +114,7 @@ class BufferText : public Buffer {
 		
 		int32_t  GetMousePosition(Vector2D<float> pos);
 		
-		void     DrawLineNumber(ewol::OObject2DTextColored* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
+		void     DrawLineNumber(ewol::TEXT_DISPLAY_TYPE* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
 		void     DrawCursor(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip);
 
 };

@@ -148,7 +148,7 @@ MainWindows::MainWindows(void)
 				myCodeView->SetExpendY(true);
 				myCodeView->SetFillX(true);
 				myCodeView->SetFillY(true);
-				myCodeView->SetFontSize(11);
+				myCodeView->SetFontSize(48);
 				myCodeView->SetFontNameNormal(    "Font/freefont/FreeMono.ttf");
 				myCodeView->SetFontNameBold(      "Font/freefont/FreeMonoBold.ttf");
 				myCodeView->SetFontNameItalic(    "Font/freefont/FreeMonoOblique.ttf");
