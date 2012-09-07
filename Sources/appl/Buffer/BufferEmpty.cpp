@@ -67,32 +67,55 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
+#ifdef __VIDEO__OPENGL_ES_2
+int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOText,
+                             ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
+#else
 int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
                              ewol::TEXT_DISPLAY_TYPE& OOTextBold,
                              ewol::TEXT_DISPLAY_TYPE& OOTextItalic,
                              ewol::TEXT_DISPLAY_TYPE& OOTextBoldItalic,
                              ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
+#endif
 {
 	// Get color : 
 	Colorize	*myColor = NULL;
 	
-	int32_t letterHeight = OOTextNormal.GetHeight();
+	#ifdef __VIDEO__OPENGL_ES_2
+		int32_t letterHeight = OOText.GetHeight();
+	#else
+		int32_t letterHeight = OOTextNormal.GetHeight();
+	#endif
 	
 	Vector2D<float>  textPos;
 	textPos.x = 20;
 	textPos.y = sizeY - 20 - letterHeight;
 	etk::UString tmpDisplay ;
-		/*
+	
 	myColor = ColorizeManager::Get("normal");
-	OOTextBold.SetColor(myColor->GetFG());
-	etk::UString tmpDisplay = "edn - Editeur De N'ours";
-	OOTextBold.Text(textPos, tmpDisplay);
-	*/
+	tmpDisplay = "edn - Editeur De N'ours";
+	#ifdef __VIDEO__OPENGL_ES_2
+		OOText.SetColor(myColor->GetFG());
+		OOText.SetBold(true);
+		OOText.SetItalic(false);
+		OOText.Text(textPos, tmpDisplay);
+	#else
+		OOTextBold.SetColor(myColor->GetFG());
+		OOTextBold.Text(textPos, tmpDisplay);
+	#endif
+	
 	myColor = ColorizeManager::Get("commentDoxygen");
-	OOTextNormal.SetColor(myColor->GetFG());
 	textPos.y = (int32_t)(textPos.y - letterHeight*1.30);
 	tmpDisplay = "No Buffer Availlable to display";
-	OOTextNormal.Text(textPos, tmpDisplay);
+	#ifdef __VIDEO__OPENGL_ES_2
+		OOText.SetBold(false);
+		OOText.SetItalic(false);
+		OOText.SetColor(myColor->GetFG());
+		OOText.Text(textPos, tmpDisplay);
+	#else
+		OOTextNormal.SetColor(myColor->GetFG());
+		OOTextNormal.Text(textPos, tmpDisplay);
+	#endif
 	
 	OOColored.SetColor(draw::color::white);
 	OOColored.Rectangle( 0, 0, sizeX, sizeY);

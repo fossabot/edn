@@ -41,8 +41,11 @@ typedef struct{
 	uint32_t diplayableLine;			//!< NB Line that can be displayed
 }infoStatBuffer_ts;
 
-//#define TEXT_DISPLAY_TYPE OObject2DTextColored
-#define TEXT_DISPLAY_TYPE OObject2DTextShader
+#ifdef __VIDEO__OPENGL_ES_2
+	#define TEXT_DISPLAY_TYPE OObject2DTextShader
+#else
+	#define TEXT_DISPLAY_TYPE OObject2DTextColored
+#endif
 
 class Buffer {
 	public:
@@ -82,12 +85,17 @@ class Buffer {
 	public:
 		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate) {};
 		virtual void      SetLineDisplay(uint32_t lineNumber) {};
+		#ifdef __VIDEO__OPENGL_ES_2
+		virtual int32_t   Display(ewol::TEXT_DISPLAY_TYPE& OOText,
+		                          ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
 		
+		#else
 		virtual int32_t   Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 		                          ewol::TEXT_DISPLAY_TYPE& OOTextBold,
 		                          ewol::TEXT_DISPLAY_TYPE& OOTextItalic,
 		                          ewol::TEXT_DISPLAY_TYPE& OOTextBoldItalic,
 		                          ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
+		#endif
 		{
 			return ERR_NONE;
 		}

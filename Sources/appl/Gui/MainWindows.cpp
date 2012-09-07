@@ -40,6 +40,7 @@
 #include <ewol/widget/ContextMenu.h>
 #include <ewol/widget/PopUp.h>
 #include <ewol/widget/Spacer.h>
+#include <ewol/widget/Slider.h>
 #include <ewol/widget/Menu.h>
 #include <ewol/widget/meta/FileChooser.h>
 #include <ewol/widget/meta/Parameter.h>
@@ -112,6 +113,16 @@ class ParameterAboutGui : public ewol::SizerVert
 };
 
 
+const char * l_smoothChick = "tmpEvent_smooth";
+const char * l_smoothMin = "tmpEvent_minChange";
+const char * l_smoothMax = "tmpEvent_maxChange";
+
+
+extern float DF_SoftEdge_min;
+extern float DF_SoftEdge_max;
+extern int32_t DF_SoftEdge;
+ewol::Slider* tmpSliderMin = NULL;
+ewol::Slider* tmpSliderMax = NULL;
 
 #undef __class__
 #define __class__	"MainWindows"
@@ -143,21 +154,53 @@ MainWindows::MainWindows(void)
 			mySizerHori->SubWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
-				myCodeView = new CodeView();
+				#ifdef __VIDEO__OPENGL_ES_2
+					myCodeView = new CodeView("Font/freefont/FreeMono.ttf", 24);
+				#else
+					myCodeView = new CodeView();
+				#endif
 				myCodeView->SetExpendX(true);
 				myCodeView->SetExpendY(true);
 				myCodeView->SetFillX(true);
 				myCodeView->SetFillY(true);
-				myCodeView->SetFontSize(48);
-				myCodeView->SetFontNameNormal(    "Font/freefont/FreeMono.ttf");
-				myCodeView->SetFontNameBold(      "Font/freefont/FreeMonoBold.ttf");
-				myCodeView->SetFontNameItalic(    "Font/freefont/FreeMonoOblique.ttf");
-				myCodeView->SetFontNameBoldItalic("Font/freefont/FreeMonoBoldOblique.ttf");
+				#ifndef __VIDEO__OPENGL_ES_2
+					myCodeView->SetFontSize(11);
+					myCodeView->SetFontNameNormal(    "Font/freefont/FreeMono.ttf");
+					myCodeView->SetFontNameBold(      "Font/freefont/FreeMonoBold.ttf");
+					myCodeView->SetFontNameItalic(    "Font/freefont/FreeMonoOblique.ttf");
+					myCodeView->SetFontNameBoldItalic("Font/freefont/FreeMonoBoldOblique.ttf");
+				#endif
 				mySizerVert2->SubWidgetAdd(myCodeView);
 				
 				// search area : 
 				Search * mySearch = new Search();
 				mySizerVert2->SubWidgetAdd(mySearch);
+				{
+					ewol::SizerHori * mySizerHori2 = new ewol::SizerHori();
+					mySizerVert2->SubWidgetAdd(mySizerHori2);
+						
+						ewol::CheckBox* tmpCheck = new ewol::CheckBox("smooth");
+						mySizerHori2->SubWidgetAdd(tmpCheck);
+						tmpCheck->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_smoothChick);
+						
+						ewol::Slider* tmpSlider = new ewol::Slider();
+						mySizerHori2->SubWidgetAdd(tmpSlider);
+						tmpSlider->RegisterOnEvent(this, ewolEventSliderChange, l_smoothMin);
+						tmpSlider->SetExpendX(true);
+						tmpSlider->SetMin(0);
+						tmpSlider->SetMax(1000);
+						tmpSlider->SetValue(0450);
+						tmpSliderMin = tmpSlider;
+						
+						tmpSlider = new ewol::Slider();
+						mySizerHori2->SubWidgetAdd(tmpSlider);
+						tmpSlider->RegisterOnEvent(this, ewolEventSliderChange, l_smoothMax);
+						tmpSlider->SetExpendX(true);
+						tmpSlider->SetMin(0);
+						tmpSlider->SetMax(1000);
+						tmpSlider->SetValue(0550);
+						tmpSliderMax = tmpSlider;
+				}
 			
 		mySizerHori = new ewol::SizerHori();
 		mySizerVert->SubWidgetAdd(mySizerHori);
@@ -349,8 +392,29 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			tmpSubWidget = new ParameterAboutGui();
 			tmpWidget->MenuAdd("About",           "", tmpSubWidget);
 		}
+	} else if (eventId == l_smoothChick) {
+		if (data == "true") {
+			DF_SoftEdge = 1;
+		} else {
+			DF_SoftEdge = 0;
+		}
+	} else if (eventId == l_smoothMin) {
+		int32_t newVal = 0;
+		sscanf(data.c_str(), "%d", &newVal);
+		DF_SoftEdge_min = (float)newVal / 1000.0;
+		if (DF_SoftEdge_min>DF_SoftEdge_max) {
+			DF_SoftEdge_max = DF_SoftEdge_min;
+			tmpSliderMax->SetValue(DF_SoftEdge_max*1000.0);
+		}
+	} else if (eventId == l_smoothMax) {
+		int32_t newVal = 0;
+		sscanf(data.c_str(), "%d", &newVal);
+		DF_SoftEdge_max = (float)newVal / 1000.0;
+		if (DF_SoftEdge_min>DF_SoftEdge_max) {
+			DF_SoftEdge_min = DF_SoftEdge_max;
+			tmpSliderMin->SetValue(DF_SoftEdge_min*1000.0);
+		}
 	}
-	
 	
 	return;
 }

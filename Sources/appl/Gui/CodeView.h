@@ -38,7 +38,11 @@
 class CodeView :public ewol::WidgetScrooled
 {
 	public:
-		         CodeView(void);
+		void Init(void);
+		#ifdef __VIDEO__OPENGL_ES_2
+			CodeView(etk::UString fontName, int32_t fontSize);
+		#endif
+		CodeView(void);
 		virtual ~CodeView(void);
 		/**
 		 * @brief Get the current Object type of the EObject
@@ -57,10 +61,14 @@ class CodeView :public ewol::WidgetScrooled
 		etk::Vector<Vector2D<float> >  m_lineNumberList;
 		void UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
-		ewol::TEXT_DISPLAY_TYPE   m_OObjectTextNormal;
-		ewol::TEXT_DISPLAY_TYPE   m_OObjectTextBold;
-		ewol::TEXT_DISPLAY_TYPE   m_OObjectTextItalic;
-		ewol::TEXT_DISPLAY_TYPE   m_OObjectTextBoldItalic;
+		#ifdef __VIDEO__OPENGL_ES_2
+			ewol::TEXT_DISPLAY_TYPE   m_OObjectText;
+		#else
+			ewol::TEXT_DISPLAY_TYPE   m_OObjectTextNormal;
+			ewol::TEXT_DISPLAY_TYPE   m_OObjectTextBold;
+			ewol::TEXT_DISPLAY_TYPE   m_OObjectTextItalic;
+			ewol::TEXT_DISPLAY_TYPE   m_OObjectTextBoldItalic;
+		#endif
 		ewol::OObject2DColored       m_OObjectsColored;
 		
 	public:
@@ -98,10 +106,14 @@ class CodeView :public ewol::WidgetScrooled
 		virtual void OnLostFocus(void);
 	public:
 		void SetFontSize(int32_t size);
-		void SetFontNameNormal(etk::UString fontName);
-		void SetFontNameBold(etk::UString fontName);
-		void SetFontNameItalic(etk::UString fontName);
-		void SetFontNameBoldItalic(etk::UString fontName);
+		#ifdef __VIDEO__OPENGL_ES_2
+			void SetFontName(etk::UString fontName);
+		#else
+			void SetFontNameNormal(etk::UString fontName);
+			void SetFontNameBold(etk::UString fontName);
+			void SetFontNameItalic(etk::UString fontName);
+			void SetFontNameBoldItalic(etk::UString fontName);
+		#endif
 	private:
 		void CalculateMaxSize(void);
 	protected:

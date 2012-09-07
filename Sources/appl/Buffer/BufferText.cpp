@@ -277,6 +277,12 @@ int32_t BufferText::GetNumberOfLine(void)
  * @return 
  *
  */
+#ifdef __VIDEO__OPENGL_ES_2
+int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOText,
+                            ewol::OObject2DColored& OOColored,
+                            int32_t offsetX, int32_t offsetY,
+                            int32_t sizeX, int32_t sizeY)
+#else
 int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
                             ewol::TEXT_DISPLAY_TYPE& OOTextBold,
                             ewol::TEXT_DISPLAY_TYPE& OOTextItalic,
@@ -284,14 +290,19 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
                             ewol::OObject2DColored& OOColored,
                             int32_t offsetX, int32_t offsetY,
                             int32_t sizeX, int32_t sizeY)
+#endif
 {
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
 	int32_t selHave;
 	
-	int32_t letterWidth = OOTextNormal.GetSize("A").x;
-	int32_t letterHeight = OOTextNormal.GetHeight();
-	
+	#ifdef __VIDEO__OPENGL_ES_2
+		int32_t letterWidth = OOText.GetSize("A").x;
+		int32_t letterHeight = OOText.GetHeight();
+	#else
+		int32_t letterWidth = OOTextNormal.GetSize("A").x;
+		int32_t letterHeight = OOTextNormal.GetHeight();
+	#endif
 	int32_t displayStartLineId = offsetY / letterHeight - 1;
 	displayStartLineId = etk_max(0, displayStartLineId);
 	uint32_t y = - offsetY + displayStartLineId*letterHeight;
@@ -316,11 +327,12 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	// Get color : 
 	Colorize *  myColor           = ColorizeManager::Get("normal");
 	Colorize *  myColorSel        = ColorizeManager::Get("SelectedText");
-	draw::Color &  myColorSpace    = ColorizeManager::Get(COLOR_CODE_SPACE);
-	draw::Color &  myColorTab      = ColorizeManager::Get(COLOR_CODE_TAB);
+	draw::Color &  myColorSpace   = ColorizeManager::Get(COLOR_CODE_SPACE);
+	draw::Color &  myColorTab     = ColorizeManager::Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
+	#ifndef __VIDEO__OPENGL_ES_2
 	ewol::TEXT_DISPLAY_TYPE* OOTextSelected = NULL;
-	
+	#endif
 	int mylen = m_EdnBuf.Size();
 	int32_t x_base=nbColoneForLineNumber*letterWidth;
 	int32_t idX = 0;
@@ -349,9 +361,14 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	y = sizeY - y;
 	y -= letterHeight;
 	
-	OOTextNormal.clippingDisable();
 	OOColored.clippingDisable();
-	DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+	#ifdef __VIDEO__OPENGL_ES_2
+		OOText.clippingDisable();
+		DrawLineNumber(&OOText,       &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+	#else
+		OOTextNormal.clippingDisable();
+		DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+	#endif
 	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 	
 	clipping_ts drawClipping;
@@ -366,10 +383,14 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	drawClippingTextArea.w = sizeX - drawClipping.x;
 	drawClippingTextArea.h = sizeY;
 	
-	OOTextNormal.clippingSet(drawClippingTextArea);
-	OOTextBold.clippingSet(drawClippingTextArea);
-	OOTextItalic.clippingSet(drawClippingTextArea);
-	OOTextBoldItalic.clippingSet(drawClippingTextArea);
+	#ifdef __VIDEO__OPENGL_ES_2
+		OOText.clippingSet(drawClippingTextArea);
+	#else
+		OOTextNormal.clippingSet(drawClippingTextArea);
+		OOTextBold.clippingSet(drawClippingTextArea);
+		OOTextItalic.clippingSet(drawClippingTextArea);
+		OOTextBoldItalic.clippingSet(drawClippingTextArea);
+	#endif
 	OOColored.clippingSet(drawClippingTextArea);
 	
 	// Clear the line intexation :
@@ -434,25 +455,34 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 					haveBg = selectColor->HaveBg();
 				}
 			}
-			if (true == selectColor->GetItalic() ) {
-				if (true == selectColor->GetBold() ) {
-					OOTextSelected = &OOTextBoldItalic;
+			#ifdef __VIDEO__OPENGL_ES_2
+				tmpElementProperty.m_ySize = OOText.GetHeight();
+				OOText.SetColor(selectColor->GetFG());
+				OOText.SetBold(selectColor->GetBold());
+				OOText.SetItalic(selectColor->GetItalic());
+				myStringToDisplay = displayChar;
+				drawSize = OOText.Text(textPos, myStringToDisplay);
+			#else
+				if (true == selectColor->GetItalic() ) {
+					if (true == selectColor->GetBold() ) {
+						OOTextSelected = &OOTextBoldItalic;
+					} else {
+						OOTextSelected = &OOTextItalic;
+					}
 				} else {
-					OOTextSelected = &OOTextItalic;
+					if (true == selectColor->GetBold() ) {
+						OOTextSelected = &OOTextBold;
+					} else {
+						OOTextSelected = &OOTextNormal;
+					}
 				}
-			} else {
-				if (true == selectColor->GetBold() ) {
-					OOTextSelected = &OOTextBold;
-				} else {
-					OOTextSelected = &OOTextNormal;
-				}
-			}
-			tmpElementProperty.m_ySize = OOTextSelected->GetHeight();
-			//tmpElementProperty.m_yOffset += tmpElementProperty.m_ySize;
-			OOTextSelected->SetColor(selectColor->GetFG());
-			// TODO : Remove this unreallistic leak of time
-			myStringToDisplay = displayChar;
-			drawSize = OOTextSelected->Text(textPos, myStringToDisplay);
+				tmpElementProperty.m_ySize = OOTextSelected->GetHeight();
+				//tmpElementProperty.m_yOffset += tmpElementProperty.m_ySize;
+				OOTextSelected->SetColor(selectColor->GetFG());
+				// TODO : Remove this unreallistic leak of time
+				myStringToDisplay = displayChar;
+				drawSize = OOTextSelected->Text(textPos, myStringToDisplay);
+			#endif
 			//APPL_DEBUG("add element : " << tmpElementProperty.m_yOffset << "," << tmpElementProperty.m_xOffset);
 			m_elmentList.PushBack(tmpElementProperty);
 			
@@ -477,10 +507,18 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 			y -= letterHeight;
 			displayLines++;
 			currentLineID++;
-			OOTextNormal.clippingDisable();
 			OOColored.clippingDisable();
-			DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
-			OOTextNormal.clippingEnable();
+			#ifdef __VIDEO__OPENGL_ES_2
+				OOText.clippingDisable();
+				OOText.SetBold(false);
+				OOText.SetItalic(false);
+				DrawLineNumber(&OOText, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+				OOText.clippingEnable();
+			#else
+				OOTextNormal.clippingDisable();
+				DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+				OOTextNormal.clippingEnable();
+			#endif
 			OOColored.clippingEnable();
 			// add elements : 
 			m_elmentList.PushBack(tmpElementProperty);

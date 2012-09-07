@@ -41,8 +41,7 @@
 #undef __class__
 #define __class__	"CodeView"
 
-
-CodeView::CodeView(void)
+void CodeView::Init(void)
 {
 	m_label = "CodeView is disable ...";
 	
@@ -68,6 +67,19 @@ CodeView::CodeView(void)
 	RegisterMultiCast(ednMsgGuiFind);
 	RegisterMultiCast(ednMsgGuiReplace);
 	SetLimitScrolling(0.2);
+}
+
+#ifdef __VIDEO__OPENGL_ES_2
+	CodeView::CodeView(etk::UString fontName, int32_t fontSize) :
+		m_OObjectText(fontName, fontSize)
+	{
+		Init();
+	}
+#endif
+
+CodeView::CodeView(void)
+{
+	Init();
 }
 
 CodeView::~CodeView(void)
@@ -106,7 +118,11 @@ bool CodeView::CalculateMinSize(void)
 void CodeView::CalculateMaxSize(void)
 {
 	m_maxSize.x = 2048;
-	int32_t letterHeight = m_OObjectTextNormal.GetHeight();
+	#ifdef __VIDEO__OPENGL_ES_2
+		int32_t letterHeight = m_OObjectText.GetHeight();
+	#else
+		int32_t letterHeight = m_OObjectTextNormal.GetHeight();
+	#endif
 	m_maxSize.y = BufferManager::Get(m_bufferID)->GetNumberOfLine() * letterHeight;
 }
 
@@ -114,10 +130,14 @@ void CodeView::CalculateMaxSize(void)
 void CodeView::OnDraw(ewol::DrawProperty& displayProp)
 {
 	m_OObjectsColored.Draw();
-	m_OObjectTextNormal.Draw();
-	m_OObjectTextBold.Draw();
-	m_OObjectTextItalic.Draw();
-	m_OObjectTextBoldItalic.Draw();
+	#ifdef __VIDEO__OPENGL_ES_2
+		m_OObjectText.Draw();
+	#else
+		m_OObjectTextNormal.Draw();
+		m_OObjectTextBold.Draw();
+		m_OObjectTextItalic.Draw();
+		m_OObjectTextBoldItalic.Draw();
+	#endif
 	WidgetScrooled::OnDraw(displayProp);
 }
 
@@ -129,10 +149,14 @@ void CodeView::OnRegenerateDisplay(void)
 		// For the scrooling windows
 		CalculateMaxSize();
 		
-		m_OObjectTextNormal.Clear();
-		m_OObjectTextBold.Clear();
-		m_OObjectTextItalic.Clear();
-		m_OObjectTextBoldItalic.Clear();
+		#ifdef __VIDEO__OPENGL_ES_2
+			m_OObjectText.Clear();
+		#else
+			m_OObjectTextNormal.Clear();
+			m_OObjectTextBold.Clear();
+			m_OObjectTextItalic.Clear();
+			m_OObjectTextBoldItalic.Clear();
+		#endif
 		m_OObjectsColored.Clear();
 		
 		
@@ -145,12 +169,18 @@ void CodeView::OnRegenerateDisplay(void)
 		} // else : nothing to do ...
 		
 		// generate the objects :
-		BufferManager::Get(m_bufferID)->Display(m_OObjectTextNormal,
-		                                        m_OObjectTextBold,
-		                                        m_OObjectTextItalic,
-		                                        m_OObjectTextBoldItalic,
-		                                        m_OObjectsColored,
-		                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
+		#ifdef __VIDEO__OPENGL_ES_2
+			BufferManager::Get(m_bufferID)->Display(m_OObjectText,
+			                                        m_OObjectsColored,
+			                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
+		#else
+			BufferManager::Get(m_bufferID)->Display(m_OObjectTextNormal,
+			                                        m_OObjectTextBold,
+			                                        m_OObjectTextItalic,
+			                                        m_OObjectTextBoldItalic,
+			                                        m_OObjectsColored,
+			                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
+		#endif
 		// set the current size of the windows
 		SetMaxSize(BufferManager::Get(m_bufferID)->GetMaxSize());
 		
@@ -405,29 +435,41 @@ void CodeView::OnLostFocus(void)
 
 void CodeView::SetFontSize(int32_t size)
 {
-	m_OObjectTextNormal.SetSize(size);
-	m_OObjectTextBold.SetSize(size);
-	m_OObjectTextItalic.SetSize(size);
-	m_OObjectTextBoldItalic.SetSize(size);
+	#ifdef __VIDEO__OPENGL_ES_2
+		m_OObjectText.SetSize(size);
+	#else
+		m_OObjectTextNormal.SetSize(size);
+		m_OObjectTextBold.SetSize(size);
+		m_OObjectTextItalic.SetSize(size);
+		m_OObjectTextBoldItalic.SetSize(size);
+	#endif
 	SetScrollingSize(size*3.0*1.46); // 1.46 is a magic nmber ...
 }
 
-void CodeView::SetFontNameNormal(etk::UString fontName)
-{
-	m_OObjectTextNormal.SetFont(fontName);
-}
+#ifdef __VIDEO__OPENGL_ES_2
+	void CodeView::SetFontName(etk::UString fontName)
+	{
+		m_OObjectText.SetFont(fontName);
+	}
 
-void CodeView::SetFontNameBold(etk::UString fontName)
-{
-	m_OObjectTextBold.SetFont(fontName);
-}
-
-void CodeView::SetFontNameItalic(etk::UString fontName)
-{
-	m_OObjectTextItalic.SetFont(fontName);
-}
-
-void CodeView::SetFontNameBoldItalic(etk::UString fontName)
-{
-	m_OObjectTextBoldItalic.SetFont(fontName);
-}
+#else
+	void CodeView::SetFontNameNormal(etk::UString fontName)
+	{
+		m_OObjectTextNormal.SetFont(fontName);
+	}
+	
+	void CodeView::SetFontNameBold(etk::UString fontName)
+	{
+		m_OObjectTextBold.SetFont(fontName);
+	}
+	
+	void CodeView::SetFontNameItalic(etk::UString fontName)
+	{
+		m_OObjectTextItalic.SetFont(fontName);
+	}
+	
+	void CodeView::SetFontNameBoldItalic(etk::UString fontName)
+	{
+		m_OObjectTextBoldItalic.SetFont(fontName);
+	}
+#endif
