@@ -14,7 +14,7 @@ LOCAL_VERSION_TAG_SHORT=$(shell cd $(LOCAL_PATH) ; git describe --tags --abbrev=
 $(info $(LOCAL_MODULE) version TAG : $(LOCAL_VERSION_TAG))
 
 # name of the dependency
-LOCAL_STATIC_LIBRARIES := ewol libzip
+LOCAL_LIBRARIES := ewol freetype libpng parsersvg tinyxml lua etk libzip
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH) $(addprefix $(LOCAL_PATH)/, $(sort $(dir $(FILE_LIST))))
 
