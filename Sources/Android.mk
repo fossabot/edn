@@ -6,7 +6,7 @@ include $(CLEAR_VARS)
 include $(LOCAL_PATH)/file.mk
 
 # name of the librairy
-LOCAL_MODULE := ednpackage
+LOCAL_MODULE := $(call convert-special-char,$(CONFIG___EWOL_APPL_NAME__))
 
 # get the tag of the current project : 
 LOCAL_VERSION_TAG=$(shell cd $(LOCAL_PATH) ; git describe --tags)
