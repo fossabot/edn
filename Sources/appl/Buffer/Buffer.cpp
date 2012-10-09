@@ -48,8 +48,10 @@ Buffer::Buffer()
 	m_haveName = false;
 	etk::UString mString = "Untitle - ";
 	mString += fileBasicID++;
+	EWOL_DEBUG("Create buffer try  name : \"" << mString << "\"");
 	SetFileName(mString);
 	m_haveName = false;
+	EWOL_DEBUG("Create buffer with name : \"" << m_fileName.GetCompleateName() << "\"");
 }
 
 /**
@@ -63,7 +65,9 @@ Buffer::Buffer()
 Buffer::Buffer(etk::File &newName)
 {
 	m_fileModify = false;
+	EWOL_DEBUG("Create buffer try  name : \"" << newName << "\"");
 	SetFileName(newName);
+	EWOL_DEBUG("Create buffer with name : \"" << m_fileName.GetCompleateName() << "\"");
 }
 
 /**
@@ -76,7 +80,7 @@ Buffer::Buffer(etk::File &newName)
  */
 Buffer::~Buffer(void)
 {
-
+	
 }
 /**
  * @brief

@@ -10,12 +10,10 @@ dans la liste des truc important a refaire
 * 0.3.6 ...
 
 * 0.2.X :
-	- gui : Amelioration du full-screen et du display de base (sans l'entete de la fenetre)
 	- gui : Demander la création de nouveaux fichier quand il n'existe pas (a l'ouverture en ligne de commande)
 	- sys : Mise en place des colorisation de base pour le
 			* java script
 			* SQL
-	- sys : replace TAB with space when Tab is pressed
 	- sys : Catch F[1-12] ==> for user personal event
 	- BUG : Correction du bug des entré bizard tel que les chapot et les guillemets
 	- BUG : de sélection quand la ligne est pleine et la première ligne séctionnée. ==> regarder après avoir fait le display ligne par ligne...

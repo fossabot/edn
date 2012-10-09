@@ -305,10 +305,8 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		PopUpWidgetPush(tmpWidget);
 		tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
 	} else if (eventId == ednEventPopUpFileSelected) {
-		// get the filename : 
-		etk::UString tmpData = data;
-		APPL_DEBUG("Request opening the file : " << tmpData);
-		SendMultiCast(ednMsgOpenFile, tmpData);
+		APPL_DEBUG("Request opening the file : " << data);
+		SendMultiCast(ednMsgOpenFile, data);
 	} else if (eventId == ednMsgGuiSaveAs) {
 		if (data == "") {
 			APPL_ERROR("Null data for Save As file ... ");
