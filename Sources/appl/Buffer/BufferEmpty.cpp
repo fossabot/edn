@@ -67,7 +67,7 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
-#ifdef __VIDEO__OPENGL_ES_2
+#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOText,
                              ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
 #else
@@ -81,7 +81,7 @@ int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	// Get color : 
 	Colorize	*myColor = NULL;
 	
-	#ifdef __VIDEO__OPENGL_ES_2
+	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		int32_t letterHeight = OOText.GetHeight();
 	#else
 		int32_t letterHeight = OOTextNormal.GetHeight();
@@ -94,7 +94,7 @@ int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	
 	myColor = ColorizeManager::Get("normal");
 	tmpDisplay = "edn - Editeur De N'ours";
-	#ifdef __VIDEO__OPENGL_ES_2
+	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		OOText.SetColor(myColor->GetFG());
 		OOText.SetBold(true);
 		OOText.SetItalic(false);
@@ -107,7 +107,7 @@ int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	myColor = ColorizeManager::Get("commentDoxygen");
 	textPos.y = (int32_t)(textPos.y - letterHeight*1.30);
 	tmpDisplay = "No Buffer Availlable to display";
-	#ifdef __VIDEO__OPENGL_ES_2
+	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		OOText.SetBold(false);
 		OOText.SetItalic(false);
 		OOText.SetColor(myColor->GetFG());

@@ -41,7 +41,7 @@ typedef struct{
 	uint32_t diplayableLine;			//!< NB Line that can be displayed
 }infoStatBuffer_ts;
 
-#ifdef __VIDEO__OPENGL_ES_2
+#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 	#define TEXT_DISPLAY_TYPE OObject2DTextShader
 #else
 	#define TEXT_DISPLAY_TYPE OObject2DTextColored
@@ -85,7 +85,7 @@ class Buffer {
 	public:
 		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate) {};
 		virtual void      SetLineDisplay(uint32_t lineNumber) {};
-		#ifdef __VIDEO__OPENGL_ES_2
+		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		virtual int32_t   Display(ewol::TEXT_DISPLAY_TYPE& OOText,
 		                          ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
 		

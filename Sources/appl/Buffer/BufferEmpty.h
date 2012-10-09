@@ -32,7 +32,7 @@ class BufferEmpty : public Buffer {
 	public:
 		BufferEmpty(void);
 		virtual ~BufferEmpty(void);
-		#ifdef __VIDEO__OPENGL_ES_2
+		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		int32_t Display(ewol::TEXT_DISPLAY_TYPE& OOText,
 		                ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY);
 		#else

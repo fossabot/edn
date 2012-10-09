@@ -277,7 +277,7 @@ int32_t BufferText::GetNumberOfLine(void)
  * @return 
  *
  */
-#ifdef __VIDEO__OPENGL_ES_2
+#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOText,
                             ewol::OObject2DColored& OOColored,
                             int32_t offsetX, int32_t offsetY,
@@ -296,7 +296,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	bool selIsRect;
 	int32_t selHave;
 	
-	#ifdef __VIDEO__OPENGL_ES_2
+	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		int32_t letterWidth = OOText.GetSize("A").x;
 		int32_t letterHeight = OOText.GetHeight();
 	#else
@@ -330,7 +330,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	draw::Color &  myColorSpace   = ColorizeManager::Get(COLOR_CODE_SPACE);
 	draw::Color &  myColorTab     = ColorizeManager::Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
-	#ifndef __VIDEO__OPENGL_ES_2
+	#ifndef APPL_BUFFER_FONT_DISTANCE_FIELD
 	ewol::TEXT_DISPLAY_TYPE* OOTextSelected = NULL;
 	#endif
 	int mylen = m_EdnBuf.Size();
@@ -362,7 +362,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	y -= letterHeight;
 	
 	OOColored.clippingDisable();
-	#ifdef __VIDEO__OPENGL_ES_2
+	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		OOText.clippingDisable();
 		DrawLineNumber(&OOText,       &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
 	#else
@@ -383,7 +383,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	drawClippingTextArea.w = sizeX - drawClipping.x;
 	drawClippingTextArea.h = sizeY;
 	
-	#ifdef __VIDEO__OPENGL_ES_2
+	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		OOText.clippingSet(drawClippingTextArea);
 	#else
 		OOTextNormal.clippingSet(drawClippingTextArea);
@@ -455,7 +455,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 					haveBg = selectColor->HaveBg();
 				}
 			}
-			#ifdef __VIDEO__OPENGL_ES_2
+			#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 				tmpElementProperty.m_ySize = OOText.GetHeight();
 				OOText.SetColor(selectColor->GetFG());
 				OOText.SetBold(selectColor->GetBold());
@@ -508,7 +508,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 			displayLines++;
 			currentLineID++;
 			OOColored.clippingDisable();
-			#ifdef __VIDEO__OPENGL_ES_2
+			#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 				OOText.clippingDisable();
 				OOText.SetBold(false);
 				OOText.SetItalic(false);

@@ -154,7 +154,7 @@ MainWindows::MainWindows(void)
 			mySizerHori->SubWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
-				#ifdef __VIDEO__OPENGL_ES_2
+				#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 					myCodeView = new CodeView("Font/freefont/FreeMono.ttf", 24);
 				#else
 					myCodeView = new CodeView();
@@ -163,7 +163,7 @@ MainWindows::MainWindows(void)
 				myCodeView->SetExpendY(true);
 				myCodeView->SetFillX(true);
 				myCodeView->SetFillY(true);
-				#ifndef __VIDEO__OPENGL_ES_2
+				#ifndef APPL_BUFFER_FONT_DISTANCE_FIELD
 					myCodeView->SetFontSize(11);
 					myCodeView->SetFontNameNormal(    "Font/freefont/FreeMono.ttf");
 					myCodeView->SetFontNameBold(      "Font/freefont/FreeMonoBold.ttf");
@@ -175,6 +175,7 @@ MainWindows::MainWindows(void)
 				// search area : 
 				Search * mySearch = new Search();
 				mySizerVert2->SubWidgetAdd(mySearch);
+				#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 				{
 					ewol::SizerHori * mySizerHori2 = new ewol::SizerHori();
 					mySizerVert2->SubWidgetAdd(mySizerHori2);
@@ -201,6 +202,7 @@ MainWindows::MainWindows(void)
 						tmpSlider->SetValue(0550);
 						tmpSliderMax = tmpSlider;
 				}
+				#endif
 			
 		mySizerHori = new ewol::SizerHori();
 		mySizerVert->SubWidgetAdd(mySizerHori);

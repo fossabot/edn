@@ -1,0 +1,23 @@
+menu "General"
+	if __VIDEO__OPENGL_ES_2
+		choice
+			prompt "Buffer text configuration"
+			default APPL_BUFFER_FONT_NORMAL
+			help
+				Buffer display mode :
+					0 : Basic Sprite font mode.
+					    ==> Old standard mode fast but need to reaload distint font for every size
+					1 : Distance Field.
+					    ==> New theoric mode for the display of the font ==> really slow but insteresting ...
+			config APPL_BUFFER_FONT_NORMAL
+				bool "0: Basic Sprite font mode"
+			config APPL_BUFFER_FONT_DISTANCE_FIELD
+				bool "1: Distance Field"
+		endchoice
+	endif
+	if __VIDEO__OPENGL_ES_1
+		config APPL_BUFFER_FONT_NORMAL
+			bool
+			default y
+	endif
+endmenu

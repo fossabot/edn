@@ -5,6 +5,8 @@ include $(CLEAR_VARS)
 # load the common sources file of the platform
 include $(LOCAL_PATH)/file.mk
 
+LOCAL_CONFIG_FILES := Config.in
+
 # name of the librairy
 ifeq ($(CONFIG___EWOL_APPL_NAME__),$(empty))
 LOCAL_MODULE := edn

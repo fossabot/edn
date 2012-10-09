@@ -39,7 +39,7 @@ class CodeView :public ewol::WidgetScrooled
 {
 	public:
 		void Init(void);
-		#ifdef __VIDEO__OPENGL_ES_2
+		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 			CodeView(etk::UString fontName, int32_t fontSize);
 		#endif
 		CodeView(void);
@@ -61,7 +61,7 @@ class CodeView :public ewol::WidgetScrooled
 		etk::Vector<Vector2D<float> >  m_lineNumberList;
 		void UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
-		#ifdef __VIDEO__OPENGL_ES_2
+		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 			ewol::TEXT_DISPLAY_TYPE   m_OObjectText;
 		#else
 			ewol::TEXT_DISPLAY_TYPE   m_OObjectTextNormal;
@@ -106,7 +106,7 @@ class CodeView :public ewol::WidgetScrooled
 		virtual void OnLostFocus(void);
 	public:
 		void SetFontSize(int32_t size);
-		#ifdef __VIDEO__OPENGL_ES_2
+		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 			void SetFontName(etk::UString fontName);
 		#else
 			void SetFontNameNormal(etk::UString fontName);

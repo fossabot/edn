@@ -69,7 +69,7 @@ void CodeView::Init(void)
 	SetLimitScrolling(0.2);
 }
 
-#ifdef __VIDEO__OPENGL_ES_2
+#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 	CodeView::CodeView(etk::UString fontName, int32_t fontSize) :
 		m_OObjectText(fontName, fontSize)
 	{
@@ -118,7 +118,7 @@ bool CodeView::CalculateMinSize(void)
 void CodeView::CalculateMaxSize(void)
 {
 	m_maxSize.x = 2048;
-	#ifdef __VIDEO__OPENGL_ES_2
+	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		int32_t letterHeight = m_OObjectText.GetHeight();
 	#else
 		int32_t letterHeight = m_OObjectTextNormal.GetHeight();
@@ -130,7 +130,7 @@ void CodeView::CalculateMaxSize(void)
 void CodeView::OnDraw(ewol::DrawProperty& displayProp)
 {
 	m_OObjectsColored.Draw();
-	#ifdef __VIDEO__OPENGL_ES_2
+	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		m_OObjectText.Draw();
 	#else
 		m_OObjectTextNormal.Draw();
@@ -149,7 +149,7 @@ void CodeView::OnRegenerateDisplay(void)
 		// For the scrooling windows
 		CalculateMaxSize();
 		
-		#ifdef __VIDEO__OPENGL_ES_2
+		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 			m_OObjectText.Clear();
 		#else
 			m_OObjectTextNormal.Clear();
@@ -169,7 +169,7 @@ void CodeView::OnRegenerateDisplay(void)
 		} // else : nothing to do ...
 		
 		// generate the objects :
-		#ifdef __VIDEO__OPENGL_ES_2
+		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 			BufferManager::Get(m_bufferID)->Display(m_OObjectText,
 			                                        m_OObjectsColored,
 			                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
@@ -435,7 +435,7 @@ void CodeView::OnLostFocus(void)
 
 void CodeView::SetFontSize(int32_t size)
 {
-	#ifdef __VIDEO__OPENGL_ES_2
+	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		m_OObjectText.SetSize(size);
 	#else
 		m_OObjectTextNormal.SetSize(size);
@@ -446,12 +446,11 @@ void CodeView::SetFontSize(int32_t size)
 	SetScrollingSize(size*3.0*1.46); // 1.46 is a magic nmber ...
 }
 
-#ifdef __VIDEO__OPENGL_ES_2
+#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 	void CodeView::SetFontName(etk::UString fontName)
 	{
 		m_OObjectText.SetFont(fontName);
 	}
-
 #else
 	void CodeView::SetFontNameNormal(etk::UString fontName)
 	{
