@@ -133,6 +133,7 @@ void APP_Init(void)
 	ewol::shortCut::Add("ctrl+l",       ednMsgGuiGotoLine, "???");
 	
 	ewol::shortCut::Add("ctrl+f",       ednMsgGuiSearch, "");
+	ewol::shortCut::Add("F12",          ednMsgGuiReloadShader, "");
 	
 	
 	// add files

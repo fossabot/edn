@@ -56,6 +56,7 @@ extern const char* const ednMsgGuiShowEndOfLine = "edn-Msg-Gui-ShowEndOfLine";
 
 extern const char* const ednMsgGuiCtags         = "edn-Msg-Gui-CTags";
 
+extern const char* const ednMsgGuiReloadShader  = "edn-Msg-Gui-ReloadOpenGlShader";
 
 
 ////////////////////////////////////////////////////////////////////////

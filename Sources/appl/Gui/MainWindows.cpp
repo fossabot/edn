@@ -45,6 +45,7 @@
 #include <ewol/widget/meta/FileChooser.h>
 #include <ewol/widget/meta/Parameter.h>
 #include <ewol/widget/WidgetManager.h>
+#include <ewol/ResourceManager.h>
 #include <ewol/eObject/EObject.h>
 
 
@@ -83,7 +84,7 @@ class ParameterAboutGui : public ewol::SizerVert
 			AddElement("    Website : https://github.com/HeeroYui/ewol");
 			AddElement("    Licence : BSD like");
 			AddElement("    Copyright 2010 Edouard DUPIN, all right reserved");
-			AddElement("    Supported OS : Linux, Android" );
+			AddElement("    Supported OS : Linux, Windows, Android" );
 			AddElement(etk::UString("    OpenGl librairy : v") + ewol::GetVersion() );
 			AddElement("Ewol", true);
 			AddElement("");
@@ -253,6 +254,8 @@ MainWindows::MainWindows(void)
 				(void)myMenu->AddSpacer();
 				(void)myMenu->Add(idMenugDisplay, "Color Black",          "", ednMsgGuiChangeColor, "Black");
 				(void)myMenu->Add(idMenugDisplay, "Color White",          "", ednMsgGuiChangeColor, "White");
+				(void)myMenu->AddSpacer();
+				(void)myMenu->Add(idMenugDisplay, "Reload OpenGl Shader", "", ednMsgGuiReloadShader);
 			
 			m_widgetLabelFileName = new ewol::Label("FileName");
 			m_widgetLabelFileName->SetExpendX(true);
@@ -266,6 +269,7 @@ MainWindows::MainWindows(void)
 	// to update the title ... 
 	RegisterMultiCast(ednMsgBufferState);
 	RegisterMultiCast(ednMsgBufferId);
+	RegisterMultiCast(ednMsgGuiReloadShader);
 }
 
 
@@ -289,7 +293,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 {
 	ewol::Windows::OnReceiveMessage(CallerObject, eventId, data);
 	
-	//APPL_INFO("Receive Event from the main windows ... : widgetid=" << CallerObject << "\"" << eventId << "\" ==> data=\"" << data << "\"" );
+	//APPL_INFO("Receive Event from the main windows ... : \"" << eventId << "\" ==> data=\"" << data << "\"" );
 	// Open file Section ...
 	if (eventId == ednMsgGuiOpen) {
 		ewol::FileChooser* tmpWidget = new ewol::FileChooser();
@@ -414,6 +418,9 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			DF_SoftEdge_min = DF_SoftEdge_max;
 			tmpSliderMin->SetValue(DF_SoftEdge_min*1000.0);
 		}
+	} else if (eventId == ednMsgGuiReloadShader) {
+		ewol::resource::ReLoadResources();
+		ewol::ForceRedrawAll();
 	}
 	
 	return;
