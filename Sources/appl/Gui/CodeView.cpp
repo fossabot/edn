@@ -66,6 +66,7 @@ void CodeView::Init(void)
 	RegisterMultiCast(ednMsgGuiChangeCharset);
 	RegisterMultiCast(ednMsgGuiFind);
 	RegisterMultiCast(ednMsgGuiReplace);
+	RegisterMultiCast(ednMsgGuiGotoLine);
 	SetLimitScrolling(0.2);
 }
 
@@ -397,21 +398,12 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 		} else if (data == "All") {
 			
 		}
+	} else if (eventId == ednMsgGuiGotoLine) {
+		int32_t lineID = 0;
+		sscanf(data.c_str(), "%d", &lineID);
+		APPL_INFO("Goto line : " << lineID);
+		BufferManager::Get(m_bufferID)->JumpAtLine(lineID);
 	}
-	/*
-	switch (id)
-	{
-		case APPL_MSG__CURRENT_GOTO_LINE:
-			if (dataID<0) {
-				dataID = 0;
-			}
-			BufferManager::Get(m_bufferID)->JumpAtLine(dataID);
-			break;
-		case APPL_MSG__CURRENT_SET_CHARSET:
-			BufferManager::Get(m_bufferID)->SetCharset((unicode::charset_te)dataID);
-			break;
-	}
-	*/
 	// Force redraw of the widget
 	MarkToRedraw();
 }

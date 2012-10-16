@@ -28,12 +28,89 @@
 #include <CTagsManager.h>
 #include <BufferManager.h>
 #include <ewol/eObject/EObject.h>
+#include <ewol/widget/meta/FileChooser.h>
+#include <appl/Gui/TagFileSelection.h>
 
 
 
 #undef  __class__
 #define __class__    "CTagsManager"
-#if 0
+
+
+typedef struct{
+	char    filename[MAX_FILE_NAME];
+	char    RegExp[MAX_REG_EXP_SEARCH];
+	int32_t lineID;
+} TagListFind_ts;
+
+class CTagsManager: public ewol::EObject
+{
+	public:
+		// Constructeur
+		CTagsManager(void);
+		~CTagsManager(void);
+		
+		/**
+		 * @brief Get the current Object type of the EObject
+		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
+		 * @param[in] objectType type description
+		 * @return true if the object is compatible, otherwise false
+		 */
+		const char * const GetObjectType(void)
+		{
+			return "CTagsManager";
+		}
+		/**
+		 * @brief Receive a message from an other EObject with a specific eventId and data
+		 * @param[in] CallerObject Pointer on the EObject that information came from
+		 * @param[in] eventId Message registered by this class
+		 * @param[in] data Data registered by this class
+		 * @return ---
+		 */
+		void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
+		
+		int32_t                     m_currentSelectedID;
+		void                        LoadTagFile(void);
+		int32_t                     MultipleJump(void);
+		void                        JumpTo(void);
+		void                        PrintTag(const tagEntry *entry, bool small);
+		etk::UString                GetFolder(etk::UString &inputString);
+		etk::UString                m_tagFolderBase;
+		etk::UString                m_tagFilename;
+		tagFile *                   m_ctagFile;
+		// history system
+		void                        AddToHistory(int32_t bufferID);
+		int32_t                     m_historyPos;
+		etk::Vector<etk::File*>     m_historyList;
+		etk::Vector<TagListFind_ts> m_currentList;
+		void                        JumpAtID(int32_t selectID);
+};
+
+static CTagsManager* s_elementPointer = NULL;
+void cTagsManager::Init(void)
+{
+	if (NULL != s_elementPointer) {
+		delete(s_elementPointer);
+		s_elementPointer = NULL;
+		EWOL_WARNING("Ctags manager already instanciate ... ==> restart IT");
+	}
+	s_elementPointer = new CTagsManager();
+	if (NULL != s_elementPointer) {
+		EWOL_ERROR("Ctags manager error to instanciate ...");
+	}
+}
+void cTagsManager::UnInit(void)
+{
+	if (NULL != s_elementPointer) {
+		delete(s_elementPointer);
+		s_elementPointer = NULL;
+	} else {
+		EWOL_ERROR("Ctags manager not instanciate ... ==> can not remove it ...");
+	}
+}
+
+
+
 /**
  * @brief
  *
@@ -48,7 +125,9 @@ CTagsManager::CTagsManager(void)
 	m_tagFolderBase = "";
 	m_ctagFile = NULL;
 	m_historyPos = 0;
-	ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgGuiCtags);
+	RegisterMultiCast(ednMsgGuiCtags);
+	RegisterMultiCast(ednMsgBufferId);
+	EWOL_INFO("Ctags manager (INIT)");
 }
 
 /**
@@ -61,14 +140,13 @@ CTagsManager::CTagsManager(void)
  */
 CTagsManager::~CTagsManager(void)
 {
-	/*
+	EWOL_INFO("Ctags manager (Un-INIT)");
 	if(0 != m_historyList.Size()) {
 		for (int32_t iii=0; iii< m_historyList.Size(); iii++) {
 			delete(m_historyList[iii]);
 		}
 		m_historyList.Clear();
 	}
-	*/
 }
 
 etk::UString CTagsManager::GetFolder(etk::UString &inputString)
@@ -93,65 +171,55 @@ etk::UString CTagsManager::GetFolder(etk::UString &inputString)
 	return out;
 }
 
-bool CTagsManager::OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, float x, float y)
+const char * ednEventPopUpCtagsLoadFile = "edn-event-load-ctags";
+
+void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
 {
-	/*
-	switch (id)
-	{
-		case APPL_MSG__BUFFER_CHANGE_CURRENT:
-			m_currentSelectedID = dataID;
-			break;
-		case APPL_MSG__OPEN_CTAGS:
+	if (eventId == ednMsgBufferId) {
+		//m_currentSelectedID = dataID;
+	} else if (eventId == ednEventPopUpCtagsLoadFile) {
+		// open the new one :
+		etk::File tmpFilename = data;
+		m_tagFilename = tmpFilename.GetShortFilename();
+		m_tagFolderBase = tmpFilename.GetFolder();
+		APPL_DEBUG("Receive load Ctags file : " << m_tagFolderBase << "/" << m_tagFilename << " ");
+		LoadTagFile();
+	} else if (eventId == ednMsgGuiCtags) {
+		if (data == "Load") {
 			APPL_INFO("Request opening ctag file");
-			{
-				GtkWidget *dialog = gtk_file_chooser_dialog_new( "Open Exuberant Ctags File", NULL,
-				                                                 GTK_FILE_CHOOSER_ACTION_OPEN,
-				                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-				                                                 GTK_STOCK_OPEN,   GTK_RESPONSE_ACCEPT,
-				                                                 NULL); // end button/response list
-				if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
-				{
-					// open the new one : 
-					m_tagFilename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (dialog));
-					m_tagFolderBase = GetFolder(m_tagFilename);
-					LoadTagFile();
-				}
-				gtk_widget_destroy(dialog);
+			ewol::FileChooser* tmpWidget = new ewol::FileChooser();
+			if (NULL == tmpWidget) {
+				APPL_ERROR("Can not allocate widget ==> display might be in error");
+			} else {
+				tmpWidget->SetTitle("Open Exuberant Ctags File");
+				tmpWidget->SetValidateLabel("Open");
+				PopUpWidgetPush(tmpWidget);
+				tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpCtagsLoadFile);
 			}
-			break;
-		case APPL_MSG__RELOAD_CTAGS:
+		} else if (data == "ReLoad") {
+			APPL_INFO("Request re-load ctag file");
 			LoadTagFile();
-			break;
-		case APPL_MSG__JUMP_TO_CURRENT_SELECTION:
+		} else if (data == "Jump") {
 			JumpTo();
-			break;
-		case APPL_MSG__JUMP_BACK:
+		} else if (data == "Back") {
 			if (m_historyList.Size() > 0) {
-				BufferManager *myBufferManager = BufferManager::getInstance();
 				int32_t id = m_historyList.Size()-1;
-				if (false == myBufferManager->Exist(*m_historyList[id]) ) {
-					// need to open the file : 
-					int32_t openID = myBufferManager->Open(*m_historyList[id]);
-					SendMessage(APPL_MSG__CURRENT_CHANGE_BUFFER_ID, openID);
-				} else {
-					SendMessage(APPL_MSG__CURRENT_CHANGE_BUFFER_ID, myBufferManager->GetId(*m_historyList[id]));
-				}
-				SendMessage(APPL_MSG__CURRENT_GOTO_LINE, m_historyList[id]->GetLineNumber());
+				SendMultiCast(ednMsgOpenFile, m_historyList[id]->GetCompleateName() );
+				SendMultiCast(ednMsgGuiGotoLine, m_historyList[id]->GetLineNumber());
 				// Remove element ....
 				delete(m_historyList[id]);
 				m_historyList[id]=NULL;
 				m_historyList.PopBack();
 			}
-			break;
+		} else {
+			
+		}
 	}
-	*/
-	return false;
 }
 
 
 void CTagsManager::LoadTagFile(void)
 {
-	/*
 	tagFileInfo info;
 	
 	// close previous tag file
@@ -170,156 +238,45 @@ void CTagsManager::LoadTagFile(void)
 	} else {
 		APPL_INFO("Error to open ctags file ...");
 	}
-	*/
 }
 
 void CTagsManager::AddToHistory(int32_t bufferID)
 {
-	/*
 	// check tho history position : remove if needed
-	if (m_historyPos < edn_max(m_historyList.Size()-1, 0) ) {
+	if (m_historyPos < etk_max(m_historyList.Size()-1, 0) ) {
 		for(int32_t iii= m_historyPos; iii < m_historyList.Size(); iii++) {
 			delete(m_historyList[iii]);
 		}
 		m_historyList.EraseLen(m_historyPos, m_historyList.Size() - m_historyPos);
 	}
 	// add the current element
-	BufferManager *myBufferManager = BufferManager::getInstance();
-	etk::File currentFilename = myBufferManager->Get(bufferID)->GetFileName();
-	*/
+	etk::File currentFilename = BufferManager::Get(bufferID)->GetFileName();
 }
-
-/*
-enum
-{
-	CTAGS_COL_FILE = 0,
-	CTAGS_COL_LINE_NUMBER,
-	CTAGS_NUM_COLS
-};
-void CTagsManager::cb_row(GtkTreeView *p_treeview,
-                          GtkTreePath * p_path,
-                          GtkTreeViewColumn * p_column,
-                          gpointer data)
-{
-	APPL_DEBUG("event");
-	CTagsManager * self = static_cast<CTagsManager*>(data);
-	
-	gchar * p_file=NULL;
-	gint lineNumber;
-	GtkTreeIter iter;
-	
-	
-	if (gtk_tree_model_get_iter( GTK_TREE_MODEL(self->m_listStore), &iter, p_path))
-	{
-		gtk_tree_model_get( GTK_TREE_MODEL(self->m_listStore),
-		                    &iter,
-		                    CTAGS_COL_FILE, &p_file,
-		                    CTAGS_COL_LINE_NUMBER, &lineNumber,
-		                    -1 );
-		APPL_DEBUG("find : " << p_file << ":" << lineNumber);
-		for (int32_t iii = 0; iii < self->m_currentList.Size() ; iii++) {
-			if(    self->m_currentList[iii].lineID == lineNumber
-			    && strcmp(self->m_currentList[iii].filename, p_file)==0)
-			{
-				g_object_unref( GTK_TREE_MODEL(self->m_listStore));
-				// Remove dialogue
-				gtk_widget_destroy(self->m_Dialog);
-				// Jump ...
-				self->JumpAtID(iii);
-				return;
-			}
-		}
-	}
-}
-*/
-
-/*
-GtkWidget * CTagsManager::CreateViewAndModel(void)
-{
-	
-	GtkCellRenderer *   renderer;
-	GtkWidget *         view;
-	view = gtk_tree_view_new();
-	
-	// Column 1
-	renderer = gtk_cell_renderer_text_new();
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view),
-	                                            -1,
-	                                            "File",
-	                                            renderer,
-	                                            "text", CTAGS_COL_FILE,
-	                                            NULL);
-	
-	// Column 2
-	renderer = gtk_cell_renderer_text_new();
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view),
-	                                            -1,
-	                                            "lineNumber",
-	                                            renderer,
-	                                            "text", CTAGS_COL_LINE_NUMBER,
-	                                            NULL);
-	
-	// Set data in the list : 
-	GtkTreeIter      iter;
-	m_listStore = gtk_list_store_new(CTAGS_NUM_COLS, G_TYPE_STRING, G_TYPE_UINT);
-	// Append a row and fill in some data
-	for (int32_t iii=0; iii<m_currentList.Size() ; iii++) {
-		gtk_list_store_append(m_listStore, &iter);
-		gtk_list_store_set(m_listStore, &iter,
-		                   CTAGS_COL_FILE, m_currentList[iii].filename,
-		                   CTAGS_COL_LINE_NUMBER, m_currentList[iii].lineID,
-		                   -1);
-	}
-	
-	gtk_tree_view_set_model( GTK_TREE_VIEW(view), GTK_TREE_MODEL(m_listStore) );
-	g_signal_connect( G_OBJECT(view), "row-activated", G_CALLBACK(cb_row), this );
-	//g_object_unref(GTK_TREE_MODEL(m_listStore));
-	
-	return view;
-}
-
-*/
-
 
 
 int32_t CTagsManager::MultipleJump(void)
 {
-	/*
-	// dlg to confirm the quit event : 
-	m_Dialog = gtk_dialog_new_with_buttons("C-Tags jump...",
-	                                       NULL,
-	                                       GTK_DIALOG_MODAL,
-	                                       //"Jump", GTK_RESPONSE_YES,
-	                                       GTK_STOCK_QUIT, GTK_RESPONSE_NO,
-	                                       NULL);
-	// Set over main windows
-	//gtk_window_set_transient_for(GTK_WINDOW(myDialog), GTK_WINDOW(m_mainWindow->GetWidget()));
-	// add writting area
-	GtkWidget *myContentArea = gtk_dialog_get_content_area( GTK_DIALOG(m_Dialog));
-	GtkWidget *listView = CreateViewAndModel();
-	gtk_box_pack_start(GTK_BOX(myContentArea), listView, TRUE, TRUE, 0);
-	// Display it
-	gtk_widget_show_all(myContentArea);
-	int32_t result = gtk_dialog_run(GTK_DIALOG(m_Dialog));
-	// Get data from the gtk entry
-	if (result == GTK_RESPONSE_NO) {
-		g_object_unref(GTK_TREE_MODEL(m_listStore));
-		// Remove dialogue
-		gtk_widget_destroy(m_Dialog);
+	APPL_INFO("Multiple file destination ...");
+	appl::TagFileSelection* tmpWidget = new appl::TagFileSelection();
+	if (NULL == tmpWidget) {
+		APPL_ERROR("Can not allocate widget ==> display might be in error");
+	} else {
+		for (int32_t iii=0; iii<m_currentList.Size() ; iii++) {
+			tmpWidget->AddCtagsNewItem(m_currentList[iii].filename, m_currentList[iii].lineID);
+		}
+		PopUpWidgetPush(tmpWidget);
+		tmpWidget->RegisterOnEvent(this, applEventctagsSelection);
 	}
-	*/
 	return 0;
 }
 
 
 void CTagsManager::JumpAtID(int32_t selectID)
 {
-/*
-	BufferManager *myBufferManager = BufferManager::getInstance();
 	etk::File myFile = m_currentList[selectID].filename;
 	APPL_INFO("save curent filename and position : ");
-	int32_t currentSelected = myBufferManager->GetSelected();
-	Buffer* tmpBuf = myBufferManager->Get(currentSelected);
+	int32_t currentSelected = BufferManager::GetSelected();
+	Buffer* tmpBuf = BufferManager::Get(currentSelected);
 	if (NULL != tmpBuf) {
 		etk::File * bufferFilename = new etk::File();
 		*bufferFilename = tmpBuf->GetFileName();
@@ -327,40 +284,33 @@ void CTagsManager::JumpAtID(int32_t selectID)
 		m_historyList.PushBack(bufferFilename);
 	}
 	APPL_INFO(" OPEN the TAG file Destination : " << myFile );
-	if (false == myBufferManager->Exist(myFile) ) {
-		// need to open the file : 
-		int32_t openID = myBufferManager->Open(myFile);
-		SendMessage(APPL_MSG__CURRENT_CHANGE_BUFFER_ID, openID);
-	} else {
-		SendMessage(APPL_MSG__CURRENT_CHANGE_BUFFER_ID, myBufferManager->GetId(myFile));
-	}
-	SendMessage(APPL_MSG__CURRENT_GOTO_LINE, m_currentList[selectID].lineID - 1);
-*/
+	SendMultiCast(ednMsgOpenFile, myFile.GetCompleateName());
+	SendMultiCast(ednMsgGuiGotoLine, m_currentList[selectID].lineID - 1);
 }
 
 
 void CTagsManager::JumpTo(void)
 {
-/*
 	m_currentList.Clear();
 	if (NULL != m_ctagFile) {
-		etk::Vector<int8_t> data;
 		// get the middle button of the clipboard ==> represent the current selection ...
-		ClipBoard::Get(COPY_MIDDLE_BUTTON, data);
+		etk::UString data = ewol::clipBoard::Get(ewol::clipBoard::CLIPBOARD_SELECTION);
+		APPL_DEBUG("clipboard data : \"" << data << "\"");
 		if (data.Size() == 0) {
-			APPL_INFO("No current S\E9lection");
+			APPL_INFO("No current selection");
 		}
 		tagEntry entry;
-		data.PushBack('\0');
-		APPL_INFO("try to find the tag : " << (const char *)&data[0]);
-		if (tagsFind (m_ctagFile, &entry, (const char *)&data[0], 0) == TagSuccess) {
+		APPL_INFO("try to find the tag : " << data);
+		if (tagsFind (m_ctagFile, &entry, data.c_str(), 0) == TagSuccess) {
 			tagEntry entrySave = entry;
 			int32_t numberOfTags = 0;
 			
 			// For all tags : Save in an internal Structure :
 			do {
 				etk::UString destinationFilename = m_tagFolderBase;
+				destinationFilename += "/";
 				destinationFilename += entry.file;
+				APPL_WARNING("plop : \"" << destinationFilename << "\"  from : " << m_tagFolderBase << " " << entry.file);
 				etk::File myfile = destinationFilename;
 				TagListFind_ts myStruct;
 				strncpy(myStruct.filename, myfile.GetCompleateName().c_str(), MAX_FILE_NAME);
@@ -376,7 +326,6 @@ void CTagsManager::JumpTo(void)
 			
 			if (1==m_currentList.Size() ) {
 				JumpAtID(0);
-				
 			} else {
 				// Open a choice windows...
 				int32_t SelectID = MultipleJump();
@@ -385,19 +334,19 @@ void CTagsManager::JumpTo(void)
 			APPL_INFO("no tag find ...");
 		}
 	}
-*/
 }
-/*
+
+
 void CTagsManager::PrintTag (const tagEntry *entry, bool small)
 {
 	if (small==true) {
 		APPL_INFO("find Tag file : name=\"" << entry->name << "\" in file=\"" << entry->file 
-			<< "\" at line="<< entry->address.lineNumber);
+			<< "\" at line="<< (int32_t)entry->address.lineNumber);
 	} else {
 		int i;
 		APPL_INFO("find Tag file : name=\"" << entry->name << "\" in file=\"" << entry->file 
-			<< "\" pattern=\"" <<entry->address.pattern 
-			<< "\" at line="<<entry->address.lineNumber);
+			<< "\" pattern=\"" << entry->address.pattern 
+			<< "\" at line="<< (int32_t)entry->address.lineNumber);
 		
 		APPL_INFO("Extention field : ");
 		if (entry->kind != NULL  &&  entry->kind [0] != '\0') {
@@ -411,7 +360,4 @@ void CTagsManager::PrintTag (const tagEntry *entry, bool small)
 		}
 	}
 }
-*/
-
-#endif
 

@@ -18,7 +18,9 @@ FILE_LIST+=		appl/Gui/BufferView.cpp \
 				appl/Gui/CodeView.cpp \
 				appl/Gui/MainWindows.cpp \
 				appl/Gui/Search.cpp \
-				appl/Gui/SearchData.cpp
+				appl/Gui/SearchData.cpp \
+				appl/Gui/TagFileSelection.cpp \
+				appl/Gui/TagFileList.cpp
 
 # All needed for the buffer management :
 FILE_LIST+=		appl/Buffer/EdnVectorBuf.cpp \

@@ -89,6 +89,7 @@ void APP_Init(void)
 	
 	HighlightManager::Init();
 	HighlightManager::loadLanguages();
+	cTagsManager::Init();
 
 	char cCurrentPath[FILENAME_MAX];
 	// get the curent program folder
@@ -135,6 +136,8 @@ void APP_Init(void)
 	ewol::shortCut::Add("ctrl+f",       ednMsgGuiSearch, "");
 	ewol::shortCut::Add("F12",          ednMsgGuiReloadShader, "");
 	
+	ewol::shortCut::Add("ctrl+d",       ednMsgGuiCtags, "Jump");
+	
 	
 	// add files
 	APPL_INFO("show list of files : ");
@@ -163,6 +166,8 @@ void APP_UnInit(void)
 	APPL_INFO("==> Un-Init Edn (START)");
 	// Remove windows :
 	ewol::DisplayWindows(NULL);
+	
+	cTagsManager::UnInit();
 	
 	APPL_INFO("Stop Hightlight");
 	HighlightManager::UnInit();

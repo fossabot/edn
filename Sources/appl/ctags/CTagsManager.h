@@ -33,40 +33,11 @@
 
 #define MAX_REG_EXP_SEARCH	(1024)
 
-typedef struct{
-	char    filename[MAX_FILE_NAME];
-	char    RegExp[MAX_REG_EXP_SEARCH];
-	int32_t lineID;
-} TagListFind_ts;
-
-/*
-class CTagsManager: public etk::Singleton<CTagsManager>, public ewol::Widget
+namespace cTagsManager
 {
-	friend class etk::Singleton<CTagsManager>;
-	// specific for sigleton system...
-	private:
-		// Constructeur
-		CTagsManager(void);
-		~CTagsManager(void);
-
-	public:
-		virtual bool OnEventAreaExternal(int32_t widgetID, const char * generateEventId, const char * eventExternId, float x, float y);
-	private:
-		int32_t                    m_currentSelectedID;
-		void                       LoadTagFile(void);
-		int32_t                    MultipleJump(void);
-		void                       JumpTo(void);
-		void                       PrintTag(const tagEntry *entry, bool small);
-		etk::UString               GetFolder(etk::UString &inputString);
-		etk::UString               m_tagFolderBase;
-		etk::UString               m_tagFilename;
-		tagFile *                  m_ctagFile;
-		// history system
-		void                       AddToHistory(int32_t bufferID);
-		int32_t                    m_historyPos;
-		etk::Vector<etk::File*>   m_historyList;
-		etk::Vector<TagListFind_ts> m_currentList;
-		void                       JumpAtID(int32_t selectID);
+	void Init(void);
+	void UnInit(void);
 };
-*/
+
+
 #endif
