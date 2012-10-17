@@ -34,13 +34,21 @@
 
 extern const char * const applEventCtagsListSelect;
 extern const char * const applEventCtagsListValidate;
+extern const char * const applEventCtagsListUnSelect;
 
 namespace appl {
+	class TagListElement {
+		public:
+			etk::UString filename;
+			int32_t      fileLine;
+			TagListElement(etk::UString& file, int32_t line) : filename(file), fileLine(line) {};
+			~TagListElement(void) {};
+	};
 	class TagFileList : public ewol::List
 	{
 		private:
-			int32_t                          m_selectedLine;
-			etk::Vector<etk::UString *>     m_list;
+			int32_t                            m_selectedLine;
+			etk::Vector<appl::TagListElement*> m_list;
 		public:
 			TagFileList(void);
 			~TagFileList(void);
@@ -65,7 +73,7 @@ namespace appl {
 			 * @param[in] jump line id
 			 * @return ---
 			 */
-			void         Add(etk::UString file, int32_t line);
+			void         Add(etk::UString& file, int32_t line);
 	};
 };
 

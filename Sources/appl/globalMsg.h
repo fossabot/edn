@@ -55,6 +55,7 @@
 	extern const char* const ednMsgGuiShowEndOfLine; // data : "enable" "disable"
 	
 	extern const char* const ednMsgGuiCtags;         // data : "Load" "ReLoad" "Jump" "Back"
+	extern const char* const ednMsgCtagsLoadFile;    // data : "filename of the ctags file"
 	
 	extern const char* const ednMsgGuiReloadShader;  // data : ""
 

@@ -55,6 +55,7 @@ extern const char* const ednMsgGuiShowSpaces    = "edn-Msg-Gui-ShowSpaces";
 extern const char* const ednMsgGuiShowEndOfLine = "edn-Msg-Gui-ShowEndOfLine";
 
 extern const char* const ednMsgGuiCtags         = "edn-Msg-Gui-CTags";
+extern const char* const ednMsgCtagsLoadFile    = "edn-Msg-CTags-direct-load";
 
 extern const char* const ednMsgGuiReloadShader  = "edn-Msg-Gui-ReloadOpenGlShader";
 

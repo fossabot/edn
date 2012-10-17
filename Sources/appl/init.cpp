@@ -141,11 +141,19 @@ void APP_Init(void)
 	
 	// add files
 	APPL_INFO("show list of files : ");
-	
+	bool ctagDetected = false;
 	for( int32_t iii=0 ; iii<ewol::CmdLine::Nb(); iii++) {
-		APPL_INFO("need load file : \"" << ewol::CmdLine::Get(iii) << "\"" );
 		etk::UString tmpppp = ewol::CmdLine::Get(iii);
-		ewol::EObjectMessageMultiCast::AnonymousSend(ednMsgOpenFile, tmpppp);
+		if (tmpppp == "-t") {
+			ctagDetected = true;
+		} else if (true == ctagDetected) {
+			APPL_INFO("Load ctag file : \"" << tmpppp << "\"" );
+			ctagDetected = false;
+			ewol::EObjectMessageMultiCast::AnonymousSend(ednMsgCtagsLoadFile, tmpppp);
+		} else {
+			APPL_INFO("need load file : \"" << tmpppp << "\"" );
+			ewol::EObjectMessageMultiCast::AnonymousSend(ednMsgOpenFile, tmpppp);
+		}
 	}
 	
 	APPL_INFO("==> Init Edn (END)");

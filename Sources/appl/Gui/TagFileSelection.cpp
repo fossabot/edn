@@ -133,7 +133,9 @@ appl::TagFileSelection::TagFileSelection(void)
 		if (NULL == m_listTag) {
 			EWOL_ERROR("Can not allocate widget ==> display might be in error");
 		} else {
-			//m_widgetListFolder->RegisterOnEvent(this, ewolEventFSFolderValidate, ewolEventFileChooserListFolder);
+			m_listTag->RegisterOnEvent(this, applEventCtagsListValidate);
+			m_listTag->RegisterOnEvent(this, applEventCtagsListSelect);
+			m_listTag->RegisterOnEvent(this, applEventCtagsListUnSelect);
 			m_listTag->SetExpendX(true);
 			m_listTag->SetExpendY(true);
 			m_listTag->SetFillX(true);
@@ -168,11 +170,22 @@ void appl::TagFileSelection::OnReceiveMessage(ewol::EObject * CallerObject, cons
 {
 	EWOL_INFO("ctags LIST ... : \"" << eventId << "\" ==> data=\"" << data << "\"" );
 	if (eventId == applEventctagsSelection) {
-		GenerateEventId(eventId, "???");
+		if (m_eventNamed!="") {
+			GenerateEventId(applEventctagsSelection, m_eventNamed);
+			//==> Auto remove ...
+			AutoDestroy();
+		}
+	} else if (eventId == applEventCtagsListSelect) {
+		m_eventNamed = data;
+		
+	} else if (eventId == applEventCtagsListUnSelect) {
+		m_eventNamed = "";
+	} else if (eventId == applEventCtagsListValidate) {
+		GenerateEventId(applEventctagsSelection, data);
 		//==> Auto remove ...
 		AutoDestroy();
 	} else if (eventId == applEventctagsCancel) {
-		//Nothing selected ...
+		GenerateEventId(applEventctagsCancel, "");
 		//==> Auto remove ...
 		AutoDestroy();
 	}

@@ -26,15 +26,11 @@
 #include <etk/tool.h>
 #include <appl/Gui/TagFileList.h>
 
-extern "C" {
-	// file browsing ...
-	#include <dirent.h>
-}
-
 #undef __class__
 #define __class__	"TagFileList"
 
 extern const char * const applEventCtagsListSelect     = "appl-event-ctags-list-select";
+extern const char * const applEventCtagsListUnSelect   = "appl-event-ctags-list-un-select";
 extern const char * const applEventCtagsListValidate   = "appl-event-ctags-list-validate";
 
 
@@ -77,7 +73,13 @@ uint32_t appl::TagFileList::GetNuberOfRaw(void) {
 
 bool appl::TagFileList::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg) {
 	if (raw >= 0 && raw < m_list.Size() && NULL != m_list[raw]) {
-		myTextToWrite = *m_list[raw];
+		if (0==colomn) {
+			// note : tmp while the list support multiple colomn
+			myTextToWrite = m_list[raw]->filename;
+			myTextToWrite = m_list[raw]->filename + ":" + etk::UString(m_list[raw]->fileLine);
+		} else {
+			myTextToWrite = etk::UString(m_list[raw]->fileLine);
+		}
 	} else {
 		myTextToWrite = "ERROR";
 	}
@@ -105,18 +107,16 @@ bool appl::TagFileList::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typ
 			} else {
 				m_selectedLine = raw;
 			}
+			const char * event = applEventCtagsListValidate;
 			if (previousRaw != m_selectedLine) {
-				if(    m_selectedLine >=0
-				    && m_selectedLine < m_list.Size()
-				    && NULL != m_list[m_selectedLine] ) {
-					GenerateEventId(applEventCtagsListSelect, *m_list[m_selectedLine]);
-				}
+				event = applEventCtagsListSelect;
+			}
+			if(    m_selectedLine >=0
+			    && m_selectedLine < m_list.Size()
+			    && NULL != m_list[m_selectedLine] ) {
+				GenerateEventId(event, etk::UString(m_list[raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
 			} else {
-				if(    m_selectedLine >=0
-				    && m_selectedLine < m_list.Size()
-				    && NULL != m_list[m_selectedLine] ) {
-					GenerateEventId(applEventCtagsListValidate, *m_list[m_selectedLine]);
-				}
+				GenerateEventId(applEventCtagsListUnSelect);
 			}
 			// need to regenerate the display of the list : 
 			MarkToRedraw();
@@ -133,9 +133,9 @@ bool appl::TagFileList::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typ
  * @param[in] jump line id
  * @return ---
  */
-void appl::TagFileList::Add(etk::UString file, int32_t line)
+void appl::TagFileList::Add(etk::UString& file, int32_t line)
 {
-	etk::UString *tmpFile = new etk::UString(file);
+	appl::TagListElement *tmpFile = new appl::TagListElement(file, line);
 	if (NULL != tmpFile) {
 		m_list.PushBack(tmpFile);
 	}

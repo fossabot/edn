@@ -36,13 +36,6 @@
 #undef  __class__
 #define __class__    "CTagsManager"
 
-
-typedef struct{
-	char    filename[MAX_FILE_NAME];
-	char    RegExp[MAX_REG_EXP_SEARCH];
-	int32_t lineID;
-} TagListFind_ts;
-
 class CTagsManager: public ewol::EObject
 {
 	public:
@@ -79,11 +72,9 @@ class CTagsManager: public ewol::EObject
 		etk::UString                m_tagFilename;
 		tagFile *                   m_ctagFile;
 		// history system
-		void                        AddToHistory(int32_t bufferID);
 		int32_t                     m_historyPos;
 		etk::Vector<etk::File*>     m_historyList;
-		etk::Vector<TagListFind_ts> m_currentList;
-		void                        JumpAtID(int32_t selectID);
+		void                        RegisterHistory(void);
 };
 
 static CTagsManager* s_elementPointer = NULL;
@@ -127,6 +118,7 @@ CTagsManager::CTagsManager(void)
 	m_historyPos = 0;
 	RegisterMultiCast(ednMsgGuiCtags);
 	RegisterMultiCast(ednMsgBufferId);
+	RegisterMultiCast(ednMsgCtagsLoadFile);
 	EWOL_INFO("Ctags manager (INIT)");
 }
 
@@ -149,35 +141,15 @@ CTagsManager::~CTagsManager(void)
 	}
 }
 
-etk::UString CTagsManager::GetFolder(etk::UString &inputString)
-{
-	/*
-	char tmpVal[4096];
-	strncpy(tmpVal, inputString.c_str(), 4096);
-	tmpVal[4096-1] = '\0';
-	char *ptr = strrchr(tmpVal, '/');
-	if (NULL == ptr) {
-		ptr = strrchr(tmpVal, '\\');
-	}
-	etk::UString out = "./";
-	if (NULL != ptr) {
-		*ptr = '\0';
-		out = tmpVal;
-		out+= '/';
-	}
-	return out;
-	*/
-	etk::UString out = "./";
-	return out;
-}
-
 const char * ednEventPopUpCtagsLoadFile = "edn-event-load-ctags";
 
 void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
 {
+	//EWOL_INFO("ctags manager event ... : \"" << eventId << "\" ==> data=\"" << data << "\"" );
 	if (eventId == ednMsgBufferId) {
 		//m_currentSelectedID = dataID;
-	} else if (eventId == ednEventPopUpCtagsLoadFile) {
+	} else if(    eventId == ednEventPopUpCtagsLoadFile
+	           || eventId == ednMsgCtagsLoadFile) {
 		// open the new one :
 		etk::File tmpFilename = data;
 		m_tagFilename = tmpFilename.GetShortFilename();
@@ -214,6 +186,16 @@ void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * e
 		} else {
 			
 		}
+	} else if (eventId == applEventctagsSelection) {
+		// save the current file in the history
+		RegisterHistory();
+		// parse the input data
+		char tmp[4096];
+		int32_t lineID;
+		sscanf(data.c_str(), "%d:%s", &lineID, tmp);
+		// generate envents
+		SendMultiCast(ednMsgOpenFile, tmp);
+		SendMultiCast(ednMsgGuiGotoLine, lineID - 1);
 	}
 }
 
@@ -240,40 +222,9 @@ void CTagsManager::LoadTagFile(void)
 	}
 }
 
-void CTagsManager::AddToHistory(int32_t bufferID)
+
+void CTagsManager::RegisterHistory(void)
 {
-	// check tho history position : remove if needed
-	if (m_historyPos < etk_max(m_historyList.Size()-1, 0) ) {
-		for(int32_t iii= m_historyPos; iii < m_historyList.Size(); iii++) {
-			delete(m_historyList[iii]);
-		}
-		m_historyList.EraseLen(m_historyPos, m_historyList.Size() - m_historyPos);
-	}
-	// add the current element
-	etk::File currentFilename = BufferManager::Get(bufferID)->GetFileName();
-}
-
-
-int32_t CTagsManager::MultipleJump(void)
-{
-	APPL_INFO("Multiple file destination ...");
-	appl::TagFileSelection* tmpWidget = new appl::TagFileSelection();
-	if (NULL == tmpWidget) {
-		APPL_ERROR("Can not allocate widget ==> display might be in error");
-	} else {
-		for (int32_t iii=0; iii<m_currentList.Size() ; iii++) {
-			tmpWidget->AddCtagsNewItem(m_currentList[iii].filename, m_currentList[iii].lineID);
-		}
-		PopUpWidgetPush(tmpWidget);
-		tmpWidget->RegisterOnEvent(this, applEventctagsSelection);
-	}
-	return 0;
-}
-
-
-void CTagsManager::JumpAtID(int32_t selectID)
-{
-	etk::File myFile = m_currentList[selectID].filename;
 	APPL_INFO("save curent filename and position : ");
 	int32_t currentSelected = BufferManager::GetSelected();
 	Buffer* tmpBuf = BufferManager::Get(currentSelected);
@@ -283,15 +234,11 @@ void CTagsManager::JumpAtID(int32_t selectID)
 		bufferFilename->SetLineNumber(tmpBuf->GetCurrentLine());
 		m_historyList.PushBack(bufferFilename);
 	}
-	APPL_INFO(" OPEN the TAG file Destination : " << myFile );
-	SendMultiCast(ednMsgOpenFile, myFile.GetCompleateName());
-	SendMultiCast(ednMsgGuiGotoLine, m_currentList[selectID].lineID - 1);
 }
 
 
 void CTagsManager::JumpTo(void)
 {
-	m_currentList.Clear();
 	if (NULL != m_ctagFile) {
 		// get the middle button of the clipboard ==> represent the current selection ...
 		etk::UString data = ewol::clipBoard::Get(ewol::clipBoard::CLIPBOARD_SELECTION);
@@ -306,29 +253,33 @@ void CTagsManager::JumpTo(void)
 			int32_t numberOfTags = 0;
 			
 			// For all tags : Save in an internal Structure :
-			do {
-				etk::UString destinationFilename = m_tagFolderBase;
-				destinationFilename += "/";
-				destinationFilename += entry.file;
-				APPL_WARNING("plop : \"" << destinationFilename << "\"  from : " << m_tagFolderBase << " " << entry.file);
-				etk::File myfile = destinationFilename;
-				TagListFind_ts myStruct;
-				strncpy(myStruct.filename, myfile.GetCompleateName().c_str(), MAX_FILE_NAME);
-				myStruct.filename[MAX_FILE_NAME-1] = '\0';
-				strncpy(myStruct.RegExp, entry.address.pattern, MAX_REG_EXP_SEARCH);
-				myStruct.RegExp[MAX_REG_EXP_SEARCH-1] = '\0';
-				myStruct.lineID = entry.address.lineNumber;
-				// at at the corect position
-				m_currentList.PushBack(myStruct);
-				PrintTag(&entry, true);
-			} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
+			etk::UString tmpFile(m_tagFolderBase + "/" + entry.file);
+			etk::File myfile(tmpFile);
+			int32_t lineID = entry.address.lineNumber;
+			PrintTag(&entry, true);
 			
-			
-			if (1==m_currentList.Size() ) {
-				JumpAtID(0);
+			if (tagsFindNext (m_ctagFile, &entry) == TagSuccess) {
+				APPL_INFO("Multiple file destination ...");
+				appl::TagFileSelection* tmpWidget = new appl::TagFileSelection();
+				if (NULL == tmpWidget) {
+					APPL_ERROR("Can not allocate widget ==> display might be in error");
+				} else {
+					tmpWidget->AddCtagsNewItem(myfile.GetCompleateName(), lineID);
+					do {
+						tmpFile = m_tagFolderBase + "/" + entry.file;
+						myfile = tmpFile;
+						lineID = entry.address.lineNumber;
+						PrintTag(&entry, true);
+						tmpWidget->AddCtagsNewItem(myfile.GetCompleateName(), lineID);
+					} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
+					PopUpWidgetPush(tmpWidget);
+					tmpWidget->RegisterOnEvent(this, applEventctagsSelection);
+				}
 			} else {
-				// Open a choice windows...
-				int32_t SelectID = MultipleJump();
+				RegisterHistory();
+				APPL_INFO(" OPEN the TAG file Destination : " << tmpFile );
+				SendMultiCast(ednMsgOpenFile, myfile.GetCompleateName());
+				SendMultiCast(ednMsgGuiGotoLine, lineID - 1);
 			}
 		} else {
 			APPL_INFO("no tag find ...");

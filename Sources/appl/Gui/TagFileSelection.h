@@ -39,6 +39,7 @@ namespace appl {
 	{
 		private:
 			appl::TagFileList*   m_listTag;
+			etk::UString         m_eventNamed;
 		public:
 			TagFileSelection(void);
 			virtual ~TagFileSelection(void);
