@@ -74,23 +74,33 @@ uint32_t appl::TagFileList::GetNuberOfRaw(void) {
 bool appl::TagFileList::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg) {
 	if (raw >= 0 && raw < m_list.Size() && NULL != m_list[raw]) {
 		if (0==colomn) {
-			// note : tmp while the list support multiple colomn
-			myTextToWrite = m_list[raw]->filename;
-			myTextToWrite = m_list[raw]->filename + ":" + etk::UString(m_list[raw]->fileLine);
-		} else {
 			myTextToWrite = etk::UString(m_list[raw]->fileLine);
+		} else {
+			myTextToWrite = m_list[raw]->filename;
 		}
 	} else {
 		myTextToWrite = "ERROR";
 	}
 	fg = draw::color::black;
 	if (raw % 2) {
-		bg = 0xFFFFFF00;
+		if (colomn%2==0) {
+			bg = 0xFFFFFF00;
+		} else {
+			bg = 0xFFFFFF10;
+		}
 	} else {
-		bg = 0xBFBFBFFF;
+		if (colomn%2==0) {
+			bg = 0xBFBFBFFF;
+		} else {
+			bg = 0xCFCFCFFF;
+		}
 	}
 	if (m_selectedLine == raw) {
-		bg = 0x8F8FFFFF;
+		if (colomn%2==0) {
+			bg = 0x8F8FFFFF;
+		} else {
+			bg = 0x7F7FFFFF;
+		}
 	}
 	return true;
 };
