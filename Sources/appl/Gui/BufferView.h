@@ -31,8 +31,31 @@
 #include <appl/globalMsg.h>
 #include <ewol/widget/List.h>
 
+namespace appl
+{
+	class dataBufferStruct
+	{
+		public:
+			etk::File m_bufferName;
+			uint32_t  m_bufferID;
+			bool      m_isModify;
+			dataBufferStruct(etk::File& bufferName, int32_t bufferID, bool isModify) :
+				m_bufferName(bufferName),
+				m_bufferID(bufferID),
+				m_isModify(isModify)
+			{
+				
+			};
+			~dataBufferStruct(void) { };
+	};
+};
+
 class BufferView : public ewol::List
 {
+	private:
+		int32_t                               m_selectedIdRequested;
+		int32_t                               m_selectedID;
+		etk::Vector<appl::dataBufferStruct*>  m_list;
 	public:
 		// Constructeur
 		BufferView(void);
@@ -60,9 +83,7 @@ class BufferView : public ewol::List
 		virtual uint32_t GetNuberOfRaw(void);
 		virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg);
 		virtual bool OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,  int32_t colomn, int32_t raw, float x, float y);
-	private:
-		int32_t               m_selectedIdRequested;
-		int32_t               m_selectedID;
+		void RemoveAllElement(void);
 };
 
 

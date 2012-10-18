@@ -51,6 +51,7 @@ namespace globals
 
 	void    init2(void);
 	
+	bool    OrderTheBufferList(void);
 	
 	class ParameterGlobalsGui : public ewol::SizerVert
 	{

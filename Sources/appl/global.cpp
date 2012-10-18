@@ -101,6 +101,12 @@ void globals::SetAutoIndent(bool newVal)
 // -----------------------------------------------------------
 
 
+bool globals::OrderTheBufferList(void)
+{
+	return true;
+}
+
+// -----------------------------------------------------------
 
 
 int32_t globals::getNbColoneBorder(void)

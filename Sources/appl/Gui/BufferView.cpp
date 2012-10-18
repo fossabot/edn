@@ -35,6 +35,30 @@
 #define __class__	"BufferView"
 
 
+
+static void SortElementList(etk::Vector<appl::dataBufferStruct *> &list)
+{
+	etk::Vector<appl::dataBufferStruct *> tmpList = list;
+	list.Clear();
+	for(int32_t iii=0; iii<tmpList.Size(); iii++) {
+		if (NULL != tmpList[iii]) {
+			int32_t findPos = 0;
+			for(int32_t jjj=0; jjj<list.Size(); jjj++) {
+				//EWOL_DEBUG("compare : \""<<*tmpList[iii] << "\" and \"" << *m_listDirectory[jjj] << "\"");
+				if (list[jjj]!=NULL) {
+					if (tmpList[iii]->m_bufferName.GetShortFilename() > list[jjj]->m_bufferName.GetShortFilename()) {
+						findPos = jjj+1;
+					}
+				}
+			}
+			//EWOL_DEBUG("position="<<findPos);
+			list.Insert(findPos, tmpList[iii]);
+		}
+	}
+}
+
+
+
 BufferView::BufferView(void)
 {
 	SetCanHaveFocus(true);
@@ -47,9 +71,19 @@ BufferView::BufferView(void)
 
 BufferView::~BufferView(void)
 {
-
+	RemoveAllElement();
 }
 
+void BufferView::RemoveAllElement(void)
+{
+	for(int32_t iii=0; iii<m_list.Size(); iii++) {
+		if (NULL!=m_list[iii]) {
+			delete(m_list[iii]);
+			m_list[iii] = NULL;
+		}
+	}
+	m_list.Clear();
+}
 
 /**
  * @brief Receive a message from an other EObject with a specific eventId and data
@@ -62,11 +96,36 @@ void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eve
 {
 	ewol::List::OnReceiveMessage(CallerObject, eventId, data);
 	if (eventId == ednMsgBufferListChange) {
+		// clean The list
+		RemoveAllElement();
+		// Get all the buffer name and properties:
+		int32_t nbBufferOpen = BufferManager::Size();
+		for (int32_t iii=0; iii<nbBufferOpen; iii++) {
+			if (BufferManager::Exist(iii)) {
+				bool isModify  = BufferManager::Get(iii)->IsModify();
+				etk::File name = BufferManager::Get(iii)->GetFileName();
+				appl::dataBufferStruct* tmpElement = new appl::dataBufferStruct(name, iii, isModify);
+				if (NULL != tmpElement) {
+					m_list.PushBack(tmpElement);
+				} else {
+					APPL_ERROR("Allocation error of the tmp buffer list element");
+				}
+			}
+		}
+		if (true == globals::OrderTheBufferList() ) {
+			SortElementList(m_list);
+		}
 		MarkToRedraw();
 	}else if (eventId == ednMsgBufferId) {
 		m_selectedIdRequested = BufferManager::GetSelected();
 		MarkToRedraw();
 	}else if (eventId == ednMsgBufferState) {
+		// Update list of modify section ...
+		for (int32_t iii=0; iii<m_list.Size(); iii++) {
+			if (NULL!=m_list[iii]) {
+				m_list[iii]->m_isModify = BufferManager::Get(m_list[iii]->m_bufferID)->IsModify();
+			}
+		}
 		MarkToRedraw();
 	}
 }
@@ -90,12 +149,11 @@ bool BufferView::GetTitle(int32_t colomn, etk::UString &myTitle, draw::Color &fg
 
 uint32_t BufferView::GetNuberOfRaw(void)
 {
-	return BufferManager::SizeOpen();
+	return m_list.Size();
 }
 
 bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg)
 {
-	etk::File name;
 	bool isModify;
 	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;
 	basicColor_te selectBG = COLOR_LIST_BG_1;
@@ -103,28 +161,12 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 	if (m_selectedIdRequested != -1) {
 		m_selectedID = -1;
 	}
-	// transforme the ID in the real value ...
-	int32_t realID = BufferManager::WitchBuffer(raw+1);
-	if (BufferManager::Exist(realID)) {
-		isModify = BufferManager::Get(realID)->IsModify();
-		name = BufferManager::Get(realID)->GetFileName();
+	if(    raw>=0
+	    && raw<m_list.Size()
+	    && NULL != m_list[raw]) {
+		myTextToWrite = m_list[raw]->m_bufferName.GetShortFilename();
 		
-		#if 0
-			char *tmpModify = (char*)" ";
-			if (true == isModify) {
-				tmpModify = (char*)"M";
-			}
-			myTextToWrite  = "[";
-			myTextToWrite += realID;
-			myTextToWrite += "](";
-			myTextToWrite += tmpModify;
-			myTextToWrite += ") ";
-		#else
-			myTextToWrite = "";
-		#endif
-		myTextToWrite += name.GetShortFilename();
-		
-		if (true == isModify) {
+		if (true == m_list[raw]->m_isModify) {
 			selectFG = COLOR_LIST_TEXT_MODIFY;
 		} else {
 			selectFG = COLOR_LIST_TEXT_NORMAL;
@@ -135,7 +177,7 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 			selectBG = COLOR_LIST_BG_2;
 		}
 		// the buffer change of selection ...
-		if (m_selectedIdRequested == realID) {
+		if (m_selectedIdRequested == m_list[raw]->m_bufferID) {
 			m_selectedID = raw;
 			// stop searching
 			m_selectedIdRequested = -1;
@@ -155,10 +197,11 @@ bool BufferView::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent,
 {
 	if (1 == IdInput && typeEvent == ewol::EVENT_INPUT_TYPE_SINGLE) {
 		APPL_INFO("Event on List : IdInput=" << IdInput << " colomn=" << colomn << " raw=" << raw );
-		int32_t selectBuf = BufferManager::WitchBuffer(raw+1);
-		if ( 0 <= selectBuf) {
+		if(    raw>=0
+		    && raw<m_list.Size()
+		    && NULL != m_list[raw]) {
 			m_selectedID = raw;
-			SendMultiCast(ednMsgBufferId, selectBuf);
+			SendMultiCast(ednMsgBufferId, m_list[raw]->m_bufferID);
 		}
 	}
 	MarkToRedraw();
