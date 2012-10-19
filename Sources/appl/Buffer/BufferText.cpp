@@ -305,7 +305,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	#endif
 	int32_t displayStartLineId = offsetY / letterHeight - 1;
 	displayStartLineId = etk_max(0, displayStartLineId);
-	uint32_t y = - offsetY + displayStartLineId*letterHeight;
+	int32_t y = - offsetY + displayStartLineId*letterHeight;
 	
 	// update the display position with the scroll ofset : 
 	int32_t displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
@@ -404,8 +404,8 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	m_elmentList.PushBack(tmpElementProperty);
 	
 	float lineMaxSize = 0.0;
-	for (iii=displayStartBufferPos; iii<mylen && displayLines >=0 ; iii = new_i) {
-		//APPL_DEBUG("diplay element=" << iii);
+	for (iii=displayStartBufferPos; iii<mylen && displayLines >=0 && y >= -2*letterHeight; iii = new_i) {
+		//APPL_DEBUG("display pos =" << y);
 		int displaywidth;
 		uint32_t currentChar = '\0';
 		new_i = iii;
@@ -505,6 +505,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 			idX =0;
 			pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 			y -= letterHeight;
+			//APPL_DEBUG("display pos =" << y);
 			displayLines++;
 			currentLineID++;
 			OOColored.clippingDisable();
@@ -524,6 +525,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 			m_elmentList.PushBack(tmpElementProperty);
 		}
 	}
+	//APPL_DEBUG("end at pos buf =" << iii << " / " << m_EdnBuf.Size());
 	// special case : the cursor is at the end of the buffer...
 	if (m_cursorPos == iii) {
 		DrawCursor(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
