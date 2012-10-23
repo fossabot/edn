@@ -123,14 +123,6 @@ void APP_Init(void)
 	ewol::shortCut::Add("ctrl+z",       ednMsgGuiUndo, "");
 	ewol::shortCut::Add("ctrl+shift+z", ednMsgGuiRedo, "");
 	
-	ewol::shortCut::Add("ctrl+w",       ednMsgGuiRm,     "Line");
-	ewol::shortCut::Add("ctrl+shift+w", ednMsgGuiRm,     "Paragraph");
-	ewol::shortCut::Add("ctrl+x",       ednMsgGuiCut,    "STD");
-	ewol::shortCut::Add("ctrl+c",       ednMsgGuiCopy,   "STD");
-	ewol::shortCut::Add("ctrl+v",       ednMsgGuiPaste,  "STD");
-	ewol::shortCut::Add("ctrl+a",       ednMsgGuiSelect, "ALL");
-	ewol::shortCut::Add("ctrl+shift+a", ednMsgGuiSelect, "NONE");
-	
 	ewol::shortCut::Add("ctrl+l",       ednMsgGuiGotoLine, "???");
 	
 	ewol::shortCut::Add("ctrl+f",       ednMsgGuiSearch, "");

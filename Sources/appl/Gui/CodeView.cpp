@@ -68,6 +68,14 @@ void CodeView::Init(void)
 	RegisterMultiCast(ednMsgGuiReplace);
 	RegisterMultiCast(ednMsgGuiGotoLine);
 	SetLimitScrolling(0.2);
+	
+	ShortCutAdd("ctrl+w",       ednMsgGuiRm,     "Line");
+	ShortCutAdd("ctrl+shift+w", ednMsgGuiRm,     "Paragraph");
+	ShortCutAdd("ctrl+x",       ednMsgGuiCut,    "STD");
+	ShortCutAdd("ctrl+c",       ednMsgGuiCopy,   "STD");
+	ShortCutAdd("ctrl+v",       ednMsgGuiPaste,  "STD");
+	ShortCutAdd("ctrl+a",       ednMsgGuiSelect, "ALL");
+	ShortCutAdd("ctrl+shift+a", ednMsgGuiSelect, "NONE");
 }
 
 #ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
