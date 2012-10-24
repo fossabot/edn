@@ -25,6 +25,7 @@ download the software :
 	make DEBUG=1
 	or
 	make CLANG=1 DEBUG=1
+	cp -r ../ewol/share/* share/
 	./out_LINUX/debug/obj/usr/bin/edn -l6 yourFile.txt
 	Note : -l6 corespond at the LOG level to display
 
