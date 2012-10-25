@@ -59,7 +59,7 @@ int32_t EdnBuf::Undo(void)
 	if (0 == nbInserted) {
 		// just add data at position ...
 		if (0 == nbDeleted) {
-			APPL_ERROR("EdnBuf::Undo nothing to do in UNDO");
+			APPL_DEBUG("EdnBuf::Undo nothing to do in UNDO");
 		} else {
 			Insert(pos, deletedText);
 			posDest = pos + nbDeleted;
@@ -89,7 +89,7 @@ int32_t EdnBuf::Redo(void)
 	int32_t posDest = -1;
 	if (0 == nbElement) {
 		// nothing to do ...
-		APPL_ERROR("EdnBuf::Redo No more History");
+		APPL_DEBUG("EdnBuf::Redo No more History");
 		return -1;
 	}
 	nbElement--;
