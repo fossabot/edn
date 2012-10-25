@@ -68,6 +68,7 @@ void APP_Init(void)
 	etk::InitDefaultFolder(PROJECT_NAME);
 
 	ewol::font::SetDefaultFont("Font/freefont/FreeSerif.ttf");
+	//ewol::font::SetDefaultFont("Font/ACharmingFont.ttf");
 	#ifdef __TARGET_OS__Android
 		ewol::font::SetDefaultSize(19);
 	#else
