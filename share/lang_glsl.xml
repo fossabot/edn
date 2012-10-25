@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EdnLang version="0.1" lang="glsl">
+	<ext>*.glsl</ext>
+	<ext>*.vert</ext>
+	<ext>*.frag</ext>
+	<ext>*.prog</ext>
+	<pass1>
+		<rule name="my comment multiline doxygen">
+			<color>commentDoxygen</color>
+			<start>/\*\*</start>
+			<end>\*/</end>
+		</rule>
+		<rule name="my comment multiline">
+			<color>comment</color>
+			<start>/\*</start>
+			<end>\*/</end>
+		</rule>
+		<rule name="my if 0">
+			<color>preprocesseur</color>
+			<start>#[ \t]*if 0</start>
+			<end>#endif|#else</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+		<rule name="my preprocesseur">
+			<color>preprocesseur</color>
+			<start>#</start>
+			<end>\n</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+		<rule name="my comment doxygen">
+			<color>commentDoxygen</color>
+			<start>//!</start>
+			<end>\n</end>
+		</rule>
+		<rule name="my todo comment">
+			<color>SYNTAX_ERROR</color>
+			<start>//[ \t]*TODO[ \t]*:</start>
+			<end>\n</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+		<rule name="my comment">
+			<color>comment</color>
+			<start>//</start>
+			<end>\n</end>
+			<EscapeChar>\</EscapeChar>
+		</rule>
+	</pass1>
+	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
+		<rule name="my keyword">
+			<color>keyword</color>
+			<start>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof\@</start>
+		</rule>
+		<rule name="my type">
+			<color>type</color>
+			<start>\@bool|float|int|(vec|mat|ivect|bvect)[2-4]\@</start>
+		</rule>
+		<rule name="my storage keyword">
+			<color>storageKeyword</color>
+			<start>\@varying|uniform|attribute\@</start>
+		</rule>
+		<rule name="numeric constant">
+			<color>number</color>
+			<start>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</start>
+		</rule>
+		<rule name="my boolean">
+			<color>boolean</color>
+			<start>\@true|false\@</start>
+		</rule>
+		<rule name="BIG LETTER">
+			<color>macro</color>
+			<start>\@[A-Z_][A-Z_0-9]{3,500}\@</start>
+		</rule>
+		<rule name="Function name">
+			<color>functionName</color>
+			<start>\@(\w|_)+[ \t]*\(</start>
+		</rule>
+		<rule name="condition">
+			<color>boolean</color>
+			<start>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</start>
+		</rule>
+	</pass2>
+</EdnLang>
