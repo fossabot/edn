@@ -37,21 +37,13 @@ LOCAL_CFLAGS    :=  -DMODE_RELEASE \
                     -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION_TAG_SHORT)-$(BUILD_DIRECTORY_MODE)\""
 endif
 
-LOCAL_COPY_FILES := ../share/color_white.xml:usr/share/$(LOCAL_MODULE)/color_white.xml \
-                    ../share/color_black.xml:usr/share/$(LOCAL_MODULE)/color_black.xml \
-                    ../share/lang_asm.xml:usr/share/$(LOCAL_MODULE)/lang_asm.xml \
-                    ../share/lang_bash.xml:usr/share/$(LOCAL_MODULE)/lang_bash.xml \
-                    ../share/lang_boo.xml:usr/share/$(LOCAL_MODULE)/lang_boo.xml \
-                    ../share/lang_c.xml:usr/share/$(LOCAL_MODULE)/lang_c.xml \
-                    ../share/lang_glsl.xml:usr/share/$(LOCAL_MODULE)/lang_glsl.xml \
-                    ../share/lang_in.xml:usr/share/$(LOCAL_MODULE)/lang_in.xml \
-                    ../share/lang_java.xml:usr/share/$(LOCAL_MODULE)/lang_java.xml \
-                    ../share/lang_lua.xml:usr/share/$(LOCAL_MODULE)/lang_lua.xml \
-                    ../share/lang_Makefile.xml:usr/share/$(LOCAL_MODULE)/lang_Makefile.xml \
-                    ../share/lang_matlab.xml:usr/share/$(LOCAL_MODULE)/lang_matlab.xml \
-                    ../share/lang_php.xml:usr/share/$(LOCAL_MODULE)/lang_php.xml \
-                    ../share/lang_xml.xml:usr/share/$(LOCAL_MODULE)/lang_xml.xml
+LOCAL_COPY_FILES := \
+                    ../share/Font/freefont/FreeSerif.ttf:usr/share/$(LOCAL_MODULE)/Font/freefont/FreeSerif.ttf
 
+LOCAL_COPY_FOLDERS := \
+                      ../share/*.xml:usr/share/$(LOCAL_MODULE) \
+                      ../share/icon/*.svg:usr/share/$(LOCAL_MODULE)/icon \
+                      ../share/Font/freefont/FreeMon*.ttf:usr/share/$(LOCAL_MODULE)/Font/freefont
 
 include $(BUILD_EXECUTABLE)
 
