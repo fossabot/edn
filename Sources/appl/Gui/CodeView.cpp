@@ -104,7 +104,7 @@ CodeView::~CodeView(void)
  */
 void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
 {
-	Vector2D<float>  tmpCoord;
+	etk::Vector2D<float>  tmpCoord;
 	tmpCoord.x = 0;
 	tmpCoord.y = 0;
 	if (m_lineNumberList.Size()<=bufferID) {
@@ -170,10 +170,10 @@ void CodeView::OnRegenerateDisplay(void)
 		
 		
 		if(true == BufferManager::Get(m_bufferID)->NeedToUpdateDisplayPosition() ) {
-			Vector2D<float>  borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
+			etk::Vector2D<float>  borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
 			bool centerRequested = false;
 			// TODO : set it back ...
-			Vector2D<float>  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(999/*m_OObjectTextNormal.GetFontID()*/, centerRequested);
+			etk::Vector2D<float>  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(999/*m_OObjectTextNormal.GetFontID()*/, centerRequested);
 			SetScrollingPositionDynamic(borderWidth, currentPosition, centerRequested);
 		} // else : nothing to do ...
 		
@@ -243,13 +243,13 @@ void CodeView::OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID)
  * @return true the event is used
  * @return false the event is not used
  */
-bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::eventInputType_te typeEvent, Vector2D<float>  pos)
+bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::eventInputType_te typeEvent, etk::Vector2D<float>  pos)
 {
-	Vector2D<float>  relativePos = RelativePosition(pos);
+	etk::Vector2D<float>  relativePos = RelativePosition(pos);
 	// corection for the openGl abstraction
 	//relativePos.y = m_size.y - relativePos.y;
 	
-	Vector2D<float>  limitedPos = relativePos;
+	etk::Vector2D<float>  limitedPos = relativePos;
 	limitedPos.x = etk_avg(1, limitedPos.x, m_size.x-1);
 	limitedPos.y = etk_avg(1, limitedPos.y, m_size.y-1);
 	

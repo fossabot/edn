@@ -70,8 +70,8 @@ class BufferText : public Buffer {
 		#endif
 		void      AddChar(uniChar_t unicodeData);
 		void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);
-		void      MouseSelectFromCursorTo(Vector2D<float> pos);
-		void      MouseEvent(Vector2D<float> pos);
+		void      MouseSelectFromCursorTo(etk::Vector2D<float> pos);
+		void      MouseEvent(etk::Vector2D<float> pos);
 		void      MouseEventDouble(void);
 		void      MouseEventTriple(void);
 
@@ -100,7 +100,7 @@ class BufferText : public Buffer {
 		
 		// Direct buffer IO
 		EdnBuf                          m_EdnBuf;             //!< buffer associated on this displayer
-		Vector2D<float>                 m_displaySize;        //!< number of char displayable in the screan
+		etk::Vector2D<float>                 m_displaySize;        //!< number of char displayable in the screan
 		// Cursor :
 		int32_t                         m_cursorPos;          //!< position in the buffer of the cursor
 		int32_t                         m_cursorPreferredCol; //!< colomn of the last up and down ...
@@ -112,13 +112,13 @@ class BufferText : public Buffer {
 	private:
 		bool m_centerRequested;
 	public:
-		virtual Vector2D<float> GetPosition(int32_t fontId, bool& centerRequested);
+		virtual etk::Vector2D<float> GetPosition(int32_t fontId, bool& centerRequested);
 	private:
 		bool     TextDMoveUp(int32_t offset);
 		bool     TextDMoveDown(int32_t offset);
 		void     SetInsertPosition(int32_t newPosition, bool insertChar = false);
 		
-		int32_t  GetMousePosition(Vector2D<float> pos);
+		int32_t  GetMousePosition(etk::Vector2D<float> pos);
 		
 		void     DrawLineNumber(ewol::TEXT_DISPLAY_TYPE* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
 		void     DrawCursor(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip);

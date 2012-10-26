@@ -27,7 +27,7 @@
 #define __BUFFER_H__
 
 #include <etk/UString.h>
-#include <etk/File.h>
+#include <etk/os/File.h>
 #include <etk/unicode.h>
 #include <ewol/ewol.h>
 
@@ -101,8 +101,8 @@ class Buffer {
 		}
 		virtual void      AddChar(uniChar_t unicodeData) {};
 		virtual void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent) {};
-		virtual void      MouseSelectFromCursorTo(Vector2D<float> pos) {};
-		virtual void      MouseEvent(Vector2D<float> pos) {};
+		virtual void      MouseSelectFromCursorTo(etk::Vector2D<float> pos) {};
+		virtual void      MouseEvent(etk::Vector2D<float> pos) {};
 		virtual void      MouseEventDouble(void) {};
 		virtual void      MouseEventTriple(void) {};
 		virtual void      RemoveLine(void) {};
@@ -127,15 +127,15 @@ class Buffer {
 		// moving with cursor change position:
 	private:
 		bool       m_updatePositionRequested; //!< if a position xhange in the windows ...
-		Vector2D<float>  m_maximumSize;             //!< current maxSize of the buffer
+		etk::Vector2D<float>  m_maximumSize;             //!< current maxSize of the buffer
 	protected:
 		void RequestUpdateOfThePosition(void) { m_updatePositionRequested = true; };
-		void SetMaximumSize(Vector2D<float>  maxSize) { m_maximumSize = maxSize; };
+		void SetMaximumSize(etk::Vector2D<float>  maxSize) { m_maximumSize = maxSize; };
 	public:
 		bool                NeedToUpdateDisplayPosition(void);
-		virtual Vector2D<float>   GetBorderSize(void);               // this is to requested the minimum size for the buffer that is not consider as visible ...
-		virtual Vector2D<float>   GetPosition(int32_t fontId, bool& centerRequested);
-		Vector2D<float>           GetMaxSize(void) { return m_maximumSize; };
+		virtual etk::Vector2D<float>   GetBorderSize(void);               // this is to requested the minimum size for the buffer that is not consider as visible ...
+		virtual etk::Vector2D<float>   GetPosition(int32_t fontId, bool& centerRequested);
+		etk::Vector2D<float>           GetMaxSize(void) { return m_maximumSize; };
 	protected:
 		bool              m_fileModify;           //!< 
 		// naming

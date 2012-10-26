@@ -87,7 +87,7 @@ int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 		int32_t letterHeight = OOTextNormal.GetHeight();
 	#endif
 	
-	Vector2D<float>  textPos;
+	etk::Vector2D<float>  textPos;
 	textPos.x = 20;
 	textPos.y = sizeY - 20 - letterHeight;
 	etk::UString tmpDisplay ;

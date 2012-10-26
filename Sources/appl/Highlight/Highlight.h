@@ -42,7 +42,7 @@ extern "C" {
 	} colorInformation_ts;
 }
 
-#include <etk/File.h>
+#include <etk/os/File.h>
 #include <HighlightPattern.h>
 #include <Colorize.h>
 #include <EdnVectorBuf.h>

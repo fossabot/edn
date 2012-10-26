@@ -23,6 +23,7 @@
  *******************************************************************************
  */
 
+#include <etk/Types.h>
 #include <etk/UString.h>
 #include <ewol/ewol.h>
 #include <ewol/eObject/EObject.h>
@@ -30,7 +31,7 @@
 
 #include <appl/Debug.h>
 #include <appl/global.h>
-#include <etk/File.h>
+#include <etk/os/File.h>
 #include <etk/tool.h>
 #include <Gui/MainWindows.h>
 #include <BufferManager.h>
@@ -64,7 +65,7 @@ void APP_Init(void)
 			APPL_INFO("==> Init "PROJECT_NAME" (START) (Android) (Debug)");
 		#endif
 	#endif
-	ewol::ChangeSize(Vector2D<int32_t>(800, 600));
+	ewol::ChangeSize(etk::Vector2D<int32_t>(800, 600));
 	etk::InitDefaultFolder(PROJECT_NAME);
 
 	ewol::font::SetDefaultFont("Font/freefont/FreeSerif.ttf");

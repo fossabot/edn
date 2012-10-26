@@ -121,19 +121,19 @@ bool Buffer::NeedToUpdateDisplayPosition(void)
 	return tmpVal;
 }
 
-Vector2D<float>  Buffer::GetBorderSize(void)
+etk::Vector2D<float>  Buffer::GetBorderSize(void)
 {
-	Vector2D<float>  tmpVal;
+	etk::Vector2D<float>  tmpVal;
 	tmpVal.x = 30;
 	tmpVal.y = 30;
 	return tmpVal;
 }
 
 
-Vector2D<float>  Buffer::GetPosition(int32_t fontId,bool& centerRequested)
+etk::Vector2D<float>  Buffer::GetPosition(int32_t fontId,bool& centerRequested)
 {
 	centerRequested = false;
-	Vector2D<float>  tmpVal;
+	etk::Vector2D<float>  tmpVal;
 	tmpVal.x = 0;
 	tmpVal.y = 0;
 	return tmpVal;

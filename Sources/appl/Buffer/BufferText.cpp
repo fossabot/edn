@@ -214,7 +214,7 @@ void BufferText::DrawLineNumber(ewol::TEXT_DISPLAY_TYPE* OOText, ewol::OObject2D
 	OOColored->Rectangle( 0, positionY, sizeX+0.5*SEPARATION_SIZE_LINE_NUMBER, sizeY);
 	OOText->SetColor(ColorizeManager::Get(COLOR_CODE_LINE_NUMBER));
 	
-	Vector2D<float>  textPos;
+	etk::Vector2D<float>  textPos;
 	textPos.x = 1;
 	textPos.y = positionY;
 	etk::UString tmppp = tmpLineNumber;
@@ -309,7 +309,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	
 	// update the display position with the scroll ofset : 
 	int32_t displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
-	Vector2D<float>  maxSize;
+	etk::Vector2D<float>  maxSize;
 	maxSize.x = 0.0;
 	maxSize.y = m_EdnBuf.NumberOfLines() * letterHeight;
 	int32_t nbColoneForLineNumber = GetLineNumberNumberOfElement();
@@ -415,7 +415,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 		int32_t drawSize = 0;
 		
 		// update display position :
-		Vector2D<float>  textPos;
+		etk::Vector2D<float>  textPos;
 		textPos.x = pixelX-offsetX;
 		textPos.y = y;
 		// update X pos
@@ -540,7 +540,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 
 
 
-int32_t BufferText::GetMousePosition(Vector2D<float> pos)
+int32_t BufferText::GetMousePosition(etk::Vector2D<float> pos)
 {
 	bool inLineDone=false;
 	//APPL_DEBUG("try to find in : " << width << "," << height);
@@ -591,7 +591,7 @@ int32_t BufferText::GetMousePosition(Vector2D<float> pos)
  *
  */
 // TODO : Simplify selection ....
-void BufferText::MouseEvent(Vector2D<float> pos)
+void BufferText::MouseEvent(etk::Vector2D<float> pos)
 {
 	if (true == ewol::IsSetShift() ) {
 		MouseSelectFromCursorTo(pos);
@@ -621,7 +621,7 @@ void BufferText::MouseEvent(Vector2D<float> pos)
  * @todo : Set the move up and DOWN...
  *
  */
-void BufferText::MouseSelectFromCursorTo(Vector2D<float> pos)
+void BufferText::MouseSelectFromCursorTo(etk::Vector2D<float> pos)
 {
 	// Get the caracter mouse position
 	int32_t newPos = GetMousePosition(pos);
@@ -900,11 +900,11 @@ void BufferText::cursorMove(ewol::eventKbMoveType_te moveTypeEvent)
  * @return ---
  *
  */
-Vector2D<float>  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
+etk::Vector2D<float>  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 {
 	centerRequested = m_centerRequested;
 	m_centerRequested = false;
-	Vector2D<float>  outputPosition;
+	etk::Vector2D<float>  outputPosition;
 
 	// Display position (Y mode):
 	APPL_INFO("change the position : " << m_cursorPos);
@@ -932,7 +932,7 @@ Vector2D<float>  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 	/* if we request a center : 
 	} else {
 		// center the line at the middle of the screen :
-		Vector2D<float>  outputPosition;
+		etk::Vector2D<float>  outputPosition;
 		//APPL_DEBUG(" -------------------------------------------------");
 		outputPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
 		//APPL_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << outputPosition.y);
