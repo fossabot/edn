@@ -39,8 +39,3 @@ LOCAL_CFLAGS    :=  -DMODE_RELEASE \
 endif
 
 include $(BUILD_EXECUTABLE)
-
-NDK_MODULE_PATH := $(LOCAL_PATH)/../../
-
-
-$(call import-module,ewol/Sources)

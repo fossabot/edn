@@ -4,7 +4,7 @@
 #############################################################################"
 
 #need to define the project name in hard to prevent some error in the config system :
-CONFIG___EWOL_APPL_NAME__="edn"
+PROJECT_NAME=edn
 
 # Add package needed :
 # current user packages

@@ -42,7 +42,3 @@ endif
 
 include $(BUILD_SHARED_LIBRARY)
 
-NDK_MODULE_PATH := $(LOCAL_PATH)/../../
-
-
-$(call import-module,ewol/Sources)

@@ -46,3 +46,13 @@ FILE_LIST+=		appl/Highlight/HighlightPattern.cpp \
 # Main entry file : 
 FILE_LIST+=		appl/init.cpp
 
+
+
+LOCAL_COPY_FILES := \
+                    ../share/Font/freefont/FreeSerif.ttf:Font/freefont/FreeSerif.ttf
+
+LOCAL_COPY_FOLDERS := \
+                      ../share/*.xml: \
+                      ../share/icon/*.svg:icon \
+                      ../share/Font/freefont/FreeMon*.ttf:Font/freefont
+

@@ -37,18 +37,6 @@ LOCAL_CFLAGS    :=  -DMODE_RELEASE \
                     -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION_TAG_SHORT)-$(BUILD_DIRECTORY_MODE)\""
 endif
 
-LOCAL_COPY_FILES := \
-                    ../share/Font/freefont/FreeSerif.ttf:usr/share/$(LOCAL_MODULE)/Font/freefont/FreeSerif.ttf
-
-LOCAL_COPY_FOLDERS := \
-                      ../share/*.xml:usr/share/$(LOCAL_MODULE) \
-                      ../share/icon/*.svg:usr/share/$(LOCAL_MODULE)/icon \
-                      ../share/Font/freefont/FreeMon*.ttf:usr/share/$(LOCAL_MODULE)/Font/freefont
 
 include $(BUILD_EXECUTABLE)
 
-NDK_MODULE_PATH := $(LOCAL_PATH)/../../
-
-
-
-$(call import-module,ewol/Sources)
