@@ -51,7 +51,7 @@ Buffer::Buffer()
 	EWOL_DEBUG("Create buffer try  name : \"" << mString << "\"");
 	SetFileName(mString);
 	m_haveName = false;
-	EWOL_DEBUG("Create buffer with name : \"" << m_fileName.GetCompleateName() << "\"");
+	EWOL_DEBUG("Create buffer with name : " << m_fileName );
 }
 
 /**
@@ -62,12 +62,12 @@ Buffer::Buffer()
  * @return ---
  *
  */
-Buffer::Buffer(etk::File &newName)
+Buffer::Buffer(etk::FSNode &newName)
 {
 	m_fileModify = false;
 	EWOL_DEBUG("Create buffer try  name : \"" << newName << "\"");
 	SetFileName(newName);
-	EWOL_DEBUG("Create buffer with name : \"" << m_fileName.GetCompleateName() << "\"");
+	EWOL_DEBUG("Create buffer with name : " << m_fileName );
 }
 
 /**

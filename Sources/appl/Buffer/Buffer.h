@@ -27,7 +27,7 @@
 #define __BUFFER_H__
 
 #include <etk/UString.h>
-#include <etk/os/File.h>
+#include <etk/os/FSNode.h>
 #include <etk/unicode.h>
 #include <ewol/ewol.h>
 
@@ -50,15 +50,15 @@ typedef struct{
 class Buffer {
 	public:
 		                  Buffer(void);
-		                  Buffer(etk::File &newName);
+		                  Buffer(etk::FSNode &newName);
 		virtual          ~Buffer(void);
 		
-		etk::File         GetFileName(void)
+		etk::FSNode       GetFileName(void)
 		{
 			return m_fileName;
 		};
 		
-		void              SetFileName(etk::File &newName)
+		void              SetFileName(etk::FSNode &newName)
 		{
 			m_fileName = newName;
 			m_haveName = true;
@@ -67,7 +67,7 @@ class Buffer {
 		
 		void              SetFileName(etk::UString &newName)
 		{
-			m_fileName.SetCompleateName(newName, etk::FILE_TYPE_DIRECT);
+			m_fileName.SetName(newName);
 			m_haveName = true;
 			NameChange();
 		};
@@ -139,7 +139,7 @@ class Buffer {
 	protected:
 		bool              m_fileModify;           //!< 
 		// naming
-		etk::File         m_fileName;             //!< filename of the curent buffer
+		etk::FSNode       m_fileName;             //!< filename of the curent buffer
 		bool              m_haveName;             //!< to know if the file have a name or NOT
 };
 

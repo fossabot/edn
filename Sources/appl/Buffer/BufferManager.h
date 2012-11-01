@@ -39,8 +39,8 @@ namespace BufferManager
 	int32_t     GetSelected(void);
 	Buffer *    Get(int32_t BufferID);
 	bool        Exist(int32_t BufferID);
-	bool        Exist(etk::File &myFile);
-	int32_t     GetId(etk::File &myFile);
+	bool        Exist(etk::FSNode &myFile);
+	int32_t     GetId(etk::FSNode &myFile);
 	// return the number of buffer (open in the past) if 5 buffer open and 4 close ==> return 5
 	uint32_t    Size(void);
 	uint32_t    SizeOpen(void);

@@ -46,7 +46,7 @@ static void SortElementList(etk::Vector<appl::dataBufferStruct *> &list)
 			for(int32_t jjj=0; jjj<list.Size(); jjj++) {
 				//EWOL_DEBUG("compare : \""<<*tmpList[iii] << "\" and \"" << *m_listDirectory[jjj] << "\"");
 				if (list[jjj]!=NULL) {
-					if (tmpList[iii]->m_bufferName.GetShortFilename() > list[jjj]->m_bufferName.GetShortFilename()) {
+					if (tmpList[iii]->m_bufferName.GetNameFile() > list[jjj]->m_bufferName.GetNameFile()) {
 						findPos = jjj+1;
 					}
 				}
@@ -103,7 +103,7 @@ void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eve
 		for (int32_t iii=0; iii<nbBufferOpen; iii++) {
 			if (BufferManager::Exist(iii)) {
 				bool isModify  = BufferManager::Get(iii)->IsModify();
-				etk::File name = BufferManager::Get(iii)->GetFileName();
+				etk::FSNode name = BufferManager::Get(iii)->GetFileName();
 				appl::dataBufferStruct* tmpElement = new appl::dataBufferStruct(name, iii, isModify);
 				if (NULL != tmpElement) {
 					m_list.PushBack(tmpElement);
@@ -164,7 +164,7 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 	if(    raw>=0
 	    && raw<m_list.Size()
 	    && NULL != m_list[raw]) {
-		myTextToWrite = m_list[raw]->m_bufferName.GetShortFilename();
+		myTextToWrite = m_list[raw]->m_bufferName.GetNameFile();
 		
 		if (true == m_list[raw]->m_isModify) {
 			selectFG = COLOR_LIST_TEXT_MODIFY;

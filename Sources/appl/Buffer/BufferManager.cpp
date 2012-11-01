@@ -63,15 +63,15 @@ class classBufferManager: public ewol::EObject
 		// create a buffer with no element
 		int32_t     Create(void);
 		// open curent filename
-		int32_t     Open(etk::File &myFile);
+		int32_t     Open(etk::FSNode &myFile);
 		bool        Remove(int32_t BufferID);
 	public:
 		int32_t     GetSelected(void) { return m_idSelected;};
 		//void        SetSelected(int32_t id) {m_idSelected = id;};
 		Buffer *    Get(int32_t BufferID);
 		bool        Exist(int32_t BufferID);
-		bool        Exist(etk::File &myFile);
-		int32_t     GetId(etk::File &myFile);
+		bool        Exist(etk::FSNode &myFile);
+		int32_t     GetId(etk::FSNode &myFile);
 		// return the number of buffer (open in the past) if 5 buffer open and 4 close ==> return 5
 		uint32_t    Size(void);
 		uint32_t    SizeOpen(void);
@@ -165,7 +165,7 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 		}
 	} else if (eventId == ednMsgOpenFile) {
 		if (data != "" ) {
-			etk::File myFile(data, etk::FILE_TYPE_DIRECT);
+			etk::FSNode myFile(data);
 			APPL_DEBUG("request open file = \"" <<data << "\" ?= \"" << myFile << "\"");
 			int32_t newOne = Open(myFile);
 			if (-1 != newOne) {
@@ -343,7 +343,7 @@ int32_t	classBufferManager::Create(void)
  * @todo : check if this file is not curently open and return the old ID
  *
  */
-int32_t classBufferManager::Open(etk::File &myFile)
+int32_t classBufferManager::Open(etk::FSNode &myFile)
 {
 	if (false == Exist(myFile)) {
 		// allocate a new Buffer
@@ -396,7 +396,7 @@ bool classBufferManager::Exist(int32_t BufferID)
 }
 
 
-bool classBufferManager::Exist(etk::File &myFile )
+bool classBufferManager::Exist(etk::FSNode &myFile )
 {
 	if (-1 == GetId(myFile)) {
 		return false;
@@ -405,7 +405,7 @@ bool classBufferManager::Exist(etk::File &myFile )
 }
 
 
-int32_t classBufferManager::GetId(etk::File &myFile)
+int32_t classBufferManager::GetId(etk::FSNode &myFile)
 {
 	int32_t iii;
 	// check if the Buffer existed
@@ -561,7 +561,7 @@ bool BufferManager::Exist(int32_t BufferID)
 	return localManager->Exist(BufferID);
 }
 
-bool BufferManager::Exist(etk::File &myFile)
+bool BufferManager::Exist(etk::FSNode &myFile)
 {
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
@@ -570,7 +570,7 @@ bool BufferManager::Exist(etk::File &myFile)
 	return localManager->Exist(myFile);
 }
 
-int32_t BufferManager::GetId(etk::File &myFile)
+int32_t BufferManager::GetId(etk::FSNode &myFile)
 {
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");

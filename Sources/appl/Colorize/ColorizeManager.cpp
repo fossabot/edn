@@ -28,6 +28,7 @@
 #include <tinyXML/tinyxml.h>
 #include <ewol/eObject/EObject.h>
 #include <ewol/eObject/EObjectManager.h>
+#include <etk/os/FSNode.h>
 
 #define PFX	"ColorizeManager "
 
@@ -143,17 +144,17 @@ void classColorManager::LoadFile(const char * xmlFilename)
 	// allocate the document in the stack
 	TiXmlDocument XmlDocument;
 	// open the curent File
-	etk::File fileName(xmlFilename, etk::FILE_TYPE_DATA);
+	etk::FSNode fileName(etk::UString("DATA:") + xmlFilename);
 	if (false == fileName.Exist()) {
 		APPL_ERROR("File Does not exist : " << fileName);
 		return;
 	}
-	int32_t fileSize = fileName.Size();
+	int32_t fileSize = fileName.FileSize();
 	if (0==fileSize) {
 		APPL_ERROR("This file is empty : " << fileName);
 		return;
 	}
-	if (false == fileName.fOpenRead()) {
+	if (false == fileName.FileOpenRead()) {
 		APPL_ERROR("Can not open the file : " << fileName);
 		return;
 	}
@@ -165,9 +166,9 @@ void classColorManager::LoadFile(const char * xmlFilename)
 	}
 	memset(fileBuffer, 0, (fileSize+5)*sizeof(char));
 	// load data from the file :
-	fileName.fRead(fileBuffer, 1, fileSize);
+	fileName.FileRead(fileBuffer, 1, fileSize);
 	// close the file:
-	fileName.fClose();
+	fileName.FileClose();
 	// load the XML from the memory
 	XmlDocument.Parse((const char*)fileBuffer, 0, TIXML_ENCODING_UTF8);
 

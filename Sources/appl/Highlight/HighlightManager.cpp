@@ -89,7 +89,7 @@ class localClassHighlightManager: public ewol::EObject
 			*/
 		}
 		
-		Highlight* Get(etk::File &fileName)
+		Highlight* Get(etk::FSNode &fileName)
 		{
 			int32_t i;
 			for (i=0; i<listHighlight.Size(); i++) {
@@ -100,7 +100,7 @@ class localClassHighlightManager: public ewol::EObject
 			return NULL;
 		}
 		
-		bool Exist(etk::File &fileName)
+		bool Exist(etk::FSNode &fileName)
 		{
 			if (NULL != Get(fileName) ) {
 				return true;
@@ -201,7 +201,7 @@ void HighlightManager::loadLanguages(void)
 	localManager->loadLanguages();
 }
 
-Highlight* HighlightManager::Get(etk::File &fileName)
+Highlight* HighlightManager::Get(etk::FSNode &fileName)
 {
 	if (NULL == localManager) {
 		return NULL;
@@ -209,7 +209,7 @@ Highlight* HighlightManager::Get(etk::File &fileName)
 	return localManager->Get(fileName);
 }
 
-bool HighlightManager::Exist(etk::File &fileName)
+bool HighlightManager::Exist(etk::FSNode &fileName)
 {
 	if (NULL == localManager) {
 		return false;

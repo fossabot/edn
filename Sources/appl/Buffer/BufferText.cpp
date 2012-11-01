@@ -117,20 +117,22 @@ BufferText::BufferText()
  * @return ---
  *
  */
-BufferText::BufferText(etk::File &fileName) : Buffer(fileName)
+BufferText::BufferText(etk::FSNode &fileName) : Buffer(fileName)
 {
 	BasicInit();
 	NameChange();
 	APPL_INFO("Add Data from file(" << GetFileName() << ")");
-	FILE * myFile = NULL;
-	// try to open the file. if not existed, new file
-	
-	myFile = fopen(fileName.GetCompleateName().c_str(), "r");
-	if (NULL != myFile) {
-		m_EdnBuf.DumpFrom(myFile);
-		// close the input file
-		fclose(myFile);
-		SetModify(false);
+	etk::FSNode myFile(fileName);
+	if (true == myFile.Exist()) {
+		if (false == myFile.FileOpenRead()) {
+			APPL_WARNING("File can not be open in read mode : " << myFile);
+			SetModify(true);
+		} else {
+			// TODO : Old methode to file access :
+			//m_EdnBuf.DumpFrom(myFile);
+			myFile.FileClose();
+			SetModify(false);
+		}
 	} else {
 		// fichier inexistant... creation d'un nouveaux
 		APPL_WARNING("No File ==> created a new one(" << GetFileName() << ")");
@@ -151,14 +153,14 @@ BufferText::BufferText(etk::File &fileName) : Buffer(fileName)
 void BufferText::Save(void)
 {
 	APPL_INFO("Save File : \"" <<  GetFileName() << "\"" );
-	FILE * myFile = NULL;
-	myFile = fopen(GetFileName().GetCompleateName().c_str(), "w");
-	if (NULL != myFile) {
-		m_EdnBuf.DumpIn(myFile);
-		fclose(myFile);
-		SetModify(false);
-	} else {
+	etk::FSNode myFile(GetFileName());
+	if (false == myFile.FileOpenWrite()) {
 		APPL_ERROR("Can not open in writing the specify file");
+	} else {
+		// TODO : Old methode to file access :
+		//m_EdnBuf.DumpIn(myFile);
+		myFile.FileClose();
+		SetModify(false);
 	}
 }
 

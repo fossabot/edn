@@ -48,7 +48,7 @@ class CharElement
 class BufferText : public Buffer {
 	public:
 		          BufferText(void);
-		          BufferText(etk::File &fileName);
+		          BufferText(etk::FSNode &fileName);
 		virtual  ~BufferText(void);
 		void      Save(void);
 		

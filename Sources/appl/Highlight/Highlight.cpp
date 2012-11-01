@@ -49,17 +49,17 @@ Highlight::Highlight(etk::UString &xmlFilename)
 {
 	TiXmlDocument XmlDocument;
 
-	etk::File fileName(xmlFilename, etk::FILE_TYPE_DATA);
+	etk::FSNode fileName(etk::UString("DATA:") + xmlFilename);
 	if (false == fileName.Exist()) {
 		APPL_ERROR("File Does not exist : " << fileName);
 		return;
 	}
-	int32_t fileSize = fileName.Size();
+	int32_t fileSize = fileName.FileSize();
 	if (0==fileSize) {
 		APPL_ERROR("This file is empty : " << fileName);
 		return;
 	}
-	if (false == fileName.fOpenRead()) {
+	if (false == fileName.FileOpenRead()) {
 		APPL_ERROR("Can not open the file : " << fileName);
 		return;
 	}
@@ -71,9 +71,9 @@ Highlight::Highlight(etk::UString &xmlFilename)
 	}
 	memset(fileBuffer, 0, (fileSize+5)*sizeof(char));
 	// load data from the file :
-	fileName.fRead(fileBuffer, 1, fileSize);
+	fileName.FileRead(fileBuffer, 1, fileSize);
 	// close the file:
-	fileName.fClose();
+	fileName.FileClose();
 	// load the XML from the memory
 	bool loadError = XmlDocument.Parse((const char*)fileBuffer, 0, TIXML_ENCODING_UTF8);
 	if (false == loadError) {
@@ -191,15 +191,15 @@ bool Highlight::HasExtention(etk::UString &ext)
 	return false;
 }
 
-bool Highlight::FileNameCompatible(etk::File &fileName)
+bool Highlight::FileNameCompatible(etk::FSNode &fileName)
 {
 	int32_t i;
 	etk::UString extention;
-	if (true == fileName.HasExtention() ) {
+	if (true == fileName.FileHasExtention() ) {
 		extention = "*.";
-		extention += fileName.GetExtention();
+		extention += fileName.FileGetExtention();
 	} else {
-		extention = fileName.GetShortFilename();
+		extention = fileName.GetNameFile();
 	}
 	APPL_DEBUG(" try to find : in \"" << fileName << "\" extention:\"" << extention << "\" ");
 

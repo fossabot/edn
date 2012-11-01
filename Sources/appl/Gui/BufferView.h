@@ -36,10 +36,10 @@ namespace appl
 	class dataBufferStruct
 	{
 		public:
-			etk::File m_bufferName;
-			uint32_t  m_bufferID;
-			bool      m_isModify;
-			dataBufferStruct(etk::File& bufferName, int32_t bufferID, bool isModify) :
+			etk::FSNode m_bufferName;
+			uint32_t    m_bufferID;
+			bool        m_isModify;
+			dataBufferStruct(etk::FSNode& bufferName, int32_t bufferID, bool isModify) :
 				m_bufferName(bufferName),
 				m_bufferID(bufferID),
 				m_isModify(isModify)

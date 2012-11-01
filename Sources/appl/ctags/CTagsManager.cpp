@@ -31,7 +31,7 @@
 #include <ewol/widget/meta/FileChooser.h>
 #include <appl/Gui/TagFileSelection.h>
 
-
+// TODO : The line ID is no more stored in the file system (FSNode) ...
 
 #undef  __class__
 #define __class__    "CTagsManager"
@@ -73,7 +73,7 @@ class CTagsManager: public ewol::EObject
 		tagFile *                   m_ctagFile;
 		// history system
 		int32_t                     m_historyPos;
-		etk::Vector<etk::File*>     m_historyList;
+		etk::Vector<etk::FSNode*>   m_historyList;
 		void                        RegisterHistory(void);
 };
 
@@ -151,9 +151,9 @@ void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * e
 	} else if(    eventId == ednEventPopUpCtagsLoadFile
 	           || eventId == ednMsgCtagsLoadFile) {
 		// open the new one :
-		etk::File tmpFilename = data;
-		m_tagFilename = tmpFilename.GetShortFilename();
-		m_tagFolderBase = tmpFilename.GetFolder();
+		etk::FSNode tmpFilename = data;
+		m_tagFilename = tmpFilename.GetNameFile();
+		m_tagFolderBase = tmpFilename.GetNameFolder();
 		APPL_DEBUG("Receive load Ctags file : " << m_tagFolderBase << "/" << m_tagFilename << " ");
 		LoadTagFile();
 	} else if (eventId == ednMsgGuiCtags) {
@@ -176,8 +176,8 @@ void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * e
 		} else if (data == "Back") {
 			if (m_historyList.Size() > 0) {
 				int32_t id = m_historyList.Size()-1;
-				SendMultiCast(ednMsgOpenFile, m_historyList[id]->GetCompleateName() );
-				SendMultiCast(ednMsgGuiGotoLine, m_historyList[id]->GetLineNumber());
+				SendMultiCast(ednMsgOpenFile, m_historyList[id]->GetName() );
+				SendMultiCast(ednMsgGuiGotoLine, 0);// TODO : m_historyList[id]->GetLineNumber());
 				// Remove element ....
 				delete(m_historyList[id]);
 				m_historyList[id]=NULL;
@@ -229,9 +229,9 @@ void CTagsManager::RegisterHistory(void)
 	int32_t currentSelected = BufferManager::GetSelected();
 	Buffer* tmpBuf = BufferManager::Get(currentSelected);
 	if (NULL != tmpBuf) {
-		etk::File * bufferFilename = new etk::File();
+		etk::FSNode * bufferFilename = new etk::FSNode();
 		*bufferFilename = tmpBuf->GetFileName();
-		bufferFilename->SetLineNumber(tmpBuf->GetCurrentLine());
+		// TODO : bufferFilename->SetLineNumber(tmpBuf->GetCurrentLine());
 		m_historyList.PushBack(bufferFilename);
 	}
 }
@@ -254,7 +254,7 @@ void CTagsManager::JumpTo(void)
 			
 			// For all tags : Save in an internal Structure :
 			etk::UString tmpFile(m_tagFolderBase + "/" + entry.file);
-			etk::File myfile(tmpFile);
+			etk::FSNode myfile(tmpFile);
 			int32_t lineID = entry.address.lineNumber;
 			PrintTag(&entry, true);
 			
@@ -264,13 +264,13 @@ void CTagsManager::JumpTo(void)
 				if (NULL == tmpWidget) {
 					APPL_ERROR("Can not allocate widget ==> display might be in error");
 				} else {
-					tmpWidget->AddCtagsNewItem(myfile.GetCompleateName(), lineID);
+					tmpWidget->AddCtagsNewItem(myfile.GetName(), lineID);
 					do {
 						tmpFile = m_tagFolderBase + "/" + entry.file;
 						myfile = tmpFile;
 						lineID = entry.address.lineNumber;
 						PrintTag(&entry, true);
-						tmpWidget->AddCtagsNewItem(myfile.GetCompleateName(), lineID);
+						tmpWidget->AddCtagsNewItem(myfile.GetName(), lineID);
 					} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
 					PopUpWidgetPush(tmpWidget);
 					tmpWidget->RegisterOnEvent(this, applEventctagsSelection);
@@ -278,7 +278,7 @@ void CTagsManager::JumpTo(void)
 			} else {
 				RegisterHistory();
 				APPL_INFO(" OPEN the TAG file Destination : " << tmpFile );
-				SendMultiCast(ednMsgOpenFile, myfile.GetCompleateName());
+				SendMultiCast(ednMsgOpenFile, myfile.GetName());
 				SendMultiCast(ednMsgGuiGotoLine, lineID - 1);
 			}
 		} else {

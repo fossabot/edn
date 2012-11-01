@@ -302,8 +302,8 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		if (BufferManager::GetSelected()!=-1) {
 			Buffer * myBuffer = BufferManager::Get(BufferManager::GetSelected());
 			if (NULL!=myBuffer) {
-				etk::File tmpFile = myBuffer->GetFileName();
-				tmpWidget->SetFolder(tmpFile.GetFolder());
+				etk::FSNode tmpFile = myBuffer->GetFileName();
+				tmpWidget->SetFolder(tmpFile.GetNameFolder());
 			}
 		}
 		PopUpWidgetPush(tmpWidget);
@@ -335,9 +335,9 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 					etk::UString folder = "/home/";
 					etk::UString fileName = "";
 					if (true == myBuffer->HaveName()) {
-						etk::File tmpName = myBuffer->GetFileName();
-						folder = tmpName.GetFolder();
-						fileName = tmpName.GetShortFilename();
+						etk::FSNode tmpName = myBuffer->GetFileName();
+						folder = tmpName.GetNameFolder();
+						fileName = tmpName.GetNameFile();
 					}
 					tmpWidget->SetFolder(folder);
 					tmpWidget->SetFileName(fileName);
@@ -358,9 +358,9 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		// the buffer change we need to update the widget string
 		Buffer* tmpBuffer = BufferManager::Get(BufferManager::GetSelected());
 		if (NULL != tmpBuffer) {
-			etk::File compleateName = tmpBuffer->GetFileName();
+			etk::FSNode compleateName = tmpBuffer->GetFileName();
 			bool isModify = tmpBuffer->IsModify();
-			etk::UString directName = compleateName.GetCompleateName();
+			etk::UString directName = compleateName.GetName();
 			if (true == isModify) {
 				directName += " *";
 			}

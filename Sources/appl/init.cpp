@@ -31,7 +31,7 @@
 
 #include <appl/Debug.h>
 #include <appl/global.h>
-#include <etk/os/File.h>
+#include <etk/os/FSNode.h>
 #include <etk/tool.h>
 #include <Gui/MainWindows.h>
 #include <BufferManager.h>
@@ -154,9 +154,9 @@ void APP_Init(void)
 }
 
 
-etk::File APP_Icon(void)
+etk::FSNode APP_Icon(void)
 {
-	etk::File bitmapFile("iconEdn.bmp", etk::FILE_TYPE_DATA);
+	etk::FSNode bitmapFile("DATA:iconEdn.bmp");
 	return bitmapFile;
 }
 

@@ -36,8 +36,8 @@ namespace HighlightManager{
 	void       Init(void);
 	void       UnInit(void);
 	void       loadLanguages(void);
-	Highlight* Get(etk::File &fileName);
-	bool       Exist(etk::File &fileName);
+	Highlight* Get(etk::FSNode &fileName);
+	bool       Exist(etk::FSNode &fileName);
 };
 
 

@@ -42,7 +42,7 @@ extern "C" {
 	} colorInformation_ts;
 }
 
-#include <etk/os/File.h>
+#include <etk/os/FSNode.h>
 #include <HighlightPattern.h>
 #include <Colorize.h>
 #include <EdnVectorBuf.h>
@@ -54,7 +54,7 @@ class Highlight {
 		Highlight(etk::UString &xmlFilename);
 		~Highlight(void);
 		bool HasExtention(etk::UString &ext);
-		bool FileNameCompatible(etk::File &fileName);
+		bool FileNameCompatible(etk::FSNode &fileName);
 		void Display(void);
 		void ReloadColor(void);
 		void Parse(int32_t start,
