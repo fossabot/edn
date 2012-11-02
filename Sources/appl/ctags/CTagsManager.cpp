@@ -81,12 +81,11 @@ static CTagsManager* s_elementPointer = NULL;
 void cTagsManager::Init(void)
 {
 	if (NULL != s_elementPointer) {
-		delete(s_elementPointer);
 		s_elementPointer = NULL;
-		EWOL_WARNING("Ctags manager already instanciate ... ==> restart IT");
+		EWOL_WARNING("Ctags manager already instanciate ... ==> restart IT (can have memory leek ...)");
 	}
 	s_elementPointer = new CTagsManager();
-	if (NULL != s_elementPointer) {
+	if (NULL == s_elementPointer) {
 		EWOL_ERROR("Ctags manager error to instanciate ...");
 	}
 }

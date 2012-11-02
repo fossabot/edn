@@ -513,7 +513,7 @@ static classBufferManager * localManager = NULL;
 
 void BufferManager::Init(void)
 {
-	if (NULL == localManager) {
+	if (NULL != localManager) {
 		EWOL_ERROR("classBufferManager ==> already exist, just unlink the previous ...");
 		localManager = NULL;
 	}

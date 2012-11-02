@@ -364,7 +364,7 @@ static classColorManager * localManager = NULL;
 
 void ColorizeManager::Init(void)
 {
-	if (NULL == localManager) {
+	if (NULL != localManager) {
 		EWOL_ERROR("ColorizeManager ==> already exist, just unlink the previous ...");
 		localManager = NULL;
 	}

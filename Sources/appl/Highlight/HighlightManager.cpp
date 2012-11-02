@@ -172,7 +172,7 @@ static localClassHighlightManager * localManager = NULL;
 
 void HighlightManager::Init(void)
 {
-	if (NULL == localManager) {
+	if (NULL != localManager) {
 		APPL_ERROR("HighlightManager ==> already exist, just unlink the previous ...");
 		localManager = NULL;
 	}
