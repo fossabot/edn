@@ -52,7 +52,7 @@ class CTagsManager: public ewol::EObject
 		const char * const GetObjectType(void)
 		{
 			return "CTagsManager";
-		}
+		};
 		/**
 		 * @brief Receive a message from an other EObject with a specific eventId and data
 		 * @param[in] CallerObject Pointer on the EObject that information came from
@@ -66,7 +66,7 @@ class CTagsManager: public ewol::EObject
 		void                        LoadTagFile(void);
 		int32_t                     MultipleJump(void);
 		void                        JumpTo(void);
-		void                        PrintTag(const tagEntry *entry, bool small);
+		void                        PrintTag(const tagEntry *entry);
 		etk::UString                GetFolder(etk::UString &inputString);
 		etk::UString                m_tagFolderBase;
 		etk::UString                m_tagFilename;
@@ -255,7 +255,7 @@ void CTagsManager::JumpTo(void)
 			etk::UString tmpFile(m_tagFolderBase + "/" + entry.file);
 			etk::FSNode myfile(tmpFile);
 			int32_t lineID = entry.address.lineNumber;
-			PrintTag(&entry, true);
+			PrintTag(&entry);
 			
 			if (tagsFindNext (m_ctagFile, &entry) == TagSuccess) {
 				APPL_INFO("Multiple file destination ...");
@@ -268,7 +268,7 @@ void CTagsManager::JumpTo(void)
 						tmpFile = m_tagFolderBase + "/" + entry.file;
 						myfile = tmpFile;
 						lineID = entry.address.lineNumber;
-						PrintTag(&entry, true);
+						PrintTag(&entry);
 						tmpWidget->AddCtagsNewItem(myfile.GetName(), lineID);
 					} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
 					PopUpWidgetPush(tmpWidget);
@@ -287,12 +287,12 @@ void CTagsManager::JumpTo(void)
 }
 
 
-void CTagsManager::PrintTag (const tagEntry *entry, bool small)
+void CTagsManager::PrintTag(const tagEntry *entry)
 {
-	if (small==true) {
+	#if 1
 		APPL_INFO("find Tag file : name=\"" << entry->name << "\" in file=\"" << entry->file 
 			<< "\" at line="<< (int32_t)entry->address.lineNumber);
-	} else {
+	#else
 		int i;
 		APPL_INFO("find Tag file : name=\"" << entry->name << "\" in file=\"" << entry->file 
 			<< "\" pattern=\"" << entry->address.pattern 
@@ -308,6 +308,6 @@ void CTagsManager::PrintTag (const tagEntry *entry, bool small)
 		for (i = 0  ;  i < entry->fields.count  ;  ++i) {
 			APPL_INFO("               " << entry->fields.list[i].key << ":" << entry->fields.list[i].value );
 		}
-	}
+	#endif
 }
 

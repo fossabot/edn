@@ -472,3 +472,4 @@ void CodeView::SetFontSize(int32_t size)
 		m_OObjectTextBoldItalic.SetFont(fontName);
 	}
 #endif
+
