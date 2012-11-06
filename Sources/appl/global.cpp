@@ -27,6 +27,8 @@
 #include <ColorizeManager.h>
 #include <appl/globalMsg.h>
 #include <ewol/eObject/EObject.h>
+#include <ewol/ResourceManager.h>
+#include <etk/os/FSNode.h>
 
 #undef __class__
 #define __class__	"globals"
@@ -126,6 +128,7 @@ static const char * const l_changeIndentation = "edn-event-change-indentation";
 static const char * const l_changeSpace       = "edn-event-change-spaces";
 static const char * const l_changeTabulation  = "edn-event-change-tabulation";
 static const char * const l_changeEndOfLine   = "edn-event-change-endOfLine";
+static const char * const l_changeRounded     = "edn-event-change-rounded";
 
 globals::ParameterGlobalsGui::ParameterGlobalsGui(void) 
 {
@@ -176,6 +179,15 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void)
 		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeEndOfLine);
 		SubWidgetAdd(myCheckbox);
 	}
+	myCheckbox = new ewol::CheckBox("switch Rounded/default");
+	if (NULL == myCheckbox) {
+		APPL_ERROR("Can not allocate widget ==> display might be in error");
+	} else {
+		myCheckbox->SetExpendX(true);
+		myCheckbox->SetValue(IsSetDisplayEndOfLine());
+		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeRounded);
+		SubWidgetAdd(myCheckbox);
+	}
 }
 
 globals::ParameterGlobalsGui::~ParameterGlobalsGui(void) 
@@ -219,6 +231,14 @@ void globals::ParameterGlobalsGui::OnReceiveMessage(ewol::EObject * CallerObject
 		} else {
 			SetDisplayTabChar(false);
 		}
+	} else if (eventId == l_changeRounded) {
+		if (data == "true") {
+			etk::theme::SetName("GUI", "rounded");;
+		} else {
+			etk::theme::SetName("GUI", "default");;
+		}
+		// Reload shaders and graphic system ...
+		ewol::resource::ReLoadResources();
 	}
 	
 }
