@@ -114,12 +114,12 @@ static int32_t getFileSize(FILE *myFile)
  * @return true if OK / false if an error occured
  *
  */
-bool EdnVectorBuf::DumpIn(FILE *myFile)
+bool EdnVectorBuf::DumpIn(etk::FSNode &file)
 {
 	bool ret = true;
 	// write Data
-	(void)fwrite(m_data,            sizeof(int8_t), m_gapStart, myFile);
-	(void)fwrite(&m_data[m_gapEnd], sizeof(int8_t), m_allocated - m_gapEnd, myFile);
+	(void)file.FileWrite(m_data,            sizeof(int8_t), m_gapStart);
+	(void)file.FileWrite(&m_data[m_gapEnd], sizeof(int8_t), m_allocated - m_gapEnd);
 	return ret;
 }
 
@@ -132,19 +132,19 @@ bool EdnVectorBuf::DumpIn(FILE *myFile)
  * @return true if OK / false if an error occured
  *
  */
-bool EdnVectorBuf::DumpFrom(FILE *myFile)
+bool EdnVectorBuf::DumpFrom(etk::FSNode &file)
 {
 	bool ret = true;
-	int32_t length = getFileSize(myFile);
+	uint32_t length = file.FileSize();
 	// error case ...
-	if (length < 0) {
-		length = 0;
+	if (length > 2000000000) {
+		return false;
 	}
 	// allocate the current buffer : 
 	ChangeAllocation(length + GAP_SIZE_MIN);
 	
 	// insert Data
-	int32_t nbReadData = fread(&m_data[GAP_SIZE_MIN], sizeof(int8_t), length, myFile);
+	int32_t nbReadData = file.FileRead(&m_data[GAP_SIZE_MIN], sizeof(int8_t), length);
 	APPL_INFO("load data : filesize=" << length << ", readData=" << nbReadData);
 	// check ERROR
 	if (nbReadData != length) {

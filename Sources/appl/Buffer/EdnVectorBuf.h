@@ -27,6 +27,7 @@
 #define __EDN_VECTOR_BUF_H__
 
 #include <etk/Vector.h>
+#include <etk/os/FSNode.h>
 
 #undef __class__
 #define __class__	"EdnVectorBuf"
@@ -265,8 +266,8 @@ class EdnVectorBuf
 										EdnVectorBuf(const EdnVectorBuf & Evb);
 										~EdnVectorBuf();
 		
-		bool	 DumpIn(				FILE *myFile);
-		bool	 DumpFrom(				FILE *myFile);
+		bool	 DumpIn(				etk::FSNode &file);
+		bool	 DumpFrom(				etk::FSNode &file);
 		
 		EdnVectorBuf &					operator=(	const EdnVectorBuf & Evb);
 		int8_t							operator[] (int32_t pos);

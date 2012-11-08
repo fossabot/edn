@@ -128,8 +128,7 @@ BufferText::BufferText(etk::FSNode &fileName) : Buffer(fileName)
 			APPL_WARNING("File can not be open in read mode : " << myFile);
 			SetModify(true);
 		} else {
-			// TODO : Old methode to file access :
-			//m_EdnBuf.DumpFrom(myFile);
+			m_EdnBuf.DumpFrom(myFile);
 			myFile.FileClose();
 			SetModify(false);
 		}
@@ -157,8 +156,7 @@ void BufferText::Save(void)
 	if (false == myFile.FileOpenWrite()) {
 		APPL_ERROR("Can not open in writing the specify file");
 	} else {
-		// TODO : Old methode to file access :
-		//m_EdnBuf.DumpIn(myFile);
+		m_EdnBuf.DumpIn(myFile);
 		myFile.FileClose();
 		SetModify(false);
 	}

@@ -78,8 +78,8 @@ class EdnBuf {
 		void    SetAll(                 etk::Vector<int8_t> &text);
 		void    GetRange(               int32_t start, int32_t end, etk::Vector<int8_t> &output);
 		void    GetRange(               int32_t start, int32_t end, etk::UString &output);
-		bool    DumpIn(                 FILE *myFile);
-		bool    DumpFrom(               FILE *myFile);
+		bool    DumpIn(                 etk::FSNode &file);
+		bool    DumpFrom(               etk::FSNode &file);
 		// replace with operator [] ...
 		int8_t  operator[] (int32_t);
 		int32_t Insert(                 int32_t pos, etk::Vector<int8_t> &insertText);

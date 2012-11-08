@@ -89,10 +89,10 @@ EdnBuf::~EdnBuf(void)
  * @return true if OK / false if an error occured
  *
  */
-bool EdnBuf::DumpIn(FILE *myFile)
+bool EdnBuf::DumpIn(etk::FSNode &file)
 {
 	// write Data
-	return m_data.DumpIn(myFile);
+	return m_data.DumpIn(file);
 }
 
 
@@ -104,9 +104,9 @@ bool EdnBuf::DumpIn(FILE *myFile)
  * @return true if OK / false if an error occured
  *
  */
-bool EdnBuf::DumpFrom(FILE *myFile)
+bool EdnBuf::DumpFrom(etk::FSNode &file)
 {
-	if (true == m_data.DumpFrom(myFile) ) {
+	if (true == m_data.DumpFrom(file) ) {
 		// set no selection
 		UpdateSelection(0, 0, m_data.Size() );
 		// generate HighLight
