@@ -85,8 +85,7 @@ void APP_Init(void)
 	
 	// set color and other trucs...
 	ColorizeManager::Init();
-	etk::UString corlorFile = "color_white.xml";
-	ColorizeManager::LoadFile( corlorFile.c_str() );
+	ColorizeManager::LoadFile( "white" );
 	ColorizeManager::DisplayListOfColor();
 	
 	HighlightManager::Init();

@@ -111,51 +111,51 @@ class localClassHighlightManager: public ewol::EObject
 		
 		void loadLanguages(void)
 		{
-			etk::UString xmlFilename = "lang_c.xml";
+			etk::UString xmlFilename = "languages/c/highlight.xml";
 			Highlight *myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_boo.xml";
+			xmlFilename = "languages/boo/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_Makefile.xml";
+			xmlFilename = "languages/makefile/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_asm.xml";
+			xmlFilename = "languages/asm/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_xml.xml";
+			xmlFilename = "languages/xml/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_php.xml";
+			xmlFilename = "languages/php/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_bash.xml";
+			xmlFilename = "languages/bash/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_matlab.xml";
+			xmlFilename = "languages/matlab/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_java.xml";
+			xmlFilename = "languages/java/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_lua.xml";
+			xmlFilename = "languages/lua/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_in.xml";
+			xmlFilename = "languages/in/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			
-			xmlFilename = "lang_glsl.xml";
+			xmlFilename = "languages/glsl/highlight.xml";
 			myHightline = new Highlight(xmlFilename);
 			listHighlight.PushBack(myHightline);
 			

@@ -144,7 +144,7 @@ void classColorManager::LoadFile(const char * xmlFilename)
 	// allocate the document in the stack
 	TiXmlDocument XmlDocument;
 	// open the curent File
-	etk::FSNode fileName(etk::UString("DATA:") + xmlFilename);
+	etk::FSNode fileName(etk::UString("DATA:color/") + xmlFilename + etk::UString(".xml"));
 	if (false == fileName.Exist()) {
 		APPL_ERROR("File Does not exist : " << fileName);
 		return;

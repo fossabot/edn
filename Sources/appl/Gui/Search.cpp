@@ -56,7 +56,7 @@ Search::Search(void) :
 	
 	ewol::ButtonImage * myButtonImage = NULL;
 	
-	myButtonImage = new ewol::ButtonImage("icon/Remove.svg");
+	myButtonImage = new ewol::ButtonImage("THEME:GUI:Remove.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -76,7 +76,7 @@ Search::Search(void) :
 		SubWidgetAdd(m_searchEntry);
 	}
 	
-	myButtonImage = new ewol::ButtonImage("icon/Search.svg");
+	myButtonImage = new ewol::ButtonImage("THEME:GUI:Search.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -96,7 +96,7 @@ Search::Search(void) :
 		SubWidgetAdd(m_replaceEntry);
 	}
 	
-	myButtonImage = new ewol::ButtonImage("icon/Replace.svg");
+	myButtonImage = new ewol::ButtonImage("THEME:GUI:Replace.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -105,11 +105,11 @@ Search::Search(void) :
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new ewol::ButtonImage("icon/CaseSensitive.svg");
+	myButtonImage = new ewol::ButtonImage("THEME:GUI:CaseSensitive.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		myButtonImage->SetImageSelected("icon/CaseSensitive.svg", 0xFFFFFF5F);
+		myButtonImage->SetImageSelected("THEME:GUI:CaseSensitive.svg", 0xFFFFFF5F);
 		myButtonImage->SetMinSize(32,32);
 		myButtonImage->SetToggleMode(true);
 		myButtonImage->SetValue(SearchData::GetCase());
@@ -117,11 +117,11 @@ Search::Search(void) :
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new ewol::ButtonImage("icon/WrapAround.svg");
+	myButtonImage = new ewol::ButtonImage("THEME:GUI:WrapAround.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		myButtonImage->SetImageSelected("icon/WrapAround.svg", 0xFFFFFF5F);
+		myButtonImage->SetImageSelected("THEME:GUI:WrapAround.svg", 0xFFFFFF5F);
 		myButtonImage->SetMinSize(32,32);
 		myButtonImage->SetToggleMode(true);
 		myButtonImage->SetValue(SearchData::GetWrap());
@@ -129,11 +129,11 @@ Search::Search(void) :
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new ewol::ButtonImage("icon/Up.svg");
+	myButtonImage = new ewol::ButtonImage("THEME:GUI:Up.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		myButtonImage->SetImageSelected("icon/Down.svg");
+		myButtonImage->SetImageSelected("THEME:GUI:Down.svg");
 		myButtonImage->SetMinSize(32,32);
 		myButtonImage->SetToggleMode(true);
 		myButtonImage->SetValue(m_forward);

@@ -52,7 +52,19 @@ LOCAL_COPY_FILES := \
                     ../share/Font/freefont/FreeSerif.ttf:Font/freefont/FreeSerif.ttf
 
 LOCAL_COPY_FOLDERS := \
-                      ../share/*.xml: \
-                      ../share/icon/*.svg:icon \
+                      ../share/color/*.xml:color/ \
+                      ../share/languages/asm/*.xml:languages/asm/ \
+                      ../share/languages/bash/*.xml:languages/bash/ \
+                      ../share/languages/boo/*.xml:languages/boo/ \
+                      ../share/languages/c/*.xml:languages/c/ \
+                      ../share/languages/glsl/*.xml:languages/glsl/ \
+                      ../share/languages/in/*.xml:languages/in/ \
+                      ../share/languages/java/*.xml:languages/java/ \
+                      ../share/languages/lua/*.xml:languages/lua/ \
+                      ../share/languages/makefile/*.xml:languages/makefile/ \
+                      ../share/languages/matlab/*.xml:languages/matlab/ \
+                      ../share/languages/php/*.xml:languages/php/ \
+                      ../share/languages/xml/*.xml:languages/xml/ \
+                      ../share/theme/default/*.svg:theme/default/ \
                       ../share/Font/freefont/FreeMon*.ttf:Font/freefont
 
