@@ -51,9 +51,7 @@ PROJECT_DESCRIPTION="Text editor for sources code with ctags management"
 
 # Add package needed :
 # current user packages
-USER_PACKAGES =$(shell pwd)/Sources/
-# Add ewol packages
-USER_PACKAGES+=$(shell realpath $(shell pwd)/../ewol/Sources/)
+USER_PACKAGES =$(shell pwd)/sources/
 
-# include basic makefile for ewol generic toolchain
-include $(shell pwd)/../ewol/Build/Makefile.mk
+# include the basic makefile of ewol :
+include $(shell pwd)/../ewol/Makefile.mk
