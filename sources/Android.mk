@@ -8,11 +8,7 @@ include $(LOCAL_PATH)/file.mk
 LOCAL_CONFIG_FILES := Config.in
 
 # name of the librairy
-ifeq ($(CONFIG___EWOL_APPL_NAME__),$(empty))
 LOCAL_MODULE := edn
-else
-LOCAL_MODULE := $(call convert-special-char,$(CONFIG___EWOL_APPL_NAME__))
-endif
 
 # get the tag of the current project : 
 LOCAL_VERSION=$(shell cat $(LOCAL_PATH)/../tag)
