@@ -54,20 +54,10 @@ class BufferText : public Buffer {
 		
 		void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		void      SetLineDisplay(uint32_t lineNumber);
-		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 		int32_t   Display(ewol::TEXT_DISPLAY_TYPE& OOText,
 		                  ewol::OObject2DColored& OOColored,
 		                  int32_t offsetX, int32_t offsetY,
 		                  int32_t sizeX, int32_t sizeY);
-		#else
-		int32_t   Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
-		                  ewol::TEXT_DISPLAY_TYPE& OOTextBold,
-		                  ewol::TEXT_DISPLAY_TYPE& OOTextItalic,
-		                  ewol::TEXT_DISPLAY_TYPE& OOTextBoldItalic,
-		                  ewol::OObject2DColored& OOColored,
-		                  int32_t offsetX, int32_t offsetY,
-		                  int32_t sizeX, int32_t sizeY);
-		#endif
 		void      AddChar(uniChar_t unicodeData);
 		void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);
 		void      MouseSelectFromCursorTo(etk::Vector2D<float> pos);

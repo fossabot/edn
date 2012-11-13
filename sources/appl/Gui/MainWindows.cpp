@@ -155,22 +155,11 @@ MainWindows::MainWindows(void)
 			mySizerHori->SubWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
-				#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-					myCodeView = new CodeView("Font/freefont/FreeMono.ttf", 24);
-				#else
-					myCodeView = new CodeView();
-				#endif
+				myCodeView = new CodeView("FreeMono", 24);
 				myCodeView->SetExpendX(true);
 				myCodeView->SetExpendY(true);
 				myCodeView->SetFillX(true);
 				myCodeView->SetFillY(true);
-				#ifndef APPL_BUFFER_FONT_DISTANCE_FIELD
-					myCodeView->SetFontSize(11);
-					myCodeView->SetFontNameNormal(    "Font/freefont/FreeMono.ttf");
-					myCodeView->SetFontNameBold(      "Font/freefont/FreeMonoBold.ttf");
-					myCodeView->SetFontNameItalic(    "Font/freefont/FreeMonoOblique.ttf");
-					myCodeView->SetFontNameBoldItalic("Font/freefont/FreeMonoBoldOblique.ttf");
-				#endif
 				mySizerVert2->SubWidgetAdd(myCodeView);
 				
 				// search area : 

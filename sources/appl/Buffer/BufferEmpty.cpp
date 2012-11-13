@@ -67,25 +67,13 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
-#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOText,
                              ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
-#else
-int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
-                             ewol::TEXT_DISPLAY_TYPE& OOTextBold,
-                             ewol::TEXT_DISPLAY_TYPE& OOTextItalic,
-                             ewol::TEXT_DISPLAY_TYPE& OOTextBoldItalic,
-                             ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
-#endif
 {
 	// Get color : 
 	Colorize	*myColor = NULL;
 	
-	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-		int32_t letterHeight = OOText.GetHeight();
-	#else
-		int32_t letterHeight = OOTextNormal.GetHeight();
-	#endif
+	int32_t letterHeight = OOText.GetHeight();
 	
 	etk::Vector2D<float>  textPos;
 	textPos.x = 20;
@@ -100,8 +88,8 @@ int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 		OOText.SetItalic(false);
 		OOText.Text(textPos, tmpDisplay);
 	#else
-		OOTextBold.SetColor(myColor->GetFG());
-		OOTextBold.Text(textPos, tmpDisplay);
+		OOText.SetColor(myColor->GetFG());
+		OOText.Text(textPos, tmpDisplay, ewol::font::Bold);
 	#endif
 	
 	myColor = ColorizeManager::Get("commentDoxygen");
@@ -113,8 +101,8 @@ int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 		OOText.SetColor(myColor->GetFG());
 		OOText.Text(textPos, tmpDisplay);
 	#else
-		OOTextNormal.SetColor(myColor->GetFG());
-		OOTextNormal.Text(textPos, tmpDisplay);
+		OOText.SetColor(myColor->GetFG());
+		OOText.Text(textPos, tmpDisplay, ewol::font::Regular);
 	#endif
 	
 	OOColored.SetColor(draw::color::white);

@@ -78,13 +78,11 @@ void CodeView::Init(void)
 	ShortCutAdd("ctrl+shift+a", ednMsgGuiSelect, "NONE");
 }
 
-#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-	CodeView::CodeView(etk::UString fontName, int32_t fontSize) :
-		m_OObjectText(fontName, fontSize)
-	{
-		Init();
-	}
-#endif
+CodeView::CodeView(etk::UString fontName, int32_t fontSize) :
+	m_OObjectText(fontName, fontSize)
+{
+	Init();
+}
 
 CodeView::CodeView(void)
 {
@@ -127,11 +125,7 @@ bool CodeView::CalculateMinSize(void)
 void CodeView::CalculateMaxSize(void)
 {
 	m_maxSize.x = 2048;
-	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-		int32_t letterHeight = m_OObjectText.GetHeight();
-	#else
-		int32_t letterHeight = m_OObjectTextNormal.GetHeight();
-	#endif
+	int32_t letterHeight = m_OObjectText.GetHeight();
 	m_maxSize.y = BufferManager::Get(m_bufferID)->GetNumberOfLine() * letterHeight;
 }
 
@@ -139,14 +133,7 @@ void CodeView::CalculateMaxSize(void)
 void CodeView::OnDraw(ewol::DrawProperty& displayProp)
 {
 	m_OObjectsColored.Draw();
-	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-		m_OObjectText.Draw();
-	#else
-		m_OObjectTextNormal.Draw();
-		m_OObjectTextBold.Draw();
-		m_OObjectTextItalic.Draw();
-		m_OObjectTextBoldItalic.Draw();
-	#endif
+	m_OObjectText.Draw();
 	WidgetScrooled::OnDraw(displayProp);
 }
 
@@ -158,14 +145,7 @@ void CodeView::OnRegenerateDisplay(void)
 		// For the scrooling windows
 		CalculateMaxSize();
 		
-		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-			m_OObjectText.Clear();
-		#else
-			m_OObjectTextNormal.Clear();
-			m_OObjectTextBold.Clear();
-			m_OObjectTextItalic.Clear();
-			m_OObjectTextBoldItalic.Clear();
-		#endif
+		m_OObjectText.Clear();
 		m_OObjectsColored.Clear();
 		
 		
@@ -178,18 +158,9 @@ void CodeView::OnRegenerateDisplay(void)
 		} // else : nothing to do ...
 		
 		// generate the objects :
-		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-			BufferManager::Get(m_bufferID)->Display(m_OObjectText,
-			                                        m_OObjectsColored,
-			                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
-		#else
-			BufferManager::Get(m_bufferID)->Display(m_OObjectTextNormal,
-			                                        m_OObjectTextBold,
-			                                        m_OObjectTextItalic,
-			                                        m_OObjectTextBoldItalic,
-			                                        m_OObjectsColored,
-			                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
-		#endif
+		BufferManager::Get(m_bufferID)->Display(m_OObjectText,
+		                                        m_OObjectsColored,
+		                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
 		// set the current size of the windows
 		SetMaxSize(BufferManager::Get(m_bufferID)->GetMaxSize());
 		
@@ -435,41 +406,12 @@ void CodeView::OnLostFocus(void)
 
 void CodeView::SetFontSize(int32_t size)
 {
-	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-		m_OObjectText.SetSize(size);
-	#else
-		m_OObjectTextNormal.SetSize(size);
-		m_OObjectTextBold.SetSize(size);
-		m_OObjectTextItalic.SetSize(size);
-		m_OObjectTextBoldItalic.SetSize(size);
-	#endif
+	m_OObjectText.SetSize(size);
 	SetScrollingSize(size*3.0*1.46); // 1.46 is a magic nmber ...
 }
 
-#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-	void CodeView::SetFontName(etk::UString fontName)
-	{
-		m_OObjectText.SetFont(fontName);
-	}
-#else
-	void CodeView::SetFontNameNormal(etk::UString fontName)
-	{
-		m_OObjectTextNormal.SetFont(fontName);
-	}
-	
-	void CodeView::SetFontNameBold(etk::UString fontName)
-	{
-		m_OObjectTextBold.SetFont(fontName);
-	}
-	
-	void CodeView::SetFontNameItalic(etk::UString fontName)
-	{
-		m_OObjectTextItalic.SetFont(fontName);
-	}
-	
-	void CodeView::SetFontNameBoldItalic(etk::UString fontName)
-	{
-		m_OObjectTextBoldItalic.SetFont(fontName);
-	}
-#endif
+void CodeView::SetFontName(etk::UString fontName)
+{
+	m_OObjectText.SetFont(fontName);
+}
 

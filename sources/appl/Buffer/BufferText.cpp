@@ -277,32 +277,18 @@ int32_t BufferText::GetNumberOfLine(void)
  * @return 
  *
  */
-#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOText,
                             ewol::OObject2DColored& OOColored,
                             int32_t offsetX, int32_t offsetY,
                             int32_t sizeX, int32_t sizeY)
-#else
-int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
-                            ewol::TEXT_DISPLAY_TYPE& OOTextBold,
-                            ewol::TEXT_DISPLAY_TYPE& OOTextItalic,
-                            ewol::TEXT_DISPLAY_TYPE& OOTextBoldItalic,
-                            ewol::OObject2DColored& OOColored,
-                            int32_t offsetX, int32_t offsetY,
-                            int32_t sizeX, int32_t sizeY)
-#endif
 {
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
 	int32_t selHave;
 	
-	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-		int32_t letterWidth = OOText.GetSize("A").x;
-		int32_t letterHeight = OOText.GetHeight();
-	#else
-		int32_t letterWidth = OOTextNormal.GetSize("A").x;
-		int32_t letterHeight = OOTextNormal.GetHeight();
-	#endif
+	int32_t letterWidth = OOText.GetSize("A").x;
+	int32_t letterHeight = OOText.GetHeight();
+	
 	int32_t displayStartLineId = offsetY / letterHeight - 1;
 	displayStartLineId = etk_max(0, displayStartLineId);
 	int32_t y = - offsetY + displayStartLineId*letterHeight;
@@ -330,9 +316,6 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	draw::Color &  myColorSpace   = ColorizeManager::Get(COLOR_CODE_SPACE);
 	draw::Color &  myColorTab     = ColorizeManager::Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
-	#ifndef APPL_BUFFER_FONT_DISTANCE_FIELD
-	ewol::TEXT_DISPLAY_TYPE* OOTextSelected = NULL;
-	#endif
 	int mylen = m_EdnBuf.Size();
 	int32_t x_base=nbColoneForLineNumber*letterWidth;
 	int32_t idX = 0;
@@ -362,13 +345,8 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	y -= letterHeight;
 	
 	OOColored.clippingDisable();
-	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-		OOText.clippingDisable();
-		DrawLineNumber(&OOText,       &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
-	#else
-		OOTextNormal.clippingDisable();
-		DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
-	#endif
+	OOText.clippingDisable();
+	DrawLineNumber(&OOText,       &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
 	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 	
 	clipping_ts drawClipping;
@@ -383,14 +361,7 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 	drawClippingTextArea.w = sizeX - drawClipping.x;
 	drawClippingTextArea.h = sizeY;
 	
-	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-		OOText.clippingSet(drawClippingTextArea);
-	#else
-		OOTextNormal.clippingSet(drawClippingTextArea);
-		OOTextBold.clippingSet(drawClippingTextArea);
-		OOTextItalic.clippingSet(drawClippingTextArea);
-		OOTextBoldItalic.clippingSet(drawClippingTextArea);
-	#endif
+	OOText.clippingSet(drawClippingTextArea);
 	OOColored.clippingSet(drawClippingTextArea);
 	
 	// Clear the line intexation :
@@ -463,25 +434,26 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 				myStringToDisplay = displayChar;
 				drawSize = OOText.Text(textPos, myStringToDisplay);
 			#else
+				ewol::font::mode_te tmpMode = ewol::font::Regular;
 				if (true == selectColor->GetItalic() ) {
 					if (true == selectColor->GetBold() ) {
-						OOTextSelected = &OOTextBoldItalic;
+						tmpMode = ewol::font::BoldItalic;
 					} else {
-						OOTextSelected = &OOTextItalic;
+						tmpMode = ewol::font::Italic;
 					}
 				} else {
 					if (true == selectColor->GetBold() ) {
-						OOTextSelected = &OOTextBold;
+						tmpMode = ewol::font::Bold;
 					} else {
-						OOTextSelected = &OOTextNormal;
+						tmpMode = ewol::font::Regular;
 					}
 				}
-				tmpElementProperty.m_ySize = OOTextSelected->GetHeight();
+				tmpElementProperty.m_ySize = OOText.GetHeight();
 				//tmpElementProperty.m_yOffset += tmpElementProperty.m_ySize;
-				OOTextSelected->SetColor(selectColor->GetFG());
+				OOText.SetColor(selectColor->GetFG());
 				// TODO : Remove this unreallistic leak of time
 				myStringToDisplay = displayChar;
-				drawSize = OOTextSelected->Text(textPos, myStringToDisplay);
+				drawSize = OOText.Text(textPos, myStringToDisplay, tmpMode);
 			#endif
 			//APPL_DEBUG("add element : " << tmpElementProperty.m_yOffset << "," << tmpElementProperty.m_xOffset);
 			m_elmentList.PushBack(tmpElementProperty);
@@ -516,9 +488,9 @@ int32_t BufferText::Display(ewol::TEXT_DISPLAY_TYPE& OOTextNormal,
 				DrawLineNumber(&OOText, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
 				OOText.clippingEnable();
 			#else
-				OOTextNormal.clippingDisable();
-				DrawLineNumber(&OOTextNormal, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
-				OOTextNormal.clippingEnable();
+				OOText.clippingDisable();
+				DrawLineNumber(&OOText, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+				OOText.clippingEnable();
 			#endif
 			OOColored.clippingEnable();
 			// add elements : 

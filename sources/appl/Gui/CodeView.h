@@ -39,9 +39,7 @@ class CodeView :public ewol::WidgetScrooled
 {
 	public:
 		void Init(void);
-		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-			CodeView(etk::UString fontName, int32_t fontSize);
-		#endif
+		CodeView(etk::UString fontName, int32_t fontSize);
 		CodeView(void);
 		virtual ~CodeView(void);
 		/**
@@ -61,14 +59,7 @@ class CodeView :public ewol::WidgetScrooled
 		etk::Vector<etk::Vector2D<float> >  m_lineNumberList;
 		void UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
-		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-			ewol::TEXT_DISPLAY_TYPE   m_OObjectText;
-		#else
-			ewol::TEXT_DISPLAY_TYPE   m_OObjectTextNormal;
-			ewol::TEXT_DISPLAY_TYPE   m_OObjectTextBold;
-			ewol::TEXT_DISPLAY_TYPE   m_OObjectTextItalic;
-			ewol::TEXT_DISPLAY_TYPE   m_OObjectTextBoldItalic;
-		#endif
+		ewol::TEXT_DISPLAY_TYPE   m_OObjectText;
 		ewol::OObject2DColored       m_OObjectsColored;
 		
 	public:
@@ -106,14 +97,7 @@ class CodeView :public ewol::WidgetScrooled
 		virtual void OnLostFocus(void);
 	public:
 		void SetFontSize(int32_t size);
-		#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-			void SetFontName(etk::UString fontName);
-		#else
-			void SetFontNameNormal(etk::UString fontName);
-			void SetFontNameBold(etk::UString fontName);
-			void SetFontNameItalic(etk::UString fontName);
-			void SetFontNameBoldItalic(etk::UString fontName);
-		#endif
+		void SetFontName(etk::UString fontName);
 	private:
 		void CalculateMaxSize(void);
 	protected:
