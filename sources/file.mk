@@ -47,10 +47,6 @@ FILE_LIST+=		appl/Highlight/HighlightPattern.cpp \
 FILE_LIST+=		appl/init.cpp
 
 
-
-LOCAL_COPY_FILES := \
-                    ../data/Font/freefont/FreeSerif.ttf:Font/freefont/FreeSerif.ttf
-
 LOCAL_COPY_FOLDERS := \
                       ../data/color/*.xml:color/ \
                       ../data/languages/asm/*.xml:languages/asm/ \
@@ -65,6 +61,10 @@ LOCAL_COPY_FOLDERS := \
                       ../data/languages/matlab/*.xml:languages/matlab/ \
                       ../data/languages/php/*.xml:languages/php/ \
                       ../data/languages/xml/*.xml:languages/xml/ \
-                      ../data/theme/default/*.svg:theme/default/ \
-                      ../data/Font/freefont/FreeMon*.ttf:Font/freefont
+                      ../data/theme/default/*.svg:theme/default/
 
+ifneq ($(CONFIG___EWOL_INTEGRATED_FONT__),$(empty))
+
+LOCAL_COPY_FILES := ../data/Font/freefont/FreeSerif.ttf:fonts/FreeSerif.ttf
+LOCAL_COPY_FOLDERS += ../data/Font/freefont/FreeMon*.ttf:fonts
+endif
