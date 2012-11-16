@@ -79,7 +79,8 @@ void CodeView::Init(void)
 }
 
 CodeView::CodeView(etk::UString fontName, int32_t fontSize) :
-	m_OObjectText(fontName, fontSize)
+	m_OObjectText(fontName, fontSize),
+	m_displayText("Times_New_Roman", 14)
 {
 	Init();
 }
@@ -133,7 +134,8 @@ void CodeView::CalculateMaxSize(void)
 void CodeView::OnDraw(ewol::DrawProperty& displayProp)
 {
 	m_OObjectsColored.Draw();
-	m_OObjectText.Draw();
+	//m_OObjectText.Draw();
+	m_displayText.Draw();
 	WidgetScrooled::OnDraw(displayProp);
 }
 
@@ -146,8 +148,35 @@ void CodeView::OnRegenerateDisplay(void)
 		CalculateMaxSize();
 		
 		m_OObjectText.Clear();
+		m_displayText.Clear();
 		m_OObjectsColored.Clear();
 		
+		#if 1
+			
+			m_OObjectsColored.SetColor(draw::color::white);
+			m_OObjectsColored.Rectangle( 0, 0, m_size.x, m_size.y);
+			m_OObjectsColored.SetColor(draw::color::aqua);
+			m_OObjectsColored.Rectangle( 20, 0, m_size.x-40, m_size.y-50);
+			
+			
+			etk::UString tmpString("PETIT test géant pour voir si ca fonctionne");
+			// clean the element
+			m_displayText.SetPos(etk::Vector3D<float>((float)20,(float)m_size.y-20,(float)0) );
+			m_displayText.Print(tmpString);
+			tmpString = "Un jour Cosette se regarda par hasard dans son miroir et se dit: Tiens! Il lui semblait presque qu'elle était jolie. Ceci la jeta dans un trouble singulier. Jusqu'à ce moment elle n'avait point songé à sa figure. Elle se voyait dans son miroir, mais elle ne s'y regardait pas. Et puis, on lui avait souvent dit qu'elle était laide ; Jean Valjean seul disait doucement : Mais non! mais non! Quoi qu'il en fût, Cosette s'était toujours crue laide, et avait grandi dans cette idée avec la résignation facile de l'enfance. Voici que tout d'un coup son miroir lui disait comme Jean Valjean : Mais non! Elle ne dormit pas de la nuit. Si j'étais jolie ? pensait-elle, comme cela serait drôle que je fusse jolie! Et elle se rappelait celles de ses compagnes dont la beauté faisait effet dans le couvent, et elle se disait : Comment ! je serais comme mademoiselle une telle!\n"
+			            "sdfsqdfqsdjfhqlskdjhf qlksjdhflqkjsdhlfkqjshdlkfjqhslkdjfhqlskdjhfqlksjdhflqkjsdhflkqjsdhlkfqjshdlkfjqshldkjqfhsldkfjqhslkdjfqhlskdjfhqlskjdhflqksjdhflkqjshdlfkqjsdf\n\n"
+			            "Le lendemain elle se regarda, mais non par hasard, et elle douta: Où avais-je l'esprit ? dit-elle, non, je suis laide. Elle avait tout simplement mal dormi, elle avait les yeux battus et elle était pâle. Elle ne s'était pas sentie très joyeuse la veille de croire à sa beauté, mais elle fut triste de n'y plus croire. Elle ne se regarda plus, et pendant plus de quinze jours elle tâcha de se coiffer tournant le dos au miroir.\n"
+			            "Le soir, après le dîner, elle faisait assez habituellement de la tapisserie dans le salon, ou quelque ouvrage de couvent, et Jean Valjean lisait à côté d'elle. Une fois elle leva les yeux de son ouvrage et elle fut toute surprise de la façon inquiète dont son père la regardait.\n"
+			            "Une autre fois, elle passait dans la rue, et il lui sembla que quelqu'un qu'elle ne vit pas disait derrière elle : Jolie femme ! mais mal mise. Bah ! pensa-t-elle, ce n'est pas moi. Je suis bien mise et laide. Elle avait alors son chapeau de peluche et sa robe de mérinos.\n"
+			            "Un jour enfin, elle était dans le jardin, et elle entendit la pauvre vieille Toussaint qui disait : Monsieur, remarquez-vous comme mademoiselle devient jolie ? Cosette n'entendit pas ce que son père répondit, les paroles de Toussaint furent pour elle une sorte de commotion. Elle s'échappa du jardin, monta à sa chambre, courut à la glace, il y avait trois mois qu'elle ne s'était regardée, et poussa un cri. Elle venait de s'éblouir elle-même.";
+			m_displayText.SetPos(etk::Vector3D<float>((float)40,(float)m_size.y-50,(float)0) );
+			m_displayText.SetTextAlignement(20, m_size.x-20, ewol::Text::alignJustify);
+			m_displayText.Print(tmpString);
+			
+			// force the redraw
+			PeriodicCallSet(true);
+			MarkToRedraw();
+		#else
 		
 		if(true == BufferManager::Get(m_bufferID)->NeedToUpdateDisplayPosition() ) {
 			etk::Vector2D<float>  borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
@@ -169,6 +198,7 @@ void CodeView::OnRegenerateDisplay(void)
 		
 		// call the herited class...
 		WidgetScrooled::OnRegenerateDisplay();
+		#endif
 	}
 }
 

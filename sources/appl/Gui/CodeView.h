@@ -34,6 +34,7 @@
 #include <etk/Types.h>
 #include <ewol/widget/WidgetScrolled.h>
 #include <ewol/ResourceManager.h>
+#include <ewol/compositing/Text.h>
 
 class CodeView :public ewol::WidgetScrooled
 {
@@ -60,6 +61,7 @@ class CodeView :public ewol::WidgetScrooled
 		void UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
 		ewol::TEXT_DISPLAY_TYPE   m_OObjectText;
+		ewol::Text                   m_displayText;
 		ewol::OObject2DColored       m_OObjectsColored;
 		
 	public:

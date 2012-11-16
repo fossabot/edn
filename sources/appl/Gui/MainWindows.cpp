@@ -155,7 +155,7 @@ MainWindows::MainWindows(void)
 			mySizerHori->SubWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
-				myCodeView = new CodeView("FreeMono", 24);
+				myCodeView = new CodeView("FreeMono", 11);
 				myCodeView->SetExpendX(true);
 				myCodeView->SetExpendY(true);
 				myCodeView->SetFillX(true);
