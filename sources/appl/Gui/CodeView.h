@@ -67,6 +67,7 @@ class CodeView :public ewol::WidgetScrooled
 		ewol::OObject2DColored       m_OObjectsColored;
 		// TODO : Remove : 
 		ewol::Text::aligneMode_te    m_alignement;
+		bool                         m_clipping;
 	public:
 		virtual void   OnRegenerateDisplay(void);
 		/**

@@ -45,7 +45,7 @@ void CodeView::Init(void)
 {
 	m_alignement = ewol::Text::alignJustify;
 	m_label = "CodeView is disable ...";
-	
+	m_clipping = false;
 	m_bufferID = -1;
 	m_buttunOneSelected = false;
 	
@@ -286,13 +286,13 @@ void CodeView::OnRegenerateDisplay(void)
 			m_OObjectsColored.SetColor(draw::color::aqua);
 			m_OObjectsColored.Rectangle( 20, 0, m_size.x-40, m_size.y-100);
 			m_displayText.SetColorBG(draw::color::none);
-			
-			m_OObjectsColored.SetColor(draw::color::green);
-			m_OObjectsColored.Rectangle( 200, 200, 200, 200);
-			etk::Vector3D<float> drawClippingPos(200.0, 200.0, -0.5);
-			etk::Vector3D<float> drawClippingSize(400.0, 400.0, 1.0);
-			m_displayText.SetClipping(drawClippingPos, drawClippingSize);
-			
+			if (true == m_clipping) {
+				m_OObjectsColored.SetColor(draw::color::green);
+				m_OObjectsColored.Rectangle( 200, 200, 200, 200);
+				etk::Vector3D<float> drawClippingPos(200.0, 200.0, -0.5);
+				etk::Vector3D<float> drawClippingSize(400.0, 400.0, 1.0);
+				m_displayText.SetClipping(drawClippingPos, drawClippingSize);
+			}
 			
 			tmpString = "Un jour Cosette se regarda par hasard dans son miroir et se dit: Tiens! Il lui semblait presque qu'elle était jolie. Ceci la jeta dans un trouble singulier. Jusqu'à ce moment elle n'avait point songé à sa figure. Elle se voyait dans son miroir, mais elle ne s'y regardait pas. Et puis, on lui avait souvent dit qu'elle était laide ; Jean Valjean seul disait doucement : Mais non! mais non! Quoi qu'il en fût, Cosette s'était toujours crue laide, et avait grandi dans cette idée avec la résignation facile de l'enfance. Voici que tout d'un coup son miroir lui disait comme Jean Valjean : Mais non! Elle ne dormit pas de la nuit. Si j'étais jolie ? pensait-elle, comme cela serait drôle que je fusse jolie! Et elle se rappelait celles de ses compagnes dont la beauté faisait effet dans le couvent, et elle se disait : Comment ! je serais comme mademoiselle une telle!\n"
 			            "sdfsqdfqsdjfhqlskdjhf qlksjdhflqkjsdhlfkqjshdlkfjqhslkdjfhqlskdjhfqlksjdhflqkjsdhflkqjsdhlkfqjshdlkfjqshldkjqfhsldkfjqhslkdjfqhlskdjfhqlskjdhflqksjdhflkqjshdlfkqjsdf\n\n"
@@ -304,7 +304,7 @@ void CodeView::OnRegenerateDisplay(void)
 			m_displayText.SetTextAlignement(20, m_size.x-20, m_alignement);
 			m_displayText.Print(tmpString);
 			
-			
+			/*
 			draw::Color tmpColor = 0x0000FF55;
 			m_displayDrawing.SetColor(tmpColor);
 			m_displayDrawing.Tranlate(etk::Vector3D<float>(100, 100, 0) );
@@ -315,7 +315,7 @@ void CodeView::OnRegenerateDisplay(void)
 			m_displayDrawing.SetPos(etk::Vector3D<float>(300, 0, 0) );
 			m_displayDrawing.SetThickness(20);
 			m_displayDrawing.LineTo(etk::Vector3D<float>(200, 200, 0) );
-			
+			*/
 			// force the redraw
 			PeriodicCallSet(true);
 			MarkToRedraw();
@@ -415,20 +415,22 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 					break;
 				case ewol::Text::alignDisable:
 					m_alignement = ewol::Text::alignJustify;
+					m_clipping = (m_clipping)?false:true;
 					break;
 			}
 			MarkToRedraw();
 		}
-	}
-	
-	if (m_bufferID < 0) {
-		return false;
 	}
 	if (true == WidgetScrooled::OnEventInput(type, IdInput, typeEvent, pos)) {
 		ewol::widgetManager::FocusKeep(this);
 		// nothing to do ... done on upper widget ...
 		return true;
 	}
+	
+	if (m_bufferID < 0) {
+		return false;
+	}
+	
 	if (1 == IdInput) {
 		#ifndef __MODE__Touch
 			if (ewol::EVENT_INPUT_TYPE_DOWN == typeEvent) {
