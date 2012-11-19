@@ -238,7 +238,7 @@ void Highlight::Parse(int32_t start,
                       int32_t stop,
                       etk::Vector<colorInformation_ts> &metaData,
                       int32_t addingPos,
-                      EdnVectorBuf &buffer)
+                      etk::Buffer &buffer)
 {
 	if (0 > addingPos) {
 		addingPos = 0;
@@ -301,7 +301,7 @@ void Highlight::Parse(int32_t start,
 void Highlight::Parse2(int32_t start,
                        int32_t stop,
                        etk::Vector<colorInformation_ts> &metaData,
-                       EdnVectorBuf &buffer)
+                       etk::Buffer &buffer)
 {
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << " ==> position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;

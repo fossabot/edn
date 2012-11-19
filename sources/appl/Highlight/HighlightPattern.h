@@ -35,7 +35,7 @@ class HighlightPattern;
 #include <Colorize.h>
 #include <etk/Vector.h>
 #include <tinyXML/tinyxml.h>
-#include <EdnVectorBuf.h>
+#include <etk/Buffer.h>
 
 typedef enum {
 	HLP_FIND_ERROR,
@@ -65,7 +65,7 @@ class HighlightPattern {
 		
 		bool            IsEnable(void);
 		void            Display(void);
-		resultFind_te   Find(int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer);
+		resultFind_te   Find(int32_t start, int32_t stop, colorInformation_ts &resultat, etk::Buffer &buffer);
 		Colorize *      GetColor(void) { return m_color; };
 		void            ParseRules(TiXmlNode *child, int32_t level);
 		
@@ -76,13 +76,13 @@ class HighlightPattern {
 		etk::UString                        m_paternName;               //!< Current style name (like "c++" or "c" or "script Bash")
 		etk::UString                        m_colorName;                //!< Current color name
 		Colorize *                          m_color;                    //!< Link to the color manager
-		etk::RegExp<EdnVectorBuf> *         m_regExpStart;              //!< Start of Regular expression
-		etk::RegExp<EdnVectorBuf> *         m_regExpStop;               //!< Stop of Regular Expression
+		etk::RegExp<etk::Buffer> *          m_regExpStart;              //!< Start of Regular expression
+		etk::RegExp<etk::Buffer> *          m_regExpStop;               //!< Stop of Regular Expression
 		bool                                m_haveStopPatern;           //!< Stop patern presence
 		bool                                m_multiline;                //!< The patern is multiline
 		uniChar_t                           m_escapeChar;               //!< Escape char to prevent exeit of patern ....
-		etk::Vector<HighlightPattern *> m_subPatern;                //!< Under patern of this one
-//		etk::Vector<HighlightPattern *> m_subColor;                 //!< Under Color in the start RegExp ...
+		etk::Vector<HighlightPattern *>     m_subPatern;                //!< Under patern of this one
+//		etk::Vector<HighlightPattern *>     m_subColor;                 //!< Under Color in the start RegExp ...
 };
 
 #endif

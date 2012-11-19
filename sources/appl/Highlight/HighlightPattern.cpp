@@ -38,8 +38,8 @@ HighlightPattern::HighlightPattern(void)
 	m_haveStopPatern = false;
 	m_multiline = false;
 	m_color = ColorizeManager::Get("normal");
-	m_regExpStart = new etk::RegExp<EdnVectorBuf>();
-	m_regExpStop = new etk::RegExp<EdnVectorBuf>();
+	m_regExpStart = new etk::RegExp<etk::Buffer>();
+	m_regExpStop = new etk::RegExp<etk::Buffer>();
 	m_escapeChar = 0;
 }
 
@@ -207,7 +207,7 @@ void HighlightPattern::ParseRules(TiXmlNode *child, int32_t level)
  * @return HLP_FIND_OK_NO_END Xe find a partial pattern (missing end)
  * @return HLP_FIND_ERROR Not find the pattern
  */
-resultFind_te HighlightPattern::Find(int32_t start, int32_t stop, colorInformation_ts &resultat, EdnVectorBuf &buffer)
+resultFind_te HighlightPattern::Find(int32_t start, int32_t stop, colorInformation_ts &resultat, etk::Buffer &buffer)
 {
 	//APPL_DEBUG(" try to find the element");
 	resultat.beginStart = -1;

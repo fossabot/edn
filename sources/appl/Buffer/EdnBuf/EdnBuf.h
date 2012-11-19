@@ -31,7 +31,7 @@
 
 class EdnBuf;
 
-#include <EdnVectorBuf.h>
+#include <etk/Buffer.h>
 #include <EdnBufHistory.h>
 #include <HighlightManager.h>
 #include <etk/unicode.h>
@@ -166,7 +166,7 @@ class EdnBuf {
 		colorInformation_ts *                   GetElementColorAtPosition(int32_t pos, int32_t &starPos);
 
 	private:
-		EdnVectorBuf                            m_data;                     //!< buffer of the data in the mode int8_t
+		etk::Buffer                             m_data;                     //!< buffer of the data in the mode int8_t
 		void                                    CountNumberOfLines(void);
 		int32_t                                 m_nbLine;                   //!< Number of line in the biffer
 

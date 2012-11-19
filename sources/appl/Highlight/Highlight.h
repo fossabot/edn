@@ -45,7 +45,7 @@ extern "C" {
 #include <etk/os/FSNode.h>
 #include <HighlightPattern.h>
 #include <Colorize.h>
-#include <EdnVectorBuf.h>
+#include <etk/Buffer.h>
 #include <tinyXML/tinyxml.h>
 
 class Highlight {
@@ -61,14 +61,14 @@ class Highlight {
 		           int32_t stop,
 		           etk::Vector<colorInformation_ts> &metaData,
 		           int32_t addingPos,
-		           EdnVectorBuf &buffer);
+		           etk::Buffer &buffer);
 		void Parse2(int32_t start,
 		            int32_t stop,
 		            etk::Vector<colorInformation_ts> &metaData,
-		            EdnVectorBuf &buffer);
+		            etk::Buffer &buffer);
 	private:
-		void                                ParseRules(TiXmlNode *child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level);
-		etk::UString                        m_styleName;               //!< curent style name (like "c++" or "c" or "script Bash")
+		void                            ParseRules(TiXmlNode *child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level);
+		etk::UString                    m_styleName;               //!< curent style name (like "c++" or "c" or "script Bash")
 		etk::Vector<etk::UString*>      m_listExtentions;          //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
 		etk::Vector<HighlightPattern*>  m_listHighlightPass1;      //!< List of ALL hightlight modules (pass 1 ==> when we load and wride data on the buffer)
 		etk::Vector<HighlightPattern*>  m_listHighlightPass2;      //!< List of ALL hightlight modules (pass 2 ==> When we display the buffer( only the display area (100 lines)) )

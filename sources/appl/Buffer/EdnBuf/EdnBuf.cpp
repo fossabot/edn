@@ -124,7 +124,7 @@ void EdnBuf::GetAll(etk::Vector<int8_t> &text)
 	// Clean output vector
 	text.Clear();
 	// Set data on the vector
-	m_data.Get(0, m_data.Size(), text);
+	text = m_data.Get(0, m_data.Size());
 }
 
 
@@ -153,7 +153,7 @@ void EdnBuf::GetRange(int32_t start, int32_t end, etk::Vector<int8_t> &output)
 	// Remove all data ...
 	output.Clear();
 	// import data : 
-	m_data.Get(start, end-start, output);
+	output = m_data.Get(start, end-start);
 	//APPL_DEBUG("request start=" << start << " end="<< end << " size="<< end-start << " result size=" << output.Size() );
 }
 
@@ -162,8 +162,7 @@ void EdnBuf::GetRange(int32_t start, int32_t end, etk::UString &output)
 	// Remove all data ...
 	output = "";
 	// import data : 
-	etk::Vector<int8_t> localOutput;
-	m_data.Get(start, end-start, localOutput);
+	etk::Vector<int8_t> localOutput = m_data.Get(start, end-start);
 	// transcript in UNICODE ...
 	if (true == m_isUtf8) {
 		localOutput.PushBack('\0');
@@ -763,16 +762,11 @@ int32_t EdnBuf::CharWidth(char c, int32_t indent)
  */
 int32_t EdnBuf::CountDispChars(int32_t lineStartPos, int32_t targetPos)
 {
-	EdnVectorBuf::Iterator myPosIt = m_data.Position(lineStartPos);
 	int32_t charCount = 0;
-	
 	char expandedChar[MAX_EXP_CHAR_LEN];
 	//APPL_DEBUG("lineStartPos="<< lineStartPos << " targetPos=" << targetPos);
-	while(		myPosIt
-			&&	myPosIt.Position() < targetPos )
-	{
-		charCount += ExpandCharacter(*myPosIt, charCount, expandedChar);
-		myPosIt++;
+	for(int32_t iii = lineStartPos; iii< targetPos && iii<m_data.Size() ; iii++ ) {
+		charCount += ExpandCharacter(m_data[iii], charCount, expandedChar);
 	}
 	//APPL_DEBUG(" result=" << charCount);
 	return charCount;
@@ -780,102 +774,74 @@ int32_t EdnBuf::CountDispChars(int32_t lineStartPos, int32_t targetPos)
 
 /**
  * @brief Return the position of the nth diplaye char
- * 
  * @param[in] lineStartPos Position of the start of the line
  * @param[in] nChars search in the next nChars elements
- * 
  * @return number of diaplay char
- * 
  */
 int32_t EdnBuf::CountForwardDispChars(int32_t lineStartPos, int32_t nChars)
 {
-	EdnVectorBuf::Iterator myPosIt = m_data.Position(lineStartPos);
 	int32_t charCount = 0;
-	char c;
-	
-	while(		charCount < nChars
-			&&	myPosIt)
-	{
-		c = *myPosIt;
+	int32_t iii = 0;
+	for(iii = lineStartPos; charCount<nChars && iii<m_data.Size() ; iii++ ) {
+		char c = m_data[iii];
 		if (c == '\n') {
-			return myPosIt.Position();
+			return iii;
 		}
 		charCount += CharWidth(c, charCount);
-		myPosIt++;
 	}
-	return myPosIt.Position();
+	return iii;
 }
 
 
 /**
  * @brief Count the number of newlines ('\n') between startPos and endPos
- * 
  * @param[in,out] startPos	Fist position in the buffer
  * @param[in,out] endPos	Last position in the buffer (not counted)
- * 
- * @return ---
- * 
  */
 int32_t EdnBuf::CountLines(int32_t startPos, int32_t endPos)
 {
-	EdnVectorBuf::Iterator myPosIt = m_data.Position(startPos);
 	int32_t lineCount = 0;
-	
-	while (myPosIt) {
-		if (myPosIt.Position() == endPos) {
+	for(int32_t iii = startPos; iii<m_data.Size() ; iii++ ) {
+		if (iii == endPos) {
 			return lineCount;
 		}
-		if ('\n' == *myPosIt) {
+		if ('\n' == m_data[iii]) {
 			lineCount++;
 		}
-		myPosIt++;
 	}
 	return lineCount;
 }
 
 /**
  * @brief count the number of '\n' in the vector of elements
- * 
  * @param[in] text Data to count the lines
- * 
  * @return number of line found
- * 
  */
 int32_t EdnBuf::CountLines(etk::Vector<int8_t> &data)
 {
-	etk::Vector<int8_t>::Iterator myPosIt = data.Begin();
 	int32_t lineCount = 0;
-	
-	while(myPosIt) {
-		if ('\n' == *myPosIt) {
+	for(int32_t iii=0 ; iii<m_data.Size() ; iii++ ) {
+		if ('\n' == data[iii]) {
 			lineCount++;
 		}
-		myPosIt++;
 	}
 	return lineCount;
 }
 
 int32_t EdnBuf::CountLines(void)
 {
-	EdnVectorBuf::Iterator myPosIt = m_data.Begin();
 	int32_t lineCount = 0;
-	
-	while(myPosIt) {
-		if ('\n' == *myPosIt) {
+	for(int32_t iii=0 ; iii<m_data.Size() ; iii++ ) {
+		if ('\n' == m_data[iii]) {
 			lineCount++;
 		}
-		myPosIt++;
 	}
 	return lineCount;
 }
 
 /**
  * @brief Calculate the number of line
- *
- * @param ---
- *
  * @return the number of line in the buffer [1..n]
- *
  */
 void EdnBuf::CountNumberOfLines(void)
 {
@@ -900,22 +866,20 @@ int32_t EdnBuf::CountForwardNLines(int32_t startPos, int32_t nLines)
 	} else if (startPos > m_data.Size() ) {
 		return m_data.Size();
 	}
-	EdnVectorBuf::Iterator myPosIt = m_data.Position(startPos);
 	int32_t lineCount = 0;
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
-	while(myPosIt)
-	{
-		if ('\n' == *myPosIt) {
+	int32_t iii = 0;
+	for(iii = startPos; iii<m_data.Size() ; iii++ ) {
+		if ('\n' == m_data[iii]) {
 			lineCount++;
 			if (lineCount == nLines) {
 				//APPL_INFO("   ==> (1) at position=" << myPosIt.Position()+1 );
-				return myPosIt.Position()+1;
+				return iii+1;
 			}
 		}
-		myPosIt++;
 	}
 	//APPL_INFO("   ==> (2) at position=" << myPosIt.Position() );
-	return myPosIt.Position();
+	return iii;
 }
 
 
@@ -937,18 +901,15 @@ int32_t EdnBuf::CountBackwardNLines(int32_t startPos, int32_t nLines)
 	}
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
 	
-	EdnVectorBuf::Iterator myPosIt = m_data.Position(startPos-1);
 	int32_t lineCount = -1;
-	
-	while(myPosIt) {
-		if ('\n' == *myPosIt) {
+	for(int32_t iii = startPos-1; iii>=0 ; iii-- ) {
+		if ('\n' == m_data[iii]) {
 			lineCount++;
 			if (lineCount >= nLines) {
 				//APPL_INFO("   ==> (1) at position=" << myPosIt.Position()+1 );
-				return myPosIt.Position()+1;
+				return iii+1;
 			}
 		}
-		myPosIt--;
 	}
 	//APPL_INFO("   ==> (2) at position=0");
 	return 0;
@@ -1276,15 +1237,12 @@ void EdnBuf::eventModification(int32_t pos, int32_t nInserted, etk::Vector<int8_
  */
 bool EdnBuf::SearchForward(int32_t startPos, char searchChar, int32_t *foundPos)
 {
-	// Create iterator
-	EdnVectorBuf::Iterator myPosIt = m_data.Position(startPos);
 	// move in the string
-	while (myPosIt) {
-		if (*myPosIt == searchChar) {
-			*foundPos = myPosIt.Position();
+	for(int32_t iii=startPos ; iii<m_data.Size() ; iii++ ) {
+		if (m_data[iii] == searchChar) {
+			*foundPos = iii;
 			return true;
 		}
-		myPosIt++;
 	}
 	*foundPos = m_data.Size();
 	return false;
@@ -1303,15 +1261,12 @@ bool EdnBuf::SearchForward(int32_t startPos, char searchChar, int32_t *foundPos)
  */
 bool EdnBuf::SearchBackward(int32_t startPos, char searchChar, int32_t *foundPos)
 {
-	// Create iterator
-	EdnVectorBuf::Iterator myPosIt = m_data.Position(startPos-1);
 	// move in the string
-	while (myPosIt) {
-		if (*myPosIt == searchChar) {
-			*foundPos = myPosIt.Position();
+	for(int32_t iii=startPos-1 ; iii>=0 ; iii-- ) {
+		if (m_data[iii] == searchChar) {
+			*foundPos = iii;
 			return true;
 		}
-		myPosIt--;
 	}
 	*foundPos = 0;
 	return false;

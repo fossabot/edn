@@ -23,8 +23,7 @@ FILE_LIST+=		appl/Gui/BufferView.cpp \
 				appl/Gui/TagFileList.cpp
 
 # All needed for the buffer management :
-FILE_LIST+=		appl/Buffer/EdnVectorBuf.cpp \
-				appl/Buffer/EdnBuf/EdnBuf.cpp \
+FILE_LIST+=		appl/Buffer/EdnBuf/EdnBuf.cpp \
 				appl/Buffer/EdnBuf/EdnBuf_HighLight.cpp \
 				appl/Buffer/EdnBuf/EdnBuf_History.cpp \
 				appl/Buffer/EdnBuf/EdnBuf_Selection.cpp \
