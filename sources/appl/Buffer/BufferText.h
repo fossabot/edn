@@ -39,10 +39,8 @@ typedef enum {
 class CharElement
 {
 	public:
-		int16_t m_yOffset;
-		int16_t m_xOffset;
-		int16_t m_ySize;
-		int32_t m_bufferPos;
+		float    m_LineOffset;
+		int32_t  m_bufferPos;
 };
 
 class BufferText : public Buffer {
@@ -54,8 +52,8 @@ class BufferText : public Buffer {
 		
 		void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		void      SetLineDisplay(uint32_t lineNumber);
-		int32_t   Display(ewol::TEXT_DISPLAY_TYPE& OOText,
-		                  ewol::OObject2DColored& OOColored,
+		int32_t   Display(ewol::Text& OOText,
+		                  ewol::Drawing& OOColored,
 		                  int32_t offsetX, int32_t offsetY,
 		                  int32_t sizeX, int32_t sizeY);
 		void      AddChar(uniChar_t unicodeData);
@@ -90,7 +88,7 @@ class BufferText : public Buffer {
 		
 		// Direct buffer IO
 		EdnBuf                          m_EdnBuf;             //!< buffer associated on this displayer
-		etk::Vector2D<float>                 m_displaySize;        //!< number of char displayable in the screan
+		etk::Vector2D<float>            m_displaySize;        //!< number of char displayable in the screan
 		// Cursor :
 		int32_t                         m_cursorPos;          //!< position in the buffer of the cursor
 		int32_t                         m_cursorPreferredCol; //!< colomn of the last up and down ...
@@ -110,8 +108,8 @@ class BufferText : public Buffer {
 		
 		int32_t  GetMousePosition(etk::Vector2D<float> pos);
 		
-		void     DrawLineNumber(ewol::TEXT_DISPLAY_TYPE* OOText, ewol::OObject2DColored* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
-		void     DrawCursor(ewol::OObject2DColored* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth, clipping_ts &clip);
+		void     DrawLineNumber(ewol::Text* OOText, ewol::Drawing* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
+		void     DrawCursor(ewol::Drawing* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth);//, clipping_ts &clip);
 
 };
 

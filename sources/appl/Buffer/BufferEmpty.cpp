@@ -67,13 +67,14 @@ BufferEmpty::~BufferEmpty(void)
  * @return ---
  *
  */
-int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOText,
-                             ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
+int32_t BufferEmpty::Display(ewol::Text& OOText,
+                             ewol::Drawing& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
 {
 	// Get color : 
 	Colorize	*myColor = NULL;
 	
-	int32_t letterHeight = OOText.GetHeight();
+	etk::Vector3D<float> tmpLetterSize = OOText.CalculateSize((uniChar_t)'A');
+	int32_t letterHeight = tmpLetterSize.y;
 	
 	etk::Vector2D<float>  textPos;
 	textPos.x = 20;
@@ -82,31 +83,24 @@ int32_t BufferEmpty::Display(ewol::TEXT_DISPLAY_TYPE& OOText,
 	
 	myColor = ColorizeManager::Get("normal");
 	tmpDisplay = "edn - Editeur De N'ours";
-	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-		OOText.SetColor(myColor->GetFG());
-		OOText.SetBold(true);
-		OOText.SetItalic(false);
-		OOText.Text(textPos, tmpDisplay);
-	#else
-		OOText.SetColor(myColor->GetFG());
-		OOText.Text(textPos, tmpDisplay, ewol::font::Bold);
-	#endif
+	
+	OOText.SetColor(myColor->GetFG());
+	OOText.SetPos(etk::Vector3D<float>(textPos.x, textPos.y, 0.0f) );
+	OOText.SetFontMode(ewol::font::Bold);
+	OOText.Print(tmpDisplay);
 	
 	myColor = ColorizeManager::Get("commentDoxygen");
 	textPos.y = (int32_t)(textPos.y - letterHeight*1.30);
 	tmpDisplay = "No Buffer Availlable to display";
-	#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-		OOText.SetBold(false);
-		OOText.SetItalic(false);
-		OOText.SetColor(myColor->GetFG());
-		OOText.Text(textPos, tmpDisplay);
-	#else
-		OOText.SetColor(myColor->GetFG());
-		OOText.Text(textPos, tmpDisplay, ewol::font::Regular);
-	#endif
+	
+	OOText.SetColor(myColor->GetFG());
+	OOText.SetPos(etk::Vector3D<float>(textPos.x, textPos.y, 0.0f) );
+	OOText.SetFontMode(ewol::font::Regular);
+	OOText.Print(tmpDisplay);
 	
 	OOColored.SetColor(draw::color::white);
-	OOColored.Rectangle( 0, 0, sizeX, sizeY);
+	OOText.SetPos(etk::Vector3D<float>(0.0f, 0.0f, 0.0f) );
+	OOColored.RectangleWidth(etk::Vector3D<float>((float)sizeX, (float)sizeY, 0.0f)  );
 	
 	return ERR_NONE;
 }

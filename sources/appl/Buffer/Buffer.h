@@ -30,6 +30,8 @@
 #include <etk/os/FSNode.h>
 #include <etk/unicode.h>
 #include <ewol/ewol.h>
+#include <ewol/compositing/Drawing.h>
+#include <ewol/compositing/Text.h>
 
 
 typedef struct{
@@ -40,12 +42,6 @@ typedef struct{
 	uint32_t diplayableColomn;			//!< NB colomn that can be displayed
 	uint32_t diplayableLine;			//!< NB Line that can be displayed
 }infoStatBuffer_ts;
-
-#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-	#define TEXT_DISPLAY_TYPE OObject2DTextShader
-#else
-	#define TEXT_DISPLAY_TYPE OObject2DTextColored
-#endif
 
 class Buffer {
 	public:
@@ -85,8 +81,8 @@ class Buffer {
 	public:
 		virtual void      GetInfo(infoStatBuffer_ts &infoToUpdate) {};
 		virtual void      SetLineDisplay(uint32_t lineNumber) {};
-		virtual int32_t   Display(ewol::TEXT_DISPLAY_TYPE& OOText,
-		                          ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
+		virtual int32_t   Display(ewol::Text& OOText,
+		                          ewol::Drawing& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY)
 		{
 			return ERR_NONE;
 		}

@@ -43,9 +43,8 @@
 
 void CodeView::Init(void)
 {
-	m_alignement = ewol::Text::alignJustify;
 	m_label = "CodeView is disable ...";
-	m_clipping = false;
+	
 	m_bufferID = -1;
 	m_buttunOneSelected = false;
 	
@@ -80,9 +79,7 @@ void CodeView::Init(void)
 }
 
 CodeView::CodeView(etk::UString fontName, int32_t fontSize) :
-	m_OObjectText(fontName, fontSize),
-	//m_displayText("Times_New_Roman", 14)
-	m_displayText("Arial", 14)
+	m_displayText(fontName, fontSize)
 {
 	Init();
 }
@@ -105,7 +102,7 @@ CodeView::~CodeView(void)
  */
 void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
 {
-	etk::Vector2D<float>  tmpCoord;
+	etk::Vector2D<float> tmpCoord;
 	tmpCoord.x = 0;
 	tmpCoord.y = 0;
 	if (m_lineNumberList.Size()<=bufferID) {
@@ -128,15 +125,13 @@ bool CodeView::CalculateMinSize(void)
 void CodeView::CalculateMaxSize(void)
 {
 	m_maxSize.x = 2048;
-	int32_t letterHeight = m_OObjectText.GetHeight();
+	int32_t letterHeight = m_displayText.CalculateSize('A').y;
 	m_maxSize.y = BufferManager::Get(m_bufferID)->GetNumberOfLine() * letterHeight;
 }
 
 
 void CodeView::OnDraw(ewol::DrawProperty& displayProp)
 {
-	m_OObjectsColored.Draw();
-	//m_OObjectText.Draw();
 	m_displayDrawing.Draw();
 	m_displayText.Draw();
 	WidgetScrooled::OnDraw(displayProp);
@@ -149,177 +144,8 @@ void CodeView::OnRegenerateDisplay(void)
 		
 		// For the scrooling windows
 		CalculateMaxSize();
-		
-		m_OObjectText.Clear();
 		m_displayDrawing.Clear();
 		m_displayText.Clear();
-		m_OObjectsColored.Clear();
-		
-		#if 1
-			
-			
-			
-			m_OObjectsColored.SetColor(draw::color::white);
-			m_OObjectsColored.Rectangle( 0, 0, m_size.x, m_size.y);
-			
-			m_displayText.SetColor(draw::color::red);
-			etk::UString tmpString("PETIT test sur les Text Display : ");
-			
-			switch (m_alignement)
-			{
-				case ewol::Text::alignJustify:
-					m_displayText.SetFontMode(ewol::font::Regular);
-					tmpString += "mode JUSTIFY";
-					break;
-				case ewol::Text::alignLeft:
-					m_displayText.SetFontMode(ewol::font::Bold);
-					tmpString += "mode Left";
-					break;
-				case ewol::Text::alignRight:
-					m_displayText.SetFontMode(ewol::font::Italic);
-					tmpString += "mode Right";
-					break;
-				case ewol::Text::alignCenter:
-					m_displayText.SetFontMode(ewol::font::BoldItalic);
-					tmpString += "mode Center";
-					break;
-				case ewol::Text::alignDisable:
-					tmpString += "mode Disable";
-					break;
-			}
-			m_displayText.SetPos(etk::Vector3D<float>((float)20,(float)m_size.y-20,(float)0) );
-			m_displayText.Print(tmpString);
-			
-			tmpString = "test de text complexe ...";
-			
-			etk::Vector<ewol::TextDecoration> decoration;
-			ewol::TextDecoration plop;
-			plop.m_colorFg = draw::color::red;
-			plop.m_colorBg = draw::color::green;
-			plop.m_mode = ewol::font::Regular;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::green;
-			plop.m_colorBg = draw::color::red;
-			plop.m_mode = ewol::font::BoldItalic;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::yellow;
-			plop.m_colorBg = draw::color::orange;
-			plop.m_mode = ewol::font::Bold;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::black;
-			plop.m_colorBg = draw::color::gray;
-			plop.m_mode = ewol::font::Italic;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::red;
-			plop.m_colorBg = draw::color::green;
-			plop.m_mode = ewol::font::Regular;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::red;
-			plop.m_colorBg = draw::color::green;
-			plop.m_mode = ewol::font::Regular;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::green;
-			plop.m_colorBg = draw::color::red;
-			plop.m_mode = ewol::font::BoldItalic;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::yellow;
-			plop.m_colorBg = draw::color::orange;
-			plop.m_mode = ewol::font::Bold;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::black;
-			plop.m_colorBg = draw::color::gray;
-			plop.m_mode = ewol::font::Italic;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::red;
-			plop.m_colorBg = draw::color::green;
-			plop.m_mode = ewol::font::Regular;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::red;
-			plop.m_colorBg = draw::color::green;
-			plop.m_mode = ewol::font::Regular;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::green;
-			plop.m_colorBg = draw::color::red;
-			plop.m_mode = ewol::font::BoldItalic;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::yellow;
-			plop.m_colorBg = draw::color::orange;
-			plop.m_mode = ewol::font::Bold;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::black;
-			plop.m_colorBg = draw::color::gray;
-			plop.m_mode = ewol::font::Italic;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::red;
-			plop.m_colorBg = draw::color::green;
-			plop.m_mode = ewol::font::Regular;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::red;
-			plop.m_colorBg = draw::color::green;
-			plop.m_mode = ewol::font::Regular;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::green;
-			plop.m_colorBg = draw::color::red;
-			plop.m_mode = ewol::font::BoldItalic;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::yellow;
-			plop.m_colorBg = draw::color::orange;
-			plop.m_mode = ewol::font::Bold;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::black;
-			plop.m_colorBg = draw::color::gray;
-			plop.m_mode = ewol::font::Italic;
-			decoration.PushBack(plop);
-			plop.m_colorFg = draw::color::red;
-			plop.m_colorBg = draw::color::green;
-			plop.m_mode = ewol::font::Regular;
-			decoration.PushBack(plop);
-			
-			m_displayText.SetPos(etk::Vector3D<float>((float)20,(float)m_size.y-50,(float)0) );
-			m_displayText.Print(tmpString, decoration);
-			
-			
-			
-			
-			m_displayText.SetColor(draw::color::black);
-			m_displayText.SetFontMode(ewol::font::Regular);
-			m_OObjectsColored.SetColor(draw::color::aqua);
-			m_OObjectsColored.Rectangle( 20, 0, m_size.x-40, m_size.y-100);
-			m_displayText.SetColorBG(draw::color::none);
-			if (true == m_clipping) {
-				m_OObjectsColored.SetColor(draw::color::green);
-				m_OObjectsColored.Rectangle( 200, 200, 200, 200);
-				etk::Vector3D<float> drawClippingPos(200.0, 200.0, -0.5);
-				etk::Vector3D<float> drawClippingSize(400.0, 400.0, 1.0);
-				m_displayText.SetClipping(drawClippingPos, drawClippingSize);
-			}
-			
-			tmpString = "Un jour Cosette se regarda par hasard dans son miroir et se dit: Tiens! Il lui semblait presque qu'elle était jolie. Ceci la jeta dans un trouble singulier. Jusqu'à ce moment elle n'avait point songé à sa figure. Elle se voyait dans son miroir, mais elle ne s'y regardait pas. Et puis, on lui avait souvent dit qu'elle était laide ; Jean Valjean seul disait doucement : Mais non! mais non! Quoi qu'il en fût, Cosette s'était toujours crue laide, et avait grandi dans cette idée avec la résignation facile de l'enfance. Voici que tout d'un coup son miroir lui disait comme Jean Valjean : Mais non! Elle ne dormit pas de la nuit. Si j'étais jolie ? pensait-elle, comme cela serait drôle que je fusse jolie! Et elle se rappelait celles de ses compagnes dont la beauté faisait effet dans le couvent, et elle se disait : Comment ! je serais comme mademoiselle une telle!\n"
-			            "sdfsqdfqsdjfhqlskdjhf qlksjdhflqkjsdhlfkqjshdlkfjqhslkdjfhqlskdjhfqlksjdhflqkjsdhflkqjsdhlkfqjshdlkfjqshldkjqfhsldkfjqhslkdjfqhlskdjfhqlskjdhflqksjdhflkqjshdlfkqjsdf\n\n"
-			            "Le lendemain elle se regarda, mais non par hasard, et elle douta: Où avais-je l'esprit ? dit-elle, non, je suis laide. Elle avait tout simplement mal dormi, elle avait les yeux battus et elle était pâle. Elle ne s'était pas sentie très joyeuse la veille de croire à sa beauté, mais elle fut triste de n'y plus croire. Elle ne se regarda plus, et pendant plus de quinze jours elle tâcha de se coiffer tournant le dos au miroir.\n"
-			            "Le soir, après le dîner, elle faisait assez habituellement de la tapisserie dans le salon, ou quelque ouvrage de couvent, et Jean Valjean lisait à côté d'elle. Une fois elle leva les yeux de son ouvrage et elle fut toute surprise de la façon inquiète dont son père la regardait.\n"
-			            "Une autre fois, elle passait dans la rue, et il lui sembla que quelqu'un qu'elle ne vit pas disait derrière elle : Jolie femme ! mais mal mise. Bah ! pensa-t-elle, ce n'est pas moi. Je suis bien mise et laide. Elle avait alors son chapeau de peluche et sa robe de mérinos.\n"
-			            "Un jour enfin, elle était dans le jardin, et elle entendit la pauvre vieille Toussaint qui disait : Monsieur, remarquez-vous comme mademoiselle devient jolie ? Cosette n'entendit pas ce que son père répondit, les paroles de Toussaint furent pour elle une sorte de commotion. Elle s'échappa du jardin, monta à sa chambre, courut à la glace, il y avait trois mois qu'elle ne s'était regardée, et poussa un cri. Elle venait de s'éblouir elle-même.";
-			m_displayText.SetPos(etk::Vector3D<float>((float)40,(float)m_size.y-100,(float)0) );
-			m_displayText.SetTextAlignement(20, m_size.x-20, m_alignement);
-			m_displayText.Print(tmpString);
-			
-			/*
-			draw::Color tmpColor = 0x0000FF55;
-			m_displayDrawing.SetColor(tmpColor);
-			m_displayDrawing.Tranlate(etk::Vector3D<float>(100, 100, 0) );
-			m_displayDrawing.SetThickness(2);
-			m_displayDrawing.Rectangle(etk::Vector3D<float>(200, 200, 0) );
-			
-			m_displayDrawing.SetColor(0x00F46799);
-			m_displayDrawing.SetPos(etk::Vector3D<float>(300, 0, 0) );
-			m_displayDrawing.SetThickness(20);
-			m_displayDrawing.LineTo(etk::Vector3D<float>(200, 200, 0) );
-			*/
-			// force the redraw
-			PeriodicCallSet(true);
-			MarkToRedraw();
-		#else
 		
 		if(true == BufferManager::Get(m_bufferID)->NeedToUpdateDisplayPosition() ) {
 			etk::Vector2D<float>  borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
@@ -330,8 +156,8 @@ void CodeView::OnRegenerateDisplay(void)
 		} // else : nothing to do ...
 		
 		// generate the objects :
-		BufferManager::Get(m_bufferID)->Display(m_OObjectText,
-		                                        m_OObjectsColored,
+		BufferManager::Get(m_bufferID)->Display(m_displayText,
+		                                        m_displayDrawing,
 		                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
 		// set the current size of the windows
 		SetMaxSize(BufferManager::Get(m_bufferID)->GetMaxSize());
@@ -341,7 +167,6 @@ void CodeView::OnRegenerateDisplay(void)
 		
 		// call the herited class...
 		WidgetScrooled::OnRegenerateDisplay();
-		#endif
 	}
 }
 
@@ -396,31 +221,6 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 	etk::Vector2D<float>  limitedPos = relativePos;
 	limitedPos.x = etk_avg(1, limitedPos.x, m_size.x-1);
 	limitedPos.y = etk_avg(1, limitedPos.y, m_size.y-1);
-	if (1 == IdInput) {
-		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
-			APPL_DEBUG("Must change the display ... ");
-			switch (m_alignement)
-			{
-				case ewol::Text::alignJustify:
-					m_alignement = ewol::Text::alignLeft;
-					break;
-				case ewol::Text::alignLeft:
-					m_alignement = ewol::Text::alignRight;
-					break;
-				case ewol::Text::alignRight:
-					m_alignement = ewol::Text::alignCenter;
-					break;
-				case ewol::Text::alignCenter:
-					m_alignement = ewol::Text::alignDisable;
-					break;
-				case ewol::Text::alignDisable:
-					m_alignement = ewol::Text::alignJustify;
-					m_clipping = (m_clipping)?false:true;
-					break;
-			}
-			MarkToRedraw();
-		}
-	}
 	if (true == WidgetScrooled::OnEventInput(type, IdInput, typeEvent, pos)) {
 		ewol::widgetManager::FocusKeep(this);
 		// nothing to do ... done on upper widget ...
@@ -605,12 +405,12 @@ void CodeView::OnLostFocus(void)
 
 void CodeView::SetFontSize(int32_t size)
 {
-	m_OObjectText.SetSize(size);
+	m_displayText.SetFontSize(size);
 	SetScrollingSize(size*3.0*1.46); // 1.46 is a magic nmber ...
 }
 
 void CodeView::SetFontName(etk::UString fontName)
 {
-	m_OObjectText.SetFont(fontName);
+	m_displayText.SetFontName(fontName);
 }
 

@@ -32,8 +32,8 @@ class BufferEmpty : public Buffer {
 	public:
 		BufferEmpty(void);
 		virtual ~BufferEmpty(void);
-		int32_t Display(ewol::TEXT_DISPLAY_TYPE& OOText,
-		                ewol::OObject2DColored& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY);
+		int32_t Display(ewol::Text& OOText,
+		                ewol::Drawing& OOColored, int32_t offsetX, int32_t offsetY, int32_t sizeX, int32_t sizeY);
 };
 
 
