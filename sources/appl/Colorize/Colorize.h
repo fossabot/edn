@@ -59,8 +59,6 @@ class Colorize {
 		
 		bool italic;
 		bool bold;
-		bool haveFG;
-		bool haveBG;
 
 };
 

@@ -39,7 +39,10 @@ typedef enum {
 class CharElement
 {
 	public:
-		float    m_LineOffset;
+		float    m_LineOffset; // TODO : DEPRECATED ...
+		int16_t  m_yOffset;
+		int16_t  m_xOffset;
+		int16_t  m_ySize;
 		int32_t  m_bufferPos;
 };
 

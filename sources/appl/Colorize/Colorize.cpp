@@ -36,12 +36,10 @@ Colorize::Colorize(	etk::UString &newColorName)
 {
 
 	m_colorFG = draw::color::black;
-	m_colorBG = draw::color::black;
+	m_colorBG = draw::color::none;
 	
 	italic	= false;
 	bold	= false;
-	haveFG	= false;
-	haveBG	= false;
 	SetName(newColorName);
 	APPL_VERBOSE("New(Colorise)");
 }
@@ -51,12 +49,10 @@ Colorize::Colorize(void)
 	ColorName = "no_name";
 	
 	m_colorFG = draw::color::black;
-	m_colorBG = draw::color::black;
+	m_colorBG = draw::color::none;
 	
 	italic	= false;
 	bold	= false;
-	haveFG	= false;
-	haveBG	= false;
 	
 	APPL_VERBOSE("New(Colorise)");
 }
@@ -88,21 +84,19 @@ etk::UString Colorize::GetName(void)
 
 void Colorize::SetFgColor(const char *myColor)
 {
-	haveFG = true;
 	m_colorFG = myColor;
 	APPL_VERBOSE(myColor << " ==> "<< m_colorFG );
 }
 
 void Colorize::SetBgColor(const char *myColor)
 {
-	haveBG = true;
 	m_colorBG = myColor;
 	APPL_VERBOSE(myColor << " ==> "<< m_colorBG );
 }
 
 bool Colorize::HaveBg(void)
 {
-	return haveBG;
+	return m_colorBG.a!=0;
 }
 
 

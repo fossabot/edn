@@ -210,8 +210,8 @@ void BufferText::DrawLineNumber(ewol::Text* OOText, ewol::Drawing* OOColored, in
 {
 	char tmpLineNumber[50];
 	sprintf(tmpLineNumber, "%*d", nbColomn, lineNumber);
-	//OOText->SetColor(ColorizeManager::Get(COLOR_LIST_BG_2));
-	//OOText->SetColorBg(ColorizeManager::Get(COLOR_CODE_LINE_NUMBER));
+	OOText->SetColorBg(ColorizeManager::Get(COLOR_LIST_BG_2));
+	OOText->SetColor(ColorizeManager::Get(COLOR_CODE_LINE_NUMBER));
 	OOText->SetPos(etk::Vector3D<float>(1.0f, (float)positionY, 0.0f) );
 	OOText->Print(tmpLineNumber);
 }
@@ -279,9 +279,11 @@ int32_t BufferText::Display(ewol::Text& OOText,
                             int32_t offsetX, int32_t offsetY,
                             int32_t sizeX, int32_t sizeY)
 {
-	OOColored.SetPos(etk::Vector3D<float>(0,0,0));
-	OOColored.SetColor(0xFFFFFFFF);
+	OOColored.SetPos(etk::Vector3D<float>(-2048, -2048, 0));
+	OOColored.SetColor(ColorizeManager::Get(COLOR_CODE_BASIC_BG));
 	OOColored.RectangleWidth(etk::Vector3D<float>(4096, 4096, 0) );
+	
+# if 0
 	
 	
 	OOText.SetColor(0x000000FF);
@@ -335,20 +337,8 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	}
 	// TODO : Missing the last line ...
 
+#else
 
-
-
-
-
-
-
-
-
-
-
-	#ifdef QSDFQSDFSDFQS_QSDFQSDf_QSDFQSDF___QSDFQSDFQ
-	
-	
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
 	int32_t selHave;
@@ -382,16 +372,12 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	// Get color : 
 	Colorize *  myColor           = ColorizeManager::Get("normal");
 	Colorize *  myColorSel        = ColorizeManager::Get("SelectedText");
-	draw::Color &  myColorSpace   = ColorizeManager::Get(COLOR_CODE_SPACE);
-	draw::Color &  myColorTab     = ColorizeManager::Get(COLOR_CODE_TAB);
+	draw::Color & myColorSpace   = ColorizeManager::Get(COLOR_CODE_SPACE);
+	draw::Color & myColorTab     = ColorizeManager::Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
 	int mylen = m_EdnBuf.Size();
 	int32_t x_base=nbColoneForLineNumber*letterWidth;
 	int32_t idX = 0;
-	
-	//OOColored.SetColor(ColorizeManager::Get(COLOR_CODE_BASIC_BG));
-	OOColored.SetPos(etk::Vector3D<float>(0,0,0));
-	OOColored.RectangleWidth(etk::Vector3D<float>(sizeX, sizeY, 0) );
 	
 	int64_t startTime = ewol::GetTime();
 	int displayLines = 0;
@@ -468,40 +454,36 @@ int32_t BufferText::Display(ewol::Text& OOText,
 					selectColor = HLColor->patern->GetColor();
 				}
 			}
-			/*
-			bool haveBg = false;
+			OOText.SetColorBg(draw::color::none);
 			if(	true == selHave
 				&&	selStart <= iii
 				&&	selEnd   > iii)
 			{
 				selectColor = myColorSel;
-				OOColored.SetColor(selectColor->GetBG());
-				haveBg = selectColor->HaveBg();
+				OOText.SetColorBg(selectColor->GetBG() );
 			} else {
 				if(		' ' == currentChar
 				&&	true == globals::IsSetDisplaySpaceChar() )
 				{
-					OOColored.SetColor(myColorSpace);
-					haveBg = true;
+					OOText.SetColorBg(myColorSpace);
 				} else if(		'\t' == currentChar
 							&&	true == globals::IsSetDisplaySpaceChar() )
 				{
-					OOColored.SetColor(myColorTab);
-					haveBg = true;
+					OOText.SetColorBg(myColorTab);
 				} else {
-					OOColored.SetColor(selectColor->GetBG());
-					haveBg = selectColor->HaveBg();
+					OOText.SetColorBg(selectColor->GetBG());
 				}
-			}*/
+			}
 			tmpElementProperty.m_ySize = 20;//OOText.GetHeight();
-			//OOText.SetColor(selectColor->GetFG());
+			OOText.SetColor(selectColor->GetFG() );
 			//OOText.SetColorBg(selectColor->GetFG());
 			OOText.SetFontBold(selectColor->GetBold());
 			OOText.SetFontItalic(selectColor->GetItalic());
 			myStringToDisplay = displayChar;
 			OOText.SetPos(etk::Vector3D<float>(textPos.x, textPos.y, 0.0f) );
 			OOText.Print(myStringToDisplay);
-			
+			// To update the display position
+			drawSize = OOText.GetPos().x - textPos.x;
 			//APPL_DEBUG("add element : " << tmpElementProperty.m_yOffset << "," << tmpElementProperty.m_xOffset);
 			m_elmentList.PushBack(tmpElementProperty);
 			
@@ -544,6 +526,246 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	SetMaximumSize(maxSize);
 	int64_t stopTime2 = ewol::GetTime();
 	APPL_DEBUG("DRAW text (brut) = " << stopTime2 - stopTime << " micro-s");
+
+#endif
+
+
+
+
+
+
+
+
+
+
+	#ifdef QSDFQSDFSDFQS_QSDFQSDf_QSDFQSDF___QSDFQSDFQ
+	
+	
+	int32_t selStart, selEnd, selRectStart, selRectEnd;
+	bool selIsRect;
+	int32_t selHave;
+	
+	int32_t letterWidth = OOText.GetSize("A").x;
+	int32_t letterHeight = OOText.GetHeight();
+	
+	int32_t displayStartLineId = offsetY / letterHeight - 1;
+	displayStartLineId = etk_max(0, displayStartLineId);
+	int32_t y = - offsetY + displayStartLineId*letterHeight;
+	
+	// update the display position with the scroll ofset : 
+	int32_t displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
+	etk::Vector2D<float>  maxSize;
+	maxSize.x = 0.0;
+	maxSize.y = m_EdnBuf.NumberOfLines() * letterHeight;
+	int32_t nbColoneForLineNumber = GetLineNumberNumberOfElement();
+	
+	// update the number of element that can be displayed
+	m_displaySize.x = (sizeX/letterWidth) + 1 - nbColoneForLineNumber;
+	m_displaySize.y = (sizeY/letterHeight) + 1;
+	APPL_VERBOSE("main DIPLAY " << m_displaySize.x << " char * " << m_displaySize.y << " char");
+	
+	selHave = m_EdnBuf.GetSelectionPos(selStart, selEnd, selIsRect, selRectStart, selRectEnd);
+	
+	colorInformation_ts * HLColor = NULL;
+	
+	int32_t iii, new_i;
+	// Get color : 
+	Colorize *  myColor           = ColorizeManager::Get("normal");
+	Colorize *  myColorSel        = ColorizeManager::Get("SelectedText");
+	draw::Color &  myColorSpace   = ColorizeManager::Get(COLOR_CODE_SPACE);
+	draw::Color &  myColorTab     = ColorizeManager::Get(COLOR_CODE_TAB);
+	Colorize *  selectColor       = NULL;
+	int mylen = m_EdnBuf.Size();
+	int32_t x_base=nbColoneForLineNumber*letterWidth;
+	int32_t idX = 0;
+	
+	OOColored.SetColor(ColorizeManager::Get(COLOR_CODE_BASIC_BG));
+	OOColored.Rectangle( 0, 0, sizeX, sizeY);
+	
+	int64_t startTime = ewol::GetTime();
+	int displayLines = 0;
+	// Regenerate the colorizing if necessary ...
+	displayHLData_ts m_displayLocalSyntax;
+	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, displayStartBufferPos, m_displaySize.y);
+	
+	int64_t stopTime = ewol::GetTime();
+	APPL_DEBUG("Parsing Highlight = " << stopTime - startTime << " micro-s");
+	
+	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
+	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
+	etk::UString myStringToDisplay;
+	// draw the lineNumber : 
+	int32_t currentLineID = displayStartLineId+1;
+	APPL_VERBOSE("Start display of text buffer [" << displayStartBufferPos<< ".." << mylen << "]");
+	APPL_VERBOSE("cursor Pos : " << m_cursorPos << "start at pos=" << displayStartBufferPos);
+	
+	// note corection of the openGl invertion system :
+	y = sizeY - y;
+	y -= letterHeight;
+	
+	OOColored.clippingDisable();
+	OOText.clippingDisable();
+	DrawLineNumber(&OOText,       &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
+	
+	clipping_ts drawClipping;
+	drawClipping.x = 0;
+	drawClipping.y = 0;
+	drawClipping.w = sizeX;
+	drawClipping.h = sizeY;
+	
+	clipping_ts drawClippingTextArea;
+	drawClippingTextArea.x = pixelX;
+	drawClippingTextArea.y = 0;
+	drawClippingTextArea.w = sizeX - drawClipping.x;
+	drawClippingTextArea.h = sizeY;
+	
+	OOText.clippingSet(drawClippingTextArea);
+	OOColored.clippingSet(drawClippingTextArea);
+	
+	// Clear the line intexation :
+	m_elmentList.Clear();
+	// every char element is register to find the diplay pos when mouse event arrive
+	CharElement tmpElementProperty;
+	tmpElementProperty.m_yOffset = y;
+	tmpElementProperty.m_xOffset = 0;
+	tmpElementProperty.m_ySize = 10;
+	tmpElementProperty.m_bufferPos = displayStartBufferPos;
+	m_elmentList.PushBack(tmpElementProperty);
+	
+	float lineMaxSize = 0.0;
+	for (iii=displayStartBufferPos; iii<mylen && displayLines >=0 && y >= -2*letterHeight; iii = new_i) {
+		//APPL_DEBUG("display pos =" << y);
+		int displaywidth;
+		uint32_t currentChar = '\0';
+		new_i = iii;
+		// update the element buffer pos:
+		tmpElementProperty.m_bufferPos = new_i;
+		displaywidth = m_EdnBuf.GetExpandedChar(new_i, idX, displayChar, currentChar);
+		int32_t drawSize = 0;
+		
+		// update display position :
+		etk::Vector2D<float>  textPos;
+		textPos.x = pixelX-offsetX;
+		textPos.y = y;
+		// update X pos
+		tmpElementProperty.m_xOffset = textPos.x;
+		tmpElementProperty.m_yOffset = textPos.y;
+		
+		//APPL_INFO("diplay element=" << new_i);
+		if (currentChar!='\n') {
+			selectColor = myColor;
+			HLColor = m_EdnBuf.GetElementColorAtPosition(m_displayLocalSyntax, iii);
+			if (NULL != HLColor) {
+				if (NULL != HLColor->patern) {
+					selectColor = HLColor->patern->GetColor();
+				}
+			}
+			bool haveBg = false;
+			if(	true == selHave
+				&&	selStart <= iii
+				&&	selEnd   > iii)
+			{
+				selectColor = myColorSel;
+				OOColored.SetColor(selectColor->GetBG());
+				haveBg = selectColor->HaveBg();
+			} else {
+				if(		' ' == currentChar
+				&&	true == globals::IsSetDisplaySpaceChar() )
+				{
+					OOColored.SetColor(myColorSpace);
+					haveBg = true;
+				} else if(		'\t' == currentChar
+							&&	true == globals::IsSetDisplaySpaceChar() )
+				{
+					OOColored.SetColor(myColorTab);
+					haveBg = true;
+				} else {
+					OOColored.SetColor(selectColor->GetBG());
+					haveBg = selectColor->HaveBg();
+				}
+			}
+			#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
+				tmpElementProperty.m_ySize = OOText.GetHeight();
+				OOText.SetColor(selectColor->GetFG());
+				OOText.SetBold(selectColor->GetBold());
+				OOText.SetItalic(selectColor->GetItalic());
+				myStringToDisplay = displayChar;
+				drawSize = OOText.Text(textPos, myStringToDisplay);
+			#else
+				ewol::font::mode_te tmpMode = ewol::font::Regular;
+				if (true == selectColor->GetItalic() ) {
+					if (true == selectColor->GetBold() ) {
+						tmpMode = ewol::font::BoldItalic;
+					} else {
+						tmpMode = ewol::font::Italic;
+					}
+				} else {
+					if (true == selectColor->GetBold() ) {
+						tmpMode = ewol::font::Bold;
+					} else {
+						tmpMode = ewol::font::Regular;
+					}
+				}
+				tmpElementProperty.m_ySize = OOText.GetHeight();
+				//tmpElementProperty.m_yOffset += tmpElementProperty.m_ySize;
+				OOText.SetColor(selectColor->GetFG());
+				// TODO : Remove this unreallistic leak of time
+				myStringToDisplay = displayChar;
+				drawSize = OOText.Text(textPos, myStringToDisplay, tmpMode);
+			#endif
+			//APPL_DEBUG("add element : " << tmpElementProperty.m_yOffset << "," << tmpElementProperty.m_xOffset);
+			m_elmentList.PushBack(tmpElementProperty);
+			
+			if (true == haveBg ) {
+				OOColored.Rectangle(textPos.x, y, drawSize, letterHeight);
+			}
+		}
+		idX += displaywidth;
+		// display cursor : 
+		if (m_cursorPos == iii) {
+			// display the cursor:
+			DrawCursor(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
+		}
+		lineMaxSize += drawSize;
+		pixelX += drawSize;
+		// move to next line ...
+		if (currentChar=='\n') {
+			maxSize.x = etk_max(lineMaxSize, maxSize.x);
+			lineMaxSize = 0.0;
+			idX =0;
+			pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
+			y -= letterHeight;
+			//APPL_DEBUG("display pos =" << y);
+			displayLines++;
+			currentLineID++;
+			OOColored.clippingDisable();
+			#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
+				OOText.clippingDisable();
+				OOText.SetBold(false);
+				OOText.SetItalic(false);
+				DrawLineNumber(&OOText, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+				OOText.clippingEnable();
+			#else
+				OOText.clippingDisable();
+				DrawLineNumber(&OOText, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+				OOText.clippingEnable();
+			#endif
+			OOColored.clippingEnable();
+			// add elements : 
+			m_elmentList.PushBack(tmpElementProperty);
+		}
+	}
+	//APPL_DEBUG("end at pos buf =" << iii << " / " << m_EdnBuf.Size());
+	// special case : the cursor is at the end of the buffer...
+	if (m_cursorPos == iii) {
+		DrawCursor(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth, drawClippingTextArea);
+	}
+	// set the maximum size for the display ...
+	SetMaximumSize(maxSize);
+	int64_t stopTime2 = ewol::GetTime();
+	APPL_DEBUG("DRAW text (brut) = " << stopTime2 - stopTime << " micro-s");
+
 	#endif
 	return ERR_NONE;
 }
@@ -593,6 +815,7 @@ int32_t BufferText::GetMousePosition(etk::Vector2D<float> pos)
 		APPL_CRITICAL("Error to get position (very bad)");
 		return 0;
 	}
+	return 0;
 }
 
 
