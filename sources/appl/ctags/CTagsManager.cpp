@@ -226,7 +226,7 @@ void CTagsManager::RegisterHistory(void)
 {
 	APPL_INFO("save curent filename and position : ");
 	int32_t currentSelected = BufferManager::GetSelected();
-	Buffer* tmpBuf = BufferManager::Get(currentSelected);
+	BufferText* tmpBuf = BufferManager::Get(currentSelected);
 	if (NULL != tmpBuf) {
 		etk::FSNode * bufferFilename = new etk::FSNode();
 		*bufferFilename = tmpBuf->GetFileName();

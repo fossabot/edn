@@ -68,7 +68,7 @@ class classBufferManager: public ewol::EObject
 	public:
 		int32_t     GetSelected(void) { return m_idSelected;};
 		//void        SetSelected(int32_t id) {m_idSelected = id;};
-		Buffer *    Get(int32_t BufferID);
+		BufferText* Get(int32_t BufferID);
 		bool        Exist(int32_t BufferID);
 		bool        Exist(etk::FSNode &myFile);
 		int32_t     GetId(etk::FSNode &myFile);
@@ -80,11 +80,10 @@ class classBufferManager: public ewol::EObject
 
 	private:
 		
-		etk::Vector<Buffer*> listBuffer;  //!< element List of the char Elements
+		etk::Vector<BufferText*> listBuffer;  //!< element List of the char Elements
 		
 		void        RemoveAll(void);          //!< remove all buffer
 		int32_t     m_idSelected;
-		Buffer *    BufferNotExiste;          //!< When an error arrive in get buffer we return the Error buffer (not writable)
 };
 
 
@@ -99,8 +98,6 @@ class classBufferManager: public ewol::EObject
  */
 classBufferManager::classBufferManager(void)
 {
-	// nothing to do ...
-	BufferNotExiste = new BufferEmpty();
 	m_idSelected = -1;
 	RegisterMultiCast(ednMsgGuiNew);
 	RegisterMultiCast(ednMsgOpenFile);
@@ -126,8 +123,6 @@ classBufferManager::~classBufferManager(void)
 	// clear The list of Buffer
 	APPL_INFO("~classBufferManager::listBuffer.Clear();");
 	listBuffer.Clear();
-	APPL_INFO("~classBufferManager::delete(BufferNotExiste);");
-	delete(BufferNotExiste);
 }
 
 
@@ -325,7 +320,7 @@ void classBufferManager::RemoveAll(void)
 int32_t	classBufferManager::Create(void)
 {
 	// allocate a new Buffer
-	Buffer *myBuffer = new BufferText();
+	BufferText *myBuffer = new BufferText();
 	// Add at the list of element
 	listBuffer.PushBack(myBuffer);
 	int32_t basicID = listBuffer.Size() - 1;
@@ -347,7 +342,7 @@ int32_t classBufferManager::Open(etk::FSNode &myFile)
 {
 	if (false == Exist(myFile)) {
 		// allocate a new Buffer
-		Buffer *myBuffer = new BufferText(myFile);
+		BufferText *myBuffer = new BufferText(myFile);
 		// Add at the list of element
 		listBuffer.PushBack(myBuffer);
 		return listBuffer.Size() - 1;
@@ -359,11 +354,11 @@ int32_t classBufferManager::Open(etk::FSNode &myFile)
 
 
 
-Buffer * classBufferManager::Get(int32_t BufferID)
+BufferText * classBufferManager::Get(int32_t BufferID)
 {
 	// possible special case : -1;
 	if (-1 >= BufferID) {
-		return BufferNotExiste;
+		return NULL;
 	}
 	// check if the Buffer existed
 	if (BufferID < listBuffer.Size()) {
@@ -376,7 +371,7 @@ Buffer * classBufferManager::Get(int32_t BufferID)
 	} else {
 		APPL_ERROR("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.Size());
 	}
-	return BufferNotExiste;
+	return NULL;
 }
 
 
@@ -543,7 +538,7 @@ int32_t BufferManager::GetSelected(void)
 	return localManager->GetSelected();
 }
 
-Buffer * BufferManager::Get(int32_t BufferID)
+BufferText * BufferManager::Get(int32_t BufferID)
 {
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");

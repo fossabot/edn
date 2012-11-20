@@ -289,7 +289,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		tmpWidget->SetTitle("Open Files ...");
 		tmpWidget->SetValidateLabel("Open");
 		if (BufferManager::GetSelected()!=-1) {
-			Buffer * myBuffer = BufferManager::Get(BufferManager::GetSelected());
+			BufferText * myBuffer = BufferManager::Get(BufferManager::GetSelected());
 			if (NULL!=myBuffer) {
 				etk::FSNode tmpFile = myBuffer->GetFileName();
 				tmpWidget->SetFolder(tmpFile.GetNameFolder());
@@ -314,7 +314,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			if (false == BufferManager::Exist(m_currentSavingAsIdBuffer)) {
 				APPL_ERROR("Request saveAs on non existant Buffer ID=" << m_currentSavingAsIdBuffer);
 			} else {
-				Buffer * myBuffer = BufferManager::Get(m_currentSavingAsIdBuffer);
+				BufferText* myBuffer = BufferManager::Get(m_currentSavingAsIdBuffer);
 				ewol::FileChooser* tmpWidget = new ewol::FileChooser();
 				if (NULL == tmpWidget) {
 					APPL_ERROR("Can not allocate widget ==> display might be in error");
@@ -345,7 +345,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 	} else if(    eventId == ednMsgBufferState
 	           || eventId == ednMsgBufferId) {
 		// the buffer change we need to update the widget string
-		Buffer* tmpBuffer = BufferManager::Get(BufferManager::GetSelected());
+		BufferText* tmpBuffer = BufferManager::Get(BufferManager::GetSelected());
 		if (NULL != tmpBuffer) {
 			etk::FSNode compleateName = tmpBuffer->GetFileName();
 			bool isModify = tmpBuffer->IsModify();

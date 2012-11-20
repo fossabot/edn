@@ -26,9 +26,7 @@
 #ifndef __BUFFER_MANAGER_H__
 #define __BUFFER_MANAGER_H__
 
-#include <Buffer.h>
 #include <BufferText.h>
-#include <BufferEmpty.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/Widget.h>
 
@@ -37,7 +35,7 @@ namespace BufferManager
 	void        Init(void);
 	void        UnInit(void);
 	int32_t     GetSelected(void);
-	Buffer *    Get(int32_t BufferID);
+	BufferText* Get(int32_t BufferID);
 	bool        Exist(int32_t BufferID);
 	bool        Exist(etk::FSNode &myFile);
 	int32_t     GetId(etk::FSNode &myFile);

@@ -28,9 +28,7 @@ FILE_LIST+=		appl/Buffer/EdnBuf/EdnBuf.cpp \
 				appl/Buffer/EdnBuf/EdnBuf_History.cpp \
 				appl/Buffer/EdnBuf/EdnBuf_Selection.cpp \
 				appl/Buffer/EdnBuf/EdnBufHistory.cpp \
-				appl/Buffer/Buffer.cpp \
 				appl/Buffer/BufferText.cpp \
-				appl/Buffer/BufferEmpty.cpp \
 				appl/Buffer/BufferManager.cpp
 
 # Generic color management for the text editor : 
@@ -61,6 +59,7 @@ LOCAL_COPY_FOLDERS := \
                       ../data/languages/php/*.xml:languages/php/ \
                       ../data/languages/xml/*.xml:languages/xml/ \
                       ../data/theme/default/*.svg:theme/default/
+
 
 ifneq ($(CONFIG___EWOL_INTEGRATED_FONT__),$(empty))
 

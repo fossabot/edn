@@ -102,13 +102,16 @@ void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eve
 		int32_t nbBufferOpen = BufferManager::Size();
 		for (int32_t iii=0; iii<nbBufferOpen; iii++) {
 			if (BufferManager::Exist(iii)) {
-				bool isModify  = BufferManager::Get(iii)->IsModify();
-				etk::FSNode name = BufferManager::Get(iii)->GetFileName();
-				appl::dataBufferStruct* tmpElement = new appl::dataBufferStruct(name, iii, isModify);
-				if (NULL != tmpElement) {
-					m_list.PushBack(tmpElement);
-				} else {
-					APPL_ERROR("Allocation error of the tmp buffer list element");
+				BufferText* tmpBuffer = BufferManager::Get(iii);
+				if (NULL != tmpBuffer) {
+					bool isModify  = tmpBuffer->IsModify();
+					etk::FSNode name = tmpBuffer->GetFileName();
+					appl::dataBufferStruct* tmpElement = new appl::dataBufferStruct(name, iii, isModify);
+					if (NULL != tmpElement) {
+						m_list.PushBack(tmpElement);
+					} else {
+						APPL_ERROR("Allocation error of the tmp buffer list element");
+					}
 				}
 			}
 		}

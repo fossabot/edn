@@ -126,7 +126,12 @@ void CodeView::CalculateMaxSize(void)
 {
 	m_maxSize.x = 2048;
 	int32_t letterHeight = m_displayText.CalculateSize('A').y;
-	m_maxSize.y = BufferManager::Get(m_bufferID)->GetNumberOfLine() * letterHeight;
+	BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+	if (NULL!=tmpBuffer) {
+		m_maxSize.y = tmpBuffer->GetNumberOfLine() * letterHeight;
+	} else {
+		m_maxSize.y = 50;
+	}
 }
 
 
@@ -147,8 +152,15 @@ void CodeView::OnRegenerateDisplay(void)
 		m_displayDrawing.Clear();
 		m_displayText.Clear();
 		
-		if(true == BufferManager::Get(m_bufferID)->NeedToUpdateDisplayPosition() ) {
-			etk::Vector2D<float>  borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
+		// Reset the background : 
+		m_displayDrawing.SetPos(etk::Vector3D<float>(-2048, -2048, 0));
+		m_displayDrawing.SetColor(ColorizeManager::Get(COLOR_CODE_BASIC_BG));
+		m_displayDrawing.RectangleWidth(etk::Vector3D<float>(4096, 4096, 0) );
+		
+		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if(    NULL != tmpBuffer
+		    && true == tmpBuffer->NeedToUpdateDisplayPosition() ) {
+			etk::Vector2D<float> borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
 			bool centerRequested = false;
 			// TODO : set it back ...
 			etk::Vector2D<float>  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(999/*m_OObjectTextNormal.GetFontID()*/, centerRequested);
@@ -156,12 +168,62 @@ void CodeView::OnRegenerateDisplay(void)
 		} // else : nothing to do ...
 		
 		// generate the objects :
-		BufferManager::Get(m_bufferID)->Display(m_displayText,
-		                                        m_displayDrawing,
-		                                        m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
-		// set the current size of the windows
-		SetMaxSize(BufferManager::Get(m_bufferID)->GetMaxSize());
-		
+		if (-1 == m_bufferID) {
+			m_displayText.SetTextAlignement(10, m_size.x-20, ewol::Text::alignLeft);
+			m_displayDrawing.SetColor(0x00000022);
+			m_displayDrawing.SetPos(etk::Vector3D<float>(10, 0, 0));
+			m_displayDrawing.Rectangle(etk::Vector3D<float>((int32_t)m_size.x-20, 1500, 0) );
+			
+			m_displayText.SetRelPos(etk::Vector3D<float>(10, 0, 0));
+			// nothing to display :
+			etk::UString tmpString("<html>\n"
+			                       "	<body>\n"
+			                       "		<br/>\n"
+			                       "		<font color=\"red\">\n"
+			                       "			<b>\n"
+			                       "				edn - Editeur De N'ours\n"
+			                       "			</b>\n"
+			                       "		</font>\n"
+			                       "		<br/>\n"
+			                       "		<br/>\n"
+			                       "		<font color=\"indigo\">\n"
+			                       "			<i>\n"
+			                       "				No Buffer Availlable to display\n"
+			                       "			</i>\n"
+			                       "		</font>\n"
+			                       
+			                       "		<br/><br/><br/>\n"
+			                       "		<center>\n"
+			                       "			Un jour Cosette se <b>regarda</b> par hasard dans son miroir et se dit: Tiens! <b>Il lui semblait presque <i>qu'elle était jolie.</i></b> Ceci la jeta dans un trouble singulier. <font color=\"#FF0000\">Jusqu'à ce moment elle <b>n'avait</b> point <i>songé</i> à sa figure.</font> Elle se voyait dans son miroir, mais elle ne s'y regardait pas. Et puis, on lui avait souvent dit qu'elle était laide;<br/> Jean Valjean seul disait doucement : <br/> Mais non!<br/>  mais non!<br/>  Quoi qu'il en fut, Cosette s'était toujours crue laide, et avait grandi dans cette idée avec la résignation facile de l'enfance. Voici que tout d'un coup son miroir lui disait comme Jean Valjean : Mais non! Elle ne dormit pas de la nuit. Si j'étais jolie ? pensait-elle, comme cela serait drole que je fusse jolie! Et elle se rappelait celles de ses compagnes dont la beauté faisait effet dans le couvent, et elle se disait : Comment! je serais comme mademoiselle une telle!\n"
+			                       "		</center>\n"
+			                       
+			                       "		<br/><br/><br/>\n"
+			                       "		<left>\n"
+			                       "			Un jour Cosette se <b>regarda</b> par hasard dans son miroir et se dit: Tiens! <b>Il lui semblait presque <i>qu'elle était jolie.</i></b> Ceci la jeta dans un trouble singulier. <font color=\"#0F0\">Jusqu'à ce moment elle <b>n'avait</b> point <i>songé</i> à sa figure.</font> Elle se voyait dans son miroir, mais elle ne s'y regardait pas. Et puis, on lui avait souvent dit qu'elle était laide;<br/> Jean Valjean seul disait doucement :<br/>  Mais non!<br/>  mais non!<br/>  Quoi qu'il en fut, Cosette s'était toujours crue laide, et avait grandi dans cette idée avec la résignation facile de l'enfance. Voici que tout d'un coup son miroir lui disait comme Jean Valjean : Mais non! Elle ne dormit pas de la nuit. Si j'étais jolie ? pensait-elle, comme cela serait drole que je fusse jolie! Et elle se rappelait celles de ses compagnes dont la beauté faisait effet dans le couvent, et elle se disait : Comment! je serais comme mademoiselle une telle!\n"
+			                       "		</left>\n"
+			                       
+			                       "		<br/><br/><br/>\n"
+			                       "		<right>\n"
+			                       "			Un jour Cosette se <b>regarda</b> par hasard dans son miroir et se dit: Tiens! <b>Il lui semblait presque <i>qu'elle était jolie.</i></b> Ceci la jeta dans un trouble singulier. <font color=\"#00F\">Jusqu'à ce moment elle<b> n'avait</b> point <i>songé</i> à sa figure.</font> Elle se voyait dans son miroir, mais elle ne s'y regardait pas. Et puis, on lui avait souvent dit qu'elle était laide;<br/> Jean Valjean seul disait doucement :<br/>  Mais non! <br/> mais non!<br/>  Quoi qu'il en fut, Cosette s'était toujours crue laide, et avait grandi dans cette idée avec la résignation facile de l'enfance. Voici que tout d'un coup son miroir lui disait comme Jean Valjean : Mais non! Elle ne dormit pas de la nuit. Si j'étais jolie ? pensait-elle, comme cela serait drole que je fusse jolie! Et elle se rappelait celles de ses compagnes dont la beauté faisait effet dans le couvent, et elle se disait : Comment! je serais comme mademoiselle une telle!\n"
+			                       "		</right>\n"
+			                       
+			                       "		<br/><br/><br/>\n"
+			                       "		<justify>\n"
+			                       "			Un jour Cosette se <b>regarda</b> par hasard dans son miroir et se dit: Tiens! <b>Il lui semblait presque <i>qu'elle était jolie.</i></b> Ceci la jeta dans un trouble singulier. <font color=\"#FF0\">Jusqu'à ce moment elle <b>n'avait</b> point <i>songé</i> à sa figure.</font> Elle se voyait dans son miroir, mais elle ne s'y regardait pas. Et puis, on lui avait souvent dit qu'elle était laide;<br/> Jean Valjean seul disait doucement :<br/>  Mais non!<br/>  mais non!<br/>  Quoi qu'il en fut, Cosette s'était toujours crue laide, et avait grandi dans cette idée avec la résignation facile de l'enfance. Voici que tout d'un coup son miroir lui disait comme Jean Valjean : Mais non! Elle ne dormit pas de la nuit. Si j'étais jolie ? pensait-elle, comme cela serait drole que je fusse jolie! Et elle se rappelait celles de ses compagnes dont la beauté faisait effet dans le couvent, et elle se disait : Comment! je serais comme mademoiselle une telle!\n"
+			                       "		</justify>\n"
+			                       "	</body>\n"
+			                       "</html>\n");
+			m_displayText.SetPos(etk::Vector3D<float>(0.0f, m_size.y, 0.0f) );
+			m_displayText.ForceLineReturn();
+			m_displayText.PrintDecorated(tmpString);
+		} else {
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->Display(m_displayText, m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
+			}
+			// set the current size of the windows
+			SetMaxSize(BufferManager::Get(m_bufferID)->GetMaxSize());
+		}
 		int64_t stopTime = ewol::GetTime();
 		APPL_DEBUG("Display Code Generation = " << stopTime - startTime << " micro-s");
 		
@@ -175,7 +237,10 @@ bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, uniChar_t unicodeData)
 {
 	//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
 	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
-		BufferManager::Get(m_bufferID)->AddChar(unicodeData);
+		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (NULL!=tmpBuffer) {
+			tmpBuffer->AddChar(unicodeData);
+		}
 		MarkToRedraw();
 	}
 	return true;
@@ -185,7 +250,10 @@ bool CodeView::OnEventKb(ewol::eventKbType_te typeEvent, uniChar_t unicodeData)
 bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveType_te moveTypeEvent)
 {
 	if (typeEvent == ewol::EVENT_KB_TYPE_DOWN) {
-		BufferManager::Get(m_bufferID)->cursorMove(moveTypeEvent);
+		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (NULL!=tmpBuffer) {
+			tmpBuffer->cursorMove(moveTypeEvent);
+		}
 		MarkToRedraw();
 	}
 	return true;
@@ -199,7 +267,10 @@ bool CodeView::OnEventKbMove(ewol::eventKbType_te typeEvent, ewol::eventKbMoveTy
  */
 void CodeView::OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID)
 {
-	BufferManager::Get(m_bufferID)->Paste(clipboardID);
+	BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+	if (NULL!=tmpBuffer) {
+		tmpBuffer->Paste(clipboardID);
+	}
 	MarkToRedraw();
 }
 
@@ -237,27 +308,42 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 				m_buttunOneSelected = true;
 				ewol::widgetManager::FocusKeep(this);
 				// TODO : Set something good
-				BufferManager::Get(m_bufferID)->MouseEvent(limitedPos);
+				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+				if (NULL!=tmpBuffer) {
+					tmpBuffer->MouseEvent(limitedPos);
+				}
 				MarkToRedraw();
 			} else if (ewol::EVENT_INPUT_TYPE_UP == typeEvent) {
 				m_buttunOneSelected = false;
-				BufferManager::Get(m_bufferID)->Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
+				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+				if (NULL!=tmpBuffer) {
+					tmpBuffer->Copy(ewol::clipBoard::CLIPBOARD_SELECTION);
+				}
 				MarkToRedraw();
 			} else 
 		#endif
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			#ifdef __MODE__Touch
 				ewol::widgetManager::FocusKeep(this);
-				BufferManager::Get(m_bufferID)->MouseEvent(limitedPos);
+				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+				if (NULL!=tmpBuffer) {
+					tmpBuffer->MouseEvent(limitedPos);
+				}
 				MarkToRedraw();
 			#else
 				// nothing to do ...
 			#endif
 		} else if (ewol::EVENT_INPUT_TYPE_DOUBLE == typeEvent) {
-			BufferManager::Get(m_bufferID)->MouseEventDouble();
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->MouseEventDouble();
+			}
 			MarkToRedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_TRIPLE == typeEvent) {
-			BufferManager::Get(m_bufferID)->MouseEventTriple();
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->MouseEventTriple();
+			}
 			MarkToRedraw();
 		} else if (ewol::EVENT_INPUT_TYPE_MOVE == typeEvent) {
 			if (true == m_buttunOneSelected) {
@@ -272,14 +358,20 @@ bool CodeView::OnEventInput(ewol::inputType_te type, int32_t IdInput, ewol::even
 				}
 				//APPL_INFO("mouse-motion BT1 %d, %d", xxx, yyy);
 				// TODO : Set something good
-				BufferManager::Get(m_bufferID)->MouseSelectFromCursorTo(limitedPos);
+				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+				if (NULL!=tmpBuffer) {
+					tmpBuffer->MouseSelectFromCursorTo(limitedPos);
+				}
 				MarkToRedraw();
 			}
 		}
 	} else if (2 == IdInput) {
 		if (ewol::EVENT_INPUT_TYPE_SINGLE == typeEvent) {
 			// TODO : Set something good
-			BufferManager::Get(m_bufferID)->MouseEvent(limitedPos);
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->MouseEvent(limitedPos);
+			}
 			ewol::clipBoard::Request(ewol::clipBoard::CLIPBOARD_SELECTION);
 			ewol::widgetManager::FocusKeep(this);
 		}
@@ -320,21 +412,36 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 			m_originScrooled = m_lineNumberList[m_bufferID];
 		}
 	} else if (eventId == ednMsgGuiCopy) {
-		BufferManager::Get(m_bufferID)->Copy(ewol::clipBoard::CLIPBOARD_STD);
+		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (NULL!=tmpBuffer) {
+			tmpBuffer->Copy(ewol::clipBoard::CLIPBOARD_STD);
+		}
 	} else if (eventId == ednMsgGuiCut) {
-		BufferManager::Get(m_bufferID)->Cut(ewol::clipBoard::CLIPBOARD_STD);
+		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (NULL!=tmpBuffer) {
+			tmpBuffer->Cut(ewol::clipBoard::CLIPBOARD_STD);
+		}
 	} else if (eventId == ednMsgGuiPaste) {
 		ewol::clipBoard::Request(ewol::clipBoard::CLIPBOARD_STD);
 	} else if (eventId == ednMsgGuiUndo) {
-		BufferManager::Get(m_bufferID)->Undo();
+		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (NULL!=tmpBuffer) {
+			tmpBuffer->Undo();
+		}
 	} else if (eventId == ednMsgGuiRedo) {
-		BufferManager::Get(m_bufferID)->Redo();
+		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (NULL!=tmpBuffer) {
+			tmpBuffer->Redo();
+		}
 	} else if (eventId == ednMsgGuiRm) {
 		// data : "Word" "Line" "Paragraph"
 		if (data == "Word") {
 			APPL_WARNING(" on event " << eventId << " data=\"" << data << "\" ==> not coded" );
 		} else if (data == "Line") {
-			BufferManager::Get(m_bufferID)->RemoveLine();
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->RemoveLine();
+			}
 		} else if (data == "Paragraph") {
 			APPL_WARNING(" on event " << eventId << " data=\"" << data << "\" ==> not coded" );
 		} else {
@@ -343,20 +450,35 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 	} else if (eventId == ednMsgGuiSelect) {
 		// data : "ALL" "NONE"
 		if (data == "ALL") {
-			BufferManager::Get(m_bufferID)->SelectAll();
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->SelectAll();
+			}
 		} else if (data == "NONE") {
-			BufferManager::Get(m_bufferID)->SelectNone();
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->SelectNone();
+			}
 		} else {
 			APPL_ERROR(" on event " << eventId << " unknow data=\"" << data << "\"" );
 		}
 	} else if (eventId == ednMsgGuiChangeCharset) {
 		// data : "UTF-8" "ISO-8859-1" "ISO-8859-15"
 		if (data == "UTF-8") {
-			BufferManager::Get(m_bufferID)->SetCharset(unicode::EDN_CHARSET_UTF8);
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->SetCharset(unicode::EDN_CHARSET_UTF8);
+			}
 		} else if (data == "ISO-8859-1") {
-			BufferManager::Get(m_bufferID)->SetCharset(unicode::EDN_CHARSET_ISO_8859_1);
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->SetCharset(unicode::EDN_CHARSET_ISO_8859_1);
+			}
 		} else if (data == "ISO-8859-15") {
-			BufferManager::Get(m_bufferID)->SetCharset(unicode::EDN_CHARSET_ISO_8859_15);
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->SetCharset(unicode::EDN_CHARSET_ISO_8859_15);
+			}
 		} else {
 			APPL_ERROR(" on event " << eventId << " unknow data=\"" << data << "\"" );
 		}
@@ -364,15 +486,24 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 		etk::UString myDataString;
 		SearchData::GetSearch(myDataString);
 		if (data == "Next") {
-			BufferManager::Get(m_bufferID)->Search(myDataString, false, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->Search(myDataString, false, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
+			}
 		} else if (data == "Previous") {
-			BufferManager::Get(m_bufferID)->Search(myDataString, true, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->Search(myDataString, true, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
+			}
 		}
 	} else if (eventId == ednMsgGuiReplace) {
 		etk::UString myDataString;
 		SearchData::GetReplace(myDataString);
 		if (data == "Normal") {
-			BufferManager::Get(m_bufferID)->Replace(myDataString);
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->Replace(myDataString);
+			}
 		} else if (data == "All") {
 			
 		}
@@ -380,7 +511,10 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 		int32_t lineID = 0;
 		sscanf(data.c_str(), "%d", &lineID);
 		APPL_INFO("Goto line : " << lineID);
-		BufferManager::Get(m_bufferID)->JumpAtLine(lineID);
+		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (NULL!=tmpBuffer) {
+			tmpBuffer->JumpAtLine(lineID);
+		}
 	}
 	// Force redraw of the widget
 	MarkToRedraw();

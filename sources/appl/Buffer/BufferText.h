@@ -26,8 +26,14 @@
 #ifndef __BUFFER_TEXT_H__
 #define __BUFFER_TEXT_H__
 
+#include <etk/UString.h>
+#include <etk/os/FSNode.h>
+#include <etk/unicode.h>
+#include <ewol/ewol.h>
+#include <ewol/compositing/Drawing.h>
+#include <ewol/compositing/Text.h>
+
 #include "ColorizeManager.h"
-#include "Buffer.h"
 #include "EdnBuf.h"
 
 typedef enum {
@@ -46,7 +52,58 @@ class CharElement
 		int32_t  m_bufferPos;
 };
 
-class BufferText : public Buffer {
+
+typedef struct{
+	uint32_t nbTotalLine;				//!< Number of line in the buffer
+	uint32_t nbTotalColomn;				//!< Number of line in the buffer
+	uint32_t startLineDisplay;			//!< First line display.
+	uint32_t startColomnDisplay;		//!< First Colomn displayed
+	uint32_t diplayableColomn;			//!< NB colomn that can be displayed
+	uint32_t diplayableLine;			//!< NB Line that can be displayed
+}infoStatBuffer_ts;
+
+
+class BufferText
+{
+	private:
+		bool                  m_fileModify;              //!< 
+		// naming
+		etk::FSNode           m_fileName;                //!< filename of the curent buffer
+		bool                  m_haveName;                //!< to know if the file have a name or NOT
+		bool                  m_updatePositionRequested; //!< if a position xhange in the windows ...
+		etk::Vector2D<float>  m_maximumSize;             //!< current maxSize of the buffer
+	public:
+				void      SetModify(bool status);
+		virtual etk::Vector2D<float>   GetBorderSize(void);
+		void RequestUpdateOfThePosition(void) { m_updatePositionRequested = true; };
+		void SetMaximumSize(etk::Vector2D<float>  maxSize) { m_maximumSize = maxSize; };
+		bool                NeedToUpdateDisplayPosition(void);
+		etk::Vector2D<float>           GetMaxSize(void) { return m_maximumSize; };
+				bool      IsModify(void);
+	public:
+		etk::FSNode       GetFileName(void)
+		{
+			return m_fileName;
+		};
+		
+		void SetFileName(etk::FSNode &newName)
+		{
+			m_fileName = newName;
+			m_haveName = true;
+			NameChange();
+		};
+		
+		void SetFileName(etk::UString &newName)
+		{
+			m_fileName.SetName(newName);
+			m_haveName = true;
+			NameChange();
+		};
+		
+		bool HaveName(void)
+		{
+			return m_haveName;
+		}
 	public:
 		          BufferText(void);
 		          BufferText(etk::FSNode &fileName);
@@ -56,7 +113,6 @@ class BufferText : public Buffer {
 		void      GetInfo(infoStatBuffer_ts &infoToUpdate);
 		void      SetLineDisplay(uint32_t lineNumber);
 		int32_t   Display(ewol::Text& OOText,
-		                  ewol::Drawing& OOColored,
 		                  int32_t offsetX, int32_t offsetY,
 		                  int32_t sizeX, int32_t sizeY);
 		void      AddChar(uniChar_t unicodeData);
@@ -111,8 +167,7 @@ class BufferText : public Buffer {
 		
 		int32_t  GetMousePosition(etk::Vector2D<float> pos);
 		
-		void     DrawLineNumber(ewol::Text* OOText, ewol::Drawing* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
-		void     DrawCursor(ewol::Drawing* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth);//, clipping_ts &clip);
+		void     DrawLineNumber(ewol::Text* OOText, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
 
 };
 

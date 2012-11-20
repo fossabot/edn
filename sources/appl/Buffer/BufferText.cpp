@@ -101,8 +101,70 @@ void BufferText::NameChange(void)
  * @return ---
  *
  */
+bool BufferText::IsModify(void)
+{
+	return m_fileModify;
+}
+
+void BufferText::SetModify(bool status)
+{
+	if (status != m_fileModify) {
+		m_fileModify = status;
+		// TODO : Remove from here
+		etk::UString data = "Modify";
+		ewol::EObjectMessageMultiCast::AnonymousSend(ednMsgBufferState, data);
+	}
+}
+
+
+/**
+ * @brief
+ *
+ * @param[in,out] ---
+ *
+ * @return ---
+ *
+ */
+bool BufferText::NeedToUpdateDisplayPosition(void)
+{
+	bool tmpVal = m_updatePositionRequested;
+	m_updatePositionRequested = false;
+	return tmpVal;
+}
+
+etk::Vector2D<float>  BufferText::GetBorderSize(void)
+{
+	etk::Vector2D<float>  tmpVal;
+	tmpVal.x = 30;
+	tmpVal.y = 30;
+	return tmpVal;
+}
+
+
+
+
+/**
+ * @brief
+ *
+ * @param[in,out] ---
+ *
+ * @return ---
+ *
+ */
 BufferText::BufferText()
 {
+
+	static int32_t fileBasicID = 0;
+	m_updatePositionRequested = false;
+	m_fileModify = true;
+	m_haveName = false;
+	etk::UString mString = "Untitle - ";
+	mString += fileBasicID++;
+	EWOL_DEBUG("Create buffer try  name : \"" << mString << "\"");
+	SetFileName(mString);
+	m_haveName = false;
+	EWOL_DEBUG("Create buffer with name : " << m_fileName );
+	
 	BasicInit();
 	SetModify(true);
 	APPL_INFO("New(Empty-Buffer)");
@@ -117,8 +179,13 @@ BufferText::BufferText()
  * @return ---
  *
  */
-BufferText::BufferText(etk::FSNode &fileName) : Buffer(fileName)
+BufferText::BufferText(etk::FSNode &fileName)
 {
+	m_fileModify = false;
+	EWOL_DEBUG("Create buffer try  name : \"" << fileName << "\"");
+	SetFileName(fileName);
+	EWOL_DEBUG("Create buffer with name : " << m_fileName );
+	
 	BasicInit();
 	NameChange();
 	APPL_INFO("Add Data from file(" << GetFileName() << ")");
@@ -206,7 +273,7 @@ void BufferText::SetLineDisplay(uint32_t lineNumber)
 
 #define SEPARATION_SIZE_LINE_NUMBER         (3)
 
-void BufferText::DrawLineNumber(ewol::Text* OOText, ewol::Drawing* OOColored, int32_t sizeX, int32_t sizeY, int32_t nbColomn,  int32_t lineNumber, int32_t positionY)
+void BufferText::DrawLineNumber(ewol::Text* OOText, int32_t sizeX, int32_t sizeY, int32_t nbColomn,  int32_t lineNumber, int32_t positionY)
 {
 	char tmpLineNumber[50];
 	sprintf(tmpLineNumber, "%*d", nbColomn, lineNumber);
@@ -214,23 +281,6 @@ void BufferText::DrawLineNumber(ewol::Text* OOText, ewol::Drawing* OOColored, in
 	OOText->SetColor(ColorizeManager::Get(COLOR_CODE_LINE_NUMBER));
 	OOText->SetPos(etk::Vector3D<float>(1.0f, (float)positionY, 0.0f) );
 	OOText->Print(tmpLineNumber);
-}
-
-#define CURSOR_WIDTH           (5)
-#define CURSOR_THICKNESS       (1.2)
-void BufferText::DrawCursor(ewol::Drawing* OOColored, int32_t x, int32_t y, int32_t letterHeight, int32_t letterWidth)//, clipping_ts &clip)
-{
-	/*
-	draw::Color & tmpppppp = ColorizeManager::Get(COLOR_CODE_CURSOR);
-	OOColored->SetColor(tmpppppp);
-	if (true == ewol::IsSetInsert()) {
-		OOColored->Rectangle( x, y, letterWidth, letterHeight);
-	} else {
-		OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y)                              , (int32_t)(x+CURSOR_WIDTH), (int32_t)(y)                              , CURSOR_THICKNESS);
-		OOColored->Line( (int32_t)(x-CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), (int32_t)(x+CURSOR_WIDTH), (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
-		OOColored->Line( (int32_t)(x)             , (int32_t)(y)                              , (int32_t)(x)             , (int32_t)(y+letterHeight-CURSOR_THICKNESS), CURSOR_THICKNESS);
-	}
-	*/
 }
 
 
@@ -275,69 +325,10 @@ int32_t BufferText::GetNumberOfLine(void)
  *
  */
 int32_t BufferText::Display(ewol::Text& OOText,
-                            ewol::Drawing& OOColored,
                             int32_t offsetX, int32_t offsetY,
                             int32_t sizeX, int32_t sizeY)
 {
-	OOColored.SetPos(etk::Vector3D<float>(-2048, -2048, 0));
-	OOColored.SetColor(ColorizeManager::Get(COLOR_CODE_BASIC_BG));
-	OOColored.RectangleWidth(etk::Vector3D<float>(4096, 4096, 0) );
-	
-# if 0
-	
-	
-	OOText.SetColor(0x000000FF);
-	OOText.SetColorBg(0x00000000);
-	OOText.Translate(etk::Vector3D<float>(0,sizeY,0) );
-	OOText.SetPos(etk::Vector3D<float>(0,0,0));
-	// the text is all the time writtent upper (due top the openGL system ==> the the first line must be written under ...
-	OOText.ForceLineReturn();
-	// This is use to generate an automatic return when \n is done ... ==> this permit to not know the line height ...
-	OOText.SetTextAlignement(0, sizeX, ewol::Text::alignDisable);
-	
-	// Generate MawSize 
-	/*
-	maxSize.x = 0.0;
-	maxSize.y = m_EdnBuf.NumberOfLines() * OOText.CalculateSize((uniChar_t)'A').y;
-	*/
-	
-	// Clear the line intexation :
-	m_elmentList.Clear();
-	// every char element is register to find the diplay pos when mouse event arrive
-	CharElement tmpElementProperty;
-	// set the first char : 
-	//tmpElementProperty.m_LineOffset = OOText.GetPos().y;
-	//tmpElementProperty.m_bufferPos  = displayStartBufferPos;
-	//m_elmentList.PushBack(tmpElementProperty);
-	
-	
-	int32_t displayStartLineId = (float)offsetY / OOText.CalculateSize((uniChar_t)'A').y;
-	// the ofsset is all time negative ...
-	displayStartLineId = etk_max(0, displayStartLineId);
-	APPL_DEBUG(" request offset : " << offsetY << " ==> " << displayStartLineId);
-	// update the display position with the scroll ofset : 
-	int32_t currentLineStartPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
-	int32_t findPos;
-	etk::UString lineText;
-	while (true == m_EdnBuf.SearchForward(currentLineStartPos, '\n', &findPos) ) {
-		// remember the start line display position in the buffer
-		tmpElementProperty.m_bufferPos = currentLineStartPos;
-		// we did not copy the \n
-		m_EdnBuf.GetRange(currentLineStartPos, findPos-1, lineText);
-		// update the next extract position with the \n removed
-		currentLineStartPos = findPos+1;
-		OOText.Print(lineText);
-		// Remember the last position of the current Line :
-		tmpElementProperty.m_LineOffset = OOText.GetPos().y;
-		// element list is used to manage the current line position
-		m_elmentList.PushBack(tmpElementProperty);
-		
-		// go to the start of the line ...
-		OOText.ForceLineReturn();
-	}
-	// TODO : Missing the last line ...
 
-#else
 
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
@@ -400,9 +391,8 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	y = sizeY - y;
 	y -= letterHeight;
 	
-	OOColored.SetClippingMode(false);
 	OOText.SetClippingMode(false);
-	DrawLineNumber(&OOText,       &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+	DrawLineNumber(&OOText, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
 	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 	
 	clipping_ts drawClipping;
@@ -413,8 +403,6 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	
 	OOText.SetClippingWidth(etk::Vector3D<float>((float)pixelX, 0.0f, -0.5f),
 	                        etk::Vector3D<float>((float)(sizeX - drawClipping.x), (float)sizeY, 0.5f) );
-	OOColored.SetClippingWidth(etk::Vector3D<float>(0.0f, 0.0f, -0.5f),
-	                           etk::Vector3D<float>((float)sizeX, (float)sizeY, 0.5f) );
 	
 	// Clear the line intexation :
 	m_elmentList.Clear();
@@ -425,6 +413,8 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	tmpElementProperty.m_ySize = 10;
 	tmpElementProperty.m_bufferPos = displayStartBufferPos;
 	m_elmentList.PushBack(tmpElementProperty);
+	
+	etk::Vector3D<float> tmpCursorPosition(0, 0, -1); //Cursor is display only at the end to be all time over the background ... (-1 in z no cursor)
 	
 	float lineMaxSize = 0.0;
 	for (iii=displayStartBufferPos; iii<mylen && displayLines >=0 && y >= -2*letterHeight; iii = new_i) {
@@ -455,21 +445,23 @@ int32_t BufferText::Display(ewol::Text& OOText,
 				}
 			}
 			OOText.SetColorBg(draw::color::none);
-			if(	true == selHave
-				&&	selStart <= iii
-				&&	selEnd   > iii)
+			if(    true == selHave
+			    && selStart <= iii
+			    && selEnd > iii)
 			{
 				selectColor = myColorSel;
 				OOText.SetColorBg(selectColor->GetBG() );
 			} else {
-				if(		' ' == currentChar
-				&&	true == globals::IsSetDisplaySpaceChar() )
-				{
-					OOText.SetColorBg(myColorSpace);
-				} else if(		'\t' == currentChar
-							&&	true == globals::IsSetDisplaySpaceChar() )
-				{
-					OOText.SetColorBg(myColorTab);
+				if(false == selectColor->HaveBg()) {
+					if(    (uniChar_t)' ' == currentChar
+					    && true == globals::IsSetDisplaySpaceChar() )
+					{
+						OOText.SetColorBg(myColorSpace);
+					} else if(    '\t' == currentChar
+					           && true == globals::IsSetDisplayTabChar() )
+					{
+						OOText.SetColorBg(myColorTab);
+					}
 				} else {
 					OOText.SetColorBg(selectColor->GetBG());
 				}
@@ -491,8 +483,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 		idX += displaywidth;
 		// display cursor : 
 		if (m_cursorPos == iii) {
-			// display the cursor:
-			DrawCursor(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth);
+			tmpCursorPosition = etk::Vector3D<float>(pixelX - offsetX, y, 0);
 		}
 		lineMaxSize += drawSize;
 		pixelX += drawSize;
@@ -506,35 +497,31 @@ int32_t BufferText::Display(ewol::Text& OOText,
 			//APPL_DEBUG("display pos =" << y);
 			displayLines++;
 			currentLineID++;
-			OOColored.SetClippingMode(false);
 			OOText.SetClippingMode(false);
 			OOText.SetFontBold(false);
 			OOText.SetFontItalic(false);
-			DrawLineNumber(&OOText, &OOColored, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
+			DrawLineNumber(&OOText, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
 			OOText.SetClippingMode(true);
-			OOColored.SetClippingMode(true);
-			// add elements : 
+			// add elements :
 			m_elmentList.PushBack(tmpElementProperty);
 		}
 	}
 	//APPL_DEBUG("end at pos buf =" << iii << " / " << m_EdnBuf.Size());
 	// special case : the cursor is at the end of the buffer...
 	if (m_cursorPos == iii) {
-		DrawCursor(&OOColored, pixelX - offsetX, y, letterHeight, letterWidth);//, drawClippingTextArea);
+		tmpCursorPosition = etk::Vector3D<float>(pixelX - offsetX, y, 0);
+	}
+	if (tmpCursorPosition.z!=-1) {
+		// display the cursor:
+		OOText.SetPos(tmpCursorPosition);
+		OOText.SetColor(ColorizeManager::Get(COLOR_CODE_CURSOR));
+		OOText.SetColorBg(ColorizeManager::Get(COLOR_CODE_CURSOR));
+		OOText.PrintCursor(ewol::IsSetInsert());
 	}
 	// set the maximum size for the display ...
 	SetMaximumSize(maxSize);
 	int64_t stopTime2 = ewol::GetTime();
 	APPL_DEBUG("DRAW text (brut) = " << stopTime2 - stopTime << " micro-s");
-
-#endif
-
-
-
-
-
-
-
 
 
 
@@ -777,7 +764,6 @@ int32_t BufferText::GetMousePosition(etk::Vector2D<float> pos)
 	bool inLineDone=false;
 	//APPL_DEBUG("try to find in : " << width << "," << height);
 	for(int32_t iii=0; iii<m_elmentList.Size()-1; iii++) {
-		/*
 		//APPL_DEBUG("check element : " << m_elmentList[iii].m_yOffset << "<= " << pos.y << " <" << (m_elmentList[iii].m_yOffset + m_elmentList[iii].m_ySize));
 		if(false == inLineDone) {
 			if(    pos.y>=m_elmentList[iii].m_yOffset
@@ -799,10 +785,8 @@ int32_t BufferText::GetMousePosition(etk::Vector2D<float> pos)
 				return m_elmentList[iii].m_bufferPos;
 			}
 		}
-		*/
 	}
 	if (m_elmentList.Size()>0) {
-		/*
 		if(pos.y<m_elmentList[m_elmentList.Size()/2].m_yOffset) {
 			//APPL_DEBUG("Error to get position (return Last)");
 			return m_elmentList[m_elmentList.Size()-1].m_bufferPos;
@@ -810,7 +794,6 @@ int32_t BufferText::GetMousePosition(etk::Vector2D<float> pos)
 			//APPL_DEBUG("Error to get position (return begin)");
 			return m_elmentList[0].m_bufferPos;
 		}
-		*/
 	} else {
 		APPL_CRITICAL("Error to get position (very bad)");
 		return 0;
