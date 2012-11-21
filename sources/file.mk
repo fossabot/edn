@@ -61,7 +61,7 @@ LOCAL_COPY_FOLDERS := \
                       ../data/theme/default/*.svg:theme/default/
 
 
-ifneq ($(CONFIG___EWOL_INTEGRATED_FONT__),$(empty))
+ifneq ($(__EWOL_INTEGRATED_FONT__),$(empty))
 
 LOCAL_COPY_FILES := ../data/Font/freefont/FreeSerif.ttf:fonts/FreeSerif.ttf
 LOCAL_COPY_FOLDERS += ../data/Font/freefont/FreeMon*.ttf:fonts
