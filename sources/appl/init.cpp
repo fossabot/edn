@@ -48,6 +48,18 @@ MainWindows * basicWindows = NULL;
 
 
 /**
+ * @brief Main of the program (This can be set in every case, but it is not used in Andoid...).
+ * @param std IO
+ * @return std IO
+ */
+int main(int argc, char *argv[])
+{
+	// only one things to do : 
+	return ewol::Run(argc, argv);
+}
+
+
+/**
  * @brief main application function Initialisation
  */
 void APP_Init(void)
