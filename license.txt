@@ -1,26 +1,15 @@
-=====================================================================
-==       Copyright 2010 Edouard DUPIN, all right reserved          ==
-=====================================================================
+Edn (Editeur De N'ours) : Source code editor
+Copyright (C) Copyright 2010 Edouard DUPIN
 
-Edn (Editeur De N'ours) is a FREE software.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-Terms of license:
-
-You can:
-	- Redistribute the sources code and binaries.
-	- Modify the Sources code.
-	- Use a part of the sources (less than 50%) in an other software, just write somewhere "Edn is great" visible by the user (on your product or on your website with a link to my page).
-	- Redistribute the modification only if you want.
-	- Send me the bug-fix (it could be great).
-	- Pay me a beer or some other things.
-	- Print the source code on WC paper ...
-You can NOT:
-	- Earn money with this Software (But I can).
-	- Add malware in the Sources.
-	- Do something bad with the sources.
-	- Use it to travel in the space with a toaster.
-
-I reserve the right to change this license. If it change the version of the copy you have keep its own license
-
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.

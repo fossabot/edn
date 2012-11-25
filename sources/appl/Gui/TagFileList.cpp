@@ -1,26 +1,9 @@
 /**
- *******************************************************************************
- * @file TagFileList.cpp
- * @brief Editeur De N'ours : Tags list display to jump (sources)
  * @author Edouard DUPIN
- * @date 16/10/2012
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
 
 #include <etk/tool.h>
@@ -106,9 +89,9 @@ bool appl::TagFileList::GetElement(int32_t colomn, int32_t raw, etk::UString &my
 };
 
 
-bool appl::TagFileList::OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent, int32_t colomn, int32_t raw, float x, float y)
+bool appl::TagFileList::OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y)
 {
-	if (typeEvent == ewol::EVENT_INPUT_TYPE_SINGLE) {
+	if (typeEvent == ewol::keyEvent::statusSingle) {
 		EWOL_INFO("Event on List : IdInput=" << IdInput << " colomn=" << colomn << " raw=" << raw );
 		if (1 == IdInput) {
 			int32_t previousRaw = m_selectedLine;

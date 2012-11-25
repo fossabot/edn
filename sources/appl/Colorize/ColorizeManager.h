@@ -1,33 +1,17 @@
 /**
- *******************************************************************************
- * @file ColorizeManager.h
- * @brief Editeur De N'ours : Colorising Manager (header)
  * @author Edouard DUPIN
- * @date 14/12/2010
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
- 
+
 #ifndef __COLORIZE_MANAGER_H__
 #define __COLORIZE_MANAGER_H__
 
 #include <Colorize.h>
 #include <appl/globalMsg.h>
+#include <draw/Color.h>
 #include <ewol/widget/Widget.h>
 
 typedef enum {

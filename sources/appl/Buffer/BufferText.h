@@ -1,28 +1,11 @@
 /**
- *******************************************************************************
- * @file BufferText.h
- * @brief Editeur De N'ours : Text Buffer (edit only ASCII text File) (header)
  * @author Edouard DUPIN
- * @date 19/01/2011
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
- 
+
 #ifndef __BUFFER_TEXT_H__
 #define __BUFFER_TEXT_H__
 
@@ -116,7 +99,7 @@ class BufferText
 		                  int32_t offsetX, int32_t offsetY,
 		                  int32_t sizeX, int32_t sizeY);
 		void      AddChar(uniChar_t unicodeData);
-		void      cursorMove(ewol::eventKbMoveType_te moveTypeEvent);
+		void      cursorMove(ewol::keyEvent::keyboard_te  moveTypeEvent);
 		void      MouseSelectFromCursorTo(etk::Vector2D<float> pos);
 		void      MouseEvent(etk::Vector2D<float> pos);
 		void      MouseEventDouble(void);

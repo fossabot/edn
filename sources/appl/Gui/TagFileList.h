@@ -1,33 +1,14 @@
 /**
- *******************************************************************************
- * @file TagFileList.h
- * @brief Editeur De N'ours : Tags list display to jump (header)
  * @author Edouard DUPIN
- * @date 16/10/2012
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
 
 #ifndef __APPL_CTAGS_LIST_H__
 #define __APPL_CTAGS_LIST_H__
 
-
-#include <etk/Types.h>
 #include <appl/Debug.h>
 #include <ewol/widget/List.h>
 
@@ -44,7 +25,7 @@ namespace appl {
 			TagListElement(etk::UString& file, int32_t line) : filename(file), fileLine(line) {};
 			~TagListElement(void) {};
 	};
-	class TagFileList : public ewol::List
+	class TagFileList : public widget::List
 	{
 		private:
 			int32_t                            m_selectedLine;
@@ -58,7 +39,7 @@ namespace appl {
 			bool GetTitle(int32_t colomn, etk::UString &myTitle, draw::Color &fg, draw::Color &bg);
 			uint32_t GetNuberOfRaw(void);
 			bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg);
-			bool OnItemEvent(int32_t IdInput, ewol::eventInputType_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
+			bool OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
 			/**
 			 * @brief Get the current Object type of the EObject
 			 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it

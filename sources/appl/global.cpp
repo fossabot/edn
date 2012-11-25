@@ -1,33 +1,16 @@
 /**
- *******************************************************************************
- * @file tools_Globals.cpp
- * @brief Editeur De N'ours : Globals Values
  * @author Edouard DUPIN
- * @date 05/12/2010
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
 
 #include <appl/global.h>
 #include <ColorizeManager.h>
 #include <appl/globalMsg.h>
 #include <ewol/eObject/EObject.h>
-#include <ewol/ResourceManager.h>
+#include <ewol/renderer/ResourceManager.h>
 #include <etk/os/FSNode.h>
 
 #undef __class__
@@ -132,10 +115,10 @@ static const char * const l_changeRounded     = "edn-event-change-rounded";
 
 globals::ParameterGlobalsGui::ParameterGlobalsGui(void) 
 {
-	ewol::CheckBox* myCheckbox = NULL;
-	ewol::Spacer* mySpacer = NULL;
+	widget::CheckBox* myCheckbox = NULL;
+	widget::Spacer* mySpacer = NULL;
 	
-	mySpacer = new ewol::Spacer();
+	mySpacer = new widget::Spacer();
 	if (NULL == mySpacer) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
@@ -143,7 +126,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void)
 		mySpacer->SetExpendY(true);
 		SubWidgetAdd(mySpacer);
 	}
-	myCheckbox = new ewol::CheckBox("Automatic Indentation");
+	myCheckbox = new widget::CheckBox("Automatic Indentation");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
@@ -152,7 +135,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void)
 		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeIndentation);
 		SubWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new ewol::CheckBox("Display space char (' ')");
+	myCheckbox = new widget::CheckBox("Display space char (' ')");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
@@ -161,7 +144,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void)
 		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeSpace);
 		SubWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new ewol::CheckBox("Display tabulation char ('\\t')");
+	myCheckbox = new widget::CheckBox("Display tabulation char ('\\t')");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
@@ -170,7 +153,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void)
 		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeTabulation);
 		SubWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new ewol::CheckBox("Display end of line ('\\n')");
+	myCheckbox = new widget::CheckBox("Display end of line ('\\n')");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
@@ -179,7 +162,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void)
 		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeEndOfLine);
 		SubWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new ewol::CheckBox("switch Rounded/default");
+	myCheckbox = new widget::CheckBox("switch Rounded/default");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
@@ -205,7 +188,7 @@ globals::ParameterGlobalsGui::~ParameterGlobalsGui(void)
  */
 void globals::ParameterGlobalsGui::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
 {
-	ewol::SizerVert::OnReceiveMessage(CallerObject, eventId, data);
+	widget::SizerVert::OnReceiveMessage(CallerObject, eventId, data);
 	
 	if (eventId == l_changeEndOfLine) {
 		if (data == "true") {

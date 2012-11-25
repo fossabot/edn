@@ -1,27 +1,11 @@
 /**
- *******************************************************************************
- * @file MainWindows.cpp
- * @brief Editeur De N'ours : main Windows diplayer (Sources)
  * @author Edouard DUPIN
- * @date 04/01/2011
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
+
 
 #include <appl/Debug.h>
 #include <appl/global.h>
@@ -45,7 +29,6 @@
 #include <ewol/widget/meta/FileChooser.h>
 #include <ewol/widget/meta/Parameter.h>
 #include <ewol/widget/WidgetManager.h>
-#include <ewol/ResourceManager.h>
 #include <ewol/eObject/EObject.h>
 
 
@@ -57,14 +40,14 @@
 #include <ewol/widget/Label.h>
 #include <ewol/widget/Spacer.h>
 
-class ParameterAboutGui : public ewol::SizerVert
+class ParameterAboutGui : public widget::SizerVert
 {
 	public :
 		ParameterAboutGui(void)
 		{
-			ewol::Spacer* mySpacer = NULL;
+			widget::Spacer* mySpacer = NULL;
 			
-			mySpacer = new ewol::Spacer();
+			mySpacer = new widget::Spacer();
 			if (NULL == mySpacer) {
 				APPL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
@@ -102,7 +85,7 @@ class ParameterAboutGui : public ewol::SizerVert
 		
 		void AddElement(etk::UString label, bool bold=false, bool italic=false)
 		{
-			ewol::Label* myLabel = new ewol::Label(label);
+			widget::Label* myLabel = new widget::Label(label);
 			if (NULL == myLabel) {
 				APPL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
@@ -118,31 +101,31 @@ const char * l_smoothChick = "tmpEvent_smooth";
 const char * l_smoothMin = "tmpEvent_minChange";
 const char * l_smoothMax = "tmpEvent_maxChange";
 
-
+/*
 extern float DF_SoftEdge_min;
 extern float DF_SoftEdge_max;
 extern int32_t DF_SoftEdge;
-ewol::Slider* tmpSliderMin = NULL;
-ewol::Slider* tmpSliderMax = NULL;
-
+widget::Slider* tmpSliderMin = NULL;
+widget::Slider* tmpSliderMax = NULL;
+*/
 #undef __class__
 #define __class__	"MainWindows"
 
 MainWindows::MainWindows(void)
 {
 	APPL_DEBUG("CREATE WINDOWS ... ");
-	ewol::SizerVert * mySizerVert = NULL;
-	ewol::SizerVert * mySizerVert2 = NULL;
-	ewol::SizerHori * mySizerHori = NULL;
+	widget::SizerVert * mySizerVert = NULL;
+	widget::SizerVert * mySizerVert2 = NULL;
+	widget::SizerHori * mySizerHori = NULL;
 	//ewol::Button * myButton = NULL;
 	CodeView * myCodeView = NULL;
 	BufferView * myBufferView = NULL;
-	ewol::Menu * myMenu = NULL;
+	widget::Menu * myMenu = NULL;
 	
-	mySizerVert = new ewol::SizerVert();
+	mySizerVert = new widget::SizerVert();
 	SetSubWidget(mySizerVert);
 	
-		mySizerHori = new ewol::SizerHori();
+		mySizerHori = new widget::SizerHori();
 		mySizerVert->SubWidgetAdd(mySizerHori);
 			myBufferView = new BufferView();
 			myBufferView->SetExpendX(false);
@@ -151,7 +134,7 @@ MainWindows::MainWindows(void)
 			myBufferView->SetFillY(true);
 			mySizerHori->SubWidgetAdd(myBufferView);
 			
-			mySizerVert2 = new ewol::SizerVert();
+			mySizerVert2 = new widget::SizerVert();
 			mySizerHori->SubWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
@@ -167,14 +150,14 @@ MainWindows::MainWindows(void)
 				mySizerVert2->SubWidgetAdd(mySearch);
 				#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 				{
-					ewol::SizerHori * mySizerHori2 = new ewol::SizerHori();
+					widget::SizerHori * mySizerHori2 = new widget::SizerHori();
 					mySizerVert2->SubWidgetAdd(mySizerHori2);
 						
-						ewol::CheckBox* tmpCheck = new ewol::CheckBox("smooth");
+						widget::CheckBox* tmpCheck = new widget::CheckBox("smooth");
 						mySizerHori2->SubWidgetAdd(tmpCheck);
 						tmpCheck->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_smoothChick);
 						
-						ewol::Slider* tmpSlider = new ewol::Slider();
+						widget::Slider* tmpSlider = new widget::Slider();
 						mySizerHori2->SubWidgetAdd(tmpSlider);
 						tmpSlider->RegisterOnEvent(this, ewolEventSliderChange, l_smoothMin);
 						tmpSlider->SetExpendX(true);
@@ -183,7 +166,7 @@ MainWindows::MainWindows(void)
 						tmpSlider->SetValue(0450);
 						tmpSliderMin = tmpSlider;
 						
-						tmpSlider = new ewol::Slider();
+						tmpSlider = new widget::Slider();
 						mySizerHori2->SubWidgetAdd(tmpSlider);
 						tmpSlider->RegisterOnEvent(this, ewolEventSliderChange, l_smoothMax);
 						tmpSlider->SetExpendX(true);
@@ -194,26 +177,26 @@ MainWindows::MainWindows(void)
 				}
 				#endif
 			
-		mySizerHori = new ewol::SizerHori();
+		mySizerHori = new widget::SizerHori();
 		mySizerVert->SubWidgetAdd(mySizerHori);
 			
-			myMenu = new ewol::Menu();
+			myMenu = new widget::Menu();
 			mySizerHori->SubWidgetAdd(myMenu);
 			int32_t idMenuFile = myMenu->AddTitle("File");
 				(void)myMenu->Add(idMenuFile, "New",          "", ednMsgGuiNew);
 				(void)myMenu->AddSpacer();
-				(void)myMenu->Add(idMenuFile, "Open",         "icon/Load.svg", ednMsgGuiOpen);
-				(void)myMenu->Add(idMenuFile, "Close",        "icon/Close.svg", ednMsgGuiClose, "current");
+				(void)myMenu->Add(idMenuFile, "Open",         "THEME:GUI:Load.svg", ednMsgGuiOpen);
+				(void)myMenu->Add(idMenuFile, "Close",        "THEME:GUI:Close.svg", ednMsgGuiClose, "current");
 				(void)myMenu->Add(idMenuFile, "Close (all)",  "", ednMsgGuiClose, "All");
-				(void)myMenu->Add(idMenuFile, "Save",         "icon/Save.svg", ednMsgGuiSave, "current");
+				(void)myMenu->Add(idMenuFile, "Save",         "THEME:GUI:Save.svg", ednMsgGuiSave, "current");
 				(void)myMenu->Add(idMenuFile, "Save As ...",  "", ednMsgGuiSaveAs);
 				(void)myMenu->AddSpacer();
 				//(void)myMenu->Add(idMenuFile, "Exit", "", ednMsgGuiExit);
 				(void)myMenu->AddSpacer();
-				(void)myMenu->Add(idMenuFile, "Properties",   "icon/Parameter.svg", ednMsgProperties);
+				(void)myMenu->Add(idMenuFile, "Properties",   "THEME:GUI:Parameter.svg", ednMsgProperties);
 			int32_t idMenuEdit = myMenu->AddTitle("Edit");
-				(void)myMenu->Add(idMenuEdit, "Undo",         "icon/Undo.svg", ednMsgGuiUndo);
-				(void)myMenu->Add(idMenuEdit, "Redo",         "icon/Redo.svg", ednMsgGuiRedo);
+				(void)myMenu->Add(idMenuEdit, "Undo",         "THEME:GUI:Undo.svg", ednMsgGuiUndo);
+				(void)myMenu->Add(idMenuEdit, "Redo",         "THEME:GUI:Redo.svg", ednMsgGuiRedo);
 				(void)myMenu->AddSpacer();
 				(void)myMenu->Add(idMenuEdit, "Copy",         "", ednMsgGuiCopy, "STD");
 				(void)myMenu->Add(idMenuEdit, "Cut",          "", ednMsgGuiCut, "STD");
@@ -224,8 +207,8 @@ MainWindows::MainWindows(void)
 				(void)myMenu->Add(idMenuEdit, "Un-Select","", ednMsgGuiSelect, "NONE");
 				(void)myMenu->Add(idMenuEdit, "Goto line ...","", ednMsgGuiGotoLine, "???");
 			int32_t idMenuSearch = myMenu->AddTitle("Search");
-				(void)myMenu->Add(idMenuSearch, "Search",         "icon/Search.svg", ednMsgGuiSearch);
-				(void)myMenu->Add(idMenuSearch, "Replace",        "icon/Replace.svg", ednMsgGuiReplace);
+				(void)myMenu->Add(idMenuSearch, "Search",         "THEME:GUI:Search.svg", ednMsgGuiSearch);
+				(void)myMenu->Add(idMenuSearch, "Replace",        "THEME:GUI:Replace.svg", ednMsgGuiReplace);
 				(void)myMenu->AddSpacer();
 				(void)myMenu->Add(idMenuSearch, "Find (previous)","", ednMsgGuiFind, "Previous");
 				(void)myMenu->Add(idMenuSearch, "Find (next)",    "", ednMsgGuiFind, "Next");
@@ -246,11 +229,35 @@ MainWindows::MainWindows(void)
 				(void)myMenu->AddSpacer();
 				(void)myMenu->Add(idMenugDisplay, "Reload OpenGl Shader", "", ednMsgGuiReloadShader);
 			
-			m_widgetLabelFileName = new ewol::Label("FileName");
+			m_widgetLabelFileName = new widget::Label("FileName");
 			m_widgetLabelFileName->SetExpendX(true);
 			m_widgetLabelFileName->SetFillY(true);
 			mySizerHori->SubWidgetAdd(m_widgetLabelFileName);
-		
+	
+	
+	// add generic shortcut ...
+	//                 (shift, control, alt,  meta,  uniChar_t unicodeValue, const char * generateEventId, etk::UString& data)
+	ShortCutAdd("ctrl+o",       ednMsgGuiOpen, "", true);
+	ShortCutAdd("ctrl+n",       ednMsgGuiNew,   "", true);
+	
+	ShortCutAdd("ctrl+s",       ednMsgGuiSave, "current", true);
+	ShortCutAdd("ctrl+shift+s", ednMsgGuiSave, "All", true);
+	
+	ShortCutAdd("ctrl+q",       ednMsgGuiClose, "current", true);
+	ShortCutAdd("ctrl+shift+q", ednMsgGuiClose, "All", true);
+	
+	ShortCutAdd("ctrl+z",       ednMsgGuiUndo, "", true);
+	ShortCutAdd("ctrl+shift+z", ednMsgGuiRedo, "", true);
+	
+	ShortCutAdd("ctrl+l",       ednMsgGuiGotoLine, "???", true);
+	
+	ShortCutAdd("ctrl+f",       ednMsgGuiSearch, "", true);
+	ShortCutAdd("F12",          ednMsgGuiReloadShader, "", true);
+	
+	ShortCutAdd("ctrl+d",       ednMsgGuiCtags, "Jump", true);
+	
+	
+	
 	// Generic event ...
 	RegisterMultiCast(ednMsgGuiSaveAs);
 	RegisterMultiCast(ednMsgProperties);
@@ -285,7 +292,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 	//APPL_INFO("Receive Event from the main windows ... : \"" << eventId << "\" ==> data=\"" << data << "\"" );
 	// Open file Section ...
 	if (eventId == ednMsgGuiOpen) {
-		ewol::FileChooser* tmpWidget = new ewol::FileChooser();
+		widget::FileChooser* tmpWidget = new widget::FileChooser();
 		tmpWidget->SetTitle("Open Files ...");
 		tmpWidget->SetValidateLabel("Open");
 		if (BufferManager::GetSelected()!=-1) {
@@ -315,7 +322,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 				APPL_ERROR("Request saveAs on non existant Buffer ID=" << m_currentSavingAsIdBuffer);
 			} else {
 				BufferText* myBuffer = BufferManager::Get(m_currentSavingAsIdBuffer);
-				ewol::FileChooser* tmpWidget = new ewol::FileChooser();
+				widget::FileChooser* tmpWidget = new widget::FileChooser();
 				if (NULL == tmpWidget) {
 					APPL_ERROR("Can not allocate widget ==> display might be in error");
 				} else {
@@ -369,7 +376,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		// TODO : Set the Title ....
 	} else if (eventId == ednMsgProperties) {
 		// Request the parameter GUI
-		ewol::Parameter* tmpWidget = new ewol::Parameter();
+		widget::Parameter* tmpWidget = new widget::Parameter();
 		if (NULL == tmpWidget) {
 			APPL_ERROR("Can not allocate widget ==> display might be in error");
 		} else {
@@ -385,7 +392,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			tmpSubWidget = new ParameterAboutGui();
 			tmpWidget->MenuAdd("About",           "", tmpSubWidget);
 		}
-	} else if (eventId == l_smoothChick) {
+	}/* else if (eventId == l_smoothChick) {
 		if (data == "true") {
 			DF_SoftEdge = 1;
 		} else {
@@ -407,7 +414,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			DF_SoftEdge_min = DF_SoftEdge_max;
 			tmpSliderMin->SetValue(DF_SoftEdge_min*1000.0);
 		}
-	} else if (eventId == ednMsgGuiReloadShader) {
+	} */else if (eventId == ednMsgGuiReloadShader) {
 		ewol::resource::ReLoadResources();
 		ewol::ForceRedrawAll();
 	}

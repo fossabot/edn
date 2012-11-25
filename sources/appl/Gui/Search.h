@@ -1,28 +1,11 @@
 /**
- *******************************************************************************
- * @file Search.h
- * @brief Editeur De N'ours : Search system (header)
  * @author Edouard DUPIN
- * @date 03/01/2011
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
- 
+
 #ifndef __SEARCH_H__
 #define __SEARCH_H__
 
@@ -30,7 +13,7 @@
 #include <ewol/widget/SizerHori.h>
 #include <ewol/widget/Entry.h>
 
-class Search : public ewol::SizerHori
+class Search : public widget::SizerHori
 {
 	public:
 		// Constructeur
@@ -60,8 +43,8 @@ class Search : public ewol::SizerHori
 		virtual void OnObjectRemove(ewol::EObject * removeObject);
 	private:
 		bool    m_forward;
-		ewol::Entry * m_searchEntry;
-		ewol::Entry * m_replaceEntry;
+		widget::Entry * m_searchEntry;
+		widget::Entry * m_replaceEntry;
 };
 
 #endif

@@ -1,33 +1,15 @@
 /**
- *******************************************************************************
- * @file appl/global.h
- * @brief Editeur De N'ours : Globals Values (header)
  * @author Edouard DUPIN
- * @date 05/12/2010
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
- 
+
 #ifndef __TOOLS_GLOBALS_H__
 #define __TOOLS_GLOBALS_H__
 
 #include <appl/Debug.h>
-#include <etk/Types.h>
 #include <ewol/widget/SizerVert.h>
 
 
@@ -53,7 +35,7 @@ namespace globals
 	
 	bool    OrderTheBufferList(void);
 	
-	class ParameterGlobalsGui : public ewol::SizerVert
+	class ParameterGlobalsGui : public widget::SizerVert
 	{
 		public :
 			ParameterGlobalsGui(void);

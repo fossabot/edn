@@ -1,51 +1,9 @@
 /**
- *******************************************************************************
- * @file TagFileSelection.cpp
- * @brief Editeur De N'ours : Tags list selection to jump (sources)
  * @author Edouard DUPIN
- * @date 16/10/2012
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
- */
-
-
-/**
- *******************************************************************************
- * @file ewol/widget/meta/FileChooser.cpp
- * @brief ewol File chooser meta widget system (Sources)
- * @author Edouard DUPIN
- * @date 29/12/2011
- * @par Project
- * ewol
- *
- * @par Copyright
- * Copyright 2011 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
 
 #include <appl/Gui/TagFileSelection.h>
@@ -77,13 +35,13 @@ appl::TagFileSelection::TagFileSelection(void)
 	AddEventId(applEventctagsSelection);
 	AddEventId(applEventctagsCancel);
 	
-	ewol::Label*      myWidgetTitle = NULL;
-	ewol::Button*     myWidgetValidate = NULL;
-	ewol::Button*     myWidgetCancel = NULL;
+	widget::Label*      myWidgetTitle = NULL;
+	widget::Button*     myWidgetValidate = NULL;
+	widget::Button*     myWidgetCancel = NULL;
 	
-	ewol::SizerVert * mySizerVert = NULL;
-	ewol::SizerHori * mySizerHori = NULL;
-	ewol::Spacer *    mySpacer = NULL;
+	widget::SizerVert * mySizerVert = NULL;
+	widget::SizerHori * mySizerHori = NULL;
+	widget::Spacer *    mySpacer = NULL;
 	#if defined(__TARGET_OS__Android)
 		SetDisplayRatio(0.90);
 	#elif defined(__TARGET_OS__Windows)
@@ -92,7 +50,7 @@ appl::TagFileSelection::TagFileSelection(void)
 		SetDisplayRatio(0.80);
 	#endif
 	
-	mySizerVert = new ewol::SizerVert();
+	mySizerVert = new widget::SizerVert();
 	if (NULL == mySizerVert) {
 		EWOL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
@@ -100,19 +58,19 @@ appl::TagFileSelection::TagFileSelection(void)
 		// set it in the pop-up-system : 
 		SubWidgetSet(mySizerVert);
 		
-		mySizerHori = new ewol::SizerHori();
+		mySizerHori = new widget::SizerHori();
 		if (NULL == mySizerHori) {
 			EWOL_ERROR("Can not allocate widget ==> display might be in error");
 		} else {
 			mySizerVert->SubWidgetAdd(mySizerHori);
-			mySpacer = new ewol::Spacer();
+			mySpacer = new widget::Spacer();
 			if (NULL == mySpacer) {
 				EWOL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
 				mySpacer->SetExpendX(true);
 				mySizerHori->SubWidgetAdd(mySpacer);
 			}
-			myWidgetValidate = new ewol::Button("Jump");
+			myWidgetValidate = new widget::Button("Jump");
 			if (NULL == myWidgetValidate) {
 				EWOL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
@@ -120,7 +78,7 @@ appl::TagFileSelection::TagFileSelection(void)
 				myWidgetValidate->RegisterOnEvent(this, ewolEventButtonPressed, applEventctagsSelection);
 				mySizerHori->SubWidgetAdd(myWidgetValidate);
 			}
-			myWidgetCancel = new ewol::Button("Cancel");
+			myWidgetCancel = new widget::Button("Cancel");
 			if (NULL == myWidgetCancel) {
 				EWOL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
@@ -143,7 +101,7 @@ appl::TagFileSelection::TagFileSelection(void)
 			mySizerVert->SubWidgetAdd(m_listTag);
 		}
 		
-		myWidgetTitle = new ewol::Label("Ctags Jump Selection ...");
+		myWidgetTitle = new widget::Label("Ctags Jump Selection ...");
 		if (NULL == myWidgetTitle) {
 			EWOL_ERROR("Can not allocate widget ==> display might be in error");
 		} else {
@@ -216,7 +174,7 @@ void appl::TagFileSelection::AddCtagsNewItem(etk::UString file, int32_t line)
 void appl::TagFileSelection::OnObjectRemove(ewol::EObject * removeObject)
 {
 	// First step call parrent : 
-	ewol::PopUp::OnObjectRemove(m_listTag);
+	widget::PopUp::OnObjectRemove(m_listTag);
 	// second step find if in all the elements ...
 	if(removeObject == m_listTag) {
 		m_listTag = NULL;

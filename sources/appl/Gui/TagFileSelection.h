@@ -1,32 +1,14 @@
 /**
- *******************************************************************************
- * @file TagFileSelection.h
- * @brief Editeur De N'ours : Tags list selection to jump (header)
  * @author Edouard DUPIN
- * @date 16/10/2012
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
 
 #ifndef __APPL_CTAGS_SELECTION_H__
 #define __APPL_CTAGS_SELECTION_H__
 
-#include <etk/Types.h>
 #include <appl/Debug.h>
 #include <ewol/widget/PopUp.h>
 #include <appl/Gui/TagFileList.h>
@@ -35,7 +17,7 @@ extern const char * const applEventctagsSelection;
 extern const char * const applEventctagsCancel;
 
 namespace appl {
-	class TagFileSelection : public ewol::PopUp
+	class TagFileSelection : public widget::PopUp
 	{
 		private:
 			appl::TagFileList*   m_listTag;

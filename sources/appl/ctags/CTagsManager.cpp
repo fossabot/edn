@@ -1,26 +1,9 @@
 /**
- *******************************************************************************
- * @file CTagsManager.cpp
- * @brief Editeur De N'ours : Ctags manager : acces to the ctags file (Sources)
  * @author Edouard DUPIN
- * @date 15/07/2011
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
 
 #include <appl/Debug.h>
@@ -158,13 +141,13 @@ void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * e
 	} else if (eventId == ednMsgGuiCtags) {
 		if (data == "Load") {
 			APPL_INFO("Request opening ctag file");
-			ewol::FileChooser* tmpWidget = new ewol::FileChooser();
+			widget::FileChooser* tmpWidget = new widget::FileChooser();
 			if (NULL == tmpWidget) {
 				APPL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
 				tmpWidget->SetTitle("Open Exuberant Ctags File");
 				tmpWidget->SetValidateLabel("Open");
-				PopUpWidgetPush(tmpWidget);
+				ewol::WindowsPopUpAdd(tmpWidget);
 				tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpCtagsLoadFile);
 			}
 		} else if (data == "ReLoad") {
@@ -240,7 +223,7 @@ void CTagsManager::JumpTo(void)
 {
 	if (NULL != m_ctagFile) {
 		// get the middle button of the clipboard ==> represent the current selection ...
-		etk::UString data = ewol::clipBoard::Get(ewol::clipBoard::CLIPBOARD_SELECTION);
+		etk::UString data = ewol::clipBoard::Get(ewol::clipBoard::clipboardSelection);
 		APPL_DEBUG("clipboard data : \"" << data << "\"");
 		if (data.Size() == 0) {
 			APPL_INFO("No current selection");
@@ -271,7 +254,7 @@ void CTagsManager::JumpTo(void)
 						PrintTag(&entry);
 						tmpWidget->AddCtagsNewItem(myfile.GetName(), lineID);
 					} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
-					PopUpWidgetPush(tmpWidget);
+					ewol::WindowsPopUpAdd(tmpWidget);
 					tmpWidget->RegisterOnEvent(this, applEventctagsSelection);
 				}
 			} else {

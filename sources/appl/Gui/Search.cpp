@@ -1,28 +1,10 @@
 /**
- *******************************************************************************
- * @file Search.cpp
- * @brief Editeur De N'ours : Search system
  * @author Edouard DUPIN
- * @date 03/01/2011
- * @par Project
- * Edn
- *
- * @par Copyright
- * Copyright 2010 Edouard DUPIN, all right reserved
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY.
- *
- * Licence summary : 
- *    You can modify and redistribute the sources code and binaries.
- *    You can send me the bug-fix
- *    You can not earn money with this Software (if the source extract from Edn
- *        represent less than 50% of original Sources)
- * Term of the licence in in the file licence.txt.
- *
- *******************************************************************************
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
  */
-
 
 #include "appl/global.h"
 #include "Search.h"
@@ -31,7 +13,7 @@
 #include "MainWindows.h"
 #include "appl/globalMsg.h"
 
-#include <ewol/widget/ButtonImage.h>
+#include <ewol/widget/Button.h>
 
 
 #undef __class__
@@ -54,9 +36,9 @@ Search::Search(void) :
 {
 	m_forward = false;
 	
-	ewol::ButtonImage * myButtonImage = NULL;
-	
-	myButtonImage = new ewol::ButtonImage("THEME:GUI:Remove.svg");
+	//widget::ButtonImage * myButtonImage = NULL;
+	/*
+	myButtonImage = new widget::ButtonImage("THEME:GUI:Remove.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -64,8 +46,8 @@ Search::Search(void) :
 		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventHideBt);
 		SubWidgetAdd(myButtonImage);
 	}
-	
-	m_searchEntry = new ewol::Entry();
+	*/
+	m_searchEntry = new widget::Entry();
 	if (NULL == m_searchEntry) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -75,8 +57,8 @@ Search::Search(void) :
 		m_searchEntry->SetFillX(true);
 		SubWidgetAdd(m_searchEntry);
 	}
-	
-	myButtonImage = new ewol::ButtonImage("THEME:GUI:Search.svg");
+	/*
+	myButtonImage = new widget::ButtonImage("THEME:GUI:Search.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -84,8 +66,8 @@ Search::Search(void) :
 		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventSearchBt);
 		SubWidgetAdd(myButtonImage);
 	}
-	
-	m_replaceEntry = new ewol::Entry();
+	*/
+	m_replaceEntry = new widget::Entry();
 	if (NULL == m_replaceEntry) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -95,8 +77,8 @@ Search::Search(void) :
 		m_replaceEntry->SetFillX(true);
 		SubWidgetAdd(m_replaceEntry);
 	}
-	
-	myButtonImage = new ewol::ButtonImage("THEME:GUI:Replace.svg");
+	/*
+	myButtonImage = new widget::ButtonImage("THEME:GUI:Replace.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -105,7 +87,7 @@ Search::Search(void) :
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new ewol::ButtonImage("THEME:GUI:CaseSensitive.svg");
+	myButtonImage = new widget::ButtonImage("THEME:GUI:CaseSensitive.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -129,7 +111,7 @@ Search::Search(void) :
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new ewol::ButtonImage("THEME:GUI:Up.svg");
+	myButtonImage = new widget::ButtonImage("THEME:GUI:Up.svg");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -140,7 +122,7 @@ Search::Search(void) :
 		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventForwardCb);
 		SubWidgetAdd(myButtonImage);
 	}
-	
+	*/
 	RegisterMultiCast(ednMsgGuiSearch);
 	// basicly hiden ...
 	Hide();
@@ -161,7 +143,7 @@ Search::~Search(void)
  */
 void Search::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
 {
-	ewol::SizerHori::OnReceiveMessage(CallerObject, eventId, data);
+	widget::SizerHori::OnReceiveMessage(CallerObject, eventId, data);
 	//APPL_INFO("Search receive message : \"" << eventId << "\" data=\"" << data << "\"");
 	if ( eventId == l_eventSearchEntry) {
 		SearchData::SetSearch(data);
@@ -242,7 +224,7 @@ void Search::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId
  */
 void Search::OnObjectRemove(ewol::EObject * removeObject)
 {
-	ewol::SizerHori::OnObjectRemove(removeObject);
+	widget::SizerHori::OnObjectRemove(removeObject);
 	if (removeObject == m_searchEntry) {
 		m_searchEntry = NULL;
 	}
