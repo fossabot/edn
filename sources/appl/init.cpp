@@ -125,9 +125,9 @@ void APP_Init(void)
 }
 
 
-etk::FSNode APP_Icon(void)
+etk::UString APP_Icon(void)
 {
-	etk::FSNode bitmapFile("DATA:iconEdn.bmp");
+	etk::UString bitmapFile("DATA:iconEdn.bmp");
 	return bitmapFile;
 }
 
