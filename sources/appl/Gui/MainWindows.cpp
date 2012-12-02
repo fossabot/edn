@@ -101,13 +101,6 @@ const char * l_smoothChick = "tmpEvent_smooth";
 const char * l_smoothMin = "tmpEvent_minChange";
 const char * l_smoothMax = "tmpEvent_maxChange";
 
-/*
-extern float DF_SoftEdge_min;
-extern float DF_SoftEdge_max;
-extern int32_t DF_SoftEdge;
-widget::Slider* tmpSliderMin = NULL;
-widget::Slider* tmpSliderMax = NULL;
-*/
 #undef __class__
 #define __class__	"MainWindows"
 
@@ -392,29 +385,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			tmpSubWidget = new ParameterAboutGui();
 			tmpWidget->MenuAdd("About",           "", tmpSubWidget);
 		}
-	}/* else if (eventId == l_smoothChick) {
-		if (data == "true") {
-			DF_SoftEdge = 1;
-		} else {
-			DF_SoftEdge = 0;
-		}
-	} else if (eventId == l_smoothMin) {
-		int32_t newVal = 0;
-		sscanf(data.c_str(), "%d", &newVal);
-		DF_SoftEdge_min = (float)newVal / 1000.0;
-		if (DF_SoftEdge_min>DF_SoftEdge_max) {
-			DF_SoftEdge_max = DF_SoftEdge_min;
-			tmpSliderMax->SetValue(DF_SoftEdge_max*1000.0);
-		}
-	} else if (eventId == l_smoothMax) {
-		int32_t newVal = 0;
-		sscanf(data.c_str(), "%d", &newVal);
-		DF_SoftEdge_max = (float)newVal / 1000.0;
-		if (DF_SoftEdge_min>DF_SoftEdge_max) {
-			DF_SoftEdge_min = DF_SoftEdge_max;
-			tmpSliderMin->SetValue(DF_SoftEdge_min*1000.0);
-		}
-	} */else if (eventId == ednMsgGuiReloadShader) {
+	} else if (eventId == ednMsgGuiReloadShader) {
 		ewol::resource::ReLoadResources();
 		ewol::ForceRedrawAll();
 	}

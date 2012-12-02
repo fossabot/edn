@@ -137,8 +137,11 @@ etk::UString APP_Icon(void)
 void APP_UnInit(void)
 {
 	APPL_INFO("==> Un-Init Edn (START)");
-	// Remove windows :
-	ewol::WindowsSet(NULL);
+	
+	if (NULL != basicWindows) {
+		delete(basicWindows);
+		basicWindows = NULL;
+	}
 	
 	cTagsManager::UnInit();
 	
@@ -149,15 +152,6 @@ void APP_UnInit(void)
 	BufferManager::UnInit();
 	APPL_INFO("Stop ColorizeManager");
 	ColorizeManager::UnInit();
-	APPL_INFO("Stop Search");
-	//Search::Kill();
-	//APPL_INFO("Stop Accel key");
-	//AccelKey::Kill();
-	
-	if (NULL != basicWindows) {
-		delete(basicWindows);
-		basicWindows = NULL;
-	}
 	APPL_INFO("==> Un-Init Edn (END)");
 }
 

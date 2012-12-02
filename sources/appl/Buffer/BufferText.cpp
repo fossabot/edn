@@ -493,8 +493,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 		OOText.SetPos(tmpCursorPosition);
 		OOText.SetColor(ColorizeManager::Get(COLOR_CODE_CURSOR));
 		OOText.SetColorBg(ColorizeManager::Get(COLOR_CODE_CURSOR));
-#warning TODO ...
-		OOText.PrintCursor(false);// TODO : ewol::IsSetInsert());
+		OOText.PrintCursor(ewol::GetCurrentSpecialKeyStatus().IsSetInsert());
 	}
 	// set the maximum size for the display ...
 	SetMaximumSize(maxSize);
@@ -560,8 +559,7 @@ int32_t BufferText::GetMousePosition(etk::Vector2D<float> pos)
 // TODO : Simplify selection ....
 void BufferText::MouseEvent(etk::Vector2D<float> pos)
 {
-#warning TODO ...
-	if (false){ // TODO : true == ewol::IsSetShift() ) {
+	if (ewol::GetCurrentSpecialKeyStatus().IsSetShift() ) {
 		MouseSelectFromCursorTo(pos);
 	} else {
 		// Get the caracter mouse position
@@ -714,14 +712,12 @@ void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 		return;
 	}
 	
-#warning TODO ...
 	if(    false == haveSelectionActive
-	    && false) //true  == ewol::IsSetShift() )
+	    && true  == ewol::GetCurrentSpecialKeyStatus().IsSetShift() )
 	{
 		// new selection
 		m_EdnBuf.Select(rememberCursorPos, m_cursorPos);
-#warning TODO ...
-	} else if(    false//true == ewol::IsSetShift()
+	} else if(    true == ewol::GetCurrentSpecialKeyStatus().IsSetShift()
 	           && true == haveSelectionActive)
 	{
 		// update selection
@@ -950,8 +946,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 				m_EdnBuf.ReplaceSelected(tmpVect);
 				SetInsertPosition(SelectionStart+tmpVect.Size(), true);
 			} else {
-#warning TODO ...
-				if (false){//true == ewol::IsSetShift() ) {
+				if (true == ewol::GetCurrentSpecialKeyStatus().IsSetShift() ) {
 					m_cursorPos = m_EdnBuf.UnIndent();
 				} else {
 					m_cursorPos = m_EdnBuf.Indent();
@@ -960,8 +955,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 		}
 	} else if (unicodeData == '\n') {
 		etk::Vector<int8_t> tmpVect;
-#warning TODO ...
-		if (false){//true == ewol::IsSetShift()) {
+		if (true == ewol::GetCurrentSpecialKeyStatus().IsSetShift()) {
 			tmpVect.PushBack('\r');
 		} else {
 			tmpVect.PushBack('\n');
