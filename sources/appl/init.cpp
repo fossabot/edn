@@ -61,7 +61,7 @@ void APP_Init(void)
 			APPL_INFO("==> Init "PROJECT_NAME" (START) (Android) (Debug)");
 		#endif
 	#endif
-	ewol::ChangeSize(etk::Vector2D<int32_t>(800, 600));
+	ewol::ChangeSize(ivec2(800, 600));
 	etk::InitDefaultFolder(PROJECT_NAME);
 	#ifdef __TARGET_OS__Android
 		ewol::config::FontSetDefault("FreeSerif", 19);

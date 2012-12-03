@@ -113,9 +113,9 @@ bool BufferText::NeedToUpdateDisplayPosition(void)
 	return tmpVal;
 }
 
-etk::Vector2D<float>  BufferText::GetBorderSize(void)
+vec2  BufferText::GetBorderSize(void)
 {
-	etk::Vector2D<float>  tmpVal;
+	vec2  tmpVal;
 	tmpVal.x = 30;
 	tmpVal.y = 30;
 	return tmpVal;
@@ -260,7 +260,7 @@ void BufferText::DrawLineNumber(ewol::Text* OOText, int32_t sizeX, int32_t sizeY
 	sprintf(tmpLineNumber, "%*d", nbColomn, lineNumber);
 	OOText->SetColorBg(ColorizeManager::Get(COLOR_LIST_BG_2));
 	OOText->SetColor(ColorizeManager::Get(COLOR_CODE_LINE_NUMBER));
-	OOText->SetPos(etk::Vector3D<float>(1.0f, (float)positionY, 0.0f) );
+	OOText->SetPos(vec3(1.0f, (float)positionY, 0.0f) );
 	OOText->Print(tmpLineNumber);
 }
 
@@ -315,7 +315,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	bool selIsRect;
 	int32_t selHave;
 	
-	etk::Vector3D<float> tmpLetterSize = OOText.CalculateSize((uniChar_t)'A');
+	vec3 tmpLetterSize = OOText.CalculateSize((uniChar_t)'A');
 	
 	int32_t letterWidth = tmpLetterSize.x;
 	int32_t letterHeight = tmpLetterSize.y;
@@ -326,7 +326,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	
 	// update the display position with the scroll ofset : 
 	int32_t displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
-	etk::Vector2D<float>  maxSize;
+	vec2  maxSize;
 	maxSize.x = 0.0;
 	maxSize.y = m_EdnBuf.NumberOfLines() * letterHeight;
 	int32_t nbColoneForLineNumber = GetLineNumberNumberOfElement();
@@ -376,10 +376,10 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	DrawLineNumber(&OOText, x_base, sizeY, nbColoneForLineNumber, currentLineID, y);
 	int32_t pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
 	
-	etk::Vector3D<float> drawClippingPos(0,0,-0.5);
-	etk::Vector3D<float> drawClippingSize(sizeX, sizeY, 1);
-	OOText.SetClippingWidth(etk::Vector3D<float>((float)pixelX, 0.0f, -0.5f),
-	                        etk::Vector3D<float>((float)(sizeX - drawClippingPos.x), (float)sizeY, 0.5f) );
+	vec3 drawClippingPos(0,0,-0.5);
+	vec3 drawClippingSize(sizeX, sizeY, 1);
+	OOText.SetClippingWidth(vec3((float)pixelX, 0.0f, -0.5f),
+	                        vec3((float)(sizeX - drawClippingPos.x), (float)sizeY, 0.5f) );
 	
 	// Clear the line intexation :
 	m_elmentList.Clear();
@@ -391,7 +391,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	tmpElementProperty.m_bufferPos = displayStartBufferPos;
 	m_elmentList.PushBack(tmpElementProperty);
 	
-	etk::Vector3D<float> tmpCursorPosition(0, 0, -1); //Cursor is display only at the end to be all time over the background ... (-1 in z no cursor)
+	vec3 tmpCursorPosition(0, 0, -1); //Cursor is display only at the end to be all time over the background ... (-1 in z no cursor)
 	
 	float lineMaxSize = 0.0;
 	for (iii=displayStartBufferPos; iii<mylen && displayLines >=0 && y >= -2*letterHeight; iii = new_i) {
@@ -405,7 +405,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 		int32_t drawSize = 0;
 		
 		// update display position :
-		etk::Vector2D<float>  textPos;
+		vec2  textPos;
 		textPos.x = pixelX-offsetX;
 		textPos.y = y;
 		// update X pos
@@ -449,7 +449,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 			OOText.SetFontBold(selectColor->GetBold());
 			OOText.SetFontItalic(selectColor->GetItalic());
 			myStringToDisplay = displayChar;
-			OOText.SetPos(etk::Vector3D<float>(textPos.x, textPos.y, 0.0f) );
+			OOText.SetPos(vec3(textPos.x, textPos.y, 0.0f) );
 			OOText.Print(myStringToDisplay);
 			// To update the display position
 			drawSize = OOText.GetPos().x - textPos.x;
@@ -460,7 +460,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 		idX += displaywidth;
 		// display cursor : 
 		if (m_cursorPos == iii) {
-			tmpCursorPosition = etk::Vector3D<float>(pixelX - offsetX, y, 0);
+			tmpCursorPosition = vec3(pixelX - offsetX, y, 0);
 		}
 		lineMaxSize += drawSize;
 		pixelX += drawSize;
@@ -486,7 +486,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	//APPL_DEBUG("end at pos buf =" << iii << " / " << m_EdnBuf.Size());
 	// special case : the cursor is at the end of the buffer...
 	if (m_cursorPos == iii) {
-		tmpCursorPosition = etk::Vector3D<float>(pixelX - offsetX, y, 0);
+		tmpCursorPosition = vec3(pixelX - offsetX, y, 0);
 	}
 	if (tmpCursorPosition.z!=-1) {
 		// display the cursor:
@@ -505,7 +505,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 
 
 
-int32_t BufferText::GetMousePosition(etk::Vector2D<float> pos)
+int32_t BufferText::GetMousePosition(vec2 pos)
 {
 	bool inLineDone=false;
 	//APPL_DEBUG("try to find in : " << width << "," << height);
@@ -557,7 +557,7 @@ int32_t BufferText::GetMousePosition(etk::Vector2D<float> pos)
  *
  */
 // TODO : Simplify selection ....
-void BufferText::MouseEvent(etk::Vector2D<float> pos)
+void BufferText::MouseEvent(vec2 pos)
 {
 	if (ewol::GetCurrentSpecialKeyStatus().IsSetShift() ) {
 		MouseSelectFromCursorTo(pos);
@@ -587,7 +587,7 @@ void BufferText::MouseEvent(etk::Vector2D<float> pos)
  * @todo : Set the move up and DOWN...
  *
  */
-void BufferText::MouseSelectFromCursorTo(etk::Vector2D<float> pos)
+void BufferText::MouseSelectFromCursorTo(vec2 pos)
 {
 	// Get the caracter mouse position
 	int32_t newPos = GetMousePosition(pos);
@@ -866,11 +866,11 @@ void BufferText::cursorMove(ewol::keyEvent::keyboard_te moveTypeEvent)
  * @return ---
  *
  */
-etk::Vector2D<float>  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
+vec2  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 {
 	centerRequested = m_centerRequested;
 	m_centerRequested = false;
-	etk::Vector2D<float>  outputPosition;
+	vec2  outputPosition;
 
 	// Display position (Y mode):
 	APPL_INFO("change the position : " << m_cursorPos);
@@ -898,7 +898,7 @@ etk::Vector2D<float>  BufferText::GetPosition(int32_t fontId, bool& centerReques
 	/* if we request a center : 
 	} else {
 		// center the line at the middle of the screen :
-		etk::Vector2D<float>  outputPosition;
+		vec2  outputPosition;
 		//APPL_DEBUG(" -------------------------------------------------");
 		outputPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
 		//APPL_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << outputPosition.y);

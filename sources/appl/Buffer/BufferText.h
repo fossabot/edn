@@ -54,14 +54,14 @@ class BufferText
 		etk::FSNode           m_fileName;                //!< filename of the curent buffer
 		bool                  m_haveName;                //!< to know if the file have a name or NOT
 		bool                  m_updatePositionRequested; //!< if a position xhange in the windows ...
-		etk::Vector2D<float>  m_maximumSize;             //!< current maxSize of the buffer
+		vec2  m_maximumSize;             //!< current maxSize of the buffer
 	public:
 				void      SetModify(bool status);
-		virtual etk::Vector2D<float>   GetBorderSize(void);
+		virtual vec2   GetBorderSize(void);
 		void RequestUpdateOfThePosition(void) { m_updatePositionRequested = true; };
-		void SetMaximumSize(etk::Vector2D<float>  maxSize) { m_maximumSize = maxSize; };
+		void SetMaximumSize(vec2  maxSize) { m_maximumSize = maxSize; };
 		bool                NeedToUpdateDisplayPosition(void);
-		etk::Vector2D<float>           GetMaxSize(void) { return m_maximumSize; };
+		vec2           GetMaxSize(void) { return m_maximumSize; };
 				bool      IsModify(void);
 	public:
 		etk::FSNode       GetFileName(void)
@@ -100,8 +100,8 @@ class BufferText
 		                  int32_t sizeX, int32_t sizeY);
 		void      AddChar(uniChar_t unicodeData);
 		void      cursorMove(ewol::keyEvent::keyboard_te  moveTypeEvent);
-		void      MouseSelectFromCursorTo(etk::Vector2D<float> pos);
-		void      MouseEvent(etk::Vector2D<float> pos);
+		void      MouseSelectFromCursorTo(vec2 pos);
+		void      MouseEvent(vec2 pos);
 		void      MouseEventDouble(void);
 		void      MouseEventTriple(void);
 
@@ -130,7 +130,7 @@ class BufferText
 		
 		// Direct buffer IO
 		EdnBuf                          m_EdnBuf;             //!< buffer associated on this displayer
-		etk::Vector2D<float>            m_displaySize;        //!< number of char displayable in the screan
+		vec2            m_displaySize;        //!< number of char displayable in the screan
 		// Cursor :
 		int32_t                         m_cursorPos;          //!< position in the buffer of the cursor
 		int32_t                         m_cursorPreferredCol; //!< colomn of the last up and down ...
@@ -142,13 +142,13 @@ class BufferText
 	private:
 		bool m_centerRequested;
 	public:
-		virtual etk::Vector2D<float> GetPosition(int32_t fontId, bool& centerRequested);
+		virtual vec2 GetPosition(int32_t fontId, bool& centerRequested);
 	private:
 		bool     TextDMoveUp(int32_t offset);
 		bool     TextDMoveDown(int32_t offset);
 		void     SetInsertPosition(int32_t newPosition, bool insertChar = false);
 		
-		int32_t  GetMousePosition(etk::Vector2D<float> pos);
+		int32_t  GetMousePosition(vec2 pos);
 		
 		void     DrawLineNumber(ewol::Text* OOText, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
 

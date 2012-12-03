@@ -84,7 +84,7 @@ CodeView::~CodeView(void)
  */
 void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
 {
-	etk::Vector2D<float> tmpCoord;
+	vec2 tmpCoord;
 	tmpCoord.x = 0;
 	tmpCoord.y = 0;
 	if (m_lineNumberList.Size()<=bufferID) {
@@ -135,17 +135,17 @@ void CodeView::OnRegenerateDisplay(void)
 		m_displayText.Clear();
 		
 		// Reset the background : 
-		m_displayDrawing.SetPos(etk::Vector3D<float>(-2048, -2048, 0));
+		m_displayDrawing.SetPos(vec3(-2048, -2048, 0));
 		m_displayDrawing.SetColor(ColorizeManager::Get(COLOR_CODE_BASIC_BG));
-		m_displayDrawing.RectangleWidth(etk::Vector3D<float>(4096, 4096, 0) );
+		m_displayDrawing.RectangleWidth(vec3(4096, 4096, 0) );
 		
 		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 		if(    NULL != tmpBuffer
 		    && true == tmpBuffer->NeedToUpdateDisplayPosition() ) {
-			etk::Vector2D<float> borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
+			vec2 borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
 			bool centerRequested = false;
 			// TODO : set it back ...
-			etk::Vector2D<float>  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(999/*m_OObjectTextNormal.GetFontID()*/, centerRequested);
+			vec2  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(999/*m_OObjectTextNormal.GetFontID()*/, centerRequested);
 			SetScrollingPositionDynamic(borderWidth, currentPosition, centerRequested);
 		} // else : nothing to do ...
 		
@@ -153,10 +153,10 @@ void CodeView::OnRegenerateDisplay(void)
 		if (-1 == m_bufferID) {
 			m_displayText.SetTextAlignement(10, m_size.x-20, ewol::Text::alignLeft);
 			m_displayDrawing.SetColor(0x00000022);
-			m_displayDrawing.SetPos(etk::Vector3D<float>(10, 0, 0));
-			m_displayDrawing.Rectangle(etk::Vector3D<float>((int32_t)m_size.x-20, 1500, 0) );
+			m_displayDrawing.SetPos(vec3(10, 0, 0));
+			m_displayDrawing.Rectangle(vec3((int32_t)m_size.x-20, 1500, 0) );
 			
-			m_displayText.SetRelPos(etk::Vector3D<float>(10, 0, 0));
+			m_displayText.SetRelPos(vec3(10, 0, 0));
 			// nothing to display :
 			etk::UString tmpString("<br/>\n"
 			                       "<font color=\"red\">\n"
@@ -191,7 +191,7 @@ void CodeView::OnRegenerateDisplay(void)
 			                       "<justify>\n"
 			                       "	Un jour Cosette se <b>regarda</b> par hasard dans son miroir et se dit: Tiens! <b>Il lui semblait presque <i>qu'elle était jolie.</i></b> Ceci la jeta dans un trouble singulier. <font color=\"#FF0\">Jusqu'à ce moment elle <b>n'avait</b> point <i>songé</i> à sa figure.</font> Elle se voyait dans son miroir, mais elle ne s'y regardait pas. Et puis, on lui avait souvent dit qu'elle était laide;<br/> Jean Valjean seul disait doucement :<br/>  Mais non!<br/>  mais non!<br/>  Quoi qu'il en fut, Cosette s'était toujours crue laide, et avait grandi dans cette idée avec la résignation facile de l'enfance. Voici que tout d'un coup son miroir lui disait comme Jean Valjean : Mais non! Elle ne dormit pas de la nuit. Si j'étais jolie ? pensait-elle, comme cela serait drole que je fusse jolie! Et elle se rappelait celles de ses compagnes dont la beauté faisait effet dans le couvent, et elle se disait : Comment! je serais comme mademoiselle une telle!\n"
 			                       "</justify>\n");
-			m_displayText.SetPos(etk::Vector3D<float>(0.0f, m_size.y, 0.0f) );
+			m_displayText.SetPos(vec3(0.0f, m_size.y, 0.0f) );
 			m_displayText.ForceLineReturn();
 			m_displayText.PrintDecorated(tmpString);
 		} else {
@@ -261,13 +261,13 @@ void CodeView::OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID)
  * @return true the event is used
  * @return false the event is not used
  */
-bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol::keyEvent::status_te typeEvent, etk::Vector2D<float> pos)
+bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol::keyEvent::status_te typeEvent, vec2 pos)
 {
-	etk::Vector2D<float>  relativePos = RelativePosition(pos);
+	vec2  relativePos = RelativePosition(pos);
 	// corection for the openGl abstraction
 	//relativePos.y = m_size.y - relativePos.y;
 	
-	etk::Vector2D<float>  limitedPos = relativePos;
+	vec2  limitedPos = relativePos;
 	limitedPos.x = etk_avg(1, limitedPos.x, m_size.x-1);
 	limitedPos.y = etk_avg(1, limitedPos.y, m_size.y-1);
 	if (true == WidgetScrooled::OnEventInput(type, IdInput, typeEvent, pos)) {

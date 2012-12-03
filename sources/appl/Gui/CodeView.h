@@ -35,7 +35,7 @@ class CodeView :public widget::WidgetScrooled
 		draw::Color                    m_textColorBg;  //!< Background color
 		int32_t                        m_bufferID;
 		bool                           m_buttunOneSelected;
-		etk::Vector<etk::Vector2D<float> >  m_lineNumberList;
+		etk::Vector<vec2 >  m_lineNumberList;
 		void UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
 		ewol::Text                   m_displayText;
@@ -47,7 +47,7 @@ class CodeView :public widget::WidgetScrooled
 		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
 	public:
 		// Derived function
-		virtual bool OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol::keyEvent::status_te typeEvent, etk::Vector2D<float> pos);
+		virtual bool OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol::keyEvent::status_te typeEvent, vec2 pos);
 		// Derived function
 		virtual bool OnEventKb(ewol::keyEvent::status_te typeEvent, uniChar_t unicodeData);
 		// Derived function
