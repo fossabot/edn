@@ -802,7 +802,7 @@ int32_t EdnBuf::CountLines(int32_t startPos, int32_t endPos)
 int32_t EdnBuf::CountLines(etk::Vector<int8_t> &data)
 {
 	int32_t lineCount = 0;
-	for(int32_t iii=0 ; iii<m_data.Size() ; iii++ ) {
+	for(int32_t iii=0 ; iii<data.Size() ; iii++ ) {
 		if ('\n' == data[iii]) {
 			lineCount++;
 		}
@@ -1174,8 +1174,6 @@ void EdnBuf::eventModification(int32_t pos, int32_t nInserted, etk::Vector<int8_
 	} else {
 		APPL_INFO("(pos="<<pos<<", nDeleted="<<deletedText.Size()<<", nInserted=" << nInserted << ", deletedText=\"xx???xx\");");
 		// update the number of lines : 
-		//CountNumberOfLines(); 	//==> not efficent methode ...
-		// ==> better methode : just update the number of line added and removed ...
 		//APPL_INFO(" add=" << CountLines(pos, pos+nInserted) << " lines  |  remove="<< CountLines(deletedText) << " lines");
 		m_nbLine += CountLines(pos, pos+nInserted) - CountLines(deletedText);
 		// Update histories

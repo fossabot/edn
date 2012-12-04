@@ -309,8 +309,6 @@ int32_t BufferText::Display(ewol::Text& OOText,
                             int32_t offsetX, int32_t offsetY,
                             int32_t sizeX, int32_t sizeY)
 {
-
-
 	int32_t selStart, selEnd, selRectStart, selRectEnd;
 	bool selIsRect;
 	int32_t selHave;
@@ -328,7 +326,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	int32_t displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
 	vec2  maxSize;
 	maxSize.x = 0.0;
-	maxSize.y = m_EdnBuf.NumberOfLines() * letterHeight;
+	maxSize.y = m_EdnBuf.NumberOfLines() * tmpLetterSize.y;
 	int32_t nbColoneForLineNumber = GetLineNumberNumberOfElement();
 	
 	// update the number of element that can be displayed

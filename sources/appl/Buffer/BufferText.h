@@ -56,13 +56,13 @@ class BufferText
 		bool                  m_updatePositionRequested; //!< if a position xhange in the windows ...
 		vec2  m_maximumSize;             //!< current maxSize of the buffer
 	public:
-				void      SetModify(bool status);
-		virtual vec2   GetBorderSize(void);
+		void SetModify(bool status);
+		virtual vec2 GetBorderSize(void);
 		void RequestUpdateOfThePosition(void) { m_updatePositionRequested = true; };
 		void SetMaximumSize(vec2  maxSize) { m_maximumSize = maxSize; };
-		bool                NeedToUpdateDisplayPosition(void);
-		vec2           GetMaxSize(void) { return m_maximumSize; };
-				bool      IsModify(void);
+		bool NeedToUpdateDisplayPosition(void);
+		vec2 GetMaxSize(void) { return m_maximumSize; };
+		bool IsModify(void);
 	public:
 		etk::FSNode       GetFileName(void)
 		{
