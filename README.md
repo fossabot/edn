@@ -25,14 +25,18 @@ download the software :
 	make DEBUG=1
 	or
 	make CLANG=1 DEBUG=1
-	cp -r ../ewol/share/* share/
-	./out_LINUX/debug/obj/usr/bin/edn -l6 yourFile.txt
-	Note : -l6 corespond at the LOG level to display
+	./out/Linux/debug/staging/edn/usr/bin/edn -l6 yourFile.txt
+	Note : -l6 corespond at the LOG level to display.
+	Note : If you not compile in debug mode, you must install it to execure it.
 
 (release) Compile software & install & run:
 
+	# generate binary and tree
 	make
-	./install.sh
+	# generate .deb packages
+	make final
+	# install .deb packages
+	make install
 	edn exemple.txt
 
 (Android) Compile software & install
@@ -45,24 +49,49 @@ download the software :
 		http://developer.android.com/sdk/index.html
 		==> you need to download sub package of the NDK (refer to the NDK doccumentation) but only supported android version >4.0
 	cd ../edn
+	# generate .so
 	make PLATFORM=Android
+	# generate .apk
+	make PLATFORM=Android final
+	# To send it on the board :
 	make PLATFORM=Android install
+	# to show the log :
+	make PLATFORM=Android log
 
-License (like GPL)
+
+(Windows) Compile software & install
+
+	cd yourDevFolder/edn
+	make PLATFORM=Windows
+	# generate ...
+	make PLATFORM=Windows final
+
+
+Dependency packages
+===================
+
+	sudo apt-get install g++ libgl1-mesa-dev zlib1g-dev libasound2-dev
+	# if you want to compile with clang :
+	sudo apt-get install clang
+	# if you want to compile for windows :
+	sudo apt-get install mingw32
+
+
+License (GPL)
 ==================
 
-	You can:
-		- Redistribute the sources code and binaries.
-		- Modify the Sources code.
-		- Use a part of the sources (less than 50%) in an other software, just write somewhere "Edn is great" visible by the user (on your product or on your website with a link to my page).
-		- Redistribute the modification only if you want.
-		- Send me the bug-fix (it could be great).
-		- Pay me a beer or some other things.
-		- Print the source code on WC paper ...
-	You can NOT:
-		- Earn money with this Software (But I can).
-		- Add malware in the Sources.
-		- Do something bad with the sources.
-		- Use it to travel in the space with a toaster.
+	Edn (Editeur De N'ours) : Source code editor
+	Copyright (C) Copyright 2010 Edouard DUPIN
 	
-	I reserve the right to change this licence. If it change the version of the copy you have keep its own license
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program. If not, see <http://www.gnu.org/licenses/>.
