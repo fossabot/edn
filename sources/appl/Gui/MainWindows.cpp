@@ -55,37 +55,22 @@ class ParameterAboutGui : public widget::SizerVert
 				mySpacer->SetExpendY(true);
 				SubWidgetAdd(mySpacer);
 			}
-			AddElement("        libPng");
-			AddElement("        ogg-tremor");
-			AddElement("        portaudio");
-			AddElement("        libZip");
-			AddElement("        tinyXml");
-			AddElement("        freetype");
-			AddElement("        agg2.4");
-			AddElement("        etk (BSD)");
-			AddElement("    ewol is based on");
-			AddElement("    Website : https://github.com/HeeroYui/ewol");
-			AddElement("    Licence : BSD like");
-			AddElement("    Copyright 2010 Edouard DUPIN, all right reserved");
-			AddElement("    Supported OS : Linux, Windows, Android" );
-			AddElement(etk::UString("    OpenGl librairy : v") + ewol::GetVersion() );
-			AddElement("Ewol", true);
-			AddElement("");
-			AddElement("    Website : https://github.com/HeeroYui/edn");
-			AddElement("    Licence : GPL");
-			AddElement("    Copyright 2010 Edouard DUPIN, all right reserved");
-			AddElement(etk::UString("    Build Time : ") + etk::UString(BUILD_TIME));
-			AddElement("    Source Code Editor");
-			AddElement(etk::UString("    Editeur De N'ours : v") + etk::UString(APPL_VERSION_TAG_NAME));
-			AddElement("Edn", true);
-			
-		};
-		
-		~ParameterAboutGui(void) { };
-		
-		void AddElement(etk::UString label, bool bold=false, bool italic=false)
-		{
-			widget::Label* myLabel = new widget::Label(label);
+			etk::UString tmpLabel = "<left>";
+			tmpLabel += "  <b>Editeur De N'ours</b> : v";
+			tmpLabel += APPL_VERSION_TAG_NAME;
+			tmpLabel += "<br/>";
+			tmpLabel += "  <b>Build Time</b> : ";
+			tmpLabel += BUILD_TIME;
+			tmpLabel += "<br/>";
+			tmpLabel += "  <b>Website</b> : https://github.com/HeeroYui/edn<br/>";
+			tmpLabel += "  <b>License</b> : GPL v3<br/>";
+			tmpLabel += "  <b>Copyright</b> : 2010 Edouard DUPIN<br/>";
+			tmpLabel += "<br/>";
+			tmpLabel += "  dependency librairies :<br/>";
+			tmpLabel += "    libPng, ogg-tremor, portaudio, libZip<br/>";
+			tmpLabel += "    tinyXml, freetype, agg2.4, etk<br/>";
+			tmpLabel += "</left>";
+			widget::Label* myLabel = new widget::Label(tmpLabel);
 			if (NULL == myLabel) {
 				APPL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
@@ -94,6 +79,7 @@ class ParameterAboutGui : public widget::SizerVert
 			}
 		};
 		
+		~ParameterAboutGui(void) { };
 };
 
 
@@ -222,7 +208,7 @@ MainWindows::MainWindows(void)
 				(void)myMenu->AddSpacer();
 				(void)myMenu->Add(idMenugDisplay, "Reload OpenGl Shader", "", ednMsgGuiReloadShader);
 			
-			m_widgetLabelFileName = new widget::Label("FileName");
+			m_widgetLabelFileName = new widget::Label("<left>FileName</left>");
 			m_widgetLabelFileName->SetExpendX(true);
 			m_widgetLabelFileName->SetFillY(true);
 			mySizerHori->SubWidgetAdd(m_widgetLabelFileName);
@@ -353,10 +339,9 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			if (true == isModify) {
 				directName += " *";
 			}
-			if (NULL == m_widgetLabelFileName) {
-				return;
+			if (NULL != m_widgetLabelFileName) {
+				m_widgetLabelFileName->SetLabel(etk::UString("<left>") + directName + "</left>");
 			}
-			m_widgetLabelFileName->SetLabel(directName);
 			etk::UString windowsTitle = "edn - ";
 			windowsTitle += directName;
 			ewol::SetTitle(windowsTitle);
