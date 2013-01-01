@@ -44,7 +44,7 @@ FILE_LIST+=		appl/Highlight/HighlightPattern.cpp \
 FILE_LIST+=		appl/init.cpp
 
 
-LOCAL_COPY_FOLDERS := \
+LOCAL_COPY_FOLDERS := ../data/icon.*: \
                       ../data/color/*.xml:color/ \
                       ../data/languages/asm/*.xml:languages/asm/ \
                       ../data/languages/bash/*.xml:languages/bash/ \

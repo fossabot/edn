@@ -68,6 +68,10 @@ void APP_Init(void)
 	#else
 		ewol::config::FontSetDefault("FreeSerif", 14);
 	#endif
+	
+	// set the application icon ...
+	ewol::SetIcon("DATA:icon.png");
+	
 	// init internal global value
 	globals::init();
 	
@@ -124,12 +128,6 @@ void APP_Init(void)
 	APPL_INFO("==> Init Edn (END)");
 }
 
-
-etk::UString APP_Icon(void)
-{
-	etk::UString bitmapFile("DATA:iconEdn.bmp");
-	return bitmapFile;
-}
 
 /**
  * @brief main application function Un-Initialisation
