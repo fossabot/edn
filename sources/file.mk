@@ -60,6 +60,7 @@ LOCAL_COPY_FOLDERS := ../data/icon.*: \
                       ../data/languages/xml/*.xml:languages/xml/ \
                       ../data/theme/default/*.svg:theme/default/
 
+LOCAL_COPY_FILES := 
 
 ifneq ($(__EWOL_INTEGRATED_FONT__),$(empty))
 

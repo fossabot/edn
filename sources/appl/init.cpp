@@ -48,19 +48,26 @@ int main(int argc, const char *argv[])
  */
 void APP_Init(void)
 {
-	#ifdef __TARGET_OS__Linux
-		#ifdef MODE_RELEASE
-			APPL_INFO("==> Init "PROJECT_NAME" (START) (Linux) (Release)");
-		#else
-			APPL_INFO("==> Init "PROJECT_NAME" (START) (Linux) (Debug)");
-		#endif
+	#ifdef MODE_RELEASE
+		char * debugMode = "Release";
 	#else
-		#ifdef MODE_RELEASE
-			APPL_INFO("==> Init "PROJECT_NAME" (START) (Android) (Release)");
-		#else
-			APPL_INFO("==> Init "PROJECT_NAME" (START) (Android) (Debug)");
-		#endif
+		char * debugMode = "Debug";
 	#endif
+	#ifdef __TARGET_OS__Linux
+		char * osMode = "Linux";
+	#elif defined(__TARGET_OS__Android)
+		char * osMode = "Android";
+	#elif defined(__TARGET_OS__Windows)
+		char * osMode = "Windows";
+	#elif defined(__TARGET_OS__IOs)
+		char * osMode = "IOs";
+	#elif defined(__TARGET_OS__MacOs)
+		char * osMode = "MacOs";
+	#else
+		char * osMode = "Unknown";
+	#endif
+	APPL_INFO("==> Init "PROJECT_NAME" (START) [" << osMode << "] (" << debugMode << ")");
+	
 	ewol::ChangeSize(ivec2(800, 600));
 	etk::InitDefaultFolder(PROJECT_NAME);
 	#ifdef __TARGET_OS__Android
@@ -74,6 +81,8 @@ void APP_Init(void)
 	
 	// init internal global value
 	globals::init();
+	// set the application icon ...
+	ewol::SetIcon("DATA:icon.png");
 	
 	
 	// init ALL Singleton :

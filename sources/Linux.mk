@@ -26,5 +26,7 @@ LOCAL_LDLIBS    :=
 LOCAL_CFLAGS    :=  -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" \
                     -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION)-$(BUILD_DIRECTORY_MODE)\""
 
+LOCAL_COPY_FILES += ../data/icon.png:icon.png
+
 include $(BUILD_EXECUTABLE)
 
