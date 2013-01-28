@@ -45,8 +45,7 @@ void BufferText::BasicInit(void)
 	m_cursorPos = 0;
 	m_cursorPreferredCol = -1;
 	//m_cursorMode = CURSOR_DISPLAY_MODE_NORMAL;
-	m_displaySize.x = 200;
-	m_displaySize.y = 20;
+	m_displaySize.setValue(200,20);
 	m_centerRequested = false;
 }
 
@@ -116,8 +115,7 @@ bool BufferText::NeedToUpdateDisplayPosition(void)
 vec2  BufferText::GetBorderSize(void)
 {
 	vec2  tmpVal;
-	tmpVal.x = 30;
-	tmpVal.y = 30;
+	tmpVal.setValue(30,30);
 	return tmpVal;
 }
 
@@ -315,8 +313,8 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	
 	vec3 tmpLetterSize = OOText.CalculateSize((uniChar_t)'A');
 	
-	int32_t letterWidth = tmpLetterSize.x;
-	int32_t letterHeight = tmpLetterSize.y;
+	int32_t letterWidth = tmpLetterSize.x();
+	int32_t letterHeight = tmpLetterSize.y();
 	
 	int32_t displayStartLineId = offsetY / letterHeight - 1;
 	displayStartLineId = etk_max(0, displayStartLineId);
@@ -325,14 +323,14 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	// update the display position with the scroll ofset : 
 	int32_t displayStartBufferPos = m_EdnBuf.CountForwardNLines(0, displayStartLineId);
 	vec2  maxSize;
-	maxSize.x = 0.0;
-	maxSize.y = m_EdnBuf.NumberOfLines() * tmpLetterSize.y;
+	maxSize.setX(0);
+	maxSize.setY(m_EdnBuf.NumberOfLines() * tmpLetterSize.y());
 	int32_t nbColoneForLineNumber = GetLineNumberNumberOfElement();
 	
 	// update the number of element that can be displayed
-	m_displaySize.x = (sizeX/letterWidth) + 1 - nbColoneForLineNumber;
-	m_displaySize.y = (sizeY/letterHeight) + 1;
-	APPL_VERBOSE("main DIPLAY " << m_displaySize.x << " char * " << m_displaySize.y << " char");
+	m_displaySize.setX((sizeX/letterWidth) + 1 - nbColoneForLineNumber);
+	m_displaySize.setY((sizeY/letterHeight) + 1);
+	APPL_VERBOSE("main DIPLAY " << m_displaySize.x() << " char * " << m_displaySize.y() << " char");
 	
 	selHave = m_EdnBuf.GetSelectionPos(selStart, selEnd, selIsRect, selRectStart, selRectEnd);
 	
@@ -353,7 +351,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	int displayLines = 0;
 	// Regenerate the colorizing if necessary ...
 	displayHLData_ts m_displayLocalSyntax;
-	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, displayStartBufferPos, m_displaySize.y);
+	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, displayStartBufferPos, m_displaySize.y());
 	
 	int64_t stopTime = ewol::GetTime();
 	APPL_DEBUG("Parsing Highlight = " << stopTime - startTime << " micro-s");
@@ -377,7 +375,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	vec3 drawClippingPos(0,0,-0.5);
 	vec3 drawClippingSize(sizeX, sizeY, 1);
 	OOText.SetClippingWidth(vec3((float)pixelX, 0.0f, -0.5f),
-	                        vec3((float)(sizeX - drawClippingPos.x), (float)sizeY, 0.5f) );
+	                        vec3((float)(sizeX - drawClippingPos.x()), (float)sizeY, 0.5f) );
 	
 	// Clear the line intexation :
 	m_elmentList.Clear();
@@ -403,12 +401,10 @@ int32_t BufferText::Display(ewol::Text& OOText,
 		int32_t drawSize = 0;
 		
 		// update display position :
-		vec2  textPos;
-		textPos.x = pixelX-offsetX;
-		textPos.y = y;
+		vec2  textPos(pixelX-offsetX, y);
 		// update X pos
-		tmpElementProperty.m_xOffset = textPos.x;
-		tmpElementProperty.m_yOffset = textPos.y;
+		tmpElementProperty.m_xOffset = textPos.x();
+		tmpElementProperty.m_yOffset = textPos.y();
 		
 		//APPL_INFO("diplay element=" << new_i);
 		if (currentChar!='\n') {
@@ -447,10 +443,10 @@ int32_t BufferText::Display(ewol::Text& OOText,
 			OOText.SetFontBold(selectColor->GetBold());
 			OOText.SetFontItalic(selectColor->GetItalic());
 			myStringToDisplay = displayChar;
-			OOText.SetPos(vec3(textPos.x, textPos.y, 0.0f) );
+			OOText.SetPos(vec3(textPos.x(), textPos.y(), 0.0f) );
 			OOText.Print(myStringToDisplay);
 			// To update the display position
-			drawSize = OOText.GetPos().x - textPos.x;
+			drawSize = OOText.GetPos().x() - textPos.x();
 			//APPL_DEBUG("add element : " << tmpElementProperty.m_yOffset << "," << tmpElementProperty.m_xOffset);
 			m_elmentList.PushBack(tmpElementProperty);
 			
@@ -464,7 +460,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 		pixelX += drawSize;
 		// move to next line ...
 		if (currentChar=='\n') {
-			maxSize.x = etk_max(lineMaxSize, maxSize.x);
+			maxSize.setX(etk_max(lineMaxSize, maxSize.x()));
 			lineMaxSize = 0.0;
 			idX =0;
 			pixelX = x_base + SEPARATION_SIZE_LINE_NUMBER;
@@ -486,7 +482,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	if (m_cursorPos == iii) {
 		tmpCursorPosition = vec3(pixelX - offsetX, y, 0);
 	}
-	if (tmpCursorPosition.z!=-1) {
+	if (tmpCursorPosition.z()!=-1) {
 		// display the cursor:
 		OOText.SetPos(tmpCursorPosition);
 		OOText.SetColor(ColorizeManager::Get(COLOR_CODE_CURSOR));
@@ -510,8 +506,8 @@ int32_t BufferText::GetMousePosition(vec2 pos)
 	for(int32_t iii=0; iii<m_elmentList.Size()-1; iii++) {
 		//APPL_DEBUG("check element : " << m_elmentList[iii].m_yOffset << "<= " << pos.y << " <" << (m_elmentList[iii].m_yOffset + m_elmentList[iii].m_ySize));
 		if(false == inLineDone) {
-			if(    pos.y>=m_elmentList[iii].m_yOffset
-			    && pos.y<m_elmentList[iii].m_yOffset + m_elmentList[iii].m_ySize ) {
+			if(    pos.y()>=m_elmentList[iii].m_yOffset
+			    && pos.y()<m_elmentList[iii].m_yOffset + m_elmentList[iii].m_ySize ) {
 				// we find the line (int theory) ==> note : Some problem can appear here when the size are not the same ...
 				// this is to prevent multiple size font ...
 				inLineDone = true;
@@ -520,8 +516,8 @@ int32_t BufferText::GetMousePosition(vec2 pos)
 		}
 		// we detected the line
 		if(true == inLineDone) {
-			if(    pos.x>=m_elmentList[iii].m_xOffset
-			    && pos.x<m_elmentList[iii+1].m_xOffset ) {
+			if(    pos.x()>=m_elmentList[iii].m_xOffset
+			    && pos.x()<m_elmentList[iii+1].m_xOffset ) {
 				// we get the position ...
 				return m_elmentList[iii].m_bufferPos;
 			} else if (m_elmentList[iii].m_xOffset>=m_elmentList[iii+1].m_xOffset) {
@@ -531,7 +527,7 @@ int32_t BufferText::GetMousePosition(vec2 pos)
 		}
 	}
 	if (m_elmentList.Size()>0) {
-		if(pos.y<m_elmentList[m_elmentList.Size()/2].m_yOffset) {
+		if(pos.y()<m_elmentList[m_elmentList.Size()/2].m_yOffset) {
 			//APPL_DEBUG("Error to get position (return Last)");
 			return m_elmentList[m_elmentList.Size()-1].m_bufferPos;
 		} else {
@@ -831,11 +827,11 @@ void BufferText::cursorMove(ewol::keyEvent::keyboard_te moveTypeEvent)
 			break;
 		case ewol::keyEvent::keyboardPageUp:
 			//APPL_INFO("keyEvent : <PAGE-UP>");
-			TextDMoveUp(m_displaySize.y);
+			TextDMoveUp(m_displaySize.y());
 			break;
 		case ewol::keyEvent::keyboardPageDown:
 			//APPL_INFO("keyEvent : <PAGE-DOWN>");
-			TextDMoveDown(m_displaySize.y);
+			TextDMoveDown(m_displaySize.y());
 			break;
 		case ewol::keyEvent::keyboardStart:
 			//APPL_INFO("keyEvent : <Start of line>");
@@ -873,11 +869,11 @@ vec2  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 	// Display position (Y mode):
 	APPL_INFO("change the position : " << m_cursorPos);
 	// get the line id of the curent position of the cursor :
-	outputPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
+	outputPosition.setY(m_EdnBuf.CountLines(0, m_cursorPos));
 	// get the first position of the current line
 	int32_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
 	// count the number of char in the line (real displayed char with whar like <kjkj>)
-	outputPosition.x = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
+	outputPosition.setX(m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos));
 	APPL_INFO("Curent cursor pos=" << outputPosition);
 	
 	// get font porperties :
@@ -889,8 +885,8 @@ vec2  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 	*/
 	float letterWidth = 10;
 	float letterHeight = 15;
-	outputPosition.x *= letterWidth;
-	outputPosition.y *= letterHeight;
+	outputPosition.setValue(outputPosition.x() * letterWidth,
+	                        outputPosition.y() * letterHeight);
 	return outputPosition;
 
 	/* if we request a center : 

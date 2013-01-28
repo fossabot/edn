@@ -85,8 +85,7 @@ CodeView::~CodeView(void)
 void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
 {
 	vec2 tmpCoord;
-	tmpCoord.x = 0;
-	tmpCoord.y = 0;
+	tmpCoord.setValue(0,0);
 	if (m_lineNumberList.Size()<=bufferID) {
 		// update the number of elements : 
 		for (int32_t iii=m_lineNumberList.Size(); iii <= bufferID; iii++) {
@@ -99,20 +98,19 @@ void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
 
 bool CodeView::CalculateMinSize(void)
 {
-	m_minSize.x = 50;
-	m_minSize.y = 50;
+	m_minSize.setValue(50,50);
 	return true;
 }
 
 void CodeView::CalculateMaxSize(void)
 {
-	m_maxSize.x = 2048;
-	int32_t letterHeight = m_displayText.CalculateSize('A').y;
+	m_maxSize.setX(2048);
+	int32_t letterHeight = m_displayText.CalculateSize('A').y();
 	BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 	if (NULL!=tmpBuffer) {
-		m_maxSize.y = tmpBuffer->GetNumberOfLine() * letterHeight;
+		m_maxSize.setY(tmpBuffer->GetNumberOfLine() * letterHeight);
 	} else {
-		m_maxSize.y = 50;
+		m_maxSize.setY(50);
 	}
 }
 
@@ -151,10 +149,10 @@ void CodeView::OnRegenerateDisplay(void)
 		
 		// generate the objects :
 		if (-1 == m_bufferID) {
-			m_displayText.SetTextAlignement(10, m_size.x-20, ewol::Text::alignLeft);
+			m_displayText.SetTextAlignement(10, m_size.x()-20, ewol::Text::alignLeft);
 			m_displayDrawing.SetColor(0x00000022);
 			m_displayDrawing.SetPos(vec3(10, 0, 0));
-			m_displayDrawing.Rectangle(vec3((int32_t)m_size.x-20, 1500, 0) );
+			m_displayDrawing.Rectangle(vec3((int32_t)m_size.x()-20, 1500, 0) );
 			
 			m_displayText.SetRelPos(vec3(10, 0, 0));
 			// nothing to display :
@@ -171,13 +169,13 @@ void CodeView::OnRegenerateDisplay(void)
 			                       "		No Buffer Availlable to display\n"
 			                       "	</i>\n"
 			                       "</font>\n");
-			m_displayText.SetPos(vec3(0.0f, m_size.y, 0.0f) );
+			m_displayText.SetPos(vec3(0.0f, m_size.y(), 0.0f) );
 			m_displayText.ForceLineReturn();
 			m_displayText.PrintDecorated(tmpString);
 		} else {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
-				tmpBuffer->Display(m_displayText, m_originScrooled.x, m_originScrooled.y, m_size.x, m_size.y);
+				tmpBuffer->Display(m_displayText, m_originScrooled.x(), m_originScrooled.y(), m_size.x(), m_size.y());
 			}
 			// set the current size of the windows
 			SetMaxSize(BufferManager::Get(m_bufferID)->GetMaxSize());
@@ -248,8 +246,8 @@ bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol:
 	//relativePos.y = m_size.y - relativePos.y;
 	
 	vec2  limitedPos = relativePos;
-	limitedPos.x = etk_avg(1, limitedPos.x, m_size.x-1);
-	limitedPos.y = etk_avg(1, limitedPos.y, m_size.y-1);
+	limitedPos.setValue(etk_avg(1, limitedPos.x(), m_size.x()-1),
+	                    etk_avg(1, limitedPos.y(), m_size.y()-1));
 	if (true == WidgetScrooled::OnEventInput(type, IdInput, typeEvent, pos)) {
 		ewol::widgetManager::FocusKeep(this);
 		// nothing to do ... done on upper widget ...
@@ -306,8 +304,8 @@ bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol:
 		} else if (ewol::keyEvent::statusMove == typeEvent) {
 			if (true == m_buttunOneSelected) {
 				int xxx, yyy;
-				xxx = relativePos.x;
-				yyy = relativePos.y;
+				xxx = relativePos.x();
+				yyy = relativePos.y();
 				if (xxx<0) {
 					xxx = 0;
 				}
