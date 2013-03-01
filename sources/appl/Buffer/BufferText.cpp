@@ -114,9 +114,7 @@ bool BufferText::NeedToUpdateDisplayPosition(void)
 
 vec2  BufferText::GetBorderSize(void)
 {
-	vec2  tmpVal;
-	tmpVal.setValue(30,30);
-	return tmpVal;
+	return vec2(30,30);;
 }
 
 
@@ -864,7 +862,7 @@ vec2  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 {
 	centerRequested = m_centerRequested;
 	m_centerRequested = false;
-	vec2  outputPosition;
+	vec2  outputPosition(0,0);
 
 	// Display position (Y mode):
 	APPL_INFO("change the position : " << m_cursorPos);
@@ -892,7 +890,7 @@ vec2  BufferText::GetPosition(int32_t fontId, bool& centerRequested)
 	/* if we request a center : 
 	} else {
 		// center the line at the middle of the screen :
-		vec2  outputPosition;
+		vec2  outputPosition(0,0);
 		//APPL_DEBUG(" -------------------------------------------------");
 		outputPosition.y = m_EdnBuf.CountLines(0, m_cursorPos);
 		//APPL_DEBUG(" cursor position : " << m_cursorPos << " ==> ligne=" << outputPosition.y);

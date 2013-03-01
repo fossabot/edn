@@ -84,8 +84,7 @@ CodeView::~CodeView(void)
  */
 void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
 {
-	vec2 tmpCoord;
-	tmpCoord.setValue(0,0);
+	vec2 tmpCoord(0,0);
 	if (m_lineNumberList.Size()<=bufferID) {
 		// update the number of elements : 
 		for (int32_t iii=m_lineNumberList.Size(); iii <= bufferID; iii++) {

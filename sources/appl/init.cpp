@@ -49,22 +49,22 @@ int main(int argc, const char *argv[])
 void APP_Init(void)
 {
 	#ifdef MODE_RELEASE
-		char * debugMode = "Release";
+		const char * debugMode = "Release";
 	#else
-		char * debugMode = "Debug";
+		const char * debugMode = "Debug";
 	#endif
 	#ifdef __TARGET_OS__Linux
-		char * osMode = "Linux";
+		const char * osMode = "Linux";
 	#elif defined(__TARGET_OS__Android)
-		char * osMode = "Android";
+		const char * osMode = "Android";
 	#elif defined(__TARGET_OS__Windows)
-		char * osMode = "Windows";
+		const char * osMode = "Windows";
 	#elif defined(__TARGET_OS__IOs)
-		char * osMode = "IOs";
+		const char * osMode = "IOs";
 	#elif defined(__TARGET_OS__MacOs)
-		char * osMode = "MacOs";
+		const char * osMode = "MacOs";
 	#else
-		char * osMode = "Unknown";
+		const char * osMode = "Unknown";
 	#endif
 	APPL_INFO("==> Init "PROJECT_NAME" (START) [" << osMode << "] (" << debugMode << ")");
 	
