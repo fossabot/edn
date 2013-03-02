@@ -52,11 +52,11 @@
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<start>\@bool|float|int|(vec|mat|ivect|bvect)[2-4]\@</start>
+			<start>\@void|bool|float|int|(vec|mat|ivect|bvect)[2-4]\@</start>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<start>\@varying|uniform|attribute\@</start>
+			<start>\@varying|uniform|attribute|precision|mediump\@</start>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
