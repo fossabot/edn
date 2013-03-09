@@ -66,6 +66,10 @@ download the software :
 	# generate ...
 	make PLATFORM=Windows final
 
+(MAC) All needed and some useful packages
+	- Git access (client you want or : http://code.google.com/p/git-osx-installer/ ==>need a ctrl+click to remove the normal installation control)
+	- Xcode ==> for all developement packages
+		- in Xcode : XCode->Setting->Download and install component: "Command Line Tools"
 
 Dependency packages
 ===================
@@ -77,7 +81,7 @@ Dependency packages
 	sudo apt-get install mingw32
 
 
-License (GPL)
+License (GPLv3)
 ==================
 
 	Edn (Editeur De N'ours) : Source code editor

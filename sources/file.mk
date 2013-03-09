@@ -5,7 +5,7 @@
 ###############################################################################
 
 # ExuberantCtags reading file tools (extern OPEN Sources) :
-FILE_LIST+=		appl/ctags/readtags.cpp \
+FILE_LIST=		appl/ctags/readtags.cpp \
 				appl/ctags/CTagsManager.cpp
 
 # Globals debug tool:
