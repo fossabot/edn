@@ -16,8 +16,7 @@
 
 #include <ewol/widget/Button.h>
 #include <ewol/widget/CheckBox.h>
-#include <ewol/widget/SizerHori.h>
-#include <ewol/widget/SizerVert.h>
+#include <ewol/widget/Sizer.h>
 #include <ewol/widget/Label.h>
 #include <ewol/widget/Entry.h>
 #include <ewol/widget/List.h>
@@ -40,10 +39,11 @@
 #include <ewol/widget/Label.h>
 #include <ewol/widget/Spacer.h>
 
-class ParameterAboutGui : public widget::SizerVert
+class ParameterAboutGui : public widget::Sizer
 {
 	public :
-		ParameterAboutGui(void)
+		ParameterAboutGui(void) :
+			widget::Sizer(widget::Sizer::modeVert)
 		{
 			widget::Spacer* mySpacer = NULL;
 			
@@ -93,18 +93,18 @@ const char * l_smoothMax = "tmpEvent_maxChange";
 MainWindows::MainWindows(void)
 {
 	APPL_DEBUG("CREATE WINDOWS ... ");
-	widget::SizerVert * mySizerVert = NULL;
-	widget::SizerVert * mySizerVert2 = NULL;
-	widget::SizerHori * mySizerHori = NULL;
+	widget::Sizer * mySizerVert = NULL;
+	widget::Sizer * mySizerVert2 = NULL;
+	widget::Sizer * mySizerHori = NULL;
 	//ewol::Button * myButton = NULL;
 	CodeView * myCodeView = NULL;
 	BufferView * myBufferView = NULL;
 	widget::Menu * myMenu = NULL;
 	
-	mySizerVert = new widget::SizerVert();
+	mySizerVert = new widget::Sizer(widget::Sizer::modeVert);
 	SetSubWidget(mySizerVert);
 	
-		mySizerHori = new widget::SizerHori();
+		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
 		mySizerVert->SubWidgetAdd(mySizerHori);
 			myBufferView = new BufferView();
 			myBufferView->SetExpendX(false);
@@ -113,7 +113,7 @@ MainWindows::MainWindows(void)
 			myBufferView->SetFillY(true);
 			mySizerHori->SubWidgetAdd(myBufferView);
 			
-			mySizerVert2 = new widget::SizerVert();
+			mySizerVert2 = new widget::Sizer(widget::Sizer::modeVert);
 			mySizerHori->SubWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
@@ -129,7 +129,7 @@ MainWindows::MainWindows(void)
 				mySizerVert2->SubWidgetAdd(mySearch);
 				#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 				{
-					widget::SizerHori * mySizerHori2 = new widget::SizerHori();
+					widget::Sizer * mySizerHori2 = new widget::Sizer(widget::Sizer::modeHori);
 					mySizerVert2->SubWidgetAdd(mySizerHori2);
 						
 						widget::CheckBox* tmpCheck = new widget::CheckBox("smooth");
@@ -156,7 +156,7 @@ MainWindows::MainWindows(void)
 				}
 				#endif
 			
-		mySizerHori = new widget::SizerHori();
+		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
 		mySizerVert->SubWidgetAdd(mySizerHori);
 			
 			myMenu = new widget::Menu();
@@ -257,14 +257,8 @@ MainWindows::~MainWindows(void)
 const char *const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
 const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
 
-/**
- * @brief Receive a message from an other EObject with a specific eventId and data
- * @param[in] CallerObject Pointer on the EObject that information came from
- * @param[in] eventId Message registered by this class
- * @param[in] data Data registered by this class
- * @return ---
- */
-void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
+
+void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
 {
 	ewol::Windows::OnReceiveMessage(CallerObject, eventId, data);
 	
@@ -378,13 +372,6 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 	return;
 }
 
-
-/**
-* @brief Inform object that an other object is removed ...
-* @param[in] removeObject Pointer on the EObject remeved ==> the user must remove all reference on this EObject
-* @note : Sub classes must call this class
-* @return ---
-*/
 void MainWindows::OnObjectRemove(ewol::EObject * removeObject)
 {
 	ewol::Windows::OnObjectRemove(removeObject);

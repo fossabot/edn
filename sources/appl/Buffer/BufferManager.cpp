@@ -39,7 +39,7 @@ class classBufferManager: public ewol::EObject
 		 * @param[in] data Data registered by this class
 		 * @return ---
 		 */
-		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
+		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
 	private:
 		// return the ID of the buffer allocated
 		// create a buffer with no element
@@ -115,7 +115,7 @@ classBufferManager::~classBufferManager(void)
  * @param[in] data Data registered by this class
  * @return ---
  */
-void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
+void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
 {
 	ewol::EObject::OnReceiveMessage(CallerObject, eventId, data);
 	

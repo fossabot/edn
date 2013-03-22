@@ -43,7 +43,7 @@ class CTagsManager: public ewol::EObject
 		 * @param[in] data Data registered by this class
 		 * @return ---
 		 */
-		void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
+		void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
 		
 		int32_t                     m_currentSelectedID;
 		void                        LoadTagFile(void);
@@ -125,7 +125,7 @@ CTagsManager::~CTagsManager(void)
 
 const char * ednEventPopUpCtagsLoadFile = "edn-event-load-ctags";
 
-void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
+void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
 {
 	//EWOL_INFO("ctags manager event ... : \"" << eventId << "\" ==> data=\"" << data << "\"" );
 	if (eventId == ednMsgBufferId) {

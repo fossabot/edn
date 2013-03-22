@@ -44,7 +44,7 @@ class CodeView :public widget::WidgetScrooled
 		// Derived function
 		virtual void   OnRegenerateDisplay(void);
 		// Derived function
-		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
+		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
 	public:
 		// Derived function
 		virtual bool OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol::keyEvent::status_te typeEvent, vec2 pos);

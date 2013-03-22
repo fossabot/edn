@@ -31,6 +31,7 @@ const char* const l_eventForwardCb     = "appl-forward-CheckBox";
 const char* const l_eventHideBt        = "appl-hide-button";
 
 Search::Search(void) :
+	widget::Sizer(widget::Sizer::modeHori),
 	m_searchEntry(NULL),
 	m_replaceEntry(NULL)
 {
@@ -139,16 +140,9 @@ Search::~Search(void)
 }
 
 
-/**
- * @brief Receive a message from an other EObject with a specific eventId and data
- * @param[in] CallerObject Pointer on the EObject that information came from
- * @param[in] eventId Message registered by this class
- * @param[in] data Data registered by this class
- * @return ---
- */
-void Search::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
+void Search::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
 {
-	widget::SizerHori::OnReceiveMessage(CallerObject, eventId, data);
+	widget::Sizer::OnReceiveMessage(CallerObject, eventId, data);
 	//APPL_INFO("Search receive message : \"" << eventId << "\" data=\"" << data << "\"");
 	if ( eventId == l_eventSearchEntry) {
 		SearchData::SetSearch(data);
@@ -221,15 +215,9 @@ void Search::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId
 	}
 }
 
-/**
- * @brief Inform object that an other object is removed ...
- * @param[in] removeObject Pointer on the EObject remeved ==> the user must remove all reference on this EObject
- * @note : Sub classes must call this class
- * @return ---
- */
 void Search::OnObjectRemove(ewol::EObject * removeObject)
 {
-	widget::SizerHori::OnObjectRemove(removeObject);
+	widget::Sizer::OnObjectRemove(removeObject);
 	if (removeObject == m_searchEntry) {
 		m_searchEntry = NULL;
 	}

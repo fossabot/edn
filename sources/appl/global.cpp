@@ -113,7 +113,8 @@ static const char * const l_changeTabulation  = "edn-event-change-tabulation";
 static const char * const l_changeEndOfLine   = "edn-event-change-endOfLine";
 static const char * const l_changeRounded     = "edn-event-change-rounded";
 
-globals::ParameterGlobalsGui::ParameterGlobalsGui(void) 
+globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
+	widget::Sizer(widget::Sizer::modeVert)
 {
 	widget::CheckBox* myCheckbox = NULL;
 	widget::Spacer* mySpacer = NULL;
@@ -179,16 +180,9 @@ globals::ParameterGlobalsGui::~ParameterGlobalsGui(void)
 }
 
 
-/**
- * @brief Receive a message from an other EObject with a specific eventId and data
- * @param[in] CallerObject Pointer on the EObject that information came from
- * @param[in] eventId Message registered by this class
- * @param[in] data Data registered by this class
- * @return ---
- */
-void globals::ParameterGlobalsGui::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
+void globals::ParameterGlobalsGui::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
 {
-	widget::SizerVert::OnReceiveMessage(CallerObject, eventId, data);
+	widget::Sizer::OnReceiveMessage(CallerObject, eventId, data);
 	
 	if (eventId == l_changeEndOfLine) {
 		if (data == "true") {

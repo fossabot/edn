@@ -75,7 +75,7 @@ void BufferView::RemoveAllElement(void)
  * @param[in] data Data registered by this class
  * @return ---
  */
-void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
+void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
 {
 	widget::List::OnReceiveMessage(CallerObject, eventId, data);
 	if (eventId == ednMsgBufferListChange) {

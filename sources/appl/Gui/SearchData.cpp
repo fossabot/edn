@@ -16,7 +16,7 @@
 
 static etk::UString m_findRequest = "";
 
-void SearchData::SetSearch(etk::UString &myData)
+void SearchData::SetSearch(const etk::UString &myData)
 {
 	m_findRequest = myData;
 }
@@ -33,7 +33,7 @@ bool SearchData::IsSearchEmpty(void)
 }
 
 static etk::UString m_replaceRequest = "";
-void SearchData::SetReplace(etk::UString &myData)
+void SearchData::SetReplace(const etk::UString &myData)
 {
 	m_replaceRequest = myData;
 }

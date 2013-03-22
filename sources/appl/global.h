@@ -10,7 +10,7 @@
 #define __TOOLS_GLOBALS_H__
 
 #include <appl/Debug.h>
-#include <ewol/widget/SizerVert.h>
+#include <ewol/widget/Sizer.h>
 
 
 namespace globals
@@ -35,19 +35,13 @@ namespace globals
 	
 	bool    OrderTheBufferList(void);
 	
-	class ParameterGlobalsGui : public widget::SizerVert
+	class ParameterGlobalsGui : public widget::Sizer
 	{
 		public :
 			ParameterGlobalsGui(void);
 			~ParameterGlobalsGui(void);
-			/**
-			 * @brief Receive a message from an other EObject with a specific eventId and data
-			 * @param[in] CallerObject Pointer on the EObject that information came from
-			 * @param[in] eventId Message registered by this class
-			 * @param[in] data Data registered by this class
-			 * @return ---
-			 */
-			virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
+			// herited function
+			virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
 	};
 
 }

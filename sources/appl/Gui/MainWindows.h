@@ -29,7 +29,7 @@ class MainWindows : public ewol::Windows
 		// Derived function
 		const char * const GetObjectType(void) { return "MainWindows"; };
 		// Derived function
-		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
+		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
 		// Derived function
 		virtual void OnObjectRemove(ewol::EObject * removeObject);
 };

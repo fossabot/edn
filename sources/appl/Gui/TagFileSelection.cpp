@@ -7,8 +7,7 @@
  */
 
 #include <appl/Gui/TagFileSelection.h>
-#include <ewol/widget/SizerHori.h>
-#include <ewol/widget/SizerVert.h>
+#include <ewol/widget/Sizer.h>
 #include <ewol/widget/List.h>
 #include <ewol/widget/Spacer.h>
 #include <ewol/widget/Image.h>
@@ -39,8 +38,8 @@ appl::TagFileSelection::TagFileSelection(void)
 	widget::Button*     myWidgetValidate = NULL;
 	widget::Button*     myWidgetCancel = NULL;
 	
-	widget::SizerVert * mySizerVert = NULL;
-	widget::SizerHori * mySizerHori = NULL;
+	widget::Sizer * mySizerVert = NULL;
+	widget::Sizer * mySizerHori = NULL;
 	widget::Spacer *    mySpacer = NULL;
 	#if defined(__TARGET_OS__Android)
 		SetDisplayRatio(0.90);
@@ -50,7 +49,7 @@ appl::TagFileSelection::TagFileSelection(void)
 		SetDisplayRatio(0.80);
 	#endif
 	
-	mySizerVert = new widget::SizerVert();
+	mySizerVert = new widget::Sizer(widget::Sizer::modeVert);
 	if (NULL == mySizerVert) {
 		EWOL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
@@ -58,7 +57,7 @@ appl::TagFileSelection::TagFileSelection(void)
 		// set it in the pop-up-system : 
 		SubWidgetSet(mySizerVert);
 		
-		mySizerHori = new widget::SizerHori();
+		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
 		if (NULL == mySizerHori) {
 			EWOL_ERROR("Can not allocate widget ==> display might be in error");
 		} else {
@@ -116,15 +115,7 @@ appl::TagFileSelection::~TagFileSelection(void)
 	
 }
 
-
-/**
- * @brief Receive a message from an other EObject with a specific eventId and data
- * @param[in] CallerObject Pointer on the EObject that information came from
- * @param[in] eventId Message registered by this class
- * @param[in] data Data registered by this class
- * @return ---
- */
-void appl::TagFileSelection::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
+void appl::TagFileSelection::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
 {
 	EWOL_INFO("ctags LIST ... : \"" << eventId << "\" ==> data=\"" << data << "\"" );
 	if (eventId == applEventctagsSelection) {
@@ -155,7 +146,6 @@ void appl::TagFileSelection::OnReceiveMessage(ewol::EObject * CallerObject, cons
  * @brief Add a Ctags item on the curent list
  * @param[in] file Compleate file name
  * @param[in] jump line id
- * @return ---
  */
 void appl::TagFileSelection::AddCtagsNewItem(etk::UString file, int32_t line)
 {
@@ -164,13 +154,6 @@ void appl::TagFileSelection::AddCtagsNewItem(etk::UString file, int32_t line)
 	}
 }
 
-
-/**
- * @brief Inform object that an other object is removed ...
- * @param[in] removeObject Pointer on the EObject remeved ==> the user must remove all reference on this EObject
- * @note : Sub classes must call this class
- * @return ---
- */
 void appl::TagFileSelection::OnObjectRemove(ewol::EObject * removeObject)
 {
 	// First step call parrent : 

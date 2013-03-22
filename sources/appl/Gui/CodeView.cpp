@@ -343,7 +343,7 @@ bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol:
  * @param[in] data Data registered by this class
  * @return ---
  */
-void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
+void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
 {
 	widget::WidgetScrooled::OnReceiveMessage(CallerObject, eventId, data);
 	APPL_DEBUG("Extern Event : " << CallerObject << "  type : " << eventId << "  data=\"" << data << "\"");

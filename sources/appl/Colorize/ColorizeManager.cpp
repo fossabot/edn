@@ -40,7 +40,7 @@ class classColorManager: public ewol::EObject
 		 * @param[in] data Data registered by this class
 		 * @return ---
 		 */
-		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data);
+		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
 	public:
 		void        LoadFile(etk::UString &xmlFilename);
 		void        LoadFile(const char * xmlFilename);
@@ -80,7 +80,7 @@ classColorManager::~classColorManager(void)
 	listMyColor.Clear();
 }
 
-void classColorManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, etk::UString data)
+void classColorManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
 {
 	/*
 	switch (id)

@@ -240,7 +240,8 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
 	GetRange(start, end, deletedText);
 	etk::Vector<int8_t> tmpInsertText;
 	if (true == m_isUtf8) {
-		char * tmpPointer = insertText.c_str();
+		etk::Char tmpChar = insertText.c_str();
+		const char * tmpPointer = tmpChar;
 		while (*tmpPointer != '\0') {
 			tmpInsertText.PushBack(*tmpPointer++);
 		}
@@ -932,7 +933,8 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foun
 {
 	etk::Vector<int8_t> searchVect;
 	if (true == m_isUtf8) {
-		char * tmpPointer = search.c_str();
+		etk::Char tmpChar = search.c_str();
+		const char * tmpPointer = tmpChar;
 		while (*tmpPointer != '\0') {
 			searchVect.PushBack(*tmpPointer++);
 		}
@@ -987,7 +989,8 @@ bool EdnBuf::SearchBackward(int32_t startPos, etk::UString &search, int32_t *fou
 {
 	etk::Vector<int8_t> searchVect;
 	if (true == m_isUtf8) {
-		char * tmpPointer = search.c_str();
+		etk::Char tmpChar = search.c_str();
+		const char * tmpPointer = tmpChar;
 		while (*tmpPointer != '\0') {
 			searchVect.PushBack(*tmpPointer++);
 		}
@@ -1137,7 +1140,8 @@ int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
 {
 	etk::Vector<int8_t> tmpInsertText;
 	if (true == m_isUtf8) {
-		char * tmpPointer = insertText.c_str();
+		etk::Char tmpChar = insertText.c_str();
+		const char * tmpPointer = tmpChar;
 		while (*tmpPointer != '\0') {
 			tmpInsertText.PushBack(*tmpPointer++);
 		}
