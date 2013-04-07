@@ -18,13 +18,12 @@ LOCAL_STATIC_LIBRARIES := ewol
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH) $(addprefix $(LOCAL_PATH)/, $(sort $(dir $(FILE_LIST))))
 
-LOCAL_SRC_FILES := $(FILE_LIST)
-
+LOCAL_SRC_FILES := $(FILE_LIST) \
 
 LOCAL_LDLIBS    := 
 
 LOCAL_CFLAGS    :=  -DPROJECT_NAME="\"$(LOCAL_MODULE)\"" \
-                    -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION)-$(BUILD_DIRECTORY_MODE)\""
+                    -DAPPL_VERSION_TAG_NAME="\"$(LOCAL_VERSION)-$(BUILD_DIRECTORY_MODE)\"" 
 
 LOCAL_COPY_FILES += ../data/icon.png:icon.png
 
