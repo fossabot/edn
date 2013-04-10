@@ -38,7 +38,7 @@ Search::Search(void) :
 	m_forward = false;
 	
 	widget::Button * myButtonImage = NULL;
-	myButtonImage = new widget::Button("", "");
+	myButtonImage = new widget::Button("");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -59,7 +59,7 @@ Search::Search(void) :
 		SubWidgetAdd(m_searchEntry);
 	}
 	
-	myButtonImage = new widget::Button("","");
+	myButtonImage = new widget::Button("");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -80,7 +80,7 @@ Search::Search(void) :
 		SubWidgetAdd(m_replaceEntry);
 	}
 	
-	myButtonImage = new widget::Button("","");
+	myButtonImage = new widget::Button("");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -90,7 +90,7 @@ Search::Search(void) :
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new widget::Button("","");
+	myButtonImage = new widget::Button("");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -103,7 +103,7 @@ Search::Search(void) :
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new widget::Button("","");
+	myButtonImage = new widget::Button("");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
@@ -116,7 +116,7 @@ Search::Search(void) :
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new widget::Button("","");
+	myButtonImage = new widget::Button("");
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {

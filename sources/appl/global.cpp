@@ -123,15 +123,14 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	if (NULL == mySpacer) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
-		mySpacer->SetExpendX(true);
-		mySpacer->SetExpendY(true);
+		mySpacer->SetExpand(bvec2(true,true));
 		SubWidgetAdd(mySpacer);
 	}
 	myCheckbox = new widget::CheckBox("Automatic Indentation");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
-		myCheckbox->SetExpendX(true);
+		myCheckbox->SetExpand(bvec2(true,false));
 		myCheckbox->SetValue(IsSetAutoIndent());
 		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeIndentation);
 		SubWidgetAdd(myCheckbox);
@@ -140,7 +139,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
-		myCheckbox->SetExpendX(true);
+		myCheckbox->SetExpand(bvec2(true,false));
 		myCheckbox->SetValue(IsSetDisplaySpaceChar());
 		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeSpace);
 		SubWidgetAdd(myCheckbox);
@@ -149,7 +148,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
-		myCheckbox->SetExpendX(true);
+		myCheckbox->SetExpand(bvec2(true,false));
 		myCheckbox->SetValue(IsSetDisplayTabChar());
 		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeTabulation);
 		SubWidgetAdd(myCheckbox);
@@ -158,7 +157,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
-		myCheckbox->SetExpendX(true);
+		myCheckbox->SetExpand(bvec2(true,false));
 		myCheckbox->SetValue(IsSetDisplayEndOfLine());
 		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeEndOfLine);
 		SubWidgetAdd(myCheckbox);
@@ -167,7 +166,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
-		myCheckbox->SetExpendX(true);
+		myCheckbox->SetExpand(bvec2(true,false));
 		myCheckbox->SetValue(IsSetDisplayEndOfLine());
 		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeRounded);
 		SubWidgetAdd(myCheckbox);

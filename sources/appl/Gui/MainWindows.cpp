@@ -51,8 +51,7 @@ class ParameterAboutGui : public widget::Sizer
 			if (NULL == mySpacer) {
 				APPL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
-				mySpacer->SetExpendX(true);
-				mySpacer->SetExpendY(true);
+				mySpacer->SetExpand(bvec2(true,true));
 				SubWidgetAdd(mySpacer);
 			}
 			etk::UString tmpLabel = "<left>";
@@ -74,7 +73,7 @@ class ParameterAboutGui : public widget::Sizer
 			if (NULL == myLabel) {
 				APPL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
-				myLabel->SetExpendX(true);
+				myLabel->SetExpand(bvec2(true,false));
 				SubWidgetAdd(myLabel);
 			}
 		};
@@ -107,10 +106,8 @@ MainWindows::MainWindows(void)
 		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
 		mySizerVert->SubWidgetAdd(mySizerHori);
 			myBufferView = new BufferView();
-			myBufferView->SetExpendX(false);
-			myBufferView->SetExpendY(true);
-			myBufferView->SetFillX(true);
-			myBufferView->SetFillY(true);
+			myBufferView->SetExpand(bvec2(false,true));
+			myBufferView->SetFill(bvec2(true,true));
 			mySizerHori->SubWidgetAdd(myBufferView);
 			
 			mySizerVert2 = new widget::Sizer(widget::Sizer::modeVert);
@@ -118,10 +115,8 @@ MainWindows::MainWindows(void)
 				
 				// main buffer Area :
 				myCodeView = new CodeView("FreeMono", 11);
-				myCodeView->SetExpendX(true);
-				myCodeView->SetExpendY(true);
-				myCodeView->SetFillX(true);
-				myCodeView->SetFillY(true);
+				myCodeView->SetExpand(bvec2(true,true));
+				myCodeView->SetFill(bvec2(true,true));
 				mySizerVert2->SubWidgetAdd(myCodeView);
 				
 				// search area : 
@@ -139,7 +134,7 @@ MainWindows::MainWindows(void)
 						widget::Slider* tmpSlider = new widget::Slider();
 						mySizerHori2->SubWidgetAdd(tmpSlider);
 						tmpSlider->RegisterOnEvent(this, ewolEventSliderChange, l_smoothMin);
-						tmpSlider->SetExpendX(true);
+						tmpSlider->SetExpand(bvec2(true,false));
 						tmpSlider->SetMin(0);
 						tmpSlider->SetMax(1000);
 						tmpSlider->SetValue(0450);
@@ -148,7 +143,7 @@ MainWindows::MainWindows(void)
 						tmpSlider = new widget::Slider();
 						mySizerHori2->SubWidgetAdd(tmpSlider);
 						tmpSlider->RegisterOnEvent(this, ewolEventSliderChange, l_smoothMax);
-						tmpSlider->SetExpendX(true);
+						tmpSlider->SetExpand(bvec2(true,false));
 						tmpSlider->SetMin(0);
 						tmpSlider->SetMax(1000);
 						tmpSlider->SetValue(0550);
@@ -209,8 +204,8 @@ MainWindows::MainWindows(void)
 				(void)myMenu->Add(idMenugDisplay, "Reload OpenGl Shader", "", ednMsgGuiReloadShader);
 			
 			m_widgetLabelFileName = new widget::Label("<left>FileName</left>");
-			m_widgetLabelFileName->SetExpendX(true);
-			m_widgetLabelFileName->SetFillY(true);
+			m_widgetLabelFileName->SetExpand(bvec2(true,false));
+			m_widgetLabelFileName->SetFill(bvec2(false,true));;
 			mySizerHori->SubWidgetAdd(m_widgetLabelFileName);
 	
 	
