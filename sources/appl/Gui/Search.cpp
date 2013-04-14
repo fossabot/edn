@@ -14,21 +14,22 @@
 #include "appl/globalMsg.h"
 
 #include <ewol/widget/Button.h>
+#include <ewol/widget/Image.h>
 
 
 #undef __class__
-#define __class__	"Search"
+#define __class__ "Search"
 
-const char* const l_eventSearchEntry        = "appl-search-entry";
-const char* const l_eventSearchEntryEnter   = "appl-search-entry-enter";
-const char* const l_eventReplaceEntry       = "appl-replace-entry";
-const char* const l_eventReplaceEntryEnter  = "appl-replace-entry-enter";
-const char* const l_eventSearchBt      = "appl-search-button";
-const char* const l_eventReplaceBt     = "appl-replace-button";
-const char* const l_eventCaseCb        = "appl-case-sensitive-CheckBox";
-const char* const l_eventWrapCb        = "appl-wrap-CheckBox";
-const char* const l_eventForwardCb     = "appl-forward-CheckBox";
-const char* const l_eventHideBt        = "appl-hide-button";
+const char* const l_eventSearchEntry = "appl-search-entry";
+const char* const l_eventSearchEntryEnter = "appl-search-entry-enter";
+const char* const l_eventReplaceEntry = "appl-replace-entry";
+const char* const l_eventReplaceEntryEnter = "appl-replace-entry-enter";
+const char* const l_eventSearchBt = "appl-search-button";
+const char* const l_eventReplaceBt = "appl-replace-button";
+const char* const l_eventCaseCb = "appl-case-sensitive-CheckBox";
+const char* const l_eventWrapCb = "appl-wrap-CheckBox";
+const char* const l_eventForwardCb = "appl-forward-CheckBox";
+const char* const l_eventHideBt = "appl-hide-button";
 
 Search::Search(void) :
 	widget::Sizer(widget::Sizer::modeHori),
@@ -36,14 +37,44 @@ Search::Search(void) :
 	m_replaceEntry(NULL)
 {
 	m_forward = false;
-	
+	// TODO : Change the mode of creating interface : 
+	/* 
+	<composer>
+		<sizer mode="hori" expand="true,false" fill="true" lock="true">
+			<button name="SEARCH:close">
+				<image src="THEME:GUI:Remove.svg" fill="true" size="70,70mm"/>
+			</button>
+			<entry name="SEARCH:search-entry" expand="true" fill="true"/>
+			<button name="SEARCH:search">
+				<image src="THEME:GUI:Search.svg" fill="true" size="70,70mm"/>
+			</button>
+			<entry name="SEARCH:replace-entry" expand="true" fill="true"/>
+			<button name="SEARCH:replace">
+				<image src="THEME:GUI:Replace.svg" fill="true" size="70,70mm"/>
+			</button>
+			<button name="SEARCH:case">
+				<image src="THEME:GUI:CaseSensitive.svg" fill="true" size="70,70mm" hover="Close search bar"/>
+				<image src="THEME:GUI:CaseSensitive.svg" fill="true" size="70,70mm" hover="Close search bar"/>
+			</button>
+			<button name="SEARCH:wrap">
+				<image src="THEME:GUI:WrapAround.svg" fill="true" size="70,70mm" hover="Close search bar"/>
+				<image src="THEME:GUI:WrapAround.svg" fill="true" size="70,70mm" hover="Close search bar"/>
+			</button>
+			<button name="SEARCH:up-down">
+				<image src="THEME:GUI:Up.svg" fill="true" size="70,70mm" hover="Close search bar"/>
+				<image src="THEME:GUI:Down.svg" fill="true" size="70,70mm" hover="Close search bar"/>
+			</button>
+		</size>
+	</composer>
+	*/
 	widget::Button * myButtonImage = NULL;
-	myButtonImage = new widget::Button("");
+	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		myButtonImage->SetImage("THEME:GUI:Remove.svg");
-		myButtonImage->SetMinSize(32,32);
+		widget::Image* tmpImage = new widget::Image("THEME:GUI:Remove.svg");
+		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->SetSubWidget(tmpImage);
 		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventHideBt);
 		SubWidgetAdd(myButtonImage);
 	}
@@ -54,17 +85,18 @@ Search::Search(void) :
 	} else {
 		m_searchEntry->RegisterOnEvent(this, ewolEventEntryModify, l_eventSearchEntry);
 		m_searchEntry->RegisterOnEvent(this, ewolEventEntryEnter,  l_eventSearchEntryEnter);
-		m_searchEntry->SetExpendX(true);
-		m_searchEntry->SetFillX(true);
+		m_searchEntry->SetExpand(bvec2(true,false));
+		m_searchEntry->SetFill(bvec2(true,false));
 		SubWidgetAdd(m_searchEntry);
 	}
 	
-	myButtonImage = new widget::Button("");
+	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		myButtonImage->SetImage("THEME:GUI:Search.svg");
-		myButtonImage->SetMinSize(32,32);
+		widget::Image* tmpImage = new widget::Image("THEME:GUI:Search.svg");
+		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->SetSubWidget(tmpImage);
 		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventSearchBt);
 		SubWidgetAdd(myButtonImage);
 	}
@@ -75,55 +107,74 @@ Search::Search(void) :
 	} else {
 		m_replaceEntry->RegisterOnEvent(this, ewolEventEntryModify, l_eventReplaceEntry);
 		m_replaceEntry->RegisterOnEvent(this, ewolEventEntryEnter, l_eventReplaceEntryEnter);
-		m_replaceEntry->SetExpendX(true);
-		m_replaceEntry->SetFillX(true);
+		m_replaceEntry->SetExpand(bvec2(true,false));
+		m_replaceEntry->SetFill(bvec2(true,false));
 		SubWidgetAdd(m_replaceEntry);
 	}
 	
-	myButtonImage = new widget::Button("");
+	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		myButtonImage->SetImage("THEME:GUI:Replace.svg");
-		myButtonImage->SetMinSize(32,32);
+		widget::Image* tmpImage = new widget::Image("THEME:GUI:Replace.svg");
+		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->SetSubWidget(tmpImage);
 		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventReplaceBt);
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new widget::Button("");
+	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		myButtonImage->SetImage("THEME:GUI:CaseSensitive.svg");
-		myButtonImage->SetImageToggle("THEME:GUI:CaseSensitive.svg", 0xFFFFFF5F);
-		myButtonImage->SetMinSize(32,32);
 		myButtonImage->SetToggleMode(true);
+		
+		widget::Image* tmpImage = new widget::Image("THEME:GUI:CaseSensitive.svg");
+		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->SetSubWidget(tmpImage);
+		
+		tmpImage = new widget::Image("THEME:GUI:CaseSensitive.svg"); // TODO : Set color on Image .... 0xFFFFFF5F
+		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->SetSubWidgetToggle(tmpImage);
+		
 		myButtonImage->SetValue(!SearchData::GetCase());
 		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventCaseCb);
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new widget::Button("");
+	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		myButtonImage->SetImage("THEME:GUI:WrapAround.svg");
-		myButtonImage->SetImageToggle("THEME:GUI:WrapAround.svg", 0xFFFFFF5F);
-		myButtonImage->SetMinSize(32,32);
 		myButtonImage->SetToggleMode(true);
+		
+		widget::Image* tmpImage = new widget::Image("THEME:GUI:WrapAround.svg");
+		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->SetSubWidget(tmpImage);
+		
+		tmpImage = new widget::Image("THEME:GUI:WrapAround.svg"); // TODO : Set color on Image .... 0xFFFFFF5F
+		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->SetSubWidgetToggle(tmpImage);
+		
 		myButtonImage->SetValue(!SearchData::GetWrap());
 		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventWrapCb);
 		SubWidgetAdd(myButtonImage);
 	}
 	
-	myButtonImage = new widget::Button("");
+	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		myButtonImage->SetImage("THEME:GUI:Up.svg");
-		myButtonImage->SetImageToggle("THEME:GUI:Down.svg");
-		myButtonImage->SetMinSize(32,32);
 		myButtonImage->SetToggleMode(true);
+		
+		widget::Image* tmpImage = new widget::Image("THEME:GUI:Up.svg");
+		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->SetSubWidget(tmpImage);
+		
+		tmpImage = new widget::Image("THEME:GUI:Down.svg");
+		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->SetSubWidgetToggle(tmpImage);
+		
 		myButtonImage->SetValue(!m_forward);
 		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventForwardCb);
 		SubWidgetAdd(myButtonImage);

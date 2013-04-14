@@ -16,6 +16,7 @@
 #include <etk/tool.h>
 #include <ewol/widget/Button.h>
 #include <ewol/widget/Label.h>
+#include <ewol/widget/Composer.h>
 
 #include <ewol/ewol.h>
 
@@ -53,7 +54,7 @@ appl::TagFileSelection::TagFileSelection(void)
 	if (NULL == mySizerVert) {
 		EWOL_ERROR("Can not allocate widget ==> display might be in error");
 	} else {
-		mySizerVert->LockExpendContamination(true);
+		mySizerVert->LockExpand(bvec2(true,true));
 		// set it in the pop-up-system : 
 		SubWidgetSet(mySizerVert);
 		
@@ -66,22 +67,37 @@ appl::TagFileSelection::TagFileSelection(void)
 			if (NULL == mySpacer) {
 				EWOL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
-				mySpacer->SetExpendX(true);
+				mySpacer->SetExpand(bvec2(true,false));
 				mySizerHori->SubWidgetAdd(mySpacer);
 			}
-			myWidgetValidate = new widget::Button("Jump");
+			myWidgetValidate = new widget::Button();
 			if (NULL == myWidgetValidate) {
 				EWOL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
-				myWidgetValidate->SetImage("icon/Load.svg");
+				myWidgetValidate->SetSubWidget(
+				    new widget::Composer(widget::Composer::String,
+				        "<composer>\n"
+				        "	<sizer mode=\"hori\">\n"
+				        "		<image src=\"THEME:GUI:icon/Load.svg\" fill=\"true\" size=\"70,70mm\"/>\n"
+				        "		<label>Jump</label>\n"
+				        "	</sizer>\n"
+				        "</composer\n"));
+				
 				myWidgetValidate->RegisterOnEvent(this, ewolEventButtonPressed, applEventctagsSelection);
 				mySizerHori->SubWidgetAdd(myWidgetValidate);
 			}
-			myWidgetCancel = new widget::Button("Cancel");
+			myWidgetCancel = new widget::Button();
 			if (NULL == myWidgetCancel) {
 				EWOL_ERROR("Can not allocate widget ==> display might be in error");
 			} else {
-				myWidgetCancel->SetImage("icon/Remove.svg");
+				myWidgetCancel->SetSubWidget(
+				    new widget::Composer(widget::Composer::String,
+				        "<composer>\n"
+				        "	<sizer mode=\"hori\">\n"
+				        "		<image src=\"THEME:GUI:icon/Remove.svg\" fill=\"true\" size=\"70,70mm\"/>\n"
+				        "		<label>Cancel</label>\n"
+				        "	</sizer>\n"
+				        "</composer\n"));
 				myWidgetCancel->RegisterOnEvent(this, ewolEventButtonPressed, applEventctagsCancel);
 				mySizerHori->SubWidgetAdd(myWidgetCancel);
 			}
@@ -93,10 +109,8 @@ appl::TagFileSelection::TagFileSelection(void)
 			m_listTag->RegisterOnEvent(this, applEventCtagsListValidate);
 			m_listTag->RegisterOnEvent(this, applEventCtagsListSelect);
 			m_listTag->RegisterOnEvent(this, applEventCtagsListUnSelect);
-			m_listTag->SetExpendX(true);
-			m_listTag->SetExpendY(true);
-			m_listTag->SetFillX(true);
-			m_listTag->SetFillY(true);
+			m_listTag->SetExpand(bvec2(true,true));
+			m_listTag->SetFill(bvec2(true,true));
 			mySizerVert->SubWidgetAdd(m_listTag);
 		}
 		
