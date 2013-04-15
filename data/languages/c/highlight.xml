@@ -5,6 +5,7 @@
 	<ext>*.cc</ext>
 	<ext>*.h</ext>
 	<ext>*.hpp</ext>
+	<ext>*.mm</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline doxygen">
 			<color>commentDoxygen</color>
