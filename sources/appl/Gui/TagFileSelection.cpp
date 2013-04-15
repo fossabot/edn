@@ -43,11 +43,11 @@ appl::TagFileSelection::TagFileSelection(void)
 	widget::Sizer * mySizerHori = NULL;
 	widget::Spacer *    mySpacer = NULL;
 	#if defined(__TARGET_OS__Android)
-		SetDisplayRatio(0.90);
+		SetMinSize(ewol::Dimension(vec2(90,90),ewol::Dimension::Pourcent));
 	#elif defined(__TARGET_OS__Windows)
-		SetDisplayRatio(0.80);
+		SetMinSize(ewol::Dimension(vec2(80,80),ewol::Dimension::Pourcent));
 	#else
-		SetDisplayRatio(0.80);
+		SetMinSize(ewol::Dimension(vec2(80,80),ewol::Dimension::Pourcent));
 	#endif
 	
 	mySizerVert = new widget::Sizer(widget::Sizer::modeVert);
@@ -56,7 +56,7 @@ appl::TagFileSelection::TagFileSelection(void)
 	} else {
 		mySizerVert->LockExpand(bvec2(true,true));
 		// set it in the pop-up-system : 
-		SubWidgetSet(mySizerVert);
+		SetSubWidget(mySizerVert);
 		
 		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
 		if (NULL == mySizerHori) {

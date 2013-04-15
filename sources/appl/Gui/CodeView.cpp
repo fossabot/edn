@@ -238,7 +238,7 @@ void CodeView::OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID)
  * @return true the event is used
  * @return false the event is not used
  */
-bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol::keyEvent::status_te typeEvent, vec2 pos)
+bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol::keyEvent::status_te typeEvent, const vec2& pos)
 {
 	vec2  relativePos = RelativePosition(pos);
 	// corection for the openGl abstraction
