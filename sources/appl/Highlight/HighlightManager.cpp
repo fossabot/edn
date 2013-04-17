@@ -83,54 +83,19 @@ class localClassHighlightManager: public ewol::EObject
 		
 		void loadLanguages(void)
 		{
-			etk::UString xmlFilename = "languages/c/highlight.xml";
-			Highlight *myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/boo/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/makefile/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/asm/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/xml/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/php/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/bash/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/matlab/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/java/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/lua/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/in/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
-			xmlFilename = "languages/glsl/highlight.xml";
-			myHightline = new Highlight(xmlFilename);
-			listHighlight.PushBack(myHightline);
-			
+			etk::FSNode myFile("DATA:languages/");
+			// get the subfolder list :
+			etk::Vector<etk::FSNode *> list = myFile.FolderGetSubList(false, true, false,false);
+			for ( int32_t iii=0 ; iii<list.Size() ; iii++ ) {
+				if (NULL!=list[iii]) {
+					if (list[iii]->GetNodeType()==etk::FSN_FOLDER) {
+						etk::UString filename = list[iii]->GetName() + "/highlight.xml";
+						APPL_DEBUG("Load xml name : " << filename);
+						Highlight *myHightline = new Highlight(filename);
+						listHighlight.PushBack(myHightline);
+					}
+				}
+			}
 			//myHightline->Display();
 		}
 

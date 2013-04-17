@@ -58,6 +58,7 @@ LOCAL_COPY_FOLDERS := ../data/icon.*: \
                       ../data/languages/matlab/*.xml:languages/matlab/ \
                       ../data/languages/php/*.xml:languages/php/ \
                       ../data/languages/xml/*.xml:languages/xml/ \
+                      ../data/languages/python/*.xml:languages/python/ \
                       ../data/theme/default/*.svg:theme/default/
 
 LOCAL_COPY_FILES := 

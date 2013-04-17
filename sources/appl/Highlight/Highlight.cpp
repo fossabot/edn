@@ -32,7 +32,7 @@ Highlight::Highlight(etk::UString &xmlFilename)
 {
 	TiXmlDocument XmlDocument;
 
-	etk::FSNode fileName(etk::UString("DATA:") + xmlFilename);
+	etk::FSNode fileName(xmlFilename);
 	if (false == fileName.Exist()) {
 		APPL_ERROR("File Does not exist : " << fileName);
 		return;
