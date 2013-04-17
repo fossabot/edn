@@ -1,12 +1,12 @@
 #!/usr/bin/python
-import make
+import module
 
 # prevent erro integration
 #if 'myModule' in globals():
 #	del myModule
 
 # module name is 'edn' and type binary.
-myModule = make.module(__file__, 'edn', 'BINARY')
+myModule = module.module(__file__, 'edn', 'BINARY')
 # add the file to compile:
 myModule.AddSrcFile([
 		'appl/ctags/readtags.cpp',
@@ -51,12 +51,6 @@ myModule.AddSrcFile([
 
 myModule.AddModuleDepend('ewol')
 
-#myModule.CompileFlags_LINK()
-#myModule.CompileFlags_CC()
-#myModule.CompileFlags_XX()
-#myModule.CompileFlags_M()
-#myModule.CompileFlags_MM()
-
 myModule.CompileFlags_CC([
 	'-DPROJECT_NAME="'+myModule.name+'"',
 	'-DAPPL_VERSION_TAG_NAME="4.25.26.23.25.88"'])
@@ -64,4 +58,4 @@ myModule.CompileFlags_CC([
 myModule.CopyFile('../data/icon.png','icon.png')
 
 # add the currrent module at the 
-make.AddModule(myModule)
+module.AddModule(myModule)

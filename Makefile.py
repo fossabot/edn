@@ -1,8 +1,6 @@
 #!/usr/bin/python
-import make
+import module
+import buildTools
 
-make.ImportPath(make.GetCurrentPath(__file__) + "/sources/")
-make.ImportPath(make.GetCurrentPath(__file__) + "/../ewol/")
-
-
-make.Dump()
+module.ImportPath(buildTools.GetCurrentPath(__file__) + "/sources/")
+module.ImportPath(buildTools.GetCurrentPath(__file__) + "/../ewol/")
