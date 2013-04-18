@@ -56,10 +56,10 @@ class ParameterAboutGui : public widget::Sizer
 			}
 			etk::UString tmpLabel = "<left>";
 			tmpLabel += "  <b>Editeur De N'ours</b> : v";
-			tmpLabel += APPL_VERSION_TAG_NAME;
+			//tmpLabel += APPL_VERSION_TAG_NAME;
 			tmpLabel += "<br/>";
 			tmpLabel += "  <b>Build Time</b> : ";
-			tmpLabel += BUILD_TIME;
+			//tmpLabel += BUILD_TIME;
 			tmpLabel += "<br/>";
 			tmpLabel += "  <b>Website</b> : https://github.com/HeeroYui/edn<br/>";
 			tmpLabel += "  <b>License</b> : GPL v3<br/>";
