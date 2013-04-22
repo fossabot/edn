@@ -4,7 +4,7 @@ import lutinTools
 
 def Create(target):
 	# module name is 'edn' and type binary.
-	myModule = lutinModule.module(__file__, 'edn', 'BINARY')
+	myModule = lutinModule.module(__file__, 'edn', 'PACKAGE')
 	# add the file to compile:
 	myModule.AddSrcFile([
 			'appl/ctags/readtags.cpp',
@@ -80,6 +80,19 @@ def Create(target):
 	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl/ctags")
 	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl/Gui")
 	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl/Highlight")
+	
+	
+	
+	# set the package properties :
+	myModule.pkgSet("VERSION", "0.4.0")
+	myModule.pkgSet("COMPAGNY_TYPE", "org")
+	myModule.pkgSet("COMPAGNY_NAME", "Edouard DUPIN")
+	myModule.pkgSet("MAINTAINER", ["Mr DUPIN Edouard <yui.heero@gmail.com>"])
+	myModule.pkgSet("ICON", "/../data/icon.png")
+	myModule.pkgSet("SECTION", ["Development", "Editors"])
+	myModule.pkgSet("PRIORITY", "optional")
+	myModule.pkgSet("DESCRIPTION", "Text editor for sources code with ctags management")
+	
 	
 	# add the currrent module at the 
 	return myModule

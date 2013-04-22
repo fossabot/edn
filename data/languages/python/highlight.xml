@@ -37,7 +37,7 @@
 		</rule>
 		<rule name="my function keyword">
 			<color>systemFunction</color>
-			<start>\@print|len|range|del|__init__|self\@</start>
+			<start>\@print|len|range|del|__init__|self|os\.|sys\.|path\.\@</start>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
@@ -45,7 +45,7 @@
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<start>\@def|class\@</start>
+			<start>\@def|class|import|from|as|try|except\@</start>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
