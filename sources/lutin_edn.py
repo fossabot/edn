@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import lutinModule
 import lutinTools
+import datetime
 
 def Create(target):
 	# module name is 'edn' and type binary.
@@ -51,7 +52,8 @@ def Create(target):
 	
 	myModule.CompileFlags_CC([
 		'-DPROJECT_NAME="\\"'+myModule.name+'\\""',
-		'-DAPPL_VERSION_TAG_NAME="\\"4.25.26.23.25.88\\""'])
+		'-DAPPL_VERSION_TAG_NAME="\\"4.25.26.23.25.88\\""',
+		"-DBUILD_TIME=\"\\\""+str(datetime.datetime.now())+"\\\"\""])
 	
 	myModule.CopyFile('../data/icon.png','icon.png')
 	
@@ -88,11 +90,15 @@ def Create(target):
 	myModule.pkgSet("COMPAGNY_TYPE", "org")
 	myModule.pkgSet("COMPAGNY_NAME", "Edouard DUPIN")
 	myModule.pkgSet("MAINTAINER", ["Mr DUPIN Edouard <yui.heero@gmail.com>"])
-	myModule.pkgSet("ICON", "/../data/icon.png")
+	myModule.pkgSet("ICON", lutinTools.GetCurrentPath(__file__) + "/../data/icon.png")
 	myModule.pkgSet("SECTION", ["Development", "Editors"])
 	myModule.pkgSet("PRIORITY", "optional")
 	myModule.pkgSet("DESCRIPTION", "Text editor for sources code with ctags management")
+	myModule.pkgSet("NAME", "Editeur de N'ours")
 	
+	myModule.pkgAddRight("WRITE_EXTERNAL_STORAGE")
+	myModule.pkgAddRight("SET_ORIENTATION")
+	myModule.pkgAddRight("VIBRATE")
 	
 	# add the currrent module at the 
 	return myModule
