@@ -54,8 +54,8 @@ def Create(target):
 	
 	myModule.CompileFlags_CC([
 		'-DPROJECT_NAME="\\"'+myModule.name+'\\""',
-		'-DAPPL_VERSION_TAG_NAME="\\"4.25.26.23.25.88\\""',
-		"-DBUILD_TIME=\"\\\""+str(datetime.date())+"\\\"\""])
+		'-DAPPL_VERSION_TAG_NAME="\\"4.25.26.23.25\\""',
+		"-DBUILD_TIME=\"\\\""+str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"\\\"\""])
 	
 	myModule.CopyFile('../data/icon.png','icon.png')
 	
