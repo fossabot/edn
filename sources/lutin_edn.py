@@ -50,10 +50,12 @@ def Create(target):
 	
 	myModule.AddModuleDepend('ewol')
 	
+	now = datetime.datetime.now()
+	
 	myModule.CompileFlags_CC([
 		'-DPROJECT_NAME="\\"'+myModule.name+'\\""',
 		'-DAPPL_VERSION_TAG_NAME="\\"4.25.26.23.25.88\\""',
-		"-DBUILD_TIME=\"\\\""+str(datetime.datetime.now())+"\\\"\""])
+		"-DBUILD_TIME=\"\\\""+str(datetime.date())+"\\\"\""])
 	
 	myModule.CopyFile('../data/icon.png','icon.png')
 	
@@ -84,6 +86,9 @@ def Create(target):
 	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl/Highlight")
 	
 	
+	myModule.CopyFile("../data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")
+	myModule.CopyFolder("../data/Font/freefont/FreeMon*.ttf","fonts/")
+	
 	
 	# set the package properties :
 	myModule.pkgSet("VERSION", "0.4.0")
@@ -98,7 +103,6 @@ def Create(target):
 	
 	myModule.pkgAddRight("WRITE_EXTERNAL_STORAGE")
 	myModule.pkgAddRight("SET_ORIENTATION")
-	myModule.pkgAddRight("VIBRATE")
 	
 	# add the currrent module at the 
 	return myModule
