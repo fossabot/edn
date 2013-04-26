@@ -52,9 +52,11 @@ def Create(target):
 	
 	now = datetime.datetime.now()
 	
+	versionID=str(now.year-2012)+"."+str(now.month)+"."+str(now.day)
+	
 	myModule.CompileFlags_CC([
-		'-DPROJECT_NAME="\\"'+myModule.name+'\\""',
-		'-DAPPL_VERSION_TAG_NAME="\\"4.25.26.23.25\\""',
+		"-DPROJECT_NAME=\"\\\""+myModule.name+"\\\"\"",
+		"-DAPPL_VERSION_TAG_NAME=\"\\\""+versionID+"\\\"\"",
 		"-DBUILD_TIME=\"\\\""+str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"\\\"\""])
 	
 	myModule.CopyFile('../data/icon.png','icon.png')
@@ -91,7 +93,7 @@ def Create(target):
 	
 	
 	# set the package properties :
-	myModule.pkgSet("VERSION", "0.4.0")
+	myModule.pkgSet("VERSION", versionID)
 	myModule.pkgSet("COMPAGNY_TYPE", "org")
 	myModule.pkgSet("COMPAGNY_NAME", "Edouard DUPIN")
 	myModule.pkgSet("MAINTAINER", ["Mr DUPIN Edouard <yui.heero@gmail.com>"])
