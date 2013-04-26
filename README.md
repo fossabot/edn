@@ -20,24 +20,22 @@ download the software :
 	git clone git://github.com/HeeroYui/edn.git
 	cd edn
 
+
 (debug) Compile software & Run debug version:
 
-	make DEBUG=1
+	../ewol/build/lutin.py --color --mode=debug
 	or
-	make CLANG=1 DEBUG=1
-	./out/Linux/debug/staging/edn/usr/bin/edn -l6 yourFile.txt
+	../ewol/build/lutin.py --color --compilator=clang --mode=debug
+	./out/Linux/debug/staging/edn//usr/bin/edn -l6 yourFile.txt
 	Note : -l6 corespond at the LOG level to display.
-	Note : If you not compile in debug mode, you must install it to execure it.
+
 
 (release) Compile software & install & run:
 
-	# generate binary and tree
-	make
-	# generate .deb packages
-	make final
-	# install .deb packages
-	make install
+	# generate binary, tree, package and install it ...
+	../ewol/build/lutin.py -c edn-install
 	edn exemple.txt
+
 
 (Android) Compile software & install
 
@@ -50,30 +48,35 @@ download the software :
 		==> you need to download sub package of the NDK (refer to the NDK doccumentation) but only supported android version >4.0
 	cd ../edn
 	# generate .so
-	make PLATFORM=Android
-	# generate .apk
-	make PLATFORM=Android final
-	# To send it on the board :
-	make PLATFORM=Android install
+	../ewol/build/lutin.py --color --target=Android --mode=debug edn-install
 	# to show the log :
-	make PLATFORM=Android log
+	../ewol/build/lutin.py --target=Android edn-log
 
 
 (Windows) Compile software & install
 
 	cd yourDevFolder/edn
-	make PLATFORM=Windows
-	# generate ...
-	make PLATFORM=Windows final
+	../ewol/build/lutin.py --color --target=Windows --mode=debug
+
 
 (MAC) All needed and some useful packages
+
 	- Git access (client you want or : http://code.google.com/p/git-osx-installer/ ==>need a ctrl+click to remove the normal installation control)
 	- Xcode ==> for all developement packages
 		- in Xcode : XCode->Setting->Download and install component: "Command Line Tools"
+	
+	cd yourDevFolder/edn
+	../ewol/build/lutin.py --color --mode=debug
+
+
+On linux you can generate 3 board in one time
+=============================================
+
+	cd yourDevFolder/edn
+	../ewol/build/lutin.py --color --target=Linux --mode=debug edn --target=Windows --mode=debug edn --target=Android --mode=debug edn
 
 Dependency packages
 ===================
-
 	sudo apt-get install g++ libgl1-mesa-dev zlib1g-dev libasound2-dev
 	# if you want to compile with clang :
 	sudo apt-get install clang
