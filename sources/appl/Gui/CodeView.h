@@ -40,23 +40,13 @@ class CodeView :public widget::WidgetScrooled
 		// drawing elements :
 		ewol::Text                   m_displayText;
 		ewol::Drawing                m_displayDrawing;
-	public:
-		// Derived function
+	public: // Derived function
 		virtual void   OnRegenerateDisplay(void);
-		// Derived function
 		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
-	public:
-		// Derived function
-		virtual bool OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol::keyEvent::status_te typeEvent,const vec2& pos);
-		// Derived function
-		virtual bool OnEventKb(ewol::keyEvent::status_te typeEvent, uniChar_t unicodeData);
-		// Derived function
-		virtual bool OnEventKbMove(ewol::keyEvent::status_te typeEvent, ewol::keyEvent::keyboard_te moveTypeEvent);
-		// Derived function
+		virtual bool OnEventInput(const ewol::EventInput& _event);
+		virtual bool OnEventEntry(const ewol::EventEntry& _event);
 		virtual void OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
-		// Derived function
 		virtual void OnGetFocus(void);
-		// Derived function
 		virtual void OnLostFocus(void);
 	public:
 		void SetFontSize(int32_t size);

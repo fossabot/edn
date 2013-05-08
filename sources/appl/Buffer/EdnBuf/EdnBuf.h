@@ -65,7 +65,7 @@ class EdnBuf {
 		bool    DumpIn(                 etk::FSNode &file);
 		bool    DumpFrom(               etk::FSNode &file);
 		// replace with operator [] ...
-		int8_t  operator[] (int32_t);
+		int8_t  operator[] (int32_t) const;
 		int32_t Insert(                 int32_t pos, etk::Vector<int8_t> &insertText);
 		int32_t Insert(                 int32_t pos, etk::UString &insertText);
 		int32_t Replace(                int32_t start, int32_t end, etk::Vector<int8_t> &insertText);

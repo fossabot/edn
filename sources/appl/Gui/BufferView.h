@@ -51,17 +51,13 @@ class BufferView : public widget::List
 	protected:
 		// function call to display the list :
 		virtual draw::Color GetBasicBG(void);
+		void RemoveAllElement(void);
 		// Derived function
 		virtual uint32_t GetNuberOfColomn(void);
-		// Derived function
 		virtual bool GetTitle(int32_t colomn, etk::UString &myTitle, draw::Color &fg, draw::Color &bg);
-		// Derived function
 		virtual uint32_t GetNuberOfRaw(void);
-		// Derived function
 		virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg);
-		// Derived function
 		virtual bool OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
-		void RemoveAllElement(void);
 };
 
 

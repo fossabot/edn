@@ -21,6 +21,8 @@
 
 		<!-- hightline description : -->
 		<color name="type"					FG="#376d0a" bold="yes"/>
+		<color name="memberClass"			FG="#005A00" bold="yes"/>
+		<color name="inputFunction"			FG="#B80000" bold="yes" italic="yes"/>
 		<color name="storageKeyword"		FG="#466cb4"/>
 		<color name="number"				FG="#007b00"/>
 		<color name="systemFunction"		FG="#acaa00"/>

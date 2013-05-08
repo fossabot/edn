@@ -167,7 +167,7 @@ void EdnBuf::GetRange(int32_t start, int32_t end, etk::UString &output)
  * @return The character at buffer position "pos"
  * 
  */
-int8_t EdnBuf::operator[] (int32_t pos)
+int8_t EdnBuf::operator[] (int32_t pos) const
 {
 	int8_t res = m_data.Get(pos);
 	return res;

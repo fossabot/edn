@@ -28,7 +28,7 @@ namespace appl {
 	class TagFileList : public widget::List
 	{
 		private:
-			int32_t                            m_selectedLine;
+			int32_t m_selectedLine;
 			etk::Vector<appl::TagListElement*> m_list;
 		public:
 			TagFileList(void);
@@ -40,21 +40,15 @@ namespace appl {
 			uint32_t GetNuberOfRaw(void);
 			bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg);
 			bool OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
-			/**
-			 * @brief Get the current Object type of the EObject
-			 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
-			 * @param[in] objectType type description
-			 * @return true if the object is compatible, otherwise false
-			 */
+			// herited function
 			const char * const GetObjectType(void) { return "TagFileList"; };
 		public:
 			/**
 			 * @brief Add a Ctags item on the curent list
 			 * @param[in] file Compleate file name
 			 * @param[in] jump line id
-			 * @return ---
 			 */
-			void         Add(etk::UString& file, int32_t line);
+			void Add(etk::UString& file, int32_t line);
 	};
 };
 

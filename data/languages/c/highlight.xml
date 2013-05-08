@@ -89,7 +89,7 @@
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<start>\@const|class|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum\@</start>
+			<start>\@inline|const|class|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum\@</start>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
@@ -106,6 +106,14 @@
 		<rule name="BIG LETTER">
 			<color>macro</color>
 			<start>\@[A-Z_][A-Z_0-9]{3,500}\@</start>
+		</rule>
+		<rule name="CPP member">
+			<color>memberClass</color>
+			<start>\@m_[A-Za-z_0-9]*\@</start>
+		</rule>
+		<rule name="function input">
+			<color>inputFunction</color>
+			<start>\@_[A-Za-z_0-9]*\@</start>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>

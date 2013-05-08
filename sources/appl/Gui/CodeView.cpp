@@ -80,7 +80,6 @@ CodeView::~CodeView(void)
 /**
  * @brief Check if the number of reference buffer is good or not ...
  * @param[in] bufferID id of the current Buffer that needed to have a reference
- * @return ---
  */
 void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
 {
@@ -188,38 +187,30 @@ void CodeView::OnRegenerateDisplay(void)
 }
 
 
-bool CodeView::OnEventKb(ewol::keyEvent::status_te typeEvent, uniChar_t unicodeData)
+bool CodeView::OnEventEntry(const ewol::EventEntry& _event)
 {
-	//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
-	if (typeEvent == ewol::keyEvent::statusDown) {
+	if (_event.GetType() == ewol::keyEvent::keyboardChar) {
+		//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
+		if (_event.GetStatus() == ewol::keyEvent::statusDown) {
+			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			if (NULL!=tmpBuffer) {
+				tmpBuffer->AddChar(_event.GetChar());
+			}
+			MarkToRedraw();
+		}
+		return true;
+	}
+	// move events ...
+	if (_event.GetStatus() == ewol::keyEvent::statusDown) {
 		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 		if (NULL!=tmpBuffer) {
-			tmpBuffer->AddChar(unicodeData);
+			tmpBuffer->cursorMove(_event.GetType());
 		}
 		MarkToRedraw();
 	}
 	return true;
 }
 
-
-bool CodeView::OnEventKbMove(ewol::keyEvent::status_te typeEvent, ewol::keyEvent::keyboard_te moveTypeEvent)
-{
-	if (typeEvent == ewol::keyEvent::statusDown) {
-		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
-		if (NULL!=tmpBuffer) {
-			tmpBuffer->cursorMove(moveTypeEvent);
-		}
-		MarkToRedraw();
-	}
-	return true;
-}
-
-/**
- * @brief Event on a past event ==> this event is asynchronous due to all system does not support direct getting datas
- * @note : need to have focus ...
- * @param[in] mode Mode of data requested
- * @return ---
- */
 void CodeView::OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID)
 {
 	BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
@@ -229,25 +220,17 @@ void CodeView::OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID)
 	MarkToRedraw();
 }
 
-/**
- * @brief Event on an input of this Widget
- * @param[in] type Type of the input (ewol::INPUT_TYPE_MOUSE/ewol::INPUT_TYPE_FINGER ...)
- * @param[in] IdInput Id of the current Input (PC : left=1, right=2, middle=3, none=0 / Tactil : first finger=1 , second=2 (only on this widget, no knowledge at ouside finger))
- * @param[in] typeEvent ewol type of event like EVENT_INPUT_TYPE_DOWN/EVENT_INPUT_TYPE_MOVE/EVENT_INPUT_TYPE_UP/EVENT_INPUT_TYPE_SINGLE/EVENT_INPUT_TYPE_DOUBLE/...
- * @param[in] pos Absolute position of the event
- * @return true the event is used
- * @return false the event is not used
- */
-bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol::keyEvent::status_te typeEvent, const vec2& pos)
+bool CodeView::OnEventInput(const ewol::EventInput& _event)
 {
-	vec2  relativePos = RelativePosition(pos);
+	vec2 relativePos = RelativePosition(_event.GetPos());
+	//APPL_DEBUG("Event at pos : " << _event.GetPos() << " ==> " << relativePos );
 	// corection for the openGl abstraction
 	//relativePos.y = m_size.y - relativePos.y;
 	
-	vec2  limitedPos = relativePos;
+	vec2 limitedPos = relativePos;
 	limitedPos.setValue(etk_avg(1, limitedPos.x(), m_size.x()-1),
 	                    etk_avg(1, limitedPos.y(), m_size.y()-1));
-	if (true == WidgetScrooled::OnEventInput(type, IdInput, typeEvent, pos)) {
+	if (true == WidgetScrooled::OnEventInput(_event)) {
 		ewol::widgetManager::FocusKeep(this);
 		// nothing to do ... done on upper widget ...
 		return true;
@@ -257,9 +240,10 @@ bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol:
 		return false;
 	}
 	
-	if (1 == IdInput) {
-		#ifndef __MODE__Touch
-			if (ewol::keyEvent::statusDown == typeEvent) {
+	if (1 == _event.GetId()) {
+		
+		if (ewol::keyEvent::typeMouse == _event.GetType()) {
+			if (ewol::keyEvent::statusDown == _event.GetStatus()) {
 				m_buttunOneSelected = true;
 				ewol::widgetManager::FocusKeep(this);
 				// TODO : Set something good
@@ -268,39 +252,39 @@ bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol:
 					tmpBuffer->MouseEvent(limitedPos);
 				}
 				MarkToRedraw();
-			} else if (ewol::keyEvent::statusUp == typeEvent) {
+			} else if (ewol::keyEvent::statusUp == _event.GetStatus()) {
 				m_buttunOneSelected = false;
 				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 				if (NULL!=tmpBuffer) {
 					tmpBuffer->Copy(ewol::clipBoard::clipboardSelection);
 				}
 				MarkToRedraw();
-			} else 
-		#endif
-		if (ewol::keyEvent::statusSingle == typeEvent) {
-			#ifdef __MODE__Touch
+			}
+		}
+		if (ewol::keyEvent::statusSingle == _event.GetStatus()) {
+			if (ewol::keyEvent::typeMouse == _event.GetType()) {
 				ewol::widgetManager::FocusKeep(this);
 				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 				if (NULL!=tmpBuffer) {
 					tmpBuffer->MouseEvent(limitedPos);
 				}
 				MarkToRedraw();
-			#else
+			} else {
 				// nothing to do ...
-			#endif
-		} else if (ewol::keyEvent::statusDouble == typeEvent) {
+			}
+		} else if (ewol::keyEvent::statusDouble == _event.GetStatus()) {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->MouseEventDouble();
 			}
 			MarkToRedraw();
-		} else if (ewol::keyEvent::statusTriple == typeEvent) {
+		} else if (ewol::keyEvent::statusTriple == _event.GetStatus()) {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->MouseEventTriple();
 			}
 			MarkToRedraw();
-		} else if (ewol::keyEvent::statusMove == typeEvent) {
+		} else if (ewol::keyEvent::statusMove == _event.GetStatus()) {
 			if (true == m_buttunOneSelected) {
 				int xxx, yyy;
 				xxx = relativePos.x();
@@ -320,8 +304,8 @@ bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol:
 				MarkToRedraw();
 			}
 		}
-	} else if (2 == IdInput) {
-		if (ewol::keyEvent::statusSingle == typeEvent) {
+	} else if (2 == _event.GetId()) {
+		if (ewol::keyEvent::statusSingle == _event.GetStatus()) {
 			// TODO : Set something good
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
@@ -334,15 +318,6 @@ bool CodeView::OnEventInput(ewol::keyEvent::type_te type, int32_t IdInput, ewol:
 	return true;
 }
 
-
-
-/**
- * @brief Receive a message from an other EObject with a specific eventId and data
- * @param[in] CallerObject Pointer on the EObject that information came from
- * @param[in] eventId Message registered by this class
- * @param[in] data Data registered by this class
- * @return ---
- */
 void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
 {
 	widget::WidgetScrooled::OnReceiveMessage(CallerObject, eventId, data);
