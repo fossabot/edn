@@ -26,24 +26,11 @@ class CTagsManager: public ewol::EObject
 		CTagsManager(void);
 		~CTagsManager(void);
 		
-		/**
-		 * @brief Get the current Object type of the EObject
-		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
-		 * @param[in] objectType type description
-		 * @return true if the object is compatible, otherwise false
-		 */
 		const char * const GetObjectType(void)
 		{
 			return "CTagsManager";
 		};
-		/**
-		 * @brief Receive a message from an other EObject with a specific eventId and data
-		 * @param[in] CallerObject Pointer on the EObject that information came from
-		 * @param[in] eventId Message registered by this class
-		 * @param[in] data Data registered by this class
-		 * @return ---
-		 */
-		void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
+		void OnReceiveMessage(const ewol::EMessage& _msg);
 		
 		int32_t                     m_currentSelectedID;
 		void                        LoadTagFile(void);
@@ -125,21 +112,21 @@ CTagsManager::~CTagsManager(void)
 
 const char * ednEventPopUpCtagsLoadFile = "edn-event-load-ctags";
 
-void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
+void CTagsManager::OnReceiveMessage(const ewol::EMessage& _msg)
 {
 	//EWOL_INFO("ctags manager event ... : \"" << eventId << "\" ==> data=\"" << data << "\"" );
-	if (eventId == ednMsgBufferId) {
+	if (_msg.GetMessage() == ednMsgBufferId) {
 		//m_currentSelectedID = dataID;
-	} else if(    eventId == ednEventPopUpCtagsLoadFile
-	           || eventId == ednMsgCtagsLoadFile) {
+	} else if(    _msg.GetMessage() == ednEventPopUpCtagsLoadFile
+	           || _msg.GetMessage() == ednMsgCtagsLoadFile) {
 		// open the new one :
-		etk::FSNode tmpFilename = data;
+		etk::FSNode tmpFilename = _msg.GetData();
 		m_tagFilename = tmpFilename.GetNameFile();
 		m_tagFolderBase = tmpFilename.GetNameFolder();
 		APPL_DEBUG("Receive load Ctags file : " << m_tagFolderBase << "/" << m_tagFilename << " ");
 		LoadTagFile();
-	} else if (eventId == ednMsgGuiCtags) {
-		if (data == "Load") {
+	} else if (_msg.GetMessage() == ednMsgGuiCtags) {
+		if (_msg.GetData() == "Load") {
 			APPL_INFO("Request opening ctag file");
 			widget::FileChooser* tmpWidget = new widget::FileChooser();
 			if (NULL == tmpWidget) {
@@ -150,12 +137,12 @@ void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * e
 				ewol::WindowsPopUpAdd(tmpWidget);
 				tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpCtagsLoadFile);
 			}
-		} else if (data == "ReLoad") {
+		} else if (_msg.GetData() == "ReLoad") {
 			APPL_INFO("Request re-load ctag file");
 			LoadTagFile();
-		} else if (data == "Jump") {
+		} else if (_msg.GetData() == "Jump") {
 			JumpTo();
-		} else if (data == "Back") {
+		} else if (_msg.GetData() == "Back") {
 			if (m_historyList.Size() > 0) {
 				int32_t id = m_historyList.Size()-1;
 				SendMultiCast(ednMsgOpenFile, m_historyList[id]->GetName() );
@@ -168,13 +155,13 @@ void CTagsManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * e
 		} else {
 			
 		}
-	} else if (eventId == applEventctagsSelection) {
+	} else if (_msg.GetMessage() == applEventctagsSelection) {
 		// save the current file in the history
 		RegisterHistory();
 		// parse the input data
 		char tmp[4096];
 		int32_t lineID;
-		sscanf(data.c_str(), "%d:%s", &lineID, tmp);
+		sscanf(_msg.GetData().c_str(), "%d:%s", &lineID, tmp);
 		// generate envents
 		SendMultiCast(ednMsgOpenFile, tmp);
 		SendMultiCast(ednMsgGuiGotoLine, lineID - 1);

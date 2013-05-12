@@ -68,17 +68,10 @@ void BufferView::RemoveAllElement(void)
 	m_list.Clear();
 }
 
-/**
- * @brief Receive a message from an other EObject with a specific eventId and data
- * @param[in] CallerObject Pointer on the EObject that information came from
- * @param[in] eventId Message registered by this class
- * @param[in] data Data registered by this class
- * @return ---
- */
-void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
+void BufferView::OnReceiveMessage(const ewol::EMessage& _msg)
 {
-	widget::List::OnReceiveMessage(CallerObject, eventId, data);
-	if (eventId == ednMsgBufferListChange) {
+	widget::List::OnReceiveMessage(_msg);
+	if (_msg.GetMessage() == ednMsgBufferListChange) {
 		// clean The list
 		RemoveAllElement();
 		// Get all the buffer name and properties:
@@ -102,10 +95,10 @@ void BufferView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eve
 			SortElementList(m_list);
 		}
 		MarkToRedraw();
-	}else if (eventId == ednMsgBufferId) {
+	}else if (_msg.GetMessage() == ednMsgBufferId) {
 		m_selectedIdRequested = BufferManager::GetSelected();
 		MarkToRedraw();
-	}else if (eventId == ednMsgBufferState) {
+	}else if (_msg.GetMessage() == ednMsgBufferState) {
 		// Update list of modify section ...
 		for (int32_t iii=0; iii<m_list.Size(); iii++) {
 			if (NULL!=m_list[iii]) {

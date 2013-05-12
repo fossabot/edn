@@ -23,24 +23,11 @@ class classColorManager: public ewol::EObject
 		classColorManager(void);
 		~classColorManager(void);
 		
-		/**
-		 * @brief Get the current Object type of the EObject
-		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
-		 * @param[in] objectType type description
-		 * @return true if the object is compatible, otherwise false
-		 */
 		const char * const GetObjectType(void)
 		{
 			return "ApplColorManager";
 		}
-		/**
-		 * @brief Receive a message from an other EObject with a specific eventId and data
-		 * @param[in] CallerObject Pointer on the EObject that information came from
-		 * @param[in] eventId Message registered by this class
-		 * @param[in] data Data registered by this class
-		 * @return ---
-		 */
-		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
+		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
 	public:
 		void        LoadFile(etk::UString &xmlFilename);
 		void        LoadFile(const char * xmlFilename);
@@ -80,7 +67,7 @@ classColorManager::~classColorManager(void)
 	listMyColor.Clear();
 }
 
-void classColorManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
+void classColorManager::OnReceiveMessage(const ewol::EMessage& _msg)
 {
 	/*
 	switch (id)

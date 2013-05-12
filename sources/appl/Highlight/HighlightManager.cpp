@@ -44,7 +44,7 @@ class localClassHighlightManager: public ewol::EObject
 		}
 		
 		// herited function
-		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
+		virtual void OnReceiveMessage(const ewol::EMessage& _msg)
 		{
 			/*
 			switch (id)

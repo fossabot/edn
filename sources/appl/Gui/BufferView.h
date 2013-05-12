@@ -47,7 +47,7 @@ class BufferView : public widget::List
 		// Derived function
 		const char * const GetObjectType(void) { return "ApplBufferView"; };
 		// Derived function
-		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
+		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
 	protected:
 		// function call to display the list :
 		virtual draw::Color GetBasicBG(void);

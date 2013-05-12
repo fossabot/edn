@@ -179,36 +179,36 @@ globals::ParameterGlobalsGui::~ParameterGlobalsGui(void)
 }
 
 
-void globals::ParameterGlobalsGui::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
+void globals::ParameterGlobalsGui::OnReceiveMessage(const ewol::EMessage& _msg)
 {
-	widget::Sizer::OnReceiveMessage(CallerObject, eventId, data);
+	widget::Sizer::OnReceiveMessage(_msg);
 	
-	if (eventId == l_changeEndOfLine) {
-		if (data == "true") {
+	if (_msg.GetMessage() == l_changeEndOfLine) {
+		if (_msg.GetData() == "true") {
 			SetDisplayEndOfLine(true);
 		} else {
 			SetDisplayEndOfLine(false);
 		}
-	} else if (eventId == l_changeIndentation) {
-		if (data == "true") {
+	} else if (_msg.GetMessage() == l_changeIndentation) {
+		if (_msg.GetData() == "true") {
 			SetAutoIndent(true);
 		} else {
 			SetAutoIndent(false);
 		}
-	} else if (eventId == l_changeSpace) {
-		if (data == "true") {
+	} else if (_msg.GetMessage() == l_changeSpace) {
+		if (_msg.GetData() == "true") {
 			SetDisplaySpaceChar(true);
 		} else {
 			SetDisplaySpaceChar(false);
 		}
-	} else if (eventId == l_changeTabulation) {
-		if (data == "true") {
+	} else if (_msg.GetMessage() == l_changeTabulation) {
+		if (_msg.GetData() == "true") {
 			SetDisplayTabChar(true);
 		} else {
 			SetDisplayTabChar(false);
 		}
-	} else if (eventId == l_changeRounded) {
-		if (data == "true") {
+	} else if (_msg.GetMessage() == l_changeRounded) {
+		if (_msg.GetData() == "true") {
 			etk::theme::SetName("GUI", "rounded");;
 		} else {
 			etk::theme::SetName("GUI", "default");;

@@ -253,13 +253,13 @@ const char *const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
 const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
 
 
-void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
+void MainWindows::OnReceiveMessage(const ewol::EMessage& _msg)
 {
-	ewol::Windows::OnReceiveMessage(CallerObject, eventId, data);
+	ewol::Windows::OnReceiveMessage(_msg);
 	
 	//APPL_INFO("Receive Event from the main windows ... : \"" << eventId << "\" ==> data=\"" << data << "\"" );
 	// Open file Section ...
-	if (eventId == ednMsgGuiOpen) {
+	if (_msg.GetMessage() == ednMsgGuiOpen) {
 		widget::FileChooser* tmpWidget = new widget::FileChooser();
 		tmpWidget->SetTitle("Open Files ...");
 		tmpWidget->SetValidateLabel("Open");
@@ -272,18 +272,18 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		}
 		PopUpWidgetPush(tmpWidget);
 		tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
-	} else if (eventId == ednEventPopUpFileSelected) {
-		APPL_DEBUG("Request opening the file : " << data);
-		SendMultiCast(ednMsgOpenFile, data);
-	} else if (eventId == ednMsgGuiSaveAs) {
-		if (data == "") {
+	} else if (_msg.GetMessage() == ednEventPopUpFileSelected) {
+		APPL_DEBUG("Request opening the file : " << _msg.GetData());
+		SendMultiCast(ednMsgOpenFile, _msg.GetData());
+	} else if (_msg.GetMessage() == ednMsgGuiSaveAs) {
+		if (_msg.GetData() == "") {
 			APPL_ERROR("Null data for Save As file ... ");
 		} else {
 			m_currentSavingAsIdBuffer = -1;
-			if (data == "current") {
+			if (_msg.GetData() == "current") {
 				m_currentSavingAsIdBuffer = BufferManager::GetSelected();
 			} else {
-				sscanf(data.c_str(), "%d", &m_currentSavingAsIdBuffer);
+				sscanf(_msg.GetData().c_str(), "%d", &m_currentSavingAsIdBuffer);
 			}
 			
 			if (false == BufferManager::Exist(m_currentSavingAsIdBuffer)) {
@@ -310,15 +310,15 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 				}
 			}
 		}
-	} else if (eventId == ednEventPopUpFileSaveAs) {
+	} else if (_msg.GetMessage() == ednEventPopUpFileSaveAs) {
 		// get the filename : 
-		etk::UString tmpData = data;
+		etk::UString tmpData = _msg.GetData();
 		APPL_DEBUG("Request Saving As file : " << tmpData);
 		
 		BufferManager::Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
 		SendMultiCast(ednMsgGuiSave, m_currentSavingAsIdBuffer);
-	} else if(    eventId == ednMsgBufferState
-	           || eventId == ednMsgBufferId) {
+	} else if(    _msg.GetMessage() == ednMsgBufferState
+	           || _msg.GetMessage() == ednMsgBufferId) {
 		// the buffer change we need to update the widget string
 		BufferText* tmpBuffer = BufferManager::Get(BufferManager::GetSelected());
 		if (NULL != tmpBuffer) {
@@ -341,7 +341,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 		}
 		return;
 		// TODO : Set the Title ....
-	} else if (eventId == ednMsgProperties) {
+	} else if (_msg.GetMessage() == ednMsgProperties) {
 		// Request the parameter GUI
 		widget::Parameter* tmpWidget = new widget::Parameter();
 		if (NULL == tmpWidget) {
@@ -359,7 +359,7 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 			tmpSubWidget = new ParameterAboutGui();
 			tmpWidget->MenuAdd("About",           "", tmpSubWidget);
 		}
-	} else if (eventId == ednMsgGuiReloadShader) {
+	} else if (_msg.GetMessage() == ednMsgGuiReloadShader) {
 		ewol::resource::ReLoadResources();
 		ewol::ForceRedrawAll();
 	}
@@ -367,10 +367,10 @@ void MainWindows::OnReceiveMessage(ewol::EObject * CallerObject, const char * ev
 	return;
 }
 
-void MainWindows::OnObjectRemove(ewol::EObject * removeObject)
+void MainWindows::OnObjectRemove(ewol::EObject * _removeObject)
 {
-	ewol::Windows::OnObjectRemove(removeObject);
-	if (m_widgetLabelFileName == removeObject) {
+	ewol::Windows::OnObjectRemove(_removeObject);
+	if (m_widgetLabelFileName == _removeObject) {
 		m_widgetLabelFileName = NULL;
 	}
 }

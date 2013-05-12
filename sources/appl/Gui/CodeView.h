@@ -25,36 +25,34 @@ class CodeView :public widget::WidgetScrooled
 		CodeView(etk::UString fontName, int32_t fontSize);
 		CodeView(void);
 		virtual ~CodeView(void);
-		// Derived function
-		const char * const GetObjectType(void) { return "ApplCodeView"; };
-		// Derived function
-		virtual bool   CalculateMinSize(void);
 	private:
-		etk::UString                   m_label;
-		draw::Color                    m_textColorFg;  //!< Text color
-		draw::Color                    m_textColorBg;  //!< Background color
-		int32_t                        m_bufferID;
-		bool                           m_buttunOneSelected;
-		etk::Vector<vec2 >  m_lineNumberList;
+		etk::UString m_label;
+		draw::Color m_textColorFg;  //!< Text color
+		draw::Color m_textColorBg;  //!< Background color
+		int32_t m_bufferID;
+		bool m_buttunOneSelected;
+		etk::Vector<vec2 > m_lineNumberList;
 		void UpdateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
-		ewol::Text                   m_displayText;
-		ewol::Drawing                m_displayDrawing;
-	public: // Derived function
-		virtual void   OnRegenerateDisplay(void);
-		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
-		virtual bool OnEventInput(const ewol::EventInput& _event);
-		virtual bool OnEventEntry(const ewol::EventEntry& _event);
-		virtual void OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
-		virtual void OnGetFocus(void);
-		virtual void OnLostFocus(void);
+		ewol::Text m_displayText;
+		ewol::Drawing m_displayDrawing;
 	public:
 		void SetFontSize(int32_t size);
 		void SetFontName(etk::UString fontName);
 	private:
 		void CalculateMaxSize(void);
-	protected:
-		virtual void OnDraw(ewol::DrawProperty& displayProp);
+	protected: // derived function
+		virtual void OnDraw(void);
+	public:  // Derived function
+		const char * const GetObjectType(void) { return "ApplCodeView"; };
+		virtual bool CalculateMinSize(void);
+		virtual void OnRegenerateDisplay(void);
+		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
+		virtual bool OnEventInput(const ewol::EventInput& _event);
+		virtual bool OnEventEntry(const ewol::EventEntry& _event);
+		virtual void OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
+		virtual void OnGetFocus(void);
+		virtual void OnLostFocus(void);
 };
 
 #endif

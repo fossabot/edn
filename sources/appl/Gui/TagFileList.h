@@ -40,7 +40,7 @@ namespace appl {
 			uint32_t GetNuberOfRaw(void);
 			bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg);
 			bool OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
-			// herited function
+			// derived function
 			const char * const GetObjectType(void) { return "TagFileList"; };
 		public:
 			/**

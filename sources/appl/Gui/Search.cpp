@@ -191,63 +191,63 @@ Search::~Search(void)
 }
 
 
-void Search::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
+void Search::OnReceiveMessage(const ewol::EMessage& _msg)
 {
-	widget::Sizer::OnReceiveMessage(CallerObject, eventId, data);
+	widget::Sizer::OnReceiveMessage(_msg);
 	//APPL_INFO("Search receive message : \"" << eventId << "\" data=\"" << data << "\"");
-	if ( eventId == l_eventSearchEntry) {
-		SearchData::SetSearch(data);
-	} else if ( eventId == l_eventSearchEntryEnter) {
-		SearchData::SetSearch(data);
+	if ( _msg.GetMessage() == l_eventSearchEntry) {
+		SearchData::SetSearch(_msg.GetData());
+	} else if ( _msg.GetMessage() == l_eventSearchEntryEnter) {
+		SearchData::SetSearch(_msg.GetData());
 		if (true==m_forward) {
 			SendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
 			SendMultiCast(ednMsgGuiFind, "Next");
 		}
-	} else if ( eventId == l_eventReplaceEntry) {
-		SearchData::SetReplace(data);
-	} else if ( eventId == l_eventReplaceEntryEnter) {
-		SearchData::SetReplace(data);
+	} else if ( _msg.GetMessage() == l_eventReplaceEntry) {
+		SearchData::SetReplace(_msg.GetData());
+	} else if ( _msg.GetMessage() == l_eventReplaceEntryEnter) {
+		SearchData::SetReplace(_msg.GetData());
 		SendMultiCast(ednMsgGuiReplace, "Normal");
 		if (true==m_forward) {
 			SendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
 			SendMultiCast(ednMsgGuiFind, "Next");
 		}
-	} else if ( eventId == l_eventSearchBt) {
+	} else if ( _msg.GetMessage() == l_eventSearchBt) {
 		if (true==m_forward) {
 			SendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
 			SendMultiCast(ednMsgGuiFind, "Next");
 		}
-	} else if ( eventId == l_eventReplaceBt) {
+	} else if ( _msg.GetMessage() == l_eventReplaceBt) {
 		SendMultiCast(ednMsgGuiReplace, "Normal");
 		if (true==m_forward) {
 			SendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
 			SendMultiCast(ednMsgGuiFind, "Next");
 		}
-	} else if ( eventId == l_eventCaseCb) {
-		if (data == "1") {
+	} else if ( _msg.GetMessage() == l_eventCaseCb) {
+		if (_msg.GetData() == "1") {
 			SearchData::SetCase(false);
 		} else {
 			SearchData::SetCase(true);
 		}
-	} else if ( eventId == l_eventWrapCb) {
-		if (data == "1") {
+	} else if ( _msg.GetMessage() == l_eventWrapCb) {
+		if (_msg.GetData() == "1") {
 			SearchData::SetWrap(false);
 		} else {
 			SearchData::SetWrap(true);
 		}
-	} else if ( eventId == l_eventForwardCb) {
-		if (data == "1") {
+	} else if ( _msg.GetMessage() == l_eventForwardCb) {
+		if (_msg.GetData() == "1") {
 			m_forward = false;
 		} else {
 			m_forward = true;
 		}
-	} else if ( eventId == l_eventHideBt) {
+	} else if ( _msg.GetMessage() == l_eventHideBt) {
 		Hide();
-	} else if ( eventId == ednMsgGuiSearch) {
+	} else if ( _msg.GetMessage() == ednMsgGuiSearch) {
 		if (true == IsHide()) {
 			Show();
 			if (m_searchEntry!= NULL) {
@@ -266,13 +266,13 @@ void Search::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId
 	}
 }
 
-void Search::OnObjectRemove(ewol::EObject * removeObject)
+void Search::OnObjectRemove(ewol::EObject * _removeObject)
 {
-	widget::Sizer::OnObjectRemove(removeObject);
-	if (removeObject == m_searchEntry) {
+	widget::Sizer::OnObjectRemove(_removeObject);
+	if (_removeObject == m_searchEntry) {
 		m_searchEntry = NULL;
 	}
-	if (removeObject == m_replaceEntry) {
+	if (_removeObject == m_replaceEntry) {
 		m_replaceEntry = NULL;
 	}
 }

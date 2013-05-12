@@ -21,25 +21,12 @@ class classBufferManager: public ewol::EObject
 		// Constructeur
 		classBufferManager(void);
 		~classBufferManager(void);
-		/**
-		 * @brief Get the current Object type of the EObject
-		 * @note In Embended platforme, it is many time no -rtti flag, then it is not possible to use dynamic cast ==> this will replace it
-		 * @param[in] objectType type description
-		 * @return true if the object is compatible, otherwise false
-		 */
 		const char * const GetObjectType(void)
 		{
 			return "ApplBufferManager";
 		}
 	public:
-		/**
-		 * @brief Receive a message from an other EObject with a specific eventId and data
-		 * @param[in] CallerObject Pointer on the EObject that information came from
-		 * @param[in] eventId Message registered by this class
-		 * @param[in] data Data registered by this class
-		 * @return ---
-		 */
-		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
+		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
 	private:
 		// return the ID of the buffer allocated
 		// create a buffer with no element
@@ -70,14 +57,6 @@ class classBufferManager: public ewol::EObject
 
 
 // Constructeur
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
 classBufferManager::classBufferManager(void)
 {
 	m_idSelected = -1;
@@ -89,14 +68,6 @@ classBufferManager::classBufferManager(void)
 	RegisterMultiCast(ednMsgBufferId);
 }
 
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
 classBufferManager::~classBufferManager(void)
 {
 	//clean All Buffer
@@ -108,24 +79,17 @@ classBufferManager::~classBufferManager(void)
 }
 
 
-/**
- * @brief Receive a message from an other EObject with a specific eventId and data
- * @param[in] CallerObject Pointer on the EObject that information came from
- * @param[in] eventId Message registered by this class
- * @param[in] data Data registered by this class
- * @return ---
- */
-void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
+void classBufferManager::OnReceiveMessage(const ewol::EMessage& _msg)
 {
-	ewol::EObject::OnReceiveMessage(CallerObject, eventId, data);
+	ewol::EObject::OnReceiveMessage(_msg);
 	
-	if (eventId == ednMsgBufferId) {
+	if (_msg.GetMessage() == ednMsgBufferId) {
 		// select a new buffer ID :
-		if (data == "") {
+		if (_msg.GetData() == "") {
 			APPL_ERROR("Request select buffer ID = \"\" ");
 		} else {
 			int32_t newID = -1;
-			sscanf(data.c_str(), "%d", &newID);
+			sscanf(_msg.GetData().c_str(), "%d", &newID);
 			if(true == Exist(newID)) {
 				m_idSelected = newID;
 			} else {
@@ -133,17 +97,17 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 				APPL_ERROR("Request a non existant ID : " << newID << " reset to -1...");
 			}
 		}
-	} else if (eventId == ednMsgGuiNew) {
+	} else if (_msg.GetMessage() == ednMsgGuiNew) {
 		int32_t newOne = Create();
 		if (-1 != newOne) {
 			m_idSelected = newOne;
 			SendMultiCast(ednMsgBufferId, m_idSelected);
 			SendMultiCast(ednMsgBufferListChange);
 		}
-	} else if (eventId == ednMsgOpenFile) {
-		if (data != "" ) {
-			etk::FSNode myFile(data);
-			APPL_DEBUG("request open file = \"" <<data << "\" ?= \"" << myFile << "\"");
+	} else if (_msg.GetMessage() == ednMsgOpenFile) {
+		if (_msg.GetData() != "" ) {
+			etk::FSNode myFile(_msg.GetData());
+			APPL_DEBUG("request open file = \"" << _msg.GetData() << "\" ?= \"" << myFile << "\"");
 			int32_t newOne = Open(myFile);
 			if (-1 != newOne) {
 				m_idSelected = newOne;
@@ -154,11 +118,11 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 				APPL_ERROR("Can not open the file : \"" << myFile << "\"");
 			}
 		}
-	} else if (eventId == ednMsgGuiSave) {
-		if (data == "") {
+	} else if (_msg.GetMessage() == ednMsgGuiSave) {
+		if (_msg.GetData() == "") {
 			APPL_ERROR("Null data for close file ... ");
 		} else {
-			if (data == "current") {
+			if (_msg.GetData() == "current") {
 				// Check buffer existence
 				if(true == Exist(m_idSelected)) {
 					// If no name ==> request a Gui display ...
@@ -170,7 +134,7 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 				}
 			} else {
 				int32_t newId;
-				sscanf(data.c_str(), "%d", &newId);
+				sscanf(_msg.GetData().c_str(), "%d", &newId);
 				if (false == Exist(newId)) {
 					APPL_ERROR("Request a save As with a non existant ID=" << newId);
 				} else {
@@ -184,20 +148,20 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 				SendMultiCast(ednMsgBufferState, "saved");
 			}
 		}
-	} else if (eventId == ednMsgGuiClose) {
-		if (data == "") {
+	} else if (_msg.GetMessage() == ednMsgGuiClose) {
+		if (_msg.GetData() == "") {
 			APPL_ERROR("Null data for close file ... ");
 		} else {
-			if (data == "All") {
+			if (_msg.GetData() == "All") {
 				
 			} else {
 				int32_t closeID = -1;
-				if (data == "current") {
+				if (_msg.GetData() == "current") {
 					closeID = m_idSelected;
 					APPL_DEBUG("Close specific buffer ID" << closeID);
 				} else {
 					// close specific buffer ...
-					sscanf(data.c_str(), "%d", &closeID);
+					sscanf(_msg.GetData().c_str(), "%d", &closeID);
 					APPL_DEBUG("Close specific buffer ID="<< closeID);
 				}
 				if(true == Exist(closeID)) {
@@ -232,13 +196,13 @@ void classBufferManager::OnReceiveMessage(ewol::EObject * CallerObject, const ch
 				}
 			}
 		}
-	} else if (eventId == ednMsgCodeViewSelectedId) {
+	} else if (_msg.GetMessage() == ednMsgCodeViewSelectedId) {
 		//Change the selected buffer
-		if (data == "") {
+		if (_msg.GetData() == "") {
 			APPL_ERROR("Null data for changing buffer ID file ... ");
 		} else {
 			int32_t newId;
-			sscanf(data.c_str(), "%d", &newId);
+			sscanf(_msg.GetData().c_str(), "%d", &newId);
 			if (true == Exist(newId)) {
 				m_idSelected = newId;
 			} else {

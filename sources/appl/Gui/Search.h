@@ -15,20 +15,18 @@
 
 class Search : public widget::Sizer
 {
-	public:
-		// Constructeur
-		Search(void);
-		~Search(void);
-		// herited function
-		const char * const GetObjectType(void) { return "ApplSearch"; };
-		// herited function
-		virtual void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
-		// herited function
-		virtual void OnObjectRemove(ewol::EObject * removeObject);
 	private:
 		bool    m_forward;
 		widget::Entry * m_searchEntry;
 		widget::Entry * m_replaceEntry;
+	public:
+		// Constructeur
+		Search(void);
+		~Search(void);
+	public: // derived function
+		virtual const char * const GetObjectType(void) { return "ApplSearch"; };
+		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
+		virtual void OnObjectRemove(ewol::EObject * _removeObject);
 };
 
 #endif

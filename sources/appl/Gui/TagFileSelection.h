@@ -25,19 +25,16 @@ namespace appl {
 		public:
 			TagFileSelection(void);
 			virtual ~TagFileSelection(void);
-			// herited function
-			const char * const GetObjectType(void) { return "EwolFileChooser"; };
-			// herited function
-			void OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data);
-			// herited function
-			void OnObjectRemove(ewol::EObject * removeObject);
 			/**
 			 * @brief Add a Ctags item on the curent list
 			 * @param[in] file Compleate file name
 			 * @param[in] jump line id
 			 */
 			void AddCtagsNewItem(etk::UString file, int32_t line);
-			
+		public: // herited function
+			const char * const GetObjectType(void) { return "EwolFileChooser"; };
+			void OnReceiveMessage(const ewol::EMessage& _msg);
+			void OnObjectRemove(ewol::EObject * _removeObject);
 	};
 };
 

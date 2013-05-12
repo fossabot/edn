@@ -113,11 +113,11 @@ void CodeView::CalculateMaxSize(void)
 }
 
 
-void CodeView::OnDraw(ewol::DrawProperty& displayProp)
+void CodeView::OnDraw(void)
 {
 	m_displayDrawing.Draw();
 	m_displayText.Draw();
-	WidgetScrooled::OnDraw(displayProp);
+	WidgetScrooled::OnDraw();
 }
 
 void CodeView::OnRegenerateDisplay(void)
@@ -318,19 +318,19 @@ bool CodeView::OnEventInput(const ewol::EventInput& _event)
 	return true;
 }
 
-void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
+void CodeView::OnReceiveMessage(const ewol::EMessage& _msg)
 {
-	widget::WidgetScrooled::OnReceiveMessage(CallerObject, eventId, data);
-	APPL_DEBUG("Extern Event : " << CallerObject << "  type : " << eventId << "  data=\"" << data << "\"");
+	widget::WidgetScrooled::OnReceiveMessage(_msg);
+	APPL_DEBUG("Extern Event : " << _msg.GetCaller() << "  type : " << _msg.GetMessage() << "  data=\"" << _msg.GetData() << "\"");
 	
-	if(eventId == ednMsgBufferId) {
+	if(_msg.GetMessage() == ednMsgBufferId) {
 		//keep the reference of the display offset :
 		if(    m_bufferID >=0
 		    && m_bufferID < m_lineNumberList.Size()) {
 			m_lineNumberList[m_bufferID] = m_originScrooled;
 		}
 		int32_t bufferID = 0;
-		sscanf(data.c_str(), "%d", &bufferID);
+		sscanf(_msg.GetData().c_str(), "%d", &bufferID);
 		APPL_INFO("Select a new Buffer ... " << bufferID);
 		// set the new buffer ID
 		m_bufferID = bufferID;
@@ -341,105 +341,105 @@ void CodeView::OnReceiveMessage(ewol::EObject * CallerObject, const char * event
 		    && m_bufferID < m_lineNumberList.Size()) {
 			m_originScrooled = m_lineNumberList[m_bufferID];
 		}
-	} else if (eventId == ednMsgGuiCopy) {
+	} else if (_msg.GetMessage() == ednMsgGuiCopy) {
 		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 		if (NULL!=tmpBuffer) {
 			tmpBuffer->Copy(ewol::clipBoard::clipboardStd);
 		}
-	} else if (eventId == ednMsgGuiCut) {
+	} else if (_msg.GetMessage() == ednMsgGuiCut) {
 		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 		if (NULL!=tmpBuffer) {
 			tmpBuffer->Cut(ewol::clipBoard::clipboardStd);
 		}
-	} else if (eventId == ednMsgGuiPaste) {
+	} else if (_msg.GetMessage() == ednMsgGuiPaste) {
 		ewol::clipBoard::Request(ewol::clipBoard::clipboardStd);
-	} else if (eventId == ednMsgGuiUndo) {
+	} else if (_msg.GetMessage() == ednMsgGuiUndo) {
 		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 		if (NULL!=tmpBuffer) {
 			tmpBuffer->Undo();
 		}
-	} else if (eventId == ednMsgGuiRedo) {
+	} else if (_msg.GetMessage() == ednMsgGuiRedo) {
 		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 		if (NULL!=tmpBuffer) {
 			tmpBuffer->Redo();
 		}
-	} else if (eventId == ednMsgGuiRm) {
+	} else if (_msg.GetMessage() == ednMsgGuiRm) {
 		// data : "Word" "Line" "Paragraph"
-		if (data == "Word") {
-			APPL_WARNING(" on event " << eventId << " data=\"" << data << "\" ==> not coded" );
-		} else if (data == "Line") {
+		if (_msg.GetData() == "Word") {
+			APPL_WARNING(" on event " << _msg.GetMessage() << " data=\"" << _msg.GetData() << "\" ==> not coded" );
+		} else if (_msg.GetData() == "Line") {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->RemoveLine();
 			}
-		} else if (data == "Paragraph") {
-			APPL_WARNING(" on event " << eventId << " data=\"" << data << "\" ==> not coded" );
+		} else if (_msg.GetData() == "Paragraph") {
+			APPL_WARNING(" on event " << _msg.GetMessage() << " data=\"" << _msg.GetData() << "\" ==> not coded" );
 		} else {
-			APPL_ERROR(" on event " << eventId << " unknow data=\"" << data << "\"" );
+			APPL_ERROR(" on event " << _msg.GetMessage() << " unknow data=\"" << _msg.GetData() << "\"" );
 		}
-	} else if (eventId == ednMsgGuiSelect) {
+	} else if (_msg.GetMessage() == ednMsgGuiSelect) {
 		// data : "ALL" "NONE"
-		if (data == "ALL") {
+		if (_msg.GetData() == "ALL") {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->SelectAll();
 			}
-		} else if (data == "NONE") {
+		} else if (_msg.GetData() == "NONE") {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->SelectNone();
 			}
 		} else {
-			APPL_ERROR(" on event " << eventId << " unknow data=\"" << data << "\"" );
+			APPL_ERROR(" on event " << _msg.GetMessage() << " unknow data=\"" << _msg.GetData() << "\"" );
 		}
-	} else if (eventId == ednMsgGuiChangeCharset) {
+	} else if (_msg.GetMessage() == ednMsgGuiChangeCharset) {
 		// data : "UTF-8" "ISO-8859-1" "ISO-8859-15"
-		if (data == "UTF-8") {
+		if (_msg.GetData() == "UTF-8") {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->SetCharset(unicode::EDN_CHARSET_UTF8);
 			}
-		} else if (data == "ISO-8859-1") {
+		} else if (_msg.GetData() == "ISO-8859-1") {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->SetCharset(unicode::EDN_CHARSET_ISO_8859_1);
 			}
-		} else if (data == "ISO-8859-15") {
+		} else if (_msg.GetData() == "ISO-8859-15") {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->SetCharset(unicode::EDN_CHARSET_ISO_8859_15);
 			}
 		} else {
-			APPL_ERROR(" on event " << eventId << " unknow data=\"" << data << "\"" );
+			APPL_ERROR(" on event " << _msg.GetMessage() << " unknow data=\"" << _msg.GetData() << "\"" );
 		}
-	} else if (eventId == ednMsgGuiFind) {
+	} else if (_msg.GetMessage() == ednMsgGuiFind) {
 		etk::UString myDataString;
 		SearchData::GetSearch(myDataString);
-		if (data == "Next") {
+		if (_msg.GetData() == "Next") {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->Search(myDataString, false, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
 			}
-		} else if (data == "Previous") {
+		} else if (_msg.GetData() == "Previous") {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->Search(myDataString, true, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
 			}
 		}
-	} else if (eventId == ednMsgGuiReplace) {
+	} else if (_msg.GetMessage() == ednMsgGuiReplace) {
 		etk::UString myDataString;
 		SearchData::GetReplace(myDataString);
-		if (data == "Normal") {
+		if (_msg.GetData() == "Normal") {
 			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->Replace(myDataString);
 			}
-		} else if (data == "All") {
+		} else if (_msg.GetData() == "All") {
 			
 		}
-	} else if (eventId == ednMsgGuiGotoLine) {
+	} else if (_msg.GetMessage() == ednMsgGuiGotoLine) {
 		int32_t lineID = 0;
-		sscanf(data.c_str(), "%d", &lineID);
+		sscanf(_msg.GetData().c_str(), "%d", &lineID);
 		APPL_INFO("Goto line : " << lineID);
 		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 		if (NULL!=tmpBuffer) {

@@ -129,25 +129,25 @@ appl::TagFileSelection::~TagFileSelection(void)
 	
 }
 
-void appl::TagFileSelection::OnReceiveMessage(ewol::EObject * CallerObject, const char * eventId, const etk::UString& data)
+void appl::TagFileSelection::OnReceiveMessage(const ewol::EMessage& _msg)
 {
-	EWOL_INFO("ctags LIST ... : \"" << eventId << "\" ==> data=\"" << data << "\"" );
-	if (eventId == applEventctagsSelection) {
+	EWOL_INFO("ctags LIST ... : \"" << _msg.GetMessage() << "\" ==> data=\"" << _msg.GetData() << "\"" );
+	if (_msg.GetMessage() == applEventctagsSelection) {
 		if (m_eventNamed!="") {
 			GenerateEventId(applEventctagsSelection, m_eventNamed);
 			//==> Auto remove ...
 			AutoDestroy();
 		}
-	} else if (eventId == applEventCtagsListSelect) {
-		m_eventNamed = data;
+	} else if (_msg.GetMessage() == applEventCtagsListSelect) {
+		m_eventNamed = _msg.GetData();
 		
-	} else if (eventId == applEventCtagsListUnSelect) {
+	} else if (_msg.GetMessage() == applEventCtagsListUnSelect) {
 		m_eventNamed = "";
-	} else if (eventId == applEventCtagsListValidate) {
-		GenerateEventId(applEventctagsSelection, data);
+	} else if (_msg.GetMessage() == applEventCtagsListValidate) {
+		GenerateEventId(applEventctagsSelection, _msg.GetData());
 		//==> Auto remove ...
 		AutoDestroy();
-	} else if (eventId == applEventctagsCancel) {
+	} else if (_msg.GetMessage() == applEventctagsCancel) {
 		GenerateEventId(applEventctagsCancel, "");
 		//==> Auto remove ...
 		AutoDestroy();
@@ -168,12 +168,12 @@ void appl::TagFileSelection::AddCtagsNewItem(etk::UString file, int32_t line)
 	}
 }
 
-void appl::TagFileSelection::OnObjectRemove(ewol::EObject * removeObject)
+void appl::TagFileSelection::OnObjectRemove(ewol::EObject * _removeObject)
 {
 	// First step call parrent : 
-	widget::PopUp::OnObjectRemove(m_listTag);
+	widget::PopUp::OnObjectRemove(_removeObject);
 	// second step find if in all the elements ...
-	if(removeObject == m_listTag) {
+	if(_removeObject == m_listTag) {
 		m_listTag = NULL;
 	}
 }
