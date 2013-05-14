@@ -15,108 +15,70 @@
 #define __class__	"Colorize"
 
 
-Colorize::Colorize(	etk::UString &newColorName)
-{
-
+appl::Colorize::Colorize(const etk::UString &_colorName) :
+	m_name(_colorName),
 	m_colorFG = draw::color::black;
 	m_colorBG = draw::color::none;
-	
-	italic	= false;
-	bold	= false;
-	SetName(newColorName);
+	m_italic	= false;
+	m_bold	= false;
+{
 	APPL_VERBOSE("New(Colorise)");
 }
 
-Colorize::Colorize(void)
+void appl::Colorize::SetName(const etk::UString &_newColorName)
 {
-	ColorName = "no_name";
-	
-	m_colorFG = draw::color::black;
-	m_colorBG = draw::color::none;
-	
-	italic	= false;
-	bold	= false;
-	
-	APPL_VERBOSE("New(Colorise)");
+	APPL_VERBOSE("color change name : \"" << m_name << "\" ==> \"" << _newColorName << "\"");
+	m_name = _newColorName;
 }
 
-Colorize::~Colorize(void)
+void appl::Colorize::SetFgColor(const etk::UString& _myColor)
 {
-	// nothing to do ...
+	m_colorFG = _myColor;
+	APPL_VERBOSE(_myColor << " ==> "<< m_colorFG );
 }
 
-
-void Colorize::SetName(const char *newColorName)
+void appl::Colorize::SetBgColor(const etk::UString& _myColor)
 {
-	APPL_VERBOSE("color change name : \"" << ColorName << "\" ==> \"" << newColorName << "\"");
-	ColorName = newColorName;
-}
-
-void Colorize::SetName(etk::UString &newColorName)
-{
-	APPL_VERBOSE("color change name : \"" << ColorName << "\" ==> \"" << newColorName << "\"");
-	ColorName = newColorName;
+	m_colorBG = _myColor;
+	APPL_VERBOSE(_myColor << " ==> "<< m_colorBG );
 }
 
 
-etk::UString Colorize::GetName(void)
+void appl::Colorize::SetItalic(bool _enable)
 {
-	return ColorName;
-}
-
-
-void Colorize::SetFgColor(const char *myColor)
-{
-	m_colorFG = myColor;
-	APPL_VERBOSE(myColor << " ==> "<< m_colorFG );
-}
-
-void Colorize::SetBgColor(const char *myColor)
-{
-	m_colorBG = myColor;
-	APPL_VERBOSE(myColor << " ==> "<< m_colorBG );
-}
-
-bool Colorize::HaveBg(void)
-{
-	return m_colorBG.a!=0;
-}
-
-
-void Colorize::SetItalic(bool enable)
-{
-	italic = enable;
-	if (true == enable) {
+	m_italic = _enable;
+	if (true == m_italic) {
 		APPL_VERBOSE("color : \"" << ColorName << "\" enable italic");
 	} else {
 		APPL_VERBOSE("color : \"" << ColorName << "\" disable italic");
 	}
 }
 
-bool Colorize::GetItalic(void)
+void appl::Colorize::SetBold(bool _enable)
 {
-	return italic;
-}
-
-
-void Colorize::SetBold(bool enable)
-{
-	bold = enable;
-	if (true == enable) {
-		APPL_VERBOSE("color : \"" << ColorName << "\" enable bold");
+	m_bold = _enable;
+	if (true == m_bold) {
+		APPL_VERBOSE("color : \"" << m_name << "\" enable bold");
 	} else {
-		APPL_VERBOSE("color : \"" << ColorName << "\" disable bold");
+		APPL_VERBOSE("color : \"" << m_name << "\" disable bold");
 	}
 }
 
-bool Colorize::GetBold(void)
+etk::CCout& appl::operator <<(etk::CCout& _os, const appl::Colorize& _obj)
 {
-	return bold;
+	_os << "{name=\"" << _obj.GetName() << "\"";
+	_os << " fg=" << _obj.GetFG();
+	if (_obj.HaveBg()==true) {
+		_os << " bg=" << _obj.GetBG();
+	}
+	if (_obj.GetBold()==true) {
+		_os << " bold";
+	}
+	if (_obj.GetItalic()==true) {
+		_os << " italic";
+	}
+		_os << "}";
+	return _os;
 }
-
-
-
-
-
 
 

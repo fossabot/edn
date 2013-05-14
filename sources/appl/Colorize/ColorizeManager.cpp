@@ -29,20 +29,15 @@ class classColorManager: public ewol::EObject
 		}
 		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
 	public:
-		void        LoadFile(etk::UString &xmlFilename);
-		void        LoadFile(const char * xmlFilename);
-		Colorize *  Get(const char *colorName);
-		Colorize *  Get(etk::UString &colorName);
-		draw::Color& Get(basicColor_te myColor);
-		bool        Exist(etk::UString &colorName);
-		bool        Exist(const char *colorName);
-		void        DisplayListOfColor(void);
+		void LoadFile(const etk::UString& _xmlFilename);
+		appl::Colorize* Get(const etk::UString& _colorName);
+		bool Exist(void etk::UString& _colorName);
+		void DisplayListOfColor(void);
 
 	private:
-		etk::UString                m_fileColor;
-		etk::Vector<Colorize*>  listMyColor;		//!< List of ALL Color
-		Colorize *                  errorColor;
-		draw::Color                  basicColors[COLOR_NUMBER_MAX];
+		etk::UString m_fileColor;
+		etk::Vector<appl::Colorize*> m_list; //!< List of ALL Color
+		appl::Colorize * m_colorizeError;
 };
 
 
@@ -53,18 +48,18 @@ classColorManager::classColorManager(void)
 
 classColorManager::~classColorManager(void)
 {
-	delete(errorColor);
+	delete(m_colorizeError);
 
 	int32_t i;
 	// clean all Element
-	for (i=0; i< listMyColor.Size(); i++) {
-		if (NULL != listMyColor[i]) {
-			delete(listMyColor[i]);
-			listMyColor[i] = NULL;
+	for (i=0; i< m_list.Size(); i++) {
+		if (NULL != m_list[i]) {
+			delete(m_list[i]);
+			m_list[i] = NULL;
 		}
 	}
 	// clear the compleate list
-	listMyColor.Clear();
+	m_list.Clear();
 }
 
 void classColorManager::OnReceiveMessage(const ewol::EMessage& _msg)
@@ -84,38 +79,30 @@ void classColorManager::OnReceiveMessage(const ewol::EMessage& _msg)
 	*/
 }
 
-
-void classColorManager::LoadFile(etk::UString &xmlFilename)
-{
-	// TODO : Remove this
-	LoadFile(xmlFilename.c_str());
-}
-
-// TODO : Remove this ...
-void classColorManager::LoadFile(const char * xmlFilename)
+void classColorManager::LoadFile(const etk::UString& _xmlFilename)
 {
 	// Remove all old color : 
 	int32_t i;
 	// clean all Element
-	for (i=0; i< listMyColor.Size(); i++) {
-		if (NULL != listMyColor[i]) {
-			delete(listMyColor[i]);
-			listMyColor[i] = NULL;
+	for (i=0; i< m_list.Size(); i++) {
+		if (NULL != m_list[i]) {
+			delete(m_list[i]);
+			m_list[i] = NULL;
 		}
 	}
 	// clear the compleate list
-	listMyColor.Clear();
+	m_list.Clear();
 
-	m_fileColor = xmlFilename;
-	APPL_DEBUG("open file (COLOR) \"" << xmlFilename << "\" ? = \"" << m_fileColor << "\"");
-	errorColor = new Colorize();
-	errorColor->SetBgColor("#00FF00FF");
-	errorColor->SetFgColor("#FF00FFFF");
+	m_fileColor = _xmlFilename;
+	APPL_DEBUG("open file (COLOR) \"" << _xmlFilename << "\" ? = \"" << m_fileColor << "\"");
+	m_colorizeError = new Colorize();
+	m_colorizeError->SetBgColor("#00FF00FF");
+	m_colorizeError->SetFgColor("#FF00FFFF");
 
 	// allocate the document in the stack
 	TiXmlDocument XmlDocument;
 	// open the curent File
-	etk::FSNode fileName(etk::UString("DATA:color/") + xmlFilename + etk::UString(".xml"));
+	etk::FSNode fileName(etk::UString("DATA:color/") + _xmlFilename + etk::UString(".xml"));
 	if (false == fileName.Exist()) {
 		APPL_ERROR("File Does not exist : " << fileName);
 		return;
@@ -152,109 +139,45 @@ void classColorManager::LoadFile(const char * xmlFilename)
 		while(NULL != pNode) {
 			if (pNode->Type()==TiXmlNode::TINYXML_COMMENT) {
 				// nothing to do, just proceed to next step
-			} else if (!strcmp(pNode->Value(), "gui")) {
-				TiXmlNode * pGuiNode = pNode->FirstChild();
-				while(NULL != pGuiNode) {
-					if (pGuiNode->Type()==TiXmlNode::TINYXML_COMMENT) {
-						// nothing to do, just proceed to next step
-					} else if (!strcmp(pGuiNode->Value(), "color")) {
-						//--------------------------------------------------------------------------------------------
-						//<color name="basicBackground" val="#000000"/>
-						//--------------------------------------------------------------------------------------------
-						const char *colorName = pGuiNode->ToElement()->Attribute("name");
-						int32_t id = 0;
-						if (NULL == colorName) {
-							APPL_ERROR("(l "<< pGuiNode->Row() <<") node with no name");
-							// get next node element
-							pGuiNode = pGuiNode->NextSibling();
-							continue;
-						}
-						if (!strcmp(colorName, "CODE_space")) {
-							id = COLOR_CODE_SPACE;
-						} else if (!strcmp(colorName, "CODE_tabulation")) {
-							id = COLOR_CODE_TAB;
-						} else if (!strcmp(colorName, "CODE_basicBackgroung")) {
-							id = COLOR_CODE_BASIC_BG;
-						} else if (!strcmp(colorName, "CODE_cursor")) {
-							id = COLOR_CODE_CURSOR;
-						} else if (!strcmp(colorName, "CODE_lineNumber")) {
-							id = COLOR_CODE_LINE_NUMBER;
-						} else if (!strcmp(colorName, "LIST_backgroung1")) {
-							id = COLOR_LIST_BG_1;
-						} else if (!strcmp(colorName, "LIST_backgroung2")) {
-							id = COLOR_LIST_BG_2;
-						} else if (!strcmp(colorName, "LIST_backgroungSelected")) {
-							id = COLOR_LIST_BG_SELECTED;
-						} else if (!strcmp(colorName, "LIST_textNormal")) {
-							id = COLOR_LIST_TEXT_NORMAL;
-						} else if (!strcmp(colorName, "LIST_textModify")) {
-							id = COLOR_LIST_TEXT_MODIFY;
-						} else {
-							APPL_ERROR("(l "<<pGuiNode->Row()<<") Unknown basic gui color : \"" << colorName << "\"" );
-							// get next node element
-							pGuiNode = pGuiNode->NextSibling();
-							continue;
-						}
-						const char *color = pGuiNode->ToElement()->Attribute("val");
-						if (NULL != color) {
-							basicColors[id] = color;
-						}
-					} else {
-						APPL_ERROR("(l "<<pGuiNode->Row()<<") node not suported : \""<<pGuiNode->Value()<<"\" must be [color]");
-					}
+			} else if (!strcmp(pNode->Value(), "color")) {
+				appl::Colorize *myNewColor = new appl::Colorize();
+				//--------------------------------------------------------------------------------------------
+				//<color name="basicBackground"		FG="#000000"	BG="#000000"	bold="no"	italic="no"/>
+				//--------------------------------------------------------------------------------------------
+				// get the name of the Chaine
+				const char *colorName = pGuiNode->ToElement()->Attribute("name");
+				if (NULL == colorName) {
+					APPL_ERROR(PFX"(l "<< pGuiNode->Row() <<") node with no name");
 					// get next node element
 					pGuiNode = pGuiNode->NextSibling();
+					continue;
+				} else {
+					myNewColor->SetName(colorName);
+					//APPL_INFO(PFX"Add a new color in the panel : \"%s\"", colorName);
 				}
-			} else if (!strcmp(pNode->Value(), "syntax")) {
-				TiXmlNode * pGuiNode = pNode->FirstChild();
-				while(NULL != pGuiNode)
-				{
-					if (pGuiNode->Type()==TiXmlNode::TINYXML_COMMENT) {
-						// nothing to do, just proceed to next step
-					} else if (!strcmp(pGuiNode->Value(), "color")) {
-						Colorize *myNewColor = new Colorize();
-						//--------------------------------------------------------------------------------------------
-						//<color name="basicBackground"		FG="#000000"	BG="#000000"	bold="no"	italic="no"/>
-						//--------------------------------------------------------------------------------------------
-						// get the name of the Chaine
-						const char *colorName = pGuiNode->ToElement()->Attribute("name");
-						if (NULL == colorName) {
-							APPL_ERROR(PFX"(l "<< pGuiNode->Row() <<") node with no name");
-							// get next node element
-							pGuiNode = pGuiNode->NextSibling();
-							continue;
-						} else {
-							myNewColor->SetName(colorName);
-							//APPL_INFO(PFX"Add a new color in the panel : \"%s\"", colorName);
-						}
-						const char *colorBG = pGuiNode->ToElement()->Attribute("BG");
-						if (NULL != colorBG) {
-							myNewColor->SetBgColor(colorBG);
-						}
-						const char *colorFG = pGuiNode->ToElement()->Attribute("FG");
-						if (NULL != colorFG) {
-							myNewColor->SetFgColor(colorFG);
-						}
-						const char *bold = pGuiNode->ToElement()->Attribute("bold");
-						if (NULL != bold) {
-							if(0 == strcmp(bold, "yes") ) {
-								myNewColor->SetBold(true);
-							}
-						}
-						const char *italic = pGuiNode->ToElement()->Attribute("italic");
-						if (NULL != italic) {
-							if(0 == strcmp(italic, "yes") ) {
-								myNewColor->SetItalic(true);
-							}
-						}
-						listMyColor.PushBack(myNewColor);
-					} else {
-						APPL_ERROR(PFX"(l "<<pNode->Row()<<") node not suported : \""<<pNode->Value()<<"\" must be [color]");
+				const char *colorBG = pGuiNode->ToElement()->Attribute("BG");
+				if (NULL != colorBG) {
+					myNewColor->SetBgColor(colorBG);
+				}
+				const char *colorFG = pGuiNode->ToElement()->Attribute("FG");
+				if (NULL != colorFG) {
+					myNewColor->SetFgColor(colorFG);
+				}
+				const char *bold = pGuiNode->ToElement()->Attribute("bold");
+				if (NULL != bold) {
+					if(0 == strcmp(bold, "yes") ) {
+						myNewColor->SetBold(true);
 					}
-					pGuiNode = pGuiNode->NextSibling();
 				}
+				const char *italic = pGuiNode->ToElement()->Attribute("italic");
+				if (NULL != italic) {
+					if(0 == strcmp(italic, "yes") ) {
+						myNewColor->SetItalic(true);
+					}
+				}
+				m_list.PushBack(myNewColor);
 			} else {
-				APPL_ERROR(PFX"(l "<<pNode->Row()<<") node not suported : \""<<pNode->Value()<<"\" must be [gui,syntax]");
+				APPL_ERROR(PFX"(l "<<pNode->Row()<<") node not suported : \""<<pNode->Value()<<"\" must be [color]");
 			}
 			// get next node element
 			pNode = pNode->NextSibling();
@@ -267,64 +190,34 @@ void classColorManager::LoadFile(const char * xmlFilename)
 	//SendMessage(APPL_MSG__USER_DISPLAY_CHANGE);
 }
 
-// TODO : Remove this ...
-Colorize *classColorManager::Get(const char *colorName)
+Colorize *classColorManager::Get(const etk::UString& _colorName)
 {
-	int32_t i;
-	for (i=0; i<listMyColor.Size(); i++) {
-		etk::UString elementName = listMyColor[i]->GetName();
-		if (elementName == colorName) {
-			return listMyColor[i];
+	for (int32_t iii=0; iii<m_list.Size(); iii++) {
+		if (_colorName == m_list[iii]->GetName()) {
+			return m_list[iii];
 		}
 	}
-	APPL_ERROR(PFX"Color does not Existed ["<< colorName<<"]" );
+	APPL_ERROR(PFX"Color does not Existed ["<< _colorName<<"]" );
 	// an error
-	return errorColor;
+	return m_colorizeError;
 }
 
-Colorize *classColorManager::Get(etk::UString &colorName)
+bool classColorManager::Exist(const etk::UString& _colorName)
 {
-	// TODO : Remove this
-	return Get(colorName.c_str());
-}
-
-draw::Color & classColorManager::Get(basicColor_te myColor)
-{
-	if (myColor < COLOR_NUMBER_MAX) {
-		return basicColors[myColor];
-	} else {
-		return basicColors[0];
-	}
-}
-
-
-// TODO : Remove this ...
-bool classColorManager::Exist(const char *colorName)
-{
-	int32_t i;
-	for (i=0; i<listMyColor.Size(); i++) {
-		etk::UString elementName = listMyColor[i]->GetName();
-		if (elementName == colorName) {
+	for (int32_t iii=0; iii<m_list.Size(); iii++) {
+		if (_colorName == m_list[iii]->GetName()) {
 			return true;
 		}
 	}
 	return false;
 }
 
-bool classColorManager::Exist(etk::UString &colorName)
-{
-	// TODO : Remove this
-	return Exist(colorName.c_str());
-}
-
 void classColorManager::DisplayListOfColor(void)
 {
 	int32_t i;
 	APPL_INFO(PFX"List of ALL COLOR : ");
-	for (i=0; i<listMyColor.Size(); i++) {
-		//etk::UString elementName = listMyColor[i]->GetName();
-		//APPL_INFO(i << " : \"" <<  elementName.c_str() << "\"" );
-		listMyColor[i]->Display(i);
+	for (iii=0; iii<m_list.Size(); iii++) {
+		APPL_INFO("        " << i << " : " << *m_list[i]);
 	}
 }
 
@@ -356,63 +249,28 @@ void ColorizeManager::UnInit(void)
 	localManager = NULL;
 }
 
-void ColorizeManager::LoadFile(etk::UString &xmlFilename)
+void ColorizeManager::LoadFile(const etk::UString& _xmlFilename)
 {
 	if (NULL == localManager) {
 		return;
 	}
-	localManager->LoadFile(xmlFilename);
+	localManager->LoadFile(_xmlFilename);
 }
 
-
-void ColorizeManager::LoadFile(const char * xmlFilename)
-{
-	if (NULL == localManager) {
-		return;
-	}
-	localManager->LoadFile(xmlFilename);
-}
-
-Colorize* ColorizeManager::Get(const char *colorName)
+Colorize* ColorizeManager::Get(const etk::UString& _colorName)
 {
 	if (NULL == localManager) {
 		return NULL;
 	}
-	return localManager->Get(colorName);
+	return localManager->Get(_colorName);
 }
 
-Colorize* ColorizeManager::Get(etk::UString &colorName)
-{
-	if (NULL == localManager) {
-		return NULL;
-	}
-	return localManager->Get(colorName);
-}
-
-draw::Color errorColor;
-
-draw::Color& ColorizeManager::Get(basicColor_te myColor)
-{
-	if (NULL == localManager) {
-		return errorColor;
-	}
-	return localManager->Get(myColor);
-}
-
-bool ColorizeManager::Exist(etk::UString &colorName)
+bool ColorizeManager::Exist(const etk::UString& _colorName)
 {
 	if (NULL == localManager) {
 		return false;
 	}
-	return localManager->Exist(colorName);
-}
-
-bool ColorizeManager::Exist(const char *colorName)
-{
-	if (NULL == localManager) {
-		return false;
-	}
-	return localManager->Exist(colorName);
+	return localManager->Exist(_colorName);
 }
 
 void ColorizeManager::DisplayListOfColor(void)
