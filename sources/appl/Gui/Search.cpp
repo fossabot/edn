@@ -75,7 +75,7 @@ Search::Search(void) :
 		widget::Image* tmpImage = new widget::Image("THEME:GUI:Remove.svg");
 		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
 		myButtonImage->SetSubWidget(tmpImage);
-		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventHideBt);
+		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventHideBt);
 		SubWidgetAdd(myButtonImage);
 	}
 	
@@ -83,8 +83,8 @@ Search::Search(void) :
 	if (NULL == m_searchEntry) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		m_searchEntry->RegisterOnEvent(this, ewolEventEntryModify, l_eventSearchEntry);
-		m_searchEntry->RegisterOnEvent(this, ewolEventEntryEnter,  l_eventSearchEntryEnter);
+		m_searchEntry->RegisterOnEvent(this, widget::Entry::eventModify, l_eventSearchEntry);
+		m_searchEntry->RegisterOnEvent(this, widget::Entry::eventEnter,  l_eventSearchEntryEnter);
 		m_searchEntry->SetExpand(bvec2(true,false));
 		m_searchEntry->SetFill(bvec2(true,false));
 		SubWidgetAdd(m_searchEntry);
@@ -97,7 +97,7 @@ Search::Search(void) :
 		widget::Image* tmpImage = new widget::Image("THEME:GUI:Search.svg");
 		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
 		myButtonImage->SetSubWidget(tmpImage);
-		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventSearchBt);
+		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventSearchBt);
 		SubWidgetAdd(myButtonImage);
 	}
 	
@@ -105,8 +105,8 @@ Search::Search(void) :
 	if (NULL == m_replaceEntry) {
 		APPL_ERROR("Widget allocation error ==> it will missing in the display");
 	} else {
-		m_replaceEntry->RegisterOnEvent(this, ewolEventEntryModify, l_eventReplaceEntry);
-		m_replaceEntry->RegisterOnEvent(this, ewolEventEntryEnter, l_eventReplaceEntryEnter);
+		m_replaceEntry->RegisterOnEvent(this, widget::Entry::eventModify, l_eventReplaceEntry);
+		m_replaceEntry->RegisterOnEvent(this, widget::Entry::eventEnter, l_eventReplaceEntryEnter);
 		m_replaceEntry->SetExpand(bvec2(true,false));
 		m_replaceEntry->SetFill(bvec2(true,false));
 		SubWidgetAdd(m_replaceEntry);
@@ -119,7 +119,7 @@ Search::Search(void) :
 		widget::Image* tmpImage = new widget::Image("THEME:GUI:Replace.svg");
 		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
 		myButtonImage->SetSubWidget(tmpImage);
-		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventReplaceBt);
+		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventReplaceBt);
 		SubWidgetAdd(myButtonImage);
 	}
 	
@@ -138,7 +138,7 @@ Search::Search(void) :
 		myButtonImage->SetSubWidgetToggle(tmpImage);
 		
 		myButtonImage->SetValue(!SearchData::GetCase());
-		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventCaseCb);
+		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventCaseCb);
 		SubWidgetAdd(myButtonImage);
 	}
 	
@@ -157,7 +157,7 @@ Search::Search(void) :
 		myButtonImage->SetSubWidgetToggle(tmpImage);
 		
 		myButtonImage->SetValue(!SearchData::GetWrap());
-		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventWrapCb);
+		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventWrapCb);
 		SubWidgetAdd(myButtonImage);
 	}
 	
@@ -176,7 +176,7 @@ Search::Search(void) :
 		myButtonImage->SetSubWidgetToggle(tmpImage);
 		
 		myButtonImage->SetValue(!m_forward);
-		myButtonImage->RegisterOnEvent(this, ewolEventButtonPressed, l_eventForwardCb);
+		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventForwardCb);
 		SubWidgetAdd(myButtonImage);
 	}
 	

@@ -246,7 +246,7 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
 			tmpInsertText.PushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<unsigned int> tmppp = insertText.GetVector();
+		etk::Vector<uniChar_t> tmppp = insertText.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
 	}
 	if (tmpInsertText.Size()>0) {
@@ -622,7 +622,7 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnico
 				tmp[kkk] = tmpString[kkk];
 				tmp[kkk+1] = '\0';
 			}
-			unicode::convertUtf8ToUnicode(tmp, outUnicode[0]);
+			outUnicode[0].SetUtf8(tmp);
 			outUnicode[1] = 0;
 		} else {
 			outUnicode[0] = '<';
@@ -939,7 +939,7 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foun
 			searchVect.PushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<unsigned int> tmppp = search.GetVector();
+		etk::Vector<etk::UniChar> tmppp = search.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
 	}
 	// remove the '\0' at the end of the string ...
@@ -995,7 +995,7 @@ bool EdnBuf::SearchBackward(int32_t startPos, etk::UString &search, int32_t *fou
 			searchVect.PushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<unsigned int> tmppp = search.GetVector();
+		etk::Vector<etk::UniChar> tmppp = search.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
 	}
 	// remove the '\0' at the end of the string ...
@@ -1146,7 +1146,7 @@ int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
 			tmpInsertText.PushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<unsigned int> tmppp = insertText.GetVector();
+		etk::Vector<etk::UniChar> tmppp = insertText.GetVector();
 		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
 	}
 	if (tmpInsertText.Size()>0) {

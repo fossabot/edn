@@ -83,7 +83,7 @@ appl::TagFileSelection::TagFileSelection(void)
 				        "	</sizer>\n"
 				        "</composer\n"));
 				
-				myWidgetValidate->RegisterOnEvent(this, ewolEventButtonPressed, applEventctagsSelection);
+				myWidgetValidate->RegisterOnEvent(this, widget::Button::eventPressed, applEventctagsSelection);
 				mySizerHori->SubWidgetAdd(myWidgetValidate);
 			}
 			myWidgetCancel = new widget::Button();
@@ -98,7 +98,7 @@ appl::TagFileSelection::TagFileSelection(void)
 				        "		<label>Cancel</label>\n"
 				        "	</sizer>\n"
 				        "</composer\n"));
-				myWidgetCancel->RegisterOnEvent(this, ewolEventButtonPressed, applEventctagsCancel);
+				myWidgetCancel->RegisterOnEvent(this, widget::Button::eventPressed, applEventctagsCancel);
 				mySizerHori->SubWidgetAdd(myWidgetCancel);
 			}
 		}

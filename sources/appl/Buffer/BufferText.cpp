@@ -1001,7 +1001,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 		// normal adding char ...
 		if (true == m_EdnBuf.GetUTF8Mode()) {
 			char tmpUTF8[16];
-			unicode::convertUnicodeToUtf8(unicodeData, tmpUTF8);
+			unicodeData.GetUtf8(tmpUTF8);
 			etk::Vector<int8_t> tmpVect;
 			int32_t localOfset = strlen(tmpUTF8);
 			tmpVect.PushBack((int8_t*)tmpUTF8, localOfset);

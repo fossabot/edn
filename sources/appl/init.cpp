@@ -69,7 +69,6 @@ void APP_Init(void)
 	APPL_INFO("==> Init "PROJECT_NAME" (START) [" << osMode << "] (" << debugMode << ")");
 	
 	ewol::ChangeSize(ivec2(800, 600));
-	etk::InitDefaultFolder(PROJECT_NAME);
 	#ifdef __TARGET_OS__Android
 		ewol::config::FontSetDefault("FreeSerif", 19);
 	#else
