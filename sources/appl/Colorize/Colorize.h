@@ -11,46 +11,39 @@
 #include <draw/Color.h>
 #include <etk/UString.h>
 
-namespace appl
-{
-	class Colorize {
-		public:
-			/**
-			 * @brief Constructeur
-			 * @param[in] _colorName Name of the color...
-			 */
-			Colorize(etk::UString& _colorName="no_name");
-			/**
-			 * @brief Desstructeur
-			 */
-			virtual ~Colorize(void) { };
-		private:
-			etk::UString m_name; //!< curent color Name
-		public:
-			void SetName(const etk::UString &_newColorName);
-			const etk::UString& GetName(void) { return m_name; };
+class Colorize {
+	public:
+		// Constructeur
+		Colorize(void);
+		Colorize(etk::UString &newColorName);
+		~Colorize(void);
 		
-		private:
-			draw::Color m_colorFG; //!< Foreground color
-			draw::Color m_colorBG; //!< Background color
-		public:
-			void SetFgColor(const etk::UString& _myColor);
-			void SetBgColor(const etk::UString& _myColor);
-			const draw::Color& GetFG(void) { return m_colorFG; };
-			const draw::Color& GetBG(void) { return m_colorBG; };
-			bool HaveBg(void) { return m_colorBG.a!=0; };
+		void SetName(etk::UString &newColorName);
+		void SetName(const char *newColorName);
+		etk::UString GetName(void);
+		void SetFgColor(const char *myColor);
+		void SetBgColor(const char *myColor);
 		
-		private:
-			bool m_italic; //!< the color request italic
-			bool m_bold; //!< The color request bold
-		public:
-			void SetItalic(bool _enable);
-			void SetBold(bool _enable);
-			bool GetItalic(void) { return m_italic; };
-			bool GetBold(void) { return m_bold; };
-	};
-	etk::CCout& operator <<(etk::CCout& _os, const appl::Colorize& _obj);
-	
+		draw::Color & GetFG(void) { return m_colorFG; };
+		draw::Color & GetBG(void) { return m_colorBG; };
+
+		bool HaveBg(void);
+		
+		void SetItalic(bool enable);
+		void SetBold(bool enable);
+		bool GetItalic(void);
+		bool GetBold(void);
+		
+		void Display(int32_t i) { APPL_INFO("        " << i << " : \"" <<  ColorName << "\"" << "     fg="<< m_colorFG); };
+
+	private:
+		etk::UString ColorName;						//!< curent color Name
+		draw::Color m_colorFG;
+		draw::Color m_colorBG;
+		
+		bool italic;
+		bool bold;
+
 };
 
 #endif

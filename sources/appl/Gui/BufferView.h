@@ -32,37 +32,32 @@ namespace appl
 			};
 			~dataBufferStruct(void) { };
 	};
-	
-	class BufferView : public widget::List
-	{
-		public:
-			/**
-			 * @brief Constructeur
-			 */
-			BufferView(void);
-			/**
-			 * @brief Destructeur
-			 */
-			virtual ~BufferView(void);
-			
-		private:
-			int32_t m_selectedIdRequested;
-			int32_t m_selectedID;
-			etk::Vector<appl::dataBufferStruct*>  m_list;
-		public: // Derived function
-			const char * const GetObjectType(void) { return "ApplBufferView"; };
-			virtual void OnReceiveMessage(const ewol::EMessage& _msg);
-		protected:
-			// function call to display the list :
-			virtual draw::Color GetBasicBG(void);
-			void RemoveAllElement(void);
-			// Derived function
-			virtual uint32_t GetNuberOfColomn(void);
-			virtual bool GetTitle(int32_t colomn, etk::UString &myTitle, draw::Color &fg, draw::Color &bg);
-			virtual uint32_t GetNuberOfRaw(void);
-			virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg);
-			virtual bool OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
-	};
+};
+
+class BufferView : public widget::List
+{
+	private:
+		int32_t                               m_selectedIdRequested;
+		int32_t                               m_selectedID;
+		etk::Vector<appl::dataBufferStruct*>  m_list;
+	public:
+		// Constructeur
+		BufferView(void);
+		~BufferView(void);
+		// Derived function
+		const char * const GetObjectType(void) { return "ApplBufferView"; };
+		// Derived function
+		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
+	protected:
+		// function call to display the list :
+		virtual draw::Color GetBasicBG(void);
+		void RemoveAllElement(void);
+		// Derived function
+		virtual uint32_t GetNuberOfColomn(void);
+		virtual bool GetTitle(int32_t colomn, etk::UString &myTitle, draw::Color &fg, draw::Color &bg);
+		virtual uint32_t GetNuberOfRaw(void);
+		virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg);
+		virtual bool OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
 };
 
 
