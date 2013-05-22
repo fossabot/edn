@@ -28,7 +28,7 @@
 		</rule>
 		<rule name="normale Balise">
 			<color>functionName</color>
-			<start>&lt;/[0-9a-fA-F_]*|&lt;[0-9a-fA-F_]*|/&gt;|&gt;</start>
+			<start>&lt;/[0-9a-zA-Z_]+|&lt;[0-9a-zA-Z_]+|/&gt;|&gt;</start>
 		</rule>
 	</pass2>
 </EdnLang>

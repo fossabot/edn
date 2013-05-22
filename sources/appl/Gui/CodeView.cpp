@@ -211,11 +211,11 @@ bool CodeView::OnEventEntry(const ewol::EventEntry& _event)
 	return true;
 }
 
-void CodeView::OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID)
+void CodeView::OnEventClipboard(ewol::clipBoard::clipboardListe_te _clipboardID)
 {
 	BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 	if (NULL!=tmpBuffer) {
-		tmpBuffer->Paste(clipboardID);
+		tmpBuffer->Paste(_clipboardID);
 	}
 	MarkToRedraw();
 }
