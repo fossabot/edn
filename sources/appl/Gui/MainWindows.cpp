@@ -352,10 +352,10 @@ void MainWindows::OnReceiveMessage(const ewol::EMessage& _msg)
 			tmpWidget->MenuAddGroup("Editor");
 			ewol::Widget* tmpSubWidget = new globals::ParameterGlobalsGui();
 			tmpWidget->MenuAdd("Editor",          "", tmpSubWidget);
-			tmpWidget->MenuAdd("Polices & Color", "", NULL);
+			tmpWidget->MenuAdd("Font & Color", "", NULL);
 			tmpWidget->MenuAdd("Highlight",       "", NULL);
-			tmpWidget->MenuAddGroup("Genral");
-			tmpWidget->MenuAdd("Affichage",       "", NULL);
+			tmpWidget->MenuAddGroup("General");
+			tmpWidget->MenuAdd("Display",       "", NULL);
 			tmpSubWidget = new ParameterAboutGui();
 			tmpWidget->MenuAdd("About",           "", tmpSubWidget);
 		}
