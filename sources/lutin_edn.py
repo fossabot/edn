@@ -50,14 +50,8 @@ def Create(target):
 	
 	myModule.AddModuleDepend('ewol')
 	
-	now = datetime.datetime.now()
-	
-	versionID=str(now.year-2012)+"."+str(now.month)+"."+str(now.day)
-	
 	myModule.CompileFlags_CC([
-		"-DPROJECT_NAME=\"\\\""+myModule.name+"\\\"\"",
-		"-DAPPL_VERSION_TAG_NAME=\"\\\""+versionID+"\\\"\"",
-		"-DBUILD_TIME=\"\\\""+str(now.day)+"/"+str(now.month)+"/"+str(now.year)+"\\\"\""])
+		"-DPROJECT_NAME=\"\\\""+myModule.name+"\\\"\""])
 	
 	myModule.CopyFile('../data/icon.png','icon.png')
 	
@@ -91,6 +85,8 @@ def Create(target):
 	myModule.CopyFile("../data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")
 	myModule.CopyFolder("../data/Font/freefont/FreeMon*.ttf","fonts/")
 	
+	now = datetime.datetime.now()
+	versionID=str(now.year-2012)+"."+str(now.month)+"."+str(now.day)
 	
 	# set the package properties :
 	myModule.pkgSet("VERSION", versionID)

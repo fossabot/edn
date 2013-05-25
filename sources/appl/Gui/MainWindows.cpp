@@ -29,8 +29,22 @@
 #include <ewol/widget/meta/Parameter.h>
 #include <ewol/widget/WidgetManager.h>
 #include <ewol/eObject/EObject.h>
+#include <date/date.h>
 
-
+namespace appl 
+{
+	etk::UString GetVersion(void)
+	{
+		#define FIRST_YEAR (2010)
+		etk::UString tmpOutput = (date::GetYear()-FIRST_YEAR);
+		tmpOutput += ".";
+		tmpOutput += date::GetMonth();
+		tmpOutput += ".";
+		tmpOutput += date::GetDay();
+		return tmpOutput;
+	}
+	
+}
 
 
 #undef __class__
@@ -55,11 +69,19 @@ class ParameterAboutGui : public widget::Sizer
 				SubWidgetAdd(mySpacer);
 			}
 			etk::UString tmpLabel = "<left>";
-			tmpLabel += "  <b>Editeur De N'ours</b> : v";
-			//tmpLabel += APPL_VERSION_TAG_NAME;
+			tmpLabel += "  <b>Editeur De N'ours</b> : v:";
+			tmpLabel += appl::GetVersion();
 			tmpLabel += "<br/>";
 			tmpLabel += "  <b>Build Time</b> : ";
-			//tmpLabel += BUILD_TIME;
+			tmpLabel += date::GetYear();
+			tmpLabel += "/";
+			tmpLabel += date::GetMonth();
+			tmpLabel += "/";
+			tmpLabel += date::GetDay();
+			tmpLabel += " ";
+			tmpLabel += date::GetHour();
+			tmpLabel += "h";
+			tmpLabel += date::GetMinute();
 			tmpLabel += "<br/>";
 			tmpLabel += "  <b>Website</b> : https://github.com/HeeroYui/edn<br/>";
 			tmpLabel += "  <b>License</b> : GPL v3<br/>";
