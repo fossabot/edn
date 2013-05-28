@@ -27,6 +27,7 @@
 #include <globalMsg.h>
 #include <ewol/config.h>
 #include <ewol/commandLine.h>
+#include <ewol/UserConfig.h>
 
 MainWindows * basicWindows = NULL;
 
@@ -79,7 +80,7 @@ void APP_Init(void)
 	ewol::SetIcon("DATA:icon.png");
 	
 	// init internal global value
-	globals::init();
+	globals::Init();
 	// set the application icon ...
 	ewol::SetIcon("DATA:icon.png");
 	
@@ -96,7 +97,10 @@ void APP_Init(void)
 	HighlightManager::Init();
 	HighlightManager::loadLanguages();
 	cTagsManager::Init();
-
+	
+	// Request load of the user configuration ...
+	ewol::userConfig::Load();
+	
 	char cCurrentPath[FILENAME_MAX];
 	// get the curent program folder
 	if (!getcwd(cCurrentPath, FILENAME_MAX)) {

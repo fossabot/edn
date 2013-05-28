@@ -18,6 +18,7 @@
 	extern const char* const ednMsgGuiSave;       // data : ""
 	extern const char* const ednMsgGuiSaveAs;     // data : ""
 	extern const char* const ednMsgProperties;    // data : ""
+	extern const char* const ednMsgGuiExit;       // data : ""
 	
 	extern const char* const ednMsgGuiUndo;       // data : ""
 	extern const char* const ednMsgGuiRedo;       // data : ""

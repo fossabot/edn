@@ -12,75 +12,166 @@
 #include <ewol/eObject/EObject.h>
 #include <ewol/renderer/ResourceManager.h>
 #include <etk/os/FSNode.h>
+#include <ewol/UserConfig.h>
 
 #undef __class__
 #define __class__	"globals"
 
-
-
-
-erreurCode_te globals::init(void)
+class myParamGlobal : public ewol::EObject
 {
-	erreurCode_te ret = ERR_NONE;
-	
+	public:
+		static const char * const configEOL;
+		static const char * const configAutoIndent;
+		static const char * const configShowTabChar;
+		static const char * const configShowSpaceChar;
+	public:
+		bool m_displayEOL;
+		bool m_AutoIndent;
+		bool m_displayTabChar;
+		bool m_displaySpaceChar;
+	public : 
+		myParamGlobal(void) {
+			m_static = true; // Note : Set the object static notification( Must be set or assert at the end of process)
+			SetName("edn_global_param");
+			m_displayEOL=false;
+			m_AutoIndent = true;
+			m_displayTabChar = true;
+			m_displaySpaceChar = true;
+			RegisterConfig(configEOL,           "bool", NULL, "Display end of line character");
+			RegisterConfig(configAutoIndent,    "bool", NULL, "Auto indent when create new line");
+			RegisterConfig(configShowTabChar,   "bool", NULL, "Display the Tab char");
+			RegisterConfig(configShowSpaceChar, "bool", NULL, "Display the space char");
+		}
+		
+		bool OnSetConfig(const ewol::EConfig& _conf)
+		{
+			// Not set the EObject node parameter (name ==> not change ...)
+			if (_conf.GetConfig() == configEOL) {
+				m_displayEOL = _conf.GetData().ToBool();
+				return true;
+			}
+			if (_conf.GetConfig() == configAutoIndent) {
+				m_AutoIndent = _conf.GetData().ToBool();
+				return true;
+			}
+			if (_conf.GetConfig() == configShowTabChar) {
+				m_displayTabChar = _conf.GetData().ToBool();
+				return true;
+			}
+			if (_conf.GetConfig() == configShowSpaceChar) {
+				m_displaySpaceChar = _conf.GetData().ToBool();
+				return true;
+			}
+			return false;
+		}
+		bool OnGetConfig(const char* _config, etk::UString& _result) const
+		{
+			// Not set the EObject node parameter (name ==> not change ...)
+			if (_config == configEOL) {
+				if (true==m_displayEOL) {
+					_result = "true";
+				} else {
+					_result = "false";
+				}
+				return true;
+			}
+			if (_config == configAutoIndent) {
+				if (true==m_AutoIndent) {
+					_result = "true";
+				} else {
+					_result = "false";
+				}
+				return true;
+			}
+			if (_config == configShowTabChar) {
+				if (true==m_displayTabChar) {
+					_result = "true";
+				} else {
+					_result = "false";
+				}
+				return true;
+			}
+			if (_config == configShowSpaceChar) {
+				if (true==m_displaySpaceChar) {
+					_result = "true";
+				} else {
+					_result = "false";
+				}
+				return true;
+			}
+			return false;
+		}
+};
 
-	return ret;
+const char * const myParamGlobal::configEOL = "eol";
+const char * const myParamGlobal::configAutoIndent = "auto-indent";
+const char * const myParamGlobal::configShowTabChar = "display-tab";
+const char * const myParamGlobal::configShowSpaceChar = "display-space";
+
+static myParamGlobal& l_obj(void)
+{
+	static myParamGlobal s_obj;
+	return s_obj;
 }
 
 
 
+void globals::Init(void)
+{
+	ewol::userConfig::AddUserConfig(&l_obj());
+}
+
+void globals::UnInit(void)
+{
+	// nothing to do ...
+	//ewol::userConfig::RmUserConfig(&l_obj());
+}
+
+
 // -----------------------------------------------------------
-static bool displayEOL = false;
 bool globals::IsSetDisplayEndOfLine(void)
 {
-	return displayEOL;
+	return l_obj().m_displayEOL;
 }
 
 void globals::SetDisplayEndOfLine(bool newVal)
 {
-	APPL_INFO("Set EndOfLine " << newVal);
-	displayEOL = newVal;
+	l_obj().m_displayEOL = newVal;
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
 // -----------------------------------------------------------
-static bool displaySpaceChar = true;
 bool globals::IsSetDisplaySpaceChar(void)
 {
-	return displaySpaceChar;
+	return l_obj().m_displaySpaceChar;
 }
 
 void globals::SetDisplaySpaceChar(bool newVal)
 {
-	APPL_INFO("Set SpaceChar " << newVal);
-	displaySpaceChar = newVal;
+	l_obj().m_displaySpaceChar = newVal;
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 // -----------------------------------------------------------
-static bool displayTabChar = true;
 bool globals::IsSetDisplayTabChar(void)
 {
-	return displayTabChar;
+	return l_obj().m_displayTabChar;
 }
 
 void globals::SetDisplayTabChar(bool newVal)
 {
-	APPL_INFO("Set SpaceChar " << newVal);
-	displayTabChar = newVal;
+	l_obj().m_displayTabChar = newVal;
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
 // -----------------------------------------------------------
-static bool AutoIndent = true;
 bool globals::IsSetAutoIndent(void)
 {
-	return AutoIndent;
+	return l_obj().m_AutoIndent;
 }
 
 void globals::SetAutoIndent(bool newVal)
 {
-	APPL_INFO("Set AutoIndent " << newVal);
-	AutoIndent = newVal;
+	l_obj().m_AutoIndent = newVal;
 }
 
 // -----------------------------------------------------------

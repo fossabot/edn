@@ -15,7 +15,8 @@
 
 namespace globals
 {
-	erreurCode_te   init(void);
+	void Init(void);
+	void UnInit(void);
 	int32_t         getNbColoneBorder(void);
 	int32_t         getNbLineBorder(void);
 

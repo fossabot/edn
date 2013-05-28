@@ -234,7 +234,7 @@ MainWindows::MainWindows(void)
 	// add generic shortcut ...
 	//                 (shift, control, alt,  meta,  uniChar_t unicodeValue, const char * generateEventId, etk::UString& data)
 	ShortCutAdd("ctrl+o",       ednMsgGuiOpen, "", true);
-	ShortCutAdd("ctrl+n",       ednMsgGuiNew,   "", true);
+	ShortCutAdd("ctrl+n",       ednMsgGuiNew,  "", true);
 	
 	ShortCutAdd("ctrl+s",       ednMsgGuiSave, "current", true);
 	ShortCutAdd("ctrl+shift+s", ednMsgGuiSave, "All", true);
@@ -384,6 +384,8 @@ void MainWindows::OnReceiveMessage(const ewol::EMessage& _msg)
 	} else if (_msg.GetMessage() == ednMsgGuiReloadShader) {
 		ewol::resource::ReLoadResources();
 		ewol::ForceRedrawAll();
+	} else if (_msg.GetMessage() == ednMsgGuiExit) {
+		// TODO ...
 	}
 	
 	return;

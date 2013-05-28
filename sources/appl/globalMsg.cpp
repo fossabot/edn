@@ -18,6 +18,7 @@ extern const char* const ednMsgGuiClose      = "edn-Msg-Gui-Close";
 extern const char* const ednMsgGuiSave       = "edn-Msg-Gui-Save";
 extern const char* const ednMsgGuiSaveAs     = "edn-Msg-Gui-SaveAs";
 extern const char* const ednMsgProperties    = "edn-Msg-Gui-Properties";
+extern const char* const ednMsgGuiExit       = "edn-Msg-Gui-quit";
 
 extern const char* const ednMsgGuiUndo       = "edn-Msg-Gui-Undo";
 extern const char* const ednMsgGuiRedo       = "edn-Msg-Gui-Redo";
