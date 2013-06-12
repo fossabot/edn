@@ -136,7 +136,7 @@ MainWindows::MainWindows(void)
 			mySizerHori->SubWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
-				myCodeView = new CodeView("FreeMono", 11);
+				myCodeView = new CodeView(/*"FreeMono"*/"DejaVuSansMono", 11);
 				myCodeView->SetExpand(bvec2(true,true));
 				myCodeView->SetFill(bvec2(true,true));
 				mySizerVert2->SubWidgetAdd(myCodeView);

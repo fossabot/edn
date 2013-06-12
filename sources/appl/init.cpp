@@ -73,7 +73,7 @@ void APP_Init(void)
 	#ifdef __TARGET_OS__Android
 		ewol::config::FontSetDefault("FreeSerif", 19);
 	#else
-		ewol::config::FontSetDefault("FreeSerif", 14);
+		ewol::config::FontSetDefault(/*"FreeSerif"*/"DejaVuSansMono",14);
 	#endif
 	
 	// set the application icon ...
