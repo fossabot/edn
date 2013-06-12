@@ -107,15 +107,19 @@ void classBufferManager::OnReceiveMessage(const ewol::EMessage& _msg)
 	} else if (_msg.GetMessage() == ednMsgOpenFile) {
 		if (_msg.GetData() != "" ) {
 			etk::FSNode myFile(_msg.GetData());
-			APPL_DEBUG("request open file = \"" << _msg.GetData() << "\" ?= \"" << myFile << "\"");
-			int32_t newOne = Open(myFile);
-			if (-1 != newOne) {
-				m_idSelected = newOne;
-				SendMultiCast(ednMsgBufferId, m_idSelected);
-				SendMultiCast(ednMsgBufferListChange);
+			if (myFile.GetNodeType() == etk::FSN_FILE) {
+				APPL_DEBUG("request open file = \"" << _msg.GetData() << "\" ?= \"" << myFile << "\"");
+				int32_t newOne = Open(myFile);
+				if (-1 != newOne) {
+					m_idSelected = newOne;
+					SendMultiCast(ednMsgBufferId, m_idSelected);
+					SendMultiCast(ednMsgBufferListChange);
+				} else {
+					// TODO : notify user that we can not open the request file...
+					APPL_ERROR("Can not open the file : \"" << myFile << "\"");
+				}
 			} else {
-				// TODO : notify user that we can not open the request file...
-				APPL_ERROR("Can not open the file : \"" << myFile << "\"");
+				APPL_ERROR("Request to open an Unknox element file : " << myFile << " type:" << myFile.GetNodeType());
 			}
 		}
 	} else if (_msg.GetMessage() == ednMsgGuiSave) {

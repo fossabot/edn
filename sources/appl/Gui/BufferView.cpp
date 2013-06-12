@@ -160,6 +160,8 @@ bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToW
 			m_selectedID = raw;
 			// stop searching
 			m_selectedIdRequested = -1;
+			// set the raw visible : 
+			SetRawVisible(m_selectedID);
 		}
 		if (m_selectedID == raw) {
 			selectBG = COLOR_LIST_BG_SELECTED;
@@ -179,7 +181,7 @@ bool BufferView::OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEven
 		if(    raw>=0
 		    && raw<m_list.Size()
 		    && NULL != m_list[raw]) {
-			m_selectedID = raw;
+			m_selectedIdRequested = m_list[raw]->m_bufferID;
 			SendMultiCast(ednMsgBufferId, m_list[raw]->m_bufferID);
 		}
 	}
