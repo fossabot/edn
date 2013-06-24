@@ -84,7 +84,6 @@ void APP_Init(void)
 	// set the application icon ...
 	ewol::SetIcon("DATA:icon.png");
 	
-	
 	// init ALL Singleton :
 	//(void)CTagsManager::getInstance();
 	BufferManager::Init();
@@ -137,7 +136,7 @@ void APP_Init(void)
 		}
 	}
 	
-	APPL_INFO("==> Init Edn (END)");
+	APPL_INFO("==> Init "PROJECT_NAME" (END)");
 }
 
 
@@ -146,7 +145,7 @@ void APP_Init(void)
  */
 void APP_UnInit(void)
 {
-	APPL_INFO("==> Un-Init Edn (START)");
+	APPL_INFO("==> Un-Init "PROJECT_NAME" (START)");
 	
 	if (NULL != basicWindows) {
 		delete(basicWindows);
@@ -162,6 +161,6 @@ void APP_UnInit(void)
 	BufferManager::UnInit();
 	APPL_INFO("Stop ColorizeManager");
 	ColorizeManager::UnInit();
-	APPL_INFO("==> Un-Init Edn (END)");
+	APPL_INFO("==> Un-Init "PROJECT_NAME" (END)");
 }
 

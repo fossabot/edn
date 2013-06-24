@@ -29,12 +29,12 @@ extern "C" {
 #include <HighlightPattern.h>
 #include <Colorize.h>
 #include <etk/Buffer.h>
-#include <tinyXML/tinyxml.h>
+#include <exml/exml.h>
 
 class Highlight {
 	public:
 		// Constructeur
-		Highlight(etk::UString &xmlFilename);
+		Highlight(const etk::UString& _xmlFilename);
 		~Highlight(void);
 		bool HasExtention(etk::UString &ext);
 		bool FileNameCompatible(etk::FSNode &fileName);
@@ -50,7 +50,7 @@ class Highlight {
 		            etk::Vector<colorInformation_ts> &metaData,
 		            etk::Buffer &buffer);
 	private:
-		void                            ParseRules(TiXmlNode *child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level);
+		void                            ParseRules(exml::Element* child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level);
 		etk::UString                    m_styleName;               //!< curent style name (like "c++" or "c" or "script Bash")
 		etk::Vector<etk::UString*>      m_listExtentions;          //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
 		etk::Vector<HighlightPattern*>  m_listHighlightPass1;      //!< List of ALL hightlight modules (pass 1 ==> when we load and wride data on the buffer)

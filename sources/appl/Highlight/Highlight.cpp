@@ -16,7 +16,7 @@
 #define __class__	"Highlight"
 
 
-void Highlight::ParseRules(TiXmlNode *child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level)
+void Highlight::ParseRules(exml::Element* child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level)
 {
 	// Create the patern ...
 	HighlightPattern *myPattern = new HighlightPattern();
@@ -28,99 +28,62 @@ void Highlight::ParseRules(TiXmlNode *child, etk::Vector<HighlightPattern*> &mLi
 
 
 
-Highlight::Highlight(etk::UString &xmlFilename)
+Highlight::Highlight(const etk::UString& _xmlFilename)
 {
-	TiXmlDocument XmlDocument;
-
-	etk::FSNode fileName(xmlFilename);
-	if (false == fileName.Exist()) {
-		APPL_ERROR("File Does not exist : " << fileName);
-		return;
+	exml::Document doc;
+	if (doc.Load(_fileName)==false) {
+		EWOL_ERROR(" can not load file XML : " << _fileName);
+		return false;
 	}
-	int32_t fileSize = fileName.FileSize();
-	if (0==fileSize) {
-		APPL_ERROR("This file is empty : " << fileName);
-		return;
+	exml::Element* root = (exml::Element*)doc.GetNamed("EdnLang");
+	if (NULL == root ) {
+		EWOL_ERROR("[" << GetId() << "] {" << GetObjectType() << "} (l ?) main node not find: \"composer\" ...");
+		return false;
 	}
-	if (false == fileName.FileOpenRead()) {
-		APPL_ERROR("Can not open the file : " << fileName);
-		return;
-	}
-	// allocate data
-	char * fileBuffer = new char[fileSize+5];
-	if (NULL == fileBuffer) {
-		APPL_ERROR("Error Memory allocation size=" << fileSize);
-		return;
-	}
-	memset(fileBuffer, 0, (fileSize+5)*sizeof(char));
-	// load data from the file :
-	fileName.FileRead(fileBuffer, 1, fileSize);
-	// close the file:
-	fileName.FileClose();
-	// load the XML from the memory
-	bool loadError = XmlDocument.Parse((const char*)fileBuffer, 0, TIXML_ENCODING_UTF8);
-	if (false == loadError) {
-		APPL_ERROR( "can not load Hightlight XML: PARSING error: \"" << xmlFilename << "\"");
-		return;
-	}
-
-
-	TiXmlElement* root = XmlDocument.FirstChildElement( "EdnLang" );
-	if (NULL == root) {
-		APPL_ERROR( "can not load Hightlight XML: main node not find: \"EdnLang\"");
-		return;
-	}
-
 	int32_t level1 = 0;
 	int32_t level2 = 0;
-	TiXmlNode * child = root->FirstChild();
-	while(NULL != child)
-	{
-		if (child->Type()==TiXmlNode::TINYXML_COMMENT) {
-			// nothing to do ...
-		} else if (!strcmp(child->Value(), "ext")) {
-			const char *myData = child->ToElement()->GetText();
+	// parse all the elements :
+	for(int32_t iii=0; iii< _node->Size(); iii++) {
+		exml::Element* child = (exml::Element*)_node->Get(iii);
+		if (child==NULL) {
+			continue;
+		}
+		if (child->GetValue() == "ext") {
+			const char *myData = child->GetText();
 			if (NULL != myData) {
 				//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
 				etk::UString * myEdnData = new etk::UString(myData);
 				m_listExtentions.PushBack(myEdnData);
 			}
-		} else if (!strcmp(child->Value(), "pass1")) {
+		} else if (child->GetValue()=="pass1") {
 			// Get sub Nodes ...
-			TiXmlNode *passChild = child->FirstChild();
-			while (NULL != passChild) {
-				if (passChild->Type()==TiXmlNode::TINYXML_COMMENT) {
-					// nothing to do ...
-				} else if (!strcmp(passChild->Value(), "rule")) {
-					ParseRules(passChild, m_listHighlightPass1, level1++);
-				} else {
-					APPL_ERROR("(l "<< passChild->Row() << ") node not suported : \""<< passChild->Value() << "\" must be [rule]" );
+			for(int32_t jjj=0; jjj< child->Size(); jjj++) {
+				exml::Element* passChild = (exml::Element*)child->Get(jjj);
+				if (passChild==NULL) {
+					continue;
 				}
-				// get the next node element : 
-				passChild = passChild->NextSibling();
+				if (passChild->GetValue() != "rule") {
+					APPL_ERROR("(l "<< passChild->Pos() << ") node not suported : \""<< passChild->GetValue() << "\" must be [rule]" );
+					continue;
+				}
+				ParseRules(passChild, m_listHighlightPass1, level1++);
 			}
-		} else if (!strcmp(child->Value(), "pass2")) {
+		} else if (child->GetValue() == "pass2") {
 			// Get sub Nodes ...
-			TiXmlNode *passChild = child->FirstChild();
-			while (NULL != passChild) {
-				if (passChild->Type()==TiXmlNode::TINYXML_COMMENT) {
-					// nothing to do ...
-				} else if (!strcmp(passChild->Value(), "rule")) {
-					ParseRules(passChild, m_listHighlightPass2, level2++);
-				} else {
-					APPL_ERROR("(l "<< passChild->Row() << ") node not suported : \""<< passChild->Value() << "\" must be [rule]" );
+			for(int32_t jjj=0; jjj< child->Size(); jjj++) {
+				exml::Element* passChild = (exml::Element*)child->Get(jjj);
+				if (passChild==NULL) {
+					continue;
 				}
-				// get the next node element : 
-				passChild = passChild->NextSibling();
+				if (passChild->GetValue() != "rule") {
+					APPL_ERROR("(l "<< passChild->Pos() << ") node not suported : \""<< passChild->GetValue() << "\" must be [rule]" );
+					continue;
+				}
+				ParseRules(passChild, m_listHighlightPass2, level2++);
 			}
 		} else {
-			APPL_ERROR("(l "<< child->Row() << ") node not suported : \""<< child->Value() << "\" must be [ext,pass1,pass2]" );
+			APPL_ERROR("(l "<< child->Pos() << ") node not suported : \""<< child->GetValue() << "\" must be [ext,pass1,pass2]" );
 		}
-		// get the next node element : 
-		child = child->NextSibling();
-	}
-	if (NULL != fileBuffer) {
-		delete[] fileBuffer;
 	}
 }
 

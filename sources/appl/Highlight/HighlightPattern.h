@@ -17,7 +17,7 @@ class HighlightPattern;
 #include <etk/RegExp.h>
 #include <Colorize.h>
 #include <etk/Vector.h>
-#include <tinyXML/tinyxml.h>
+#include <exml/exml.h>
 #include <etk/Buffer.h>
 
 typedef enum {
@@ -50,7 +50,7 @@ class HighlightPattern {
 		void            Display(void);
 		resultFind_te   Find(int32_t start, int32_t stop, colorInformation_ts &resultat, etk::Buffer &buffer);
 		Colorize *      GetColor(void) { return m_color; };
-		void            ParseRules(TiXmlNode *child, int32_t level);
+		void            ParseRules(exml::Element *child, int32_t level);
 		
 		void            ReloadColor(void);
 

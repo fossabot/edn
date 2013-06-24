@@ -107,7 +107,7 @@ void HighlightPattern::Display(void)
 		m_subPatern[i]->Display();
 	}
 }
-void HighlightPattern::ParseRules(TiXmlNode *child, int32_t level)
+void HighlightPattern::ParseRules(exml::Element *child, int32_t level)
 {
 	//--------------------------------------------------------------------------------------------
 	/*
@@ -120,51 +120,51 @@ void HighlightPattern::ParseRules(TiXmlNode *child, int32_t level)
 	*/
 	//--------------------------------------------------------------------------------------------
 	// process attribute	
-	const char *highLightName = child->ToElement()->Attribute("name");
+	etk::UString highLightName = child->GetAttribute("name");
 	etk::UString myEdnDataTmp = "???";
-	if (NULL != highLightName) {
+	if (highLightName.Size()!=0) {
 		myEdnDataTmp = highLightName;
 	}
 	SetName(myEdnDataTmp);
 	SetLevel(level);
 	
-	TiXmlElement *xChild = child->FirstChildElement("color");
+	exml::Element* xChild = (exml::Element*)child->GetNamed("color");
 	if (NULL != xChild) {
-		const char *myData = xChild->GetText();
-		if (myData) {
+		etk::UString myData = xChild->GetText();
+		if (myData.Size()!=0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
 			SetColor(myEdnData);
 		}
 	}
-	xChild = child->FirstChildElement("start");
+	xChild = (exml::Element*)child->GetNamed("start");
 	if (NULL != xChild) {
-		const char *myData = xChild->GetText();
-		if (myData) {
+		etk::UString myData = xChild->GetText();
+		if (myData.Size()!=0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
 			SetPaternStart(myEdnData);
 		}
 	}
-	xChild = child->FirstChildElement("end");
+	xChild = (exml::Element*)child->GetNamed("end");
 	if (NULL != xChild) {
-		const char *myData = xChild->GetText();
-		if (myData) {
+		etk::UString myData = xChild->GetText();
+		if (myData.Size()!=0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
 			SetPaternStop(myEdnData);
 		}
 	}
-	xChild = child->FirstChildElement("EscapeChar");
+	xChild = (exml::Element*)child->GetNamed("EscapeChar");
 	if (NULL != xChild) {
-		const char *myData = xChild->GetText();
-		if (myData) {
+		etk::UString myData = xChild->GetText();
+		if (myData.Size()!=0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
 			SetEscapeChar(myEdnData);
 		}
 	}
-	xChild = child->FirstChildElement("rule");
+	xChild = (exml::Element*)child->GetNamed("rule");
 	if (NULL != xChild) {
 		/*
 			// Create the patern ...
