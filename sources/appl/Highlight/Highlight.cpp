@@ -9,7 +9,7 @@
 #include <appl/Debug.h>
 #include <appl/global.h>
 #include <Highlight.h>
-#include <tinyXML/tinyxml.h>
+#include <exml/exml.h>
 
 
 #undef __class__
@@ -31,34 +31,34 @@ void Highlight::ParseRules(exml::Element* child, etk::Vector<HighlightPattern*> 
 Highlight::Highlight(const etk::UString& _xmlFilename)
 {
 	exml::Document doc;
-	if (doc.Load(_fileName)==false) {
-		EWOL_ERROR(" can not load file XML : " << _fileName);
-		return false;
+	if (doc.Load(_xmlFilename)==false) {
+		APPL_ERROR(" can not load file XML : " << _xmlFilename);
+		return;
 	}
 	exml::Element* root = (exml::Element*)doc.GetNamed("EdnLang");
 	if (NULL == root ) {
-		EWOL_ERROR("[" << GetId() << "] {" << GetObjectType() << "} (l ?) main node not find: \"composer\" ...");
-		return false;
+		APPL_ERROR("(l ?) main node not find: \"EdnLang\" ...");
+		return;
 	}
 	int32_t level1 = 0;
 	int32_t level2 = 0;
 	// parse all the elements :
-	for(int32_t iii=0; iii< _node->Size(); iii++) {
-		exml::Element* child = (exml::Element*)_node->Get(iii);
+	for(int32_t iii=0; iii< root->Size(); iii++) {
+		exml::Element* child = root->GetElement(iii);
 		if (child==NULL) {
+			// trash here all that is not element ...
 			continue;
 		}
 		if (child->GetValue() == "ext") {
-			const char *myData = child->GetText();
-			if (NULL != myData) {
+			etk::UString myData = child->GetText();
+			if (myData.Size()!=0) {
 				//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
-				etk::UString * myEdnData = new etk::UString(myData);
-				m_listExtentions.PushBack(myEdnData);
+				m_listExtentions.PushBack(myData);
 			}
 		} else if (child->GetValue()=="pass1") {
 			// Get sub Nodes ...
 			for(int32_t jjj=0; jjj< child->Size(); jjj++) {
-				exml::Element* passChild = (exml::Element*)child->Get(jjj);
+				exml::Element* passChild = child->GetElement(jjj);
 				if (passChild==NULL) {
 					continue;
 				}
@@ -71,7 +71,7 @@ Highlight::Highlight(const etk::UString& _xmlFilename)
 		} else if (child->GetValue() == "pass2") {
 			// Get sub Nodes ...
 			for(int32_t jjj=0; jjj< child->Size(); jjj++) {
-				exml::Element* passChild = (exml::Element*)child->Get(jjj);
+				exml::Element* passChild = child->GetElement(jjj);
 				if (passChild==NULL) {
 					continue;
 				}
@@ -99,14 +99,6 @@ Highlight::~Highlight(void)
 	}
 	// clear the compleate list
 	m_listHighlightPass1.Clear();
-
-	// clean all Element
-	for (i=0; i< m_listExtentions.Size(); i++) {
-		if (NULL != m_listExtentions[i]) {
-			delete(m_listExtentions[i]);
-			m_listExtentions[i] = NULL;
-		}
-	}
 	// clear the compleate list
 	m_listExtentions.Clear();
 }
@@ -126,31 +118,29 @@ void Highlight::ReloadColor(void)
 	}
 }
 
-bool Highlight::HasExtention(etk::UString &ext)
+bool Highlight::HasExtention(const etk::UString& _ext)
 {
-	int32_t i;
-	for (i=0; i<m_listExtentions.Size(); i++) {
-		if (ext == *m_listExtentions[i] ) {
+	for (int32_t iii=0; iii<m_listExtentions.Size(); iii++) {
+		if (_ext == m_listExtentions[iii] ) {
 			return true;
 		}
 	}
 	return false;
 }
 
-bool Highlight::FileNameCompatible(etk::FSNode &fileName)
+bool Highlight::FileNameCompatible(etk::FSNode &_fileName)
 {
-	int32_t i;
 	etk::UString extention;
-	if (true == fileName.FileHasExtention() ) {
+	if (true == _fileName.FileHasExtention() ) {
 		extention = "*.";
-		extention += fileName.FileGetExtention();
+		extention += _fileName.FileGetExtention();
 	} else {
-		extention = fileName.GetNameFile();
+		extention = _fileName.GetNameFile();
 	}
-	APPL_DEBUG(" try to find : in \"" << fileName << "\" extention:\"" << extention << "\" ");
+	APPL_DEBUG(" try to find : in \"" << _fileName << "\" extention:\"" << extention << "\" ");
 
-	for (i=0; i<m_listExtentions.Size(); i++) {
-		if (extention == *m_listExtentions[i] ) {
+	for (int32_t iii=0; iii<m_listExtentions.Size(); iii++) {
+		if (extention == m_listExtentions[iii] ) {
 			return true;
 		}
 	}
@@ -160,19 +150,18 @@ bool Highlight::FileNameCompatible(etk::FSNode &fileName)
 
 void Highlight::Display(void)
 {
-	int32_t i;
 	APPL_INFO("List of ALL Highlight : ");
-	for (i=0; i< m_listExtentions.Size(); i++) {
-		APPL_INFO("        Extention : " << i << " : " << *m_listExtentions[i] );
+	for (int32_t iii=0; iii< m_listExtentions.Size(); iii++) {
+		APPL_INFO("        Extention : " << iii << " : " << m_listExtentions[iii] );
 	}
 	// Display all elements
-	for (i=0; i< m_listHighlightPass1.Size(); i++) {
-		APPL_INFO("        " << i << " Pass 1 : " << m_listHighlightPass1[i]->GetName() );
+	for (int32_t iii=0; iii< m_listHighlightPass1.Size(); iii++) {
+		APPL_INFO("        " << iii << " Pass 1 : " << m_listHighlightPass1[iii]->GetName() );
 		//m_listHighlightPass1[i]->Display();
 	}
 	// Display all elements
-	for (i=0; i< m_listHighlightPass2.Size(); i++) {
-		APPL_INFO("        " << i << " Pass 2 : " << m_listHighlightPass2[i]->GetName() );
+	for (int32_t iii=0; iii< m_listHighlightPass2.Size(); iii++) {
+		APPL_INFO("        " << iii << " Pass 2 : " << m_listHighlightPass2[iii]->GetName() );
 		//m_listHighlightPass2[i]->Display();
 	}
 }

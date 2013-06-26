@@ -37,13 +37,10 @@ namespace ColorizeManager
 {
 	void        Init(void);
 	void        UnInit(void);
-	void        LoadFile(etk::UString &xmlFilename);
-	void        LoadFile(const char * xmlFilename);
-	Colorize *  Get(const char *colorName);
-	Colorize *  Get(etk::UString &colorName);
-	draw::Color& Get(basicColor_te myColor);
-	bool        Exist(etk::UString &colorName);
-	bool        Exist(const char *colorName);
+	void        LoadFile(const etk::UString& _xmlFilename);
+	Colorize *  Get(const etk::UString& _colorName);
+	draw::Color& Get(basicColor_te _myColor);
+	bool        Exist(const etk::UString& _colorName);
 	void        DisplayListOfColor(void);
 };
 
