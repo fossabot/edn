@@ -63,7 +63,7 @@ Highlight::Highlight(const etk::UString& _xmlFilename)
 					continue;
 				}
 				if (passChild->GetValue() != "rule") {
-					APPL_ERROR("(l "<< passChild->Pos() << ") node not suported : \""<< passChild->GetValue() << "\" must be [rule]" );
+					APPL_ERROR("(l "<< passChild->GetPos() << ") node not suported : \""<< passChild->GetValue() << "\" must be [rule]" );
 					continue;
 				}
 				ParseRules(passChild, m_listHighlightPass1, level1++);
@@ -76,13 +76,13 @@ Highlight::Highlight(const etk::UString& _xmlFilename)
 					continue;
 				}
 				if (passChild->GetValue() != "rule") {
-					APPL_ERROR("(l "<< passChild->Pos() << ") node not suported : \""<< passChild->GetValue() << "\" must be [rule]" );
+					APPL_ERROR("(l "<< passChild->GetPos() << ") node not suported : \""<< passChild->GetValue() << "\" must be [rule]" );
 					continue;
 				}
 				ParseRules(passChild, m_listHighlightPass2, level2++);
 			}
 		} else {
-			APPL_ERROR("(l "<< child->Pos() << ") node not suported : \""<< child->GetValue() << "\" must be [ext,pass1,pass2]" );
+			APPL_ERROR("(l "<< child->GetPos() << ") node not suported : \""<< child->GetValue() << "\" must be [ext,pass1,pass2]" );
 		}
 	}
 }

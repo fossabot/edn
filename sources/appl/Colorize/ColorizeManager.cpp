@@ -157,7 +157,7 @@ void classColorManager::LoadFile(const etk::UString& _xmlFilename)
 					continue;
 				}
 				if (pGuiNode->GetValue()!="color") {
-					APPL_ERROR("(l "<<pGuiNode->Pos()<<") node not suported : \""<<pGuiNode->GetValue()<<"\" must be [color]");
+					APPL_ERROR("(l "<<pGuiNode->GetPos()<<") node not suported : \""<<pGuiNode->GetValue()<<"\" must be [color]");
 					continue;
 				}
 				//--------------------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ void classColorManager::LoadFile(const etk::UString& _xmlFilename)
 				//--------------------------------------------------------------------------------------------
 				etk::UString colorName = pGuiNode->GetAttribute("name");
 				if (colorName.Size()==0) {
-					APPL_ERROR("(l "<< pGuiNode->Pos() <<") node with no name");
+					APPL_ERROR("(l "<< pGuiNode->GetPos() <<") node with no name");
 					continue;
 				}
 				int32_t id = 0;
@@ -190,7 +190,7 @@ void classColorManager::LoadFile(const etk::UString& _xmlFilename)
 				} else if (colorName=="LIST_textModify") {
 					id = COLOR_LIST_TEXT_MODIFY;
 				} else {
-					APPL_ERROR("(l "<<pGuiNode->Pos()<<") Unknown basic gui color : \"" << colorName << "\"" );
+					APPL_ERROR("(l "<<pGuiNode->GetPos()<<") Unknown basic gui color : \"" << colorName << "\"" );
 					continue;
 				}
 				etk::UString color = pGuiNode->GetAttribute("val");
@@ -205,7 +205,7 @@ void classColorManager::LoadFile(const etk::UString& _xmlFilename)
 					continue;
 				}
 				if (pGuiNode->GetValue()!="color") {
-					APPL_ERROR(PFX"(l "<<pGuiNode->Pos()<<") node not suported : \""<<pGuiNode->GetValue()<<"\" must be [color]");
+					APPL_ERROR(PFX"(l "<<pGuiNode->GetPos()<<") node not suported : \""<<pGuiNode->GetValue()<<"\" must be [color]");
 					continue;
 				}
 				//--------------------------------------------------------------------------------------------
@@ -214,12 +214,12 @@ void classColorManager::LoadFile(const etk::UString& _xmlFilename)
 				// get the name of the Chaine
 				etk::UString colorName = pGuiNode->GetAttribute("name");
 				if (colorName.Size()==0) {
-					APPL_ERROR(PFX"(l "<< pGuiNode->Pos() <<") node with no name");
+					APPL_ERROR(PFX"(l "<< pGuiNode->GetPos() <<") node with no name");
 					continue;
 				}
 				Colorize* myNewColor = new Colorize();
 				if (NULL==myNewColor) {
-					APPL_ERROR(PFX"(l "<< pGuiNode->Pos() <<") ==> allocation error");
+					APPL_ERROR(PFX"(l "<< pGuiNode->GetPos() <<") ==> allocation error");
 					continue;
 				}
 				myNewColor->SetName(colorName);
