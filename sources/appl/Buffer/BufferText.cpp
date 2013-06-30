@@ -492,7 +492,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	int64_t stopTime2 = ewol::GetTime();
 	APPL_DEBUG("DRAW text (brut) = " << stopTime2 - stopTime << " micro-s");
 
-	return ERR_NONE;
+	return 0;
 }
 
 
