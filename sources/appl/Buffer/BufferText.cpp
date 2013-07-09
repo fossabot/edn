@@ -338,8 +338,8 @@ int32_t BufferText::Display(ewol::Text& OOText,
 	// Get color : 
 	Colorize *  myColor           = ColorizeManager::Get("normal");
 	Colorize *  myColorSel        = ColorizeManager::Get("SelectedText");
-	draw::Color & myColorSpace   = ColorizeManager::Get(COLOR_CODE_SPACE);
-	draw::Color & myColorTab     = ColorizeManager::Get(COLOR_CODE_TAB);
+	etk::Color<> & myColorSpace   = ColorizeManager::Get(COLOR_CODE_SPACE);
+	etk::Color<> & myColorTab     = ColorizeManager::Get(COLOR_CODE_TAB);
 	Colorize *  selectColor       = NULL;
 	int mylen = m_EdnBuf.Size();
 	int32_t x_base=nbColoneForLineNumber*letterWidth;
@@ -413,7 +413,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 					selectColor = HLColor->patern->GetColor();
 				}
 			}
-			OOText.SetColorBg(draw::color::none);
+			OOText.SetColorBg(etk::color::none);
 			if(    true == selHave
 			    && selStart <= iii
 			    && selEnd > iii)

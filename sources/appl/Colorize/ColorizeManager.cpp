@@ -22,7 +22,7 @@ class classColorManager: public ewol::EObject
 		etk::UString m_fileColor;
 		etk::Vector<Colorize*> listMyColor; //!< List of ALL Color
 		Colorize * errorColor;
-		draw::Color basicColors[COLOR_NUMBER_MAX];
+		etk::Color<> basicColors[COLOR_NUMBER_MAX];
 		
 	public:
 		// Constructeur
@@ -80,7 +80,7 @@ class classColorManager: public ewol::EObject
 			// an error
 			return errorColor;
 		}
-		draw::Color& Get(basicColor_te _myColor)
+		etk::Color<>& Get(basicColor_te _myColor)
 		{
 			if (_myColor < COLOR_NUMBER_MAX) {
 				return basicColors[_myColor];
@@ -195,7 +195,7 @@ void classColorManager::LoadFile(const etk::UString& _xmlFilename)
 				}
 				etk::UString color = pGuiNode->GetAttribute("val");
 				if (color.Size()!=0) {
-					basicColors[id] = color.c_str();
+					basicColors[id] = color;
 				}
 			}
 		} else if (pNode->GetValue()=="syntax") {
@@ -292,10 +292,10 @@ Colorize* ColorizeManager::Get(const etk::UString& _colorName)
 	return localManager->Get(_colorName);
 }
 
-draw::Color errorColor;
 
-draw::Color& ColorizeManager::Get(basicColor_te _myColor)
+etk::Color<>& ColorizeManager::Get(basicColor_te _myColor)
 {
+	static etk::Color<> errorColor;
 	if (NULL == localManager) {
 		return errorColor;
 	}

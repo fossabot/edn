@@ -50,13 +50,13 @@ class BufferView : public widget::List
 		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
 	protected:
 		// function call to display the list :
-		virtual draw::Color GetBasicBG(void);
+		virtual etk::Color<> GetBasicBG(void);
 		void RemoveAllElement(void);
 		// Derived function
 		virtual uint32_t GetNuberOfColomn(void);
-		virtual bool GetTitle(int32_t colomn, etk::UString &myTitle, draw::Color &fg, draw::Color &bg);
+		virtual bool GetTitle(int32_t colomn, etk::UString &myTitle, etk::Color<> &fg, etk::Color<> &bg);
 		virtual uint32_t GetNuberOfRaw(void);
-		virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg);
+		virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, etk::Color<> &fg, etk::Color<> &bg);
 		virtual bool OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
 };
 

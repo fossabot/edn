@@ -110,7 +110,7 @@ void BufferView::OnReceiveMessage(const ewol::EMessage& _msg)
 }
 
 
-draw::Color BufferView::GetBasicBG(void)
+etk::Color<> BufferView::GetBasicBG(void)
 {
 	return ColorizeManager::Get(COLOR_LIST_BG_1);
 }
@@ -120,7 +120,7 @@ uint32_t BufferView::GetNuberOfColomn(void)
 	return 1;
 }
 
-bool BufferView::GetTitle(int32_t colomn, etk::UString &myTitle, draw::Color &fg, draw::Color &bg)
+bool BufferView::GetTitle(int32_t colomn, etk::UString &myTitle, etk::Color<> &fg, etk::Color<> &bg)
 {
 	myTitle = "Buffers : ";
 	return true;
@@ -131,7 +131,7 @@ uint32_t BufferView::GetNuberOfRaw(void)
 	return m_list.Size();
 }
 
-bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg)
+bool BufferView::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, etk::Color<> &fg, etk::Color<> &bg)
 {
 	bool isModify;
 	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;

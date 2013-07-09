@@ -11,7 +11,7 @@
 
 #include <Colorize.h>
 #include <appl/globalMsg.h>
-#include <draw/Color.h>
+#include <etk/Color.h>
 #include <ewol/widget/Widget.h>
 
 typedef enum {
@@ -39,7 +39,7 @@ namespace ColorizeManager
 	void        UnInit(void);
 	void        LoadFile(const etk::UString& _xmlFilename);
 	Colorize *  Get(const etk::UString& _colorName);
-	draw::Color& Get(basicColor_te _myColor);
+	etk::Color<>& Get(basicColor_te _myColor);
 	bool        Exist(const etk::UString& _colorName);
 	void        DisplayListOfColor(void);
 };

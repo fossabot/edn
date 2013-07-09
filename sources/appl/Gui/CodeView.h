@@ -27,8 +27,8 @@ class CodeView :public widget::WidgetScrooled
 		virtual ~CodeView(void);
 	private:
 		etk::UString m_label;
-		draw::Color m_textColorFg;  //!< Text color
-		draw::Color m_textColorBg;  //!< Background color
+		etk::Color<> m_textColorFg;  //!< Text color
+		etk::Color<> m_textColorBg;  //!< Background color
 		int32_t m_bufferID;
 		bool m_buttunOneSelected;
 		etk::Vector<vec2 > m_lineNumberList;

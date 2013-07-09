@@ -36,16 +36,15 @@ appl::TagFileList::~TagFileList(void)
 	}
 }
 
-draw::Color appl::TagFileList::GetBasicBG(void) {
-	draw::Color bg(0x00000010);
-	return bg;
+etk::Color<> appl::TagFileList::GetBasicBG(void) {
+	return 0x00000010;
 }
 
 uint32_t appl::TagFileList::GetNuberOfColomn(void) {
 	return 2;
 }
 
-bool appl::TagFileList::GetTitle(int32_t colomn, etk::UString &myTitle, draw::Color &fg, draw::Color &bg) {
+bool appl::TagFileList::GetTitle(int32_t colomn, etk::UString &myTitle, etk::Color<> &fg, etk::Color<> &bg) {
 	myTitle = "title";
 	return true;
 }
@@ -54,7 +53,7 @@ uint32_t appl::TagFileList::GetNuberOfRaw(void) {
 	return m_list.Size();
 }
 
-bool appl::TagFileList::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, draw::Color &fg, draw::Color &bg) {
+bool appl::TagFileList::GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, etk::Color<> &fg, etk::Color<> &bg) {
 	if (raw >= 0 && raw < m_list.Size() && NULL != m_list[raw]) {
 		if (0==colomn) {
 			myTextToWrite = etk::UString(m_list[raw]->fileLine);
@@ -64,7 +63,7 @@ bool appl::TagFileList::GetElement(int32_t colomn, int32_t raw, etk::UString &my
 	} else {
 		myTextToWrite = "ERROR";
 	}
-	fg = draw::color::black;
+	fg = etk::color::black;
 	if (raw % 2) {
 		if (colomn%2==0) {
 			bg = 0xFFFFFF00;

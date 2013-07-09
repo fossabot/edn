@@ -17,8 +17,8 @@
 
 Colorize::Colorize(const etk::UString &_newColorName) :
 	m_colorName(_newColorName),
-	m_colorFG(draw::color::black),
-	m_colorBG(draw::color::none),
+	m_colorFG(etk::color::black),
+	m_colorBG(etk::color::none),
 	m_italic(false),
 	m_bold(false)
 {

@@ -32,10 +32,10 @@ void CodeView::Init(void)
 	
 	m_lineNumberList.Clear();
 	
-	m_textColorFg = draw::color::black;
+	m_textColorFg = etk::color::black;
 	
-	m_textColorBg = draw::color::black;
-	m_textColorBg.a = 0x40;
+	m_textColorBg = etk::color::black;
+	m_textColorBg.SetA(0x40);
 	SetCanHaveFocus(true);
 	RegisterMultiCast(ednMsgBufferId);
 	RegisterMultiCast(ednMsgGuiCopy);

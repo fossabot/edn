@@ -8,7 +8,7 @@
 
 #ifndef __COLORIZE_H__
 #define __COLORIZE_H__
-#include <draw/Color.h>
+#include <etk/Color.h>
 #include <etk/UString.h>
 
 class Colorize {
@@ -24,17 +24,17 @@ class Colorize {
 		const etk::UString& GetName(void) { return m_colorName; };
 		
 	private:
-		draw::Color m_colorFG;
+		etk::Color<> m_colorFG;
 	public:
-		void SetFgColor(const etk::UString& _myColor) { m_colorFG=_myColor.c_str(); };
-		const draw::Color& GetFG(void) { return m_colorFG; };
-		bool HaveFg(void) { return m_colorFG.a!=0; };
+		void SetFgColor(const etk::UString& _myColor) { m_colorFG=_myColor; };
+		const etk::Color<>& GetFG(void) { return m_colorFG; };
+		bool HaveFg(void) { return m_colorFG.a()!=0; };
 	private:
-		draw::Color m_colorBG;
+		etk::Color<> m_colorBG;
 	public:
-		void SetBgColor(const etk::UString& _myColor) { m_colorBG=_myColor.c_str(); };
-		const draw::Color& GetBG(void) { return m_colorBG; };
-		bool HaveBg(void) { return m_colorBG.a!=0; };
+		void SetBgColor(const etk::UString& _myColor) { m_colorBG=_myColor; };
+		const etk::Color<>& GetBG(void) { return m_colorBG; };
+		bool HaveBg(void) { return m_colorBG.a()!=0; };
 	private:
 		bool m_italic;
 	public:
