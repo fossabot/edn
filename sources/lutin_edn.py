@@ -64,6 +64,7 @@ def Create(target):
 	myModule.CopyFolder('../data/languages/glsl/*.xml','languages/glsl/')
 	myModule.CopyFolder('../data/languages/in/*.xml','languages/in/')
 	myModule.CopyFolder('../data/languages/java/*.xml','languages/java/')
+	myModule.CopyFolder('../data/languages/json/*.xml','languages/json/')
 	myModule.CopyFolder('../data/languages/lua/*.xml','languages/lua/')
 	myModule.CopyFolder('../data/languages/makefile/*.xml','languages/makefile/')
 	myModule.CopyFolder('../data/languages/matlab/*.xml','languages/matlab/')
