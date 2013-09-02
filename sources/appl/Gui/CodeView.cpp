@@ -17,7 +17,7 @@
 #include <SearchData.h>
 
 #include <ewol/widget/WidgetManager.h>
-#include <ewol/eObject/EObject.h>
+#include <ewol/renderer/EObject.h>
 
 
 #undef __class__
@@ -231,7 +231,7 @@ bool CodeView::OnEventInput(const ewol::EventInput& _event)
 	limitedPos.setValue(etk_avg(1, limitedPos.x(), m_size.x()-1),
 	                    etk_avg(1, limitedPos.y(), m_size.y()-1));
 	if (true == WidgetScrooled::OnEventInput(_event)) {
-		ewol::widgetManager::FocusKeep(this);
+		KeepFocus();
 		// nothing to do ... done on upper widget ...
 		return true;
 	}
@@ -245,7 +245,7 @@ bool CodeView::OnEventInput(const ewol::EventInput& _event)
 		if (ewol::keyEvent::typeMouse == _event.GetType()) {
 			if (ewol::keyEvent::statusDown == _event.GetStatus()) {
 				m_buttunOneSelected = true;
-				ewol::widgetManager::FocusKeep(this);
+				KeepFocus();
 				// TODO : Set something good
 				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 				if (NULL!=tmpBuffer) {
@@ -263,7 +263,7 @@ bool CodeView::OnEventInput(const ewol::EventInput& _event)
 		}
 		if (ewol::keyEvent::statusSingle == _event.GetStatus()) {
 			if (ewol::keyEvent::typeMouse == _event.GetType()) {
-				ewol::widgetManager::FocusKeep(this);
+				KeepFocus();
 				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
 				if (NULL!=tmpBuffer) {
 					tmpBuffer->MouseEvent(limitedPos);
@@ -312,7 +312,7 @@ bool CodeView::OnEventInput(const ewol::EventInput& _event)
 				tmpBuffer->MouseEvent(limitedPos);
 			}
 			ewol::clipBoard::Request(ewol::clipBoard::clipboardSelection);
-			ewol::widgetManager::FocusKeep(this);
+			KeepFocus();
 		}
 	}
 	return true;
@@ -456,14 +456,14 @@ void CodeView::OnGetFocus(void)
 	/*
 	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, m_bufferID);
 	*/
-	ewol::Keyboard(true);
+	ShowKeyboard();
 	APPL_INFO("Focus - In");
 }
 
 
 void CodeView::OnLostFocus(void)
 {
-	ewol::Keyboard(false);
+	HideKeyboard();
 	APPL_INFO("Focus - out");
 }
 

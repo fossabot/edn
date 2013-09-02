@@ -16,6 +16,7 @@
 #include <ewol/widget/WidgetManager.h>
 #include <ewol/widget/Widget.h>
 #include <ewol/clipBoard.h>
+#include <ewol/renderer/eContext.h>
 
 
 #undef __class__
@@ -92,7 +93,7 @@ void BufferText::SetModify(bool status)
 		m_fileModify = status;
 		// TODO : Remove from here
 		etk::UString data = "Modify";
-		ewol::EObjectMessageMultiCast::AnonymousSend(ednMsgBufferState, data);
+		ewol::GetContext().GetEObjectManager().MultiCast().AnonymousSend(ednMsgBufferState, data);
 	}
 }
 

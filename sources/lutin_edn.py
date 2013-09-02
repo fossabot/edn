@@ -8,8 +8,8 @@ def Create(target):
 	myModule = lutinModule.module(__file__, 'edn', 'PACKAGE')
 	# add the file to compile:
 	myModule.AddSrcFile([
-			'appl/ctags/readtags.cpp',
-			'appl/ctags/CTagsManager.cpp'])
+		'appl/ctags/readtags.cpp',
+		'appl/ctags/CTagsManager.cpp'])
 	
 	myModule.AddSrcFile([
 		'appl/Debug.cpp',
@@ -100,8 +100,8 @@ def Create(target):
 	myModule.pkgSet("DESCRIPTION", "Text editor for sources code with ctags management")
 	myModule.pkgSet("NAME", "Editeur de N'ours")
 	
-	myModule.pkgAddRight("WRITE_EXTERNAL_STORAGE")
-	myModule.pkgAddRight("SET_ORIENTATION")
+	myModule.pkgAdd("RIGHT", "WRITE_EXTERNAL_STORAGE")
+	myModule.pkgAdd("RIGHT", "SET_ORIENTATION")
 	
 	# add the currrent module at the 
 	return myModule

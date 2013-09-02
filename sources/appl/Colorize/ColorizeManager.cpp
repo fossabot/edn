@@ -10,8 +10,8 @@
 #include <appl/global.h>
 #include <ColorizeManager.h>
 #include <exml/exml.h>
-#include <ewol/eObject/EObject.h>
-#include <ewol/eObject/EObjectManager.h>
+#include <ewol/renderer/EObject.h>
+#include <ewol/renderer/EObjectManager.h>
 #include <etk/os/FSNode.h>
 
 #define PFX	"ColorizeManager "

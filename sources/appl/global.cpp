@@ -9,10 +9,11 @@
 #include <appl/global.h>
 #include <ColorizeManager.h>
 #include <appl/globalMsg.h>
-#include <ewol/eObject/EObject.h>
-#include <ewol/renderer/ResourceManager.h>
+#include <ewol/renderer/EObject.h>
+#include <ewol/renderer/eContext.h>
+#include <ewol/resources/ResourceManager.h>
 #include <etk/os/FSNode.h>
-#include <ewol/UserConfig.h>
+//#include <ewol/UserConfig.h>
 
 #undef __class__
 #define __class__	"globals"
@@ -118,7 +119,7 @@ static myParamGlobal& l_obj(void)
 
 void globals::Init(void)
 {
-	ewol::userConfig::AddUserConfig(&l_obj());
+	//ewol::userConfig::AddUserConfig(&l_obj());
 }
 
 void globals::UnInit(void)
@@ -305,7 +306,8 @@ void globals::ParameterGlobalsGui::OnReceiveMessage(const ewol::EMessage& _msg)
 			etk::theme::SetName("GUI", "default");;
 		}
 		// Reload shaders and graphic system ...
-		ewol::resource::ReLoadResources();
+		ewol::GetContext().GetResourcesManager().ReLoadResources();
+		ewol::GetContext().ForceRedrawAll();
 	}
 	
 }

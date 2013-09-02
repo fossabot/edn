@@ -28,7 +28,8 @@
 #include <ewol/widget/meta/FileChooser.h>
 #include <ewol/widget/meta/Parameter.h>
 #include <ewol/widget/WidgetManager.h>
-#include <ewol/eObject/EObject.h>
+#include <ewol/renderer/EObject.h>
+#include <ewol/renderer/eContext.h>
 #include <date/date.h>
 
 namespace appl 
@@ -355,11 +356,11 @@ void MainWindows::OnReceiveMessage(const ewol::EMessage& _msg)
 			}
 			etk::UString windowsTitle = "edn - ";
 			windowsTitle += directName;
-			ewol::SetTitle(windowsTitle);
+			SetTitle(windowsTitle);
 			return;
 		} else {
 			m_widgetLabelFileName->SetLabel("");
-			ewol::SetTitle("edn");
+			SetTitle("edn");
 		}
 		return;
 		// TODO : Set the Title ....
@@ -382,8 +383,8 @@ void MainWindows::OnReceiveMessage(const ewol::EMessage& _msg)
 			tmpWidget->MenuAdd("About",           "", tmpSubWidget);
 		}
 	} else if (_msg.GetMessage() == ednMsgGuiReloadShader) {
-		ewol::resource::ReLoadResources();
-		ewol::ForceRedrawAll();
+		ewol::GetContext().GetResourcesManager().ReLoadResources();
+		ewol::GetContext().ForceRedrawAll();
 	} else if (_msg.GetMessage() == ednMsgGuiExit) {
 		// TODO ...
 	}

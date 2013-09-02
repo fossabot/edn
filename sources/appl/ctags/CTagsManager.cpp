@@ -10,7 +10,8 @@
 #include <appl/global.h>
 #include <CTagsManager.h>
 #include <BufferManager.h>
-#include <ewol/eObject/EObject.h>
+#include <ewol/renderer/EObject.h>
+#include <ewol/renderer/eContext.h>
 #include <ewol/widget/meta/FileChooser.h>
 #include <appl/Gui/TagFileSelection.h>
 
@@ -134,7 +135,7 @@ void CTagsManager::OnReceiveMessage(const ewol::EMessage& _msg)
 			} else {
 				tmpWidget->SetTitle("Open Exuberant Ctags File");
 				tmpWidget->SetValidateLabel("Open");
-				ewol::WindowsPopUpAdd(tmpWidget);
+				ewol::GetContext().GetWindows()->PopUpWidgetPush(tmpWidget);
 				tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpCtagsLoadFile);
 			}
 		} else if (_msg.GetData() == "ReLoad") {
@@ -241,7 +242,7 @@ void CTagsManager::JumpTo(void)
 						PrintTag(&entry);
 						tmpWidget->AddCtagsNewItem(myfile.GetName(), lineID);
 					} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
-					ewol::WindowsPopUpAdd(tmpWidget);
+					ewol::GetContext().GetWindows()->PopUpWidgetPush(tmpWidget);
 					tmpWidget->RegisterOnEvent(this, applEventctagsSelection);
 				}
 			} else {

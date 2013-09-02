@@ -14,6 +14,7 @@
 #include <BufferManager.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/List.h>
+#include <ewol/widget/Windows.h>
 
 namespace appl
 {
