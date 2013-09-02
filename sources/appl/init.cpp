@@ -30,9 +30,6 @@
 //#include <ewol/UserConfig.h>
 #include <ewol/renderer/eContext.h>
 
-MainWindows * basicWindows = NULL;
-
-
 /**
  * @brief Main of the program (This can be set in every case, but it is not used in Andoid...).
  * @param std IO
@@ -93,7 +90,7 @@ bool APP_Init(ewol::eContext& _context)
 	cCurrentPath[FILENAME_MAX - 1] = '\0';
 	//APPL_INFO("The current working directory is " << cCurrentPath);
 	
-	basicWindows = new MainWindows();
+	MainWindows* basicWindows = new MainWindows();
 	
 	if (NULL == basicWindows) {
 		APPL_ERROR("Can not allocate the basic windows");
@@ -132,10 +129,13 @@ bool APP_Init(ewol::eContext& _context)
 void APP_UnInit(ewol::eContext& _context)
 {
 	APPL_INFO("==> Un-Init "PROJECT_NAME" (START)");
+	ewol::Windows* tmpWindows = _context.GetWindows();
 	
-	if (NULL != basicWindows) {
-		delete(basicWindows);
-		basicWindows = NULL;
+	_context.SetWindows(NULL);
+	
+	if (NULL != tmpWindows) {
+		delete(tmpWindows);
+		tmpWindows = NULL;
 	}
 	
 	cTagsManager::UnInit();
