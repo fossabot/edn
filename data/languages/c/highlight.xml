@@ -24,7 +24,7 @@
 		</rule>
 		<rule name="code Review">
 			<color>SYNTAX_ERROR</color>
-			<start>/\*[ \t]*@review</start>
+			<start>/\*[ \t]*TODO :</start>
 			<end>\*/</end>
 		</rule>
 		<rule name="my comment multiline">
