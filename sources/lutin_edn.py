@@ -21,6 +21,7 @@ def Create(target):
 	myModule.AddSrcFile([
 		'appl/Gui/BufferView.cpp',
 		'appl/Gui/CodeView.cpp',
+		'appl/Gui/TextViewer.cpp',
 		'appl/Gui/MainWindows.cpp',
 		'appl/Gui/Search.cpp',
 		'appl/Gui/SearchData.cpp',
@@ -29,6 +30,7 @@ def Create(target):
 	
 	# All needed for the buffer management :
 	myModule.AddSrcFile([
+		'appl/Buffer/Buffer.cpp',
 		'appl/Buffer/EdnBuf/EdnBuf.cpp',
 		'appl/Buffer/EdnBuf/EdnBuf_HighLight.cpp',
 		'appl/Buffer/EdnBuf/EdnBuf_History.cpp',

@@ -49,12 +49,12 @@ typedef struct{
 class BufferText
 {
 	private:
-		bool                  m_fileModify;              //!< 
+		bool m_fileModify;
 		// naming
-		etk::FSNode           m_fileName;                //!< filename of the curent buffer
-		bool                  m_haveName;                //!< to know if the file have a name or NOT
-		bool                  m_updatePositionRequested; //!< if a position xhange in the windows ...
-		vec2  m_maximumSize;             //!< current maxSize of the buffer
+		etk::FSNode m_fileName; //!< filename of the curent buffer
+		bool m_haveName; //!< to know if the file have a name or NOT
+		bool m_updatePositionRequested; //!< if a position xhange in the windows ...
+		vec2 m_maximumSize; //!< current maxSize of the buffer
 	public:
 		void SetModify(bool status);
 		virtual vec2 GetBorderSize(void);
@@ -64,10 +64,7 @@ class BufferText
 		vec2 GetMaxSize(void) { return m_maximumSize; };
 		bool IsModify(void);
 	public:
-		etk::FSNode       GetFileName(void)
-		{
-			return m_fileName;
-		};
+		etk::FSNode GetFileName(void) { return m_fileName; };
 		
 		void SetFileName(etk::FSNode &newName)
 		{

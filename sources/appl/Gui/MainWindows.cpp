@@ -12,6 +12,7 @@
 #include <MainWindows.h>
 #include <CodeView.h>
 #include <BufferView.h>
+#include <TextViewer.h>
 #include <Search.h>
 
 #include <ewol/widget/Button.h>
@@ -120,6 +121,7 @@ MainWindows::MainWindows(void)
 	widget::Sizer * mySizerHori = NULL;
 	//ewol::Button * myButton = NULL;
 	CodeView * myCodeView = NULL;
+	appl::TextViewer * myTextView = NULL;
 	BufferView * myBufferView = NULL;
 	widget::Menu * myMenu = NULL;
 	
@@ -137,11 +139,16 @@ MainWindows::MainWindows(void)
 			mySizerHori->SubWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
+				myTextView = new appl::TextViewer("FreeMono;DejaVuSansMono", 11);
+				myTextView->SetExpand(bvec2(true,true));
+				myTextView->SetFill(bvec2(true,true));
+				mySizerVert2->SubWidgetAdd(myTextView);
+				/*
 				myCodeView = new CodeView("FreeMono;DejaVuSansMono", 11);
 				myCodeView->SetExpand(bvec2(true,true));
 				myCodeView->SetFill(bvec2(true,true));
 				mySizerVert2->SubWidgetAdd(myCodeView);
-				
+				*/
 				// search area : 
 				Search * mySearch = new Search();
 				mySizerVert2->SubWidgetAdd(mySearch);
