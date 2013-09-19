@@ -34,7 +34,8 @@ static const char *ControlCodeTable[32] = {
  */
 EdnBuf::EdnBuf(void)
 {
-	m_tabDist = 4;
+	// TODO : Set it configurable !!!
+	m_tabDist = 8;
 	m_useTabs = true;
 
 	// Current selection
@@ -501,7 +502,7 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, char outUTF8[MAX_E
 	}
 	
 	// Otherwise, just return the character
-	if (false ==m_isUtf8) {
+	if (m_isUtf8 == false) {
 		convertIsoToUtf8(m_charsetType, c, outUTF8);
 		pos++;
 	} else {
@@ -514,10 +515,10 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, char outUTF8[MAX_E
 		bool baseValid;
 		unicode::Utf8_SizeElement(tmpString, 6 , size, baseValid);
 		currentChar = 0; // TODO : Set UNICODE char ...
-		if (true == baseValid) {
+		if (baseValid == true) {
 			char *tmp = outUTF8;
-			for (int32_t k=0; k<size; k++) {
-				*tmp++ = tmpString[k];
+			for (int32_t kkk=0; kkk<size; kkk++) {
+				*tmp++ = tmpString[kkk];
 			}
 			*tmp = '\0';
 		} else {

@@ -405,8 +405,8 @@ int32_t BufferText::Display(ewol::Text& OOText,
 		if (currentChar!='\n') {
 			selectColor = myColor;
 			HLColor = m_EdnBuf.GetElementColorAtPosition(m_displayLocalSyntax, iii);
-			if (NULL != HLColor) {
-				if (NULL != HLColor->patern) {
+			if (HLColor != NULL) {
+				if (HLColor->patern != NULL) {
 					selectColor = HLColor->patern->GetColor();
 				}
 			}
@@ -419,12 +419,12 @@ int32_t BufferText::Display(ewol::Text& OOText,
 				OOText.SetColorBg(selectColor->GetBG() );
 			} else {
 				if(false == selectColor->HaveBg()) {
-					if(    (uniChar_t)' ' == currentChar
-					    && true == globals::IsSetDisplaySpaceChar() )
+					if(    currentChar == ' '
+					    && globals::IsSetDisplaySpaceChar() == true )
 					{
 						OOText.SetColorBg(myColorSpace);
-					} else if(    '\t' == currentChar
-					           && true == globals::IsSetDisplayTabChar() )
+					} else if(    currentChar == '\t'
+					           && globals::IsSetDisplayTabChar() == true )
 					{
 						OOText.SetColorBg(myColorTab);
 					}
@@ -484,6 +484,13 @@ int32_t BufferText::Display(ewol::Text& OOText,
 		OOText.SetColorBg(ColorizeManager::Get(COLOR_CODE_CURSOR));
 		OOText.PrintCursor(ewol::GetCurrentSpecialKeyStatus().IsSetInsert());
 	}
+	// Display the 80 colomn limit line :
+	
+	OOText.SetClippingMode(false);
+	OOText.GetDrawing().SetThickness(2);
+	OOText.GetDrawing().SetColor(etk::Color<>(200,200,0,255));
+	OOText.GetDrawing().SetPos(vec2((float)((nbColoneForLineNumber+80)*tmpLetterSize.x()), 0.0f));
+	OOText.GetDrawing().LineRel(vec2(0.0f, 2500.0f));
 	// set the maximum size for the display ...
 	SetMaximumSize(maxSize);
 	int64_t stopTime2 = ewol::GetTime();
