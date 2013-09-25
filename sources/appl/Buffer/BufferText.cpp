@@ -169,12 +169,10 @@ BufferText::BufferText(etk::FSNode &fileName)
 	APPL_INFO("Add Data from file(" << GetFileName() << ")");
 	etk::FSNode myFile(fileName);
 	if (true == myFile.Exist()) {
-		if (false == myFile.FileOpenRead()) {
+		if (false == m_EdnBuf.DumpFrom(myFile)) {
 			APPL_WARNING("File can not be open in read mode : " << myFile);
 			SetModify(true);
 		} else {
-			m_EdnBuf.DumpFrom(myFile);
-			myFile.FileClose();
 			SetModify(false);
 		}
 	} else {
@@ -198,11 +196,9 @@ void BufferText::Save(void)
 {
 	APPL_INFO("Save File : \"" <<  GetFileName() << "\"" );
 	etk::FSNode myFile(GetFileName());
-	if (false == myFile.FileOpenWrite()) {
+	if (false == m_EdnBuf.DumpIn(myFile)) {
 		APPL_ERROR("Can not open in writing the specify file");
 	} else {
-		m_EdnBuf.DumpIn(myFile);
-		myFile.FileClose();
 		SetModify(false);
 	}
 }
