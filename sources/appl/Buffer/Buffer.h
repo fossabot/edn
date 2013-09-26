@@ -15,13 +15,14 @@
 #include <ewol/ewol.h>
 #include <etk/Buffer.h>
 #include <ewol/renderer/EObject.h>
+#include <ewol/widget/Widget.h>
 
 namespace appl
 {
 	class Buffer : public ewol::EObject
 	{
 		public:
-			Buffer(void) { };
+			Buffer(void);
 			~Buffer(void) { };
 		private:
 			etk::UString m_fileName; //!< name of the file (with his path)
@@ -42,6 +43,9 @@ namespace appl
 			ejson::Value* m_property;
 			appl::Selection m_selection;
 			*/
+		public:
+			esize_t m_cursorPos; //!< cursor position.
+			bool OnEventEntry(const ewol::EventEntry& _event);
 	};
 };
 

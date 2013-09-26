@@ -26,10 +26,9 @@ namespace appl
 			TextViewer(const etk::UString& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);
 		private:
-			appl::Buffer* m_buffer;
-			// drawing elements :
-			ewol::Text m_displayText;
-			ewol::Drawing m_displayDrawing;
+			appl::Buffer* m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
+			ewol::Text m_displayText; //!< Text display properties.
+			ewol::Drawing m_displayDrawing; //!< Other diaplay requested.
 		public:
 			void SetFontSize(int32_t _size);
 			void SetFontName(const etk::UString& _fontName);
@@ -47,6 +46,24 @@ namespace appl
 			virtual void OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
 			virtual void OnGetFocus(void);
 			virtual void OnLostFocus(void);
+		private:
+			/**
+			 * @brief Get the next element in the buffer.
+			 * @param[in] _pos Position in the buffer
+			 * @param[out] _value Unicode value read in the buffer
+			 * @param[in] _charset Charset used to parse the current buffer
+			 * @return number ofelement read in the buffer (to increment the position)
+			 */
+			esize_t Get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const;
+			/**
+			 * @brief Expand the specify char to have a user frendly display for special char and tabs
+			 * @param[in] _indent Curent indentation in the line
+			 * @param[in] _value Current value to transform
+			 * @param[out] _out String that represent the curent value to display
+			 */
+			void Expand(esize_t& _indent, const etk::UniChar& _value, etk::UString& _out) const;
+		private:
+			bool m_insertMode; //!< the insert mode is enable
 	};
 };
 
