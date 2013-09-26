@@ -46,6 +46,14 @@ namespace appl
 		public:
 			esize_t m_cursorPos; //!< cursor position.
 			bool OnEventEntry(const ewol::EventEntry& _event);
+			/**
+			 * @brief Get the next element in the buffer.
+			 * @param[in] _pos Position in the buffer
+			 * @param[out] _value Unicode value read in the buffer
+			 * @param[in] _charset Charset used to parse the current buffer
+			 * @return number ofelement read in the buffer (to increment the position)
+			 */
+			esize_t Get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const;
 	};
 };
 

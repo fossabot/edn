@@ -48,14 +48,6 @@ namespace appl
 			virtual void OnLostFocus(void);
 		private:
 			/**
-			 * @brief Get the next element in the buffer.
-			 * @param[in] _pos Position in the buffer
-			 * @param[out] _value Unicode value read in the buffer
-			 * @param[in] _charset Charset used to parse the current buffer
-			 * @return number ofelement read in the buffer (to increment the position)
-			 */
-			esize_t Get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const;
-			/**
 			 * @brief Expand the specify char to have a user frendly display for special char and tabs
 			 * @param[in] _indent Curent indentation in the line
 			 * @param[in] _value Current value to transform

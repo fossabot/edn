@@ -87,26 +87,6 @@ void appl::TextViewer::OnDraw(void)
 	WidgetScrooled::OnDraw();
 }
 
-
-esize_t appl::TextViewer::Get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const
-{
-	_value = '\0';
-	if (_charset == unicode::EDN_CHARSET_UTF8) {
-		char tmpVal[5];
-		tmpVal[0] = m_buffer->GetData()[_pos];
-		tmpVal[1] = m_buffer->GetData()[_pos+1];
-		tmpVal[2] = m_buffer->GetData()[_pos+2];
-		tmpVal[3] = m_buffer->GetData()[_pos+3];
-		tmpVal[4] = '\0';
-		// transform ...
-		int32_t nbElement = _value.SetUtf8(tmpVal);
-		return nbElement;
-	}
-	// TODO :: need to trancode iso ==> UNICODE ...
-	_value.Set(m_buffer->GetData()[_pos]);
-	return 1;
-}
-
 static const char *ControlCodeTable[32] = {
 	 "NUL", "soh", "stx", "etx", "eot", "enq", "ack", "bel", "bs",  "ht", "nl",  "vt",  "np", "cr", "so", "si",
 	 "dle", "dc1", "dc2", "dc3", "dc4", "nak", "syn", "etb", "can", "em", "sub", "esc", "fs", "gs", "rs", "us"};
@@ -217,7 +197,7 @@ void appl::TextViewer::OnRegenerateDisplay(void)
 			// need to display the cursor :
 			tmpCursorPosition = positionCurentDisplay;
 		}
-		bufferElementSize = Get(iii, currentValue, unicode::EDN_CHARSET_UTF8);
+		bufferElementSize = m_buffer->Get(iii, currentValue, unicode::EDN_CHARSET_UTF8);
 		//APPL_DEBUG(" element size : " << iii << " : " << bufferElementSize);
 		if (currentValue == etk::UniChar::Return) {
 			countNbLine += 1;
@@ -274,7 +254,7 @@ bool appl::TextViewer::OnEventInput(const ewol::EventInput& _event)
 	if (m_buffer != NULL) {
 		
 	}
-	GetFocus();
+	KeepFocus();
 	return true;
 }
 

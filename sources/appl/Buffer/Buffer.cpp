@@ -46,9 +46,11 @@ bool appl::Buffer::OnEventEntry(const ewol::EventEntry& _event)
 		}
 		if (_event.GetChar() == etk::UniChar::Tabulation) {
 			m_data.Insert(m_cursorPos, '\t');
+			m_cursorPos += 1;
 		} else if (_event.GetChar() == etk::UniChar::Return) {
 			m_data.Insert(m_cursorPos, '\n');
-		} else if (_event.GetChar() == etk::UniChar::Backspace ) {
+			m_cursorPos += 1;
+		} else if (_event.GetChar() == etk::UniChar::Suppress ) {
 			APPL_INFO("keyEvent : <suppr>	pos=" << m_cursorPos);
 		} else if (_event.GetChar() == etk::UniChar::Delete) {
 			APPL_INFO("keyEvent : <del>	pos=" << m_cursorPos);
@@ -61,6 +63,7 @@ bool appl::Buffer::OnEventEntry(const ewol::EventEntry& _event)
 				values.PushBack(output[iii]);
 			}
 			m_data.Insert(m_cursorPos, values);
+			m_cursorPos += nbElement;
 		}
 		return true;
 	}
@@ -71,4 +74,24 @@ bool appl::Buffer::OnEventEntry(const ewol::EventEntry& _event)
 		return true;
 	}
 	return false;
+}
+
+
+esize_t appl::Buffer::Get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const
+{
+	_value = '\0';
+	if (_charset == unicode::EDN_CHARSET_UTF8) {
+		char tmpVal[5];
+		tmpVal[0] = m_data[_pos];
+		tmpVal[1] = m_data[_pos+1];
+		tmpVal[2] = m_data[_pos+2];
+		tmpVal[3] = m_data[_pos+3];
+		tmpVal[4] = '\0';
+		// transform ...
+		int32_t nbElement = _value.SetUtf8(tmpVal);
+		return nbElement;
+	}
+	// TODO :: need to trancode iso ==> UNICODE ...
+	_value.Set(m_data[_pos]);
+	return 1;
 }
