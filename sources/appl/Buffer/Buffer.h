@@ -53,7 +53,70 @@ namespace appl
 			 * @param[in] _charset Charset used to parse the current buffer
 			 * @return number ofelement read in the buffer (to increment the position)
 			 */
-			esize_t Get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const;
+			esize_t Get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
+			/**
+			 * @brief Get the previous element in the buffer.
+			 * @param[in] _pos Position in the buffer (last element of the element)
+			 * @param[out] _value Unicode value read in the buffer
+			 * @param[in] _charset Charset used to parse the current buffer
+			 * @return number of element read in the buffer (to increment the position)
+			 */
+			esize_t GetBack(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
+		private:
+			enum moveMode {
+				moveLetter,
+				moveWord,
+				moveEnd
+			}
+			/**
+			 * Move the cursor right in the line (no stop of a new line)
+			 * @param[in] _mode Moving mode char, word, ...
+			 */
+			void MoveCursorRight(moveMode _mode = moveLetter);
+			/**
+			 * Move the cursor left in the line (no stop of a new line)
+			 * @param[in] _mode Moving mode char, word, ...
+			 */
+			void MoveCursorLeft(moveMode _mode = moveLetter);
+			/**
+			 * @brief Move the cursor at an other position upper.
+			 * @param[in] _nbLine number of up line that might be moved
+			 */
+			void MoveCursorUp(esize_t _nbLine);
+			/**
+			 * @brief Move the cursor at an other position under.
+			 * @param[in] _nbLine number of down line that might be moved
+			 */
+			void MoveCursorDown(esize_t _nbLine);
+			/**
+			 * @brief Get the start of a line with the position in the buffer.
+			 * @param[in] _pos position in the buffer.
+			 * @return The position in the buffer of the start of the line.
+			 */
+			esize_t StartLine(esize_t _pos);
+			/**
+			 * @brief Get the end of a line with the position in the buffer.
+			 * @param[in] _pos position in the buffer.
+			 * @return The position in the buffer of the end of the line.
+			 */
+			esize_t EndLine(esize_t _pos);
+			/**
+			 * @brief Search a character in the buffer.
+			 * @param[in] _pos Position to start the search of the element.
+			 * @param[in] _search Character to search.
+			 * @param[out] _result Research position.
+			 * @return true if pos if fined.
+			 */
+			bool SearchForward(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
+			/**
+			 * @brief Search a character in the buffer in back mode.
+			 * @param[in] _pos Position to start the search of the element.
+			 * @param[in] _search Character to search.
+			 * @param[out] _result Research position.
+			 * @return true if pos if fined.
+			 */
+			bool SearchBack(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
+
 	};
 };
 

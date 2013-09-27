@@ -240,6 +240,7 @@ bool appl::TextViewer::OnEventEntry(const ewol::EventEntry& _event)
 	if (m_buffer == NULL) {
 		return false;
 	}
+	// just forward event ==> manage directly in the buffer
 	if (m_buffer->OnEventEntry(_event) == true) {
 		MarkToRedraw();
 		return true;
