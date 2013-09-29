@@ -87,59 +87,6 @@ void appl::TextViewer::OnDraw(void)
 	WidgetScrooled::OnDraw();
 }
 
-static const char *ControlCodeTable[32] = {
-	 "NUL", "soh", "stx", "etx", "eot", "enq", "ack", "bel", "bs",  "ht", "nl",  "vt",  "np", "cr", "so", "si",
-	 "dle", "dc1", "dc2", "dc3", "dc4", "nak", "syn", "etb", "can", "em", "sub", "esc", "fs", "gs", "rs", "us"};
-
-void appl::TextViewer::Expand(esize_t& _indent, const etk::UniChar& _value, etk::UString& _out) const
-{
-	_out.Clear();
-	int32_t tabDist = 4;
-	if (_value == etk::UniChar::Tabulation) {
-		int32_t nSpaces = tabDist - (_indent % tabDist);
-		for (int32_t iii=0; iii<nSpaces; iii++) {
-			_out.Append(etk::UniChar::Space);
-		}
-		return;
-	}
-	// Convert ASCII control codes to readable character sequences
-	if (_value == etk::UniChar::Null) {
-		_out.Append(etk::UniChar('<'));
-		_out.Append(etk::UniChar('n'));
-		_out.Append(etk::UniChar('u'));
-		_out.Append(etk::UniChar('l'));
-		_out.Append(etk::UniChar('>'));
-		return;
-	}
-	if (_value == etk::UniChar::Return) {
-		// nothing to display...
-		return;
-	}
-	if (_value.Get() <= 31) {
-		_out.Append(etk::UniChar('<'));
-		const char * tmp = ControlCodeTable[_value.Get()];
-		while (*tmp!='\0') {
-			_out.Append(etk::UniChar(*tmp));
-			tmp++;
-		}
-		_out.Append(etk::UniChar('>'));
-		return;
-	}
-	if (_value == etk::UniChar::Delete) {
-		_out.Append(etk::UniChar('<'));
-		_out.Append(etk::UniChar('d'));
-		_out.Append(etk::UniChar('e'));
-		_out.Append(etk::UniChar('l'));
-		_out.Append(etk::UniChar('>'));
-		return;
-	}
-	// nothing to do ...
-	_out.Append(_value);
-	//APPL_DEBUG("plop : " << _out);
-}
-
-
-
 void appl::TextViewer::OnRegenerateDisplay(void)
 {
 	if (false == NeedRedraw()) {
@@ -197,7 +144,7 @@ void appl::TextViewer::OnRegenerateDisplay(void)
 			// need to display the cursor :
 			tmpCursorPosition = positionCurentDisplay;
 		}
-		bufferElementSize = m_buffer->Get(iii, currentValue, unicode::EDN_CHARSET_UTF8);
+		bufferElementSize = m_buffer->Get(iii, currentValue);
 		//APPL_DEBUG(" element size : " << iii << " : " << bufferElementSize);
 		if (currentValue == etk::UniChar::Return) {
 			countNbLine += 1;
@@ -210,12 +157,13 @@ void appl::TextViewer::OnRegenerateDisplay(void)
 			m_displayText.SetPos(positionCurentDisplay);
 			continue;
 		}
-		appl::TextViewer::Expand(countColomn, currentValue, stringToDisplay);
+		m_buffer->Expand(countColomn, currentValue, stringToDisplay);
+		//APPL_DEBUG("display : '" << currentValue << "' ==> '" << stringToDisplay << "'");
 		//m_displayText.SetPos(positionCurentDisplay);
 		for (esize_t kkk=0; kkk<stringToDisplay.Size(); ++kkk) {
 			m_displayText.Print(stringToDisplay[kkk]);
 		}
-		positionCurentDisplay.setX(positionCurentDisplay.x()+tmpLetterSize.x()*(float)stringToDisplay.Size());
+		positionCurentDisplay = m_displayText.GetPos();
 		countColomn += stringToDisplay.Size();
 		
 		if (bufferElementSize ==0) {
@@ -224,7 +172,7 @@ void appl::TextViewer::OnRegenerateDisplay(void)
 	}
 	if (tmpCursorPosition.z()!=-1) {
 		// display the cursor:
-		APPL_DEBUG("display cursor at position : " << tmpCursorPosition);
+		//APPL_DEBUG("display cursor at position : " << tmpCursorPosition);
 		m_displayText.SetPos(tmpCursorPosition);
 		m_displayText.SetColor(etk::Color<>(0xFF0000FF));
 		m_displayText.SetColorBg(etk::Color<>(0xFF0000FF));

@@ -45,6 +45,7 @@ namespace appl
 			*/
 		public:
 			esize_t m_cursorPos; //!< cursor position.
+			int32_t m_cursorPreferredCol; //!< position of the cursor when up and down is done.
 			bool OnEventEntry(const ewol::EventEntry& _event);
 			/**
 			 * @brief Get the next element in the buffer.
@@ -62,12 +63,19 @@ namespace appl
 			 * @return number of element read in the buffer (to increment the position)
 			 */
 			esize_t GetBack(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
+			/**
+			 * @brief Expand the specify char to have a user frendly display for special char and tabs
+			 * @param[in] _indent Curent indentation in the line
+			 * @param[in] _value Current value to transform
+			 * @param[out] _out String that represent the curent value to display
+			 */
+			void Expand(esize_t& _indent, const etk::UniChar& _value, etk::UString& _out) const;
 		private:
 			enum moveMode {
 				moveLetter,
 				moveWord,
 				moveEnd
-			}
+			};
 			/**
 			 * Move the cursor right in the line (no stop of a new line)
 			 * @param[in] _mode Moving mode char, word, ...
@@ -107,7 +115,7 @@ namespace appl
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
-			bool SearchForward(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
+			bool Search(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
 			/**
 			 * @brief Search a character in the buffer in back mode.
 			 * @param[in] _pos Position to start the search of the element.
@@ -116,6 +124,36 @@ namespace appl
 			 * @return true if pos if fined.
 			 */
 			bool SearchBack(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
+			/**
+			 * @brief Count the number of displayed characters between buffer position
+			 * Displayed characters are the characters shown on the screen to represent characters in the 
+			 * buffer, where tabs and control characters are expanded
+			 * @param[in] _posStart start position
+			 * @param[in] _posEnd End position
+			 * @return the ID in the buffer of the requested char
+			 */
+			int32_t CountDispChars(esize_t _posStart, esize_t _posEnd);
+			/**
+			 * @brief Return the position of the nth diplaye char
+			 * @param[in] _posStart Position of the start
+			 * @param[in] _nChars search in the next nChars elements
+			 * @return position of the char i the buffer
+			 */
+			esize_t CountForwardDispChars(esize_t _posStart, int32_t _nChars);
+			/**
+			 * @brief Find the first character of the line "nLines" forward
+			 * @param[in,out] _startPos Start position.
+			 * @param[in,out] _nLines Number of line to count.
+			 * @return position of the starting the line.
+			 */
+			esize_t CountForwardNLines(esize_t _startPos, int32_t _nLines);
+			/**
+			 * @brief Find the first character of the line "nLines" backwards
+			 * @param[in,out] _startPos Start position to count (this caracter is not counted)
+			 * @param[in,out] _nLines Number of line to count (if ==0 means find the beginning of the line)
+			 * @return position of the starting the line
+			 */
+			esize_t CountBackwardNLines(esize_t _startPos, int32_t _nLines);
 
 	};
 };

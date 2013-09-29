@@ -139,7 +139,7 @@ MainWindows::MainWindows(void)
 			mySizerHori->SubWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
-				myTextView = new appl::TextViewer("FreeMono;DejaVuSansMono", 11);
+				myTextView = new appl::TextViewer("FreeSerif;FreeMono;DejaVuSansMono", 11);
 				myTextView->SetExpand(bvec2(true,true));
 				myTextView->SetFill(bvec2(true,true));
 				mySizerVert2->SubWidgetAdd(myTextView);

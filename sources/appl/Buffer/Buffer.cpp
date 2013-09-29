@@ -11,7 +11,8 @@
 #include <appl/Debug.h>
 
 appl::Buffer::Buffer(void) :
-	m_cursorPos(3)
+	m_cursorPos(0),
+	m_cursorPreferredCol(-1)
 {
 	
 }
@@ -40,6 +41,7 @@ void appl::Buffer::SetFileName(const etk::UString& _name)
 
 void appl::Buffer::MoveCursorRight(appl::Buffer::moveMode _mode)
 {
+	m_cursorPreferredCol = -1;
 	etk::UniChar value;
 	esize_t nbElement;
 	switch (_mode) {
@@ -62,6 +64,7 @@ void appl::Buffer::MoveCursorRight(appl::Buffer::moveMode _mode)
 
 void appl::Buffer::MoveCursorLeft(appl::Buffer::moveMode _mode)
 {
+	m_cursorPreferredCol = -1;
 	etk::UniChar value;
 	esize_t nbElement;
 	switch (_mode) {
@@ -83,68 +86,54 @@ void appl::Buffer::MoveCursorLeft(appl::Buffer::moveMode _mode)
 
 void appl::Buffer::MoveCursorUp(esize_t _nbLine)
 {
-	/*
 	// Find the position of the start of the line.
-	esize_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
+	esize_t lineStartPos = StartLine(m_cursorPos);
 	// check if we can go up ...
 	if (lineStartPos == 0) {
 		return;
 	}
 	// Decide what column to move to, if there's a preferred column use that
-	int32_t column = m_cursorPreferredCol;
 	if (m_cursorPreferredCol < 0) {
-		column = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
+		m_cursorPreferredCol = CountDispChars(lineStartPos, m_cursorPos);
 	}
+	EWOL_DEBUG("ploop : " << m_cursorPreferredCol);
 	// Get the previous line
-	esize_t prevLineStartPos = m_EdnBuf.CountBackwardNLines(lineStartPos, _nbLine);
+	esize_t prevLineStartPos = CountBackwardNLines(lineStartPos, _nbLine);
 	//APPL_INFO("Move Line UP result : prevLineStartPos=" << prevLineStartPos);
 	// Get the display char position
-	esize_t newPos = m_EdnBuf.CountForwardDispChars(prevLineStartPos, column);
+	esize_t newPos = CountForwardDispChars(prevLineStartPos, m_cursorPreferredCol);
 	//APPL_INFO("Move to colomn : column=" << column << " newPos=" << newPos);
-	// move the cursor
-	SetInsertPosition(newPos);
-	// if a preferred column wasn't aleady established, establish it
-	if (m_cursorPreferredCol < 0) {
-		m_cursorPreferredCol = column;
-	}
-	return;
-	*/
+	//SetInsertPosition(newPos);
+	m_cursorPos = newPos;
 }
 
 void appl::Buffer::MoveCursorDown(esize_t _nbLine)
 {
-	/*
 	// check if we are not at the end of Buffer
-	if (m_cursorPos == m_EdnBuf.Size() ) {
+	if (m_cursorPos == m_data.Size() ) {
 		return;
 	}
 	// Find the position of the start of the line.
-	esize_t lineStartPos = m_EdnBuf.StartOfLine(m_cursorPos);
+	esize_t lineStartPos = StartLine(m_cursorPos);
 	
-	int32_t column = m_cursorPreferredCol;
 	if (m_cursorPreferredCol < 0) {
-		column = m_EdnBuf.CountDispChars(lineStartPos, m_cursorPos);
+		m_cursorPreferredCol = CountDispChars(lineStartPos, m_cursorPos);
 	}
+	EWOL_DEBUG("ploop : " << m_cursorPreferredCol);
 	// get the next line :
-	esize_t nextLineStartPos = m_EdnBuf.CountForwardNLines(lineStartPos, _nbLine);
+	esize_t nextLineStartPos = CountForwardNLines(lineStartPos, _nbLine);
 	//APPL_INFO("Move Line DOWN result : nextLineStartPos=" << nextLineStartPos);
 	// Get the display char position
-	esize_t newPos = m_EdnBuf.CountForwardDispChars(nextLineStartPos, column);
+	esize_t newPos = CountForwardDispChars(nextLineStartPos, m_cursorPreferredCol);
 	//APPL_INFO("Move to colomn : column=" << column << " newPos=" << newPos);
-	
-	SetInsertPosition(newPos);
-	// if a preferred column wasn't aleady established, establish it
-	if (m_cursorPreferredCol < 0) {
-		m_cursorPreferredCol = column;
-	}
-	return;
-	*/
+	//SetInsertPosition(newPos);
+	m_cursorPos = newPos;
 }
 
 esize_t appl::Buffer::StartLine(esize_t _pos)
 {
 	esize_t startPos;
-	if (false == SearchBackward(pos, etk::UniChar::Return, &startPos)) {
+	if (false == SearchBack(_pos, etk::UniChar::Return, startPos)) {
 		return 0;
 	}
 	return startPos + 1;
@@ -153,13 +142,13 @@ esize_t appl::Buffer::StartLine(esize_t _pos)
 esize_t appl::Buffer::EndLine(esize_t _pos)
 {
 	esize_t endPos;
-	if (false == SearchForward(pos, etk::UniChar::Return, &endPos)) {
+	if (false == Search(_pos, etk::UniChar::Return, endPos)) {
 		endPos = m_data.Size();
 	}
 	return endPos;
 }
 
-bool appl::Buffer::SearchForward(esize_t _pos, const etk::UniChar& _search, esize_t& _result)
+bool appl::Buffer::Search(esize_t _pos, const etk::UniChar& _search, esize_t& _result)
 {
 	// move in the string
 	esize_t nbElementBuffer = 0;
@@ -169,6 +158,9 @@ bool appl::Buffer::SearchForward(esize_t _pos, const etk::UniChar& _search, esiz
 		if (value == _search) {
 			_result = iii;
 			return true;
+		}
+		if (nbElementBuffer<=0) {
+			nbElementBuffer = 1;
 		}
 	}
 	_result = m_data.Size();
@@ -186,6 +178,9 @@ bool appl::Buffer::SearchBack(esize_t _pos, const etk::UniChar& _search, esize_t
 			_result = iii-nbElementBuffer;
 			return true;
 		}
+		if (nbElementBuffer<=0) {
+			nbElementBuffer = 1;
+		}
 	}
 	_result = 0;
 	return false;
@@ -194,7 +189,7 @@ bool appl::Buffer::SearchBack(esize_t _pos, const etk::UniChar& _search, esize_t
 
 bool appl::Buffer::OnEventEntry(const ewol::EventEntry& _event) // TODO : , vec2 _displaySize)
 {
-	APPL_DEBUG(" event : " << _event);
+	//APPL_DEBUG(" event : " << _event);
 	if (_event.GetType() == ewol::keyEvent::keyboardChar) {
 		//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
 		if (_event.GetStatus() != ewol::keyEvent::statusDown) {
@@ -331,5 +326,155 @@ esize_t appl::Buffer::GetBack(esize_t _pos, etk::UniChar& _value, unicode::chars
 	
 }
 
+static const char *ControlCodeTable[32] = {
+	 "NUL", "soh", "stx", "etx", "eot", "enq", "ack", "bel", "bs",  "ht", "nl",  "vt",  "np", "cr", "so", "si",
+	 "dle", "dc1", "dc2", "dc3", "dc4", "nak", "syn", "etb", "can", "em", "sub", "esc", "fs", "gs", "rs", "us"};
 
+void appl::Buffer::Expand(esize_t& _indent, const etk::UniChar& _value, etk::UString& _out) const
+{
+	_out.Clear();
+	int32_t tabDist = 4;
+	if (_value == etk::UniChar::Tabulation) {
+		int32_t nSpaces = tabDist - (_indent % tabDist);
+		for (int32_t iii=0; iii<nSpaces; iii++) {
+			_out.Append(etk::UniChar::Space);
+		}
+		return;
+	}
+	// Convert ASCII control codes to readable character sequences
+	if (_value == etk::UniChar::Null) {
+		_out.Append(etk::UniChar('<'));
+		_out.Append(etk::UniChar('n'));
+		_out.Append(etk::UniChar('u'));
+		_out.Append(etk::UniChar('l'));
+		_out.Append(etk::UniChar('>'));
+		return;
+	}
+	if (_value == etk::UniChar::Return) {
+		// nothing to display...
+		return;
+	}
+	if (_value.Get() <= 31) {
+		_out.Append(etk::UniChar('<'));
+		const char * tmp = ControlCodeTable[_value.Get()];
+		while (*tmp!='\0') {
+			_out.Append(etk::UniChar(*tmp));
+			tmp++;
+		}
+		_out.Append(etk::UniChar('>'));
+		return;
+	}
+	if (_value == etk::UniChar::Delete) {
+		_out.Append(etk::UniChar('<'));
+		_out.Append(etk::UniChar('d'));
+		_out.Append(etk::UniChar('e'));
+		_out.Append(etk::UniChar('l'));
+		_out.Append(etk::UniChar('>'));
+		return;
+	}
+	// nothing to do ...
+	_out.Append(_value);
+	//APPL_DEBUG("plop : " << _out);
+}
 
+int32_t appl::Buffer::CountDispChars(esize_t _posStart, esize_t _posEnd)
+{
+	int32_t charCount = 0;
+	etk::UString expanded;
+	esize_t bufferElementSize;
+	etk::UniChar value;
+	//APPL_DEBUG("_posStart="<< _posStart << " _posEnd=" << _posEnd);
+	for(int32_t iii=_posStart; iii<_posEnd && iii<m_data.Size() ; iii+=bufferElementSize ) {
+		// get the element value:
+		bufferElementSize = Get(iii, value);
+		//APPL_DEBUG(" get : " << value << " size=" << bufferElementSize);
+		Expand(charCount, value, expanded);
+		charCount += expanded.Size();
+		if (bufferElementSize<=0) {
+			bufferElementSize = 1;
+		}
+	}
+	//APPL_DEBUG(" result=" << charCount);
+	return charCount;
+}
+
+esize_t appl::Buffer::CountForwardDispChars(esize_t _posStart, int32_t _nChars)
+{
+	int32_t charCount = 0;
+	etk::UString expanded;
+	esize_t bufferElementSize;
+	etk::UniChar value;
+	int32_t iii;
+	for(iii = _posStart; charCount<_nChars && iii<m_data.Size() ; iii+=bufferElementSize ) {
+		// get the element value:
+		bufferElementSize = Get(iii, value);
+		if (value == etk::UniChar::Return) {
+			return iii;
+		}
+		Expand(charCount, value, expanded);
+		charCount += expanded.Size();
+		if (bufferElementSize<=0) {
+			bufferElementSize = 1;
+		}
+	}
+	//APPL_DEBUG(" result=" << charCount);
+	return iii;
+}
+
+esize_t appl::Buffer::CountForwardNLines(esize_t _startPos, int32_t _nLines)
+{
+	if (_nLines <= 0) {
+		return _startPos;
+	} else if (_startPos > m_data.Size() ) {
+		return m_data.Size();
+	}
+	esize_t bufferElementSize;
+	etk::UniChar value;
+	int32_t lineCount = 0;
+	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
+	for(int32_t iii = _startPos+1; iii<m_data.Size() ; iii+=bufferElementSize ) {
+		// get the element value:
+		bufferElementSize = Get(iii, value);
+		if (value == etk::UniChar::Return) {
+			lineCount++;
+			if (lineCount == _nLines) {
+				//APPL_INFO("   ==> (1) at position=" << myPosIt.Position()+1 );
+				return iii+1;
+			}
+		}
+		if (bufferElementSize<=0) {
+			bufferElementSize = 1;
+		}
+	}
+	//APPL_INFO("   ==> (2) at position=" << myPosIt.Position() );
+	return m_data.Size();
+}
+
+esize_t appl::Buffer::CountBackwardNLines(esize_t _startPos, int32_t _nLines)
+{
+	if (_startPos <= 0) {
+		return 0;
+	} else if (_startPos > m_data.Size() ) {
+		_startPos = m_data.Size();
+	}
+	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
+	esize_t bufferElementSize;
+	etk::UniChar value;
+	int32_t lineCount = 0;
+	for(int32_t iii = _startPos-1; iii>=0 ; iii-=bufferElementSize ) {
+		// get the element value:
+		bufferElementSize = GetBack(iii, value);
+		if (value == etk::UniChar::Return) {
+			lineCount++;
+			if (lineCount >= _nLines) {
+				//APPL_INFO("   ==> (1) at position=" << myPosIt.Position()+1 );
+				return iii+1;
+			}
+		}
+		if (bufferElementSize<=0) {
+			bufferElementSize = 1;
+		}
+	}
+	//APPL_INFO("   ==> (2) at position=0");
+	return 0;
+}

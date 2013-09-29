@@ -47,14 +47,6 @@ namespace appl
 			virtual void OnGetFocus(void);
 			virtual void OnLostFocus(void);
 		private:
-			/**
-			 * @brief Expand the specify char to have a user frendly display for special char and tabs
-			 * @param[in] _indent Curent indentation in the line
-			 * @param[in] _value Current value to transform
-			 * @param[out] _out String that represent the curent value to display
-			 */
-			void Expand(esize_t& _indent, const etk::UniChar& _value, etk::UString& _out) const;
-		private:
 			bool m_insertMode; //!< the insert mode is enable
 	};
 };
