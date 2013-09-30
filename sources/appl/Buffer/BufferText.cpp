@@ -486,7 +486,7 @@ int32_t BufferText::Display(ewol::Text& OOText,
 		OOText.SetPos(tmpCursorPosition);
 		OOText.SetColor(ColorizeManager::Get(COLOR_CODE_CURSOR));
 		OOText.SetColorBg(ColorizeManager::Get(COLOR_CODE_CURSOR));
-		OOText.PrintCursor(ewol::GetCurrentSpecialKeyStatus().IsSetInsert());
+		OOText.PrintCursor(false);
 	}
 	// Display the 80 colomn limit line :
 	
@@ -559,7 +559,7 @@ int32_t BufferText::GetMousePosition(vec2 pos)
 // TODO : Simplify selection ....
 void BufferText::MouseEvent(vec2 pos)
 {
-	if (ewol::GetCurrentSpecialKeyStatus().IsSetShift() ) {
+	if (false) { //ewol::GetCurrentSpecialKeyStatus().IsSetShift() ) {
 		MouseSelectFromCursorTo(pos);
 	} else {
 		// Get the caracter mouse position
@@ -713,11 +713,11 @@ void BufferText::SetInsertPosition(int32_t newPos, bool insertChar)
 	}
 	
 	if(    false == haveSelectionActive
-	    && true  == ewol::GetCurrentSpecialKeyStatus().IsSetShift() )
+	    && true  == false ) //ewol::GetCurrentSpecialKeyStatus().IsSetShift() )
 	{
 		// new selection
 		m_EdnBuf.Select(rememberCursorPos, m_cursorPos);
-	} else if(    true == ewol::GetCurrentSpecialKeyStatus().IsSetShift()
+	} else if(    true == false //ewol::GetCurrentSpecialKeyStatus().IsSetShift()
 	           && true == haveSelectionActive)
 	{
 		// update selection
@@ -946,7 +946,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 				m_EdnBuf.ReplaceSelected(tmpVect);
 				SetInsertPosition(SelectionStart+tmpVect.Size(), true);
 			} else {
-				if (true == ewol::GetCurrentSpecialKeyStatus().IsSetShift() ) {
+				if (true == false ) { //ewol::GetCurrentSpecialKeyStatus().IsSetShift() ) {
 					m_cursorPos = m_EdnBuf.UnIndent();
 				} else {
 					m_cursorPos = m_EdnBuf.Indent();
@@ -955,7 +955,7 @@ void BufferText::AddChar(uniChar_t unicodeData)
 		}
 	} else if (unicodeData == '\n') {
 		etk::Vector<int8_t> tmpVect;
-		if (true == ewol::GetCurrentSpecialKeyStatus().IsSetShift()) {
+		if (true == false ) { //ewol::GetCurrentSpecialKeyStatus().IsSetShift()) {
 			tmpVect.PushBack('\r');
 		} else {
 			tmpVect.PushBack('\n');

@@ -220,7 +220,13 @@ bool appl::Buffer::OnEventEntry(const ewol::EventEntry& _event) // TODO : , vec2
 			// normal adding char ...
 			char output[5];
 			int32_t nbElement = _event.GetChar().GetUtf8(output);
-			m_data.Insert(m_cursorPos, (int8_t*)output, nbElement);
+			if (_event.GetSpecialKey().IsSetInsert() == false) {
+				m_data.Insert(m_cursorPos, (int8_t*)output, nbElement);
+			} else {
+				etk::UniChar value;
+				esize_t nbElementRemove = Get(m_cursorPos, value);
+				m_data.Replace(m_cursorPos, nbElementRemove, (int8_t*)output, nbElement);
+			}
 			m_cursorPos += nbElement;
 		}
 		return true;
