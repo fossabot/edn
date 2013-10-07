@@ -21,29 +21,29 @@ class classBufferManager: public ewol::EObject
 		// Constructeur
 		classBufferManager(void);
 		~classBufferManager(void);
-		const char * const GetObjectType(void)
+		const char * const getObjectType(void)
 		{
 			return "ApplBufferManager";
 		}
 	public:
-		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
+		virtual void onReceiveMessage(const ewol::EMessage& _msg);
 	private:
 		// return the ID of the buffer allocated
 		// create a buffer with no element
 		int32_t     Create(void);
 		// open curent filename
-		int32_t     Open(etk::FSNode &myFile);
-		bool        Remove(int32_t BufferID);
+		int32_t     open(etk::FSNode &myFile);
+		bool        remove(int32_t BufferID);
 	public:
-		int32_t     GetSelected(void) { return m_idSelected;};
-		//void        SetSelected(int32_t id) {m_idSelected = id;};
-		BufferText* Get(int32_t BufferID);
+		int32_t     getSelected(void) { return m_idSelected;};
+		//void        setSelected(int32_t id) {m_idSelected = id;};
+		BufferText* get(int32_t BufferID);
 		bool        Exist(int32_t BufferID);
 		bool        Exist(etk::FSNode &myFile);
-		int32_t     GetId(etk::FSNode &myFile);
-		// return the number of buffer (open in the past) if 5 buffer open and 4 close ==> return 5
-		uint32_t    Size(void);
-		uint32_t    SizeOpen(void);
+		int32_t     getId(etk::FSNode &myFile);
+		// return the number of buffer (open in the past) if 5 buffer open and 4 close  == > return 5
+		uint32_t    size(void);
+		uint32_t    sizeOpen(void);
 		int32_t     WitchBuffer(int32_t iEmeElement);
 		
 
@@ -51,7 +51,7 @@ class classBufferManager: public ewol::EObject
 		
 		etk::Vector<BufferText*> listBuffer;  //!< element List of the char Elements
 		
-		void        RemoveAll(void);          //!< remove all buffer
+		void        removeAll(void);          //!< remove all buffer
 		int32_t     m_idSelected;
 };
 
@@ -71,25 +71,25 @@ classBufferManager::classBufferManager(void)
 classBufferManager::~classBufferManager(void)
 {
 	//clean All Buffer
-	APPL_INFO("~classBufferManager::RemoveAll();");
-	RemoveAll();
+	APPL_INFO("~classBufferManager::removeAll();");
+	removeAll();
 	// clear The list of Buffer
-	APPL_INFO("~classBufferManager::listBuffer.Clear();");
-	listBuffer.Clear();
+	APPL_INFO("~classBufferManager::listBuffer.clear();");
+	listBuffer.clear();
 }
 
 
-void classBufferManager::OnReceiveMessage(const ewol::EMessage& _msg)
+void classBufferManager::onReceiveMessage(const ewol::EMessage& _msg)
 {
-	ewol::EObject::OnReceiveMessage(_msg);
+	ewol::EObject::onReceiveMessage(_msg);
 	
-	if (_msg.GetMessage() == ednMsgBufferId) {
+	if (_msg.getMessage() == ednMsgBufferId) {
 		// select a new buffer ID :
-		if (_msg.GetData() == "") {
+		if (_msg.getData() == "") {
 			APPL_ERROR("Request select buffer ID = \"\" ");
 		} else {
 			int32_t newID = -1;
-			sscanf(_msg.GetData().c_str(), "%d", &newID);
+			sscanf(_msg.getData().c_str(), "%d", &newID);
 			if(true == Exist(newID)) {
 				m_idSelected = newID;
 			} else {
@@ -97,19 +97,19 @@ void classBufferManager::OnReceiveMessage(const ewol::EMessage& _msg)
 				APPL_ERROR("Request a non existant ID : " << newID << " reset to -1...");
 			}
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiNew) {
+	} else if (_msg.getMessage() == ednMsgGuiNew) {
 		int32_t newOne = Create();
 		if (-1 != newOne) {
 			m_idSelected = newOne;
 			SendMultiCast(ednMsgBufferId, m_idSelected);
 			SendMultiCast(ednMsgBufferListChange);
 		}
-	} else if (_msg.GetMessage() == ednMsgOpenFile) {
-		if (_msg.GetData() != "" ) {
-			etk::FSNode myFile(_msg.GetData());
-			if (myFile.GetNodeType() == etk::FSN_FILE) {
-				APPL_DEBUG("request open file = \"" << _msg.GetData() << "\" ?= \"" << myFile << "\"");
-				int32_t newOne = Open(myFile);
+	} else if (_msg.getMessage() == ednMsgOpenFile) {
+		if (_msg.getData() != "" ) {
+			etk::FSNode myFile(_msg.getData());
+			if (myFile.getNodeType() == etk::FSN_FILE) {
+				APPL_DEBUG("request open file = \"" << _msg.getData() << "\" ?= \"" << myFile << "\"");
+				int32_t newOne = open(myFile);
 				if (-1 != newOne) {
 					m_idSelected = newOne;
 					SendMultiCast(ednMsgBufferId, m_idSelected);
@@ -119,57 +119,57 @@ void classBufferManager::OnReceiveMessage(const ewol::EMessage& _msg)
 					APPL_ERROR("Can not open the file : \"" << myFile << "\"");
 				}
 			} else {
-				APPL_ERROR("Request to open an Unknox element file : " << myFile << " type:" << myFile.GetNodeType());
+				APPL_ERROR("Request to open an Unknox element file : " << myFile << " type:" << myFile.getNodeType());
 			}
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiSave) {
-		if (_msg.GetData() == "") {
+	} else if (_msg.getMessage() == ednMsgGuiSave) {
+		if (_msg.getData() == "") {
 			APPL_ERROR("Null data for close file ... ");
 		} else {
-			if (_msg.GetData() == "current") {
+			if (_msg.getData() == "current") {
 				// Check buffer existence
 				if(true == Exist(m_idSelected)) {
-					// If no name ==> request a Gui display ...
-					if (Get(m_idSelected)->HaveName() == false) {
+					// If no name  == > request a Gui display ...
+					if (get(m_idSelected)->haveName() == false) {
 						SendMultiCast(ednMsgGuiSaveAs, "current");
 					} else {
-						Get(m_idSelected)->Save();
+						get(m_idSelected)->Save();
 					}
 				}
 			} else {
 				int32_t newId;
-				sscanf(_msg.GetData().c_str(), "%d", &newId);
+				sscanf(_msg.getData().c_str(), "%d", &newId);
 				if (false == Exist(newId)) {
 					APPL_ERROR("Request a save As with a non existant ID=" << newId);
 				} else {
-					// If no name ==> request a Gui display ...
-					if (Get(newId)->HaveName() == false) {
+					// If no name  == > request a Gui display ...
+					if (get(newId)->haveName() == false) {
 						SendMultiCast(ednMsgGuiSaveAs, newId);
 					} else {
-						Get(m_idSelected)->Save();
+						get(m_idSelected)->Save();
 					}
 				}
 				SendMultiCast(ednMsgBufferState, "saved");
 			}
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiClose) {
-		if (_msg.GetData() == "") {
+	} else if (_msg.getMessage() == ednMsgGuiClose) {
+		if (_msg.getData() == "") {
 			APPL_ERROR("Null data for close file ... ");
 		} else {
-			if (_msg.GetData() == "All") {
+			if (_msg.getData() == "All") {
 				
 			} else {
 				int32_t closeID = -1;
-				if (_msg.GetData() == "current") {
+				if (_msg.getData() == "current") {
 					closeID = m_idSelected;
 					APPL_DEBUG("Close specific buffer ID" << closeID);
 				} else {
 					// close specific buffer ...
-					sscanf(_msg.GetData().c_str(), "%d", &closeID);
+					sscanf(_msg.getData().c_str(), "%d", &closeID);
 					APPL_DEBUG("Close specific buffer ID="<< closeID);
 				}
 				if(true == Exist(closeID)) {
-					// Get the new display buffer 
+					// get the new display buffer 
 					if (m_idSelected == closeID) {
 						// Try previous buffer
 						int32_t destBuffer = -1;
@@ -181,7 +181,7 @@ void classBufferManager::OnReceiveMessage(const ewol::EMessage& _msg)
 						}
 						// try next buffer
 						if (-1 == destBuffer) {
-							for(int32_t ii=closeID+1; ii < listBuffer.Size(); ii++) {
+							for(int32_t ii=closeID+1; ii < listBuffer.size(); ii++) {
 								if (true == Exist(ii) ) {
 									destBuffer = ii;
 									break;
@@ -192,25 +192,25 @@ void classBufferManager::OnReceiveMessage(const ewol::EMessage& _msg)
 						m_idSelected = destBuffer;
 						SendMultiCast(ednMsgBufferId, destBuffer);
 					}
-					// Remove requested buffer
-					Remove(closeID);
+					// remove requested buffer
+					remove(closeID);
 					SendMultiCast(ednMsgBufferListChange);
 				} else {
-					APPL_ERROR("Request Close of a non existant ID : " << closeID);
+					APPL_ERROR("Request close of a non existant ID : " << closeID);
 				}
 			}
 		}
-	} else if (_msg.GetMessage() == ednMsgCodeViewSelectedId) {
+	} else if (_msg.getMessage() == ednMsgCodeViewSelectedId) {
 		//Change the selected buffer
-		if (_msg.GetData() == "") {
+		if (_msg.getData() == "") {
 			APPL_ERROR("Null data for changing buffer ID file ... ");
 		} else {
 			int32_t newId;
-			sscanf(_msg.GetData().c_str(), "%d", &newId);
+			sscanf(_msg.getData().c_str(), "%d", &newId);
 			if (true == Exist(newId)) {
 				m_idSelected = newId;
 			} else {
-				APPL_ERROR("code biew request the selection of an non -existant buffer ==> reset to -1");
+				APPL_ERROR("code biew request the selection of an non -existant buffer  == > reset to -1");
 				m_idSelected = -1;
 			}
 			SendMultiCast(ednMsgBufferId, m_idSelected);
@@ -222,11 +222,11 @@ void classBufferManager::OnReceiveMessage(const ewol::EMessage& _msg)
 	{
 			// Check buffer existence
 			if(true == Exist(dataID)) {
-				// If no name ==> request a Gui display ...
-				if (Get(dataID)->HaveName() == false) {
+				// If no name  == > request a Gui display ...
+				if (get(dataID)->haveName() == false) {
 					SendMessage(APPL_MSG__GUI_SHOW_SAVE_AS, dataID);
 				} else {
-					Get(dataID)->Save();
+					get(dataID)->Save();
 				}
 			}
 			break;
@@ -241,18 +241,18 @@ void classBufferManager::OnReceiveMessage(const ewol::EMessage& _msg)
 
 
 /**
- * @brief Remove all buffer opened
+ * @brief remove all buffer opened
  *
  * @param[in,out] ---
  *
  * @return ---
  *
  */
-void classBufferManager::RemoveAll(void)
+void classBufferManager::removeAll(void)
 {
 	int32_t i;
-	for (i=0; i<listBuffer.Size(); i++) {
-		Remove(i);
+	for (i=0; i<listBuffer.size(); i++) {
+		remove(i);
 	}
 	SendMultiCast(ednMsgGuiClose, "All");
 }
@@ -271,9 +271,9 @@ int32_t	classBufferManager::Create(void)
 {
 	// allocate a new Buffer
 	BufferText *myBuffer = new BufferText();
-	// Add at the list of element
-	listBuffer.PushBack(myBuffer);
-	int32_t basicID = listBuffer.Size() - 1;
+	// add at the list of element
+	listBuffer.pushBack(myBuffer);
+	int32_t basicID = listBuffer.size() - 1;
 	return basicID;
 }
 
@@ -288,30 +288,30 @@ int32_t	classBufferManager::Create(void)
  * @todo : check if this file is not curently open and return the old ID
  *
  */
-int32_t classBufferManager::Open(etk::FSNode &myFile)
+int32_t classBufferManager::open(etk::FSNode &myFile)
 {
 	if (false == Exist(myFile)) {
 		// allocate a new Buffer
 		BufferText *myBuffer = new BufferText(myFile);
-		// Add at the list of element
-		listBuffer.PushBack(myBuffer);
-		return listBuffer.Size() - 1;
+		// add at the list of element
+		listBuffer.pushBack(myBuffer);
+		return listBuffer.size() - 1;
 	} else {
-		// the buffer already existed ==> we open it ...
-		return GetId(myFile);
+		// the buffer already existed  == > we open it ...
+		return getId(myFile);
 	}
 }
 
 
 
-BufferText * classBufferManager::Get(int32_t BufferID)
+BufferText * classBufferManager::get(int32_t BufferID)
 {
 	// possible special case : -1;
 	if (-1 >= BufferID) {
 		return NULL;
 	}
 	// check if the Buffer existed
-	if (BufferID < listBuffer.Size()) {
+	if (BufferID < listBuffer.size()) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[BufferID]) {
 			return listBuffer[BufferID];
@@ -319,7 +319,7 @@ BufferText * classBufferManager::Get(int32_t BufferID)
 			APPL_ERROR("non existing Buffer " << BufferID);
 		}
 	} else {
-		APPL_ERROR("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.Size());
+		APPL_ERROR("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.size());
 	}
 	return NULL;
 }
@@ -331,7 +331,7 @@ bool classBufferManager::Exist(int32_t BufferID)
 		return false;
 	}
 	// check if the Buffer existed
-	if (BufferID < listBuffer.Size()) {
+	if (BufferID < listBuffer.size()) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[BufferID]) {
 			return true;
@@ -343,21 +343,21 @@ bool classBufferManager::Exist(int32_t BufferID)
 
 bool classBufferManager::Exist(etk::FSNode &myFile )
 {
-	if (-1 == GetId(myFile)) {
+	if (-1 == getId(myFile)) {
 		return false;
 	}
 	return true;
 }
 
 
-int32_t classBufferManager::GetId(etk::FSNode &myFile)
+int32_t classBufferManager::getId(etk::FSNode &myFile)
 {
 	int32_t iii;
 	// check if the Buffer existed
-	for (iii=0; iii < listBuffer.Size(); iii++) {
+	for (iii=0; iii < listBuffer.size(); iii++) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[iii]) {
-			if ( listBuffer[iii]->GetFileName() == myFile) {
+			if ( listBuffer[iii]->getFileName() == myFile) {
 				return iii;
 			}
 		}
@@ -366,18 +366,18 @@ int32_t classBufferManager::GetId(etk::FSNode &myFile)
 }
 
 
-// return the number of buffer (open in the past) if 5 buffer open and 4 close ==> return 5
-uint32_t classBufferManager::Size(void)
+// return the number of buffer (open in the past) if 5 buffer open and 4 close  == > return 5
+uint32_t classBufferManager::size(void)
 {
-	return listBuffer.Size();
+	return listBuffer.size();
 }
 
 // nb of opens file Now ...
-uint32_t classBufferManager::SizeOpen(void)
+uint32_t classBufferManager::sizeOpen(void)
 {
 	uint32_t jjj = 0;
 	// check if the Buffer existed
-	for (int32_t iii=0; iii<listBuffer.Size(); iii++) {
+	for (int32_t iii=0; iii<listBuffer.size(); iii++) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[iii]) {
 			jjj++;
@@ -394,18 +394,18 @@ uint32_t classBufferManager::SizeOpen(void)
  * @return ---
  *
  */
-bool classBufferManager::Remove(int32_t BufferID)
+bool classBufferManager::remove(int32_t BufferID)
 {
 	if (-1 >= BufferID) {
 		return false;
 	}
 	// check if the Buffer existed
-	if (BufferID < listBuffer.Size()) {
+	if (BufferID < listBuffer.size()) {
 		// check if the buffer already existed
 		if (NULL != listBuffer[BufferID]) {
 			// TODO : Check if it saved...
 			/*
-			if (false == IsSaved(BufferID) ) {
+			if (false == isSaved(BufferID) ) {
 				APPL_INFO("Buffer " << BufferID << " : Not Saved", BufferID);
 			}
 			*/
@@ -413,7 +413,7 @@ bool classBufferManager::Remove(int32_t BufferID)
 			delete( listBuffer[BufferID] );
 			listBuffer[BufferID] = NULL;
 			/*
-			ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferListChange);
+			ewol::widgetMessageMultiCast::Send(getWidgetId(), ednMsgBufferListChange);
 			*/
 			return true;
 		} else {
@@ -421,7 +421,7 @@ bool classBufferManager::Remove(int32_t BufferID)
 			return false;
 		}
 	} else {
-		APPL_INFO("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.Size());
+		APPL_INFO("call an non existing Buffer number too hight : " << BufferID << " > " << listBuffer.size());
 		return false;
 	}
 }
@@ -437,7 +437,7 @@ bool classBufferManager::Remove(int32_t BufferID)
 int32_t classBufferManager::WitchBuffer(int32_t iEmeElement)
 {
 	int32_t i;
-	for (i=0; i<listBuffer.Size(); i++) {
+	for (i=0; i<listBuffer.size(); i++) {
 		if (NULL != listBuffer[i]) {
 			iEmeElement--;
 			// find the element : 
@@ -456,10 +456,10 @@ int32_t classBufferManager::WitchBuffer(int32_t iEmeElement)
 
 static classBufferManager * localManager = NULL;
 
-void BufferManager::Init(void)
+void BufferManager::init(void)
 {
 	if (NULL != localManager) {
-		EWOL_ERROR("classBufferManager ==> already exist, just unlink the previous ...");
+		EWOL_ERROR("classBufferManager  == > already exist, just unlink the previous ...");
 		localManager = NULL;
 	}
 	localManager = new classBufferManager();
@@ -472,35 +472,35 @@ void BufferManager::Init(void)
 void BufferManager::UnInit(void)
 {
 	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
+		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return;
 	}
 	delete(localManager);
 	localManager = NULL;
 }
 
-int32_t BufferManager::GetSelected(void)
+int32_t BufferManager::getSelected(void)
 {
 	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
+		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return -1;
 	}
-	return localManager->GetSelected();
+	return localManager->getSelected();
 }
 
-BufferText * BufferManager::Get(int32_t BufferID)
+BufferText * BufferManager::get(int32_t BufferID)
 {
 	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
+		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return NULL;
 	}
-	return localManager->Get(BufferID);
+	return localManager->get(BufferID);
 }
 
 bool BufferManager::Exist(int32_t BufferID)
 {
 	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
+		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return false;
 	}
 	return localManager->Exist(BufferID);
@@ -509,43 +509,43 @@ bool BufferManager::Exist(int32_t BufferID)
 bool BufferManager::Exist(etk::FSNode &myFile)
 {
 	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
+		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return false;
 	}
 	return localManager->Exist(myFile);
 }
 
-int32_t BufferManager::GetId(etk::FSNode &myFile)
+int32_t BufferManager::getId(etk::FSNode &myFile)
 {
 	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
+		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return -1;
 	}
-	return localManager->GetId(myFile);
+	return localManager->getId(myFile);
 }
 
-uint32_t BufferManager::Size(void)
+uint32_t BufferManager::size(void)
 {
 	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
+		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return 0;
 	}
-	return localManager->Size();
+	return localManager->size();
 }
 
-uint32_t BufferManager::SizeOpen(void)
+uint32_t BufferManager::sizeOpen(void)
 {
 	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
+		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return 0;
 	}
-	return localManager->SizeOpen();
+	return localManager->sizeOpen();
 }
 
 int32_t BufferManager::WitchBuffer(int32_t iEmeElement)
 {
 	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager ==> request UnInit, but does not exist ...");
+		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return -1;
 	}
 	return localManager->WitchBuffer(iEmeElement);

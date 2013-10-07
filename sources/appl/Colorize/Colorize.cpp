@@ -25,7 +25,7 @@ Colorize::Colorize(const etk::UString &_newColorName) :
 	APPL_VERBOSE("New(Colorise)");
 }
 
-void Colorize::SetItalic(bool _enable)
+void Colorize::setItalic(bool _enable)
 {
 	m_italic = _enable;
 	if (true == _enable) {
@@ -35,7 +35,7 @@ void Colorize::SetItalic(bool _enable)
 	}
 }
 
-void Colorize::SetBold(bool _enable)
+void Colorize::setBold(bool _enable)
 {
 	m_bold = _enable;
 	if (true == _enable) {

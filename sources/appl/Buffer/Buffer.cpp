@@ -17,7 +17,7 @@ appl::Buffer::Buffer(void) :
 	
 }
 
-bool appl::Buffer::LoadFile(const etk::UString& _name)
+bool appl::Buffer::loadFile(const etk::UString& _name)
 {
 	APPL_DEBUG("Load file : '" << _name << "'");
 	m_fileName = _name;
@@ -33,7 +33,7 @@ bool appl::Buffer::LoadFile(const etk::UString& _name)
 
 
 
-void appl::Buffer::SetFileName(const etk::UString& _name)
+void appl::Buffer::setFileName(const etk::UString& _name)
 {
 	// TODO : ...
 }
@@ -47,7 +47,7 @@ void appl::Buffer::MoveCursorRight(appl::Buffer::moveMode _mode)
 	switch (_mode) {
 		default:
 		case moveLetter:
-			nbElement = Get(m_cursorPos, value);
+			nbElement = get(m_cursorPos, value);
 			if (nbElement>0) {
 				m_cursorPos += nbElement;
 			}
@@ -70,7 +70,7 @@ void appl::Buffer::MoveCursorLeft(appl::Buffer::moveMode _mode)
 	switch (_mode) {
 		default:
 		case moveLetter:
-			nbElement = GetBack(m_cursorPos-1, value);
+			nbElement = getBack(m_cursorPos-1, value);
 			if (nbElement>0) {
 				m_cursorPos -= nbElement;
 			}
@@ -86,7 +86,7 @@ void appl::Buffer::MoveCursorLeft(appl::Buffer::moveMode _mode)
 
 void appl::Buffer::MoveCursorUp(esize_t _nbLine)
 {
-	// Find the position of the start of the line.
+	// find the position of the start of the line.
 	esize_t lineStartPos = StartLine(m_cursorPos);
 	// check if we can go up ...
 	if (lineStartPos == 0) {
@@ -97,10 +97,10 @@ void appl::Buffer::MoveCursorUp(esize_t _nbLine)
 		m_cursorPreferredCol = CountDispChars(lineStartPos, m_cursorPos);
 	}
 	EWOL_DEBUG("ploop : " << m_cursorPreferredCol);
-	// Get the previous line
+	// get the previous line
 	esize_t prevLineStartPos = CountBackwardNLines(lineStartPos, _nbLine);
-	//APPL_INFO("Move Line UP result : prevLineStartPos=" << prevLineStartPos);
-	// Get the display char position
+	//APPL_INFO("Move line UP result : prevLineStartPos=" << prevLineStartPos);
+	// get the display char position
 	esize_t newPos = CountForwardDispChars(prevLineStartPos, m_cursorPreferredCol);
 	//APPL_INFO("Move to colomn : column=" << column << " newPos=" << newPos);
 	//SetInsertPosition(newPos);
@@ -110,10 +110,10 @@ void appl::Buffer::MoveCursorUp(esize_t _nbLine)
 void appl::Buffer::MoveCursorDown(esize_t _nbLine)
 {
 	// check if we are not at the end of Buffer
-	if (m_cursorPos == m_data.Size() ) {
+	if (m_cursorPos == m_data.size() ) {
 		return;
 	}
-	// Find the position of the start of the line.
+	// find the position of the start of the line.
 	esize_t lineStartPos = StartLine(m_cursorPos);
 	
 	if (m_cursorPreferredCol < 0) {
@@ -122,8 +122,8 @@ void appl::Buffer::MoveCursorDown(esize_t _nbLine)
 	EWOL_DEBUG("ploop : " << m_cursorPreferredCol);
 	// get the next line :
 	esize_t nextLineStartPos = CountForwardNLines(lineStartPos, _nbLine);
-	//APPL_INFO("Move Line DOWN result : nextLineStartPos=" << nextLineStartPos);
-	// Get the display char position
+	//APPL_INFO("Move line DOWN result : nextLineStartPos=" << nextLineStartPos);
+	// get the display char position
 	esize_t newPos = CountForwardDispChars(nextLineStartPos, m_cursorPreferredCol);
 	//APPL_INFO("Move to colomn : column=" << column << " newPos=" << newPos);
 	//SetInsertPosition(newPos);
@@ -143,7 +143,7 @@ esize_t appl::Buffer::EndLine(esize_t _pos)
 {
 	esize_t endPos;
 	if (false == Search(_pos, etk::UniChar::Return, endPos)) {
-		endPos = m_data.Size();
+		endPos = m_data.size();
 	}
 	return endPos;
 }
@@ -153,17 +153,17 @@ bool appl::Buffer::Search(esize_t _pos, const etk::UniChar& _search, esize_t& _r
 	// move in the string
 	esize_t nbElementBuffer = 0;
 	etk::UniChar value;
-	for(esize_t iii=_pos ; iii<m_data.Size() ; iii+=nbElementBuffer ) {
-		nbElementBuffer = GetBack(iii, value);
+	for(esize_t iii=_pos ; iii<m_data.size() ; iii+=nbElementBuffer ) {
+		nbElementBuffer = getBack(iii, value);
 		if (value == _search) {
 			_result = iii;
 			return true;
 		}
-		if (nbElementBuffer<=0) {
+		if (nbElementBuffer <= 0) {
 			nbElementBuffer = 1;
 		}
 	}
-	_result = m_data.Size();
+	_result = m_data.size();
 	return false;
 }
 
@@ -172,13 +172,13 @@ bool appl::Buffer::SearchBack(esize_t _pos, const etk::UniChar& _search, esize_t
 	// move in the string
 	esize_t nbElementBuffer = 0;
 	etk::UniChar value;
-	for(esize_t iii=_pos-1 ; iii>=0 ; iii-=nbElementBuffer ) {
-		nbElementBuffer = GetBack(iii, value);
+	for(esize_t iii=_pos-1 ; iii >= 0 ; iii-=nbElementBuffer ) {
+		nbElementBuffer = getBack(iii, value);
 		if (value == _search) {
 			_result = iii-nbElementBuffer;
 			return true;
 		}
-		if (nbElementBuffer<=0) {
+		if (nbElementBuffer <= 0) {
 			nbElementBuffer = 1;
 		}
 	}
@@ -187,44 +187,44 @@ bool appl::Buffer::SearchBack(esize_t _pos, const etk::UniChar& _search, esize_t
 }
 
 
-bool appl::Buffer::OnEventEntry(const ewol::EventEntry& _event) // TODO : , vec2 _displaySize)
+bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event) // TODO : , vec2 _displaySize)
 {
 	//APPL_DEBUG(" event : " << _event);
-	if (_event.GetType() == ewol::keyEvent::keyboardChar) {
+	if (_event.getType() == ewol::keyEvent::keyboardChar) {
 		//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
-		if (_event.GetStatus() != ewol::keyEvent::statusDown) {
+		if (_event.getStatus() != ewol::keyEvent::statusDown) {
 			return false;
 		}
-		if (_event.GetChar() == etk::UniChar::Tabulation) {
-			m_data.Insert(m_cursorPos, '\t');
+		if (_event.getChar() == etk::UniChar::Tabulation) {
+			m_data.insert(m_cursorPos, '\t');
 			m_cursorPos += 1;
-		} else if (_event.GetChar() == etk::UniChar::Return) {
-			m_data.Insert(m_cursorPos, '\n');
+		} else if (_event.getChar() == etk::UniChar::Return) {
+			m_data.insert(m_cursorPos, '\n');
 			m_cursorPos += 1;
-		} else if (_event.GetChar() == etk::UniChar::Suppress ) {
+		} else if (_event.getChar() == etk::UniChar::Suppress ) {
 			//APPL_INFO("keyEvent : <suppr> pos=" << m_cursorPos);
 			etk::UniChar value;
-			esize_t nbElement = Get(m_cursorPos, value);
+			esize_t nbElement = get(m_cursorPos, value);
 			if (nbElement>0) {
-				m_data.Remove(m_cursorPos, nbElement);
+				m_data.remove(m_cursorPos, nbElement);
 			}
-		} else if (_event.GetChar() == etk::UniChar::Delete) {
+		} else if (_event.getChar() == etk::UniChar::Delete) {
 			//APPL_INFO("keyEvent : <del> pos=" << m_cursorPos);
 			etk::UniChar value;
-			esize_t nbElement = GetBack(m_cursorPos-1, value);
+			esize_t nbElement = getBack(m_cursorPos-1, value);
 			if (nbElement>0) {
 				m_cursorPos -= nbElement;
-				m_data.Remove(m_cursorPos, nbElement);
+				m_data.remove(m_cursorPos, nbElement);
 			}
 		} else {
 			// normal adding char ...
 			char output[5];
-			int32_t nbElement = _event.GetChar().GetUtf8(output);
-			if (_event.GetSpecialKey().IsSetInsert() == false) {
-				m_data.Insert(m_cursorPos, (int8_t*)output, nbElement);
+			int32_t nbElement = _event.getChar().GetUtf8(output);
+			if (_event.getSpecialKey().isSetInsert() == false) {
+				m_data.insert(m_cursorPos, (int8_t*)output, nbElement);
 			} else {
 				etk::UniChar value;
-				esize_t nbElementRemove = Get(m_cursorPos, value);
+				esize_t nbElementRemove = get(m_cursorPos, value);
 				m_data.Replace(m_cursorPos, nbElementRemove, (int8_t*)output, nbElement);
 			}
 			m_cursorPos += nbElement;
@@ -232,10 +232,10 @@ bool appl::Buffer::OnEventEntry(const ewol::EventEntry& _event) // TODO : , vec2
 		return true;
 	}
 	// move events ...
-	if (_event.GetStatus() == ewol::keyEvent::statusDown) {
+	if (_event.getStatus() == ewol::keyEvent::statusDown) {
 		bool needUpdatePosition = true;
 		// check selection event ...
-		switch(_event.GetType()) {
+		switch(_event.getType()) {
 			case ewol::keyEvent::keyboardLeft:
 				//APPL_INFO("keyEvent : <LEFT>");
 				MoveCursorLeft();
@@ -282,10 +282,10 @@ bool appl::Buffer::OnEventEntry(const ewol::EventEntry& _event) // TODO : , vec2
 }
 
 
-esize_t appl::Buffer::Get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const
+esize_t appl::Buffer::get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const
 {
 	_value = '\0';
-	if (_pos<0 && _pos<m_data.Size()) {
+	if (_pos<0 && _pos<m_data.size()) {
 		return 0;
 	}
 	if (_charset == unicode::EDN_CHARSET_UTF8) {
@@ -293,22 +293,22 @@ esize_t appl::Buffer::Get(esize_t _pos, etk::UniChar& _value, unicode::charset_t
 		memset(tmpVal, 0, sizeof(tmpVal));
 		tmpVal[0] = m_data[_pos];
 		int8_t nbChar = etk::UniChar::TheoricUTF8Len(tmpVal[0]);
-		for (int32_t iii=1; iii<nbChar && _pos+iii<m_data.Size(); ++iii) {
+		for (int32_t iii=1; iii<nbChar && _pos+iii<m_data.size(); ++iii) {
 			tmpVal[iii] = m_data[_pos+iii];
 		}
 		// transform ...
-		int32_t nbElement = _value.SetUtf8(tmpVal);
+		int32_t nbElement = _value.setUtf8(tmpVal);
 		return nbElement;
 	}
-	// TODO :: need to trancode iso ==> UNICODE ...
-	_value.Set(m_data[_pos]);
+	// TODO :: need to trancode iso  == > UNICODE ...
+	_value.set(m_data[_pos]);
 	return 1;
 }
 
-esize_t appl::Buffer::GetBack(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const
+esize_t appl::Buffer::getBack(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const
 {
 	_value = '\0';
-	if (_pos<0 && _pos<m_data.Size()) {
+	if (_pos<0 && _pos<m_data.size()) {
 		return 0;
 	}
 	if (_charset == unicode::EDN_CHARSET_UTF8) {
@@ -324,10 +324,10 @@ esize_t appl::Buffer::GetBack(esize_t _pos, etk::UniChar& _value, unicode::chars
 			++iii;
 			*pointerVal = m_data[_pos - iii];
 		};
-		int32_t nbElement = _value.SetUtf8(pointerVal);
+		int32_t nbElement = _value.setUtf8(pointerVal);
 		return nbElement;
 	}
-	_value.Set(m_data[_pos]);
+	_value.set(m_data[_pos]);
 	return 1;
 	
 }
@@ -338,48 +338,48 @@ static const char *ControlCodeTable[32] = {
 
 void appl::Buffer::Expand(esize_t& _indent, const etk::UniChar& _value, etk::UString& _out) const
 {
-	_out.Clear();
+	_out.clear();
 	int32_t tabDist = 4;
 	if (_value == etk::UniChar::Tabulation) {
 		int32_t nSpaces = tabDist - (_indent % tabDist);
 		for (int32_t iii=0; iii<nSpaces; iii++) {
-			_out.Append(etk::UniChar::Space);
+			_out.append(etk::UniChar::Space);
 		}
 		return;
 	}
-	// Convert ASCII control codes to readable character sequences
+	// convert ASCII control codes to readable character sequences
 	if (_value == etk::UniChar::Null) {
-		_out.Append(etk::UniChar('<'));
-		_out.Append(etk::UniChar('n'));
-		_out.Append(etk::UniChar('u'));
-		_out.Append(etk::UniChar('l'));
-		_out.Append(etk::UniChar('>'));
+		_out.append(etk::UniChar('<'));
+		_out.append(etk::UniChar('n'));
+		_out.append(etk::UniChar('u'));
+		_out.append(etk::UniChar('l'));
+		_out.append(etk::UniChar('>'));
 		return;
 	}
 	if (_value == etk::UniChar::Return) {
 		// nothing to display...
 		return;
 	}
-	if (_value.Get() <= 31) {
-		_out.Append(etk::UniChar('<'));
-		const char * tmp = ControlCodeTable[_value.Get()];
+	if (_value.get() <= 31) {
+		_out.append(etk::UniChar('<'));
+		const char * tmp = ControlCodeTable[_value.get()];
 		while (*tmp!='\0') {
-			_out.Append(etk::UniChar(*tmp));
+			_out.append(etk::UniChar(*tmp));
 			tmp++;
 		}
-		_out.Append(etk::UniChar('>'));
+		_out.append(etk::UniChar('>'));
 		return;
 	}
 	if (_value == etk::UniChar::Delete) {
-		_out.Append(etk::UniChar('<'));
-		_out.Append(etk::UniChar('d'));
-		_out.Append(etk::UniChar('e'));
-		_out.Append(etk::UniChar('l'));
-		_out.Append(etk::UniChar('>'));
+		_out.append(etk::UniChar('<'));
+		_out.append(etk::UniChar('d'));
+		_out.append(etk::UniChar('e'));
+		_out.append(etk::UniChar('l'));
+		_out.append(etk::UniChar('>'));
 		return;
 	}
 	// nothing to do ...
-	_out.Append(_value);
+	_out.append(_value);
 	//APPL_DEBUG("plop : " << _out);
 }
 
@@ -390,13 +390,13 @@ int32_t appl::Buffer::CountDispChars(esize_t _posStart, esize_t _posEnd)
 	esize_t bufferElementSize;
 	etk::UniChar value;
 	//APPL_DEBUG("_posStart="<< _posStart << " _posEnd=" << _posEnd);
-	for(int32_t iii=_posStart; iii<_posEnd && iii<m_data.Size() ; iii+=bufferElementSize ) {
+	for(int32_t iii=_posStart; iii<_posEnd && iii<m_data.size() ; iii+=bufferElementSize ) {
 		// get the element value:
-		bufferElementSize = Get(iii, value);
+		bufferElementSize = get(iii, value);
 		//APPL_DEBUG(" get : " << value << " size=" << bufferElementSize);
 		Expand(charCount, value, expanded);
-		charCount += expanded.Size();
-		if (bufferElementSize<=0) {
+		charCount += expanded.size();
+		if (bufferElementSize <= 0) {
 			bufferElementSize = 1;
 		}
 	}
@@ -411,15 +411,15 @@ esize_t appl::Buffer::CountForwardDispChars(esize_t _posStart, int32_t _nChars)
 	esize_t bufferElementSize;
 	etk::UniChar value;
 	int32_t iii;
-	for(iii = _posStart; charCount<_nChars && iii<m_data.Size() ; iii+=bufferElementSize ) {
+	for(iii = _posStart; charCount<_nChars && iii<m_data.size() ; iii+=bufferElementSize ) {
 		// get the element value:
-		bufferElementSize = Get(iii, value);
+		bufferElementSize = get(iii, value);
 		if (value == etk::UniChar::Return) {
 			return iii;
 		}
 		Expand(charCount, value, expanded);
-		charCount += expanded.Size();
-		if (bufferElementSize<=0) {
+		charCount += expanded.size();
+		if (bufferElementSize <= 0) {
 			bufferElementSize = 1;
 		}
 	}
@@ -431,56 +431,56 @@ esize_t appl::Buffer::CountForwardNLines(esize_t _startPos, int32_t _nLines)
 {
 	if (_nLines <= 0) {
 		return _startPos;
-	} else if (_startPos > m_data.Size() ) {
-		return m_data.Size();
+	} else if (_startPos > m_data.size() ) {
+		return m_data.size();
 	}
 	esize_t bufferElementSize;
 	etk::UniChar value;
 	int32_t lineCount = 0;
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
-	for(int32_t iii = _startPos+1; iii<m_data.Size() ; iii+=bufferElementSize ) {
+	for(int32_t iii = _startPos+1; iii<m_data.size() ; iii+=bufferElementSize ) {
 		// get the element value:
-		bufferElementSize = Get(iii, value);
+		bufferElementSize = get(iii, value);
 		if (value == etk::UniChar::Return) {
 			lineCount++;
 			if (lineCount == _nLines) {
-				//APPL_INFO("   ==> (1) at position=" << myPosIt.Position()+1 );
+				//APPL_INFO("    == > (1) at position=" << myPosIt.Position()+1 );
 				return iii+1;
 			}
 		}
-		if (bufferElementSize<=0) {
+		if (bufferElementSize <= 0) {
 			bufferElementSize = 1;
 		}
 	}
-	//APPL_INFO("   ==> (2) at position=" << myPosIt.Position() );
-	return m_data.Size();
+	//APPL_INFO("    == > (2) at position=" << myPosIt.Position() );
+	return m_data.size();
 }
 
 esize_t appl::Buffer::CountBackwardNLines(esize_t _startPos, int32_t _nLines)
 {
 	if (_startPos <= 0) {
 		return 0;
-	} else if (_startPos > m_data.Size() ) {
-		_startPos = m_data.Size();
+	} else if (_startPos > m_data.size() ) {
+		_startPos = m_data.size();
 	}
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
 	esize_t bufferElementSize;
 	etk::UniChar value;
 	int32_t lineCount = 0;
-	for(int32_t iii = _startPos-1; iii>=0 ; iii-=bufferElementSize ) {
+	for(int32_t iii = _startPos-1; iii >= 0 ; iii-=bufferElementSize ) {
 		// get the element value:
-		bufferElementSize = GetBack(iii, value);
+		bufferElementSize = getBack(iii, value);
 		if (value == etk::UniChar::Return) {
 			lineCount++;
 			if (lineCount >= _nLines) {
-				//APPL_INFO("   ==> (1) at position=" << myPosIt.Position()+1 );
+				//APPL_INFO("    == > (1) at position=" << myPosIt.Position()+1 );
 				return iii+1;
 			}
 		}
-		if (bufferElementSize<=0) {
+		if (bufferElementSize <= 0) {
 			bufferElementSize = 1;
 		}
 	}
-	//APPL_INFO("   ==> (2) at position=0");
+	//APPL_INFO("    == > (2) at position=0");
 	return 0;
 }

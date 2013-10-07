@@ -37,7 +37,7 @@ Search::Search(void) :
 	m_replaceEntry(NULL)
 {
 	m_forward = false;
-	// TODO : Change the mode of creating interface : 
+	// TODO : change the mode of creating interface : 
 	/* 
 	<composer>
 		<sizer mode="hori" expand="true,false" fill="true" lock="true">
@@ -70,114 +70,114 @@ Search::Search(void) :
 	widget::Button * myButtonImage = NULL;
 	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error ==> it will missing in the display");
+		APPL_ERROR("Widget allocation error  == > it will missing in the display");
 	} else {
 		widget::Image* tmpImage = new widget::Image("THEME:GUI:Remove.svg");
-		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->SetSubWidget(tmpImage);
-		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventHideBt);
-		SubWidgetAdd(myButtonImage);
+		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->setSubWidget(tmpImage);
+		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventHideBt);
+		subWidgetAdd(myButtonImage);
 	}
 	
 	m_searchEntry = new widget::Entry();
 	if (NULL == m_searchEntry) {
-		APPL_ERROR("Widget allocation error ==> it will missing in the display");
+		APPL_ERROR("Widget allocation error  == > it will missing in the display");
 	} else {
-		m_searchEntry->RegisterOnEvent(this, widget::Entry::eventModify, l_eventSearchEntry);
-		m_searchEntry->RegisterOnEvent(this, widget::Entry::eventEnter,  l_eventSearchEntryEnter);
-		m_searchEntry->SetExpand(bvec2(true,false));
-		m_searchEntry->SetFill(bvec2(true,false));
-		SubWidgetAdd(m_searchEntry);
+		m_searchEntry->registerOnEvent(this, widget::Entry::eventModify, l_eventSearchEntry);
+		m_searchEntry->registerOnEvent(this, widget::Entry::eventEnter,  l_eventSearchEntryEnter);
+		m_searchEntry->setExpand(bvec2(true,false));
+		m_searchEntry->setFill(bvec2(true,false));
+		subWidgetAdd(m_searchEntry);
 	}
 	
 	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error ==> it will missing in the display");
+		APPL_ERROR("Widget allocation error  == > it will missing in the display");
 	} else {
 		widget::Image* tmpImage = new widget::Image("THEME:GUI:Search.svg");
-		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->SetSubWidget(tmpImage);
-		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventSearchBt);
-		SubWidgetAdd(myButtonImage);
+		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->setSubWidget(tmpImage);
+		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventSearchBt);
+		subWidgetAdd(myButtonImage);
 	}
 	
 	m_replaceEntry = new widget::Entry();
 	if (NULL == m_replaceEntry) {
-		APPL_ERROR("Widget allocation error ==> it will missing in the display");
+		APPL_ERROR("Widget allocation error  == > it will missing in the display");
 	} else {
-		m_replaceEntry->RegisterOnEvent(this, widget::Entry::eventModify, l_eventReplaceEntry);
-		m_replaceEntry->RegisterOnEvent(this, widget::Entry::eventEnter, l_eventReplaceEntryEnter);
-		m_replaceEntry->SetExpand(bvec2(true,false));
-		m_replaceEntry->SetFill(bvec2(true,false));
-		SubWidgetAdd(m_replaceEntry);
+		m_replaceEntry->registerOnEvent(this, widget::Entry::eventModify, l_eventReplaceEntry);
+		m_replaceEntry->registerOnEvent(this, widget::Entry::eventEnter, l_eventReplaceEntryEnter);
+		m_replaceEntry->setExpand(bvec2(true,false));
+		m_replaceEntry->setFill(bvec2(true,false));
+		subWidgetAdd(m_replaceEntry);
 	}
 	
 	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error ==> it will missing in the display");
+		APPL_ERROR("Widget allocation error  == > it will missing in the display");
 	} else {
 		widget::Image* tmpImage = new widget::Image("THEME:GUI:Replace.svg");
-		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->SetSubWidget(tmpImage);
-		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventReplaceBt);
-		SubWidgetAdd(myButtonImage);
+		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->setSubWidget(tmpImage);
+		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventReplaceBt);
+		subWidgetAdd(myButtonImage);
 	}
 	
 	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error ==> it will missing in the display");
+		APPL_ERROR("Widget allocation error  == > it will missing in the display");
 	} else {
-		myButtonImage->SetToggleMode(true);
+		myButtonImage->setToggleMode(true);
 		
 		widget::Image* tmpImage = new widget::Image("THEME:GUI:CaseSensitive.svg");
-		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->SetSubWidget(tmpImage);
+		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->setSubWidget(tmpImage);
 		
-		tmpImage = new widget::Image("THEME:GUI:CaseSensitive.svg"); // TODO : Set color on Image .... 0xFFFFFF5F
-		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->SetSubWidgetToggle(tmpImage);
+		tmpImage = new widget::Image("THEME:GUI:CaseSensitive.svg"); // TODO : set color on Image .... 0xFFFFFF5F
+		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->setSubWidgetToggle(tmpImage);
 		
-		myButtonImage->SetValue(!SearchData::GetCase());
-		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventCaseCb);
-		SubWidgetAdd(myButtonImage);
+		myButtonImage->setValue(!SearchData::getCase());
+		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventCaseCb);
+		subWidgetAdd(myButtonImage);
 	}
 	
 	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error ==> it will missing in the display");
+		APPL_ERROR("Widget allocation error  == > it will missing in the display");
 	} else {
-		myButtonImage->SetToggleMode(true);
+		myButtonImage->setToggleMode(true);
 		
 		widget::Image* tmpImage = new widget::Image("THEME:GUI:WrapAround.svg");
-		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->SetSubWidget(tmpImage);
+		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->setSubWidget(tmpImage);
 		
-		tmpImage = new widget::Image("THEME:GUI:WrapAround.svg"); // TODO : Set color on Image .... 0xFFFFFF5F
-		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->SetSubWidgetToggle(tmpImage);
+		tmpImage = new widget::Image("THEME:GUI:WrapAround.svg"); // TODO : set color on Image .... 0xFFFFFF5F
+		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->setSubWidgetToggle(tmpImage);
 		
-		myButtonImage->SetValue(!SearchData::GetWrap());
-		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventWrapCb);
-		SubWidgetAdd(myButtonImage);
+		myButtonImage->setValue(!SearchData::getWrap());
+		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventWrapCb);
+		subWidgetAdd(myButtonImage);
 	}
 	
 	myButtonImage = new widget::Button();
 	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error ==> it will missing in the display");
+		APPL_ERROR("Widget allocation error  == > it will missing in the display");
 	} else {
-		myButtonImage->SetToggleMode(true);
+		myButtonImage->setToggleMode(true);
 		
 		widget::Image* tmpImage = new widget::Image("THEME:GUI:Up.svg");
-		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->SetSubWidget(tmpImage);
+		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->setSubWidget(tmpImage);
 		
 		tmpImage = new widget::Image("THEME:GUI:Down.svg");
-		tmpImage->SetImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->SetSubWidgetToggle(tmpImage);
+		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
+		myButtonImage->setSubWidgetToggle(tmpImage);
 		
-		myButtonImage->SetValue(!m_forward);
-		myButtonImage->RegisterOnEvent(this, widget::Button::eventPressed, l_eventForwardCb);
-		SubWidgetAdd(myButtonImage);
+		myButtonImage->setValue(!m_forward);
+		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventForwardCb);
+		subWidgetAdd(myButtonImage);
 	}
 	
 	RegisterMultiCast(ednMsgGuiSearch);
@@ -191,74 +191,74 @@ Search::~Search(void)
 }
 
 
-void Search::OnReceiveMessage(const ewol::EMessage& _msg)
+void Search::onReceiveMessage(const ewol::EMessage& _msg)
 {
-	widget::Sizer::OnReceiveMessage(_msg);
+	widget::Sizer::onReceiveMessage(_msg);
 	//APPL_INFO("Search receive message : \"" << eventId << "\" data=\"" << data << "\"");
-	if ( _msg.GetMessage() == l_eventSearchEntry) {
-		SearchData::SetSearch(_msg.GetData());
-	} else if ( _msg.GetMessage() == l_eventSearchEntryEnter) {
-		SearchData::SetSearch(_msg.GetData());
-		if (true==m_forward) {
+	if ( _msg.getMessage() == l_eventSearchEntry) {
+		SearchData::setSearch(_msg.getData());
+	} else if ( _msg.getMessage() == l_eventSearchEntryEnter) {
+		SearchData::setSearch(_msg.getData());
+		if (true == m_forward) {
 			SendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
 			SendMultiCast(ednMsgGuiFind, "Next");
 		}
-	} else if ( _msg.GetMessage() == l_eventReplaceEntry) {
-		SearchData::SetReplace(_msg.GetData());
-	} else if ( _msg.GetMessage() == l_eventReplaceEntryEnter) {
-		SearchData::SetReplace(_msg.GetData());
+	} else if ( _msg.getMessage() == l_eventReplaceEntry) {
+		SearchData::setReplace(_msg.getData());
+	} else if ( _msg.getMessage() == l_eventReplaceEntryEnter) {
+		SearchData::setReplace(_msg.getData());
 		SendMultiCast(ednMsgGuiReplace, "Normal");
-		if (true==m_forward) {
+		if (true == m_forward) {
 			SendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
 			SendMultiCast(ednMsgGuiFind, "Next");
 		}
-	} else if ( _msg.GetMessage() == l_eventSearchBt) {
-		if (true==m_forward) {
+	} else if ( _msg.getMessage() == l_eventSearchBt) {
+		if (true == m_forward) {
 			SendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
 			SendMultiCast(ednMsgGuiFind, "Next");
 		}
-	} else if ( _msg.GetMessage() == l_eventReplaceBt) {
+	} else if ( _msg.getMessage() == l_eventReplaceBt) {
 		SendMultiCast(ednMsgGuiReplace, "Normal");
-		if (true==m_forward) {
+		if (true == m_forward) {
 			SendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
 			SendMultiCast(ednMsgGuiFind, "Next");
 		}
-	} else if ( _msg.GetMessage() == l_eventCaseCb) {
-		if (_msg.GetData() == "1") {
-			SearchData::SetCase(false);
+	} else if ( _msg.getMessage() == l_eventCaseCb) {
+		if (_msg.getData() == "1") {
+			SearchData::setCase(false);
 		} else {
-			SearchData::SetCase(true);
+			SearchData::setCase(true);
 		}
-	} else if ( _msg.GetMessage() == l_eventWrapCb) {
-		if (_msg.GetData() == "1") {
-			SearchData::SetWrap(false);
+	} else if ( _msg.getMessage() == l_eventWrapCb) {
+		if (_msg.getData() == "1") {
+			SearchData::setWrap(false);
 		} else {
-			SearchData::SetWrap(true);
+			SearchData::setWrap(true);
 		}
-	} else if ( _msg.GetMessage() == l_eventForwardCb) {
-		if (_msg.GetData() == "1") {
+	} else if ( _msg.getMessage() == l_eventForwardCb) {
+		if (_msg.getData() == "1") {
 			m_forward = false;
 		} else {
 			m_forward = true;
 		}
-	} else if ( _msg.GetMessage() == l_eventHideBt) {
+	} else if ( _msg.getMessage() == l_eventHideBt) {
 		Hide();
-	} else if ( _msg.GetMessage() == ednMsgGuiSearch) {
-		if (true == IsHide()) {
+	} else if ( _msg.getMessage() == ednMsgGuiSearch) {
+		if (true == isHide()) {
 			Show();
 			if (m_searchEntry!= NULL) {
-				m_searchEntry->KeepFocus();
+				m_searchEntry->keepFocus();
 			}
 		} else {
-			if(    (m_searchEntry!=NULL  && true==m_searchEntry->GetFocus())
-			    || (m_replaceEntry!=NULL && true==m_replaceEntry->GetFocus()) ) {
+			if(    (m_searchEntry!=NULL  && true == m_searchEntry->getFocus())
+			    || (m_replaceEntry!=NULL && true == m_replaceEntry->getFocus()) ) {
 				Hide();
 			} else if (m_searchEntry!= NULL) {
-				m_searchEntry->KeepFocus();
+				m_searchEntry->keepFocus();
 			} else {
 				Hide();
 			}
@@ -266,9 +266,9 @@ void Search::OnReceiveMessage(const ewol::EMessage& _msg)
 	}
 }
 
-void Search::OnObjectRemove(ewol::EObject * _removeObject)
+void Search::onObjectRemove(ewol::EObject * _removeObject)
 {
-	widget::Sizer::OnObjectRemove(_removeObject);
+	widget::Sizer::onObjectRemove(_removeObject);
 	if (_removeObject == m_searchEntry) {
 		m_searchEntry = NULL;
 	}

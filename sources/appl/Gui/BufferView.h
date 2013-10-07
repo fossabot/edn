@@ -46,19 +46,19 @@ class BufferView : public widget::List
 		BufferView(void);
 		~BufferView(void);
 		// Derived function
-		const char * const GetObjectType(void) { return "ApplBufferView"; };
+		const char * const getObjectType(void) { return "ApplBufferView"; };
 		// Derived function
-		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
+		virtual void onReceiveMessage(const ewol::EMessage& _msg);
 	protected:
 		// function call to display the list :
-		virtual etk::Color<> GetBasicBG(void);
-		void RemoveAllElement(void);
+		virtual etk::Color<> getBasicBG(void);
+		void removeAllElement(void);
 		// Derived function
-		virtual uint32_t GetNuberOfColomn(void);
-		virtual bool GetTitle(int32_t colomn, etk::UString &myTitle, etk::Color<> &fg, etk::Color<> &bg);
-		virtual uint32_t GetNuberOfRaw(void);
-		virtual bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, etk::Color<> &fg, etk::Color<> &bg);
-		virtual bool OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
+		virtual uint32_t getNuberOfColomn(void);
+		virtual bool getTitle(int32_t colomn, etk::UString &myTitle, etk::Color<> &fg, etk::Color<> &bg);
+		virtual uint32_t getNuberOfRaw(void);
+		virtual bool getElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, etk::Color<> &fg, etk::Color<> &bg);
+		virtual bool onItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
 };
 
 

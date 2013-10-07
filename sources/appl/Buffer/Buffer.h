@@ -28,15 +28,15 @@ namespace appl
 			etk::UString m_fileName; //!< name of the file (with his path)
 		public:
 			/**
-			 * @brief Get the curent filename of the Buffer
+			 * @brief get the curent filename of the Buffer
 			 */
-			const etk::UString& GetFileName(void) { return m_fileName; }
-			bool LoadFile(const etk::UString& _name);
-			void SetFileName(const etk::UString& _name);
+			const etk::UString& getFileName(void) { return m_fileName; }
+			bool loadFile(const etk::UString& _name);
+			void setFileName(const etk::UString& _name);
 			bool m_isModify; //!< true if the file is modify
 			etk::Buffer m_data; //!< copy of the file buffer
 		public:
-			etk::Buffer& GetData(void) { return m_data; };
+			etk::Buffer& getData(void) { return m_data; };
 			/*
 			appl::History m_history;
 			Highlight m_highlight;
@@ -46,23 +46,23 @@ namespace appl
 		public:
 			esize_t m_cursorPos; //!< cursor position.
 			int32_t m_cursorPreferredCol; //!< position of the cursor when up and down is done.
-			bool OnEventEntry(const ewol::EventEntry& _event);
+			bool onEventEntry(const ewol::EventEntry& _event);
 			/**
-			 * @brief Get the next element in the buffer.
+			 * @brief get the next element in the buffer.
 			 * @param[in] _pos Position in the buffer
 			 * @param[out] _value Unicode value read in the buffer
 			 * @param[in] _charset Charset used to parse the current buffer
 			 * @return number ofelement read in the buffer (to increment the position)
 			 */
-			esize_t Get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
+			esize_t get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
 			/**
-			 * @brief Get the previous element in the buffer.
+			 * @brief get the previous element in the buffer.
 			 * @param[in] _pos Position in the buffer (last element of the element)
 			 * @param[out] _value Unicode value read in the buffer
 			 * @param[in] _charset Charset used to parse the current buffer
 			 * @return number of element read in the buffer (to increment the position)
 			 */
-			esize_t GetBack(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
+			esize_t getBack(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
 			/**
 			 * @brief Expand the specify char to have a user frendly display for special char and tabs
 			 * @param[in] _indent Curent indentation in the line
@@ -97,13 +97,13 @@ namespace appl
 			 */
 			void MoveCursorDown(esize_t _nbLine);
 			/**
-			 * @brief Get the start of a line with the position in the buffer.
+			 * @brief get the start of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.
 			 * @return The position in the buffer of the start of the line.
 			 */
 			esize_t StartLine(esize_t _pos);
 			/**
-			 * @brief Get the end of a line with the position in the buffer.
+			 * @brief get the end of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.
 			 * @return The position in the buffer of the end of the line.
 			 */
@@ -126,7 +126,7 @@ namespace appl
 			bool SearchBack(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
 			/**
 			 * @brief Count the number of displayed characters between buffer position
-			 * Displayed characters are the characters shown on the screen to represent characters in the 
+			 * displayed characters are the characters shown on the screen to represent characters in the 
 			 * buffer, where tabs and control characters are expanded
 			 * @param[in] _posStart start position
 			 * @param[in] _posEnd End position
@@ -141,16 +141,16 @@ namespace appl
 			 */
 			esize_t CountForwardDispChars(esize_t _posStart, int32_t _nChars);
 			/**
-			 * @brief Find the first character of the line "nLines" forward
+			 * @brief find the first character of the line "nLines" forward
 			 * @param[in,out] _startPos Start position.
 			 * @param[in,out] _nLines Number of line to count.
 			 * @return position of the starting the line.
 			 */
 			esize_t CountForwardNLines(esize_t _startPos, int32_t _nLines);
 			/**
-			 * @brief Find the first character of the line "nLines" backwards
+			 * @brief find the first character of the line "nLines" backwards
 			 * @param[in,out] _startPos Start position to count (this caracter is not counted)
-			 * @param[in,out] _nLines Number of line to count (if ==0 means find the beginning of the line)
+			 * @param[in,out] _nLines Number of line to count (if  == 0 means find the beginning of the line)
 			 * @return position of the starting the line
 			 */
 			esize_t CountBackwardNLines(esize_t _startPos, int32_t _nLines);

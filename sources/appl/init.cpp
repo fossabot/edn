@@ -43,44 +43,44 @@ int main(int _argc, const char *_argv[])
 
 
 /**
- * @brief main application function Initialisation
+ * @brief main application function initialisation
  */
 bool APP_Init(ewol::eContext& _context)
 {
-	APPL_INFO("==> Init APPL (START) [" << ewol::GetBoardType() << "] (" << ewol::GetCompilationMode() << ")");
+	APPL_INFO(" == > init APPL (START) [" << ewol::getBoardType() << "] (" << ewol::GetCompilationMode() << ")");
 	
-	// TODO : Remove this : Move if in the windows properties
-	_context.SetSize(vec2(800, 600));
+	// TODO : remove this : Move if in the windows properties
+	_context.setSize(vec2(800, 600));
 	
 	// select internal data for font ...
-	_context.GetFontDefault().SetUseExternal(true);
+	_context.getFontDefault().setUseExternal(true);
 	#ifdef __TARGET_OS__Android
-		_context.GetFontDefault().Set("FreeSerif", 19);
+		_context.getFontDefault().set("FreeSerif", 19);
 	#else
-		_context.GetFontDefault().Set("FreeSerif;DejaVuSansMono",14);
+		_context.getFontDefault().set("FreeSerif;DejaVuSansMono",14);
 	#endif
 	
 	// set the application icon ...
-	_context.SetIcon("DATA:icon.png");
+	_context.setIcon("DATA:icon.png");
 	
 	// init internal global value
-	globals::Init();
+	globals::init();
 	
 	// init ALL Singleton :
 	//(void)CTagsManager::getInstance();
-	BufferManager::Init();
+	BufferManager::init();
 	
 	// set color and other trucs...
-	ColorizeManager::Init();
-	ColorizeManager::LoadFile( "white" );
-	ColorizeManager::DisplayListOfColor();
+	ColorizeManager::init();
+	ColorizeManager::loadFile( "white" );
+	ColorizeManager::displayListOfColor();
 	
-	HighlightManager::Init();
+	HighlightManager::init();
 	HighlightManager::loadLanguages();
-	cTagsManager::Init();
+	cTagsManager::init();
 	
 	// Request load of the user configuration ...
-	//ewol::userConfig::Load();
+	//ewol::userConfig::load();
 	
 	char cCurrentPath[FILENAME_MAX];
 	// get the curent program folder
@@ -98,27 +98,27 @@ bool APP_Init(ewol::eContext& _context)
 		return false;
 	}
 	// create the specific windows
-	_context.SetWindows(basicWindows);
+	_context.setWindows(basicWindows);
 	
 	
 	// add files
 	APPL_INFO("show list of files : ");
 	bool ctagDetected = false;
-	for( int32_t iii=0 ; iii<_context.GetCmd().Size(); iii++) {
-		etk::UString tmpppp = _context.GetCmd().Get(iii);
+	for( int32_t iii=0 ; iii<_context.getCmd().size(); iii++) {
+		etk::UString tmpppp = _context.getCmd().Get(iii);
 		if (tmpppp == "-t") {
 			ctagDetected = true;
 		} else if (true == ctagDetected) {
 			APPL_INFO("Load ctag file : \"" << tmpppp << "\"" );
 			ctagDetected = false;
-			_context.GetEObjectManager().MultiCast().AnonymousSend(ednMsgCtagsLoadFile, tmpppp);
+			_context.getEObjectManager().MultiCast().AnonymousSend(ednMsgCtagsLoadFile, tmpppp);
 		} else {
 			APPL_INFO("need load file : \"" << tmpppp << "\"" );
-			_context.GetEObjectManager().MultiCast().AnonymousSend(ednMsgOpenFile, tmpppp);
+			_context.getEObjectManager().MultiCast().AnonymousSend(ednMsgOpenFile, tmpppp);
 		}
 	}
 	
-	APPL_INFO("==> Init "PROJECT_NAME" (END)");
+	APPL_INFO(" == > init "PROJECT_NAME" (END)");
 	return true;
 }
 
@@ -128,10 +128,10 @@ bool APP_Init(ewol::eContext& _context)
  */
 void APP_UnInit(ewol::eContext& _context)
 {
-	APPL_INFO("==> Un-Init "PROJECT_NAME" (START)");
-	ewol::Windows* tmpWindows = _context.GetWindows();
+	APPL_INFO(" == > Un-Init "PROJECT_NAME" (START)");
+	ewol::Windows* tmpWindows = _context.getWindows();
 	
-	_context.SetWindows(NULL);
+	_context.setWindows(NULL);
 	
 	if (NULL != tmpWindows) {
 		delete(tmpWindows);
@@ -147,6 +147,6 @@ void APP_UnInit(ewol::eContext& _context)
 	BufferManager::UnInit();
 	APPL_INFO("Stop ColorizeManager");
 	ColorizeManager::UnInit();
-	APPL_INFO("==> Un-Init "PROJECT_NAME" (END)");
+	APPL_INFO(" == > Un-Init "PROJECT_NAME" (END)");
 }
 

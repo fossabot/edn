@@ -34,21 +34,21 @@ namespace appl {
 			TagFileList(void);
 			~TagFileList(void);
 			// display API :
-			virtual etk::Color<> GetBasicBG(void);
-			uint32_t GetNuberOfColomn(void);
-			bool GetTitle(int32_t colomn, etk::UString &myTitle, etk::Color<> &fg, etk::Color<> &bg);
-			uint32_t GetNuberOfRaw(void);
-			bool GetElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, etk::Color<> &fg, etk::Color<> &bg);
-			bool OnItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
+			virtual etk::Color<> getBasicBG(void);
+			uint32_t getNuberOfColomn(void);
+			bool getTitle(int32_t colomn, etk::UString &myTitle, etk::Color<> &fg, etk::Color<> &bg);
+			uint32_t getNuberOfRaw(void);
+			bool getElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, etk::Color<> &fg, etk::Color<> &bg);
+			bool onItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
 			// derived function
-			const char * const GetObjectType(void) { return "TagFileList"; };
+			const char * const getObjectType(void) { return "TagFileList"; };
 		public:
 			/**
-			 * @brief Add a Ctags item on the curent list
+			 * @brief add a Ctags item on the curent list
 			 * @param[in] file Compleate file name
 			 * @param[in] jump line id
 			 */
-			void Add(etk::UString& file, int32_t line);
+			void add(etk::UString& file, int32_t line);
 	};
 };
 

@@ -15,22 +15,22 @@
 
 namespace globals
 {
-	void Init(void);
+	void init(void);
 	void UnInit(void);
 	int32_t         getNbColoneBorder(void);
 	int32_t         getNbLineBorder(void);
 
-	bool    IsSetDisplayEndOfLine(void);
-	void    SetDisplayEndOfLine(bool newVal);
+	bool    isSetDisplayEndOfLine(void);
+	void    setDisplayEndOfLine(bool newVal);
 	
-	bool    IsSetDisplaySpaceChar(void);
-	void    SetDisplaySpaceChar(bool newVal);
+	bool    isSetDisplaySpaceChar(void);
+	void    setDisplaySpaceChar(bool newVal);
 	
-	bool    IsSetDisplayTabChar(void);
-	void    SetDisplayTabChar(bool newVal);
+	bool    isSetDisplayTabChar(void);
+	void    setDisplayTabChar(bool newVal);
 	
-	bool    IsSetAutoIndent(void);
-	void    SetAutoIndent(bool newVal);
+	bool    isSetAutoIndent(void);
+	void    setAutoIndent(bool newVal);
 
 	void    init2(void);
 	
@@ -42,7 +42,7 @@ namespace globals
 			ParameterGlobalsGui(void);
 			~ParameterGlobalsGui(void);
 			// herited function
-			virtual void OnReceiveMessage(const ewol::EMessage& _msg);
+			virtual void onReceiveMessage(const ewol::EMessage& _msg);
 	};
 
 }

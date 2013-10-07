@@ -32,44 +32,44 @@ class myParamGlobal : public ewol::EObject
 		bool m_displaySpaceChar;
 	public : 
 		myParamGlobal(void) {
-			m_static = true; // Note : Set the object static notification( Must be set or assert at the end of process)
-			SetName("edn_global_param");
+			m_static = true; // Note : set the object static notification( Must be set or assert at the end of process)
+			setName("edn_global_param");
 			m_displayEOL=false;
 			m_AutoIndent = true;
 			m_displayTabChar = true;
 			m_displaySpaceChar = true;
-			RegisterConfig(configEOL,           "bool", NULL, "Display end of line character");
-			RegisterConfig(configAutoIndent,    "bool", NULL, "Auto indent when create new line");
-			RegisterConfig(configShowTabChar,   "bool", NULL, "Display the Tab char");
-			RegisterConfig(configShowSpaceChar, "bool", NULL, "Display the space char");
+			registerConfig(configEOL,           "bool", NULL, "Display end of line character");
+			registerConfig(configAutoIndent,    "bool", NULL, "Auto indent when create new line");
+			registerConfig(configShowTabChar,   "bool", NULL, "Display the Tab char");
+			registerConfig(configShowSpaceChar, "bool", NULL, "Display the space char");
 		}
 		
-		bool OnSetConfig(const ewol::EConfig& _conf)
+		bool onSetConfig(const ewol::EConfig& _conf)
 		{
-			// Not set the EObject node parameter (name ==> not change ...)
-			if (_conf.GetConfig() == configEOL) {
-				m_displayEOL = _conf.GetData().ToBool();
+			// Not set the EObject node parameter (name  == > not change ...)
+			if (_conf.getConfig() == configEOL) {
+				m_displayEOL = _conf.getData().toBool();
 				return true;
 			}
-			if (_conf.GetConfig() == configAutoIndent) {
-				m_AutoIndent = _conf.GetData().ToBool();
+			if (_conf.getConfig() == configAutoIndent) {
+				m_AutoIndent = _conf.getData().toBool();
 				return true;
 			}
-			if (_conf.GetConfig() == configShowTabChar) {
-				m_displayTabChar = _conf.GetData().ToBool();
+			if (_conf.getConfig() == configShowTabChar) {
+				m_displayTabChar = _conf.getData().toBool();
 				return true;
 			}
-			if (_conf.GetConfig() == configShowSpaceChar) {
-				m_displaySpaceChar = _conf.GetData().ToBool();
+			if (_conf.getConfig() == configShowSpaceChar) {
+				m_displaySpaceChar = _conf.getData().toBool();
 				return true;
 			}
 			return false;
 		}
-		bool OnGetConfig(const char* _config, etk::UString& _result) const
+		bool onGetConfig(const char* _config, etk::UString& _result) const
 		{
-			// Not set the EObject node parameter (name ==> not change ...)
+			// Not set the EObject node parameter (name  == > not change ...)
 			if (_config == configEOL) {
-				if (true==m_displayEOL) {
+				if (true == m_displayEOL) {
 					_result = "true";
 				} else {
 					_result = "false";
@@ -77,7 +77,7 @@ class myParamGlobal : public ewol::EObject
 				return true;
 			}
 			if (_config == configAutoIndent) {
-				if (true==m_AutoIndent) {
+				if (true == m_AutoIndent) {
 					_result = "true";
 				} else {
 					_result = "false";
@@ -85,7 +85,7 @@ class myParamGlobal : public ewol::EObject
 				return true;
 			}
 			if (_config == configShowTabChar) {
-				if (true==m_displayTabChar) {
+				if (true == m_displayTabChar) {
 					_result = "true";
 				} else {
 					_result = "false";
@@ -93,7 +93,7 @@ class myParamGlobal : public ewol::EObject
 				return true;
 			}
 			if (_config == configShowSpaceChar) {
-				if (true==m_displaySpaceChar) {
+				if (true == m_displaySpaceChar) {
 					_result = "true";
 				} else {
 					_result = "false";
@@ -117,9 +117,9 @@ static myParamGlobal& l_obj(void)
 
 
 
-void globals::Init(void)
+void globals::init(void)
 {
-	//ewol::userConfig::AddUserConfig(&l_obj());
+	//ewol::userConfig::addUserConfig(&l_obj());
 }
 
 void globals::UnInit(void)
@@ -130,47 +130,47 @@ void globals::UnInit(void)
 
 
 // -----------------------------------------------------------
-bool globals::IsSetDisplayEndOfLine(void)
+bool globals::isSetDisplayEndOfLine(void)
 {
 	return l_obj().m_displayEOL;
 }
 
-void globals::SetDisplayEndOfLine(bool newVal)
+void globals::setDisplayEndOfLine(bool newVal)
 {
 	l_obj().m_displayEOL = newVal;
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
 // -----------------------------------------------------------
-bool globals::IsSetDisplaySpaceChar(void)
+bool globals::isSetDisplaySpaceChar(void)
 {
 	return l_obj().m_displaySpaceChar;
 }
 
-void globals::SetDisplaySpaceChar(bool newVal)
+void globals::setDisplaySpaceChar(bool newVal)
 {
 	l_obj().m_displaySpaceChar = newVal;
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 // -----------------------------------------------------------
-bool globals::IsSetDisplayTabChar(void)
+bool globals::isSetDisplayTabChar(void)
 {
 	return l_obj().m_displayTabChar;
 }
 
-void globals::SetDisplayTabChar(bool newVal)
+void globals::setDisplayTabChar(bool newVal)
 {
 	l_obj().m_displayTabChar = newVal;
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
 // -----------------------------------------------------------
-bool globals::IsSetAutoIndent(void)
+bool globals::isSetAutoIndent(void)
 {
 	return l_obj().m_AutoIndent;
 }
 
-void globals::SetAutoIndent(bool newVal)
+void globals::setAutoIndent(bool newVal)
 {
 	l_obj().m_AutoIndent = newVal;
 }
@@ -213,55 +213,55 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	
 	mySpacer = new widget::Spacer();
 	if (NULL == mySpacer) {
-		APPL_ERROR("Can not allocate widget ==> display might be in error");
+		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		mySpacer->SetExpand(bvec2(true,true));
-		SubWidgetAdd(mySpacer);
+		mySpacer->setExpand(bvec2(true,true));
+		subWidgetAdd(mySpacer);
 	}
 	myCheckbox = new widget::CheckBox("Automatic Indentation");
 	if (NULL == myCheckbox) {
-		APPL_ERROR("Can not allocate widget ==> display might be in error");
+		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		myCheckbox->SetExpand(bvec2(true,false));
-		myCheckbox->SetValue(IsSetAutoIndent());
-		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeIndentation);
-		SubWidgetAdd(myCheckbox);
+		myCheckbox->setExpand(bvec2(true,false));
+		myCheckbox->setValue(isSetAutoIndent());
+		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeIndentation);
+		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = new widget::CheckBox("Display space char (' ')");
 	if (NULL == myCheckbox) {
-		APPL_ERROR("Can not allocate widget ==> display might be in error");
+		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		myCheckbox->SetExpand(bvec2(true,false));
-		myCheckbox->SetValue(IsSetDisplaySpaceChar());
-		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeSpace);
-		SubWidgetAdd(myCheckbox);
+		myCheckbox->setExpand(bvec2(true,false));
+		myCheckbox->setValue(isSetDisplaySpaceChar());
+		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeSpace);
+		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = new widget::CheckBox("Display tabulation char ('\\t')");
 	if (NULL == myCheckbox) {
-		APPL_ERROR("Can not allocate widget ==> display might be in error");
+		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		myCheckbox->SetExpand(bvec2(true,false));
-		myCheckbox->SetValue(IsSetDisplayTabChar());
-		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeTabulation);
-		SubWidgetAdd(myCheckbox);
+		myCheckbox->setExpand(bvec2(true,false));
+		myCheckbox->setValue(isSetDisplayTabChar());
+		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeTabulation);
+		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = new widget::CheckBox("Display end of line ('\\n')");
 	if (NULL == myCheckbox) {
-		APPL_ERROR("Can not allocate widget ==> display might be in error");
+		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		myCheckbox->SetExpand(bvec2(true,false));
-		myCheckbox->SetValue(IsSetDisplayEndOfLine());
-		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeEndOfLine);
-		SubWidgetAdd(myCheckbox);
+		myCheckbox->setExpand(bvec2(true,false));
+		myCheckbox->setValue(isSetDisplayEndOfLine());
+		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeEndOfLine);
+		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = new widget::CheckBox("switch Rounded/default");
 	if (NULL == myCheckbox) {
-		APPL_ERROR("Can not allocate widget ==> display might be in error");
+		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		myCheckbox->SetExpand(bvec2(true,false));
-		myCheckbox->SetValue(IsSetDisplayEndOfLine());
-		myCheckbox->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_changeRounded);
-		SubWidgetAdd(myCheckbox);
+		myCheckbox->setExpand(bvec2(true,false));
+		myCheckbox->setValue(isSetDisplayEndOfLine());
+		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeRounded);
+		subWidgetAdd(myCheckbox);
 	}
 }
 
@@ -271,43 +271,43 @@ globals::ParameterGlobalsGui::~ParameterGlobalsGui(void)
 }
 
 
-void globals::ParameterGlobalsGui::OnReceiveMessage(const ewol::EMessage& _msg)
+void globals::ParameterGlobalsGui::onReceiveMessage(const ewol::EMessage& _msg)
 {
-	widget::Sizer::OnReceiveMessage(_msg);
+	widget::Sizer::onReceiveMessage(_msg);
 	
-	if (_msg.GetMessage() == l_changeEndOfLine) {
-		if (_msg.GetData() == "true") {
-			SetDisplayEndOfLine(true);
+	if (_msg.getMessage() == l_changeEndOfLine) {
+		if (_msg.getData() == "true") {
+			setDisplayEndOfLine(true);
 		} else {
-			SetDisplayEndOfLine(false);
+			setDisplayEndOfLine(false);
 		}
-	} else if (_msg.GetMessage() == l_changeIndentation) {
-		if (_msg.GetData() == "true") {
-			SetAutoIndent(true);
+	} else if (_msg.getMessage() == l_changeIndentation) {
+		if (_msg.getData() == "true") {
+			setAutoIndent(true);
 		} else {
-			SetAutoIndent(false);
+			setAutoIndent(false);
 		}
-	} else if (_msg.GetMessage() == l_changeSpace) {
-		if (_msg.GetData() == "true") {
-			SetDisplaySpaceChar(true);
+	} else if (_msg.getMessage() == l_changeSpace) {
+		if (_msg.getData() == "true") {
+			setDisplaySpaceChar(true);
 		} else {
-			SetDisplaySpaceChar(false);
+			setDisplaySpaceChar(false);
 		}
-	} else if (_msg.GetMessage() == l_changeTabulation) {
-		if (_msg.GetData() == "true") {
-			SetDisplayTabChar(true);
+	} else if (_msg.getMessage() == l_changeTabulation) {
+		if (_msg.getData() == "true") {
+			setDisplayTabChar(true);
 		} else {
-			SetDisplayTabChar(false);
+			setDisplayTabChar(false);
 		}
-	} else if (_msg.GetMessage() == l_changeRounded) {
-		if (_msg.GetData() == "true") {
-			etk::theme::SetName("GUI", "rounded");;
+	} else if (_msg.getMessage() == l_changeRounded) {
+		if (_msg.getData() == "true") {
+			etk::theme::setName("GUI", "rounded");;
 		} else {
-			etk::theme::SetName("GUI", "default");;
+			etk::theme::setName("GUI", "default");;
 		}
 		// Reload shaders and graphic system ...
-		ewol::GetContext().GetResourcesManager().ReLoadResources();
-		ewol::GetContext().ForceRedrawAll();
+		ewol::getContext().getResourcesManager().ReLoadResources();
+		ewol::getContext().forceRedrawAll();
 	}
 	
 }

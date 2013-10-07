@@ -14,18 +14,18 @@
 
 namespace SearchData
 {
-	void SetSearch(const etk::UString &myData);
-	void GetSearch(etk::UString &myData);
-	bool IsSearchEmpty(void);
-	void SetReplace(const etk::UString &myData);
-	void GetReplace(etk::UString &myData);
-	bool IsReplaceEmpty(void);
-	void SetCase(bool value);
-	bool GetCase(void);
-	void SetWrap(bool value);
-	bool GetWrap(void);
-	void SetRegExp(bool value);
-	bool GetRegExp(void);
+	void setSearch(const etk::UString &myData);
+	void getSearch(etk::UString &myData);
+	bool isSearchEmpty(void);
+	void setReplace(const etk::UString &myData);
+	void getReplace(etk::UString &myData);
+	bool isReplaceEmpty(void);
+	void setCase(bool value);
+	bool getCase(void);
+	void setWrap(bool value);
+	bool getWrap(void);
+	void setRegExp(bool value);
+	bool getRegExp(void);
 }
 
 

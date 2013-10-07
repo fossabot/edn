@@ -16,34 +16,34 @@
 
 static etk::UString m_findRequest = "";
 
-void SearchData::SetSearch(const etk::UString &myData)
+void SearchData::setSearch(const etk::UString &myData)
 {
 	m_findRequest = myData;
 }
-void SearchData::GetSearch(etk::UString &myData)
+void SearchData::getSearch(etk::UString &myData)
 {
 	myData = m_findRequest;
 }
-bool SearchData::IsSearchEmpty(void)
+bool SearchData::isSearchEmpty(void)
 {
-	if(m_findRequest.Size() > 0) {
+	if(m_findRequest.size() > 0) {
 		return false;
 	}
 	return true;
 }
 
 static etk::UString m_replaceRequest = "";
-void SearchData::SetReplace(const etk::UString &myData)
+void SearchData::setReplace(const etk::UString &myData)
 {
 	m_replaceRequest = myData;
 }
-void SearchData::GetReplace(etk::UString &myData)
+void SearchData::getReplace(etk::UString &myData)
 {
 	myData = m_replaceRequest;
 }
-bool SearchData::IsReplaceEmpty(void)
+bool SearchData::isReplaceEmpty(void)
 {
-	if(m_replaceRequest.Size() > 0) {
+	if(m_replaceRequest.size() > 0) {
 		return false;
 	}
 	return true;
@@ -51,33 +51,33 @@ bool SearchData::IsReplaceEmpty(void)
 
 
 static bool m_case = false;
-void SearchData::SetCase(bool value)
+void SearchData::setCase(bool value)
 {
 	m_case = value;
 }
-bool SearchData::GetCase(void)
+bool SearchData::getCase(void)
 {
 	return m_case;
 }
 
 
 static bool m_wrap = true;
-void SearchData::SetWrap(bool value)
+void SearchData::setWrap(bool value)
 {
 	m_wrap = value;
 }
-bool SearchData::GetWrap(void)
+bool SearchData::getWrap(void)
 {
 	return m_wrap;
 }
 
 
 static bool m_RegExp = false;
-void SearchData::SetRegExp(bool value)
+void SearchData::setRegExp(bool value)
 {
 	m_RegExp = value;
 }
-bool SearchData::GetRegExp(void)
+bool SearchData::getRegExp(void)
 {
 	return m_RegExp;
 }

@@ -19,7 +19,7 @@
 
 int32_t EdnBuf::Undo(void)
 {
-	int32_t nbElement = m_historyUndo.Size();
+	int32_t nbElement = m_historyUndo.size();
 	//APPL_DEBUG("EdnBuf::Undo Request id="<<nbElement);
 	int32_t posDest = -1;
 	if (0 == nbElement) {
@@ -29,8 +29,8 @@ int32_t EdnBuf::Undo(void)
 	}
 	nbElement--;
 	if (m_historyUndo[nbElement] == NULL) {
-		APPL_ERROR("EdnBuf::Undo Find empty history ==> remove it");
-		m_historyUndo.PopBack();
+		APPL_ERROR("EdnBuf::Undo find empty history  == > remove it");
+		m_historyUndo.popBack();
 		return -1;
 	}
 	int32_t pos        = m_historyUndo[nbElement]->getPos();
@@ -44,13 +44,13 @@ int32_t EdnBuf::Undo(void)
 		if (0 == nbDeleted) {
 			APPL_DEBUG("EdnBuf::Undo nothing to do in UNDO");
 		} else {
-			Insert(pos, deletedText);
+			insert(pos, deletedText);
 			posDest = pos + nbDeleted;
 		}
 	} else {
 		if (0 == nbDeleted) {
 			// only remove data
-			Remove(pos, pos+nbInserted);
+			remove(pos, pos+nbInserted);
 			posDest = pos;
 		} else {
 			// replace data
@@ -60,14 +60,14 @@ int32_t EdnBuf::Undo(void)
 	}
 	// remove element in the list :
 	delete(m_historyUndo[nbElement]);
-	m_historyUndo.PopBack();
+	m_historyUndo.popBack();
 	m_isUndoProcessing = false;
 	return posDest;
 }
 
 int32_t EdnBuf::Redo(void)
 {
-	int32_t nbElement = m_historyRedo.Size();
+	int32_t nbElement = m_historyRedo.size();
 	//APPL_DEBUG("EdnBuf::Redo Request id="<<nbElement);
 	int32_t posDest = -1;
 	if (0 == nbElement) {
@@ -77,8 +77,8 @@ int32_t EdnBuf::Redo(void)
 	}
 	nbElement--;
 	if (m_historyRedo[nbElement] == NULL) {
-		APPL_ERROR("EdnBuf::Redo Find empty history ==> remove it");
-		m_historyRedo.PopBack();
+		APPL_ERROR("EdnBuf::Redo find empty history  == > remove it");
+		m_historyRedo.popBack();
 		return -1;
 	}
 	int32_t pos        = m_historyRedo[nbElement]->getPos();
@@ -92,13 +92,13 @@ int32_t EdnBuf::Redo(void)
 		if (0 == nbDeleted) {
 			APPL_ERROR("EdnBuf::Redo nothing to do in REDO");
 		} else {
-			Insert(pos, deletedText);
+			insert(pos, deletedText);
 			posDest = pos + nbDeleted;
 		}
 	} else {
 		if (0 == nbDeleted) {
 			// only remove data
-			Remove(pos, pos+nbInserted);
+			remove(pos, pos+nbInserted);
 			posDest = pos;
 		} else {
 			// replace data
@@ -108,7 +108,7 @@ int32_t EdnBuf::Redo(void)
 	}
 	// remove element in the list :
 	delete(m_historyRedo[nbElement]);
-	m_historyRedo.PopBack();
+	m_historyRedo.popBack();
 	m_isRedoProcessing = false;
 	return posDest;
 }

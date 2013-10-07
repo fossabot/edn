@@ -21,7 +21,7 @@
 class CodeView :public widget::WidgetScrooled
 {
 	public:
-		void Init(void);
+		void init(void);
 		CodeView(etk::UString fontName, int32_t fontSize);
 		CodeView(void);
 		virtual ~CodeView(void);
@@ -32,27 +32,27 @@ class CodeView :public widget::WidgetScrooled
 		int32_t m_bufferID;
 		bool m_buttunOneSelected;
 		etk::Vector<vec2 > m_lineNumberList;
-		void UpdateNumberOfLineReference(int32_t bufferID);
+		void updateNumberOfLineReference(int32_t bufferID);
 		// drawing elements :
 		ewol::Text m_displayText;
-		ewol::Drawing m_displayDrawing;
+		ewol::drawing m_displayDrawing;
 	public:
-		void SetFontSize(int32_t size);
-		void SetFontName(etk::UString fontName);
+		void setFontSize(int32_t size);
+		void setFontName(etk::UString fontName);
 	private:
-		void CalculateMaxSize(void);
+		void calculateMaxSize(void);
 	protected: // derived function
-		virtual void OnDraw(void);
+		virtual void onDraw(void);
 	public:  // Derived function
-		const char * const GetObjectType(void) { return "ApplCodeView"; };
-		virtual bool CalculateMinSize(void);
-		virtual void OnRegenerateDisplay(void);
-		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
-		virtual bool OnEventInput(const ewol::EventInput& _event);
-		virtual bool OnEventEntry(const ewol::EventEntry& _event);
-		virtual void OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
-		virtual void OnGetFocus(void);
-		virtual void OnLostFocus(void);
+		const char * const getObjectType(void) { return "ApplCodeView"; };
+		virtual bool calculateMinSize(void);
+		virtual void onRegenerateDisplay(void);
+		virtual void onReceiveMessage(const ewol::EMessage& _msg);
+		virtual bool onEventInput(const ewol::EventInput& _event);
+		virtual bool onEventEntry(const ewol::EventEntry& _event);
+		virtual void onEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
+		virtual void onGetFocus(void);
+		virtual void onLostFocus(void);
 };
 
 #endif

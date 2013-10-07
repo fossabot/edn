@@ -36,9 +36,9 @@ class Highlight {
 		// Constructeur
 		Highlight(const etk::UString& _xmlFilename);
 		~Highlight(void);
-		bool HasExtention(const etk::UString& _ext);
-		bool FileNameCompatible(etk::FSNode &_fileName);
-		void Display(void);
+		bool hasExtention(const etk::UString& _ext);
+		bool fileNameCompatible(etk::FSNode &_fileName);
+		void display(void);
 		void ReloadColor(void);
 		void Parse(int32_t start,
 		           int32_t stop,
@@ -53,8 +53,8 @@ class Highlight {
 		void ParseRules(exml::Element* child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level);
 		etk::UString m_styleName; //!< curent style name (like "c++" or "c" or "script Bash")
 		etk::Vector<etk::UString> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
-		etk::Vector<HighlightPattern*> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1 ==> when we load and wride data on the buffer)
-		etk::Vector<HighlightPattern*> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2 ==> When we display the buffer( only the display area (100 lines)) )
+		etk::Vector<HighlightPattern*> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
+		etk::Vector<HighlightPattern*> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
 };
 
 

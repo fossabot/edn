@@ -24,9 +24,9 @@ class Search : public widget::Sizer
 		Search(void);
 		~Search(void);
 	public: // derived function
-		virtual const char * const GetObjectType(void) { return "ApplSearch"; };
-		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
-		virtual void OnObjectRemove(ewol::EObject * _removeObject);
+		virtual const char * const getObjectType(void) { return "ApplSearch"; };
+		virtual void onReceiveMessage(const ewol::EMessage& _msg);
+		virtual void onObjectRemove(ewol::EObject * _removeObject);
 };
 
 #endif

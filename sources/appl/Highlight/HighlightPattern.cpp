@@ -21,7 +21,7 @@ HighlightPattern::HighlightPattern(void)
 {
 	m_haveStopPatern = false;
 	m_multiline = false;
-	m_color = ColorizeManager::Get("normal");
+	m_color = ColorizeManager::get("normal");
 	m_regExpStart = new etk::RegExp<etk::Buffer>();
 	m_regExpStop = new etk::RegExp<etk::Buffer>();
 	m_escapeChar = 0;
@@ -33,24 +33,24 @@ HighlightPattern::~HighlightPattern(void)
 	delete(m_regExpStop);
 }
 
-void  HighlightPattern::SetPaternStart(etk::UString &regExp)
+void  HighlightPattern::setPaternStart(etk::UString &regExp)
 {
-	m_regExpStart->SetRegExp(regExp);
+	m_regExpStart->setRegExp(regExp);
 }
 
-void  HighlightPattern::SetPaternStop(etk::UString &regExp)
+void  HighlightPattern::setPaternStop(etk::UString &regExp)
 {
-	if (regExp.Size() != 0) {
-		m_regExpStop->SetRegExp(regExp);
+	if (regExp.size() != 0) {
+		m_regExpStop->setRegExp(regExp);
 		m_haveStopPatern = true;
 	} else {
 		m_haveStopPatern = false;
 	}
 }
 
-void HighlightPattern::SetEscapeChar(etk::UString &EscapeChar)
+void HighlightPattern::setEscapeChar(etk::UString &EscapeChar)
 {
-	if (EscapeChar.Size()>0) {
+	if (EscapeChar.size()>0) {
 		m_escapeChar = EscapeChar[0];
 	} else {
 		m_escapeChar = 0;
@@ -58,13 +58,13 @@ void HighlightPattern::SetEscapeChar(etk::UString &EscapeChar)
 }
 
 
-void  HighlightPattern::SetColor(etk::UString &colorName)
+void  HighlightPattern::setColor(etk::UString &colorName)
 {
 	m_colorName = colorName;
-	m_color = ColorizeManager::Get(m_colorName);
+	m_color = ColorizeManager::get(m_colorName);
 }
 
-bool HighlightPattern::IsEnable(void)
+bool HighlightPattern::isEnable(void)
 {
 	return true;
 }
@@ -72,7 +72,7 @@ bool HighlightPattern::IsEnable(void)
 
 void HighlightPattern::ReloadColor(void)
 {
-	m_color = ColorizeManager::Get(m_colorName);
+	m_color = ColorizeManager::get(m_colorName);
 }
 
 /**
@@ -83,28 +83,28 @@ void HighlightPattern::ReloadColor(void)
  * @eturn
  *
  */
-void HighlightPattern::Display(void)
+void HighlightPattern::display(void)
 {
 	/*
 	APPL_INFO("patern : \"" << m_paternName << "\" level=" << m_level );
-	APPL_INFO(" ==> colorName \"" << m_colorName << "\"");
-	APPL_INFO(" ==> regExpStart \"" << m_regExpStart->GetRegExp() << "\"");
-	APPL_INFO(" ==> regExpStop \"" << m_regExpStop->GetRegExp() << "\"");
+	APPL_INFO("  == > colorName \"" << m_colorName << "\"");
+	APPL_INFO("  == > regExpStart \"" << m_regExpStart->getRegExp() << "\"");
+	APPL_INFO("  == > regExpStop \"" << m_regExpStop->getRegExp() << "\"");
 	if (true == m_haveStopPatern) {
-		APPL_INFO(" ==> stop pattern: YES");
+		APPL_INFO("  == > stop pattern: YES");
 	} else {
-		APPL_INFO(" ==> stop pattern: NO");
+		APPL_INFO("  == > stop pattern: NO");
 	}
 	if (true == m_multiline) {
-		APPL_INFO(" ==> multiline pattern: YES");
+		APPL_INFO("  == > multiline pattern: YES");
 	} else {
-		APPL_INFO(" ==> multiline pattern: NO");
+		APPL_INFO("  == > multiline pattern: NO");
 	}
 	*/
-	// Display all elements
-	for (int32_t i=0; i< m_subPatern.Size(); i++) {
-		APPL_INFO("        " << i << " SubPattern : " << m_subPatern[i]->GetName() );
-		m_subPatern[i]->Display();
+	// display all elements
+	for (int32_t i=0; i< m_subPatern.size(); i++) {
+		APPL_INFO("        " << i << " subPattern : " << m_subPatern[i]->getName() );
+		m_subPatern[i]->display();
 	}
 }
 void HighlightPattern::ParseRules(exml::Element *child, int32_t level)
@@ -120,51 +120,51 @@ void HighlightPattern::ParseRules(exml::Element *child, int32_t level)
 	*/
 	//--------------------------------------------------------------------------------------------
 	// process attribute	
-	etk::UString highLightName = child->GetAttribute("name");
+	etk::UString highLightName = child->getAttribute("name");
 	etk::UString myEdnDataTmp = "???";
-	if (highLightName.Size()!=0) {
+	if (highLightName.size()!=0) {
 		myEdnDataTmp = highLightName;
 	}
-	SetName(myEdnDataTmp);
-	SetLevel(level);
+	setName(myEdnDataTmp);
+	setLevel(level);
 	
-	exml::Element* xChild = (exml::Element*)child->GetNamed("color");
+	exml::Element* xChild = (exml::Element*)child->getNamed("color");
 	if (NULL != xChild) {
-		etk::UString myData = xChild->GetText();
-		if (myData.Size()!=0) {
+		etk::UString myData = xChild->getText();
+		if (myData.size()!=0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
-			SetColor(myEdnData);
+			setColor(myEdnData);
 		}
 	}
-	xChild = (exml::Element*)child->GetNamed("start");
+	xChild = (exml::Element*)child->getNamed("start");
 	if (NULL != xChild) {
-		etk::UString myData = xChild->GetText();
-		if (myData.Size()!=0) {
+		etk::UString myData = xChild->getText();
+		if (myData.size()!=0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
-			SetPaternStart(myEdnData);
+			setPaternStart(myEdnData);
 		}
 	}
-	xChild = (exml::Element*)child->GetNamed("end");
+	xChild = (exml::Element*)child->getNamed("end");
 	if (NULL != xChild) {
-		etk::UString myData = xChild->GetText();
-		if (myData.Size()!=0) {
+		etk::UString myData = xChild->getText();
+		if (myData.size()!=0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
-			SetPaternStop(myEdnData);
+			setPaternStop(myEdnData);
 		}
 	}
-	xChild = (exml::Element*)child->GetNamed("EscapeChar");
+	xChild = (exml::Element*)child->getNamed("EscapeChar");
 	if (NULL != xChild) {
-		etk::UString myData = xChild->GetText();
-		if (myData.Size()!=0) {
+		etk::UString myData = xChild->getText();
+		if (myData.size()!=0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
-			SetEscapeChar(myEdnData);
+			setEscapeChar(myEdnData);
 		}
 	}
-	xChild = (exml::Element*)child->GetNamed("rule");
+	xChild = (exml::Element*)child->getNamed("rule");
 	if (NULL != xChild) {
 		/*
 			// Create the patern ...
@@ -172,7 +172,7 @@ void HighlightPattern::ParseRules(exml::Element *child, int32_t level)
 			// parse under Element
 			myPattern->ParseRules(ruleChild, level+1);
 			// add element in the list
-			m_subPatern.PushBack(myPattern);
+			m_subPatern.pushBack(myPattern);
 			//ParseRules(passChild, m_listHighlightPass1, level1++);
 		*/
 	}
@@ -180,7 +180,7 @@ void HighlightPattern::ParseRules(exml::Element *child, int32_t level)
 
 
 /**
- * @brief Find Element only in the specify start characters and find the end with the range done
+ * @brief find Element only in the specify start characters and find the end with the range done
  *
  * @param[in] start First character to search data (if recognise it start here)
  * @param[in] stop End of the possibility whe search can continue
@@ -191,7 +191,7 @@ void HighlightPattern::ParseRules(exml::Element *child, int32_t level)
  * @return HLP_FIND_OK_NO_END Xe find a partial pattern (missing end)
  * @return HLP_FIND_ERROR Not find the pattern
  */
-resultFind_te HighlightPattern::Find(int32_t start, int32_t stop, colorInformation_ts &resultat, etk::Buffer &buffer)
+resultFind_te HighlightPattern::find(int32_t start, int32_t stop, colorInformation_ts &resultat, etk::Buffer &buffer)
 {
 	//APPL_DEBUG(" try to find the element");
 	resultat.beginStart = -1;

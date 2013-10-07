@@ -27,9 +27,9 @@ class MainWindows : public ewol::Windows
 		MainWindows(void);
 		~MainWindows(void);
 	public: // Derived function
-		virtual const char * const GetObjectType(void) { return "MainWindows"; };
-		virtual void OnReceiveMessage(const ewol::EMessage& _msg);
-		virtual void OnObjectRemove(ewol::EObject * _removeObject);
+		virtual const char * const getObjectType(void) { return "MainWindows"; };
+		virtual void onReceiveMessage(const ewol::EMessage& _msg);
+		virtual void onObjectRemove(ewol::EObject * _removeObject);
 };
 
 #define EDN_CAST_MAIN_WINDOWS(curentPointer) EWOL_CAST(TYPE_EOBJECT_EDN_MAIN_WINDOWS,MainWindows,curentPointer)

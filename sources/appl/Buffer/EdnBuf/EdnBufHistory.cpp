@@ -29,7 +29,7 @@ EdnBufHistory::EdnBufHistory(int32_t pos, int32_t nInserted, etk::Vector<int8_t>
 	m_deletedText = deletedText;
 }
 
-void EdnBufHistory::Set(int32_t pos, int32_t nInserted, etk::Vector<int8_t> &deletedText)
+void EdnBufHistory::set(int32_t pos, int32_t nInserted, etk::Vector<int8_t> &deletedText)
 {
 	//APPL_INFO("EdnBufHistory new + data");
 	m_pos = pos;
@@ -49,7 +49,7 @@ int32_t EdnBufHistory::getPos(void)
 
 int32_t EdnBufHistory::getnbDeleted(void)
 {
-	return m_deletedText.Size();
+	return m_deletedText.size();
 }
 
 int32_t EdnBufHistory::getnbInserted(void)

@@ -34,7 +34,7 @@ static const char *ControlCodeTable[32] = {
  */
 EdnBuf::EdnBuf(void)
 {
-	// TODO : Set it configurable !!!
+	// TODO : set it configurable !!!
 	m_tabDist = 8;
 	m_useTabs = true;
 
@@ -61,7 +61,7 @@ EdnBuf::EdnBuf(void)
  */
 EdnBuf::~EdnBuf(void)
 {
-	// TODO : Remove history and Future
+	// TODO : remove history and Future
 }
 
 /**
@@ -80,7 +80,7 @@ bool EdnBuf::DumpIn(etk::FSNode &file)
 
 
 /**
- * @brief Load in the current file open
+ * @brief load in the current file open
  * 
  * @param[in,out] myFile	pointer on the file where data might be read
  *
@@ -91,10 +91,10 @@ bool EdnBuf::DumpFrom(etk::FSNode &file)
 {
 	if (true == m_data.DumpFrom(file) ) {
 		// set no selection
-		UpdateSelection(0, 0, m_data.Size() );
+		updateSelection(0, 0, m_data.size() );
 		// generate HighLight
 		CleanHighLight();
-		GenerateHighLightAt(0, m_data.Size());
+		generateHighLightAt(0, m_data.size());
 		CountNumberOfLines();
 		return true;
 	}
@@ -102,53 +102,53 @@ bool EdnBuf::DumpFrom(etk::FSNode &file)
 }
 
 
-void EdnBuf::GetAll(etk::Vector<int8_t> &text)
+void EdnBuf::getAll(etk::Vector<int8_t> &text)
 {
 	// Clean output vector
-	text.Clear();
-	// Set data on the vector
-	text = m_data.Get(0, m_data.Size());
+	text.clear();
+	// set data on the vector
+	text = m_data.get(0, m_data.size());
 }
 
 
-void EdnBuf::SetAll(etk::Vector<int8_t> &text)
+void EdnBuf::setAll(etk::Vector<int8_t> &text)
 {
 	etk::Vector<int8_t> deletedText;
 	
 	// extract all data of the buffer :
-	GetAll(deletedText);
+	getAll(deletedText);
 	
-	// Remove all data in the buffer:
-	m_data.Clear();
+	// remove all data in the buffer:
+	m_data.clear();
 	
 	// inset text data : 
-	m_data.Insert(0, text);
+	m_data.insert(0, text);
 	
 	// Zero all of the existing selections
-	UpdateSelection(0, deletedText.Size(), 0);
+	updateSelection(0, deletedText.size(), 0);
 	
 	// Call the modification Event Manager
-	eventModification(0, m_data.Size(), deletedText); 
+	eventModification(0, m_data.size(), deletedText); 
 }
 
-void EdnBuf::GetRange(int32_t start, int32_t end, etk::Vector<int8_t> &output)
+void EdnBuf::getRange(int32_t start, int32_t end, etk::Vector<int8_t> &output)
 {
-	// Remove all data ...
-	output.Clear();
+	// remove all data ...
+	output.clear();
 	// import data : 
-	output = m_data.Get(start, end-start);
-	//APPL_DEBUG("request start=" << start << " end="<< end << " size="<< end-start << " result size=" << output.Size() );
+	output = m_data.get(start, end-start);
+	//APPL_DEBUG("request start=" << start << " end="<< end << " size="<< end-start << " result size=" << output.size() );
 }
 
-void EdnBuf::GetRange(int32_t start, int32_t end, etk::UString &output)
+void EdnBuf::getRange(int32_t start, int32_t end, etk::UString &output)
 {
-	// Remove all data ...
+	// remove all data ...
 	output = "";
 	// import data : 
-	etk::Vector<int8_t> localOutput = m_data.Get(start, end-start);
+	etk::Vector<int8_t> localOutput = m_data.get(start, end-start);
 	// transcript in UNICODE ...
 	if (true == m_isUtf8) {
-		localOutput.PushBack('\0');
+		localOutput.pushBack('\0');
 		output = (char*)&localOutput[0];
 	} else {
 		etk::Vector<uniChar_t> tmpUnicodeData;
@@ -156,12 +156,12 @@ void EdnBuf::GetRange(int32_t start, int32_t end, etk::UString &output)
 		convertIsoToUnicode(m_charsetType, localOutput, tmpUnicodeData);
 		output = tmpUnicodeData;
 	}
-	//APPL_DEBUG("request start=" << start << " end="<< end << " size="<< end-start << " result size=" << output.Size() );
+	//APPL_DEBUG("request start=" << start << " end="<< end << " size="<< end-start << " result size=" << output.size() );
 }
 
 
 /**
- * @brief Get an element at the selected position
+ * @brief get an element at the selected position
  * 
  * @param[in] pos Charecters Position, [0..n]
  * 
@@ -170,13 +170,13 @@ void EdnBuf::GetRange(int32_t start, int32_t end, etk::UString &output)
  */
 int8_t EdnBuf::operator[] (int32_t pos) const
 {
-	int8_t res = m_data.Get(pos);
+	int8_t res = m_data.get(pos);
 	return res;
 }
 
 
 /**
- * @brief Insert Data in the Buffer
+ * @brief insert Data in the Buffer
  * 
  * @param[in] pos Position in the Buffer
  * @param[in] insertText Text to insert
@@ -184,28 +184,28 @@ int8_t EdnBuf::operator[] (int32_t pos) const
  * @return ---
  * 
  */
-int32_t EdnBuf::Insert(int32_t pos, etk::Vector<int8_t> &insertText)
+int32_t EdnBuf::insert(int32_t pos, etk::Vector<int8_t> &insertText)
 {
 	// if pos is not contiguous to existing text, make it
-	pos = etk_avg(0, pos, m_data.Size() );
+	pos = etk_avg(0, pos, m_data.size() );
 	// insert Data
 	int32_t sizeInsert=LocalInsert(pos, insertText);
 
 	// Call the redisplay ...
 	etk::Vector<int8_t> deletedText;
-	eventModification(pos, insertText.Size(), deletedText);
+	eventModification(pos, insertText.size(), deletedText);
 	return sizeInsert;
 }
-int32_t EdnBuf::Insert(int32_t pos, etk::UString &insertText)
+int32_t EdnBuf::insert(int32_t pos, etk::UString &insertText)
 {
 	// if pos is not contiguous to existing text, make it
-	pos = etk_avg(0, pos, m_data.Size() );
+	pos = etk_avg(0, pos, m_data.size() );
 	// insert Data
 	int32_t sizeInsert=LocalInsert(pos, insertText);
 
 	// Call the redisplay ...
 	etk::Vector<int8_t> deletedText;
-	eventModification(pos, insertText.Size(), deletedText);
+	eventModification(pos, insertText.size(), deletedText);
 	return sizeInsert;
 }
 
@@ -225,11 +225,11 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::Vector<int8_t> &insertT
 		return 0;
 	}
 	etk::Vector<int8_t> deletedText;
-	GetRange(start, end, deletedText);
+	getRange(start, end, deletedText);
 	m_data.Replace(start, end-start, insertText);
 	// update internal elements
-	eventModification(start, insertText.Size(), deletedText);
-	return insertText.Size();
+	eventModification(start, insertText.size(), deletedText);
+	return insertText.size();
 }
 
 int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
@@ -238,37 +238,37 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
 		return 0;
 	}
 	etk::Vector<int8_t> deletedText;
-	GetRange(start, end, deletedText);
+	getRange(start, end, deletedText);
 	etk::Vector<int8_t> tmpInsertText;
 	if (true == m_isUtf8) {
 		etk::Char tmpChar = insertText.c_str();
 		const char * tmpPointer = tmpChar;
 		while (*tmpPointer != '\0') {
-			tmpInsertText.PushBack(*tmpPointer++);
+			tmpInsertText.pushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<uniChar_t> tmppp = insertText.GetVector();
+		etk::Vector<uniChar_t> tmppp = insertText.getVector();
 		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
 	}
-	if (tmpInsertText.Size()>0) {
-		if (tmpInsertText[tmpInsertText.Size()-1] == '\0') {
-			tmpInsertText.PopBack();
+	if (tmpInsertText.size()>0) {
+		if (tmpInsertText[tmpInsertText.size()-1] == '\0') {
+			tmpInsertText.popBack();
 		}
 	}
-	if (tmpInsertText.Size()>0) {
-		if (tmpInsertText[tmpInsertText.Size()-1] == '\0') {
-			tmpInsertText.PopBack();
+	if (tmpInsertText.size()>0) {
+		if (tmpInsertText[tmpInsertText.size()-1] == '\0') {
+			tmpInsertText.popBack();
 		}
 	}
 	m_data.Replace(start, end-start, tmpInsertText);
 	// update internal elements
-	eventModification(start, tmpInsertText.Size(), deletedText);
-	return tmpInsertText.Size();
+	eventModification(start, tmpInsertText.size(), deletedText);
+	return tmpInsertText.size();
 }
 
 
 /**
- * @brief Remove data between [start..end]
+ * @brief remove data between [start..end]
  * 
  * @param[in] start	 Position started in the buffer
  * @param[in] end	   Position ended in the buffer
@@ -276,7 +276,7 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
  * @return ---
  * 
  */
-void EdnBuf::Remove(int32_t start, int32_t end)
+void EdnBuf::remove(int32_t start, int32_t end)
 {
 
 	etk::Vector<int8_t> deletedText;
@@ -286,12 +286,12 @@ void EdnBuf::Remove(int32_t start, int32_t end)
 		start = end;
 		end = temp;
 	}
-	start = etk_avg(0 , start, m_data.Size());
-	end = etk_avg(0 , end, m_data.Size());
+	start = etk_avg(0 , start, m_data.size());
+	end = etk_avg(0 , end, m_data.size());
 
-	// Remove and redisplay
-	GetRange(start, end, deletedText);
-	m_data.Remove(start, end - start);
+	// remove and redisplay
+	getRange(start, end, deletedText);
+	m_data.remove(start, end - start);
 	eventModification(start, 0, deletedText);
 }
 
@@ -300,27 +300,27 @@ int32_t EdnBuf::Indent(void)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
-	bool haveSelectionActive = GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+	bool haveSelectionActive = getSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	
 	if (false == haveSelectionActive) {
 		return SelectionEnd;
 	}
-	// Disable selection:
+	// disable selection:
 	Unselect();
-	// Get Range :
+	// get Range :
 	int32_t l_start = StartOfLine(SelectionStart);
 	int32_t l_end = EndOfLine(SelectionEnd);
 	etk::Vector<int8_t> l_tmpData;
-	GetRange(l_start, l_end, l_tmpData);
+	getRange(l_start, l_end, l_tmpData);
 	
-	l_tmpData.Insert(0, '\n');
-	for (int32_t i=1; i<l_tmpData.Size(); i++) {
+	l_tmpData.insert(0, '\n');
+	for (int32_t i=1; i<l_tmpData.size(); i++) {
 		if ('\n' == l_tmpData[i-1]) {
 			if (true == m_useTabs) {
-				l_tmpData.Insert(i, '\t');
+				l_tmpData.insert(i, '\t');
 			} else {
 				for (int32_t j=0; j<m_tabDist; j++) {
-					l_tmpData.Insert(i, ' ');
+					l_tmpData.insert(i, ' ');
 				}
 			}
 		}
@@ -328,8 +328,8 @@ int32_t EdnBuf::Indent(void)
 	l_tmpData.Erase(0);
 	// Real replace of DATA :
 	Replace(l_start, l_end, l_tmpData);
-	// Set the new selection :
-	l_end = l_start + l_tmpData.Size();
+	// set the new selection :
+	l_end = l_start + l_tmpData.size();
 	Select(l_start, l_end);
 	// Return the position of the cursor
 	return l_end;
@@ -339,26 +339,26 @@ int32_t EdnBuf::UnIndent(void)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
-	bool haveSelectionActive = GetSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
+	bool haveSelectionActive = getSelectionPos(SelectionStart, SelectionEnd, SelectionIsRect, SelectionRectStart, SelectionRectEnd);
 	
 	if (false == haveSelectionActive) {
 		return SelectionEnd;
 	}
-	// Disable selection:
+	// disable selection:
 	Unselect();
-	// Get Range :
+	// get Range :
 	int32_t l_start = StartOfLine(SelectionStart);
 	int32_t l_end = EndOfLine(SelectionEnd);
 	etk::Vector<int8_t> l_tmpData;
-	GetRange(l_start, l_end, l_tmpData);
+	getRange(l_start, l_end, l_tmpData);
 	
-	l_tmpData.Insert(0, '\n');
-	for (int32_t i=1; i<l_tmpData.Size(); i++) {
+	l_tmpData.insert(0, '\n');
+	for (int32_t i=1; i<l_tmpData.size(); i++) {
 		if ('\n' == l_tmpData[i-1]) {
 			if('\t' == l_tmpData[i]) {
 				l_tmpData.Erase(i);
 			} else if(' ' == l_tmpData[i]) {
-				for (int32_t j=0; j<m_tabDist && j+i<l_tmpData.Size() ; j++) {
+				for (int32_t j=0; j<m_tabDist && j+i<l_tmpData.size() ; j++) {
 					if(' ' == l_tmpData[i]) {
 						l_tmpData.Erase(i);
 					} else if('\t' == l_tmpData[i]) {
@@ -374,8 +374,8 @@ int32_t EdnBuf::UnIndent(void)
 	l_tmpData.Erase(0);
 	// Real replace of DATA :
 	Replace(l_start, l_end, l_tmpData);
-	// Set the new selection :
-	l_end = l_start + l_tmpData.Size();
+	// set the new selection :
+	l_end = l_start + l_tmpData.size();
 	Select(l_start, l_end);
 	// Return the position of the cursor
 	return l_end;
@@ -383,7 +383,7 @@ int32_t EdnBuf::UnIndent(void)
 
 
 /**
- * @brief Get the data of a specific line
+ * @brief get the data of a specific line
  * 
  * @param[in] pos Position in a line that might be geted
  * @param[out] text Data in the current line at pos
@@ -391,14 +391,14 @@ int32_t EdnBuf::UnIndent(void)
  * @return ---
  * 
  */
-void EdnBuf::GetLineText(int32_t pos, etk::Vector<int8_t> &text)
+void EdnBuf::getLineText(int32_t pos, etk::Vector<int8_t> &text)
 {
-	GetRange( StartOfLine(pos), EndOfLine(pos), text);
+	getRange( StartOfLine(pos), EndOfLine(pos), text);
 }
 
 
 /**
- * @brief Find the position of the start of the current line
+ * @brief find the position of the start of the current line
  * 
  * @param[in] pos position inside the line whe we need to find the start
  * 
@@ -416,7 +416,7 @@ int32_t EdnBuf::StartOfLine(int32_t pos)
 
 
 /**
- * @brief Find the position of the end of the current line
+ * @brief find the position of the end of the current line
  * 
  * @param[in] pos position inside the line whe we need to find the end
  * 
@@ -427,7 +427,7 @@ int32_t EdnBuf::EndOfLine(int32_t pos)
 {
 	int32_t endPos;
 	if (false == SearchForward(pos, '\n', &endPos)) {
-		endPos = m_data.Size();
+		endPos = m_data.size();
 	}
 	return endPos;
 }
@@ -444,12 +444,12 @@ int32_t EdnBuf::EndOfLine(int32_t pos)
  * @return number of displayable char (display char width)
  * 
  */
-int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, char outUTF8[MAX_EXP_CHAR_LEN], uint32_t &currentChar)
+int32_t EdnBuf::getExpandedChar(int32_t &pos, int32_t indent, char outUTF8[MAX_EXP_CHAR_LEN], uint32_t &currentChar)
 {
 	int32_t i, nSpaces;
-	char c = m_data.Get(pos);
+	char c = m_data.get(pos);
 	currentChar = (uint32_t)c & 0xFF;
-	/* Convert tabs to spaces */
+	/* convert tabs to spaces */
 	if (c == '\t') {
 		nSpaces = m_tabDist - (indent % m_tabDist);
 		for (i=0; i<nSpaces; i++) {
@@ -460,7 +460,7 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, char outUTF8[MAX_E
 		return nSpaces;
 	}
 	
-	// Convert ASCII control codes to readable character sequences
+	// convert ASCII control codes to readable character sequences
 	if (c == '\0') {
 		outUTF8[0] = '<';
 		outUTF8[1] = 'n';
@@ -507,14 +507,14 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, char outUTF8[MAX_E
 		pos++;
 	} else {
 		char tmpString[8];
-		for (int32_t k=0; k<6 && k< m_data.Size() - pos; k++) {
-			tmpString[k] = m_data.Get(pos+k);
+		for (int32_t k=0; k<6 && k< m_data.size() - pos; k++) {
+			tmpString[k] = m_data.get(pos+k);
 		}
 		tmpString[6] = '\0';
 		uint8_t size;
 		bool baseValid;
 		unicode::Utf8_SizeElement(tmpString, 6 , size, baseValid);
-		currentChar = 0; // TODO : Set UNICODE char ...
+		currentChar = 0; // TODO : set UNICODE char ...
 		if (baseValid == true) {
 			char *tmp = outUTF8;
 			for (int32_t kkk=0; kkk<size; kkk++) {
@@ -544,12 +544,12 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, char outUTF8[MAX_E
  * @return number of displayable char (display char width)
  * 
  */
-int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnicode[MAX_EXP_CHAR_LEN], uint32_t &currentChar)
+int32_t EdnBuf::getExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnicode[MAX_EXP_CHAR_LEN], uint32_t &currentChar)
 {
 	int32_t i, nSpaces;
-	char c = m_data.Get(pos);
+	char c = m_data.get(pos);
 	currentChar = (uint32_t)c & 0xFF;
-	/* Convert tabs to spaces */
+	/* convert tabs to spaces */
 	if (c == '\t') {
 		nSpaces = m_tabDist - (indent % m_tabDist);
 		for (i=0; i<nSpaces; i++) {
@@ -560,7 +560,7 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnico
 		return nSpaces;
 	}
 	
-	// Convert ASCII control codes to readable character sequences
+	// convert ASCII control codes to readable character sequences
 	if (c == '\0') {
 		outUnicode[0] = '<';
 		outUnicode[1] = 'n';
@@ -604,13 +604,13 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnico
 	memset(outUnicode, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
 	
 	// Otherwise, just return the character
-	if (false ==m_isUtf8) {
+	if (false  == m_isUtf8) {
 		unicode::convertIsoToUnicode(m_charsetType, c, outUnicode[0]);
 		pos++;
 	} else {
 		char tmpString[8];
-		for (int32_t k=0; k<6 && k< m_data.Size() - pos; k++) {
-			tmpString[k] = m_data.Get(pos+k);
+		for (int32_t k=0; k<6 && k< m_data.size() - pos; k++) {
+			tmpString[k] = m_data.get(pos+k);
 		}
 		tmpString[6] = '\0';
 		uint8_t size;
@@ -623,7 +623,7 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnico
 				tmp[kkk] = tmpString[kkk];
 				tmp[kkk+1] = '\0';
 			}
-			outUnicode[0].SetUtf8(tmp);
+			outUnicode[0].setUtf8(tmp);
 			outUnicode[1] = 0;
 		} else {
 			outUnicode[0] = '<';
@@ -648,7 +648,7 @@ int32_t EdnBuf::GetExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnico
 
 
 /**
- * @brief generate the real display of character of the output (ex : \t ==> 4 spaces or less ...)
+ * @brief generate the real display of character of the output (ex : \t  == > 4 spaces or less ...)
  * 
  * @param[in] c Char that might be converted
  * @param[in] indent Curent indentation befor the curent char
@@ -661,7 +661,7 @@ int32_t EdnBuf::ExpandCharacter(char c, int32_t indent, char outUTF8[MAX_EXP_CHA
 {
 	int32_t i, nSpaces;
 	
-	/* Convert tabs to spaces */
+	/* convert tabs to spaces */
 	if (c == '\t') {
 		nSpaces = m_tabDist - (indent % m_tabDist);
 		for (i=0; i<nSpaces; i++) {
@@ -671,7 +671,7 @@ int32_t EdnBuf::ExpandCharacter(char c, int32_t indent, char outUTF8[MAX_EXP_CHA
 		return nSpaces;
 	}
 	
-	// Convert ASCII control codes to readable character sequences
+	// convert ASCII control codes to readable character sequences
 	if (c == '\0') {
 		outUTF8[0] = '<';
 		outUTF8[1] = 'n';
@@ -708,7 +708,7 @@ int32_t EdnBuf::ExpandCharacter(char c, int32_t indent, char outUTF8[MAX_EXP_CHA
 }
 
 /**
- * @brief Generate the size of the display of one element
+ * @brief generate the size of the display of one element
  * 
  * @param[in] c Char that might be converted
  * @param[in] indent Curent indentation befor the curent char
@@ -735,11 +735,11 @@ int32_t EdnBuf::CharWidth(char c, int32_t indent)
 /**
  * @brief Count the number of displayed characters between buffer position
  * 
- * Displayed characters are the characters shown on the screen to represent characters in the 
+ * displayed characters are the characters shown on the screen to represent characters in the 
  * buffer, where tabs and control characters are expanded
  * 
  * @param[in] lineStartPos	Start position in the line
- * @param[in] targetPos		Displayed target position in char
+ * @param[in] targetPos		displayed target position in char
  * 
  * @return the ID in the buffer of the requested char
  * 
@@ -749,7 +749,7 @@ int32_t EdnBuf::CountDispChars(int32_t lineStartPos, int32_t targetPos)
 	int32_t charCount = 0;
 	char expandedChar[MAX_EXP_CHAR_LEN];
 	//APPL_DEBUG("lineStartPos="<< lineStartPos << " targetPos=" << targetPos);
-	for(int32_t iii = lineStartPos; iii< targetPos && iii<m_data.Size() ; iii++ ) {
+	for(int32_t iii = lineStartPos; iii< targetPos && iii<m_data.size() ; iii++ ) {
 		charCount += ExpandCharacter(m_data[iii], charCount, expandedChar);
 	}
 	//APPL_DEBUG(" result=" << charCount);
@@ -766,7 +766,7 @@ int32_t EdnBuf::CountForwardDispChars(int32_t lineStartPos, int32_t nChars)
 {
 	int32_t charCount = 0;
 	int32_t iii = 0;
-	for(iii = lineStartPos; charCount<nChars && iii<m_data.Size() ; iii++ ) {
+	for(iii = lineStartPos; charCount<nChars && iii<m_data.size() ; iii++ ) {
 		char c = m_data[iii];
 		if (c == '\n') {
 			return iii;
@@ -785,7 +785,7 @@ int32_t EdnBuf::CountForwardDispChars(int32_t lineStartPos, int32_t nChars)
 int32_t EdnBuf::CountLines(int32_t startPos, int32_t endPos)
 {
 	int32_t lineCount = 0;
-	for(int32_t iii = startPos; iii<m_data.Size() ; iii++ ) {
+	for(int32_t iii = startPos; iii<m_data.size() ; iii++ ) {
 		if (iii == endPos) {
 			return lineCount;
 		}
@@ -804,7 +804,7 @@ int32_t EdnBuf::CountLines(int32_t startPos, int32_t endPos)
 int32_t EdnBuf::CountLines(etk::Vector<int8_t> &data)
 {
 	int32_t lineCount = 0;
-	for(int32_t iii=0 ; iii<data.Size() ; iii++ ) {
+	for(int32_t iii=0 ; iii<data.size() ; iii++ ) {
 		if ('\n' == data[iii]) {
 			lineCount++;
 		}
@@ -815,7 +815,7 @@ int32_t EdnBuf::CountLines(etk::Vector<int8_t> &data)
 int32_t EdnBuf::CountLines(void)
 {
 	int32_t lineCount = 0;
-	for(int32_t iii=0 ; iii<m_data.Size() ; iii++ ) {
+	for(int32_t iii=0 ; iii<m_data.size() ; iii++ ) {
 		if ('\n' == m_data[iii]) {
 			lineCount++;
 		}
@@ -824,18 +824,18 @@ int32_t EdnBuf::CountLines(void)
 }
 
 /**
- * @brief Calculate the number of line
+ * @brief calculate the number of line
  * @return the number of line in the buffer [1..n]
  */
 void EdnBuf::CountNumberOfLines(void)
 {
-	m_nbLine = CountLines(0, m_data.Size());
+	m_nbLine = CountLines(0, m_data.size());
 	m_nbLine++;
 }
 
 
 /**
- * @brief Find the first character of the line "nLines" forward
+ * @brief find the first character of the line "nLines" forward
  * 
  * @param[in,out] startPos	Start position to count
  * @param[in,out] nLines	number of line to count
@@ -847,31 +847,31 @@ int32_t EdnBuf::CountForwardNLines(int32_t startPos, int32_t nLines)
 {
 	if (nLines == 0) {
 		return startPos;
-	} else if (startPos > m_data.Size() ) {
-		return m_data.Size();
+	} else if (startPos > m_data.size() ) {
+		return m_data.size();
 	}
 	int32_t lineCount = 0;
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
 	int32_t iii = 0;
-	for(iii = startPos; iii<m_data.Size() ; iii++ ) {
+	for(iii = startPos; iii<m_data.size() ; iii++ ) {
 		if ('\n' == m_data[iii]) {
 			lineCount++;
 			if (lineCount == nLines) {
-				//APPL_INFO("   ==> (1) at position=" << myPosIt.Position()+1 );
+				//APPL_INFO("    == > (1) at position=" << myPosIt.Position()+1 );
 				return iii+1;
 			}
 		}
 	}
-	//APPL_INFO("   ==> (2) at position=" << myPosIt.Position() );
+	//APPL_INFO("    == > (2) at position=" << myPosIt.Position() );
 	return iii;
 }
 
 
 /**
- * @brief Find the first character of the line "nLines" backwards
+ * @brief find the first character of the line "nLines" backwards
  * 
  * @param[in,out] startPos	Start position to count (this caracter is not counted)
- * @param[in,out] nLines	number of line to count (if ==0 means find the beginning of the line)
+ * @param[in,out] nLines	number of line to count (if  == 0 means find the beginning of the line)
  * 
  * @return position of the starting the line
  * 
@@ -880,22 +880,22 @@ int32_t EdnBuf::CountBackwardNLines(int32_t startPos, int32_t nLines)
 {
 	if (startPos <= 0) {
 		return 0;
-	} else if (startPos > m_data.Size() ) {
-		startPos = m_data.Size();
+	} else if (startPos > m_data.size() ) {
+		startPos = m_data.size();
 	}
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
 	
 	int32_t lineCount = -1;
-	for(int32_t iii = startPos-1; iii>=0 ; iii-- ) {
+	for(int32_t iii = startPos-1; iii >= 0 ; iii-- ) {
 		if ('\n' == m_data[iii]) {
 			lineCount++;
 			if (lineCount >= nLines) {
-				//APPL_INFO("   ==> (1) at position=" << myPosIt.Position()+1 );
+				//APPL_INFO("    == > (1) at position=" << myPosIt.Position()+1 );
 				return iii+1;
 			}
 		}
 	}
-	//APPL_INFO("   ==> (2) at position=0");
+	//APPL_INFO("    == > (2) at position=0");
 	return 0;
 }
 
@@ -911,10 +911,10 @@ bool EdnBuf::charMatch(char first, char second, bool caseSensitive)
 		}
 	}
 	if(first == second) {
-		//APPL_DEBUG("charMatch(" << first << ", " << second << ", " << caseSensitive << ") ==> true");
+		//APPL_DEBUG("charMatch(" << first << ", " << second << ", " << caseSensitive << ")  == > true");
 		return true;
 	} else {
-		//APPL_DEBUG("charMatch(" << first << ", " << second << ", " << caseSensitive << ") ==> false");
+		//APPL_DEBUG("charMatch(" << first << ", " << second << ", " << caseSensitive << ")  == > false");
 		return false;
 	}
 }
@@ -926,8 +926,8 @@ bool EdnBuf::charMatch(char first, char second, bool caseSensitive)
  * @param[in] searchVect	String to search
  * @param[out] foundPos		Current position founded
  * 
- * @return true ==> found data
- * @return false ==> not found data
+ * @return true  == > found data
+ * @return false  == > not found data
  * 
  */
 bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foundPos, int32_t *foundPosEnd, bool caseSensitive)
@@ -937,17 +937,17 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foun
 		etk::Char tmpChar = search.c_str();
 		const char * tmpPointer = tmpChar;
 		while (*tmpPointer != '\0') {
-			searchVect.PushBack(*tmpPointer++);
+			searchVect.pushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<etk::UniChar> tmppp = search.GetVector();
+		etk::Vector<etk::UniChar> tmppp = search.getVector();
 		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
 	}
 	// remove the '\0' at the end of the string ...
-	searchVect.PopBack();
+	searchVect.popBack();
 	int32_t position;
-	int32_t searchLen = searchVect.Size();
-	int32_t dataLen   = m_data.Size();
+	int32_t searchLen = searchVect.size();
+	int32_t dataLen   = m_data.size();
 	char currentChar = '\0';
 	APPL_INFO(" startPos=" << startPos << " searchLen=" << searchLen);
 	for (position=startPos; position<dataLen - (searchLen-1); position++) {
@@ -964,13 +964,13 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foun
 			}
 			if (true == found) {
 				*foundPos = position;
-				*foundPosEnd = position + searchVect.Size();
+				*foundPosEnd = position + searchVect.size();
 				return true;
 			}
 		}
 	}
-	*foundPos = m_data.Size();
-	*foundPosEnd = m_data.Size();
+	*foundPos = m_data.size();
+	*foundPosEnd = m_data.size();
 	return false;
 }
 
@@ -982,8 +982,8 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foun
  * @param[in] searchChars	String to search
  * @param[out] foundPos		Current position founded
  * 
- * @return true ==> found data
- * @return false ==> not found data
+ * @return true  == > found data
+ * @return false  == > not found data
  * 
  */
 bool EdnBuf::SearchBackward(int32_t startPos, etk::UString &search, int32_t *foundPos, int32_t *foundPosEnd, bool caseSensitive)
@@ -993,25 +993,25 @@ bool EdnBuf::SearchBackward(int32_t startPos, etk::UString &search, int32_t *fou
 		etk::Char tmpChar = search.c_str();
 		const char * tmpPointer = tmpChar;
 		while (*tmpPointer != '\0') {
-			searchVect.PushBack(*tmpPointer++);
+			searchVect.pushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<etk::UniChar> tmppp = search.GetVector();
+		etk::Vector<etk::UniChar> tmppp = search.getVector();
 		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
 	}
 	// remove the '\0' at the end of the string ...
-	searchVect.PopBack();
+	searchVect.popBack();
 	
 	int32_t position;
-	int32_t searchLen = searchVect.Size();
+	int32_t searchLen = searchVect.size();
 	char currentChar = '\0';
 	//APPL_INFO(" startPos=" << startPos << " searchLen=" << searchLen);
-	for (position=startPos; position>=searchLen-1; position--) {
+	for (position=startPos; position >= searchLen-1; position--) {
 		currentChar = m_data[position];
 		if (true == charMatch(currentChar, searchVect[searchLen-1], caseSensitive)) {
 			int32_t i;
 			bool found = true;
-			for (i=searchLen-1; i>=0; i--) {
+			for (i=searchLen-1; i >= 0; i--) {
 				currentChar = m_data[position - (searchLen-1) + i];
 				if (false == charMatch(currentChar, searchVect[i], caseSensitive)) {
 					found = false;
@@ -1020,13 +1020,13 @@ bool EdnBuf::SearchBackward(int32_t startPos, etk::UString &search, int32_t *fou
 			}
 			if (true == found) {
 				*foundPos = position - (searchLen-1);
-				*foundPosEnd = position + searchVect.Size();
+				*foundPosEnd = position + searchVect.size();
 				return true;
 			}
 		}
 	}
-	*foundPos = m_data.Size();
-	*foundPosEnd = m_data.Size();
+	*foundPos = m_data.size();
+	*foundPosEnd = m_data.size();
 	return false;
 }
 
@@ -1054,7 +1054,7 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
 	{
 		APPL_DEBUG("select spacer");
 		// special case we are looking for separation
-		for (beginPos=startPos; beginPos>=0; beginPos--) {
+		for (beginPos=startPos; beginPos >= 0; beginPos--) {
 			currentChar = m_data[beginPos];
 			if(		'\t' != currentChar
 				&&	' '  != currentChar)
@@ -1064,7 +1064,7 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
 			}
 		}
 		// special case we are looking for separation
-		for (endPos=startPos; endPos<m_data.Size(); endPos++) {
+		for (endPos=startPos; endPos<m_data.size(); endPos++) {
 			currentChar = m_data[endPos];
 			if(		'\t' != currentChar
 				&&	' '  != currentChar)
@@ -1076,7 +1076,7 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
 	} else if( true == isChar(currentChar)){
 		APPL_DEBUG("select normal Char");
 		// Search back
-		for (beginPos=startPos; beginPos>=0; beginPos--) {
+		for (beginPos=startPos; beginPos >= 0; beginPos--) {
 			currentChar = m_data[beginPos];
 			if( false == isChar(currentChar)) {
 				beginPos++;
@@ -1084,7 +1084,7 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
 			}
 		}
 		// Search forward
-		for (endPos=startPos; endPos<m_data.Size(); endPos++) {
+		for (endPos=startPos; endPos<m_data.size(); endPos++) {
 			currentChar = m_data[endPos];
 			if( false == isChar(currentChar)) {
 				break;
@@ -1095,7 +1095,7 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
 		char comparechar = currentChar;
 		APPL_DEBUG("select same char");
 		// Search back
-		for (beginPos=startPos; beginPos>=0; beginPos--) {
+		for (beginPos=startPos; beginPos >= 0; beginPos--) {
 			currentChar = m_data[beginPos];
 			if(comparechar != currentChar)
 			{
@@ -1104,7 +1104,7 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
 			}
 		}
 		// Search forward
-		for (endPos=startPos; endPos<m_data.Size(); endPos++) {
+		for (endPos=startPos; endPos<m_data.size(); endPos++) {
 			currentChar = m_data[endPos];
 			if(comparechar != currentChar)
 			{
@@ -1120,7 +1120,7 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
 
 
 /**
- * @brief Insert data in the buffer binary and call all needed functions.
+ * @brief insert data in the buffer binary and call all needed functions.
  * 
  * @param[in] pos Position to insert data in the buffer.
  * @param[in] insertText Data to insert.
@@ -1130,12 +1130,12 @@ bool EdnBuf::SelectAround(int32_t startPos, int32_t &beginPos, int32_t &endPos)
  */
 int32_t EdnBuf::LocalInsert(int32_t pos, etk::Vector<int8_t> &insertText)
 {
-	// Insert data in buffer
-	m_data.Insert(pos, insertText);
+	// insert data in buffer
+	m_data.insert(pos, insertText);
 	// update the current selected area
-	UpdateSelection(pos, 0, insertText.Size() );
+	updateSelection(pos, 0, insertText.size() );
 	// return the number of element inserted ...
-	return insertText.Size();
+	return insertText.size();
 }
 int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
 {
@@ -1144,15 +1144,15 @@ int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
 		etk::Char tmpChar = insertText.c_str();
 		const char * tmpPointer = tmpChar;
 		while (*tmpPointer != '\0') {
-			tmpInsertText.PushBack(*tmpPointer++);
+			tmpInsertText.pushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<etk::UniChar> tmppp = insertText.GetVector();
+		etk::Vector<etk::UniChar> tmppp = insertText.getVector();
 		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
 	}
-	if (tmpInsertText.Size()>0) {
-		if (tmpInsertText[tmpInsertText.Size()-1] == '\0') {
-			tmpInsertText.PopBack();
+	if (tmpInsertText.size()>0) {
+		if (tmpInsertText[tmpInsertText.size()-1] == '\0') {
+			tmpInsertText.popBack();
 		}
 	}
 	return LocalInsert(pos, tmpInsertText);
@@ -1171,38 +1171,38 @@ int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
  */
 void EdnBuf::eventModification(int32_t pos, int32_t nInserted, etk::Vector<int8_t> &deletedText)
 {
-	if(		0 == deletedText.Size()
+	if(		0 == deletedText.size()
 		&&	0 == nInserted)
 	{
 		// we do nothing ...
 		//APPL_INFO("EdnBuf::eventModification(pos="<<pos<<", ... , nRestyled=" << nRestyled << ", deletedText=\"" << textDisplay << "\");");
 	} else {
-		APPL_INFO("(pos="<<pos<<", nDeleted="<<deletedText.Size()<<", nInserted=" << nInserted << ", deletedText=\"xx???xx\");");
+		APPL_INFO("(pos="<<pos<<", nDeleted="<<deletedText.size()<<", nInserted=" << nInserted << ", deletedText=\"xx???xx\");");
 		// update the number of lines : 
 		//APPL_INFO(" add=" << CountLines(pos, pos+nInserted) << " lines  |  remove="<< CountLines(deletedText) << " lines");
 		m_nbLine += CountLines(pos, pos+nInserted) - CountLines(deletedText);
-		// Update histories
+		// update histories
 		if (false == m_isUndoProcessing) {
 			// normal or Redo processing
 			EdnBufHistory *exempleHistory = new EdnBufHistory(pos, nInserted, deletedText);
-			m_historyUndo.PushBack(exempleHistory);
+			m_historyUndo.pushBack(exempleHistory);
 			if (false == m_isRedoProcessing) {
 				// remove all element in the redo system ...
 				int32_t i;
-				for (i=m_historyRedo.Size()-1; i>=0; i--) {
+				for (i=m_historyRedo.size()-1; i >= 0; i--) {
 					if (NULL != m_historyRedo[i]) {
 						delete(m_historyRedo[i]);
 					}
-					m_historyRedo.PopBack();
+					m_historyRedo.popBack();
 				}
 			}
 		} else {
-			// undo processing ==> add element in Redo vector ...
+			// undo processing  == > add element in Redo vector ...
 			EdnBufHistory *exempleHistory = new EdnBufHistory(pos, nInserted, deletedText);
-			m_historyRedo.PushBack(exempleHistory);
+			m_historyRedo.pushBack(exempleHistory);
 		}
 		// Regenerate the Highlight : 
-		RegenerateHighLightAt(pos, deletedText.Size(), nInserted);
+		RegenerateHighLightAt(pos, deletedText.size(), nInserted);
 	}
 }
 
@@ -1223,13 +1223,13 @@ void EdnBuf::eventModification(int32_t pos, int32_t nInserted, etk::Vector<int8_
 bool EdnBuf::SearchForward(int32_t startPos, char searchChar, int32_t *foundPos)
 {
 	// move in the string
-	for(int32_t iii=startPos ; iii<m_data.Size() ; iii++ ) {
+	for(int32_t iii=startPos ; iii<m_data.size() ; iii++ ) {
 		if (m_data[iii] == searchChar) {
 			*foundPos = iii;
 			return true;
 		}
 	}
-	*foundPos = m_data.Size();
+	*foundPos = m_data.size();
 	return false;
 }
 
@@ -1247,7 +1247,7 @@ bool EdnBuf::SearchForward(int32_t startPos, char searchChar, int32_t *foundPos)
 bool EdnBuf::SearchBackward(int32_t startPos, char searchChar, int32_t *foundPos)
 {
 	// move in the string
-	for(int32_t iii=startPos-1 ; iii>=0 ; iii-- ) {
+	for(int32_t iii=startPos-1 ; iii >= 0 ; iii-- ) {
 		if (m_data[iii] == searchChar) {
 			*foundPos = iii;
 			return true;

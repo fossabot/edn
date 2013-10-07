@@ -17,7 +17,7 @@ class EdnBufHistory{
 					 EdnBufHistory(void);
 					 EdnBufHistory(int32_t pos, int32_t nInserted, etk::Vector<int8_t> &deletedText);
 					~EdnBufHistory(void);
-		void		 Set(int32_t pos, int32_t nInserted, etk::Vector<int8_t> &deletedText);
+		void		 set(int32_t pos, int32_t nInserted, etk::Vector<int8_t> &deletedText);
 		int32_t		 getPos(void);
 		int32_t		 getnbDeleted(void);
 		int32_t		 getnbInserted(void);

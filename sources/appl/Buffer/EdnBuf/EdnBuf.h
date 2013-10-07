@@ -49,37 +49,37 @@ typedef struct {
 }displayHLData_ts;
 
 class EdnBuf {
-	// TODO : Set an iterator to acces at every data without knowin the system ...
+	// TODO : set an iterator to acces at every data without knowin the system ...
 	public:
 		// constructer
 		EdnBuf(void);
 		// destructer
 		~EdnBuf(void);
 		// public function :
-		void GetAll(etk::Vector<int8_t>& _text);
-		void SetAll(etk::Vector<int8_t>& _text);
-		void GetRange(int32_t _start, int32_t _end, etk::Vector<int8_t>& _output);
-		void GetRange(int32_t _start, int32_t _end, etk::UString& _output);
+		void getAll(etk::Vector<int8_t>& _text);
+		void setAll(etk::Vector<int8_t>& _text);
+		void getRange(int32_t _start, int32_t _end, etk::Vector<int8_t>& _output);
+		void getRange(int32_t _start, int32_t _end, etk::UString& _output);
 		bool DumpIn(etk::FSNode& _file);
 		bool DumpFrom(etk::FSNode& _file);
 		// replace with operator [] ...
 		int8_t operator[] (int32_t) const;
-		int32_t Insert(int32_t _pos, etk::Vector<int8_t>& _insertText);
-		int32_t Insert(int32_t _pos, etk::UString& _insertText);
+		int32_t insert(int32_t _pos, etk::Vector<int8_t>& _insertText);
+		int32_t insert(int32_t _pos, etk::UString& _insertText);
 		int32_t Replace(int32_t _start, int32_t _end, etk::Vector<int8_t>& _insertText);
 		int32_t Replace(int32_t _start, int32_t _end, etk::UString& _insertText);
-		void Remove(int32_t _start, int32_t _end);
+		void remove(int32_t _start, int32_t _end);
 		int32_t Indent(void);
 		int32_t UnIndent(void);
 		
 		
-		void GetLineText(int32_t _pos, etk::Vector<int8_t>& _text);
+		void getLineText(int32_t _pos, etk::Vector<int8_t>& _text);
 		int32_t StartOfLine(int32_t _pos);
 		int32_t EndOfLine(int32_t _pos);
 		
-		int32_t GetExpandedChar(int32_t& _pos, int32_t _indent, uniChar_t _outUnicode[MAX_EXP_CHAR_LEN], uint32_t& _currentChar);
-		int32_t GetExpandedChar(int32_t& _pos, int32_t _indent, char _outUTF8[MAX_EXP_CHAR_LEN], uint32_t& _currentChar);
-		int32_t ExpandCharacter(char _c, int32_t _indent, char _outUTF8[MAX_EXP_CHAR_LEN]); // TODO : Remove
+		int32_t getExpandedChar(int32_t& _pos, int32_t _indent, uniChar_t _outUnicode[MAX_EXP_CHAR_LEN], uint32_t& _currentChar);
+		int32_t getExpandedChar(int32_t& _pos, int32_t _indent, char _outUTF8[MAX_EXP_CHAR_LEN], uint32_t& _currentChar);
+		int32_t ExpandCharacter(char _c, int32_t _indent, char _outUTF8[MAX_EXP_CHAR_LEN]); // TODO : remove
 		int32_t CharWidth(char _c, int32_t _indent); // TODO : rework this
 		int32_t CountDispChars(int32_t _lineStartPos, int32_t _targetPos);
 		int32_t CountForwardDispChars(int32_t _lineStartPos, int32_t _nChars);
@@ -95,8 +95,8 @@ class EdnBuf {
 		bool SearchBackward(int32_t _startPos, char _searchChar, int32_t* _foundPos);
 		bool SelectAround(int32_t _startPos, int32_t& _beginPos, int32_t& _endPos);
 
-		// Buffer Size system :
-		int32_t Size(void) { return m_data.Size(); };
+		// Buffer size system :
+		int32_t size(void) { return m_data.size(); };
 		int32_t NumberOfLines(void) { return m_nbLine; };
 
 	// -----------------------------------------
@@ -107,16 +107,16 @@ class EdnBuf {
 		void Select(int32_t _start, int32_t _end);
 		void Unselect(void);
 		void RectSelect(int32_t _start, int32_t _end, int32_t _rectStart, int32_t _rectEnd);
-		bool GetSelectionPos(int32_t& _start, int32_t& _end, bool& _isRect, int32_t& _rectStart, int32_t& _rectEnd);
-		void GetSelectionText(etk::Vector<int8_t>& _text);
-		void GetSelectionText(etk::UString& _text);
-		void RemoveSelected(void);
+		bool getSelectionPos(int32_t& _start, int32_t& _end, bool& _isRect, int32_t& _rectStart, int32_t& _rectEnd);
+		void getSelectionText(etk::Vector<int8_t>& _text);
+		void getSelectionText(etk::UString& _text);
+		void removeSelected(void);
 		int32_t ReplaceSelected(etk::Vector<int8_t>& _text);
 		int32_t ReplaceSelected(etk::UString& _text);
 	private:
 		// current selection of the buffer
 		selection m_selectionList; //!< Selection area of the buffer
-		void UpdateSelection(int32_t _pos, int32_t _nDeleted, int32_t _nInserted);
+		void updateSelection(int32_t _pos, int32_t _nDeleted, int32_t _nInserted);
 
 	// -----------------------------------------
 	// History section : 
@@ -137,15 +137,15 @@ class EdnBuf {
 		Highlight * m_Highlight; //!< internal link with the Highlight system
 		etk::Vector<colorInformation_ts> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
 		void RegenerateHighLightAt(int32_t _pos, int32_t _nbDeleted, int32_t _nbAdded);
-		void GenerateHighLightAt(int32_t _pos, int32_t _endPos, int32_t _addinPos=0);
+		void generateHighLightAt(int32_t _pos, int32_t _endPos, int32_t _addinPos=0);
 		void CleanHighLight(void);
-		void FindMainHighLightPosition(int32_t _startPos, int32_t _endPos, int32_t &_startId, int32_t &_stopId, bool _backPreviousNotEnded);
+		void findMainHighLightPosition(int32_t _startPos, int32_t _endPos, int32_t &_startId, int32_t &_stopId, bool _backPreviousNotEnded);
 	public:
-		void SetHLSystem(Highlight* _newHLSystem);
+		void setHLSystem(Highlight* _newHLSystem);
 		void HightlightGenerateLines(displayHLData_ts& _MData, int32_t _startPos, int32_t _nbLines);
-		colorInformation_ts* GetElementColorAtPosition(displayHLData_ts& _MData, int32_t _pos);
+		colorInformation_ts* getElementColorAtPosition(displayHLData_ts& _MData, int32_t _pos);
 	private:
-		colorInformation_ts* GetElementColorAtPosition(int32_t _pos, int32_t &_starPos);
+		colorInformation_ts* getElementColorAtPosition(int32_t _pos, int32_t &_starPos);
 
 	private:
 		etk::Buffer m_data; //!< buffer of the data in the mode int8_t
@@ -153,18 +153,18 @@ class EdnBuf {
 		int32_t m_nbLine; //!< Number of line in the biffer
 
 	// -----------------------------------------
-	// Display property and charset ...
+	// display property and charset ...
 	// -----------------------------------------
 	public:
-		int32_t GetTabDistance(void) { return m_tabDist; } ;
-		void SetTabDistance(int32_t _tabDist) { m_tabDist = _tabDist; };
-		unicode::charset_te GetCharsetType(void) { return m_charsetType; };
-		void SetCharsetType(unicode::charset_te _newOne) { m_charsetType = _newOne; if (unicode::EDN_CHARSET_UTF8==_newOne){m_isUtf8=true;} else {m_isUtf8=false;} };
-		bool GetUTF8Mode(void) { return m_isUtf8; };
-		void SetUTF8Mode(bool _newOne) { m_isUtf8 = _newOne; m_charsetType=unicode::EDN_CHARSET_UTF8; };
+		int32_t getTabDistance(void) { return m_tabDist; } ;
+		void setTabDistance(int32_t _tabDist) { m_tabDist = _tabDist; };
+		unicode::charset_te getCharsetType(void) { return m_charsetType; };
+		void setCharsetType(unicode::charset_te _newOne) { m_charsetType = _newOne; if (unicode::EDN_CHARSET_UTF8 == _newOne){m_isUtf8=true;} else {m_isUtf8=false;} };
+		bool getUTF8Mode(void) { return m_isUtf8; };
+		void setUTF8Mode(bool _newOne) { m_isUtf8 = _newOne; m_charsetType=unicode::EDN_CHARSET_UTF8; };
 	private:
 		// Special mode of the buffer :
-		bool m_isUtf8; //!< true if we are in UTF8 mode ==> if true the size of a char is 0, otherwise .. 1->4 ( TODO : not now)
+		bool m_isUtf8; //!< true if we are in UTF8 mode  == > if true the size of a char is 0, otherwise .. 1->4 ( TODO : not now)
 		unicode::charset_te m_charsetType; //!< if UTF8 mode is at false : the charset type of the buffer
 		// Local Tabulation policies
 		int32_t m_tabDist; //!< equiv. number of characters in a tab

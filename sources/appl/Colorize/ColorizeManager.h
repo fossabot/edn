@@ -35,13 +35,13 @@ typedef enum {
 
 namespace ColorizeManager
 {
-	void        Init(void);
+	void        init(void);
 	void        UnInit(void);
-	void        LoadFile(const etk::UString& _xmlFilename);
-	Colorize *  Get(const etk::UString& _colorName);
-	etk::Color<>& Get(basicColor_te _myColor);
+	void        loadFile(const etk::UString& _xmlFilename);
+	Colorize *  get(const etk::UString& _colorName);
+	etk::Color<>& get(basicColor_te _myColor);
 	bool        Exist(const etk::UString& _colorName);
-	void        DisplayListOfColor(void);
+	void        displayListOfColor(void);
 };
 
 #endif

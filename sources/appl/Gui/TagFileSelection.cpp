@@ -32,8 +32,8 @@ extern const char * const applEventctagsCancel              = "appl-event-ctags-
 
 appl::TagFileSelection::TagFileSelection(void)
 {
-	AddEventId(applEventctagsSelection);
-	AddEventId(applEventctagsCancel);
+	addEventId(applEventctagsSelection);
+	addEventId(applEventctagsCancel);
 	
 	widget::Label*      myWidgetTitle = NULL;
 	widget::Button*     myWidgetValidate = NULL;
@@ -43,38 +43,38 @@ appl::TagFileSelection::TagFileSelection(void)
 	widget::Sizer * mySizerHori = NULL;
 	widget::Spacer *    mySpacer = NULL;
 	#if defined(__TARGET_OS__Android)
-		SetMinSize(ewol::Dimension(vec2(90,90),ewol::Dimension::Pourcent));
+		setMinSize(ewol::Dimension(vec2(90,90),ewol::Dimension::Pourcent));
 	#elif defined(__TARGET_OS__Windows)
-		SetMinSize(ewol::Dimension(vec2(80,80),ewol::Dimension::Pourcent));
+		setMinSize(ewol::Dimension(vec2(80,80),ewol::Dimension::Pourcent));
 	#else
-		SetMinSize(ewol::Dimension(vec2(80,80),ewol::Dimension::Pourcent));
+		setMinSize(ewol::Dimension(vec2(80,80),ewol::Dimension::Pourcent));
 	#endif
 	
 	mySizerVert = new widget::Sizer(widget::Sizer::modeVert);
 	if (NULL == mySizerVert) {
-		EWOL_ERROR("Can not allocate widget ==> display might be in error");
+		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		mySizerVert->LockExpand(bvec2(true,true));
 		// set it in the pop-up-system : 
-		SetSubWidget(mySizerVert);
+		setSubWidget(mySizerVert);
 		
 		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
 		if (NULL == mySizerHori) {
-			EWOL_ERROR("Can not allocate widget ==> display might be in error");
+			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
-			mySizerVert->SubWidgetAdd(mySizerHori);
+			mySizerVert->subWidgetAdd(mySizerHori);
 			mySpacer = new widget::Spacer();
 			if (NULL == mySpacer) {
-				EWOL_ERROR("Can not allocate widget ==> display might be in error");
+				EWOL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
-				mySpacer->SetExpand(bvec2(true,false));
-				mySizerHori->SubWidgetAdd(mySpacer);
+				mySpacer->setExpand(bvec2(true,false));
+				mySizerHori->subWidgetAdd(mySpacer);
 			}
 			myWidgetValidate = new widget::Button();
 			if (NULL == myWidgetValidate) {
-				EWOL_ERROR("Can not allocate widget ==> display might be in error");
+				EWOL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
-				myWidgetValidate->SetSubWidget(
+				myWidgetValidate->setSubWidget(
 				    new widget::Composer(widget::Composer::String,
 				        "<composer>\n"
 				        "	<sizer mode=\"hori\">\n"
@@ -83,14 +83,14 @@ appl::TagFileSelection::TagFileSelection(void)
 				        "	</sizer>\n"
 				        "</composer\n"));
 				
-				myWidgetValidate->RegisterOnEvent(this, widget::Button::eventPressed, applEventctagsSelection);
-				mySizerHori->SubWidgetAdd(myWidgetValidate);
+				myWidgetValidate->registerOnEvent(this, widget::Button::eventPressed, applEventctagsSelection);
+				mySizerHori->subWidgetAdd(myWidgetValidate);
 			}
 			myWidgetCancel = new widget::Button();
 			if (NULL == myWidgetCancel) {
-				EWOL_ERROR("Can not allocate widget ==> display might be in error");
+				EWOL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
-				myWidgetCancel->SetSubWidget(
+				myWidgetCancel->setSubWidget(
 				    new widget::Composer(widget::Composer::String,
 				        "<composer>\n"
 				        "	<sizer mode=\"hori\">\n"
@@ -98,27 +98,27 @@ appl::TagFileSelection::TagFileSelection(void)
 				        "		<label>Cancel</label>\n"
 				        "	</sizer>\n"
 				        "</composer\n"));
-				myWidgetCancel->RegisterOnEvent(this, widget::Button::eventPressed, applEventctagsCancel);
-				mySizerHori->SubWidgetAdd(myWidgetCancel);
+				myWidgetCancel->registerOnEvent(this, widget::Button::eventPressed, applEventctagsCancel);
+				mySizerHori->subWidgetAdd(myWidgetCancel);
 			}
 		}
 		m_listTag = new appl::TagFileList();
 		if (NULL == m_listTag) {
-			EWOL_ERROR("Can not allocate widget ==> display might be in error");
+			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
-			m_listTag->RegisterOnEvent(this, applEventCtagsListValidate);
-			m_listTag->RegisterOnEvent(this, applEventCtagsListSelect);
-			m_listTag->RegisterOnEvent(this, applEventCtagsListUnSelect);
-			m_listTag->SetExpand(bvec2(true,true));
-			m_listTag->SetFill(bvec2(true,true));
-			mySizerVert->SubWidgetAdd(m_listTag);
+			m_listTag->registerOnEvent(this, applEventCtagsListValidate);
+			m_listTag->registerOnEvent(this, applEventCtagsListSelect);
+			m_listTag->registerOnEvent(this, applEventCtagsListUnSelect);
+			m_listTag->setExpand(bvec2(true,true));
+			m_listTag->setFill(bvec2(true,true));
+			mySizerVert->subWidgetAdd(m_listTag);
 		}
 		
 		myWidgetTitle = new widget::Label("Ctags Jump Selection ...");
 		if (NULL == myWidgetTitle) {
-			EWOL_ERROR("Can not allocate widget ==> display might be in error");
+			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
-			mySizerVert->SubWidgetAdd(myWidgetTitle);
+			mySizerVert->subWidgetAdd(myWidgetTitle);
 		}
 	}
 }
@@ -129,27 +129,27 @@ appl::TagFileSelection::~TagFileSelection(void)
 	
 }
 
-void appl::TagFileSelection::OnReceiveMessage(const ewol::EMessage& _msg)
+void appl::TagFileSelection::onReceiveMessage(const ewol::EMessage& _msg)
 {
-	EWOL_INFO("ctags LIST ... : \"" << _msg.GetMessage() << "\" ==> data=\"" << _msg.GetData() << "\"" );
-	if (_msg.GetMessage() == applEventctagsSelection) {
+	EWOL_INFO("ctags LIST ... : \"" << _msg.getMessage() << "\"  == > data=\"" << _msg.GetData() << "\"" );
+	if (_msg.getMessage() == applEventctagsSelection) {
 		if (m_eventNamed!="") {
-			GenerateEventId(applEventctagsSelection, m_eventNamed);
-			//==> Auto remove ...
+			generateEventId(applEventctagsSelection, m_eventNamed);
+			// == > Auto remove ...
 			AutoDestroy();
 		}
-	} else if (_msg.GetMessage() == applEventCtagsListSelect) {
-		m_eventNamed = _msg.GetData();
+	} else if (_msg.getMessage() == applEventCtagsListSelect) {
+		m_eventNamed = _msg.getData();
 		
-	} else if (_msg.GetMessage() == applEventCtagsListUnSelect) {
+	} else if (_msg.getMessage() == applEventCtagsListUnSelect) {
 		m_eventNamed = "";
-	} else if (_msg.GetMessage() == applEventCtagsListValidate) {
-		GenerateEventId(applEventctagsSelection, _msg.GetData());
-		//==> Auto remove ...
+	} else if (_msg.getMessage() == applEventCtagsListValidate) {
+		generateEventId(applEventctagsSelection, _msg.getData());
+		// == > Auto remove ...
 		AutoDestroy();
-	} else if (_msg.GetMessage() == applEventctagsCancel) {
-		GenerateEventId(applEventctagsCancel, "");
-		//==> Auto remove ...
+	} else if (_msg.getMessage() == applEventctagsCancel) {
+		generateEventId(applEventctagsCancel, "");
+		// == > Auto remove ...
 		AutoDestroy();
 	}
 	return;
@@ -157,21 +157,21 @@ void appl::TagFileSelection::OnReceiveMessage(const ewol::EMessage& _msg)
 
 
 /**
- * @brief Add a Ctags item on the curent list
+ * @brief add a Ctags item on the curent list
  * @param[in] file Compleate file name
  * @param[in] jump line id
  */
-void appl::TagFileSelection::AddCtagsNewItem(etk::UString file, int32_t line)
+void appl::TagFileSelection::addCtagsNewItem(etk::UString file, int32_t line)
 {
 	if (NULL != m_listTag) {
-		m_listTag->Add(file, line);
+		m_listTag->add(file, line);
 	}
 }
 
-void appl::TagFileSelection::OnObjectRemove(ewol::EObject * _removeObject)
+void appl::TagFileSelection::onObjectRemove(ewol::EObject * _removeObject)
 {
 	// First step call parrent : 
-	widget::PopUp::OnObjectRemove(_removeObject);
+	widget::PopUp::onObjectRemove(_removeObject);
 	// second step find if in all the elements ...
 	if(_removeObject == m_listTag) {
 		m_listTag = NULL;

@@ -34,28 +34,28 @@ class HighlightPattern {
 		HighlightPattern(void);
 		~HighlightPattern(void);
 		
-		void            SetName(etk::UString &name) { m_paternName = name;};
-		etk::UString    GetName(void) { return m_paternName;};
+		void            setName(etk::UString &name) { m_paternName = name;};
+		etk::UString    getName(void) { return m_paternName;};
 		
-		void            SetPaternStart(etk::UString &regExp);
-		void            SetPaternStop(etk::UString &regExp);
-		void            SetColor(etk::UString &colorName);
-		void            SetEscapeChar(etk::UString &EscapeChar);
-		void            SetMultiline(bool enable) { m_multiline = enable; };
+		void            setPaternStart(etk::UString &regExp);
+		void            setPaternStop(etk::UString &regExp);
+		void            setColor(etk::UString &colorName);
+		void            setEscapeChar(etk::UString &EscapeChar);
+		void            setMultiline(bool enable) { m_multiline = enable; };
 		
-		void            SetLevel(int32_t newLevel) { m_level = newLevel; };
-		int32_t         GetLevel(void) { return m_level; };
+		void            setLevel(int32_t newLevel) { m_level = newLevel; };
+		int32_t         getLevel(void) { return m_level; };
 		
-		bool            IsEnable(void);
-		void            Display(void);
-		resultFind_te   Find(int32_t start, int32_t stop, colorInformation_ts &resultat, etk::Buffer &buffer);
-		Colorize *      GetColor(void) { return m_color; };
+		bool            isEnable(void);
+		void            display(void);
+		resultFind_te   find(int32_t start, int32_t stop, colorInformation_ts &resultat, etk::Buffer &buffer);
+		Colorize *      getColor(void) { return m_color; };
 		void            ParseRules(exml::Element *child, int32_t level);
 		
 		void            ReloadColor(void);
 
 	private:
-		int32_t                             m_level;                    //!< Level of the pattern ==> this is to overwrite next pattern when we create an higher ....
+		int32_t                             m_level;                    //!< Level of the pattern  == > this is to overwrite next pattern when we create an higher ....
 		etk::UString                        m_paternName;               //!< Current style name (like "c++" or "c" or "script Bash")
 		etk::UString                        m_colorName;                //!< Current color name
 		Colorize *                          m_color;                    //!< Link to the color manager

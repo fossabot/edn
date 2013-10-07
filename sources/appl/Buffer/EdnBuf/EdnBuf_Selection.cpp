@@ -97,7 +97,7 @@ void EdnBuf::RectSelect(int32_t start, int32_t end, int32_t rectStart, int32_t r
  * @return ---
  * 
  */
-bool EdnBuf::GetSelectionPos(int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd)
+bool EdnBuf::getSelectionPos(int32_t &start, int32_t &end, bool &isRect, int32_t &rectStart, int32_t &rectEnd)
 {
 	/* Always fill in the parameters (zero-width can be requested too). */
 	isRect = m_selectionList.rectangular;
@@ -119,14 +119,14 @@ bool EdnBuf::GetSelectionPos(int32_t &start, int32_t &end, bool &isRect, int32_t
  * @return ---
  * 
  */
-void EdnBuf::GetSelectionText(etk::Vector<int8_t> &text)
+void EdnBuf::getSelectionText(etk::Vector<int8_t> &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;
 	// remove output data
-	text.Clear();
+	text.clear();
 	
-	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
+	bool isSelected = getSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
 	// No data selected ...
 	if (false == isSelected) {
@@ -138,17 +138,17 @@ void EdnBuf::GetSelectionText(etk::Vector<int8_t> &text)
 		//GetTextInRect(start, end, rectStart, rectEnd, text);
 		// TODO : ...
 	} else {
-		GetRange(start, end, text);
+		getRange(start, end, text);
 	}
 }
-void EdnBuf::GetSelectionText(etk::UString &text)
+void EdnBuf::getSelectionText(etk::UString &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;
 	// remove output data
 	text = "";
 	
-	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
+	bool isSelected = getSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
 	// No data selected ...
 	if (false == isSelected) {
@@ -160,7 +160,7 @@ void EdnBuf::GetSelectionText(etk::UString &text)
 		//GetTextInRect(start, end, rectStart, rectEnd, text);
 		// TODO : ...
 	} else {
-		GetRange(start, end, text);
+		getRange(start, end, text);
 	}
 }
 
@@ -173,12 +173,12 @@ void EdnBuf::GetSelectionText(etk::UString &text)
  * @return ---
  * 
  */
-void EdnBuf::RemoveSelected(void)
+void EdnBuf::removeSelected(void)
 {
 	int32_t start, end;
 	int32_t rectStart, rectEnd;
 	bool isRect;
-	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
+	bool isSelected = getSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
 	// No data selected ...
 	if (false == isSelected) {
@@ -189,7 +189,7 @@ void EdnBuf::RemoveSelected(void)
 		//RemoveRect(start, end, rectStart, rectEnd);
 		// TODO : ...
 	} else {
-		Remove(start, end);
+		remove(start, end);
 	}
 	Unselect();
 }
@@ -207,7 +207,7 @@ int32_t EdnBuf::ReplaceSelected(etk::Vector<int8_t> &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;
-	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
+	bool isSelected = getSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
 	// No data selected ...
 	if (false == isSelected) {
@@ -229,7 +229,7 @@ int32_t EdnBuf::ReplaceSelected(etk::UString &text)
 {
 	int32_t start, end, rectStart, rectEnd;
 	bool isRect;
-	bool isSelected = GetSelectionPos(start, end, isRect, rectStart, rectEnd);
+	bool isSelected = getSelectionPos(start, end, isRect, rectStart, rectEnd);
 	
 	// No data selected ...
 	if (false == isSelected) {
@@ -250,7 +250,7 @@ int32_t EdnBuf::ReplaceSelected(etk::UString &text)
 
 
 /*
-** Update an individual selection for changes in the corresponding text
+** update an individual selection for changes in the corresponding text
 */
 /**
  * @brief 
@@ -260,7 +260,7 @@ int32_t EdnBuf::ReplaceSelected(etk::UString &text)
  * @return ---
  * 
  */
-void EdnBuf::UpdateSelection(int32_t pos, int32_t nDeleted, int32_t nInserted)
+void EdnBuf::updateSelection(int32_t pos, int32_t nDeleted, int32_t nInserted)
 {
 	if(		(		false == m_selectionList.selected
 				&&	false == m_selectionList.zeroWidth)

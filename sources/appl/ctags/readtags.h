@@ -201,7 +201,7 @@ extern tagResult tagsNext (tagFile *const file, tagEntry *const entry);
 extern const char *tagsField (const tagEntry *const entry, const char *const key);
 
 /*
-*  Find the first tag matching `name'. The structure pointed to by `entry'
+*  find the first tag matching `name'. The structure pointed to by `entry'
 *  will be populated with information about the tag file entry. If a tag file
 *  is sorted using the C locale, a binary search algorithm is used to search
 *  the tag file, resulting in very fast tag lookups, even in huge tag files.
@@ -212,7 +212,7 @@ extern const char *tagsField (const tagEntry *const entry, const char *const key
 *        Tags whose leading characters match `name' will qualify.
 *
 *    TAG_FULLMATCH
-*        Only tags whose full lengths match `name' will qualify.
+*        only tags whose full lengths match `name' will qualify.
 *
 *    TAG_IGNORECASE
 *        Matching will be performed in a case-insenstive manner. Note that
@@ -228,7 +228,7 @@ extern const char *tagsField (const tagEntry *const entry, const char *const key
 extern tagResult tagsFind (tagFile *const file, tagEntry *const entry, const char *const name, const int options);
 
 /*
-*  Find the next tag matching the name and options supplied to the most recent
+*  find the next tag matching the name and options supplied to the most recent
 *  call to tagsFind() for the same tag file. The structure pointed to by
 *  `entry' will be populated with information about the tag file entry. The
 *  function will return TagSuccess if another tag matching the name is found,

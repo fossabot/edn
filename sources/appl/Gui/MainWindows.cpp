@@ -35,14 +35,14 @@
 
 namespace appl 
 {
-	etk::UString GetVersion(void)
+	etk::UString getVersion(void)
 	{
 		#define FIRST_YEAR (2010)
-		etk::UString tmpOutput = (date::GetYear()-FIRST_YEAR);
+		etk::UString tmpOutput = (date::getYear()-FIRST_YEAR);
 		tmpOutput += ".";
-		tmpOutput += date::GetMonth();
+		tmpOutput += date::getMonth();
 		tmpOutput += ".";
-		tmpOutput += date::GetDay();
+		tmpOutput += date::getDay();
 		return tmpOutput;
 	}
 	
@@ -65,25 +65,25 @@ class ParameterAboutGui : public widget::Sizer
 			
 			mySpacer = new widget::Spacer();
 			if (NULL == mySpacer) {
-				APPL_ERROR("Can not allocate widget ==> display might be in error");
+				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
-				mySpacer->SetExpand(bvec2(true,true));
-				SubWidgetAdd(mySpacer);
+				mySpacer->setExpand(bvec2(true,true));
+				subWidgetAdd(mySpacer);
 			}
 			etk::UString tmpLabel = "<left>";
 			tmpLabel += "  <b>Editeur De N'ours</b> : v:";
-			tmpLabel += appl::GetVersion();
+			tmpLabel += appl::getVersion();
 			tmpLabel += "<br/>";
 			tmpLabel += "  <b>Build Time</b> : ";
-			tmpLabel += date::GetYear();
+			tmpLabel += date::getYear();
 			tmpLabel += "/";
-			tmpLabel += date::GetMonth();
+			tmpLabel += date::getMonth();
 			tmpLabel += "/";
-			tmpLabel += date::GetDay();
+			tmpLabel += date::getDay();
 			tmpLabel += " ";
-			tmpLabel += date::GetHour();
+			tmpLabel += date::getHour();
 			tmpLabel += "h";
-			tmpLabel += date::GetMinute();
+			tmpLabel += date::getMinute();
 			tmpLabel += "<br/>";
 			tmpLabel += "  <b>Website</b> : https://github.com/HeeroYui/edn<br/>";
 			tmpLabel += "  <b>License</b> : GPL v3<br/>";
@@ -95,10 +95,10 @@ class ParameterAboutGui : public widget::Sizer
 			tmpLabel += "</left>";
 			widget::Label* myLabel = new widget::Label(tmpLabel);
 			if (NULL == myLabel) {
-				APPL_ERROR("Can not allocate widget ==> display might be in error");
+				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
-				myLabel->SetExpand(bvec2(true,false));
-				SubWidgetAdd(myLabel);
+				myLabel->setExpand(bvec2(true,false));
+				subWidgetAdd(myLabel);
 			}
 		};
 		
@@ -126,117 +126,117 @@ MainWindows::MainWindows(void)
 	widget::Menu * myMenu = NULL;
 	
 	mySizerVert = new widget::Sizer(widget::Sizer::modeVert);
-	SetSubWidget(mySizerVert);
+	setSubWidget(mySizerVert);
 	
 		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
-		mySizerVert->SubWidgetAdd(mySizerHori);
+		mySizerVert->subWidgetAdd(mySizerHori);
 			myBufferView = new BufferView();
-			myBufferView->SetExpand(bvec2(false,true));
-			myBufferView->SetFill(bvec2(true,true));
-			mySizerHori->SubWidgetAdd(myBufferView);
+			myBufferView->setExpand(bvec2(false,true));
+			myBufferView->setFill(bvec2(true,true));
+			mySizerHori->subWidgetAdd(myBufferView);
 			
 			mySizerVert2 = new widget::Sizer(widget::Sizer::modeVert);
-			mySizerHori->SubWidgetAdd(mySizerVert2);
+			mySizerHori->subWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
 				myTextView = new appl::TextViewer("FreeSerif;FreeMono;DejaVuSansMono", 11);
-				myTextView->SetExpand(bvec2(true,true));
-				myTextView->SetFill(bvec2(true,true));
-				mySizerVert2->SubWidgetAdd(myTextView);
+				myTextView->setExpand(bvec2(true,true));
+				myTextView->setFill(bvec2(true,true));
+				mySizerVert2->subWidgetAdd(myTextView);
 				/*
 				myCodeView = new CodeView("FreeMono;DejaVuSansMono", 11);
-				myCodeView->SetExpand(bvec2(true,true));
-				myCodeView->SetFill(bvec2(true,true));
-				mySizerVert2->SubWidgetAdd(myCodeView);
+				myCodeView->setExpand(bvec2(true,true));
+				myCodeView->setFill(bvec2(true,true));
+				mySizerVert2->subWidgetAdd(myCodeView);
 				*/
 				// search area : 
 				Search * mySearch = new Search();
-				mySizerVert2->SubWidgetAdd(mySearch);
+				mySizerVert2->subWidgetAdd(mySearch);
 				#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 				{
 					widget::Sizer * mySizerHori2 = new widget::Sizer(widget::Sizer::modeHori);
-					mySizerVert2->SubWidgetAdd(mySizerHori2);
+					mySizerVert2->subWidgetAdd(mySizerHori2);
 						
 						widget::CheckBox* tmpCheck = new widget::CheckBox("smooth");
-						mySizerHori2->SubWidgetAdd(tmpCheck);
-						tmpCheck->RegisterOnEvent(this, ewolEventCheckBoxClicked, l_smoothChick);
+						mySizerHori2->subWidgetAdd(tmpCheck);
+						tmpCheck->registerOnEvent(this, ewolEventCheckBoxClicked, l_smoothChick);
 						
 						widget::Slider* tmpSlider = new widget::Slider();
-						mySizerHori2->SubWidgetAdd(tmpSlider);
-						tmpSlider->RegisterOnEvent(this, ewolEventSliderChange, l_smoothMin);
-						tmpSlider->SetExpand(bvec2(true,false));
-						tmpSlider->SetMin(0);
-						tmpSlider->SetMax(1000);
-						tmpSlider->SetValue(0450);
+						mySizerHori2->subWidgetAdd(tmpSlider);
+						tmpSlider->registerOnEvent(this, ewolEventSliderChange, l_smoothMin);
+						tmpSlider->setExpand(bvec2(true,false));
+						tmpSlider->setMin(0);
+						tmpSlider->setMax(1000);
+						tmpSlider->setValue(0450);
 						tmpSliderMin = tmpSlider;
 						
 						tmpSlider = new widget::Slider();
-						mySizerHori2->SubWidgetAdd(tmpSlider);
-						tmpSlider->RegisterOnEvent(this, ewolEventSliderChange, l_smoothMax);
-						tmpSlider->SetExpand(bvec2(true,false));
-						tmpSlider->SetMin(0);
-						tmpSlider->SetMax(1000);
-						tmpSlider->SetValue(0550);
+						mySizerHori2->subWidgetAdd(tmpSlider);
+						tmpSlider->registerOnEvent(this, ewolEventSliderChange, l_smoothMax);
+						tmpSlider->setExpand(bvec2(true,false));
+						tmpSlider->setMin(0);
+						tmpSlider->setMax(1000);
+						tmpSlider->setValue(0550);
 						tmpSliderMax = tmpSlider;
 				}
 				#endif
 			
 		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
-		mySizerVert->SubWidgetAdd(mySizerHori);
+		mySizerVert->subWidgetAdd(mySizerHori);
 			
 			myMenu = new widget::Menu();
-			mySizerHori->SubWidgetAdd(myMenu);
-			int32_t idMenuFile = myMenu->AddTitle("File");
-				(void)myMenu->Add(idMenuFile, "New",          "", ednMsgGuiNew);
-				(void)myMenu->AddSpacer();
-				(void)myMenu->Add(idMenuFile, "Open",         "THEME:GUI:Load.svg", ednMsgGuiOpen);
-				(void)myMenu->Add(idMenuFile, "Close",        "THEME:GUI:Close.svg", ednMsgGuiClose, "current");
-				(void)myMenu->Add(idMenuFile, "Close (all)",  "", ednMsgGuiClose, "All");
-				(void)myMenu->Add(idMenuFile, "Save",         "THEME:GUI:Save.svg", ednMsgGuiSave, "current");
-				(void)myMenu->Add(idMenuFile, "Save As ...",  "", ednMsgGuiSaveAs);
-				(void)myMenu->AddSpacer();
-				//(void)myMenu->Add(idMenuFile, "Exit", "", ednMsgGuiExit);
-				(void)myMenu->AddSpacer();
-				(void)myMenu->Add(idMenuFile, "Properties",   "THEME:GUI:Parameter.svg", ednMsgProperties);
-			int32_t idMenuEdit = myMenu->AddTitle("Edit");
-				(void)myMenu->Add(idMenuEdit, "Undo",         "THEME:GUI:Undo.svg", ednMsgGuiUndo);
-				(void)myMenu->Add(idMenuEdit, "Redo",         "THEME:GUI:Redo.svg", ednMsgGuiRedo);
-				(void)myMenu->AddSpacer();
-				(void)myMenu->Add(idMenuEdit, "Copy",         "", ednMsgGuiCopy, "STD");
-				(void)myMenu->Add(idMenuEdit, "Cut",          "", ednMsgGuiCut, "STD");
-				(void)myMenu->Add(idMenuEdit, "Paste",        "", ednMsgGuiPaste, "STD");
-				(void)myMenu->Add(idMenuEdit, "Remove",       "", ednMsgGuiRm);
-				(void)myMenu->AddSpacer();
-				(void)myMenu->Add(idMenuEdit, "Select All","", ednMsgGuiSelect, "ALL");
-				(void)myMenu->Add(idMenuEdit, "Un-Select","", ednMsgGuiSelect, "NONE");
-				(void)myMenu->Add(idMenuEdit, "Goto line ...","", ednMsgGuiGotoLine, "???");
-			int32_t idMenuSearch = myMenu->AddTitle("Search");
-				(void)myMenu->Add(idMenuSearch, "Search",         "THEME:GUI:Search.svg", ednMsgGuiSearch);
-				(void)myMenu->Add(idMenuSearch, "Replace",        "THEME:GUI:Replace.svg", ednMsgGuiReplace);
-				(void)myMenu->AddSpacer();
-				(void)myMenu->Add(idMenuSearch, "Find (previous)","", ednMsgGuiFind, "Previous");
-				(void)myMenu->Add(idMenuSearch, "Find (next)",    "", ednMsgGuiFind, "Next");
-				(void)myMenu->Add(idMenuSearch, "Find (all)",     "", ednMsgGuiFind, "All");
-				(void)myMenu->Add(idMenuSearch, "Un-Select",      "", ednMsgGuiFind, "None");
-			int32_t idMenuCTags = myMenu->AddTitle("C-tags");
-				(void)myMenu->Add(idMenuCTags, "Load",      "", ednMsgGuiCtags, "Load");
-				(void)myMenu->Add(idMenuCTags, "ReLoad",    "", ednMsgGuiCtags, "ReLoad");
-				(void)myMenu->Add(idMenuCTags, "Jump",      "", ednMsgGuiCtags, "Jump");
-				(void)myMenu->Add(idMenuCTags, "Back",      "", ednMsgGuiCtags, "Back");
-			int32_t idMenugDisplay = myMenu->AddTitle("Display");
-				(void)myMenu->Add(idMenugDisplay, "Charset UTF-8",        "", ednMsgGuiChangeCharset, "UTF-8");
-				(void)myMenu->Add(idMenugDisplay, "Charset ISO-8859-1",   "", ednMsgGuiChangeCharset, "ISO-8859-1");
-				(void)myMenu->Add(idMenugDisplay, "Charset ISO-8859-15",  "", ednMsgGuiChangeCharset, "ISO-8859-15");
-				(void)myMenu->AddSpacer();
-				(void)myMenu->Add(idMenugDisplay, "Color Black",          "", ednMsgGuiChangeColor, "Black");
-				(void)myMenu->Add(idMenugDisplay, "Color White",          "", ednMsgGuiChangeColor, "White");
-				(void)myMenu->AddSpacer();
-				(void)myMenu->Add(idMenugDisplay, "Reload OpenGl Shader", "", ednMsgGuiReloadShader);
+			mySizerHori->subWidgetAdd(myMenu);
+			int32_t idMenuFile = myMenu->addTitle("File");
+				(void)myMenu->add(idMenuFile, "New",          "", ednMsgGuiNew);
+				(void)myMenu->addSpacer();
+				(void)myMenu->add(idMenuFile, "Open",         "THEME:GUI:Load.svg", ednMsgGuiOpen);
+				(void)myMenu->add(idMenuFile, "Close",        "THEME:GUI:Close.svg", ednMsgGuiClose, "current");
+				(void)myMenu->add(idMenuFile, "Close (all)",  "", ednMsgGuiClose, "All");
+				(void)myMenu->add(idMenuFile, "Save",         "THEME:GUI:Save.svg", ednMsgGuiSave, "current");
+				(void)myMenu->add(idMenuFile, "Save As ...",  "", ednMsgGuiSaveAs);
+				(void)myMenu->addSpacer();
+				//(void)myMenu->add(idMenuFile, "Exit", "", ednMsgGuiExit);
+				(void)myMenu->addSpacer();
+				(void)myMenu->add(idMenuFile, "Properties",   "THEME:GUI:Parameter.svg", ednMsgProperties);
+			int32_t idMenuEdit = myMenu->addTitle("Edit");
+				(void)myMenu->add(idMenuEdit, "Undo",         "THEME:GUI:Undo.svg", ednMsgGuiUndo);
+				(void)myMenu->add(idMenuEdit, "Redo",         "THEME:GUI:Redo.svg", ednMsgGuiRedo);
+				(void)myMenu->addSpacer();
+				(void)myMenu->add(idMenuEdit, "Copy",         "", ednMsgGuiCopy, "STD");
+				(void)myMenu->add(idMenuEdit, "Cut",          "", ednMsgGuiCut, "STD");
+				(void)myMenu->add(idMenuEdit, "Paste",        "", ednMsgGuiPaste, "STD");
+				(void)myMenu->add(idMenuEdit, "Remove",       "", ednMsgGuiRm);
+				(void)myMenu->addSpacer();
+				(void)myMenu->add(idMenuEdit, "Select All","", ednMsgGuiSelect, "ALL");
+				(void)myMenu->add(idMenuEdit, "Un-Select","", ednMsgGuiSelect, "NONE");
+				(void)myMenu->add(idMenuEdit, "Goto line ...","", ednMsgGuiGotoLine, "???");
+			int32_t idMenuSearch = myMenu->addTitle("Search");
+				(void)myMenu->add(idMenuSearch, "Search",         "THEME:GUI:Search.svg", ednMsgGuiSearch);
+				(void)myMenu->add(idMenuSearch, "Replace",        "THEME:GUI:Replace.svg", ednMsgGuiReplace);
+				(void)myMenu->addSpacer();
+				(void)myMenu->add(idMenuSearch, "Find (previous)","", ednMsgGuiFind, "Previous");
+				(void)myMenu->add(idMenuSearch, "Find (next)",    "", ednMsgGuiFind, "Next");
+				(void)myMenu->add(idMenuSearch, "Find (all)",     "", ednMsgGuiFind, "All");
+				(void)myMenu->add(idMenuSearch, "Un-Select",      "", ednMsgGuiFind, "None");
+			int32_t idMenuCTags = myMenu->addTitle("C-tags");
+				(void)myMenu->add(idMenuCTags, "Load",      "", ednMsgGuiCtags, "Load");
+				(void)myMenu->add(idMenuCTags, "ReLoad",    "", ednMsgGuiCtags, "ReLoad");
+				(void)myMenu->add(idMenuCTags, "Jump",      "", ednMsgGuiCtags, "Jump");
+				(void)myMenu->add(idMenuCTags, "Back",      "", ednMsgGuiCtags, "Back");
+			int32_t idMenugDisplay = myMenu->addTitle("Display");
+				(void)myMenu->add(idMenugDisplay, "Charset UTF-8",        "", ednMsgGuiChangeCharset, "UTF-8");
+				(void)myMenu->add(idMenugDisplay, "Charset ISO-8859-1",   "", ednMsgGuiChangeCharset, "ISO-8859-1");
+				(void)myMenu->add(idMenugDisplay, "Charset ISO-8859-15",  "", ednMsgGuiChangeCharset, "ISO-8859-15");
+				(void)myMenu->addSpacer();
+				(void)myMenu->add(idMenugDisplay, "Color Black",          "", ednMsgGuiChangeColor, "Black");
+				(void)myMenu->add(idMenugDisplay, "Color White",          "", ednMsgGuiChangeColor, "White");
+				(void)myMenu->addSpacer();
+				(void)myMenu->add(idMenugDisplay, "Reload openGl Shader", "", ednMsgGuiReloadShader);
 			
 			m_widgetLabelFileName = new widget::Label("<left>FileName</left>");
-			m_widgetLabelFileName->SetExpand(bvec2(true,false));
-			m_widgetLabelFileName->SetFill(bvec2(false,true));;
-			mySizerHori->SubWidgetAdd(m_widgetLabelFileName);
+			m_widgetLabelFileName->setExpand(bvec2(true,false));
+			m_widgetLabelFileName->setFill(bvec2(false,true));;
+			mySizerHori->subWidgetAdd(m_widgetLabelFileName);
 	
 	
 	// add generic shortcut ...
@@ -283,102 +283,102 @@ const char *const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
 const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
 
 
-void MainWindows::OnReceiveMessage(const ewol::EMessage& _msg)
+void MainWindows::onReceiveMessage(const ewol::EMessage& _msg)
 {
-	ewol::Windows::OnReceiveMessage(_msg);
+	ewol::Windows::onReceiveMessage(_msg);
 	
-	//APPL_INFO("Receive Event from the main windows ... : \"" << eventId << "\" ==> data=\"" << data << "\"" );
-	// Open file Section ...
-	if (_msg.GetMessage() == ednMsgGuiOpen) {
-		widget::FileChooser* tmpWidget = new widget::FileChooser();
-		tmpWidget->SetTitle("Open Files ...");
-		tmpWidget->SetValidateLabel("Open");
-		if (BufferManager::GetSelected()!=-1) {
-			BufferText * myBuffer = BufferManager::Get(BufferManager::GetSelected());
+	//APPL_INFO("Receive Event from the main windows ... : \"" << eventId << "\"  == > data=\"" << data << "\"" );
+	// open file Section ...
+	if (_msg.getMessage() == ednMsgGuiOpen) {
+		widget::fileChooser* tmpWidget = new widget::FileChooser();
+		tmpWidget->setTitle("Open files ...");
+		tmpWidget->setValidateLabel("Open");
+		if (BufferManager::getSelected()!=-1) {
+			BufferText * myBuffer = BufferManager::get(BufferManager::GetSelected());
 			if (NULL!=myBuffer) {
-				etk::FSNode tmpFile = myBuffer->GetFileName();
-				tmpWidget->SetFolder(tmpFile.GetNameFolder());
+				etk::FSNode tmpFile = myBuffer->getFileName();
+				tmpWidget->setFolder(tmpFile.getNameFolder());
 			}
 		}
-		PopUpWidgetPush(tmpWidget);
-		tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
-	} else if (_msg.GetMessage() == ednEventPopUpFileSelected) {
-		APPL_DEBUG("Request opening the file : " << _msg.GetData());
-		SendMultiCast(ednMsgOpenFile, _msg.GetData());
-	} else if (_msg.GetMessage() == ednMsgGuiSaveAs) {
-		if (_msg.GetData() == "") {
+		popUpWidgetPush(tmpWidget);
+		tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
+	} else if (_msg.getMessage() == ednEventPopUpFileSelected) {
+		APPL_DEBUG("Request opening the file : " << _msg.getData());
+		SendMultiCast(ednMsgOpenFile, _msg.getData());
+	} else if (_msg.getMessage() == ednMsgGuiSaveAs) {
+		if (_msg.getData() == "") {
 			APPL_ERROR("Null data for Save As file ... ");
 		} else {
 			m_currentSavingAsIdBuffer = -1;
-			if (_msg.GetData() == "current") {
-				m_currentSavingAsIdBuffer = BufferManager::GetSelected();
+			if (_msg.getData() == "current") {
+				m_currentSavingAsIdBuffer = BufferManager::getSelected();
 			} else {
-				sscanf(_msg.GetData().c_str(), "%d", &m_currentSavingAsIdBuffer);
+				sscanf(_msg.getData().c_str(), "%d", &m_currentSavingAsIdBuffer);
 			}
 			
 			if (false == BufferManager::Exist(m_currentSavingAsIdBuffer)) {
 				APPL_ERROR("Request saveAs on non existant Buffer ID=" << m_currentSavingAsIdBuffer);
 			} else {
-				BufferText* myBuffer = BufferManager::Get(m_currentSavingAsIdBuffer);
-				widget::FileChooser* tmpWidget = new widget::FileChooser();
+				BufferText* myBuffer = BufferManager::get(m_currentSavingAsIdBuffer);
+				widget::fileChooser* tmpWidget = new widget::FileChooser();
 				if (NULL == tmpWidget) {
-					APPL_ERROR("Can not allocate widget ==> display might be in error");
+					APPL_ERROR("Can not allocate widget  == > display might be in error");
 				} else {
-					tmpWidget->SetTitle("Save Files As...");
-					tmpWidget->SetValidateLabel("Save");
+					tmpWidget->setTitle("Save files As...");
+					tmpWidget->setValidateLabel("Save");
 					etk::UString folder = "/home/";
 					etk::UString fileName = "";
-					if (true == myBuffer->HaveName()) {
-						etk::FSNode tmpName = myBuffer->GetFileName();
-						folder = tmpName.GetNameFolder();
-						fileName = tmpName.GetNameFile();
+					if (true == myBuffer->haveName()) {
+						etk::FSNode tmpName = myBuffer->getFileName();
+						folder = tmpName.getNameFolder();
+						fileName = tmpName.getNameFile();
 					}
-					tmpWidget->SetFolder(folder);
-					tmpWidget->SetFileName(fileName);
-					PopUpWidgetPush(tmpWidget);
-					tmpWidget->RegisterOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
+					tmpWidget->setFolder(folder);
+					tmpWidget->setFileName(fileName);
+					popUpWidgetPush(tmpWidget);
+					tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
 				}
 			}
 		}
-	} else if (_msg.GetMessage() == ednEventPopUpFileSaveAs) {
+	} else if (_msg.getMessage() == ednEventPopUpFileSaveAs) {
 		// get the filename : 
-		etk::UString tmpData = _msg.GetData();
+		etk::UString tmpData = _msg.getData();
 		APPL_DEBUG("Request Saving As file : " << tmpData);
 		
-		BufferManager::Get(m_currentSavingAsIdBuffer)->SetFileName(tmpData);
+		BufferManager::get(m_currentSavingAsIdBuffer)->setFileName(tmpData);
 		SendMultiCast(ednMsgGuiSave, m_currentSavingAsIdBuffer);
-	} else if(    _msg.GetMessage() == ednMsgBufferState
-	           || _msg.GetMessage() == ednMsgBufferId) {
+	} else if(    _msg.getMessage() == ednMsgBufferState
+	           || _msg.getMessage() == ednMsgBufferId) {
 		// the buffer change we need to update the widget string
-		BufferText* tmpBuffer = BufferManager::Get(BufferManager::GetSelected());
+		BufferText* tmpBuffer = BufferManager::get(BufferManager::GetSelected());
 		if (NULL != tmpBuffer) {
-			etk::FSNode compleateName = tmpBuffer->GetFileName();
-			bool isModify = tmpBuffer->IsModify();
-			etk::UString directName = compleateName.GetName();
+			etk::FSNode compleateName = tmpBuffer->getFileName();
+			bool isModify = tmpBuffer->isModify();
+			etk::UString directName = compleateName.getName();
 			if (true == isModify) {
 				directName += " *";
 			}
 			if (NULL != m_widgetLabelFileName) {
-				m_widgetLabelFileName->SetLabel(etk::UString("<left>") + directName + "</left>");
+				m_widgetLabelFileName->setLabel(etk::UString("<left>") + directName + "</left>");
 			}
 			etk::UString windowsTitle = "edn - ";
 			windowsTitle += directName;
-			SetTitle(windowsTitle);
+			setTitle(windowsTitle);
 			return;
 		} else {
-			m_widgetLabelFileName->SetLabel("");
-			SetTitle("edn");
+			m_widgetLabelFileName->setLabel("");
+			setTitle("edn");
 		}
 		return;
-		// TODO : Set the Title ....
-	} else if (_msg.GetMessage() == ednMsgProperties) {
+		// TODO : set the Title ....
+	} else if (_msg.getMessage() == ednMsgProperties) {
 		// Request the parameter GUI
 		widget::Parameter* tmpWidget = new widget::Parameter();
 		if (NULL == tmpWidget) {
-			APPL_ERROR("Can not allocate widget ==> display might be in error");
+			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
-			tmpWidget->SetTitle("Properties");
-			PopUpWidgetPush(tmpWidget);
+			tmpWidget->setTitle("Properties");
+			popUpWidgetPush(tmpWidget);
 			tmpWidget->MenuAddGroup("Editor");
 			ewol::Widget* tmpSubWidget = new globals::ParameterGlobalsGui();
 			tmpWidget->MenuAdd("Editor",          "", tmpSubWidget);
@@ -389,19 +389,19 @@ void MainWindows::OnReceiveMessage(const ewol::EMessage& _msg)
 			tmpSubWidget = new ParameterAboutGui();
 			tmpWidget->MenuAdd("About",           "", tmpSubWidget);
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiReloadShader) {
-		ewol::GetContext().GetResourcesManager().ReLoadResources();
-		ewol::GetContext().ForceRedrawAll();
-	} else if (_msg.GetMessage() == ednMsgGuiExit) {
+	} else if (_msg.getMessage() == ednMsgGuiReloadShader) {
+		ewol::getContext().getResourcesManager().ReLoadResources();
+		ewol::getContext().forceRedrawAll();
+	} else if (_msg.getMessage() == ednMsgGuiExit) {
 		// TODO ...
 	}
 	
 	return;
 }
 
-void MainWindows::OnObjectRemove(ewol::EObject * _removeObject)
+void MainWindows::onObjectRemove(ewol::EObject * _removeObject)
 {
-	ewol::Windows::OnObjectRemove(_removeObject);
+	ewol::Windows::onObjectRemove(_removeObject);
 	if (m_widgetLabelFileName == _removeObject) {
 		m_widgetLabelFileName = NULL;
 	}

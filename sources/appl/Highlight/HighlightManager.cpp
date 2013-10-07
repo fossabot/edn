@@ -22,36 +22,36 @@ class localClassHighlightManager: public ewol::EObject
 	public:
 		// Constructeur
 		localClassHighlightManager(void) {
-			//ewol::widgetMessageMultiCast::Add(GetWidgetId(), ednMsgBufferColor);
+			//ewol::widgetMessageMultiCast::add(getWidgetId(), ednMsgBufferColor);
 		};
 		~localClassHighlightManager(void) {
 			int32_t i;
 			// clean all Element
-			for (i=0; i< listHighlight.Size(); i++) {
+			for (i=0; i< listHighlight.size(); i++) {
 				if (NULL != listHighlight[i]) {
 					delete(listHighlight[i]);
 					listHighlight[i] = NULL;
 				}
 			}
 			// clear the compleate list
-			listHighlight.Clear();
+			listHighlight.clear();
 		};
 		
 		// herited function
-		const char * const GetObjectType(void)
+		const char * const getObjectType(void)
 		{
 			return "ApplHighlightManager";
 		}
 		
 		// herited function
-		virtual void OnReceiveMessage(const ewol::EMessage& _msg)
+		virtual void onReceiveMessage(const ewol::EMessage& _msg)
 		{
 			/*
 			switch (id)
 			{
 				case APPL_MSG__COLOR_HAS_CHANGE:
 					APPL_INFO("UPDATE the color pointer on the HL");
-					for (int32_t i=0; i<listHighlight.Size(); i++) {
+					for (int32_t i=0; i<listHighlight.size(); i++) {
 						if (NULL != listHighlight[i]) {
 							listHighlight[i]->ReloadColor();
 						}
@@ -61,11 +61,11 @@ class localClassHighlightManager: public ewol::EObject
 			*/
 		}
 		
-		Highlight* Get(etk::FSNode &fileName)
+		Highlight* get(etk::FSNode &fileName)
 		{
 			int32_t i;
-			for (i=0; i<listHighlight.Size(); i++) {
-				if (true == listHighlight[i]->FileNameCompatible(fileName) ) {
+			for (i=0; i<listHighlight.size(); i++) {
+				if (true == listHighlight[i]->fileNameCompatible(fileName) ) {
 					return listHighlight[i];
 				}
 			}
@@ -74,7 +74,7 @@ class localClassHighlightManager: public ewol::EObject
 		
 		bool Exist(etk::FSNode &fileName)
 		{
-			if (NULL != Get(fileName) ) {
+			if (NULL != get(fileName) ) {
 				return true;
 			}
 			return false;
@@ -86,17 +86,17 @@ class localClassHighlightManager: public ewol::EObject
 			etk::FSNode myFile("DATA:languages/");
 			// get the subfolder list :
 			etk::Vector<etk::FSNode *> list = myFile.FolderGetSubList(false, true, false,false);
-			for ( int32_t iii=0 ; iii<list.Size() ; iii++ ) {
+			for ( int32_t iii=0 ; iii<list.size() ; iii++ ) {
 				if (NULL!=list[iii]) {
-					if (list[iii]->GetNodeType()==etk::FSN_FOLDER) {
-						etk::UString filename = list[iii]->GetName() + "/highlight.xml";
+					if (list[iii]->getNodeType() == etk::FSN_FOLDER) {
+						etk::UString filename = list[iii]->getName() + "/highlight.xml";
 						APPL_DEBUG("Load xml name : " << filename);
 						Highlight *myHightline = new Highlight(filename);
-						listHighlight.PushBack(myHightline);
+						listHighlight.pushBack(myHightline);
 					}
 				}
 			}
-			//myHightline->Display();
+			//myHightline->display();
 		}
 
 };
@@ -105,10 +105,10 @@ static localClassHighlightManager * localManager = NULL;
 
 
 
-void HighlightManager::Init(void)
+void HighlightManager::init(void)
 {
 	if (NULL != localManager) {
-		APPL_ERROR("HighlightManager ==> already exist, just unlink the previous ...");
+		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
 		localManager = NULL;
 	}
 	localManager = new localClassHighlightManager();
@@ -121,7 +121,7 @@ void HighlightManager::Init(void)
 void HighlightManager::UnInit(void)
 {
 	if (NULL == localManager) {
-		APPL_ERROR("HighlightManager ==> request UnInit, but does not exist ...");
+		APPL_ERROR("HighlightManager  == > request UnInit, but does not exist ...");
 		return;
 	}
 	delete(localManager);
@@ -136,12 +136,12 @@ void HighlightManager::loadLanguages(void)
 	localManager->loadLanguages();
 }
 
-Highlight* HighlightManager::Get(etk::FSNode &fileName)
+Highlight* HighlightManager::get(etk::FSNode &fileName)
 {
 	if (NULL == localManager) {
 		return NULL;
 	}
-	return localManager->Get(fileName);
+	return localManager->get(fileName);
 }
 
 bool HighlightManager::Exist(etk::FSNode &fileName)

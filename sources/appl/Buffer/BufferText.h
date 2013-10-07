@@ -42,7 +42,7 @@ typedef struct{
 	uint32_t startLineDisplay;			//!< First line display.
 	uint32_t startColomnDisplay;		//!< First Colomn displayed
 	uint32_t diplayableColomn;			//!< NB colomn that can be displayed
-	uint32_t diplayableLine;			//!< NB Line that can be displayed
+	uint32_t diplayableLine;			//!< NB line that can be displayed
 }infoStatBuffer_ts;
 
 
@@ -56,31 +56,31 @@ class BufferText
 		bool m_updatePositionRequested; //!< if a position xhange in the windows ...
 		vec2 m_maximumSize; //!< current maxSize of the buffer
 	public:
-		void SetModify(bool status);
-		virtual vec2 GetBorderSize(void);
+		void setModify(bool status);
+		virtual vec2 getBorderSize(void);
 		void RequestUpdateOfThePosition(void) { m_updatePositionRequested = true; };
-		void SetMaximumSize(vec2  maxSize) { m_maximumSize = maxSize; };
-		bool NeedToUpdateDisplayPosition(void);
-		vec2 GetMaxSize(void) { return m_maximumSize; };
-		bool IsModify(void);
+		void setMaximumSize(vec2  maxSize) { m_maximumSize = maxSize; };
+		bool needToUpdateDisplayPosition(void);
+		vec2 getMaxSize(void) { return m_maximumSize; };
+		bool isModify(void);
 	public:
-		etk::FSNode GetFileName(void) { return m_fileName; };
+		etk::FSNode getFileName(void) { return m_fileName; };
 		
-		void SetFileName(etk::FSNode &newName)
+		void setFileName(etk::FSNode &newName)
 		{
 			m_fileName = newName;
 			m_haveName = true;
 			NameChange();
 		};
 		
-		void SetFileName(etk::UString &newName)
+		void setFileName(etk::UString &newName)
 		{
-			m_fileName.SetName(newName);
+			m_fileName.setName(newName);
 			m_haveName = true;
 			NameChange();
 		};
 		
-		bool HaveName(void)
+		bool haveName(void)
 		{
 			return m_haveName;
 		}
@@ -90,12 +90,12 @@ class BufferText
 		virtual  ~BufferText(void);
 		void      Save(void);
 		
-		void      GetInfo(infoStatBuffer_ts &infoToUpdate);
-		void      SetLineDisplay(uint32_t lineNumber);
-		int32_t   Display(ewol::Text& OOText,
+		void      getInfo(infoStatBuffer_ts &infoToUpdate);
+		void      setLineDisplay(uint32_t lineNumber);
+		int32_t   display(ewol::Text& OOText,
 		                  int32_t offsetX, int32_t offsetY,
 		                  int32_t sizeX, int32_t sizeY);
-		void      AddChar(uniChar_t unicodeData);
+		void      addChar(uniChar_t unicodeData);
 		void      cursorMove(ewol::keyEvent::keyboard_te  moveTypeEvent);
 		void      MouseSelectFromCursorTo(vec2 pos);
 		void      MouseEvent(vec2 pos);
@@ -108,22 +108,22 @@ class BufferText
 
 		void      Search(etk::UString &data, bool back, bool caseSensitive, bool wrap, bool regExp);
 		void      Replace(etk::UString &data);
-		int32_t   FindLine(etk::UString &data);
+		int32_t   findLine(etk::UString &data);
 		void      JumpAtLine(int32_t newLine);
-		int32_t   GetCurrentLine(void);
+		int32_t   getCurrentLine(void);
 		
-		void      RemoveLine(void);
+		void      removeLine(void);
 		void      SelectAll(void);
 		void      SelectNone(void);
 		void      Undo(void);
 		void      Redo(void);
-		void      SetCharset(unicode::charset_te newCharset);
-		int32_t   GetNumberOfLine(void);
+		void      setCharset(unicode::charset_te newCharset);
+		int32_t   getNumberOfLine(void);
 	protected:
 		void      NameChange(void);
 
 	private:
-		int32_t   GetLineNumberNumberOfElement(void);
+		int32_t   getLineNumberNumberOfElement(void);
 		
 		// Direct buffer IO
 		EdnBuf                          m_EdnBuf;             //!< buffer associated on this displayer
@@ -139,15 +139,15 @@ class BufferText
 	private:
 		bool m_centerRequested;
 	public:
-		virtual vec2 GetPosition(int32_t fontId, bool& centerRequested);
+		virtual vec2 getPosition(int32_t fontId, bool& centerRequested);
 	private:
 		bool     TextDMoveUp(int32_t offset);
 		bool     TextDMoveDown(int32_t offset);
-		void     SetInsertPosition(int32_t newPosition, bool insertChar = false);
+		void     setInsertPosition(int32_t newPosition, bool insertChar = false);
 		
-		int32_t  GetMousePosition(vec2 pos);
+		int32_t  getMousePosition(vec2 pos);
 		
-		void     DrawLineNumber(ewol::Text* OOText, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
+		void     drawLineNumber(ewol::Text* OOText, int32_t sizeX, int32_t sizeY, int32_t nbColomn, int32_t lineNumber, int32_t positionY);
 
 };
 

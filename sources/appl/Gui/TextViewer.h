@@ -28,24 +28,24 @@ namespace appl
 		private:
 			appl::Buffer* m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
 			ewol::Text m_displayText; //!< Text display properties.
-			ewol::Drawing m_displayDrawing; //!< Other diaplay requested.
+			ewol::drawing m_displayDrawing; //!< Other diaplay requested.
 		public:
-			void SetFontSize(int32_t _size);
-			void SetFontName(const etk::UString& _fontName);
+			void setFontSize(int32_t _size);
+			void setFontName(const etk::UString& _fontName);
 		private:
-			void CalculateMaxSize(void);
+			void calculateMaxSize(void);
 		protected: // derived function
-			virtual void OnDraw(void);
+			virtual void onDraw(void);
 		public:  // Derived function
-			const char * const GetObjectType(void) { return "ApplCodeView"; };
-			virtual bool CalculateMinSize(void);
-			virtual void OnRegenerateDisplay(void);
-			virtual void OnReceiveMessage(const ewol::EMessage& _msg);
-			virtual bool OnEventInput(const ewol::EventInput& _event);
-			virtual bool OnEventEntry(const ewol::EventEntry& _event);
-			virtual void OnEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
-			virtual void OnGetFocus(void);
-			virtual void OnLostFocus(void);
+			const char * const getObjectType(void) { return "ApplCodeView"; };
+			virtual bool calculateMinSize(void);
+			virtual void onRegenerateDisplay(void);
+			virtual void onReceiveMessage(const ewol::EMessage& _msg);
+			virtual bool onEventInput(const ewol::EventInput& _event);
+			virtual bool onEventEntry(const ewol::EventEntry& _event);
+			virtual void onEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
+			virtual void onGetFocus(void);
+			virtual void onLostFocus(void);
 		private:
 			bool m_insertMode; //!< the insert mode is enable
 	};

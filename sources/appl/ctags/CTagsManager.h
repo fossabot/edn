@@ -18,7 +18,7 @@
 
 namespace cTagsManager
 {
-	void Init(void);
+	void init(void);
 	void UnInit(void);
 };
 

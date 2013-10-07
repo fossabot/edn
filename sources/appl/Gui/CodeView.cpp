@@ -23,20 +23,20 @@
 #undef __class__
 #define __class__	"CodeView"
 
-void CodeView::Init(void)
+void CodeView::init(void)
 {
 	m_label = "CodeView is disable ...";
 	
 	m_bufferID = -1;
 	m_buttunOneSelected = false;
 	
-	m_lineNumberList.Clear();
+	m_lineNumberList.clear();
 	
 	m_textColorFg = etk::color::black;
 	
 	m_textColorBg = etk::color::black;
-	m_textColorBg.SetA(0x40);
-	SetCanHaveFocus(true);
+	m_textColorBg.setA(0x40);
+	setCanHaveFocus(true);
 	RegisterMultiCast(ednMsgBufferId);
 	RegisterMultiCast(ednMsgGuiCopy);
 	RegisterMultiCast(ednMsgGuiPaste);
@@ -49,7 +49,7 @@ void CodeView::Init(void)
 	RegisterMultiCast(ednMsgGuiFind);
 	RegisterMultiCast(ednMsgGuiReplace);
 	RegisterMultiCast(ednMsgGuiGotoLine);
-	SetLimitScrolling(0.2);
+	setLimitScrolling(0.2);
 	
 	ShortCutAdd("ctrl+w",       ednMsgGuiRm,     "Line");
 	ShortCutAdd("ctrl+shift+w", ednMsgGuiRm,     "Paragraph");
@@ -63,12 +63,12 @@ void CodeView::Init(void)
 CodeView::CodeView(etk::UString fontName, int32_t fontSize) :
 	m_displayText(fontName, fontSize)
 {
-	Init();
+	init();
 }
 
 CodeView::CodeView(void)
 {
-	Init();
+	init();
 }
 
 CodeView::~CodeView(void)
@@ -81,78 +81,78 @@ CodeView::~CodeView(void)
  * @brief Check if the number of reference buffer is good or not ...
  * @param[in] bufferID id of the current Buffer that needed to have a reference
  */
-void CodeView::UpdateNumberOfLineReference(int32_t bufferID)
+void CodeView::updateNumberOfLineReference(int32_t bufferID)
 {
 	vec2 tmpCoord(0,0);
-	if (m_lineNumberList.Size()<=bufferID) {
+	if (m_lineNumberList.size() <= bufferID) {
 		// update the number of elements : 
-		for (int32_t iii=m_lineNumberList.Size(); iii <= bufferID; iii++) {
+		for (int32_t iii=m_lineNumberList.size(); iii <= bufferID; iii++) {
 			// add start line at 0 :
-			m_lineNumberList.PushBack(tmpCoord);
+			m_lineNumberList.pushBack(tmpCoord);
 		}
 	}
 }
 
 
-bool CodeView::CalculateMinSize(void)
+bool CodeView::calculateMinSize(void)
 {
 	m_minSize.setValue(50,50);
 	return true;
 }
 
-void CodeView::CalculateMaxSize(void)
+void CodeView::calculateMaxSize(void)
 {
 	m_maxSize.setX(2048);
-	int32_t letterHeight = m_displayText.CalculateSize(etk::UniChar('A')).y();
-	BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+	int32_t letterHeight = m_displayText.calculateSize(etk::UniChar('A')).y();
+	BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 	if (NULL!=tmpBuffer) {
-		m_maxSize.setY(tmpBuffer->GetNumberOfLine() * letterHeight);
+		m_maxSize.setY(tmpBuffer->getNumberOfLine() * letterHeight);
 	} else {
 		m_maxSize.setY(50);
 	}
 }
 
 
-void CodeView::OnDraw(void)
+void CodeView::onDraw(void)
 {
-	m_displayDrawing.Draw();
-	m_displayText.Draw();
-	WidgetScrooled::OnDraw();
+	m_displayDrawing.draw();
+	m_displayText.draw();
+	WidgetScrooled::onDraw();
 }
 
-void CodeView::OnRegenerateDisplay(void)
+void CodeView::onRegenerateDisplay(void)
 {
-	if (true == NeedRedraw()) {
-		int64_t startTime = ewol::GetTime();
+	if (true == needRedraw()) {
+		int64_t startTime = ewol::getTime();
 		
 		// For the scrooling windows
-		CalculateMaxSize();
-		m_displayDrawing.Clear();
-		m_displayText.Clear();
+		calculateMaxSize();
+		m_displayDrawing.clear();
+		m_displayText.clear();
 		
-		// Reset the background : 
-		m_displayDrawing.SetPos(vec3(-2048, -2048, 0));
-		m_displayDrawing.SetColor(ColorizeManager::Get(COLOR_CODE_BASIC_BG));
-		m_displayDrawing.RectangleWidth(vec3(4096, 4096, 0) );
+		// reset the background : 
+		m_displayDrawing.setPos(vec3(-2048, -2048, 0));
+		m_displayDrawing.setColor(ColorizeManager::get(COLOR_CODE_BASIC_BG));
+		m_displayDrawing.rectangleWidth(vec3(4096, 4096, 0) );
 		
-		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 		if(    NULL != tmpBuffer
-		    && true == tmpBuffer->NeedToUpdateDisplayPosition() ) {
-			vec2 borderWidth = BufferManager::Get(m_bufferID)->GetBorderSize();
+		    && true == tmpBuffer->needToUpdateDisplayPosition() ) {
+			vec2 borderWidth = BufferManager::get(m_bufferID)->getBorderSize();
 			bool centerRequested = false;
 			// TODO : set it back ...
-			vec2  currentPosition = BufferManager::Get(m_bufferID)->GetPosition(999/*m_OObjectTextNormal.GetFontID()*/, centerRequested);
-			SetScrollingPositionDynamic(borderWidth, currentPosition, centerRequested);
+			vec2  currentPosition = BufferManager::get(m_bufferID)->getPosition(999/*m_OObjectTextNormal.getFontID()*/, centerRequested);
+			setScrollingPositionDynamic(borderWidth, currentPosition, centerRequested);
 		} // else : nothing to do ...
 		
 		// generate the objects :
 		if (-1 == m_bufferID) {
-			m_displayText.SetTextAlignement(10, m_size.x()-20, ewol::Text::alignLeft);
-			m_displayDrawing.SetColor(0x00000022);
-			m_displayDrawing.SetPos(vec3(10, 0, 0));
-			m_displayDrawing.Rectangle(vec3((int32_t)m_size.x()-20, 1500, 0) );
+			m_displayText.setTextAlignement(10, m_size.x()-20, ewol::Text::alignLeft);
+			m_displayDrawing.setColor(0x00000022);
+			m_displayDrawing.setPos(vec3(10, 0, 0));
+			m_displayDrawing.rectangle(vec3((int32_t)m_size.x()-20, 1500, 0) );
 			
-			m_displayText.SetRelPos(vec3(10, 0, 0));
+			m_displayText.setRelPos(vec3(10, 0, 0));
 			// nothing to display :
 			etk::UString tmpString("<br/>\n"
 			                       "<font color=\"red\">\n"
@@ -167,71 +167,71 @@ void CodeView::OnRegenerateDisplay(void)
 			                       "		No Buffer Availlable to display\n"
 			                       "	</i>\n"
 			                       "</font>\n");
-			m_displayText.SetPos(vec3(0.0f, m_size.y(), 0.0f) );
-			m_displayText.ForceLineReturn();
-			m_displayText.PrintDecorated(tmpString);
+			m_displayText.setPos(vec3(0.0f, m_size.y(), 0.0f) );
+			m_displayText.forceLineReturn();
+			m_displayText.printDecorated(tmpString);
 		} else {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
-				tmpBuffer->Display(m_displayText, m_originScrooled.x(), m_originScrooled.y(), m_size.x(), m_size.y());
+				tmpBuffer->display(m_displayText, m_originScrooled.x(), m_originScrooled.y(), m_size.x(), m_size.y());
 			}
 			// set the current size of the windows
-			SetMaxSize(BufferManager::Get(m_bufferID)->GetMaxSize());
+			setMaxSize(BufferManager::get(m_bufferID)->getMaxSize());
 		}
-		int64_t stopTime = ewol::GetTime();
+		int64_t stopTime = ewol::getTime();
 		APPL_DEBUG("Display Code Generation = " << stopTime - startTime << " micro-s");
 		
 		// call the herited class...
-		WidgetScrooled::OnRegenerateDisplay();
+		WidgetScrooled::onRegenerateDisplay();
 	}
 }
 
 
-bool CodeView::OnEventEntry(const ewol::EventEntry& _event)
+bool CodeView::onEventEntry(const ewol::EventEntry& _event)
 {
-	if (_event.GetType() == ewol::keyEvent::keyboardChar) {
+	if (_event.getType() == ewol::keyEvent::keyboardChar) {
 		//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
-		if (_event.GetStatus() == ewol::keyEvent::statusDown) {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (_event.getStatus() == ewol::keyEvent::statusDown) {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
-				tmpBuffer->AddChar(_event.GetChar());
+				tmpBuffer->addChar(_event.getChar());
 			}
-			MarkToRedraw();
+			markToRedraw();
 		}
 		return true;
 	}
 	// move events ...
-	if (_event.GetStatus() == ewol::keyEvent::statusDown) {
-		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+	if (_event.getStatus() == ewol::keyEvent::statusDown) {
+		BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 		if (NULL!=tmpBuffer) {
-			tmpBuffer->cursorMove(_event.GetType());
+			tmpBuffer->cursorMove(_event.getType());
 		}
-		MarkToRedraw();
+		markToRedraw();
 	}
 	return true;
 }
 
-void CodeView::OnEventClipboard(ewol::clipBoard::clipboardListe_te _clipboardID)
+void CodeView::onEventClipboard(ewol::clipBoard::clipboardListe_te _clipboardID)
 {
-	BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+	BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 	if (NULL!=tmpBuffer) {
 		tmpBuffer->Paste(_clipboardID);
 	}
-	MarkToRedraw();
+	markToRedraw();
 }
 
-bool CodeView::OnEventInput(const ewol::EventInput& _event)
+bool CodeView::onEventInput(const ewol::EventInput& _event)
 {
-	vec2 relativePos = RelativePosition(_event.GetPos());
-	//APPL_DEBUG("Event at pos : " << _event.GetPos() << " ==> " << relativePos );
+	vec2 relativePos = relativePosition(_event.getPos());
+	//APPL_DEBUG("Event at pos : " << _event.getPos() << "  == > " << relativePos );
 	// corection for the openGl abstraction
 	//relativePos.y = m_size.y - relativePos.y;
 	
 	vec2 limitedPos = relativePos;
 	limitedPos.setValue(etk_avg(1, limitedPos.x(), m_size.x()-1),
 	                    etk_avg(1, limitedPos.y(), m_size.y()-1));
-	if (true == WidgetScrooled::OnEventInput(_event)) {
-		KeepFocus();
+	if (true == WidgetScrooled::onEventInput(_event)) {
+		keepFocus();
 		// nothing to do ... done on upper widget ...
 		return true;
 	}
@@ -240,51 +240,51 @@ bool CodeView::OnEventInput(const ewol::EventInput& _event)
 		return false;
 	}
 	
-	if (1 == _event.GetId()) {
+	if (1 == _event.getId()) {
 		
-		if (ewol::keyEvent::typeMouse == _event.GetType()) {
-			if (ewol::keyEvent::statusDown == _event.GetStatus()) {
+		if (ewol::keyEvent::typeMouse == _event.getType()) {
+			if (ewol::keyEvent::statusDown == _event.getStatus()) {
 				m_buttunOneSelected = true;
-				KeepFocus();
-				// TODO : Set something good
-				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+				keepFocus();
+				// TODO : set something good
+				BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 				if (NULL!=tmpBuffer) {
 					tmpBuffer->MouseEvent(limitedPos);
 				}
-				MarkToRedraw();
-			} else if (ewol::keyEvent::statusUp == _event.GetStatus()) {
+				markToRedraw();
+			} else if (ewol::keyEvent::statusUp == _event.getStatus()) {
 				m_buttunOneSelected = false;
-				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+				BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 				if (NULL!=tmpBuffer) {
 					tmpBuffer->Copy(ewol::clipBoard::clipboardSelection);
 				}
-				MarkToRedraw();
+				markToRedraw();
 			}
 		}
-		if (ewol::keyEvent::statusSingle == _event.GetStatus()) {
-			if (ewol::keyEvent::typeMouse == _event.GetType()) {
-				KeepFocus();
-				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (ewol::keyEvent::statusSingle == _event.getStatus()) {
+			if (ewol::keyEvent::typeMouse == _event.getType()) {
+				keepFocus();
+				BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 				if (NULL!=tmpBuffer) {
 					tmpBuffer->MouseEvent(limitedPos);
 				}
-				MarkToRedraw();
+				markToRedraw();
 			} else {
 				// nothing to do ...
 			}
-		} else if (ewol::keyEvent::statusDouble == _event.GetStatus()) {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		} else if (ewol::keyEvent::statusDouble == _event.getStatus()) {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->MouseEventDouble();
 			}
-			MarkToRedraw();
-		} else if (ewol::keyEvent::statusTriple == _event.GetStatus()) {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+			markToRedraw();
+		} else if (ewol::keyEvent::statusTriple == _event.getStatus()) {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->MouseEventTriple();
 			}
-			MarkToRedraw();
-		} else if (ewol::keyEvent::statusMove == _event.GetStatus()) {
+			markToRedraw();
+		} else if (ewol::keyEvent::statusMove == _event.getStatus()) {
 			if (true == m_buttunOneSelected) {
 				int xxx, yyy;
 				xxx = relativePos.x();
@@ -296,185 +296,185 @@ bool CodeView::OnEventInput(const ewol::EventInput& _event)
 					yyy = 0;
 				}
 				//APPL_INFO("mouse-motion BT1 %d, %d", xxx, yyy);
-				// TODO : Set something good
-				BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+				// TODO : set something good
+				BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 				if (NULL!=tmpBuffer) {
 					tmpBuffer->MouseSelectFromCursorTo(limitedPos);
 				}
-				MarkToRedraw();
+				markToRedraw();
 			}
 		}
-	} else if (2 == _event.GetId()) {
-		if (ewol::keyEvent::statusSingle == _event.GetStatus()) {
-			// TODO : Set something good
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+	} else if (2 == _event.getId()) {
+		if (ewol::keyEvent::statusSingle == _event.getStatus()) {
+			// TODO : set something good
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->MouseEvent(limitedPos);
 			}
 			ewol::clipBoard::Request(ewol::clipBoard::clipboardSelection);
-			KeepFocus();
+			keepFocus();
 		}
 	}
 	return true;
 }
 
-void CodeView::OnReceiveMessage(const ewol::EMessage& _msg)
+void CodeView::onReceiveMessage(const ewol::EMessage& _msg)
 {
-	widget::WidgetScrooled::OnReceiveMessage(_msg);
-	APPL_DEBUG("Extern Event : " << _msg.GetCaller() << "  type : " << _msg.GetMessage() << "  data=\"" << _msg.GetData() << "\"");
+	widget::WidgetScrooled::onReceiveMessage(_msg);
+	APPL_DEBUG("Extern Event : " << _msg.getCaller() << "  type : " << _msg.GetMessage() << "  data=\"" << _msg.GetData() << "\"");
 	
-	if(_msg.GetMessage() == ednMsgBufferId) {
+	if(_msg.getMessage() == ednMsgBufferId) {
 		//keep the reference of the display offset :
-		if(    m_bufferID >=0
-		    && m_bufferID < m_lineNumberList.Size()) {
+		if(    m_bufferID  >= 0
+		    && m_bufferID < m_lineNumberList.size()) {
 			m_lineNumberList[m_bufferID] = m_originScrooled;
 		}
 		int32_t bufferID = 0;
-		sscanf(_msg.GetData().c_str(), "%d", &bufferID);
+		sscanf(_msg.getData().c_str(), "%d", &bufferID);
 		APPL_INFO("Select a new Buffer ... " << bufferID);
 		// set the new buffer ID
 		m_bufferID = bufferID;
 		// update the start display position...
-		UpdateNumberOfLineReference(m_bufferID);
+		updateNumberOfLineReference(m_bufferID);
 		// set back if needed the display position ...
-		if(    m_bufferID >=0
-		    && m_bufferID < m_lineNumberList.Size()) {
+		if(    m_bufferID  >= 0
+		    && m_bufferID < m_lineNumberList.size()) {
 			m_originScrooled = m_lineNumberList[m_bufferID];
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiCopy) {
-		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+	} else if (_msg.getMessage() == ednMsgGuiCopy) {
+		BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 		if (NULL!=tmpBuffer) {
 			tmpBuffer->Copy(ewol::clipBoard::clipboardStd);
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiCut) {
-		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+	} else if (_msg.getMessage() == ednMsgGuiCut) {
+		BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 		if (NULL!=tmpBuffer) {
 			tmpBuffer->Cut(ewol::clipBoard::clipboardStd);
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiPaste) {
+	} else if (_msg.getMessage() == ednMsgGuiPaste) {
 		ewol::clipBoard::Request(ewol::clipBoard::clipboardStd);
-	} else if (_msg.GetMessage() == ednMsgGuiUndo) {
-		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+	} else if (_msg.getMessage() == ednMsgGuiUndo) {
+		BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 		if (NULL!=tmpBuffer) {
 			tmpBuffer->Undo();
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiRedo) {
-		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+	} else if (_msg.getMessage() == ednMsgGuiRedo) {
+		BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 		if (NULL!=tmpBuffer) {
 			tmpBuffer->Redo();
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiRm) {
+	} else if (_msg.getMessage() == ednMsgGuiRm) {
 		// data : "Word" "Line" "Paragraph"
-		if (_msg.GetData() == "Word") {
-			APPL_WARNING(" on event " << _msg.GetMessage() << " data=\"" << _msg.GetData() << "\" ==> not coded" );
-		} else if (_msg.GetData() == "Line") {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (_msg.getData() == "Word") {
+			APPL_WARNING(" on event " << _msg.getMessage() << " data=\"" << _msg.GetData() << "\"  == > not coded" );
+		} else if (_msg.getData() == "Line") {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
-				tmpBuffer->RemoveLine();
+				tmpBuffer->removeLine();
 			}
-		} else if (_msg.GetData() == "Paragraph") {
-			APPL_WARNING(" on event " << _msg.GetMessage() << " data=\"" << _msg.GetData() << "\" ==> not coded" );
+		} else if (_msg.getData() == "Paragraph") {
+			APPL_WARNING(" on event " << _msg.getMessage() << " data=\"" << _msg.GetData() << "\"  == > not coded" );
 		} else {
-			APPL_ERROR(" on event " << _msg.GetMessage() << " unknow data=\"" << _msg.GetData() << "\"" );
+			APPL_ERROR(" on event " << _msg.getMessage() << " unknow data=\"" << _msg.GetData() << "\"" );
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiSelect) {
+	} else if (_msg.getMessage() == ednMsgGuiSelect) {
 		// data : "ALL" "NONE"
-		if (_msg.GetData() == "ALL") {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (_msg.getData() == "ALL") {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->SelectAll();
 			}
-		} else if (_msg.GetData() == "NONE") {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		} else if (_msg.getData() == "NONE") {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->SelectNone();
 			}
 		} else {
-			APPL_ERROR(" on event " << _msg.GetMessage() << " unknow data=\"" << _msg.GetData() << "\"" );
+			APPL_ERROR(" on event " << _msg.getMessage() << " unknow data=\"" << _msg.GetData() << "\"" );
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiChangeCharset) {
+	} else if (_msg.getMessage() == ednMsgGuiChangeCharset) {
 		// data : "UTF-8" "ISO-8859-1" "ISO-8859-15"
-		if (_msg.GetData() == "UTF-8") {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		if (_msg.getData() == "UTF-8") {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
-				tmpBuffer->SetCharset(unicode::EDN_CHARSET_UTF8);
+				tmpBuffer->setCharset(unicode::EDN_CHARSET_UTF8);
 			}
-		} else if (_msg.GetData() == "ISO-8859-1") {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		} else if (_msg.getData() == "ISO-8859-1") {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
-				tmpBuffer->SetCharset(unicode::EDN_CHARSET_ISO_8859_1);
+				tmpBuffer->setCharset(unicode::EDN_CHARSET_ISO_8859_1);
 			}
-		} else if (_msg.GetData() == "ISO-8859-15") {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		} else if (_msg.getData() == "ISO-8859-15") {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
-				tmpBuffer->SetCharset(unicode::EDN_CHARSET_ISO_8859_15);
+				tmpBuffer->setCharset(unicode::EDN_CHARSET_ISO_8859_15);
 			}
 		} else {
-			APPL_ERROR(" on event " << _msg.GetMessage() << " unknow data=\"" << _msg.GetData() << "\"" );
+			APPL_ERROR(" on event " << _msg.getMessage() << " unknow data=\"" << _msg.GetData() << "\"" );
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiFind) {
+	} else if (_msg.getMessage() == ednMsgGuiFind) {
 		etk::UString myDataString;
-		SearchData::GetSearch(myDataString);
-		if (_msg.GetData() == "Next") {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		SearchData::getSearch(myDataString);
+		if (_msg.getData() == "Next") {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
-				tmpBuffer->Search(myDataString, false, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
+				tmpBuffer->Search(myDataString, false, SearchData::getCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
 			}
-		} else if (_msg.GetData() == "Previous") {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		} else if (_msg.getData() == "Previous") {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
-				tmpBuffer->Search(myDataString, true, SearchData::GetCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
+				tmpBuffer->Search(myDataString, true, SearchData::getCase(), SearchData::GetWrap(), SearchData::GetRegExp() );
 			}
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiReplace) {
+	} else if (_msg.getMessage() == ednMsgGuiReplace) {
 		etk::UString myDataString;
-		SearchData::GetReplace(myDataString);
-		if (_msg.GetData() == "Normal") {
-			BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		SearchData::getReplace(myDataString);
+		if (_msg.getData() == "Normal") {
+			BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 			if (NULL!=tmpBuffer) {
 				tmpBuffer->Replace(myDataString);
 			}
-		} else if (_msg.GetData() == "All") {
+		} else if (_msg.getData() == "All") {
 			
 		}
-	} else if (_msg.GetMessage() == ednMsgGuiGotoLine) {
+	} else if (_msg.getMessage() == ednMsgGuiGotoLine) {
 		int32_t lineID = 0;
-		sscanf(_msg.GetData().c_str(), "%d", &lineID);
+		sscanf(_msg.getData().c_str(), "%d", &lineID);
 		APPL_INFO("Goto line : " << lineID);
-		BufferText* tmpBuffer = BufferManager::Get(m_bufferID);
+		BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 		if (NULL!=tmpBuffer) {
 			tmpBuffer->JumpAtLine(lineID);
 		}
 	}
-	// Force redraw of the widget
-	MarkToRedraw();
+	// force redraw of the widget
+	markToRedraw();
 }
 
 
-void CodeView::OnGetFocus(void)
+void CodeView::onGetFocus(void)
 {
 	/*
-	ewol::widgetMessageMultiCast::Send(GetWidgetId(), ednMsgBufferId, m_bufferID);
+	ewol::widgetMessageMultiCast::Send(getWidgetId(), ednMsgBufferId, m_bufferID);
 	*/
 	ShowKeyboard();
 	APPL_INFO("Focus - In");
 }
 
 
-void CodeView::OnLostFocus(void)
+void CodeView::onLostFocus(void)
 {
 	HideKeyboard();
 	APPL_INFO("Focus - out");
 }
 
-void CodeView::SetFontSize(int32_t size)
+void CodeView::setFontSize(int32_t size)
 {
-	m_displayText.SetFontSize(size);
-	SetScrollingSize(size*3.0*1.46); // 1.46 is a magic nmber ...
+	m_displayText.setFontSize(size);
+	setScrollingSize(size*3.0*1.46); // 1.46 is a magic nmber ...
 }
 
-void CodeView::SetFontName(etk::UString fontName)
+void CodeView::setFontName(etk::UString fontName)
 {
-	m_displayText.SetFontName(fontName);
+	m_displayText.setFontName(fontName);
 }
 
