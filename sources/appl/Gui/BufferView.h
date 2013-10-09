@@ -10,7 +10,6 @@
 #define __BUFFER_VIEW_H__
 
 #include <appl/Debug.h>
-#include <CodeView.h>
 #include <BufferManager.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/List.h>
@@ -24,11 +23,10 @@ namespace appl
 			etk::FSNode m_bufferName;
 			uint32_t    m_bufferID;
 			bool        m_isModify;
-			dataBufferStruct(etk::FSNode& bufferName, int32_t bufferID, bool isModify) :
-				m_bufferName(bufferName),
-				m_bufferID(bufferID),
-				m_isModify(isModify)
-			{
+			dataBufferStruct(etk::FSNode& _bufferName, int32_t _bufferID, bool _isModify) :
+			  m_bufferName(_bufferName),
+			  m_bufferID(_bufferID),
+			  m_isModify(_isModify) {
 				
 			};
 			~dataBufferStruct(void) { };
@@ -38,9 +36,9 @@ namespace appl
 class BufferView : public widget::List
 {
 	private:
-		int32_t                               m_selectedIdRequested;
-		int32_t                               m_selectedID;
-		etk::Vector<appl::dataBufferStruct*>  m_list;
+		int32_t m_selectedIdRequested;
+		int32_t m_selectedID;
+		etk::Vector<appl::dataBufferStruct*> m_list;
 	public:
 		// Constructeur
 		BufferView(void);
@@ -55,10 +53,10 @@ class BufferView : public widget::List
 		void removeAllElement(void);
 		// Derived function
 		virtual uint32_t getNuberOfColomn(void);
-		virtual bool getTitle(int32_t colomn, etk::UString &myTitle, etk::Color<> &fg, etk::Color<> &bg);
+		virtual bool getTitle(int32_t _colomn, etk::UString& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
 		virtual uint32_t getNuberOfRaw(void);
-		virtual bool getElement(int32_t colomn, int32_t raw, etk::UString &myTextToWrite, etk::Color<> &fg, etk::Color<> &bg);
-		virtual bool onItemEvent(int32_t IdInput, ewol::keyEvent::status_te typeEvent, int32_t colomn, int32_t raw, float x, float y);
+		virtual bool getElement(int32_t _colomn, int32_t _raw, etk::UString& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
+		virtual bool onItemEvent(int32_t _IdInput, ewol::keyEvent::status_te _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
 };
 
 

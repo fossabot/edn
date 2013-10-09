@@ -17,27 +17,26 @@ namespace globals
 {
 	void init(void);
 	void UnInit(void);
-	int32_t         getNbColoneBorder(void);
-	int32_t         getNbLineBorder(void);
+	int32_t getNbColoneBorder(void);
+	int32_t getNbLineBorder(void);
 
-	bool    isSetDisplayEndOfLine(void);
-	void    setDisplayEndOfLine(bool newVal);
+	bool isSetDisplayEndOfLine(void);
+	void setDisplayEndOfLine(bool _newVal);
 	
-	bool    isSetDisplaySpaceChar(void);
-	void    setDisplaySpaceChar(bool newVal);
+	bool isSetDisplaySpaceChar(void);
+	void setDisplaySpaceChar(bool _newVal);
 	
-	bool    isSetDisplayTabChar(void);
-	void    setDisplayTabChar(bool newVal);
+	bool isSetDisplayTabChar(void);
+	void setDisplayTabChar(bool _newVal);
 	
-	bool    isSetAutoIndent(void);
-	void    setAutoIndent(bool newVal);
+	bool isSetAutoIndent(void);
+	void setAutoIndent(bool _newVal);
 
-	void    init2(void);
+	void init2(void);
 	
-	bool    OrderTheBufferList(void);
+	bool OrderTheBufferList(void);
 	
-	class ParameterGlobalsGui : public widget::Sizer
-	{
+	class ParameterGlobalsGui : public widget::Sizer {
 		public :
 			ParameterGlobalsGui(void);
 			~ParameterGlobalsGui(void);

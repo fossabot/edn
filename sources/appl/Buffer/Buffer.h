@@ -16,11 +16,10 @@
 #include <etk/Buffer.h>
 #include <ewol/renderer/EObject.h>
 #include <ewol/widget/Widget.h>
+#include <ewol/compositing/Text.h>
 
-namespace appl
-{
-	class Buffer : public ewol::EObject
-	{
+namespace appl {
+	class Buffer : public ewol::EObject {
 		public:
 			Buffer(void);
 			~Buffer(void) { };
@@ -30,13 +29,17 @@ namespace appl
 			/**
 			 * @brief get the curent filename of the Buffer
 			 */
-			const etk::UString& getFileName(void) { return m_fileName; }
+			const etk::UString& getFileName(void) {
+				return m_fileName;
+			}
 			bool loadFile(const etk::UString& _name);
 			void setFileName(const etk::UString& _name);
 			bool m_isModify; //!< true if the file is modify
 			etk::Buffer m_data; //!< copy of the file buffer
 		public:
-			etk::Buffer& getData(void) { return m_data; };
+			etk::Buffer& getData(void) {
+				return m_data;
+			};
 			/*
 			appl::History m_history;
 			Highlight m_highlight;
@@ -46,7 +49,8 @@ namespace appl
 		public:
 			esize_t m_cursorPos; //!< cursor position.
 			int32_t m_cursorPreferredCol; //!< position of the cursor when up and down is done.
-			bool onEventEntry(const ewol::EventEntry& _event);
+			// note : We need the text drawer interface due to the fact that the move depend on the text display properties.
+			bool onEventEntry(const ewol::EventEntry& _event, ewol::Text& _testDrawer);
 			/**
 			 * @brief get the next element in the buffer.
 			 * @param[in] _pos Position in the buffer
@@ -69,7 +73,7 @@ namespace appl
 			 * @param[in] _value Current value to transform
 			 * @param[out] _out String that represent the curent value to display
 			 */
-			void Expand(esize_t& _indent, const etk::UniChar& _value, etk::UString& _out) const;
+			void expand(esize_t& _indent, const etk::UniChar& _value, etk::UString& _out) const;
 		private:
 			enum moveMode {
 				moveLetter,
@@ -80,34 +84,34 @@ namespace appl
 			 * Move the cursor right in the line (no stop of a new line)
 			 * @param[in] _mode Moving mode char, word, ...
 			 */
-			void MoveCursorRight(moveMode _mode = moveLetter);
+			void moveCursorRight(moveMode _mode = moveLetter);
 			/**
 			 * Move the cursor left in the line (no stop of a new line)
 			 * @param[in] _mode Moving mode char, word, ...
 			 */
-			void MoveCursorLeft(moveMode _mode = moveLetter);
+			void moveCursorLeft(moveMode _mode = moveLetter);
 			/**
 			 * @brief Move the cursor at an other position upper.
 			 * @param[in] _nbLine number of up line that might be moved
 			 */
-			void MoveCursorUp(esize_t _nbLine);
+			void moveCursorUp(esize_t _nbLine);
 			/**
 			 * @brief Move the cursor at an other position under.
 			 * @param[in] _nbLine number of down line that might be moved
 			 */
-			void MoveCursorDown(esize_t _nbLine);
+			void moveCursorDown(esize_t _nbLine);
 			/**
 			 * @brief get the start of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.
 			 * @return The position in the buffer of the start of the line.
 			 */
-			esize_t StartLine(esize_t _pos);
+			esize_t startLine(esize_t _pos);
 			/**
 			 * @brief get the end of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.
 			 * @return The position in the buffer of the end of the line.
 			 */
-			esize_t EndLine(esize_t _pos);
+			esize_t endLine(esize_t _pos);
 			/**
 			 * @brief Search a character in the buffer.
 			 * @param[in] _pos Position to start the search of the element.
@@ -115,7 +119,7 @@ namespace appl
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
-			bool Search(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
+			bool search(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
 			/**
 			 * @brief Search a character in the buffer in back mode.
 			 * @param[in] _pos Position to start the search of the element.
@@ -123,7 +127,7 @@ namespace appl
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
-			bool SearchBack(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
+			bool searchBack(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
 			/**
 			 * @brief Count the number of displayed characters between buffer position
 			 * displayed characters are the characters shown on the screen to represent characters in the 
@@ -132,28 +136,28 @@ namespace appl
 			 * @param[in] _posEnd End position
 			 * @return the ID in the buffer of the requested char
 			 */
-			int32_t CountDispChars(esize_t _posStart, esize_t _posEnd);
+			int32_t countDispChars(esize_t _posStart, esize_t _posEnd);
 			/**
 			 * @brief Return the position of the nth diplaye char
 			 * @param[in] _posStart Position of the start
 			 * @param[in] _nChars search in the next nChars elements
 			 * @return position of the char i the buffer
 			 */
-			esize_t CountForwardDispChars(esize_t _posStart, int32_t _nChars);
+			esize_t countForwardDispChars(esize_t _posStart, int32_t _nChars);
 			/**
 			 * @brief find the first character of the line "nLines" forward
 			 * @param[in,out] _startPos Start position.
 			 * @param[in,out] _nLines Number of line to count.
 			 * @return position of the starting the line.
 			 */
-			esize_t CountForwardNLines(esize_t _startPos, int32_t _nLines);
+			esize_t countForwardNLines(esize_t _startPos, int32_t _nLines);
 			/**
 			 * @brief find the first character of the line "nLines" backwards
 			 * @param[in,out] _startPos Start position to count (this caracter is not counted)
 			 * @param[in,out] _nLines Number of line to count (if  == 0 means find the beginning of the line)
 			 * @return position of the starting the line
 			 */
-			esize_t CountBackwardNLines(esize_t _startPos, int32_t _nLines);
+			esize_t countBackwardNLines(esize_t _startPos, int32_t _nLines);
 
 	};
 };

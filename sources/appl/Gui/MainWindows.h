@@ -12,13 +12,11 @@
 #include <appl/Debug.h>
 #include <appl/globalMsg.h>
 
-#include <CodeView.h>
 #include <BufferView.h>
 #include <BufferManager.h>
 #include <ewol/widget/Label.h>
 
-class MainWindows : public ewol::Windows
-{
+class MainWindows : public ewol::Windows {
 	private:
 		int32_t m_currentSavingAsIdBuffer;
 		widget::Label* m_widgetLabelFileName;

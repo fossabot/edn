@@ -18,25 +18,23 @@
 // TODO : The line ID is no more stored in the file system (FSNode) ...
 
 #undef  __class__
-#define __class__    "CTagsManager"
+#define __class__ "CTagsManager"
 
-class CTagsManager: public ewol::EObject
-{
+class CTagsManager: public ewol::EObject {
 	public:
 		// Constructeur
 		CTagsManager(void);
 		~CTagsManager(void);
 		
-		const char * const getObjectType(void)
-		{
+		const char * const getObjectType(void) {
 			return "CTagsManager";
 		};
 		void onReceiveMessage(const ewol::EMessage& _msg);
 		
 		int32_t                     m_currentSelectedID;
 		void                        loadTagFile(void);
-		int32_t                     MultipleJump(void);
-		void                        JumpTo(void);
+		int32_t                     multipleJump(void);
+		void                        jumpTo(void);
 		void                        printTag(const tagEntry *entry);
 		etk::UString                getFolder(etk::UString &inputString);
 		etk::UString                m_tagFolderBase;
@@ -45,12 +43,11 @@ class CTagsManager: public ewol::EObject
 		// history system
 		int32_t                     m_historyPos;
 		etk::Vector<etk::FSNode*>   m_historyList;
-		void                        RegisterHistory(void);
+		void                        registerHistory(void);
 };
 
 static CTagsManager* s_elementPointer = NULL;
-void cTagsManager::init(void)
-{
+void cTagsManager::init(void) {
 	if (NULL != s_elementPointer) {
 		s_elementPointer = NULL;
 		EWOL_WARNING("Ctags manager already instanciate ...  == > restart IT (can have memory leek ...)");
@@ -60,8 +57,7 @@ void cTagsManager::init(void)
 		EWOL_ERROR("Ctags manager error to instanciate ...");
 	}
 }
-void cTagsManager::UnInit(void)
-{
+void cTagsManager::unInit(void) {
 	if (NULL != s_elementPointer) {
 		delete(s_elementPointer);
 		s_elementPointer = NULL;
@@ -70,38 +66,18 @@ void cTagsManager::UnInit(void)
 	}
 }
 
-
-
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-CTagsManager::CTagsManager(void)
-{
+CTagsManager::CTagsManager(void) {
 	m_tagFilename = "";
 	m_tagFolderBase = "";
 	m_ctagFile = NULL;
 	m_historyPos = 0;
-	RegisterMultiCast(ednMsgGuiCtags);
-	RegisterMultiCast(ednMsgBufferId);
-	RegisterMultiCast(ednMsgCtagsLoadFile);
+	registerMultiCast(ednMsgGuiCtags);
+	registerMultiCast(ednMsgBufferId);
+	registerMultiCast(ednMsgCtagsLoadFile);
 	EWOL_INFO("Ctags manager (INIT)");
 }
 
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-CTagsManager::~CTagsManager(void)
-{
+CTagsManager::~CTagsManager(void) {
 	EWOL_INFO("Ctags manager (Un-INIT)");
 	if(0 != m_historyList.size()) {
 		for (int32_t iii=0; iii< m_historyList.size(); iii++) {
@@ -113,8 +89,7 @@ CTagsManager::~CTagsManager(void)
 
 const char * ednEventPopUpCtagsLoadFile = "edn-event-load-ctags";
 
-void CTagsManager::onReceiveMessage(const ewol::EMessage& _msg)
-{
+void CTagsManager::onReceiveMessage(const ewol::EMessage& _msg) {
 	//EWOL_INFO("ctags manager event ... : \"" << eventId << "\"  == > data=\"" << data << "\"" );
 	if (_msg.getMessage() == ednMsgBufferId) {
 		//m_currentSelectedID = dataID;
@@ -129,7 +104,7 @@ void CTagsManager::onReceiveMessage(const ewol::EMessage& _msg)
 	} else if (_msg.getMessage() == ednMsgGuiCtags) {
 		if (_msg.getData() == "Load") {
 			APPL_INFO("Request opening ctag file");
-			widget::fileChooser* tmpWidget = new widget::FileChooser();
+			widget::FileChooser* tmpWidget = new widget::FileChooser();
 			if (NULL == tmpWidget) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
@@ -142,12 +117,12 @@ void CTagsManager::onReceiveMessage(const ewol::EMessage& _msg)
 			APPL_INFO("Request re-load ctag file");
 			loadTagFile();
 		} else if (_msg.getData() == "Jump") {
-			JumpTo();
+			jumpTo();
 		} else if (_msg.getData() == "Back") {
 			if (m_historyList.size() > 0) {
 				int32_t id = m_historyList.size()-1;
-				SendMultiCast(ednMsgOpenFile, m_historyList[id]->getName() );
-				SendMultiCast(ednMsgGuiGotoLine, 0);// TODO : m_historyList[id]->getLineNumber());
+				sendMultiCast(ednMsgOpenFile, m_historyList[id]->getName() );
+				sendMultiCast(ednMsgGuiGotoLine, 0);// TODO : m_historyList[id]->getLineNumber());
 				// remove element ....
 				delete(m_historyList[id]);
 				m_historyList[id]=NULL;
@@ -158,22 +133,20 @@ void CTagsManager::onReceiveMessage(const ewol::EMessage& _msg)
 		}
 	} else if (_msg.getMessage() == applEventctagsSelection) {
 		// save the current file in the history
-		RegisterHistory();
+		registerHistory();
 		// parse the input data
 		char tmp[4096];
 		int32_t lineID;
 		sscanf(_msg.getData().c_str(), "%d:%s", &lineID, tmp);
 		// generate envents
-		SendMultiCast(ednMsgOpenFile, tmp);
-		SendMultiCast(ednMsgGuiGotoLine, lineID - 1);
+		sendMultiCast(ednMsgOpenFile, tmp);
+		sendMultiCast(ednMsgGuiGotoLine, lineID - 1);
 	}
 }
 
 
-void CTagsManager::loadTagFile(void)
-{
+void CTagsManager::loadTagFile(void) {
 	tagFileInfo info;
-	
 	// close previous tag file
 	if (NULL != m_ctagFile) {
 		tagsClose(m_ctagFile);
@@ -192,11 +165,10 @@ void CTagsManager::loadTagFile(void)
 	}
 }
 
-
-void CTagsManager::RegisterHistory(void)
-{
+void CTagsManager::registerHistory(void) {
 	APPL_INFO("save curent filename and position : ");
 	int32_t currentSelected = BufferManager::getSelected();
+	/*
 	BufferText* tmpBuf = BufferManager::get(currentSelected);
 	if (NULL != tmpBuf) {
 		etk::FSNode * bufferFilename = new etk::FSNode();
@@ -204,11 +176,10 @@ void CTagsManager::RegisterHistory(void)
 		// TODO : bufferFilename->setLineNumber(tmpBuf->getCurrentLine());
 		m_historyList.pushBack(bufferFilename);
 	}
+	*/
 }
 
-
-void CTagsManager::JumpTo(void)
-{
+void CTagsManager::jumpTo(void) {
 	if (NULL != m_ctagFile) {
 		// get the middle button of the clipboard  == > represent the current selection ...
 		etk::UString data = ewol::clipBoard::get(ewol::clipBoard::clipboardSelection);
@@ -246,10 +217,10 @@ void CTagsManager::JumpTo(void)
 					tmpWidget->registerOnEvent(this, applEventctagsSelection);
 				}
 			} else {
-				RegisterHistory();
+				registerHistory();
 				APPL_INFO(" OPEN the TAG file Destination : " << tmpFile );
-				SendMultiCast(ednMsgOpenFile, myfile.getName());
-				SendMultiCast(ednMsgGuiGotoLine, lineID - 1);
+				sendMultiCast(ednMsgOpenFile, myfile.getName());
+				sendMultiCast(ednMsgGuiGotoLine, lineID - 1);
 			}
 		} else {
 			APPL_INFO("no tag find ...");
@@ -258,8 +229,7 @@ void CTagsManager::JumpTo(void)
 }
 
 
-void CTagsManager::printTag(const tagEntry *entry)
-{
+void CTagsManager::printTag(const tagEntry *entry) {
 	#if 1
 		APPL_INFO("find Tag file : name=\"" << entry->name << "\" in file=\"" << entry->file 
 			<< "\" at line="<< (int32_t)entry->address.lineNumber);

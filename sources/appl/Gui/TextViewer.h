@@ -10,7 +10,6 @@
 #define __APPL_TEXT_VIEWER_H__
 
 #include <appl/Debug.h>
-#include <CodeView.h>
 #include <appl/Buffer/Buffer.h>
 #include <appl/globalMsg.h>
 
@@ -18,17 +17,15 @@
 #include <ewol/compositing/Text.h>
 #include <ewol/compositing/Drawing.h>
 
-namespace appl
-{
-	class TextViewer : public widget::WidgetScrooled
-	{
+namespace appl {
+	class TextViewer : public widget::WidgetScrooled {
 		public:
 			TextViewer(const etk::UString& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);
 		private:
 			appl::Buffer* m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
 			ewol::Text m_displayText; //!< Text display properties.
-			ewol::drawing m_displayDrawing; //!< Other diaplay requested.
+			ewol::Drawing m_displayDrawing; //!< Other diaplay requested.
 		public:
 			void setFontSize(int32_t _size);
 			void setFontName(const etk::UString& _fontName);

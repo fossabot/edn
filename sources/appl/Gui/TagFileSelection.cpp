@@ -23,11 +23,11 @@
 
 
 #undef __class__
-#define __class__	"TagFileSelection"
+#define __class__ "TagFileSelection"
 
 
-extern const char * const applEventctagsSelection           = "appl-event-ctags-validate";
-extern const char * const applEventctagsCancel              = "appl-event-ctags-cancel";
+extern const char * const applEventctagsSelection = "appl-event-ctags-validate";
+extern const char * const applEventctagsCancel    = "appl-event-ctags-cancel";
 
 
 appl::TagFileSelection::TagFileSelection(void)
@@ -54,7 +54,7 @@ appl::TagFileSelection::TagFileSelection(void)
 	if (NULL == mySizerVert) {
 		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		mySizerVert->LockExpand(bvec2(true,true));
+		mySizerVert->lockExpand(bvec2(true,true));
 		// set it in the pop-up-system : 
 		setSubWidget(mySizerVert);
 		
@@ -124,19 +124,17 @@ appl::TagFileSelection::TagFileSelection(void)
 }
 
 
-appl::TagFileSelection::~TagFileSelection(void)
-{
+appl::TagFileSelection::~TagFileSelection(void) {
 	
 }
 
-void appl::TagFileSelection::onReceiveMessage(const ewol::EMessage& _msg)
-{
-	EWOL_INFO("ctags LIST ... : \"" << _msg.getMessage() << "\"  == > data=\"" << _msg.GetData() << "\"" );
+void appl::TagFileSelection::onReceiveMessage(const ewol::EMessage& _msg) {
+	EWOL_INFO("ctags LIST ... : " << _msg );
 	if (_msg.getMessage() == applEventctagsSelection) {
 		if (m_eventNamed!="") {
 			generateEventId(applEventctagsSelection, m_eventNamed);
 			// == > Auto remove ...
-			AutoDestroy();
+			autoDestroy();
 		}
 	} else if (_msg.getMessage() == applEventCtagsListSelect) {
 		m_eventNamed = _msg.getData();
@@ -146,11 +144,11 @@ void appl::TagFileSelection::onReceiveMessage(const ewol::EMessage& _msg)
 	} else if (_msg.getMessage() == applEventCtagsListValidate) {
 		generateEventId(applEventctagsSelection, _msg.getData());
 		// == > Auto remove ...
-		AutoDestroy();
+		autoDestroy();
 	} else if (_msg.getMessage() == applEventctagsCancel) {
 		generateEventId(applEventctagsCancel, "");
 		// == > Auto remove ...
-		AutoDestroy();
+		autoDestroy();
 	}
 	return;
 };
@@ -161,15 +159,13 @@ void appl::TagFileSelection::onReceiveMessage(const ewol::EMessage& _msg)
  * @param[in] file Compleate file name
  * @param[in] jump line id
  */
-void appl::TagFileSelection::addCtagsNewItem(etk::UString file, int32_t line)
-{
+void appl::TagFileSelection::addCtagsNewItem(etk::UString _file, int32_t _line) {
 	if (NULL != m_listTag) {
-		m_listTag->add(file, line);
+		m_listTag->add(_file, _line);
 	}
 }
 
-void appl::TagFileSelection::onObjectRemove(ewol::EObject * _removeObject)
-{
+void appl::TagFileSelection::onObjectRemove(ewol::EObject * _removeObject) {
 	// First step call parrent : 
 	widget::PopUp::onObjectRemove(_removeObject);
 	// second step find if in all the elements ...

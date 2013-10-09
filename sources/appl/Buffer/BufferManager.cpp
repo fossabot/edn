@@ -14,9 +14,8 @@
 
 #undef __class__
 #define __class__	"classBufferManager"
-
-class classBufferManager: public ewol::EObject
-{
+#if 0
+class classBufferManager: public ewol::EObject {
 	public:
 		// Constructeur
 		classBufferManager(void);
@@ -30,7 +29,7 @@ class classBufferManager: public ewol::EObject
 	private:
 		// return the ID of the buffer allocated
 		// create a buffer with no element
-		int32_t     Create(void);
+		int32_t     create(void);
 		// open curent filename
 		int32_t     open(etk::FSNode &myFile);
 		bool        remove(int32_t BufferID);
@@ -38,13 +37,13 @@ class classBufferManager: public ewol::EObject
 		int32_t     getSelected(void) { return m_idSelected;};
 		//void        setSelected(int32_t id) {m_idSelected = id;};
 		BufferText* get(int32_t BufferID);
-		bool        Exist(int32_t BufferID);
-		bool        Exist(etk::FSNode &myFile);
+		bool        exist(int32_t BufferID);
+		bool        exist(etk::FSNode &myFile);
 		int32_t     getId(etk::FSNode &myFile);
 		// return the number of buffer (open in the past) if 5 buffer open and 4 close  == > return 5
 		uint32_t    size(void);
 		uint32_t    sizeOpen(void);
-		int32_t     WitchBuffer(int32_t iEmeElement);
+		int32_t     witchBuffer(int32_t iEmeElement);
 		
 
 	private:
@@ -234,22 +233,7 @@ void classBufferManager::onReceiveMessage(const ewol::EMessage& _msg)
 	*/
 }
 
-
-
-
-
-
-
-/**
- * @brief remove all buffer opened
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-void classBufferManager::removeAll(void)
-{
+void classBufferManager::removeAll(void) {
 	int32_t i;
 	for (i=0; i<listBuffer.size(); i++) {
 		remove(i);
@@ -261,14 +245,9 @@ void classBufferManager::removeAll(void)
 
 /**
  * @brief Create a new buffer with no name and empty
- *
- * @param[in,out] ---
- *
  * @return The ID of the curent buffer where the file is loaded
- *
  */
-int32_t	classBufferManager::Create(void)
-{
+int32_t	classBufferManager::create(void) {
 	// allocate a new Buffer
 	BufferText *myBuffer = new BufferText();
 	// add at the list of element
@@ -280,17 +259,12 @@ int32_t	classBufferManager::Create(void)
 
 /**
  * @brief open a file with the name set in parameters
- *
- * @param[in]		filename			curent filename
- *
+ * @param[in] filename curent filename
  * @return The ID of the curent buffer where the file is loaded
- *
  * @todo : check if this file is not curently open and return the old ID
- *
  */
-int32_t classBufferManager::open(etk::FSNode &myFile)
-{
-	if (false == Exist(myFile)) {
+int32_t classBufferManager::open(etk::FSNode &myFile) {
+	if (false == exist(myFile)) {
 		// allocate a new Buffer
 		BufferText *myBuffer = new BufferText(myFile);
 		// add at the list of element
@@ -302,10 +276,7 @@ int32_t classBufferManager::open(etk::FSNode &myFile)
 	}
 }
 
-
-
-BufferText * classBufferManager::get(int32_t BufferID)
-{
+BufferText * classBufferManager::get(int32_t BufferID) {
 	// possible special case : -1;
 	if (-1 >= BufferID) {
 		return NULL;
@@ -324,9 +295,7 @@ BufferText * classBufferManager::get(int32_t BufferID)
 	return NULL;
 }
 
-
-bool classBufferManager::Exist(int32_t BufferID)
-{
+bool classBufferManager::exist(int32_t BufferID) {
 	if (-1 >= BufferID) {
 		return false;
 	}
@@ -340,18 +309,14 @@ bool classBufferManager::Exist(int32_t BufferID)
 	return false;
 }
 
-
-bool classBufferManager::Exist(etk::FSNode &myFile )
-{
+bool classBufferManager::exist(etk::FSNode &myFile) {
 	if (-1 == getId(myFile)) {
 		return false;
 	}
 	return true;
 }
 
-
-int32_t classBufferManager::getId(etk::FSNode &myFile)
-{
+int32_t classBufferManager::getId(etk::FSNode &myFile) {
 	int32_t iii;
 	// check if the Buffer existed
 	for (iii=0; iii < listBuffer.size(); iii++) {
@@ -367,14 +332,12 @@ int32_t classBufferManager::getId(etk::FSNode &myFile)
 
 
 // return the number of buffer (open in the past) if 5 buffer open and 4 close  == > return 5
-uint32_t classBufferManager::size(void)
-{
+uint32_t classBufferManager::size(void) {
 	return listBuffer.size();
 }
 
 // nb of opens file Now ...
-uint32_t classBufferManager::sizeOpen(void)
-{
+uint32_t classBufferManager::sizeOpen(void) {
 	uint32_t jjj = 0;
 	// check if the Buffer existed
 	for (int32_t iii=0; iii<listBuffer.size(); iii++) {
@@ -386,16 +349,7 @@ uint32_t classBufferManager::sizeOpen(void)
 	return jjj;
 }
 
-/**
- * @brief
- *
- * @param[in,out] ---
- *
- * @return ---
- *
- */
-bool classBufferManager::remove(int32_t BufferID)
-{
+bool classBufferManager::remove(int32_t BufferID) {
 	if (-1 >= BufferID) {
 		return false;
 	}
@@ -427,15 +381,9 @@ bool classBufferManager::remove(int32_t BufferID)
 }
 
 /**
- * @brief to get the element 14 in the buffer 
- *
- * @param[in,out] ---
- *
- * @return ---
- *
+ * @brief to get the element 14 in the buffer
  */
-int32_t classBufferManager::WitchBuffer(int32_t iEmeElement)
-{
+int32_t classBufferManager::witchBuffer(int32_t iEmeElement) {
 	int32_t i;
 	for (i=0; i<listBuffer.size(); i++) {
 		if (NULL != listBuffer[i]) {
@@ -455,9 +403,9 @@ int32_t classBufferManager::WitchBuffer(int32_t iEmeElement)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static classBufferManager * localManager = NULL;
-
-void BufferManager::init(void)
-{
+#endif
+void BufferManager::init(void) {
+	/*
 	if (NULL != localManager) {
 		EWOL_ERROR("classBufferManager  == > already exist, just unlink the previous ...");
 		localManager = NULL;
@@ -467,88 +415,106 @@ void BufferManager::init(void)
 	if (NULL == localManager) {
 		EWOL_CRITICAL("Allocation of classBufferManager not done ...");
 	}
+	*/
 }
 
-void BufferManager::UnInit(void)
-{
+void BufferManager::unInit(void) {
+	/*
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return;
 	}
 	delete(localManager);
 	localManager = NULL;
+	*/
 }
 
-int32_t BufferManager::getSelected(void)
-{
+int32_t BufferManager::getSelected(void) {
+	/*
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return -1;
 	}
 	return localManager->getSelected();
+	*/
+	return -1;
 }
 
-BufferText * BufferManager::get(int32_t BufferID)
-{
+appl::Buffer * BufferManager::get(int32_t BufferID) {
+	/*
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return NULL;
 	}
 	return localManager->get(BufferID);
+	*/
+	return NULL;
 }
 
-bool BufferManager::Exist(int32_t BufferID)
-{
+bool BufferManager::exist(int32_t BufferID) {
+	/*
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return false;
 	}
-	return localManager->Exist(BufferID);
+	return localManager->exist(BufferID);
+	*/
+	return false;
 }
 
-bool BufferManager::Exist(etk::FSNode &myFile)
-{
+bool BufferManager::exist(etk::FSNode &myFile) {
+	/*
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return false;
 	}
-	return localManager->Exist(myFile);
+	return localManager->exist(myFile);
+	*/
+	return false;
 }
 
-int32_t BufferManager::getId(etk::FSNode &myFile)
-{
+int32_t BufferManager::getId(etk::FSNode &myFile) {
+	/*
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return -1;
 	}
 	return localManager->getId(myFile);
+	*/
+	return -1;
 }
 
-uint32_t BufferManager::size(void)
-{
+uint32_t BufferManager::size(void) {
+	/*
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return 0;
 	}
 	return localManager->size();
+	*/
+	return 0;
 }
 
-uint32_t BufferManager::sizeOpen(void)
-{
+uint32_t BufferManager::sizeOpen(void) {
+	/*
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return 0;
 	}
 	return localManager->sizeOpen();
+	*/
+	return 0;
 }
 
-int32_t BufferManager::WitchBuffer(int32_t iEmeElement)
-{
+int32_t BufferManager::witchBuffer(int32_t iEmeElement) {
+	/*
 	if (NULL == localManager) {
 		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
 		return -1;
 	}
-	return localManager->WitchBuffer(iEmeElement);
+	return localManager->witchBuffer(iEmeElement);
+	*/
+	return -1;
 }
 
 

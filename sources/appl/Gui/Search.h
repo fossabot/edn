@@ -16,7 +16,7 @@
 class Search : public widget::Sizer
 {
 	private:
-		bool    m_forward;
+		bool m_forward;
 		widget::Entry * m_searchEntry;
 		widget::Entry * m_replaceEntry;
 	public:

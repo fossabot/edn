@@ -32,10 +32,9 @@ const char* const l_eventForwardCb = "appl-forward-CheckBox";
 const char* const l_eventHideBt = "appl-hide-button";
 
 Search::Search(void) :
-	widget::Sizer(widget::Sizer::modeHori),
-	m_searchEntry(NULL),
-	m_replaceEntry(NULL)
-{
+  widget::Sizer(widget::Sizer::modeHori),
+  m_searchEntry(NULL),
+  m_replaceEntry(NULL) {
 	m_forward = false;
 	// TODO : change the mode of creating interface : 
 	/* 
@@ -180,19 +179,17 @@ Search::Search(void) :
 		subWidgetAdd(myButtonImage);
 	}
 	
-	RegisterMultiCast(ednMsgGuiSearch);
+	registerMultiCast(ednMsgGuiSearch);
 	// basicly hiden ...
-	Hide();
+	hide();
 }
 
-Search::~Search(void)
-{
+Search::~Search(void) {
 	
 }
 
 
-void Search::onReceiveMessage(const ewol::EMessage& _msg)
-{
+void Search::onReceiveMessage(const ewol::EMessage& _msg) {
 	widget::Sizer::onReceiveMessage(_msg);
 	//APPL_INFO("Search receive message : \"" << eventId << "\" data=\"" << data << "\"");
 	if ( _msg.getMessage() == l_eventSearchEntry) {
@@ -200,74 +197,73 @@ void Search::onReceiveMessage(const ewol::EMessage& _msg)
 	} else if ( _msg.getMessage() == l_eventSearchEntryEnter) {
 		SearchData::setSearch(_msg.getData());
 		if (true == m_forward) {
-			SendMultiCast(ednMsgGuiFind, "Previous");
+			sendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
-			SendMultiCast(ednMsgGuiFind, "Next");
+			sendMultiCast(ednMsgGuiFind, "Next");
 		}
 	} else if ( _msg.getMessage() == l_eventReplaceEntry) {
 		SearchData::setReplace(_msg.getData());
 	} else if ( _msg.getMessage() == l_eventReplaceEntryEnter) {
 		SearchData::setReplace(_msg.getData());
-		SendMultiCast(ednMsgGuiReplace, "Normal");
+		sendMultiCast(ednMsgGuiReplace, "Normal");
 		if (true == m_forward) {
-			SendMultiCast(ednMsgGuiFind, "Previous");
+			sendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
-			SendMultiCast(ednMsgGuiFind, "Next");
+			sendMultiCast(ednMsgGuiFind, "Next");
 		}
 	} else if ( _msg.getMessage() == l_eventSearchBt) {
 		if (true == m_forward) {
-			SendMultiCast(ednMsgGuiFind, "Previous");
+			sendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
-			SendMultiCast(ednMsgGuiFind, "Next");
+			sendMultiCast(ednMsgGuiFind, "Next");
 		}
 	} else if ( _msg.getMessage() == l_eventReplaceBt) {
-		SendMultiCast(ednMsgGuiReplace, "Normal");
+		sendMultiCast(ednMsgGuiReplace, "Normal");
 		if (true == m_forward) {
-			SendMultiCast(ednMsgGuiFind, "Previous");
+			sendMultiCast(ednMsgGuiFind, "Previous");
 		} else {
-			SendMultiCast(ednMsgGuiFind, "Next");
+			sendMultiCast(ednMsgGuiFind, "Next");
 		}
 	} else if ( _msg.getMessage() == l_eventCaseCb) {
-		if (_msg.getData() == "1") {
+		if (_msg.getData() == "true") {
 			SearchData::setCase(false);
 		} else {
 			SearchData::setCase(true);
 		}
 	} else if ( _msg.getMessage() == l_eventWrapCb) {
-		if (_msg.getData() == "1") {
+		if (_msg.getData() == "true") {
 			SearchData::setWrap(false);
 		} else {
 			SearchData::setWrap(true);
 		}
 	} else if ( _msg.getMessage() == l_eventForwardCb) {
-		if (_msg.getData() == "1") {
+		if (_msg.getData() == "true") {
 			m_forward = false;
 		} else {
 			m_forward = true;
 		}
 	} else if ( _msg.getMessage() == l_eventHideBt) {
-		Hide();
+		hide();
 	} else if ( _msg.getMessage() == ednMsgGuiSearch) {
 		if (true == isHide()) {
-			Show();
+			show();
 			if (m_searchEntry!= NULL) {
 				m_searchEntry->keepFocus();
 			}
 		} else {
 			if(    (m_searchEntry!=NULL  && true == m_searchEntry->getFocus())
 			    || (m_replaceEntry!=NULL && true == m_replaceEntry->getFocus()) ) {
-				Hide();
+				hide();
 			} else if (m_searchEntry!= NULL) {
 				m_searchEntry->keepFocus();
 			} else {
-				Hide();
+				hide();
 			}
 		}
 	}
 }
 
-void Search::onObjectRemove(ewol::EObject * _removeObject)
-{
+void Search::onObjectRemove(ewol::EObject * _removeObject) {
 	widget::Sizer::onObjectRemove(_removeObject);
 	if (_removeObject == m_searchEntry) {
 		m_searchEntry = NULL;

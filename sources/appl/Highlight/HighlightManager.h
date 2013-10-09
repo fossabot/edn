@@ -16,11 +16,11 @@
 #include <ewol/widget/Widget.h>
 
 namespace HighlightManager{
-	void       init(void);
-	void       UnInit(void);
-	void       loadLanguages(void);
+	void init(void);
+	void unInit(void);
+	void loadLanguages(void);
 	Highlight* get(etk::FSNode &fileName);
-	bool       Exist(etk::FSNode &fileName);
+	bool exist(etk::FSNode &fileName);
 };
 
 

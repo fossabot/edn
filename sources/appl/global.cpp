@@ -16,10 +16,9 @@
 //#include <ewol/UserConfig.h>
 
 #undef __class__
-#define __class__	"globals"
+#define __class__ "globals"
 
-class myParamGlobal : public ewol::EObject
-{
+class myParamGlobal : public ewol::EObject {
 	public:
 		static const char * const configEOL;
 		static const char * const configAutoIndent;
@@ -44,8 +43,7 @@ class myParamGlobal : public ewol::EObject
 			registerConfig(configShowSpaceChar, "bool", NULL, "Display the space char");
 		}
 		
-		bool onSetConfig(const ewol::EConfig& _conf)
-		{
+		bool onSetConfig(const ewol::EConfig& _conf) {
 			// Not set the EObject node parameter (name  == > not change ...)
 			if (_conf.getConfig() == configEOL) {
 				m_displayEOL = _conf.getData().toBool();
@@ -65,8 +63,7 @@ class myParamGlobal : public ewol::EObject
 			}
 			return false;
 		}
-		bool onGetConfig(const char* _config, etk::UString& _result) const
-		{
+		bool onGetConfig(const char* _config, etk::UString& _result) const {
 			// Not set the EObject node parameter (name  == > not change ...)
 			if (_config == configEOL) {
 				if (true == m_displayEOL) {
@@ -109,90 +106,69 @@ const char * const myParamGlobal::configAutoIndent = "auto-indent";
 const char * const myParamGlobal::configShowTabChar = "display-tab";
 const char * const myParamGlobal::configShowSpaceChar = "display-space";
 
-static myParamGlobal& l_obj(void)
-{
+static myParamGlobal& l_obj(void) {
 	static myParamGlobal s_obj;
 	return s_obj;
 }
 
-
-
-void globals::init(void)
-{
+void globals::init(void) {
 	//ewol::userConfig::addUserConfig(&l_obj());
 }
 
-void globals::UnInit(void)
-{
+void globals::UnInit(void) {
 	// nothing to do ...
 	//ewol::userConfig::RmUserConfig(&l_obj());
 }
 
-
 // -----------------------------------------------------------
-bool globals::isSetDisplayEndOfLine(void)
-{
+bool globals::isSetDisplayEndOfLine(void) {
 	return l_obj().m_displayEOL;
 }
 
-void globals::setDisplayEndOfLine(bool newVal)
-{
+void globals::setDisplayEndOfLine(bool newVal) {
 	l_obj().m_displayEOL = newVal;
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
 // -----------------------------------------------------------
-bool globals::isSetDisplaySpaceChar(void)
-{
+bool globals::isSetDisplaySpaceChar(void) {
 	return l_obj().m_displaySpaceChar;
 }
 
-void globals::setDisplaySpaceChar(bool newVal)
-{
-	l_obj().m_displaySpaceChar = newVal;
+void globals::setDisplaySpaceChar(bool _newVal) {
+	l_obj().m_displaySpaceChar = _newVal;
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 // -----------------------------------------------------------
-bool globals::isSetDisplayTabChar(void)
-{
+bool globals::isSetDisplayTabChar(void) {
 	return l_obj().m_displayTabChar;
 }
 
-void globals::setDisplayTabChar(bool newVal)
-{
-	l_obj().m_displayTabChar = newVal;
+void globals::setDisplayTabChar(bool _newVal) {
+	l_obj().m_displayTabChar = _newVal;
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
 // -----------------------------------------------------------
-bool globals::isSetAutoIndent(void)
-{
+bool globals::isSetAutoIndent(void) {
 	return l_obj().m_AutoIndent;
 }
 
-void globals::setAutoIndent(bool newVal)
-{
-	l_obj().m_AutoIndent = newVal;
+void globals::setAutoIndent(bool _newVal) {
+	l_obj().m_AutoIndent = _newVal;
 }
 
 // -----------------------------------------------------------
-
-
-bool globals::OrderTheBufferList(void)
-{
+bool globals::OrderTheBufferList(void) {
 	return true;
 }
 
 // -----------------------------------------------------------
-
-
-int32_t globals::getNbColoneBorder(void)
-{
+int32_t globals::getNbColoneBorder(void) {
 	return 6;
 }
 
-int32_t globals::getNbLineBorder(void)
-{
+int32_t globals::getNbLineBorder(void) {
 	return 3;
 }
 
@@ -206,8 +182,7 @@ static const char * const l_changeEndOfLine   = "edn-event-change-endOfLine";
 static const char * const l_changeRounded     = "edn-event-change-rounded";
 
 globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
-	widget::Sizer(widget::Sizer::modeVert)
-{
+  widget::Sizer(widget::Sizer::modeVert) {
 	widget::CheckBox* myCheckbox = NULL;
 	widget::Spacer* mySpacer = NULL;
 	
@@ -265,14 +240,12 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	}
 }
 
-globals::ParameterGlobalsGui::~ParameterGlobalsGui(void) 
-{
+globals::ParameterGlobalsGui::~ParameterGlobalsGui(void) {
 	
 }
 
 
-void globals::ParameterGlobalsGui::onReceiveMessage(const ewol::EMessage& _msg)
-{
+void globals::ParameterGlobalsGui::onReceiveMessage(const ewol::EMessage& _msg) {
 	widget::Sizer::onReceiveMessage(_msg);
 	
 	if (_msg.getMessage() == l_changeEndOfLine) {
@@ -306,7 +279,7 @@ void globals::ParameterGlobalsGui::onReceiveMessage(const ewol::EMessage& _msg)
 			etk::theme::setName("GUI", "default");;
 		}
 		// Reload shaders and graphic system ...
-		ewol::getContext().getResourcesManager().ReLoadResources();
+		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();
 	}
 	

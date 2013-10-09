@@ -16,10 +16,9 @@
 
 #define MAX_REG_EXP_SEARCH	(1024)
 
-namespace cTagsManager
-{
+namespace cTagsManager {
 	void init(void);
-	void UnInit(void);
+	void unInit(void);
 };
 
 

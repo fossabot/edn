@@ -38,7 +38,7 @@
 int main(int _argc, const char *_argv[])
 {
 	// only one things to do:
-	return ewol::Run(_argc, _argv);
+	return ewol::run(_argc, _argv);
 }
 
 
@@ -47,7 +47,7 @@ int main(int _argc, const char *_argv[])
  */
 bool APP_Init(ewol::eContext& _context)
 {
-	APPL_INFO(" == > init APPL (START) [" << ewol::getBoardType() << "] (" << ewol::GetCompilationMode() << ")");
+	APPL_INFO(" == > init APPL (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
 	
 	// TODO : remove this : Move if in the windows properties
 	_context.setSize(vec2(800, 600));
@@ -94,7 +94,7 @@ bool APP_Init(ewol::eContext& _context)
 	
 	if (NULL == basicWindows) {
 		APPL_ERROR("Can not allocate the basic windows");
-		_context.Stop();
+		_context.stop();
 		return false;
 	}
 	// create the specific windows
@@ -105,16 +105,16 @@ bool APP_Init(ewol::eContext& _context)
 	APPL_INFO("show list of files : ");
 	bool ctagDetected = false;
 	for( int32_t iii=0 ; iii<_context.getCmd().size(); iii++) {
-		etk::UString tmpppp = _context.getCmd().Get(iii);
+		etk::UString tmpppp = _context.getCmd().get(iii);
 		if (tmpppp == "-t") {
 			ctagDetected = true;
 		} else if (true == ctagDetected) {
 			APPL_INFO("Load ctag file : \"" << tmpppp << "\"" );
 			ctagDetected = false;
-			_context.getEObjectManager().MultiCast().AnonymousSend(ednMsgCtagsLoadFile, tmpppp);
+			_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, tmpppp);
 		} else {
 			APPL_INFO("need load file : \"" << tmpppp << "\"" );
-			_context.getEObjectManager().MultiCast().AnonymousSend(ednMsgOpenFile, tmpppp);
+			_context.getEObjectManager().multiCast().anonymousSend(ednMsgOpenFile, tmpppp);
 		}
 	}
 	
@@ -138,15 +138,15 @@ void APP_UnInit(ewol::eContext& _context)
 		tmpWindows = NULL;
 	}
 	
-	cTagsManager::UnInit();
+	cTagsManager::unInit();
 	
 	APPL_INFO("Stop Hightlight");
-	HighlightManager::UnInit();
+	HighlightManager::unInit();
 	//Kill all singleton
 	APPL_INFO("Stop BufferManager");
-	BufferManager::UnInit();
+	BufferManager::unInit();
 	APPL_INFO("Stop ColorizeManager");
-	ColorizeManager::UnInit();
+	ColorizeManager::unInit();
 	APPL_INFO(" == > Un-Init "PROJECT_NAME" (END)");
 }
 

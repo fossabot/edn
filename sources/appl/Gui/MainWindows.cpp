@@ -10,7 +10,6 @@
 #include <appl/Debug.h>
 #include <appl/global.h>
 #include <MainWindows.h>
-#include <CodeView.h>
 #include <BufferView.h>
 #include <TextViewer.h>
 #include <Search.h>
@@ -55,12 +54,10 @@ namespace appl
 #include <ewol/widget/Label.h>
 #include <ewol/widget/Spacer.h>
 
-class ParameterAboutGui : public widget::Sizer
-{
+class ParameterAboutGui : public widget::Sizer {
 	public :
 		ParameterAboutGui(void) :
-			widget::Sizer(widget::Sizer::modeVert)
-		{
+		  widget::Sizer(widget::Sizer::modeVert) {
 			widget::Spacer* mySpacer = NULL;
 			
 			mySpacer = new widget::Spacer();
@@ -102,7 +99,9 @@ class ParameterAboutGui : public widget::Sizer
 			}
 		};
 		
-		~ParameterAboutGui(void) { };
+		~ParameterAboutGui(void) {
+			
+		};
 };
 
 
@@ -111,16 +110,14 @@ const char * l_smoothMin = "tmpEvent_minChange";
 const char * l_smoothMax = "tmpEvent_maxChange";
 
 #undef __class__
-#define __class__	"MainWindows"
+#define __class__ "MainWindows"
 
-MainWindows::MainWindows(void)
-{
+MainWindows::MainWindows(void) {
 	APPL_DEBUG("CREATE WINDOWS ... ");
 	widget::Sizer * mySizerVert = NULL;
 	widget::Sizer * mySizerVert2 = NULL;
 	widget::Sizer * mySizerHori = NULL;
 	//ewol::Button * myButton = NULL;
-	CodeView * myCodeView = NULL;
 	appl::TextViewer * myTextView = NULL;
 	BufferView * myBufferView = NULL;
 	widget::Menu * myMenu = NULL;
@@ -241,40 +238,39 @@ MainWindows::MainWindows(void)
 	
 	// add generic shortcut ...
 	//                 (shift, control, alt,  meta,  uniChar_t unicodeValue, const char * generateEventId, etk::UString& data)
-	ShortCutAdd("ctrl+o",       ednMsgGuiOpen, "", true);
-	ShortCutAdd("ctrl+n",       ednMsgGuiNew,  "", true);
+	shortCutAdd("ctrl+o",       ednMsgGuiOpen, "", true);
+	shortCutAdd("ctrl+n",       ednMsgGuiNew,  "", true);
 	
-	ShortCutAdd("ctrl+s",       ednMsgGuiSave, "current", true);
-	ShortCutAdd("ctrl+shift+s", ednMsgGuiSave, "All", true);
+	shortCutAdd("ctrl+s",       ednMsgGuiSave, "current", true);
+	shortCutAdd("ctrl+shift+s", ednMsgGuiSave, "All", true);
 	
-	ShortCutAdd("ctrl+q",       ednMsgGuiClose, "current", true);
-	ShortCutAdd("ctrl+shift+q", ednMsgGuiClose, "All", true);
+	shortCutAdd("ctrl+q",       ednMsgGuiClose, "current", true);
+	shortCutAdd("ctrl+shift+q", ednMsgGuiClose, "All", true);
 	
-	ShortCutAdd("ctrl+z",       ednMsgGuiUndo, "", true);
-	ShortCutAdd("ctrl+shift+z", ednMsgGuiRedo, "", true);
+	shortCutAdd("ctrl+z",       ednMsgGuiUndo, "", true);
+	shortCutAdd("ctrl+shift+z", ednMsgGuiRedo, "", true);
 	
-	ShortCutAdd("ctrl+l",       ednMsgGuiGotoLine, "???", true);
+	shortCutAdd("ctrl+l",       ednMsgGuiGotoLine, "???", true);
 	
-	ShortCutAdd("ctrl+f",       ednMsgGuiSearch, "", true);
-	ShortCutAdd("F12",          ednMsgGuiReloadShader, "", true);
+	shortCutAdd("ctrl+f",       ednMsgGuiSearch, "", true);
+	shortCutAdd("F12",          ednMsgGuiReloadShader, "", true);
 	
-	ShortCutAdd("ctrl+d",       ednMsgGuiCtags, "Jump", true);
+	shortCutAdd("ctrl+d",       ednMsgGuiCtags, "Jump", true);
 	
 	
 	
 	// Generic event ...
-	RegisterMultiCast(ednMsgGuiSaveAs);
-	RegisterMultiCast(ednMsgProperties);
-	RegisterMultiCast(ednMsgGuiOpen);
+	registerMultiCast(ednMsgGuiSaveAs);
+	registerMultiCast(ednMsgProperties);
+	registerMultiCast(ednMsgGuiOpen);
 	// to update the title ... 
-	RegisterMultiCast(ednMsgBufferState);
-	RegisterMultiCast(ednMsgBufferId);
-	RegisterMultiCast(ednMsgGuiReloadShader);
+	registerMultiCast(ednMsgBufferState);
+	registerMultiCast(ednMsgBufferId);
+	registerMultiCast(ednMsgGuiReloadShader);
 }
 
 
-MainWindows::~MainWindows(void)
-{
+MainWindows::~MainWindows(void) {
 	
 }
 
@@ -283,28 +279,29 @@ const char *const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
 const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
 
 
-void MainWindows::onReceiveMessage(const ewol::EMessage& _msg)
-{
+void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 	ewol::Windows::onReceiveMessage(_msg);
 	
 	//APPL_INFO("Receive Event from the main windows ... : \"" << eventId << "\"  == > data=\"" << data << "\"" );
 	// open file Section ...
 	if (_msg.getMessage() == ednMsgGuiOpen) {
-		widget::fileChooser* tmpWidget = new widget::FileChooser();
+		widget::FileChooser* tmpWidget = new widget::FileChooser();
 		tmpWidget->setTitle("Open files ...");
 		tmpWidget->setValidateLabel("Open");
 		if (BufferManager::getSelected()!=-1) {
-			BufferText * myBuffer = BufferManager::get(BufferManager::GetSelected());
+			/*
+			BufferText * myBuffer = BufferManager::get(BufferManager::getSelected());
 			if (NULL!=myBuffer) {
 				etk::FSNode tmpFile = myBuffer->getFileName();
 				tmpWidget->setFolder(tmpFile.getNameFolder());
 			}
+			*/
 		}
 		popUpWidgetPush(tmpWidget);
 		tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
 	} else if (_msg.getMessage() == ednEventPopUpFileSelected) {
 		APPL_DEBUG("Request opening the file : " << _msg.getData());
-		SendMultiCast(ednMsgOpenFile, _msg.getData());
+		sendMultiCast(ednMsgOpenFile, _msg.getData());
 	} else if (_msg.getMessage() == ednMsgGuiSaveAs) {
 		if (_msg.getData() == "") {
 			APPL_ERROR("Null data for Save As file ... ");
@@ -316,11 +313,12 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg)
 				sscanf(_msg.getData().c_str(), "%d", &m_currentSavingAsIdBuffer);
 			}
 			
-			if (false == BufferManager::Exist(m_currentSavingAsIdBuffer)) {
+			if (false == BufferManager::exist(m_currentSavingAsIdBuffer)) {
 				APPL_ERROR("Request saveAs on non existant Buffer ID=" << m_currentSavingAsIdBuffer);
 			} else {
+				/*
 				BufferText* myBuffer = BufferManager::get(m_currentSavingAsIdBuffer);
-				widget::fileChooser* tmpWidget = new widget::FileChooser();
+				widget::FileChooser* tmpWidget = new widget::FileChooser();
 				if (NULL == tmpWidget) {
 					APPL_ERROR("Can not allocate widget  == > display might be in error");
 				} else {
@@ -338,6 +336,7 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg)
 					popUpWidgetPush(tmpWidget);
 					tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
 				}
+				*/
 			}
 		}
 	} else if (_msg.getMessage() == ednEventPopUpFileSaveAs) {
@@ -346,11 +345,12 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg)
 		APPL_DEBUG("Request Saving As file : " << tmpData);
 		
 		BufferManager::get(m_currentSavingAsIdBuffer)->setFileName(tmpData);
-		SendMultiCast(ednMsgGuiSave, m_currentSavingAsIdBuffer);
+		sendMultiCast(ednMsgGuiSave, m_currentSavingAsIdBuffer);
 	} else if(    _msg.getMessage() == ednMsgBufferState
 	           || _msg.getMessage() == ednMsgBufferId) {
 		// the buffer change we need to update the widget string
-		BufferText* tmpBuffer = BufferManager::get(BufferManager::GetSelected());
+		/*
+		BufferText* tmpBuffer = BufferManager::get(BufferManager::getSelected());
 		if (NULL != tmpBuffer) {
 			etk::FSNode compleateName = tmpBuffer->getFileName();
 			bool isModify = tmpBuffer->isModify();
@@ -369,6 +369,7 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg)
 			m_widgetLabelFileName->setLabel("");
 			setTitle("edn");
 		}
+		*/
 		return;
 		// TODO : set the Title ....
 	} else if (_msg.getMessage() == ednMsgProperties) {
@@ -379,18 +380,18 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg)
 		} else {
 			tmpWidget->setTitle("Properties");
 			popUpWidgetPush(tmpWidget);
-			tmpWidget->MenuAddGroup("Editor");
+			tmpWidget->menuAddGroup("Editor");
 			ewol::Widget* tmpSubWidget = new globals::ParameterGlobalsGui();
-			tmpWidget->MenuAdd("Editor",          "", tmpSubWidget);
-			tmpWidget->MenuAdd("Font & Color", "", NULL);
-			tmpWidget->MenuAdd("Highlight",       "", NULL);
-			tmpWidget->MenuAddGroup("General");
-			tmpWidget->MenuAdd("Display",       "", NULL);
+			tmpWidget->menuAdd("Editor",          "", tmpSubWidget);
+			tmpWidget->menuAdd("Font & Color", "", NULL);
+			tmpWidget->menuAdd("Highlight",       "", NULL);
+			tmpWidget->menuAddGroup("General");
+			tmpWidget->menuAdd("Display",       "", NULL);
 			tmpSubWidget = new ParameterAboutGui();
-			tmpWidget->MenuAdd("About",           "", tmpSubWidget);
+			tmpWidget->menuAdd("About",           "", tmpSubWidget);
 		}
 	} else if (_msg.getMessage() == ednMsgGuiReloadShader) {
-		ewol::getContext().getResourcesManager().ReLoadResources();
+		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();
 	} else if (_msg.getMessage() == ednMsgGuiExit) {
 		// TODO ...
@@ -399,8 +400,7 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg)
 	return;
 }
 
-void MainWindows::onObjectRemove(ewol::EObject * _removeObject)
-{
+void MainWindows::onObjectRemove(ewol::EObject * _removeObject) {
 	ewol::Windows::onObjectRemove(_removeObject);
 	if (m_widgetLabelFileName == _removeObject) {
 		m_widgetLabelFileName = NULL;

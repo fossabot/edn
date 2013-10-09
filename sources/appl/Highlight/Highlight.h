@@ -14,14 +14,13 @@ class Highlight;
 class HighlightPattern;
 
 extern "C" {
-	typedef struct
-	{
-		int32_t             beginStart;
-		int32_t             beginStop;
-		int32_t             endStart;
-		int32_t             endStop;
-		bool                notEnded;
-		HighlightPattern *  patern;     // pointer on class : 
+	typedef struct {
+		int32_t beginStart;
+		int32_t beginStop;
+		int32_t endStart;
+		int32_t endStop;
+		bool notEnded;
+		HighlightPattern* patern; // pointer on class :
 	} colorInformation_ts;
 }
 
@@ -39,18 +38,18 @@ class Highlight {
 		bool hasExtention(const etk::UString& _ext);
 		bool fileNameCompatible(etk::FSNode &_fileName);
 		void display(void);
-		void ReloadColor(void);
-		void Parse(int32_t start,
+		void reloadColor(void);
+		void parse(int32_t start,
 		           int32_t stop,
 		           etk::Vector<colorInformation_ts> &metaData,
 		           int32_t addingPos,
 		           etk::Buffer &buffer);
-		void Parse2(int32_t start,
+		void parse2(int32_t start,
 		            int32_t stop,
 		            etk::Vector<colorInformation_ts> &metaData,
 		            etk::Buffer &buffer);
 	private:
-		void ParseRules(exml::Element* child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level);
+		void parseRules(exml::Element* child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level);
 		etk::UString m_styleName; //!< curent style name (like "c++" or "c" or "script Bash")
 		etk::Vector<etk::UString> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
 		etk::Vector<HighlightPattern*> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)

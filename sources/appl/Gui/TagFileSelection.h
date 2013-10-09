@@ -17,11 +17,10 @@ extern const char * const applEventctagsSelection;
 extern const char * const applEventctagsCancel;
 
 namespace appl {
-	class TagFileSelection : public widget::PopUp
-	{
+	class TagFileSelection : public widget::PopUp {
 		private:
-			appl::TagFileList*   m_listTag;
-			etk::UString         m_eventNamed;
+			appl::TagFileList* m_listTag;
+			etk::UString m_eventNamed;
 		public:
 			TagFileSelection(void);
 			virtual ~TagFileSelection(void);

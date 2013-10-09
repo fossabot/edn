@@ -16,8 +16,7 @@
 
 #define PFX	"ColorizeManager "
 
-class classColorManager: public ewol::EObject
-{
+class classColorManager: public ewol::EObject {
 	private:
 		etk::UString m_fileColor;
 		etk::Vector<Colorize*> listMyColor; //!< List of ALL Color
@@ -26,12 +25,10 @@ class classColorManager: public ewol::EObject
 		
 	public:
 		// Constructeur
-		classColorManager(void)
-		{
+		classColorManager(void) {
 			//ewol::widgetMessageMultiCast::add(getWidgetId(), ednMsgGuiChangeColor);
 		}
-		~classColorManager(void)
-		{
+		~classColorManager(void) {
 			delete(errorColor);
 			
 			int32_t i;
@@ -46,12 +43,10 @@ class classColorManager: public ewol::EObject
 			listMyColor.clear();
 		}
 		
-		const char * const getObjectType(void)
-		{
+		const char * const getObjectType(void) {
 			return "Appl::ColorManager";
 		}
-		void onReceiveMessage(const ewol::EMessage& _msg)
-		{
+		void onReceiveMessage(const ewol::EMessage& _msg) {
 			/*
 			switch (id)
 			{
@@ -68,8 +63,7 @@ class classColorManager: public ewol::EObject
 		}
 	public:
 		void loadFile(const etk::UString& _xmlFilename);
-		Colorize* get(const etk::UString& _colorName)
-		{
+		Colorize* get(const etk::UString& _colorName) {
 			int32_t i;
 			for (i=0; i<listMyColor.size(); i++) {
 				if (listMyColor[i]->getName() == _colorName) {
@@ -80,16 +74,14 @@ class classColorManager: public ewol::EObject
 			// an error
 			return errorColor;
 		}
-		etk::Color<>& get(basicColor_te _myColor)
-		{
+		etk::Color<>& get(basicColor_te _myColor) {
 			if (_myColor < COLOR_NUMBER_MAX) {
 				return basicColors[_myColor];
 			} else {
 				return basicColors[0];
 			}
 		}
-		bool Exist(const etk::UString& _colorName)
-		{
+		bool exist(const etk::UString& _colorName) {
 			int32_t i;
 			for (i=0; i<listMyColor.size(); i++) {
 				if (listMyColor[i]->getName() == _colorName) {
@@ -98,8 +90,7 @@ class classColorManager: public ewol::EObject
 			}
 			return false;
 		}
-		void displayListOfColor(void)
-		{
+		void displayListOfColor(void) {
 			int32_t i;
 			APPL_INFO(PFX"List of ALL COLOR : ");
 			for (i=0; i<listMyColor.size(); i++) {
@@ -110,8 +101,7 @@ class classColorManager: public ewol::EObject
 		}
 };
 
-void classColorManager::loadFile(const etk::UString& _xmlFilename)
-{
+void classColorManager::loadFile(const etk::UString& _xmlFilename) {
 	// remove all old color : 
 	for (int32_t iii=0; iii< listMyColor.size(); iii++) {
 		if (NULL != listMyColor[iii]) {
@@ -137,7 +127,7 @@ void classColorManager::loadFile(const etk::UString& _xmlFilename)
 	}
 	exml::Element* root = (exml::Element*)doc.getNamed("EdnColor");
 	if (NULL == root ) {
-		APPL_ERROR("[" << getId() << "] {" << GetObjectType() << "} (l ?) main node not find: \"EdnColor\" ...");
+		APPL_ERROR("[" << getId() << "] {" << getObjectType() << "} (l ?) main node not find: \"EdnColor\" ...");
 		return;
 	}
 	
@@ -157,7 +147,7 @@ void classColorManager::loadFile(const etk::UString& _xmlFilename)
 					continue;
 				}
 				if (pGuiNode->getValue()!="color") {
-					APPL_ERROR("(l "<<pGuiNode->getPos()<<") node not suported : \""<<pGuiNode->GetValue()<<"\" must be [color]");
+					APPL_ERROR("(l "<<pGuiNode->getPos()<<") node not suported : \""<<pGuiNode->getValue()<<"\" must be [color]");
 					continue;
 				}
 				//--------------------------------------------------------------------------------------------
@@ -205,7 +195,7 @@ void classColorManager::loadFile(const etk::UString& _xmlFilename)
 					continue;
 				}
 				if (pGuiNode->getValue()!="color") {
-					APPL_ERROR(PFX"(l "<<pGuiNode->getPos()<<") node not suported : \""<<pGuiNode->GetValue()<<"\" must be [color]");
+					APPL_ERROR(PFX"(l "<<pGuiNode->getPos()<<") node not suported : \""<<pGuiNode->getValue()<<"\" must be [color]");
 					continue;
 				}
 				//--------------------------------------------------------------------------------------------
@@ -253,8 +243,7 @@ void classColorManager::loadFile(const etk::UString& _xmlFilename)
 static classColorManager * localManager = NULL;
 
 
-void ColorizeManager::init(void)
-{
+void ColorizeManager::init(void) {
 	if (NULL != localManager) {
 		EWOL_ERROR("ColorizeManager  == > already exist, just unlink the previous ...");
 		localManager = NULL;
@@ -266,8 +255,7 @@ void ColorizeManager::init(void)
 	}
 }
 
-void ColorizeManager::UnInit(void)
-{
+void ColorizeManager::unInit(void) {
 	if (NULL == localManager) {
 		EWOL_ERROR("ColorizeManager  == > request UnInit, but does not exist ...");
 		return;
@@ -276,16 +264,14 @@ void ColorizeManager::UnInit(void)
 	localManager = NULL;
 }
 
-void ColorizeManager::loadFile(const etk::UString& _xmlFilename)
-{
+void ColorizeManager::loadFile(const etk::UString& _xmlFilename) {
 	if (NULL == localManager) {
 		return;
 	}
 	localManager->loadFile(_xmlFilename);
 }
 
-Colorize* ColorizeManager::get(const etk::UString& _colorName)
-{
+Colorize* ColorizeManager::get(const etk::UString& _colorName) {
 	if (NULL == localManager) {
 		return NULL;
 	}
@@ -293,8 +279,7 @@ Colorize* ColorizeManager::get(const etk::UString& _colorName)
 }
 
 
-etk::Color<>& ColorizeManager::get(basicColor_te _myColor)
-{
+etk::Color<>& ColorizeManager::get(basicColor_te _myColor) {
 	static etk::Color<> errorColor;
 	if (NULL == localManager) {
 		return errorColor;
@@ -302,16 +287,14 @@ etk::Color<>& ColorizeManager::get(basicColor_te _myColor)
 	return localManager->get(_myColor);
 }
 
-bool ColorizeManager::Exist(const etk::UString& _colorName)
-{
+bool ColorizeManager::exist(const etk::UString& _colorName) {
 	if (NULL == localManager) {
 		return false;
 	}
-	return localManager->Exist(_colorName);
+	return localManager->exist(_colorName);
 }
 
-void ColorizeManager::displayListOfColor(void)
-{
+void ColorizeManager::displayListOfColor(void) {
 	if (NULL == localManager) {
 		return;
 	}

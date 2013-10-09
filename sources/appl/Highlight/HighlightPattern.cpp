@@ -11,14 +11,10 @@
 #include <HighlightPattern.h>
 #include <ColorizeManager.h>
 
-
 #undef __class__
-#define __class__	"HighlightPattern"
+#define __class__ "HighlightPattern"
 
-
-
-HighlightPattern::HighlightPattern(void)
-{
+HighlightPattern::HighlightPattern(void) {
 	m_haveStopPatern = false;
 	m_multiline = false;
 	m_color = ColorizeManager::get("normal");
@@ -27,64 +23,46 @@ HighlightPattern::HighlightPattern(void)
 	m_escapeChar = 0;
 }
 
-HighlightPattern::~HighlightPattern(void)
-{
+HighlightPattern::~HighlightPattern(void) {
 	delete(m_regExpStart);
 	delete(m_regExpStop);
 }
 
-void  HighlightPattern::setPaternStart(etk::UString &regExp)
-{
-	m_regExpStart->setRegExp(regExp);
+void HighlightPattern::setPaternStart(etk::UString& _regExp) {
+	m_regExpStart->setRegExp(_regExp);
 }
 
-void  HighlightPattern::setPaternStop(etk::UString &regExp)
-{
-	if (regExp.size() != 0) {
-		m_regExpStop->setRegExp(regExp);
+void HighlightPattern::setPaternStop(etk::UString& _regExp) {
+	if (_regExp.size() != 0) {
+		m_regExpStop->setRegExp(_regExp);
 		m_haveStopPatern = true;
 	} else {
 		m_haveStopPatern = false;
 	}
 }
 
-void HighlightPattern::setEscapeChar(etk::UString &EscapeChar)
-{
-	if (EscapeChar.size()>0) {
-		m_escapeChar = EscapeChar[0];
+void HighlightPattern::setEscapeChar(etk::UString& _EscapeChar) {
+	if (_EscapeChar.size()>0) {
+		m_escapeChar = _EscapeChar[0];
 	} else {
 		m_escapeChar = 0;
 	}
 }
 
-
-void  HighlightPattern::setColor(etk::UString &colorName)
-{
-	m_colorName = colorName;
+void  HighlightPattern::setColor(etk::UString& _colorName) {
+	m_colorName = _colorName;
 	m_color = ColorizeManager::get(m_colorName);
 }
 
-bool HighlightPattern::isEnable(void)
-{
+bool HighlightPattern::isEnable(void) {
 	return true;
 }
 
-
-void HighlightPattern::ReloadColor(void)
-{
+void HighlightPattern::reloadColor(void) {
 	m_color = ColorizeManager::get(m_colorName);
 }
 
-/**
- * @brief
- *
- * @param[in,out]
- *
- * @eturn
- *
- */
-void HighlightPattern::display(void)
-{
+void HighlightPattern::display(void) {
 	/*
 	APPL_INFO("patern : \"" << m_paternName << "\" level=" << m_level );
 	APPL_INFO("  == > colorName \"" << m_colorName << "\"");
@@ -107,8 +85,8 @@ void HighlightPattern::display(void)
 		m_subPatern[i]->display();
 	}
 }
-void HighlightPattern::ParseRules(exml::Element *child, int32_t level)
-{
+
+void HighlightPattern::parseRules(exml::Element *child, int32_t level) {
 	//--------------------------------------------------------------------------------------------
 	/*
 		<rule name="my preprocesseur">
@@ -191,8 +169,7 @@ void HighlightPattern::ParseRules(exml::Element *child, int32_t level)
  * @return HLP_FIND_OK_NO_END Xe find a partial pattern (missing end)
  * @return HLP_FIND_ERROR Not find the pattern
  */
-resultFind_te HighlightPattern::find(int32_t start, int32_t stop, colorInformation_ts &resultat, etk::Buffer &buffer)
-{
+resultFind_te HighlightPattern::find(int32_t start, int32_t stop, colorInformation_ts &resultat, etk::Buffer &buffer) {
 	//APPL_DEBUG(" try to find the element");
 	resultat.beginStart = -1;
 	resultat.beginStop = -1;
@@ -203,22 +180,22 @@ resultFind_te HighlightPattern::find(int32_t start, int32_t stop, colorInformati
 	
 	// when we have only one element : 
 	if (false == m_haveStopPatern) {
-		if (true == m_regExpStart->ProcessOneElement(buffer, start, stop)) {
-			resultat.beginStart = m_regExpStart->Start();
-			resultat.beginStop  = m_regExpStart->Stop();
-			resultat.endStart = m_regExpStart->Start();
-			resultat.endStop  = m_regExpStart->Stop();
+		if (true == m_regExpStart->processOneElement(buffer, start, stop)) {
+			resultat.beginStart = m_regExpStart->start();
+			resultat.beginStop  = m_regExpStart->stop();
+			resultat.endStart = m_regExpStart->start();
+			resultat.endStop  = m_regExpStart->stop();
 			return HLP_FIND_OK;
 		}
 		//APPL_DEBUG("NOT find hightlightpatern ...");
 	} else {
 		// try while we find the first element
-		if (true == m_regExpStart->ProcessOneElement(buffer, start, stop, m_escapeChar)) {
-			resultat.beginStart = m_regExpStart->Start();
-			resultat.beginStop  = m_regExpStart->Stop();
-			if (true == m_regExpStop->Process(buffer, resultat.beginStop, stop, m_escapeChar)) {
-				resultat.endStart = m_regExpStop->Start();
-				resultat.endStop  = m_regExpStop->Stop();
+		if (true == m_regExpStart->processOneElement(buffer, start, stop, m_escapeChar)) {
+			resultat.beginStart = m_regExpStart->start();
+			resultat.beginStop  = m_regExpStart->stop();
+			if (true == m_regExpStop->process(buffer, resultat.beginStop, stop, m_escapeChar)) {
+				resultat.endStart = m_regExpStop->start();
+				resultat.endStop  = m_regExpStop->stop();
 				return HLP_FIND_OK;
 			} else {
 				resultat.endStart = stop+1;

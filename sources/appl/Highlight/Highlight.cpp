@@ -16,20 +16,16 @@
 #define __class__	"Highlight"
 
 
-void Highlight::ParseRules(exml::Element* child, etk::Vector<HighlightPattern*> &mListPatern, int32_t level)
-{
+void Highlight::parseRules(exml::Element* _child, etk::Vector<HighlightPattern*>& _mListPatern, int32_t _level) {
 	// Create the patern ...
 	HighlightPattern *myPattern = new HighlightPattern();
 	// parse under Element
-	myPattern->ParseRules(child, level);
+	myPattern->parseRules(_child, _level);
 	// add element in the list
-	mListPatern.pushBack(myPattern);
+	_mListPatern.pushBack(myPattern);
 }
 
-
-
-Highlight::Highlight(const etk::UString& _xmlFilename)
-{
+Highlight::Highlight(const etk::UString& _xmlFilename) {
 	exml::Document doc;
 	if (doc.load(_xmlFilename) == false) {
 		APPL_ERROR(" can not load file XML : " << _xmlFilename);
@@ -63,10 +59,10 @@ Highlight::Highlight(const etk::UString& _xmlFilename)
 					continue;
 				}
 				if (passChild->getValue() != "rule") {
-					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->GetValue() << "\" must be [rule]" );
+					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->getValue() << "\" must be [rule]" );
 					continue;
 				}
-				ParseRules(passChild, m_listHighlightPass1, level1++);
+				parseRules(passChild, m_listHighlightPass1, level1++);
 			}
 		} else if (child->getValue() == "pass2") {
 			// get sub Nodes ...
@@ -76,19 +72,18 @@ Highlight::Highlight(const etk::UString& _xmlFilename)
 					continue;
 				}
 				if (passChild->getValue() != "rule") {
-					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->GetValue() << "\" must be [rule]" );
+					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->getValue() << "\" must be [rule]" );
 					continue;
 				}
-				ParseRules(passChild, m_listHighlightPass2, level2++);
+				parseRules(passChild, m_listHighlightPass2, level2++);
 			}
 		} else {
-			APPL_ERROR("(l "<< child->getPos() << ") node not suported : \""<< child->GetValue() << "\" must be [ext,pass1,pass2]" );
+			APPL_ERROR("(l "<< child->getPos() << ") node not suported : \""<< child->getValue() << "\" must be [ext,pass1,pass2]" );
 		}
 	}
 }
 
-Highlight::~Highlight(void)
-{
+Highlight::~Highlight(void) {
 	int32_t i;
 	// clean all Element
 	for (i=0; i< m_listHighlightPass1.size(); i++) {
@@ -103,23 +98,21 @@ Highlight::~Highlight(void)
 	m_listExtentions.clear();
 }
 
-void Highlight::ReloadColor(void)
-{
+void Highlight::reloadColor(void) {
 	int32_t i;
 	for (i=0; i< m_listHighlightPass1.size(); i++) {
 		if (NULL != m_listHighlightPass1[i]) {
-			m_listHighlightPass1[i]->ReloadColor();
+			m_listHighlightPass1[i]->reloadColor();
 		}
 	}
 	for (i=0; i< m_listHighlightPass2.size(); i++) {
 		if (NULL != m_listHighlightPass2[i]) {
-			m_listHighlightPass2[i]->ReloadColor();
+			m_listHighlightPass2[i]->reloadColor();
 		}
 	}
 }
 
-bool Highlight::hasExtention(const etk::UString& _ext)
-{
+bool Highlight::hasExtention(const etk::UString& _ext) {
 	for (int32_t iii=0; iii<m_listExtentions.size(); iii++) {
 		if (_ext == m_listExtentions[iii] ) {
 			return true;
@@ -128,8 +121,7 @@ bool Highlight::hasExtention(const etk::UString& _ext)
 	return false;
 }
 
-bool Highlight::fileNameCompatible(etk::FSNode &_fileName)
-{
+bool Highlight::fileNameCompatible(etk::FSNode &_fileName) {
 	etk::UString extention;
 	if (true == _fileName.fileHasExtention() ) {
 		extention = "*.";
@@ -148,8 +140,7 @@ bool Highlight::fileNameCompatible(etk::FSNode &_fileName)
 }
 
 
-void Highlight::display(void)
-{
+void Highlight::display(void) {
 	APPL_INFO("List of ALL Highlight : ");
 	for (int32_t iii=0; iii< m_listExtentions.size(); iii++) {
 		APPL_INFO("        Extention : " << iii << " : " << m_listExtentions[iii] );
@@ -169,12 +160,11 @@ void Highlight::display(void)
 
 
 // TODO : Celui qui appelle suprime des element pour rien ... Enfin c'est pas trègrave... Il suffirait juste de suprimer celuis d'avant si il n'est pas terminer...
-void Highlight::Parse(int32_t start,
+void Highlight::parse(int32_t start,
                       int32_t stop,
                       etk::Vector<colorInformation_ts> &metaData,
                       int32_t addingPos,
-                      etk::Buffer &buffer)
-{
+                      etk::Buffer &buffer) {
 	if (0 > addingPos) {
 		addingPos = 0;
 	}
@@ -198,7 +188,7 @@ void Highlight::Parse(int32_t start,
 					if (metaData[kkk].beginStart <= resultat.endStop) {
 						// remove element
 						//APPL_INFO("Erase element=" << kkk);
-						metaData.EraseLen(kkk, kkk+1);
+						metaData.eraseLen(kkk, kkk+1);
 						// Increase the end of search
 						if (kkk < metaData.size()) {
 							// just befor the end of the next element
@@ -233,11 +223,10 @@ void Highlight::Parse(int32_t start,
  * @brief second pass of the hightlight
  *
  */
-void Highlight::Parse2(int32_t start,
+void Highlight::parse2(int32_t start,
                        int32_t stop,
                        etk::Vector<colorInformation_ts> &metaData,
-                       etk::Buffer &buffer)
-{
+                       etk::Buffer &buffer) {
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << "  == > position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;
 	int32_t elementStop = stop;

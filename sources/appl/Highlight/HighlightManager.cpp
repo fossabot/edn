@@ -13,12 +13,11 @@
 #include <ewol/renderer/EObjectManager.h>
 
 #undef __class__
-#define __class__	"HighlightManager"
+#define __class__ "HighlightManager"
 
-class localClassHighlightManager: public ewol::EObject
-{
+class localClassHighlightManager: public ewol::EObject {
 	private:
-		etk::Vector<Highlight*> listHighlight;		//!< List of ALL hightlight modules
+		etk::Vector<Highlight*> listHighlight; //!< List of ALL hightlight modules
 	public:
 		// Constructeur
 		localClassHighlightManager(void) {
@@ -38,14 +37,12 @@ class localClassHighlightManager: public ewol::EObject
 		};
 		
 		// herited function
-		const char * const getObjectType(void)
-		{
+		const char * const getObjectType(void) {
 			return "ApplHighlightManager";
 		}
 		
 		// herited function
-		virtual void onReceiveMessage(const ewol::EMessage& _msg)
-		{
+		virtual void onReceiveMessage(const ewol::EMessage& _msg) {
 			/*
 			switch (id)
 			{
@@ -61,31 +58,27 @@ class localClassHighlightManager: public ewol::EObject
 			*/
 		}
 		
-		Highlight* get(etk::FSNode &fileName)
-		{
+		Highlight* get(etk::FSNode& _fileName) {
 			int32_t i;
-			for (i=0; i<listHighlight.size(); i++) {
-				if (true == listHighlight[i]->fileNameCompatible(fileName) ) {
+			for (i=0; i<listHighlight.size(); ++i) {
+				if (true == listHighlight[i]->fileNameCompatible(_fileName) ) {
 					return listHighlight[i];
 				}
 			}
 			return NULL;
 		}
 		
-		bool Exist(etk::FSNode &fileName)
-		{
-			if (NULL != get(fileName) ) {
+		bool exist(etk::FSNode& _fileName) {
+			if (NULL != get(_fileName) ) {
 				return true;
 			}
 			return false;
 		}
 		
-		
-		void loadLanguages(void)
-		{
+		void loadLanguages(void) {
 			etk::FSNode myFile("DATA:languages/");
 			// get the subfolder list :
-			etk::Vector<etk::FSNode *> list = myFile.FolderGetSubList(false, true, false,false);
+			etk::Vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
 			for ( int32_t iii=0 ; iii<list.size() ; iii++ ) {
 				if (NULL!=list[iii]) {
 					if (list[iii]->getNodeType() == etk::FSN_FOLDER) {
@@ -98,15 +91,12 @@ class localClassHighlightManager: public ewol::EObject
 			}
 			//myHightline->display();
 		}
-
 };
 
 static localClassHighlightManager * localManager = NULL;
 
 
-
-void HighlightManager::init(void)
-{
+void HighlightManager::init(void) {
 	if (NULL != localManager) {
 		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
 		localManager = NULL;
@@ -118,8 +108,7 @@ void HighlightManager::init(void)
 	}
 }
 
-void HighlightManager::UnInit(void)
-{
+void HighlightManager::unInit(void) {
 	if (NULL == localManager) {
 		APPL_ERROR("HighlightManager  == > request UnInit, but does not exist ...");
 		return;
@@ -128,28 +117,25 @@ void HighlightManager::UnInit(void)
 	localManager = NULL;
 }
 
-void HighlightManager::loadLanguages(void)
-{
+void HighlightManager::loadLanguages(void) {
 	if (NULL == localManager) {
 		return;
 	}
 	localManager->loadLanguages();
 }
 
-Highlight* HighlightManager::get(etk::FSNode &fileName)
-{
+Highlight* HighlightManager::get(etk::FSNode& _fileName) {
 	if (NULL == localManager) {
 		return NULL;
 	}
-	return localManager->get(fileName);
+	return localManager->get(_fileName);
 }
 
-bool HighlightManager::Exist(etk::FSNode &fileName)
-{
+bool HighlightManager::exist(etk::FSNode& _fileName) {
 	if (NULL == localManager) {
 		return false;
 	}
-	return localManager->Exist(fileName);
+	return localManager->exist(_fileName);
 }
 
 

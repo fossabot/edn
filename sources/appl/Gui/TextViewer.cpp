@@ -6,8 +6,6 @@
  * @license GPL v3 (see license file)
  */
 
-#include <CodeView.h>
-
 #include <appl/Debug.h>
 #include <appl/global.h>
 #include <TextViewer.h>
@@ -20,35 +18,34 @@
 #include <ewol/renderer/EObject.h>
 
 #undef __class__
-#define __class__	"TextViewer"
+#define __class__ "TextViewer"
 
 appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
-	m_buffer(NULL),
-	m_displayText(_fontName, _fontSize),
-	m_insertMode(false)
-{
+  m_buffer(NULL),
+  m_displayText(_fontName, _fontSize),
+  m_insertMode(false) {
 	setCanHaveFocus(true);
-	RegisterMultiCast(ednMsgBufferId);
-	RegisterMultiCast(ednMsgGuiCopy);
-	RegisterMultiCast(ednMsgGuiPaste);
-	RegisterMultiCast(ednMsgGuiCut);
-	RegisterMultiCast(ednMsgGuiRedo);
-	RegisterMultiCast(ednMsgGuiUndo);
-	RegisterMultiCast(ednMsgGuiRm);
-	RegisterMultiCast(ednMsgGuiSelect);
-	RegisterMultiCast(ednMsgGuiChangeCharset);
-	RegisterMultiCast(ednMsgGuiFind);
-	RegisterMultiCast(ednMsgGuiReplace);
-	RegisterMultiCast(ednMsgGuiGotoLine);
+	registerMultiCast(ednMsgBufferId);
+	registerMultiCast(ednMsgGuiCopy);
+	registerMultiCast(ednMsgGuiPaste);
+	registerMultiCast(ednMsgGuiCut);
+	registerMultiCast(ednMsgGuiRedo);
+	registerMultiCast(ednMsgGuiUndo);
+	registerMultiCast(ednMsgGuiRm);
+	registerMultiCast(ednMsgGuiSelect);
+	registerMultiCast(ednMsgGuiChangeCharset);
+	registerMultiCast(ednMsgGuiFind);
+	registerMultiCast(ednMsgGuiReplace);
+	registerMultiCast(ednMsgGuiGotoLine);
 	setLimitScrolling(0.2);
 	
-	ShortCutAdd("ctrl+w",       ednMsgGuiRm,     "Line");
-	ShortCutAdd("ctrl+shift+w", ednMsgGuiRm,     "Paragraph");
-	ShortCutAdd("ctrl+x",       ednMsgGuiCut,    "STD");
-	ShortCutAdd("ctrl+c",       ednMsgGuiCopy,   "STD");
-	ShortCutAdd("ctrl+v",       ednMsgGuiPaste,  "STD");
-	ShortCutAdd("ctrl+a",       ednMsgGuiSelect, "ALL");
-	ShortCutAdd("ctrl+shift+a", ednMsgGuiSelect, "NONE");
+	shortCutAdd("ctrl+w",       ednMsgGuiRm,     "Line");
+	shortCutAdd("ctrl+shift+w", ednMsgGuiRm,     "Paragraph");
+	shortCutAdd("ctrl+x",       ednMsgGuiCut,    "STD");
+	shortCutAdd("ctrl+c",       ednMsgGuiCopy,   "STD");
+	shortCutAdd("ctrl+v",       ednMsgGuiPaste,  "STD");
+	shortCutAdd("ctrl+a",       ednMsgGuiSelect, "ALL");
+	shortCutAdd("ctrl+shift+a", ednMsgGuiSelect, "NONE");
 	
 	// by default we load an example object:
 	
@@ -61,34 +58,27 @@ appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
 	
 }
 
-appl::TextViewer::~TextViewer(void)
-{
+appl::TextViewer::~TextViewer(void) {
 	
 }
 
-
-bool appl::TextViewer::calculateMinSize(void)
-{
+bool appl::TextViewer::calculateMinSize(void) {
 	m_minSize.setValue(50,50);
 	return true;
 }
 
-void appl::TextViewer::calculateMaxSize(void)
-{
+void appl::TextViewer::calculateMaxSize(void) {
 	m_maxSize.setX(256);
 	m_maxSize.setY(256);
 }
 
-
-void appl::TextViewer::onDraw(void)
-{
+void appl::TextViewer::onDraw(void) {
 	m_displayDrawing.draw();
 	m_displayText.draw();
 	WidgetScrooled::onDraw();
 }
 
-void appl::TextViewer::onRegenerateDisplay(void)
-{
+void appl::TextViewer::onRegenerateDisplay(void) {
 	if (false == needRedraw()) {
 		return;
 	}
@@ -157,7 +147,7 @@ void appl::TextViewer::onRegenerateDisplay(void)
 			m_displayText.setPos(positionCurentDisplay);
 			continue;
 		}
-		m_buffer->Expand(countColomn, currentValue, stringToDisplay);
+		m_buffer->expand(countColomn, currentValue, stringToDisplay);
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		//m_displayText.setPos(positionCurentDisplay);
 		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
@@ -182,23 +172,19 @@ void appl::TextViewer::onRegenerateDisplay(void)
 	WidgetScrooled::onRegenerateDisplay();
 }
 
-
-bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event)
-{
+bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 	if (m_buffer == NULL) {
 		return false;
 	}
 	// just forward event  == > manage directly in the buffer
-	if (m_buffer->onEventEntry(_event) == true) {
+	if (m_buffer->onEventEntry(_event, m_displayText) == true) {
 		markToRedraw();
 		return true;
 	}
 	return false;
 }
 
-
-bool appl::TextViewer::onEventInput(const ewol::EventInput& _event)
-{
+bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 	vec2 relativePos = relativePosition(_event.getPos());
 	if (m_buffer != NULL) {
 		
@@ -207,42 +193,34 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event)
 	return true;
 }
 
-void appl::TextViewer::onEventClipboard(ewol::clipBoard::clipboardListe_te _clipboardID)
-{
+void appl::TextViewer::onEventClipboard(ewol::clipBoard::clipboardListe_te _clipboardID) {
 	if (m_buffer != NULL) {
 		//tmpBuffer->Paste(_clipboardID);
 	}
 	markToRedraw();
 }
 
-void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg)
-{
+void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
 	// force redraw of the widget
 	markToRedraw();
 }
 
-
-void appl::TextViewer::onGetFocus(void)
-{
-	ShowKeyboard();
+void appl::TextViewer::onGetFocus(void) {
+	showKeyboard();
 	APPL_INFO("Focus - In");
 }
 
-
-void appl::TextViewer::onLostFocus(void)
-{
-	HideKeyboard();
+void appl::TextViewer::onLostFocus(void) {
+	hideKeyboard();
 	APPL_INFO("Focus - out");
 }
 
-void appl::TextViewer::setFontSize(int32_t _size)
-{
+void appl::TextViewer::setFontSize(int32_t _size) {
 	m_displayText.setFontSize(_size);
 	setScrollingSize(_size*3.0*1.46); // 1.46 is a magic number ...
 }
 
-void appl::TextViewer::setFontName(const etk::UString& _fontName)
-{
+void appl::TextViewer::setFontName(const etk::UString& _fontName) {
 	m_displayText.setFontName(_fontName);
 }
 
