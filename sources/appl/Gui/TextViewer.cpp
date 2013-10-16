@@ -185,11 +185,18 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 }
 
 bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
-	vec2 relativePos = relativePosition(_event.getPos());
-	if (m_buffer != NULL) {
-		
+	if (m_buffer == NULL) {
+		return false;
 	}
 	keepFocus();
+	vec2 relativePos = relativePosition(_event.getPos());
+	// invert for the buffer event ...
+	relativePos.setY(m_size.y()-relativePos.y());
+	// just forward event  == > manage directly in the buffer
+	if (m_buffer->onEventInput(_event, m_displayText, relativePos) == true) {
+		markToRedraw();
+		return true;
+	}
 	return true;
 }
 

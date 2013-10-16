@@ -48,9 +48,16 @@ namespace appl {
 			*/
 		public:
 			esize_t m_cursorPos; //!< cursor position.
+			int32_t m_cursorSelectPos; //!< cursor position.
 			int32_t m_cursorPreferredCol; //!< position of the cursor when up and down is done.
+			bool m_buttunOneSelected;
 			// note : We need the text drawer interface due to the fact that the move depend on the text display properties.
-			bool onEventEntry(const ewol::EventEntry& _event, ewol::Text& _testDrawer);
+			bool onEventEntry(const ewol::EventEntry& _event, ewol::Text& _textDrawer);
+			bool onEventInput(const ewol::EventInput& _event, ewol::Text& _textDrawer, const vec2& _relativePos);
+			void moveCursorAtPosition(const vec2& _relativePos, ewol::Text& _textDrawer);
+			void mouseEventDouble(void);
+			void mouseEventTriple(void);
+			esize_t getMousePosition(const vec2& _relativePos, ewol::Text& _textDrawer);
 			/**
 			 * @brief get the next element in the buffer.
 			 * @param[in] _pos Position in the buffer
