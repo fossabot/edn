@@ -36,7 +36,6 @@ void appl::Buffer::setFileName(const etk::UString& _name) {
 }
 
 void appl::Buffer::moveCursorRight(appl::Buffer::moveMode _mode) {
-	m_cursorPreferredCol = -1;
 	etk::UniChar value;
 	esize_t nbElement;
 	switch (_mode) {
@@ -44,7 +43,7 @@ void appl::Buffer::moveCursorRight(appl::Buffer::moveMode _mode) {
 		case moveLetter:
 			nbElement = get(m_cursorPos, value);
 			if (nbElement>0) {
-				m_cursorPos += nbElement;
+				moveCursor(m_cursorPos + nbElement);
 			}
 			break;
 		case moveWord:
@@ -58,7 +57,6 @@ void appl::Buffer::moveCursorRight(appl::Buffer::moveMode _mode) {
 }
 
 void appl::Buffer::moveCursorLeft(appl::Buffer::moveMode _mode) {
-	m_cursorPreferredCol = -1;
 	etk::UniChar value;
 	esize_t nbElement;
 	switch (_mode) {
@@ -66,7 +64,7 @@ void appl::Buffer::moveCursorLeft(appl::Buffer::moveMode _mode) {
 		case moveLetter:
 			nbElement = getBack(m_cursorPos-1, value);
 			if (nbElement>0) {
-				m_cursorPos -= nbElement;
+				moveCursor(m_cursorPos - nbElement);
 			}
 			break;
 		case moveWord:
@@ -78,7 +76,7 @@ void appl::Buffer::moveCursorLeft(appl::Buffer::moveMode _mode) {
 	}
 }
 
-void appl::Buffer::moveCursorUp(esize_t _nbLine) {
+void appl::Buffer::moveCursorUp(esize_t _nbLine, ewol::Text& _textDrawer) {
 	// find the position of the start of the line.
 	esize_t lineStartPos = startLine(m_cursorPos);
 	// check if we can go up ...
@@ -87,20 +85,22 @@ void appl::Buffer::moveCursorUp(esize_t _nbLine) {
 	}
 	// Decide what column to move to, if there's a preferred column use that
 	if (m_cursorPreferredCol < 0) {
-		m_cursorPreferredCol = countDispChars(lineStartPos, m_cursorPos);
+		// TODO : Remove this +1 !!!
+		m_cursorPreferredCol = getScreenSize(lineStartPos+1, m_cursorPos, _textDrawer);
 	}
 	EWOL_DEBUG("ploop : " << m_cursorPreferredCol);
 	// get the previous line
 	esize_t prevLineStartPos = countBackwardNLines(lineStartPos, _nbLine);
 	//APPL_INFO("Move line UP result : prevLineStartPos=" << prevLineStartPos);
 	// get the display char position
-	esize_t newPos = countForwardDispChars(prevLineStartPos, m_cursorPreferredCol);
+	esize_t newPos = getPosSize(prevLineStartPos, m_cursorPreferredCol, _textDrawer);
 	//APPL_INFO("Move to colomn : column=" << column << " newPos=" << newPos);
-	//SetInsertPosition(newPos);
-	m_cursorPos = newPos;
+	float posStore = m_cursorPreferredCol;
+	moveCursor(newPos);
+	m_cursorPreferredCol = posStore;
 }
 
-void appl::Buffer::moveCursorDown(esize_t _nbLine) {
+void appl::Buffer::moveCursorDown(esize_t _nbLine, ewol::Text& _textDrawer) {
 	// check if we are not at the end of Buffer
 	if (m_cursorPos == m_data.size() ) {
 		return;
@@ -109,17 +109,19 @@ void appl::Buffer::moveCursorDown(esize_t _nbLine) {
 	esize_t lineStartPos = startLine(m_cursorPos);
 	
 	if (m_cursorPreferredCol < 0) {
-		m_cursorPreferredCol = countDispChars(lineStartPos, m_cursorPos);
+		// TODO : Remove this +1 !!!
+		m_cursorPreferredCol = getScreenSize(lineStartPos+1, m_cursorPos, _textDrawer);
 	}
 	EWOL_DEBUG("ploop : " << m_cursorPreferredCol);
 	// get the next line :
 	esize_t nextLineStartPos = countForwardNLines(lineStartPos, _nbLine);
 	//APPL_INFO("Move line DOWN result : nextLineStartPos=" << nextLineStartPos);
 	// get the display char position
-	esize_t newPos = countForwardDispChars(nextLineStartPos, m_cursorPreferredCol);
+	esize_t newPos = getPosSize(nextLineStartPos, m_cursorPreferredCol, _textDrawer);
 	//APPL_INFO("Move to colomn : column=" << column << " newPos=" << newPos);
-	//SetInsertPosition(newPos);
-	m_cursorPos = newPos;
+	float posStore = m_cursorPreferredCol;
+	moveCursor(newPos);
+	m_cursorPreferredCol = posStore;
 }
 
 esize_t appl::Buffer::startLine(esize_t _pos) {
@@ -232,11 +234,11 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 				break;
 			case ewol::keyEvent::keyboardUp:
 				//APPL_INFO("keyEvent : <UP>");
-				moveCursorUp(1);
+				moveCursorUp(1, _testDrawer);
 				break;
 			case ewol::keyEvent::keyboardDown:
 				//APPL_INFO("keyEvent : <DOWN>");
-				moveCursorDown(1);
+				moveCursorDown(1, _testDrawer);
 				break;
 			case ewol::keyEvent::keyboardPageUp:
 				//APPL_INFO("keyEvent : <PAGE-UP>");
@@ -273,12 +275,14 @@ bool appl::Buffer::onEventInput(const ewol::EventInput& _event, ewol::Text& _tex
 		// mouse selection :
 		if (_event.getType() == ewol::keyEvent::typeMouse) {
 			if (_event.getStatus() == ewol::keyEvent::statusDown) {
-				m_buttunOneSelected = true;
-				moveCursorAtPosition(_relativePos, _textDrawer);
+				esize_t newPos = getMousePosition(_relativePos, _textDrawer);
+				moveCursor(newPos);
+				m_selectMode = true;
 				return true;
 			} else if (_event.getStatus() == ewol::keyEvent::statusUp) {
-				m_buttunOneSelected = false;
-				moveCursorAtPosition(_relativePos, _textDrawer);
+				esize_t newPos = getMousePosition(_relativePos, _textDrawer);
+				moveCursor(newPos);
+				m_selectMode = false;
 				// TODO : Copy selection :
 				//tmpBuffer->Copy(ewol::clipBoard::clipboardSelection);
 				return true;
@@ -286,7 +290,8 @@ bool appl::Buffer::onEventInput(const ewol::EventInput& _event, ewol::Text& _tex
 		}
 		if (_event.getStatus() == ewol::keyEvent::statusSingle) {
 			if (_event.getType() == ewol::keyEvent::typeMouse) {
-				moveCursorAtPosition(_relativePos, _textDrawer);
+				esize_t newPos = getMousePosition(_relativePos, _textDrawer);
+				moveCursor(newPos);
 				return true;
 			}
 		} else if (_event.getStatus() == ewol::keyEvent::statusDouble) {
@@ -296,46 +301,218 @@ bool appl::Buffer::onEventInput(const ewol::EventInput& _event, ewol::Text& _tex
 			mouseEventTriple();
 			return true;
 		} else if (_event.getStatus() == ewol::keyEvent::statusMove) {
-			if (m_buttunOneSelected == true) {
-				moveCursorAtPosition(_relativePos, _textDrawer);
+			if (m_selectMode == true) {
+				esize_t newPos = getMousePosition(_relativePos, _textDrawer);
+				moveCursor(newPos);
 				return true;
 			}
 		}
 	} else if (2 == _event.getId()) {
 		if (ewol::keyEvent::statusSingle == _event.getStatus()) {
-			moveCursorAtPosition(_relativePos, _textDrawer);
+			esize_t newPos = getMousePosition(_relativePos, _textDrawer);
+			moveCursor(newPos);
 			ewol::clipBoard::request(ewol::clipBoard::clipboardSelection);
 		}
 	}
 	return false;
 }
 
-void appl::Buffer::moveCursorAtPosition(const vec2& _relativePos, ewol::Text& _textDrawer)
-{
+void appl::Buffer::moveCursor(esize_t _pos) {
+	m_cursorPreferredCol = -1;
 	// selecting mode ...
-	if (m_buttunOneSelected == true) {
-		esize_t newPos = getMousePosition(_relativePos, _textDrawer);
-		APPL_DEBUG("Select : " << m_cursorPos << " ==> " << newPos);
-		m_cursorSelectPos = newPos;
+	if (m_selectMode == true) {
+		if (m_cursorSelectPos == -1) {
+			m_cursorSelectPos = m_cursorPos;
+		}
+		//APPL_DEBUG("Select : " << m_cursorSelectPos << " ==> " << newPos);
+		m_cursorPos = _pos;
+		if (m_cursorPos == m_cursorSelectPos) {
+			m_cursorSelectPos = -1;
+		}
 		return;
 	}
 	// move mode
-	esize_t newPos = getMousePosition(_relativePos, _textDrawer);
-	m_cursorPos = newPos;
+	m_cursorPos = _pos;
 	m_cursorSelectPos = -1;
 }
 
-void appl::Buffer::mouseEventDouble(void)
-{
-	
+bool appl::Buffer::selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &_endPos) {
+	esize_t bufferElementSize;
+	esize_t previousElementSize;
+	etk::UniChar currentValue;
+	get(_startPos, currentValue);
+	if (    currentValue == etk::UniChar::Tabulation
+	     || currentValue == etk::UniChar::Space) {
+		APPL_DEBUG("select spacer");
+		// special case we are looking for separation
+		for (_beginPos=_startPos;
+		     _beginPos>=0;
+		     previousElementSize = bufferElementSize,
+		     _beginPos-=bufferElementSize) {
+			bufferElementSize = getBack(_beginPos, currentValue);
+			if (    currentValue != etk::UniChar::Tabulation
+			     && currentValue != etk::UniChar::Space) {
+				_beginPos += previousElementSize;
+				break;
+			}
+		}
+		// special case we are looking for separation
+		for (_endPos=_startPos;
+		     _endPos<m_data.size();
+		     _endPos+=bufferElementSize) {
+			bufferElementSize = get(_endPos, currentValue);
+			if (    currentValue != etk::UniChar::Tabulation
+			     && currentValue != etk::UniChar::Space) {
+				break;
+			}
+		}
+		return true;
+	} else if( false == currentValue.isSpecialChar()){
+		APPL_DEBUG("select normal Char");
+		// Search back
+		for (_beginPos=_startPos;
+		     _beginPos>=0;
+		     previousElementSize = bufferElementSize,
+		     _beginPos-=bufferElementSize) {
+			bufferElementSize = getBack(_beginPos, currentValue);
+			if (    currentValue != '_'
+			     && true == currentValue.isSpecialChar()) {
+				_beginPos += previousElementSize;
+				break;
+			}
+		}
+		// Search forward
+		for (_endPos=_startPos;
+		     _endPos<m_data.size();
+		     _endPos+=bufferElementSize) {
+			bufferElementSize = get(_endPos, currentValue);
+			if (    currentValue != '_'
+			     && true == currentValue.isSpecialChar()) {
+				break;
+			}
+		}
+		return true;
+	} else {
+		etk::UniChar comparechar = currentValue;
+		APPL_DEBUG("select same char");
+		// Search back
+		for (_beginPos=_startPos;
+		     _beginPos>=0;
+		     previousElementSize = bufferElementSize,
+		     _beginPos-=bufferElementSize) {
+			bufferElementSize = getBack(_beginPos, currentValue);
+			if (comparechar != currentValue) {
+				_beginPos += previousElementSize;
+				break;
+			}
+		}
+		// Search forward
+		for (_endPos=_startPos;
+		     _endPos<m_data.size();
+		     _endPos+=bufferElementSize) {
+			bufferElementSize = get(_endPos, currentValue);
+			if (comparechar != currentValue) {
+				break;
+			}
+		}
+		return true;
+	}
+	_beginPos = 0;
+	_endPos = 0;
+	return false;
 }
 
-void appl::Buffer::mouseEventTriple(void)
-{
-	
+void appl::Buffer::mouseEventDouble(void) {
+	//m_selectMode = false;
+	esize_t beginPos, endPos;
+	if (true == selectAround(m_cursorPos, beginPos, endPos)) {
+		moveCursor(endPos);
+		m_cursorSelectPos = beginPos;
+	}
+	// TODO : copy(ewol::clipBoard::clipboardSelection);
 }
 
+void appl::Buffer::mouseEventTriple(void) {
+	//m_selectMode = false;
+	moveCursor(endLine(m_cursorPos));
+	m_cursorSelectPos = startLine(m_cursorPos);
+	// TODO : copy(ewol::clipBoard::clipboardSelection);
+}
 
+// TODO : Rename ...
+esize_t appl::Buffer::getPosSize(esize_t _startLinePos, float _distance, ewol::Text& _textDrawer)
+{
+	esize_t bufferElementSize;
+	etk::UniChar currentValue;
+	esize_t countColomn = 0;
+	etk::UString stringToDisplay;
+	_textDrawer.clear();
+	_textDrawer.forceLineReturn();
+	esize_t previousElementPos = 0;
+	for (esize_t iii=_startLinePos;
+	     iii<m_data.size();
+	     previousElementPos=iii, iii+=bufferElementSize) {
+		bufferElementSize = get(iii, currentValue);
+		if (bufferElementSize == 0) {
+			bufferElementSize = 1;
+		}
+		expand(countColomn, currentValue, stringToDisplay);
+		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
+		//m_displayText.setPos(positionCurentDisplay);
+		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
+			if (stringToDisplay[kkk] == etk::UniChar::Return) {
+				return iii;
+			} else {
+				_textDrawer.print(stringToDisplay[kkk]);
+			}
+		}
+		if (_textDrawer.getPos().x() >= _distance) {
+			return iii;
+		}
+		countColomn += stringToDisplay.size();
+	}
+	return m_data.size();
+}
+
+// TODO : Rename ...
+float appl::Buffer::getScreenSize(esize_t _startLinePos, esize_t _stopPos, ewol::Text& _textDrawer)
+{
+	float ret = 0;
+	esize_t bufferElementSize;
+	etk::UniChar currentValue;
+	esize_t countColomn = 0;
+	etk::UString stringToDisplay;
+	_textDrawer.clear();
+	esize_t previousElementPos = 0;
+	
+	APPL_DEBUG("search in " << _startLinePos << " " << _stopPos);
+	for (esize_t iii=_startLinePos;
+	     iii<m_data.size() && iii<=_stopPos;
+	     previousElementPos=iii, iii+=bufferElementSize) {
+		bufferElementSize = get(iii, currentValue);
+		if (bufferElementSize == 0) {
+			bufferElementSize = 1;
+		}
+		APPL_DEBUG("parse : " << currentValue);
+		expand(countColomn, currentValue, stringToDisplay);
+		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
+		//m_displayText.setPos(positionCurentDisplay);
+		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
+			if (stringToDisplay[kkk] == etk::UniChar::Return) {
+				APPL_DEBUG("find \n");
+				return _textDrawer.getPos().x() + 2; // TODO : Add the +2 for the end of line ...
+			} else {
+				_textDrawer.print(stringToDisplay[kkk]);
+			}
+		}
+		ret = _textDrawer.getPos().x();
+		countColomn += stringToDisplay.size();
+	}
+	APPL_DEBUG("end of buffer");
+	return ret;
+}
+
+// TODO : Rename && rework ...
 esize_t appl::Buffer::getMousePosition(const vec2& _relativePos, ewol::Text& _textDrawer)
 {
 	esize_t bufferElementSize;
@@ -482,6 +659,7 @@ void appl::Buffer::expand(esize_t& _indent, const etk::UniChar& _value, etk::USt
 	//APPL_DEBUG("plop : " << _out);
 }
 
+// TODO : No more used !!!
 int32_t appl::Buffer::countDispChars(esize_t _posStart, esize_t _posEnd) {
 	int32_t charCount = 0;
 	etk::UString expanded;
@@ -502,6 +680,7 @@ int32_t appl::Buffer::countDispChars(esize_t _posStart, esize_t _posEnd) {
 	return charCount;
 }
 
+// TODO : No more used !!!
 esize_t appl::Buffer::countForwardDispChars(esize_t _posStart, int32_t _nChars) {
 	int32_t charCount = 0;
 	etk::UString expanded;

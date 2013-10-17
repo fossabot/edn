@@ -49,14 +49,37 @@ namespace appl {
 		public:
 			esize_t m_cursorPos; //!< cursor position.
 			int32_t m_cursorSelectPos; //!< cursor position.
-			int32_t m_cursorPreferredCol; //!< position of the cursor when up and down is done.
-			bool m_buttunOneSelected;
+			float m_cursorPreferredCol; //!< position of the cursor when up and down is done.
+			bool m_selectMode; //!< when true, the select mode keep the moving selecting
 			// note : We need the text drawer interface due to the fact that the move depend on the text display properties.
 			bool onEventEntry(const ewol::EventEntry& _event, ewol::Text& _textDrawer);
 			bool onEventInput(const ewol::EventInput& _event, ewol::Text& _textDrawer, const vec2& _relativePos);
-			void moveCursorAtPosition(const vec2& _relativePos, ewol::Text& _textDrawer);
+			void moveCursor(esize_t _pos);
 			void mouseEventDouble(void);
 			void mouseEventTriple(void);
+			bool selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &_endPos);
+			/**
+			 * @brief Get the position in the buffer of a display distance from the start of the line
+			 * @param[in] _startLinePos start of the line
+			 * @param[in] _distance Distane from the start of the line
+			 * @param[in] _textDrawer Drawer compositing element
+			 * @return position in the buffer
+			 */
+			esize_t getPosSize(esize_t _startLinePos, float _distance, ewol::Text& _textDrawer);
+			/**
+			 * @brief Get the real distance displayed from the start of the line to the element requested
+			 * @param[in] _startLinePos start of the line
+			 * @param[in] _stopPos Position that we want to have te distance
+			 * @param[in] _textDrawer Drawer compositing element
+			 * @return Distance from the start of the line
+			 */
+			float getScreenSize(esize_t _startLinePos, esize_t _stopPos, ewol::Text& _textDrawer);
+			/**
+			 * @brief Get the position on the buffer with the position on the mose in the screen
+			 * @param[in] _relativePos mouse position( standard GUI position (not ewol generic pos !!!)
+			 * @param[in] _textDrawer Drawer compositing element
+			 * @return Position in the buffer
+			 */
 			esize_t getMousePosition(const vec2& _relativePos, ewol::Text& _textDrawer);
 			/**
 			 * @brief get the next element in the buffer.
@@ -101,12 +124,12 @@ namespace appl {
 			 * @brief Move the cursor at an other position upper.
 			 * @param[in] _nbLine number of up line that might be moved
 			 */
-			void moveCursorUp(esize_t _nbLine);
+			void moveCursorUp(esize_t _nbLine, ewol::Text& _textDrawer);
 			/**
 			 * @brief Move the cursor at an other position under.
 			 * @param[in] _nbLine number of down line that might be moved
 			 */
-			void moveCursorDown(esize_t _nbLine);
+			void moveCursorDown(esize_t _nbLine, ewol::Text& _textDrawer);
 			/**
 			 * @brief get the start of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.

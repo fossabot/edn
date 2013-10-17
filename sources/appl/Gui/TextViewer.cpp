@@ -129,10 +129,22 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	etk::UString stringToDisplay;
 	esize_t bufferElementSize = 0;
 	etk::UniChar currentValue;
+	bool isSelect = false;
+	int32_t selectPosStart = etk_min(m_buffer->m_cursorPos, m_buffer->m_cursorSelectPos);
+	int32_t selectPosStop = etk_max(m_buffer->m_cursorPos, m_buffer->m_cursorSelectPos);
+	if (m_buffer->m_cursorSelectPos<0) {
+		selectPosStart = -1;
+		selectPosStop = -1;
+	}
 	for (int32_t iii=0; iii<buf.size(); iii+=bufferElementSize) {
 		if (iii == m_buffer->m_cursorPos) {
 			// need to display the cursor :
 			tmpCursorPosition = positionCurentDisplay;
+		}
+		if (iii >= selectPosStart && iii < selectPosStop) {
+			isSelect = true;
+		} else {
+			isSelect = false;
 		}
 		bufferElementSize = m_buffer->get(iii, currentValue);
 		//APPL_DEBUG(" element size : " << iii << " : " << bufferElementSize);
@@ -148,11 +160,14 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			continue;
 		}
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
+		if (isSelect == true) {
+			m_displayText.setColorBg(etk::Color<>(0x00FF00FF));
+		} else {
+			m_displayText.setColorBg(etk::Color<>(0x00000000));
+		}
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		//m_displayText.setPos(positionCurentDisplay);
-		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
-			m_displayText.print(stringToDisplay[kkk]);
-		}
+		m_displayText.print(stringToDisplay);
 		positionCurentDisplay = m_displayText.getPos();
 		countColomn += stringToDisplay.size();
 		
