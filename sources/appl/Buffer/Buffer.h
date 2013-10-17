@@ -57,6 +57,9 @@ namespace appl {
 			void moveCursor(esize_t _pos);
 			void mouseEventDouble(void);
 			void mouseEventTriple(void);
+			bool hasTextSelected(void) {
+				return m_cursorSelectPos >= 0;
+			}
 			bool selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &_endPos);
 			/**
 			 * @brief Get the position in the buffer of a display distance from the start of the line

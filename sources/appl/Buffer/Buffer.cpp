@@ -51,6 +51,8 @@ void appl::Buffer::moveCursorRight(appl::Buffer::moveMode _mode) {
 			break;
 		case moveEnd:
 			// TODO : ...
+			nbElement = endLine(m_cursorPos);
+			moveCursor(nbElement);
 			break;
 	}
 	
@@ -71,7 +73,8 @@ void appl::Buffer::moveCursorLeft(appl::Buffer::moveMode _mode) {
 			// TODO : ...
 			break;
 		case moveEnd:
-			// TODO : ...
+			nbElement = startLine(m_cursorPos);
+			moveCursor(nbElement+1);
 			break;
 	}
 }
@@ -145,7 +148,7 @@ bool appl::Buffer::search(esize_t _pos, const etk::UniChar& _search, esize_t& _r
 	esize_t nbElementBuffer = 0;
 	etk::UniChar value;
 	for(esize_t iii=_pos ; iii<m_data.size() ; iii+=nbElementBuffer ) {
-		nbElementBuffer = getBack(iii, value);
+		nbElementBuffer = get(iii, value);
 		if (value == _search) {
 			_result = iii;
 			return true;
@@ -175,6 +178,8 @@ bool appl::Buffer::searchBack(esize_t _pos, const etk::UniChar& _search, esize_t
 	_result = 0;
 	return false;
 }
+
+
 // TODO : vec2 _displaySize
 bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _testDrawer) {
 	//APPL_DEBUG(" event : " << _event);
@@ -183,31 +188,97 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 		if (_event.getStatus() != ewol::keyEvent::statusDown) {
 			return false;
 		}
-		if (_event.getChar() == etk::UniChar::Tabulation) {
-			m_data.insert(m_cursorPos, '\t');
-			m_cursorPos += 1;
-		} else if (_event.getChar() == etk::UniChar::Return) {
-			m_data.insert(m_cursorPos, '\n');
-			m_cursorPos += 1;
-		} else if (_event.getChar() == etk::UniChar::Suppress ) {
+		etk::UniChar localValue = _event.getChar();
+		if (localValue == etk::UniChar::Tabulation) {
+			if (hasTextSelected()) {
+				// TODO : Special tabulation multiline indentation ...
+				/*
+				int32_t nbSelectedLines = m_EdnBuf.CountLines(SelectionStart, SelectionEnd);
+				if (1 < nbSelectedLines) {
+					if (true == _event.getSpecialKey().isSetShift() ) {
+						m_cursorPos = m_EdnBuf.UnIndent();
+					} else {
+						m_cursorPos = m_EdnBuf.Indent();
+					}
+				}
+				*/
+				return true;
+			}
+		} else if (localValue == etk::UniChar::Return) {
+			if (true == _event.getSpecialKey().isSetShift()) {
+				localValue = etk::UniChar::CarrierReturn;
+			} else {
+				/*
+				m_data.insert(m_cursorPos, '\n');
+				if (true == globals::isSetAutoIndent() ) {
+					int32_t l_lineStart;
+					// get the begin of the line or the begin of the line befor selection
+					if (false == haveSelectionActive) {
+						l_lineStart = m_EdnBuf.StartOfLine(m_cursorPos);
+					} else {
+						l_lineStart = m_EdnBuf.StartOfLine(SelectionStart);
+					}
+					// add same characters in the temporar buffer
+					for (int32_t kk=l_lineStart; kk<m_cursorPos; kk++) {
+						if (' ' == m_EdnBuf[kk]) {
+							tmpVect.pushBack(' ');
+						} else if('\t' == m_EdnBuf[kk]) {
+							tmpVect.pushBack('\t');
+						} else {
+							break;
+						}
+					}
+				}
+				m_selectMode = false;
+				moveCursor(m_cursorPos + 1);
+				return true;
+				*/
+			}
+		} else if (localValue == etk::UniChar::Suppress ) {
 			//APPL_INFO("keyEvent : <suppr> pos=" << m_cursorPos);
-			etk::UniChar value;
-			esize_t nbElement = get(m_cursorPos, value);
-			if (nbElement>0) {
-				m_data.remove(m_cursorPos, nbElement);
+			if (hasTextSelected()) {
+				esize_t startPos = etk_min(m_cursorPos, m_cursorSelectPos);
+				esize_t endPos = etk_max(m_cursorPos, m_cursorSelectPos);
+				m_data.remove(startPos, endPos-startPos);
+				m_selectMode = false;
+				moveCursor(startPos);
+			} else {
+				etk::UniChar value;
+				esize_t nbElement = get(m_cursorPos, value);
+				if (nbElement>0) {
+					m_data.remove(m_cursorPos, nbElement);
+				}
 			}
-		} else if (_event.getChar() == etk::UniChar::Delete) {
+			return true;
+		} else if (localValue == etk::UniChar::Delete) {
 			//APPL_INFO("keyEvent : <del> pos=" << m_cursorPos);
-			etk::UniChar value;
-			esize_t nbElement = getBack(m_cursorPos-1, value);
-			if (nbElement>0) {
-				m_cursorPos -= nbElement;
-				m_data.remove(m_cursorPos, nbElement);
+			if (hasTextSelected()) {
+				esize_t startPos = etk_min(m_cursorPos, m_cursorSelectPos);
+				esize_t endPos = etk_max(m_cursorPos, m_cursorSelectPos);
+				m_data.remove(startPos, endPos-startPos);
+				m_selectMode = false;
+				moveCursor(startPos);
+			} else {
+				etk::UniChar value;
+				esize_t nbElement = getBack(m_cursorPos-1, value);
+				if (nbElement>0) {
+					m_data.remove(m_cursorPos-nbElement, nbElement);
+					m_selectMode = false;
+					moveCursor(m_cursorPos-nbElement);
+				}
 			}
+			return true;
+		}
+		m_selectMode = false;
+		// normal adding char ...
+		char output[5];
+		int32_t nbElement = localValue.getUtf8(output);
+		if (hasTextSelected()) {
+			esize_t startPos = etk_min(m_cursorPos, m_cursorSelectPos);
+			esize_t endPos = etk_max(m_cursorPos, m_cursorSelectPos);
+			m_data.replace(startPos, endPos-startPos, (int8_t*)output, nbElement);
+			moveCursor(startPos+nbElement);
 		} else {
-			// normal adding char ...
-			char output[5];
-			int32_t nbElement = _event.getChar().getUtf8(output);
 			if (_event.getSpecialKey().isSetInsert() == false) {
 				m_data.insert(m_cursorPos, (int8_t*)output, nbElement);
 			} else {
@@ -215,7 +286,7 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 				esize_t nbElementRemove = get(m_cursorPos, value);
 				m_data.replace(m_cursorPos, nbElementRemove, (int8_t*)output, nbElement);
 			}
-			m_cursorPos += nbElement;
+			moveCursor(m_cursorPos+nbElement);
 		}
 		return true;
 	}
