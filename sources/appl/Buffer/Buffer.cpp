@@ -11,6 +11,63 @@
 #include <appl/Debug.h>
 #include <ewol/clipBoard.h>
 
+appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
+	if (    m_data != NULL
+	     && m_current < m_data->m_data.size() ) {
+		int8_t nbChar = etk::UChar::theoricUTF8Len(m_data->m_data[m_current]);
+		if (m_current+nbChar >= m_data->m_data.size()) {
+			return *this;
+		}
+		m_current+=nbChar;
+	}
+	return *this;
+}
+
+appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- (void) {
+	if (    m_data != NULL
+	     && m_current > 0) {
+		int32_t iii = -1;
+		while(    etk::UChar::theoricUTF8First(m_data->m_data[m_current+iii]) == false
+		       && iii >= -6
+		       && m_current-iii>0) {
+			++iii;
+		};
+		m_current += iii;
+	}
+	return *this;
+}
+
+etk::UChar appl::Buffer::Iterator::operator* (void) const {
+	etk::UChar retVal = '\0';
+	APPL_CHECK_INOUT(m_current < m_data->m_data.size());
+	char tmpVal[5];
+	memset(tmpVal, 0, sizeof(tmpVal));
+	tmpVal[0] = m_data->m_data[m_current];
+	int8_t nbChar = etk::UChar::theoricUTF8Len(tmpVal[0]);
+	for (int32_t iii=1; iii<nbChar && m_current+iii<m_data->m_data.size(); ++iii) {
+		tmpVal[iii] = m_data->m_data[m_current+iii];
+	}
+	// transform ...
+	retVal.setUtf8(tmpVal);
+	return retVal;
+}
+
+
+appl::Buffer::Iterator appl::Buffer::position(esize_t _pos) {
+	return appl::Buffer::Iterator(this, _pos);
+}
+
+appl::Buffer::Iterator appl::Buffer::begin(void) {
+	return position(0);
+}
+
+appl::Buffer::Iterator appl::Buffer::end(void) {
+	// TODO : chek the validity of the char ...
+	return position( m_data.size()-1 );
+}
+
+
+
 appl::Buffer::Buffer(void) :
   m_cursorPos(0),
   m_cursorSelectPos(-1),
@@ -36,15 +93,14 @@ void appl::Buffer::setFileName(const etk::UString& _name) {
 }
 
 void appl::Buffer::moveCursorRight(appl::Buffer::moveMode _mode) {
-	etk::UChar value;
+	Iterator it;
 	esize_t nbElement;
 	switch (_mode) {
 		default:
 		case moveLetter:
-			nbElement = get(m_cursorPos, value);
-			if (nbElement>0) {
-				moveCursor(m_cursorPos + nbElement);
-			}
+			it = position(m_cursorPos);
+			++it;
+			moveCursor(it.getPos());
 			break;
 		case moveWord:
 			// TODO : ...
@@ -60,14 +116,14 @@ void appl::Buffer::moveCursorRight(appl::Buffer::moveMode _mode) {
 
 void appl::Buffer::moveCursorLeft(appl::Buffer::moveMode _mode) {
 	etk::UChar value;
+	Iterator it;
 	esize_t nbElement;
 	switch (_mode) {
 		default:
 		case moveLetter:
-			nbElement = getBack(m_cursorPos-1, value);
-			if (nbElement>0) {
-				moveCursor(m_cursorPos - nbElement);
-			}
+			it = position(m_cursorPos);
+			--it;
+			moveCursor(it.getPos());
 			break;
 		case moveWord:
 			// TODO : ...
@@ -132,7 +188,7 @@ esize_t appl::Buffer::startLine(esize_t _pos) {
 	if (false == searchBack(_pos, etk::UChar::Return, startPos)) {
 		return 0;
 	}
-	return startPos + 1;
+	return startPos;
 }
 
 esize_t appl::Buffer::endLine(esize_t _pos) {
@@ -147,17 +203,15 @@ bool appl::Buffer::search(esize_t _pos, const etk::UChar& _search, esize_t& _res
 	// move in the string
 	esize_t nbElementBuffer = 0;
 	etk::UChar value;
-	for(esize_t iii=_pos ; iii<m_data.size() ; iii+=nbElementBuffer ) {
-		nbElementBuffer = get(iii, value);
-		if (value == _search) {
-			_result = iii;
+	for (Iterator it = position(m_cursorPos);
+	     it != end();
+	     ++it) {
+		if (*it == _search) {
+			_result = it;
 			return true;
 		}
-		if (nbElementBuffer <= 0) {
-			nbElementBuffer = 1;
-		}
 	}
-	_result = m_data.size();
+	_result = end();
 	return false;
 }
 
@@ -165,14 +219,14 @@ bool appl::Buffer::searchBack(esize_t _pos, const etk::UChar& _search, esize_t& 
 	// move in the string
 	esize_t nbElementBuffer = 0;
 	etk::UChar value;
-	for(esize_t iii=_pos-1 ; iii >= 0 ; iii-=nbElementBuffer ) {
-		nbElementBuffer = getBack(iii, value);
-		if (value == _search) {
-			_result = iii-nbElementBuffer;
+	for (Iterator it = --position(m_cursorPos);
+	     it != begin();
+	     --it) {
+		//APPL_DEBUG("compare : " << *it << " ?= " << _search);
+		if (*it == _search) {
+			//APPL_DEBUG("find : " << (esize_t)it);
+			_result = it;
 			return true;
-		}
-		if (nbElementBuffer <= 0) {
-			nbElementBuffer = 1;
 		}
 	}
 	_result = 0;
@@ -237,34 +291,22 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 		} else if (localValue == etk::UChar::Suppress ) {
 			//APPL_INFO("keyEvent : <suppr> pos=" << m_cursorPos);
 			if (hasTextSelected()) {
-				esize_t startPos = getStartSelectionPos();
-				esize_t endPos = getStopSelectionPos();
-				m_data.remove(startPos, endPos-startPos);
-				m_selectMode = false;
-				moveCursor(startPos);
+				removeSelection();
 			} else {
-				etk::UChar value;
-				esize_t nbElement = get(m_cursorPos, value);
-				if (nbElement>0) {
-					m_data.remove(m_cursorPos, nbElement);
+				int32_t dimention = (esize_t)(++position(m_cursorPos)) - m_cursorPos;
+				if (dimention > 0) {
+					m_data.remove(m_cursorPos, dimention);
 				}
 			}
 			return true;
 		} else if (localValue == etk::UChar::Delete) {
 			//APPL_INFO("keyEvent : <del> pos=" << m_cursorPos);
 			if (hasTextSelected()) {
-				esize_t startPos = getStartSelectionPos();
-				esize_t endPos = getStopSelectionPos();
-				m_data.remove(startPos, endPos-startPos);
-				m_selectMode = false;
-				moveCursor(startPos);
+				removeSelection();
 			} else {
-				etk::UChar value;
-				esize_t nbElement = getBack(m_cursorPos-1, value);
-				if (nbElement>0) {
-					m_data.remove(m_cursorPos-nbElement, nbElement);
-					m_selectMode = false;
-					moveCursor(m_cursorPos-nbElement);
+				int32_t dimention = m_cursorPos - (esize_t)(--position(m_cursorPos));
+				if (dimention > 0) {
+					m_data.remove(m_cursorPos-dimention, dimention);
 				}
 			}
 			return true;
@@ -273,20 +315,14 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 		// normal adding char ...
 		char output[5];
 		int32_t nbElement = localValue.getUtf8(output);
-		if (hasTextSelected()) {
-			esize_t startPos = getStartSelectionPos();
-			esize_t endPos = getStopSelectionPos();
-			m_data.replace(startPos, endPos-startPos, (int8_t*)output, nbElement);
-			moveCursor(startPos+nbElement);
-		} else {
-			if (_event.getSpecialKey().isSetInsert() == false) {
-				m_data.insert(m_cursorPos, (int8_t*)output, nbElement);
-			} else {
-				etk::UChar value;
-				esize_t nbElementRemove = get(m_cursorPos, value);
-				m_data.replace(m_cursorPos, nbElementRemove, (int8_t*)output, nbElement);
-			}
+		if (    hasTextSelected() == false
+		     && _event.getSpecialKey().isSetInsert() == true) {
+			int32_t dimention = (esize_t)(++position(m_cursorPos)) - m_cursorPos;
+			m_data.replace(m_cursorPos, dimention, (int8_t*)output, nbElement);
 			moveCursor(m_cursorPos+nbElement);
+		} else {
+			etk::UString myString = output;
+			paste(myString);
 		}
 		return true;
 	}
@@ -408,32 +444,31 @@ void appl::Buffer::moveCursor(esize_t _pos) {
 }
 
 bool appl::Buffer::selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &_endPos) {
-	esize_t bufferElementSize;
-	esize_t previousElementSize;
-	etk::UChar currentValue;
-	get(_startPos, currentValue);
+	etk::UChar currentValue = *position(_startPos);
+	_beginPos = 0;
+	_endPos = end();
 	if (    currentValue == etk::UChar::Tabulation
 	     || currentValue == etk::UChar::Space) {
 		APPL_DEBUG("select spacer");
-		// special case we are looking for separation
-		for (_beginPos=_startPos;
-		     _beginPos>=0;
-		     previousElementSize = bufferElementSize,
-		     _beginPos-=bufferElementSize) {
-			bufferElementSize = getBack(_beginPos, currentValue);
+		// Search back
+		for (Iterator it = --position(_startPos);
+		     it != begin();
+		     --it) {
+			currentValue = *it;
 			if (    currentValue != etk::UChar::Tabulation
 			     && currentValue != etk::UChar::Space) {
-				_beginPos += previousElementSize;
+				_beginPos = ++it;
 				break;
 			}
 		}
-		// special case we are looking for separation
-		for (_endPos=_startPos;
-		     _endPos<m_data.size();
-		     _endPos+=bufferElementSize) {
-			bufferElementSize = get(_endPos, currentValue);
+		// Search forward
+		for (Iterator it = position(_startPos);
+		     it != end();
+		     ++it) {
+			currentValue = *it;
 			if (    currentValue != etk::UChar::Tabulation
 			     && currentValue != etk::UChar::Space) {
+				_endPos = it;
 				break;
 			}
 		}
@@ -441,48 +476,48 @@ bool appl::Buffer::selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &
 	} else if( false == currentValue.isSpecialChar()){
 		APPL_DEBUG("select normal Char");
 		// Search back
-		for (_beginPos=_startPos;
-		     _beginPos>=0;
-		     previousElementSize = bufferElementSize,
-		     _beginPos-=bufferElementSize) {
-			bufferElementSize = getBack(_beginPos, currentValue);
+		for (Iterator it = --position(_startPos);
+		     it != begin();
+		     --it) {
+			currentValue = *it;
 			if (    currentValue != '_'
 			     && true == currentValue.isSpecialChar()) {
-				_beginPos += previousElementSize;
+				_beginPos = ++it;
 				break;
 			}
 		}
 		// Search forward
-		for (_endPos=_startPos;
-		     _endPos<m_data.size();
-		     _endPos+=bufferElementSize) {
-			bufferElementSize = get(_endPos, currentValue);
+		for (Iterator it = position(_startPos);
+		     it != end();
+		     ++it) {
+			currentValue = *it;
 			if (    currentValue != '_'
 			     && true == currentValue.isSpecialChar()) {
+				_endPos = it;
 				break;
 			}
 		}
 		return true;
 	} else {
-		etk::UChar comparechar = currentValue;
 		APPL_DEBUG("select same char");
+		etk::UChar comparechar = currentValue;
 		// Search back
-		for (_beginPos=_startPos;
-		     _beginPos>=0;
-		     previousElementSize = bufferElementSize,
-		     _beginPos-=bufferElementSize) {
-			bufferElementSize = getBack(_beginPos, currentValue);
+		for (Iterator it = --position(_startPos);
+		     it != begin();
+		     --it) {
+			currentValue = *it;
 			if (comparechar != currentValue) {
-				_beginPos += previousElementSize;
+				_beginPos = ++it;
 				break;
 			}
 		}
 		// Search forward
-		for (_endPos=_startPos;
-		     _endPos<m_data.size();
-		     _endPos+=bufferElementSize) {
-			bufferElementSize = get(_endPos, currentValue);
+		for (Iterator it = position(_startPos);
+		     it != end();
+		     ++it) {
+			currentValue = *it;
 			if (comparechar != currentValue) {
+				_endPos = it;
 				break;
 			}
 		}
@@ -519,58 +554,43 @@ esize_t appl::Buffer::getPosSize(esize_t _startLinePos, float _distance, ewol::T
 	etk::UString stringToDisplay;
 	_textDrawer.clear();
 	_textDrawer.forceLineReturn();
-	esize_t previousElementPos = 0;
-	for (esize_t iii=_startLinePos;
-	     iii<m_data.size();
-	     previousElementPos=iii, iii+=bufferElementSize) {
-		bufferElementSize = get(iii, currentValue);
-		if (bufferElementSize == 0) {
-			bufferElementSize = 1;
-		}
+	for (Iterator it = position(_startLinePos);
+	     it != end();
+	     ++it) {
+		currentValue = *it;
 		expand(countColomn, currentValue, stringToDisplay);
-		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
-		//m_displayText.setPos(positionCurentDisplay);
 		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
 			if (stringToDisplay[kkk] == etk::UChar::Return) {
-				return iii;
+				return it;
 			} else {
 				_textDrawer.print(stringToDisplay[kkk]);
 			}
 		}
 		if (_textDrawer.getPos().x() >= _distance) {
-			return iii;
+			return it;
 		}
 		countColomn += stringToDisplay.size();
 	}
-	return m_data.size();
+	return end();
 }
 
 // TODO : Rename ...
 float appl::Buffer::getScreenSize(esize_t _startLinePos, esize_t _stopPos, ewol::Text& _textDrawer)
 {
 	float ret = 0;
-	esize_t bufferElementSize;
 	etk::UChar currentValue;
 	esize_t countColomn = 0;
 	etk::UString stringToDisplay;
 	_textDrawer.clear();
-	esize_t previousElementPos = 0;
 	
-	APPL_DEBUG("search in " << _startLinePos << " " << _stopPos);
-	for (esize_t iii=_startLinePos;
-	     iii<m_data.size() && iii<=_stopPos;
-	     previousElementPos=iii, iii+=bufferElementSize) {
-		bufferElementSize = get(iii, currentValue);
-		if (bufferElementSize == 0) {
-			bufferElementSize = 1;
-		}
-		APPL_DEBUG("parse : " << currentValue);
+	for (Iterator it = position(_startLinePos);
+	     it != end();
+	     ++it) {
+		currentValue = *it;
+		//APPL_DEBUG("parse : " << currentValue);
 		expand(countColomn, currentValue, stringToDisplay);
-		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
-		//m_displayText.setPos(positionCurentDisplay);
 		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
 			if (stringToDisplay[kkk] == etk::UChar::Return) {
-				APPL_DEBUG("find \n");
 				return _textDrawer.getPos().x() + 2; // TODO : Add the +2 for the end of line ...
 			} else {
 				_textDrawer.print(stringToDisplay[kkk]);
@@ -579,30 +599,23 @@ float appl::Buffer::getScreenSize(esize_t _startLinePos, esize_t _stopPos, ewol:
 		ret = _textDrawer.getPos().x();
 		countColomn += stringToDisplay.size();
 	}
-	APPL_DEBUG("end of buffer");
 	return ret;
 }
 
 // TODO : Rename && rework ...
-esize_t appl::Buffer::getMousePosition(const vec2& _relativePos, ewol::Text& _textDrawer)
-{
-	esize_t bufferElementSize;
+esize_t appl::Buffer::getMousePosition(const vec2& _relativePos, ewol::Text& _textDrawer) {
 	etk::UChar currentValue;
-	vec3 tmpLetterSize = _textDrawer.calculateSize((etk::UChar)'A');
 	vec3 positionCurentDisplay(0,0,0);
+	vec3 tmpLetterSize = _textDrawer.calculateSize((etk::UChar)'A');
 	esize_t countColomn = 0;
 	etk::UString stringToDisplay;
 	_textDrawer.clear();
 	_textDrawer.forceLineReturn();
-	esize_t previousElementPos = 0;
-	for (esize_t iii=0; iii<m_data.size(); previousElementPos=iii, iii+=bufferElementSize) {
-		bufferElementSize = get(iii, currentValue);
-		if (bufferElementSize == 0) {
-			bufferElementSize = 1;
-		}
+	for (Iterator it = begin();
+	     it != end();
+	     ++it) {
+		currentValue = *it;
 		expand(countColomn, currentValue, stringToDisplay);
-		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
-		//m_displayText.setPos(positionCurentDisplay);
 		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
 			if (stringToDisplay[kkk] == etk::UChar::Return) {
 				// TODO : Remove this, use the automatic line manager ...
@@ -617,66 +630,17 @@ esize_t appl::Buffer::getMousePosition(const vec2& _relativePos, ewol::Text& _te
 				//APPL_DEBUG("line position : " << _textDrawer.getPos() << " " << positionCurentDisplay );
 				if (    _relativePos.x() >= positionCurentDisplay.x()
 				     && _relativePos.x() < _textDrawer.getPos().x() ) {
-					return iii;
+					return it;
 				}
 			} else {
-				return previousElementPos;
+				return --it;
 			}
 		}
-		
 		positionCurentDisplay = _textDrawer.getPos();
 		countColomn += stringToDisplay.size();
 	}
 	
-	return m_data.size();
-}
-
-esize_t appl::Buffer::get(esize_t _pos, etk::UChar& _value, unicode::charset_te _charset) const {
-	_value = '\0';
-	if (_pos<0 && _pos<m_data.size()) {
-		return 0;
-	}
-	if (_charset == unicode::EDN_CHARSET_UTF8) {
-		char tmpVal[5];
-		memset(tmpVal, 0, sizeof(tmpVal));
-		tmpVal[0] = m_data[_pos];
-		int8_t nbChar = etk::UChar::theoricUTF8Len(tmpVal[0]);
-		for (int32_t iii=1; iii<nbChar && _pos+iii<m_data.size(); ++iii) {
-			tmpVal[iii] = m_data[_pos+iii];
-		}
-		// transform ...
-		int32_t nbElement = _value.setUtf8(tmpVal);
-		return nbElement;
-	}
-	// TODO :: need to trancode iso  == > UNICODE ...
-	_value.set(m_data[_pos]);
-	return 1;
-}
-
-esize_t appl::Buffer::getBack(esize_t _pos, etk::UChar& _value, unicode::charset_te _charset) const {
-	_value = '\0';
-	if (_pos<0 && _pos<m_data.size()) {
-		return 0;
-	}
-	if (_charset == unicode::EDN_CHARSET_UTF8) {
-		char tmpVal[5];
-		char* pointerVal = &tmpVal[4];
-		memset(tmpVal, 0, sizeof(tmpVal));
-		*pointerVal = m_data[_pos];
-		int32_t iii=0;
-		while(    etk::UChar::theoricUTF8First(*pointerVal) == false
-		       && pointerVal > tmpVal
-		       && _pos-iii>0) {
-			--pointerVal;
-			++iii;
-			*pointerVal = m_data[_pos - iii];
-		};
-		int32_t nbElement = _value.setUtf8(pointerVal);
-		return nbElement;
-	}
-	_value.set(m_data[_pos]);
-	return 1;
-	
+	return end();
 }
 
 static const char *ControlCodeTable[32] = {
@@ -731,75 +695,61 @@ void appl::Buffer::expand(esize_t& _indent, const etk::UChar& _value, etk::UStri
 }
 
 // TODO : No more used !!!
-int32_t appl::Buffer::countDispChars(esize_t _posStart, esize_t _posEnd) {
+int32_t appl::Buffer::countDispChars(esize_t _startPos, esize_t _posEnd) {
 	int32_t charCount = 0;
 	etk::UString expanded;
-	esize_t bufferElementSize;
 	etk::UChar value;
-	//APPL_DEBUG("_posStart="<< _posStart << " _posEnd=" << _posEnd);
-	for(int32_t iii=_posStart; iii<_posEnd && iii<m_data.size() ; iii+=bufferElementSize ) {
-		// get the element value:
-		bufferElementSize = get(iii, value);
-		//APPL_DEBUG(" get : " << value << " size=" << bufferElementSize);
+	for (Iterator it = position(_startPos);
+	     it != end();
+	     ++it) {
+		value = *it;
 		expand(charCount, value, expanded);
 		charCount += expanded.size();
-		if (bufferElementSize <= 0) {
-			bufferElementSize = 1;
-		}
 	}
-	//APPL_DEBUG(" result=" << charCount);
 	return charCount;
 }
 
 // TODO : No more used !!!
-esize_t appl::Buffer::countForwardDispChars(esize_t _posStart, int32_t _nChars) {
+esize_t appl::Buffer::countForwardDispChars(esize_t _startPos, int32_t _nChars) {
 	int32_t charCount = 0;
 	etk::UString expanded;
-	esize_t bufferElementSize;
 	etk::UChar value;
-	int32_t iii;
-	for(iii = _posStart; charCount<_nChars && iii<m_data.size() ; iii+=bufferElementSize ) {
-		// get the element value:
-		bufferElementSize = get(iii, value);
+	for (Iterator it = position(_startPos);
+	     it != end();
+	     ++it) {
+		value = *it;
 		if (value == etk::UChar::Return) {
-			return iii;
+			return it;
 		}
 		expand(charCount, value, expanded);
 		charCount += expanded.size();
-		if (bufferElementSize <= 0) {
-			bufferElementSize = 1;
-		}
 	}
-	//APPL_DEBUG(" result=" << charCount);
-	return iii;
+	return end();
 }
 
 esize_t appl::Buffer::countForwardNLines(esize_t _startPos, int32_t _nLines) {
 	if (_nLines <= 0) {
 		return _startPos;
 	} else if (_startPos > m_data.size() ) {
-		return m_data.size();
+		return end();
 	}
-	esize_t bufferElementSize;
 	etk::UChar value;
 	int32_t lineCount = 0;
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
-	for(int32_t iii = _startPos+1; iii<m_data.size() ; iii+=bufferElementSize ) {
-		// get the element value:
-		bufferElementSize = get(iii, value);
+	for (Iterator it = ++position(_startPos);
+	     it != end();
+	     ++it) {
+		value = *it;
 		if (value == etk::UChar::Return) {
 			lineCount++;
 			if (lineCount == _nLines) {
 				//APPL_INFO("    == > (1) at position=" << myPosIt.Position()+1 );
-				return iii+1;
+				return (esize_t)it + 1;
 			}
-		}
-		if (bufferElementSize <= 0) {
-			bufferElementSize = 1;
 		}
 	}
 	//APPL_INFO("    == > (2) at position=" << myPosIt.Position() );
-	return m_data.size();
+	return end();
 }
 
 esize_t appl::Buffer::countBackwardNLines(esize_t _startPos, int32_t _nLines) {
@@ -809,25 +759,22 @@ esize_t appl::Buffer::countBackwardNLines(esize_t _startPos, int32_t _nLines) {
 		_startPos = m_data.size();
 	}
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
-	esize_t bufferElementSize;
 	etk::UChar value;
 	int32_t lineCount = 0;
-	for(int32_t iii = _startPos-1; iii >= 0 ; iii-=bufferElementSize ) {
-		// get the element value:
-		bufferElementSize = getBack(iii, value);
+	for (Iterator it = --position(_startPos);
+	     it != begin();
+	     --it) {
+		value = *it;
 		if (value == etk::UChar::Return) {
 			lineCount++;
 			if (lineCount >= _nLines) {
 				//APPL_INFO("    == > (1) at position=" << myPosIt.Position()+1 );
-				return iii+1;
+				return ++it;
 			}
-		}
-		if (bufferElementSize <= 0) {
-			bufferElementSize = 1;
 		}
 	}
 	//APPL_INFO("    == > (2) at position=0");
-	return 0;
+	return begin();
 }
 
 
@@ -837,15 +784,11 @@ bool appl::Buffer::copy(etk::UString& _data) {
 	if (hasTextSelected() == true) {
 		esize_t startPos = getStartSelectionPos();
 		esize_t endPos = getStopSelectionPos();
-		esize_t bufferElementSize;
-		etk::UChar value;
-		for(int32_t iii = startPos; iii < endPos ; iii+=bufferElementSize ) {
-			// get the element value:
-			bufferElementSize = get(iii, value);
-			_data += value;
-			if (bufferElementSize <= 0) {
-				bufferElementSize = 1;
-			}
+		for (Iterator it = position(startPos);
+		     it != position(endPos) &&
+		     it != end();
+		     ++it) {
+			_data += *it;
 		}
 		return true;
 	}
@@ -875,3 +818,5 @@ void appl::Buffer::removeSelection(void) {
 		moveCursor(startPos);
 	}
 }
+
+

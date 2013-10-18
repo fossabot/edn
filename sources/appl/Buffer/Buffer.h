@@ -21,6 +21,138 @@
 namespace appl {
 	class Buffer : public ewol::EObject {
 		public:
+			
+			class Iterator {
+				// Private data :
+				private:
+					esize_t m_current; //!< curent Id in the Buffer
+					appl::Buffer* m_data; //!< Pointer on the curent Buffer
+				public:
+					/**
+					 * @brief Basic itarator constructor with no link.
+					 */
+					Iterator(void):
+					  m_current(0),
+					  m_data(NULL) {
+						// nothing to do ...
+					}
+					/**
+					 * @brief Recopy constructor.
+					 * @param[in] _obj The Iterator that might be copy
+					 */
+					Iterator(const Iterator & _obj):
+					  m_current(_obj.m_current),
+					  m_data(_obj.m_data) {
+						// nothing to do ...
+					}
+					/**
+					 * @brief Asignation operator.
+					 * @param[in] _otherIterator The Iterator that might be copy
+					 * @return reference on the curent Iterator
+					 */
+					Iterator& operator=(const Iterator & _obj) {
+						m_current = _obj.m_current;
+						m_data = _obj.m_data;
+						return *this;
+					}
+					/**
+					 * @brief Basic destructor
+					 */
+					~Iterator(void) {
+						m_current = 0;
+						m_data = NULL;
+					}
+					/**
+					 * @brief basic boolean cast
+					 * @return true if the element is present in buffer
+					 */
+					operator bool (void) {
+						if (m_data == NULL) {
+							return false;
+						}
+						return (m_current < m_data->m_data.size());
+					}
+					/**
+					 * @brief basic boolean cast
+					 * @return true if the element is present in buffer
+					 */
+					operator esize_t (void) {
+						if (m_data == NULL) {
+							return 0;
+						}
+						return m_current;
+					}
+					/**
+					 * @brief Incremental operator
+					 * @return Reference on the current iterator incremented
+					 */
+					Iterator& operator++ (void);
+					/**
+					 * @brief Decremental operator
+					 * @return Reference on the current iterator decremented
+					 */
+					Iterator& operator-- (void);
+					/**
+					 * @brief Incremental operator
+					 * @return Reference on a new iterator and increment the other one
+					 */
+					Iterator operator++ (int32_t) {
+						Iterator it(*this);
+						++(*this);
+						return it;
+					}
+					/**
+					 * @brief Decremental operator
+					 * @return Reference on a new iterator and decrement the other one
+					 */
+					Iterator operator-- (int32_t) {
+						Iterator it(*this);
+						--(*this);
+						return it;
+					}
+					/**
+					 * @brief egality iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator== (const Iterator& _obj) {
+						if (    m_current == _obj.m_current
+						     && m_data == _obj.m_data) {
+							return true;
+						}
+						return false;
+					}
+					/**
+					 * @brief egality iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator!= (const Iterator& _obj) {
+						if (    m_current != _obj.m_current
+						     || m_data != _obj.m_data) {
+							return true;
+						}
+						return false;
+					}
+					/**
+					 * @brief Get the value on the current element
+					 * @return The request element value
+					 */
+					etk::UChar operator* (void) const ;
+					/**
+					 * @brief Get the position in the buffer
+					 * @return The requested position.
+					 */
+					esize_t getPos(void) {
+						return m_current;
+					}
+				private:
+					Iterator(Buffer* _obj, int32_t _pos) :
+					  m_current(_pos),
+					  m_data(_obj) {
+						// nothing to do ...
+					}
+					friend class Buffer;
+			};
+		public:
 			Buffer(void);
 			~Buffer(void) { };
 		private:
@@ -102,22 +234,6 @@ namespace appl {
 			 * @return Position in the buffer
 			 */
 			esize_t getMousePosition(const vec2& _relativePos, ewol::Text& _textDrawer);
-			/**
-			 * @brief get the next element in the buffer.
-			 * @param[in] _pos Position in the buffer
-			 * @param[out] _value Unicode value read in the buffer
-			 * @param[in] _charset Charset used to parse the current buffer
-			 * @return number ofelement read in the buffer (to increment the position)
-			 */
-			esize_t get(esize_t _pos, etk::UChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
-			/**
-			 * @brief get the previous element in the buffer.
-			 * @param[in] _pos Position in the buffer (last element of the element)
-			 * @param[out] _value Unicode value read in the buffer
-			 * @param[in] _charset Charset used to parse the current buffer
-			 * @return number of element read in the buffer (to increment the position)
-			 */
-			esize_t getBack(esize_t _pos, etk::UChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
 			/**
 			 * @brief Expand the specify char to have a user frendly display for special char and tabs
 			 * @param[in] _indent Curent indentation in the line
@@ -226,7 +342,23 @@ namespace appl {
 			 * @brief Remove the selection of the buffer. (do nothing if no secection)
 			 */
 			void removeSelection(void);
-
+		public: // iterator section :
+			/**
+			 * @brief Get an iterator an an specific position
+			 * @param[in] _pos Requested position of the iterator in the vector
+			 * @return The Iterator
+			 */
+			Iterator position(esize_t _pos);
+			/**
+			 * @brief Get an Iterator on the start position of the Vector
+			 * @return The Iterator
+			 */
+			Iterator begin(void);
+			/**
+			 * @brief Get an Iterator on the end position of the Vector
+			 * @return The Iterator
+			 */
+			Iterator end(void);
 	};
 };
 

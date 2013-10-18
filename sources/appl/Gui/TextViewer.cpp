@@ -122,9 +122,8 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	m_displayText.setColor(etk::Color<>(0, 0, 0, 256));
 	float countNbLine = 1;
 	esize_t countColomn = 0;
-	vec3 tmpLetterSize = m_displayText.calculateSize((etk::UChar)'A');
-	vec3 positionCurentDisplay(0.0f, m_size.y()-tmpLetterSize.y(), 0.0f);
-	m_displayText.setPos(positionCurentDisplay);
+	m_displayText.setPos(vec3(0.0f, m_size.y(), 0));
+	m_displayText.forceLineReturn();
 	// the siplay string :
 	etk::UString stringToDisplay;
 	esize_t bufferElementSize = 0;
@@ -136,44 +135,31 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		selectPosStart = -1;
 		selectPosStop = -1;
 	}
-	for (int32_t iii=0; iii<buf.size(); iii+=bufferElementSize) {
-		if (iii == m_buffer->m_cursorPos) {
+	for (appl::Buffer::Iterator it = m_buffer->begin();
+	     it != m_buffer->end();
+	     ++it) {
+		if ((esize_t)it == m_buffer->m_cursorPos) {
 			// need to display the cursor :
-			tmpCursorPosition = positionCurentDisplay;
+			tmpCursorPosition = m_displayText.getPos();
 		}
-		if (iii >= selectPosStart && iii < selectPosStop) {
-			isSelect = true;
-		} else {
-			isSelect = false;
-		}
-		bufferElementSize = m_buffer->get(iii, currentValue);
+		currentValue = *it;
+		//APPL_DEBUG("display element '" << currentValue << "'at pos : " << m_displayText.getPos() );
 		//APPL_DEBUG(" element size : " << iii << " : " << bufferElementSize);
 		if (currentValue == etk::UChar::Return) {
 			countNbLine += 1;
 			countColomn = 0;
-			if (bufferElementSize  == 0) {
-				bufferElementSize = 1;
-			}
-			positionCurentDisplay.setX(0);
-			positionCurentDisplay.setY(positionCurentDisplay.y()-tmpLetterSize.y());
-			m_displayText.setPos(positionCurentDisplay);
+			m_displayText.forceLineReturn();
 			continue;
 		}
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
-		if (isSelect == true) {
+		if ((esize_t)it >= selectPosStart && (esize_t)it < selectPosStop) {
 			m_displayText.setColorBg(etk::Color<>(0x00FF00FF));
 		} else {
 			m_displayText.setColorBg(etk::Color<>(0x00000000));
 		}
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
-		//m_displayText.setPos(positionCurentDisplay);
 		m_displayText.print(stringToDisplay);
-		positionCurentDisplay = m_displayText.getPos();
 		countColomn += stringToDisplay.size();
-		
-		if (bufferElementSize  == 0) {
-			bufferElementSize = 1;
-		}
 	}
 	if (tmpCursorPosition.z()!=-1) {
 		// display the cursor:
