@@ -237,7 +237,7 @@ MainWindows::MainWindows(void) {
 	
 	
 	// add generic shortcut ...
-	//                 (shift, control, alt,  meta,  uniChar_t unicodeValue, const char * generateEventId, etk::UString& data)
+	//                 (shift, control, alt,  meta,  etk::UChar unicodeValue, const char * generateEventId, etk::UString& data)
 	shortCutAdd("ctrl+o",       ednMsgGuiOpen, "", true);
 	shortCutAdd("ctrl+n",       ednMsgGuiNew,  "", true);
 	

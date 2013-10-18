@@ -77,7 +77,7 @@ class EdnBuf {
 		int32_t StartOfLine(int32_t _pos);
 		int32_t EndOfLine(int32_t _pos);
 		
-		int32_t getExpandedChar(int32_t& _pos, int32_t _indent, uniChar_t _outUnicode[MAX_EXP_CHAR_LEN], uint32_t& _currentChar);
+		int32_t getExpandedChar(int32_t& _pos, int32_t _indent, etk::UChar _outUnicode[MAX_EXP_CHAR_LEN], uint32_t& _currentChar);
 		int32_t getExpandedChar(int32_t& _pos, int32_t _indent, char _outUTF8[MAX_EXP_CHAR_LEN], uint32_t& _currentChar);
 		int32_t ExpandCharacter(char _c, int32_t _indent, char _outUTF8[MAX_EXP_CHAR_LEN]); // TODO : remove
 		int32_t CharWidth(char _c, int32_t _indent); // TODO : rework this

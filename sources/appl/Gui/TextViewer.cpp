@@ -122,13 +122,13 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	m_displayText.setColor(etk::Color<>(0, 0, 0, 256));
 	float countNbLine = 1;
 	esize_t countColomn = 0;
-	vec3 tmpLetterSize = m_displayText.calculateSize((uniChar_t)'A');
+	vec3 tmpLetterSize = m_displayText.calculateSize((etk::UChar)'A');
 	vec3 positionCurentDisplay(0.0f, m_size.y()-tmpLetterSize.y(), 0.0f);
 	m_displayText.setPos(positionCurentDisplay);
 	// the siplay string :
 	etk::UString stringToDisplay;
 	esize_t bufferElementSize = 0;
-	etk::UniChar currentValue;
+	etk::UChar currentValue;
 	bool isSelect = false;
 	int32_t selectPosStart = etk_min(m_buffer->m_cursorPos, m_buffer->m_cursorSelectPos);
 	int32_t selectPosStop = etk_max(m_buffer->m_cursorPos, m_buffer->m_cursorSelectPos);
@@ -148,7 +148,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		}
 		bufferElementSize = m_buffer->get(iii, currentValue);
 		//APPL_DEBUG(" element size : " << iii << " : " << bufferElementSize);
-		if (currentValue == etk::UniChar::Return) {
+		if (currentValue == etk::UChar::Return) {
 			countNbLine += 1;
 			countColomn = 0;
 			if (bufferElementSize  == 0) {

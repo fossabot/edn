@@ -95,7 +95,7 @@ class BufferText
 		int32_t   display(ewol::Text& OOText,
 		                  int32_t offsetX, int32_t offsetY,
 		                  int32_t sizeX, int32_t sizeY);
-		void      addChar(uniChar_t unicodeData);
+		void      addChar(etk::UChar unicodeData);
 		void      cursorMove(ewol::keyEvent::keyboard_te  moveTypeEvent);
 		void      MouseSelectFromCursorTo(vec2 pos);
 		void      MouseEvent(vec2 pos);

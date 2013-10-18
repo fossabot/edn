@@ -109,7 +109,7 @@ namespace appl {
 			 * @param[in] _charset Charset used to parse the current buffer
 			 * @return number ofelement read in the buffer (to increment the position)
 			 */
-			esize_t get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
+			esize_t get(esize_t _pos, etk::UChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
 			/**
 			 * @brief get the previous element in the buffer.
 			 * @param[in] _pos Position in the buffer (last element of the element)
@@ -117,14 +117,14 @@ namespace appl {
 			 * @param[in] _charset Charset used to parse the current buffer
 			 * @return number of element read in the buffer (to increment the position)
 			 */
-			esize_t getBack(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
+			esize_t getBack(esize_t _pos, etk::UChar& _value, unicode::charset_te _charset = unicode::EDN_CHARSET_UTF8) const;
 			/**
 			 * @brief Expand the specify char to have a user frendly display for special char and tabs
 			 * @param[in] _indent Curent indentation in the line
 			 * @param[in] _value Current value to transform
 			 * @param[out] _out String that represent the curent value to display
 			 */
-			void expand(esize_t& _indent, const etk::UniChar& _value, etk::UString& _out) const;
+			void expand(esize_t& _indent, const etk::UChar& _value, etk::UString& _out) const;
 		private:
 			enum moveMode {
 				moveLetter,
@@ -170,7 +170,7 @@ namespace appl {
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
-			bool search(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
+			bool search(esize_t _pos, const etk::UChar& _search, esize_t& _result);
 			/**
 			 * @brief Search a character in the buffer in back mode.
 			 * @param[in] _pos Position to start the search of the element.
@@ -178,7 +178,7 @@ namespace appl {
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
-			bool searchBack(esize_t _pos, const etk::UniChar& _search, esize_t& _result);
+			bool searchBack(esize_t _pos, const etk::UChar& _search, esize_t& _result);
 			/**
 			 * @brief Count the number of displayed characters between buffer position
 			 * displayed characters are the characters shown on the screen to represent characters in the 

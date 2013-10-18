@@ -103,7 +103,7 @@ bool CodeView::calculateMinSize(void)
 void CodeView::calculateMaxSize(void)
 {
 	m_maxSize.setX(2048);
-	int32_t letterHeight = m_displayText.calculateSize(etk::UniChar('A')).y();
+	int32_t letterHeight = m_displayText.calculateSize(etk::UChar('A')).y();
 	BufferText* tmpBuffer = BufferManager::get(m_bufferID);
 	if (NULL!=tmpBuffer) {
 		m_maxSize.setY(tmpBuffer->getNumberOfLine() * letterHeight);

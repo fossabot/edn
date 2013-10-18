@@ -151,7 +151,7 @@ void EdnBuf::getRange(int32_t start, int32_t end, etk::UString &output)
 		localOutput.pushBack('\0');
 		output = (char*)&localOutput[0];
 	} else {
-		etk::Vector<uniChar_t> tmpUnicodeData;
+		etk::Vector<etk::UChar> tmpUnicodeData;
 		// transform in unicode :
 		convertIsoToUnicode(m_charsetType, localOutput, tmpUnicodeData);
 		output = tmpUnicodeData;
@@ -247,7 +247,7 @@ int32_t EdnBuf::Replace(int32_t start, int32_t end, etk::UString &insertText)
 			tmpInsertText.pushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<uniChar_t> tmppp = insertText.getVector();
+		etk::Vector<etk::UChar> tmppp = insertText.getVector();
 		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
 	}
 	if (tmpInsertText.size()>0) {
@@ -544,7 +544,7 @@ int32_t EdnBuf::getExpandedChar(int32_t &pos, int32_t indent, char outUTF8[MAX_E
  * @return number of displayable char (display char width)
  * 
  */
-int32_t EdnBuf::getExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnicode[MAX_EXP_CHAR_LEN], uint32_t &currentChar)
+int32_t EdnBuf::getExpandedChar(int32_t &pos, int32_t indent, etk::UChar outUnicode[MAX_EXP_CHAR_LEN], uint32_t &currentChar)
 {
 	int32_t i, nSpaces;
 	char c = m_data.get(pos);
@@ -601,7 +601,7 @@ int32_t EdnBuf::getExpandedChar(int32_t &pos, int32_t indent, uniChar_t outUnico
 		return 5;
 	}
 	// clear all the data ...
-	memset(outUnicode, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
+	memset(outUnicode, 0, sizeof(etk::UChar)*MAX_EXP_CHAR_LEN);
 	
 	// Otherwise, just return the character
 	if (false  == m_isUtf8) {
@@ -940,7 +940,7 @@ bool EdnBuf::SearchForward(int32_t startPos, etk::UString &search, int32_t *foun
 			searchVect.pushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<etk::UniChar> tmppp = search.getVector();
+		etk::Vector<etk::UChar> tmppp = search.getVector();
 		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
 	}
 	// remove the '\0' at the end of the string ...
@@ -996,7 +996,7 @@ bool EdnBuf::SearchBackward(int32_t startPos, etk::UString &search, int32_t *fou
 			searchVect.pushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<etk::UniChar> tmppp = search.getVector();
+		etk::Vector<etk::UChar> tmppp = search.getVector();
 		convertUnicodeToIso(m_charsetType, tmppp, searchVect);
 	}
 	// remove the '\0' at the end of the string ...
@@ -1147,7 +1147,7 @@ int32_t EdnBuf::LocalInsert(int32_t pos, etk::UString &insertText)
 			tmpInsertText.pushBack(*tmpPointer++);
 		}
 	} else {
-		etk::Vector<etk::UniChar> tmppp = insertText.getVector();
+		etk::Vector<etk::UChar> tmppp = insertText.getVector();
 		convertUnicodeToIso(m_charsetType, tmppp, tmpInsertText);
 	}
 	if (tmpInsertText.size()>0) {

@@ -310,7 +310,7 @@ int32_t BufferText::display(ewol::Text& OOText,
 	bool selIsRect;
 	int32_t selHave;
 	
-	vec3 tmpLetterSize = OOText.calculateSize((uniChar_t)'A');
+	vec3 tmpLetterSize = OOText.calculateSize((etk::UChar)'A');
 	
 	int32_t letterWidth = tmpLetterSize.x();
 	int32_t letterHeight = tmpLetterSize.y();
@@ -355,8 +355,8 @@ int32_t BufferText::display(ewol::Text& OOText,
 	int64_t stopTime = ewol::getTime();
 	APPL_DEBUG("Parsing Highlight = " << stopTime - startTime << " micro-s");
 	
-	uniChar_t displayChar[MAX_EXP_CHAR_LEN];
-	memset(displayChar, 0, sizeof(uniChar_t)*MAX_EXP_CHAR_LEN);
+	etk::UChar displayChar[MAX_EXP_CHAR_LEN];
+	memset(displayChar, 0, sizeof(etk::UChar)*MAX_EXP_CHAR_LEN);
 	etk::UString myStringToDisplay;
 	// draw the lineNumber : 
 	int32_t currentLineID = displayStartLineId+1;
@@ -925,7 +925,7 @@ vec2  BufferText::getPosition(int32_t fontId, bool& centerRequested)
  * @return ---
  *
  */
-void BufferText::addChar(uniChar_t unicodeData)
+void BufferText::addChar(etk::UChar unicodeData)
 {
 	int32_t SelectionStart, SelectionEnd, SelectionRectStart, SelectionRectEnd;
 	bool SelectionIsRect;
@@ -1049,7 +1049,7 @@ int32_t BufferText::findLine(etk::UString &data)
 		return 0;
 	}
 	APPL_INFO("Search data line : \"" << data << "\"");
-	etk::Vector<uniChar_t> mVectSearch;
+	etk::Vector<etk::UChar> mVectSearch;
 	mVectSearch = data.getVector();
 	//APPL_INFO("search data Forward : startSearchPos=" << startSearchPos );
 	/*

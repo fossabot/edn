@@ -36,7 +36,7 @@ void appl::Buffer::setFileName(const etk::UString& _name) {
 }
 
 void appl::Buffer::moveCursorRight(appl::Buffer::moveMode _mode) {
-	etk::UniChar value;
+	etk::UChar value;
 	esize_t nbElement;
 	switch (_mode) {
 		default:
@@ -59,7 +59,7 @@ void appl::Buffer::moveCursorRight(appl::Buffer::moveMode _mode) {
 }
 
 void appl::Buffer::moveCursorLeft(appl::Buffer::moveMode _mode) {
-	etk::UniChar value;
+	etk::UChar value;
 	esize_t nbElement;
 	switch (_mode) {
 		default:
@@ -129,7 +129,7 @@ void appl::Buffer::moveCursorDown(esize_t _nbLine, ewol::Text& _textDrawer) {
 
 esize_t appl::Buffer::startLine(esize_t _pos) {
 	esize_t startPos;
-	if (false == searchBack(_pos, etk::UniChar::Return, startPos)) {
+	if (false == searchBack(_pos, etk::UChar::Return, startPos)) {
 		return 0;
 	}
 	return startPos + 1;
@@ -137,16 +137,16 @@ esize_t appl::Buffer::startLine(esize_t _pos) {
 
 esize_t appl::Buffer::endLine(esize_t _pos) {
 	esize_t endPos;
-	if (false == search(_pos, etk::UniChar::Return, endPos)) {
+	if (false == search(_pos, etk::UChar::Return, endPos)) {
 		endPos = m_data.size();
 	}
 	return endPos;
 }
 
-bool appl::Buffer::search(esize_t _pos, const etk::UniChar& _search, esize_t& _result) {
+bool appl::Buffer::search(esize_t _pos, const etk::UChar& _search, esize_t& _result) {
 	// move in the string
 	esize_t nbElementBuffer = 0;
-	etk::UniChar value;
+	etk::UChar value;
 	for(esize_t iii=_pos ; iii<m_data.size() ; iii+=nbElementBuffer ) {
 		nbElementBuffer = get(iii, value);
 		if (value == _search) {
@@ -161,10 +161,10 @@ bool appl::Buffer::search(esize_t _pos, const etk::UniChar& _search, esize_t& _r
 	return false;
 }
 
-bool appl::Buffer::searchBack(esize_t _pos, const etk::UniChar& _search, esize_t& _result) {
+bool appl::Buffer::searchBack(esize_t _pos, const etk::UChar& _search, esize_t& _result) {
 	// move in the string
 	esize_t nbElementBuffer = 0;
-	etk::UniChar value;
+	etk::UChar value;
 	for(esize_t iii=_pos-1 ; iii >= 0 ; iii-=nbElementBuffer ) {
 		nbElementBuffer = getBack(iii, value);
 		if (value == _search) {
@@ -188,8 +188,8 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 		if (_event.getStatus() != ewol::keyEvent::statusDown) {
 			return false;
 		}
-		etk::UniChar localValue = _event.getChar();
-		if (localValue == etk::UniChar::Tabulation) {
+		etk::UChar localValue = _event.getChar();
+		if (localValue == etk::UChar::Tabulation) {
 			if (hasTextSelected()) {
 				// TODO : Special tabulation multiline indentation ...
 				/*
@@ -204,9 +204,9 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 				*/
 				return true;
 			}
-		} else if (localValue == etk::UniChar::Return) {
+		} else if (localValue == etk::UChar::Return) {
 			if (true == _event.getSpecialKey().isSetShift()) {
-				localValue = etk::UniChar::CarrierReturn;
+				localValue = etk::UChar::CarrierReturn;
 			} else {
 				/*
 				m_data.insert(m_cursorPos, '\n');
@@ -234,7 +234,7 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 				return true;
 				*/
 			}
-		} else if (localValue == etk::UniChar::Suppress ) {
+		} else if (localValue == etk::UChar::Suppress ) {
 			//APPL_INFO("keyEvent : <suppr> pos=" << m_cursorPos);
 			if (hasTextSelected()) {
 				esize_t startPos = getStartSelectionPos();
@@ -243,14 +243,14 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 				m_selectMode = false;
 				moveCursor(startPos);
 			} else {
-				etk::UniChar value;
+				etk::UChar value;
 				esize_t nbElement = get(m_cursorPos, value);
 				if (nbElement>0) {
 					m_data.remove(m_cursorPos, nbElement);
 				}
 			}
 			return true;
-		} else if (localValue == etk::UniChar::Delete) {
+		} else if (localValue == etk::UChar::Delete) {
 			//APPL_INFO("keyEvent : <del> pos=" << m_cursorPos);
 			if (hasTextSelected()) {
 				esize_t startPos = getStartSelectionPos();
@@ -259,7 +259,7 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 				m_selectMode = false;
 				moveCursor(startPos);
 			} else {
-				etk::UniChar value;
+				etk::UChar value;
 				esize_t nbElement = getBack(m_cursorPos-1, value);
 				if (nbElement>0) {
 					m_data.remove(m_cursorPos-nbElement, nbElement);
@@ -282,7 +282,7 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 			if (_event.getSpecialKey().isSetInsert() == false) {
 				m_data.insert(m_cursorPos, (int8_t*)output, nbElement);
 			} else {
-				etk::UniChar value;
+				etk::UChar value;
 				esize_t nbElementRemove = get(m_cursorPos, value);
 				m_data.replace(m_cursorPos, nbElementRemove, (int8_t*)output, nbElement);
 			}
@@ -410,10 +410,10 @@ void appl::Buffer::moveCursor(esize_t _pos) {
 bool appl::Buffer::selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &_endPos) {
 	esize_t bufferElementSize;
 	esize_t previousElementSize;
-	etk::UniChar currentValue;
+	etk::UChar currentValue;
 	get(_startPos, currentValue);
-	if (    currentValue == etk::UniChar::Tabulation
-	     || currentValue == etk::UniChar::Space) {
+	if (    currentValue == etk::UChar::Tabulation
+	     || currentValue == etk::UChar::Space) {
 		APPL_DEBUG("select spacer");
 		// special case we are looking for separation
 		for (_beginPos=_startPos;
@@ -421,8 +421,8 @@ bool appl::Buffer::selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &
 		     previousElementSize = bufferElementSize,
 		     _beginPos-=bufferElementSize) {
 			bufferElementSize = getBack(_beginPos, currentValue);
-			if (    currentValue != etk::UniChar::Tabulation
-			     && currentValue != etk::UniChar::Space) {
+			if (    currentValue != etk::UChar::Tabulation
+			     && currentValue != etk::UChar::Space) {
 				_beginPos += previousElementSize;
 				break;
 			}
@@ -432,8 +432,8 @@ bool appl::Buffer::selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &
 		     _endPos<m_data.size();
 		     _endPos+=bufferElementSize) {
 			bufferElementSize = get(_endPos, currentValue);
-			if (    currentValue != etk::UniChar::Tabulation
-			     && currentValue != etk::UniChar::Space) {
+			if (    currentValue != etk::UChar::Tabulation
+			     && currentValue != etk::UChar::Space) {
 				break;
 			}
 		}
@@ -464,7 +464,7 @@ bool appl::Buffer::selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &
 		}
 		return true;
 	} else {
-		etk::UniChar comparechar = currentValue;
+		etk::UChar comparechar = currentValue;
 		APPL_DEBUG("select same char");
 		// Search back
 		for (_beginPos=_startPos;
@@ -514,7 +514,7 @@ void appl::Buffer::mouseEventTriple(void) {
 esize_t appl::Buffer::getPosSize(esize_t _startLinePos, float _distance, ewol::Text& _textDrawer)
 {
 	esize_t bufferElementSize;
-	etk::UniChar currentValue;
+	etk::UChar currentValue;
 	esize_t countColomn = 0;
 	etk::UString stringToDisplay;
 	_textDrawer.clear();
@@ -531,7 +531,7 @@ esize_t appl::Buffer::getPosSize(esize_t _startLinePos, float _distance, ewol::T
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		//m_displayText.setPos(positionCurentDisplay);
 		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
-			if (stringToDisplay[kkk] == etk::UniChar::Return) {
+			if (stringToDisplay[kkk] == etk::UChar::Return) {
 				return iii;
 			} else {
 				_textDrawer.print(stringToDisplay[kkk]);
@@ -550,7 +550,7 @@ float appl::Buffer::getScreenSize(esize_t _startLinePos, esize_t _stopPos, ewol:
 {
 	float ret = 0;
 	esize_t bufferElementSize;
-	etk::UniChar currentValue;
+	etk::UChar currentValue;
 	esize_t countColomn = 0;
 	etk::UString stringToDisplay;
 	_textDrawer.clear();
@@ -569,7 +569,7 @@ float appl::Buffer::getScreenSize(esize_t _startLinePos, esize_t _stopPos, ewol:
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		//m_displayText.setPos(positionCurentDisplay);
 		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
-			if (stringToDisplay[kkk] == etk::UniChar::Return) {
+			if (stringToDisplay[kkk] == etk::UChar::Return) {
 				APPL_DEBUG("find \n");
 				return _textDrawer.getPos().x() + 2; // TODO : Add the +2 for the end of line ...
 			} else {
@@ -587,8 +587,8 @@ float appl::Buffer::getScreenSize(esize_t _startLinePos, esize_t _stopPos, ewol:
 esize_t appl::Buffer::getMousePosition(const vec2& _relativePos, ewol::Text& _textDrawer)
 {
 	esize_t bufferElementSize;
-	etk::UniChar currentValue;
-	vec3 tmpLetterSize = _textDrawer.calculateSize((etk::UniChar)'A');
+	etk::UChar currentValue;
+	vec3 tmpLetterSize = _textDrawer.calculateSize((etk::UChar)'A');
 	vec3 positionCurentDisplay(0,0,0);
 	esize_t countColomn = 0;
 	etk::UString stringToDisplay;
@@ -604,7 +604,7 @@ esize_t appl::Buffer::getMousePosition(const vec2& _relativePos, ewol::Text& _te
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		//m_displayText.setPos(positionCurentDisplay);
 		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
-			if (stringToDisplay[kkk] == etk::UniChar::Return) {
+			if (stringToDisplay[kkk] == etk::UChar::Return) {
 				// TODO : Remove this, use the automatic line manager ...
 				_textDrawer.forceLineReturn();
 				countColomn = 0;
@@ -631,7 +631,7 @@ esize_t appl::Buffer::getMousePosition(const vec2& _relativePos, ewol::Text& _te
 	return m_data.size();
 }
 
-esize_t appl::Buffer::get(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const {
+esize_t appl::Buffer::get(esize_t _pos, etk::UChar& _value, unicode::charset_te _charset) const {
 	_value = '\0';
 	if (_pos<0 && _pos<m_data.size()) {
 		return 0;
@@ -640,7 +640,7 @@ esize_t appl::Buffer::get(esize_t _pos, etk::UniChar& _value, unicode::charset_t
 		char tmpVal[5];
 		memset(tmpVal, 0, sizeof(tmpVal));
 		tmpVal[0] = m_data[_pos];
-		int8_t nbChar = etk::UniChar::theoricUTF8Len(tmpVal[0]);
+		int8_t nbChar = etk::UChar::theoricUTF8Len(tmpVal[0]);
 		for (int32_t iii=1; iii<nbChar && _pos+iii<m_data.size(); ++iii) {
 			tmpVal[iii] = m_data[_pos+iii];
 		}
@@ -653,7 +653,7 @@ esize_t appl::Buffer::get(esize_t _pos, etk::UniChar& _value, unicode::charset_t
 	return 1;
 }
 
-esize_t appl::Buffer::getBack(esize_t _pos, etk::UniChar& _value, unicode::charset_te _charset) const {
+esize_t appl::Buffer::getBack(esize_t _pos, etk::UChar& _value, unicode::charset_te _charset) const {
 	_value = '\0';
 	if (_pos<0 && _pos<m_data.size()) {
 		return 0;
@@ -664,7 +664,7 @@ esize_t appl::Buffer::getBack(esize_t _pos, etk::UniChar& _value, unicode::chars
 		memset(tmpVal, 0, sizeof(tmpVal));
 		*pointerVal = m_data[_pos];
 		int32_t iii=0;
-		while(    etk::UniChar::theoricUTF8First(*pointerVal) == false
+		while(    etk::UChar::theoricUTF8First(*pointerVal) == false
 		       && pointerVal > tmpVal
 		       && _pos-iii>0) {
 			--pointerVal;
@@ -683,46 +683,46 @@ static const char *ControlCodeTable[32] = {
 	 "NUL", "soh", "stx", "etx", "eot", "enq", "ack", "bel", "bs",  "ht", "nl",  "vt",  "np", "cr", "so", "si",
 	 "dle", "dc1", "dc2", "dc3", "dc4", "nak", "syn", "etb", "can", "em", "sub", "esc", "fs", "gs", "rs", "us"};
 
-void appl::Buffer::expand(esize_t& _indent, const etk::UniChar& _value, etk::UString& _out) const {
+void appl::Buffer::expand(esize_t& _indent, const etk::UChar& _value, etk::UString& _out) const {
 	_out.clear();
 	int32_t tabDist = 4;
-	if (_value == etk::UniChar::Tabulation) {
+	if (_value == etk::UChar::Tabulation) {
 		int32_t nSpaces = tabDist - (_indent % tabDist);
 		for (int32_t iii=0; iii<nSpaces; iii++) {
-			_out.append(etk::UniChar::Space);
+			_out.append(etk::UChar::Space);
 		}
 		return;
 	}
 	// convert ASCII control codes to readable character sequences
-	if (_value == etk::UniChar::Null) {
-		_out.append(etk::UniChar('<'));
-		_out.append(etk::UniChar('n'));
-		_out.append(etk::UniChar('u'));
-		_out.append(etk::UniChar('l'));
-		_out.append(etk::UniChar('>'));
+	if (_value == etk::UChar::Null) {
+		_out.append(etk::UChar('<'));
+		_out.append(etk::UChar('n'));
+		_out.append(etk::UChar('u'));
+		_out.append(etk::UChar('l'));
+		_out.append(etk::UChar('>'));
 		return;
 	}
-	if (_value == etk::UniChar::Return) {
+	if (_value == etk::UChar::Return) {
 		// nothing to display...
-		_out.append(etk::UniChar::Return);
+		_out.append(etk::UChar::Return);
 		return;
 	}
 	if (_value.get() <= 31) {
-		_out.append(etk::UniChar('<'));
+		_out.append(etk::UChar('<'));
 		const char * tmp = ControlCodeTable[_value.get()];
 		while (*tmp!='\0') {
-			_out.append(etk::UniChar(*tmp));
+			_out.append(etk::UChar(*tmp));
 			tmp++;
 		}
-		_out.append(etk::UniChar('>'));
+		_out.append(etk::UChar('>'));
 		return;
 	}
-	if (_value == etk::UniChar::Delete) {
-		_out.append(etk::UniChar('<'));
-		_out.append(etk::UniChar('d'));
-		_out.append(etk::UniChar('e'));
-		_out.append(etk::UniChar('l'));
-		_out.append(etk::UniChar('>'));
+	if (_value == etk::UChar::Delete) {
+		_out.append(etk::UChar('<'));
+		_out.append(etk::UChar('d'));
+		_out.append(etk::UChar('e'));
+		_out.append(etk::UChar('l'));
+		_out.append(etk::UChar('>'));
 		return;
 	}
 	// nothing to do ...
@@ -735,7 +735,7 @@ int32_t appl::Buffer::countDispChars(esize_t _posStart, esize_t _posEnd) {
 	int32_t charCount = 0;
 	etk::UString expanded;
 	esize_t bufferElementSize;
-	etk::UniChar value;
+	etk::UChar value;
 	//APPL_DEBUG("_posStart="<< _posStart << " _posEnd=" << _posEnd);
 	for(int32_t iii=_posStart; iii<_posEnd && iii<m_data.size() ; iii+=bufferElementSize ) {
 		// get the element value:
@@ -756,12 +756,12 @@ esize_t appl::Buffer::countForwardDispChars(esize_t _posStart, int32_t _nChars) 
 	int32_t charCount = 0;
 	etk::UString expanded;
 	esize_t bufferElementSize;
-	etk::UniChar value;
+	etk::UChar value;
 	int32_t iii;
 	for(iii = _posStart; charCount<_nChars && iii<m_data.size() ; iii+=bufferElementSize ) {
 		// get the element value:
 		bufferElementSize = get(iii, value);
-		if (value == etk::UniChar::Return) {
+		if (value == etk::UChar::Return) {
 			return iii;
 		}
 		expand(charCount, value, expanded);
@@ -781,13 +781,13 @@ esize_t appl::Buffer::countForwardNLines(esize_t _startPos, int32_t _nLines) {
 		return m_data.size();
 	}
 	esize_t bufferElementSize;
-	etk::UniChar value;
+	etk::UChar value;
 	int32_t lineCount = 0;
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
 	for(int32_t iii = _startPos+1; iii<m_data.size() ; iii+=bufferElementSize ) {
 		// get the element value:
 		bufferElementSize = get(iii, value);
-		if (value == etk::UniChar::Return) {
+		if (value == etk::UChar::Return) {
 			lineCount++;
 			if (lineCount == _nLines) {
 				//APPL_INFO("    == > (1) at position=" << myPosIt.Position()+1 );
@@ -810,12 +810,12 @@ esize_t appl::Buffer::countBackwardNLines(esize_t _startPos, int32_t _nLines) {
 	}
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
 	esize_t bufferElementSize;
-	etk::UniChar value;
+	etk::UChar value;
 	int32_t lineCount = 0;
 	for(int32_t iii = _startPos-1; iii >= 0 ; iii-=bufferElementSize ) {
 		// get the element value:
 		bufferElementSize = getBack(iii, value);
-		if (value == etk::UniChar::Return) {
+		if (value == etk::UChar::Return) {
 			lineCount++;
 			if (lineCount >= _nLines) {
 				//APPL_INFO("    == > (1) at position=" << myPosIt.Position()+1 );
@@ -838,7 +838,7 @@ bool appl::Buffer::copy(etk::UString& _data) {
 		esize_t startPos = getStartSelectionPos();
 		esize_t endPos = getStopSelectionPos();
 		esize_t bufferElementSize;
-		etk::UniChar value;
+		etk::UChar value;
 		for(int32_t iii = startPos; iii < endPos ; iii+=bufferElementSize ) {
 			// get the element value:
 			bufferElementSize = get(iii, value);
