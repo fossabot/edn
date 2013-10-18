@@ -237,8 +237,8 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 		} else if (localValue == etk::UniChar::Suppress ) {
 			//APPL_INFO("keyEvent : <suppr> pos=" << m_cursorPos);
 			if (hasTextSelected()) {
-				esize_t startPos = etk_min(m_cursorPos, m_cursorSelectPos);
-				esize_t endPos = etk_max(m_cursorPos, m_cursorSelectPos);
+				esize_t startPos = getStartSelectionPos();
+				esize_t endPos = getStopSelectionPos();
 				m_data.remove(startPos, endPos-startPos);
 				m_selectMode = false;
 				moveCursor(startPos);
@@ -253,8 +253,8 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 		} else if (localValue == etk::UniChar::Delete) {
 			//APPL_INFO("keyEvent : <del> pos=" << m_cursorPos);
 			if (hasTextSelected()) {
-				esize_t startPos = etk_min(m_cursorPos, m_cursorSelectPos);
-				esize_t endPos = etk_max(m_cursorPos, m_cursorSelectPos);
+				esize_t startPos = getStartSelectionPos();
+				esize_t endPos = getStopSelectionPos();
 				m_data.remove(startPos, endPos-startPos);
 				m_selectMode = false;
 				moveCursor(startPos);
@@ -274,8 +274,8 @@ bool appl::Buffer::onEventEntry(const ewol::EventEntry& _event, ewol::Text& _tes
 		char output[5];
 		int32_t nbElement = localValue.getUtf8(output);
 		if (hasTextSelected()) {
-			esize_t startPos = etk_min(m_cursorPos, m_cursorSelectPos);
-			esize_t endPos = etk_max(m_cursorPos, m_cursorSelectPos);
+			esize_t startPos = getStartSelectionPos();
+			esize_t endPos = getStopSelectionPos();
 			m_data.replace(startPos, endPos-startPos, (int8_t*)output, nbElement);
 			moveCursor(startPos+nbElement);
 		} else {
@@ -828,4 +828,50 @@ esize_t appl::Buffer::countBackwardNLines(esize_t _startPos, int32_t _nLines) {
 	}
 	//APPL_INFO("    == > (2) at position=0");
 	return 0;
+}
+
+
+
+bool appl::Buffer::copy(etk::UString& _data) {
+	_data.clear();
+	if (hasTextSelected() == true) {
+		esize_t startPos = getStartSelectionPos();
+		esize_t endPos = getStopSelectionPos();
+		esize_t bufferElementSize;
+		etk::UniChar value;
+		for(int32_t iii = startPos; iii < endPos ; iii+=bufferElementSize ) {
+			// get the element value:
+			bufferElementSize = get(iii, value);
+			_data += value;
+			if (bufferElementSize <= 0) {
+				bufferElementSize = 1;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+bool appl::Buffer::paste(const etk::UString& _data) {
+	etk::Char output = _data.c_str();
+	if (hasTextSelected() == true) {
+		esize_t startPos = getStartSelectionPos();
+		esize_t endPos = getStopSelectionPos();
+		m_data.replace(m_cursorPos, endPos-startPos, (int8_t*)((void*)output), output.size());
+	} else {
+		m_data.insert(m_cursorPos, (int8_t*)((void*)output), output.size());
+	}
+	m_selectMode = false;
+	moveCursor(m_cursorPos+output.size());
+	return false;
+}
+
+void appl::Buffer::removeSelection(void) {
+	if (hasTextSelected() == true) {
+		esize_t startPos = getStartSelectionPos();
+		esize_t endPos = getStopSelectionPos();
+		m_data.remove(startPos, endPos-startPos);
+		m_selectMode = false;
+		moveCursor(startPos);
+	}
 }

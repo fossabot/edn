@@ -217,13 +217,39 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 
 void appl::TextViewer::onEventClipboard(ewol::clipBoard::clipboardListe_te _clipboardID) {
 	if (m_buffer != NULL) {
-		//tmpBuffer->Paste(_clipboardID);
+		etk::UString data = ewol::clipBoard::get(_clipboardID);
+		m_buffer->paste(data);
 	}
 	markToRedraw();
 }
 
 void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
 	// force redraw of the widget
+	if (    _msg.getMessage() == ednMsgGuiCopy
+	     || _msg.getMessage() == ednMsgGuiCut) {
+		if (m_buffer != NULL) {
+			etk::UString value;
+			m_buffer->copy(value);
+			if (value.size() != 0) {
+				ewol::clipBoard::set(ewol::clipBoard::clipboardStd, value);
+			}
+		}
+		if (_msg.getMessage() == ednMsgGuiCut) {
+			m_buffer->removeSelection();
+		}
+	} else if (_msg.getMessage() == ednMsgGuiPaste) {
+		if (m_buffer != NULL) {
+			ewol::clipBoard::request(ewol::clipBoard::clipboardStd);
+		}
+	} else if (_msg.getMessage() == ednMsgGuiUndo) {
+		if (m_buffer != NULL) {
+			//m_buffer->undo();
+		}
+	} else if (_msg.getMessage() == ednMsgGuiRedo) {
+		if (m_buffer != NULL) {
+			//m_buffer->redo();
+		}
+	}
 	markToRedraw();
 }
 

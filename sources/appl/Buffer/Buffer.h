@@ -57,8 +57,26 @@ namespace appl {
 			void moveCursor(esize_t _pos);
 			void mouseEventDouble(void);
 			void mouseEventTriple(void);
+			/**
+			 * @brief Get the status of selection.
+			 * @return true if we have a curent selection, false otherwise.
+			 */
 			bool hasTextSelected(void) {
 				return m_cursorSelectPos >= 0;
+			}
+			/**
+			 * @brief Get the Start position of the selection.
+			 * @return position of the start selection.
+			 */
+			esize_t getStartSelectionPos(void) {
+				return etk_min(m_cursorPos, m_cursorSelectPos);
+			}
+			/**
+			 * @brief Get the Stop position of the selection.
+			 * @return position of the stop selection.
+			 */
+			esize_t getStopSelectionPos(void) {
+				return etk_max(m_cursorPos, m_cursorSelectPos);
 			}
 			bool selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &_endPos);
 			/**
@@ -191,6 +209,23 @@ namespace appl {
 			 * @return position of the starting the line
 			 */
 			esize_t countBackwardNLines(esize_t _startPos, int32_t _nLines);
+		public:
+			/**
+			 * @brief copy data in the _data ref value.
+			 * @param[out] _data Output stream to copy.
+			 * @return true of no error occured.
+			 */
+			bool copy(etk::UString& _data);
+			/**
+			 * @brief past data from the _data ref value.
+			 * @param[in] _data Input stream to copy.
+			 * @return true of no error occured.
+			 */
+			bool paste(const etk::UString& _data);
+			/**
+			 * @brief Remove the selection of the buffer. (do nothing if no secection)
+			 */
+			void removeSelection(void);
 
 	};
 };
