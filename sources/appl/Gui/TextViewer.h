@@ -18,7 +18,11 @@
 #include <ewol/compositing/Drawing.h>
 
 namespace appl {
+	class TextViewerPlugin;
+	class TextPluginCopy;
 	class TextViewer : public widget::WidgetScrooled {
+		friend class appl::TextViewerPlugin;
+		friend class appl::TextPluginCopy;
 		public:
 			TextViewer(const etk::UString& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);
@@ -34,7 +38,7 @@ namespace appl {
 		protected: // derived function
 			virtual void onDraw(void);
 		public:  // Derived function
-			const char * const getObjectType(void) { return "ApplCodeView"; };
+			const char * const getObjectType(void) { return "appl::TextViewer"; };
 			virtual bool calculateMinSize(void);
 			virtual void onRegenerateDisplay(void);
 			virtual void onReceiveMessage(const ewol::EMessage& _msg);
@@ -45,6 +49,50 @@ namespace appl {
 			virtual void onLostFocus(void);
 		private:
 			bool m_insertMode; //!< the insert mode is enable
+		public:
+			
+		public:
+			// TODO : Doc : write data on buffer
+			bool moveCursor(const appl::Buffer::Iterator& _pos);
+			bool write(const etk::UString& _data);
+			bool write(const etk::UString& _data, const appl::Buffer::Iterator& _pos);
+			bool replace(const etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
+			bool replace(const etk::UString& _data);
+			void remove(void);
+			
+			
+			appl::Buffer::Iterator getMousePosition(const vec2& _relativePos);
+			void mouseEventDouble(void);
+			void mouseEventTriple(void);
+		private:
+			enum moveMode {
+				moveLetter,
+				moveWord,
+				moveEnd
+			};
+			/**
+			 * Move the cursor right in the line (no stop of a new line)
+			 * @param[in] _mode Moving mode char, word, ...
+			 */
+			void moveCursorRight(moveMode _mode = moveLetter);
+			/**
+			 * Move the cursor left in the line (no stop of a new line)
+			 * @param[in] _mode Moving mode char, word, ...
+			 */
+			void moveCursorLeft(moveMode _mode = moveLetter);
+			/**
+			 * @brief Move the cursor at an other position upper.
+			 * @param[in] _nbLine number of up line that might be moved
+			 */
+			void moveCursorUp(esize_t _nbLine);
+			/**
+			 * @brief Move the cursor at an other position under.
+			 * @param[in] _nbLine number of down line that might be moved
+			 */
+			void moveCursorDown(esize_t _nbLine);
+			
+			appl::Buffer::Iterator getPosSize(const appl::Buffer::Iterator& _startLinePos, float _distance);
+			float getScreenSize(const appl::Buffer::Iterator& _startLinePos, const appl::Buffer::Iterator& _stopPos);
 	};
 };
 

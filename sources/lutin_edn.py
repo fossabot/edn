@@ -30,6 +30,9 @@ def Create(target):
 	# All needed for the buffer management :
 	myModule.AddSrcFile([
 		'appl/Buffer/Buffer.cpp',
+		'appl/Buffer/TextPlugin.cpp',
+		'appl/Buffer/TextPluginCopy.cpp',
+		'appl/Buffer/TextPluginManager.cpp',
 		'appl/Buffer/BufferManager.cpp'])
 	
 	# Generic color management for the text editor : 

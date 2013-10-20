@@ -21,7 +21,6 @@
 namespace appl {
 	class Buffer : public ewol::EObject {
 		public:
-			
 			class Iterator {
 				// Private data :
 				private:
@@ -66,7 +65,7 @@ namespace appl {
 					 * @brief basic boolean cast
 					 * @return true if the element is present in buffer
 					 */
-					operator bool (void) {
+					operator bool (void) const {
 						if (m_data == NULL) {
 							return false;
 						}
@@ -76,7 +75,7 @@ namespace appl {
 					 * @brief basic boolean cast
 					 * @return true if the element is present in buffer
 					 */
-					operator esize_t (void) {
+					operator esize_t (void) const {
 						if (m_data == NULL) {
 							return 0;
 						}
@@ -114,7 +113,7 @@ namespace appl {
 					 * @brief egality iterator
 					 * @return true if the iterator is identical pos
 					 */
-					bool operator== (const Iterator& _obj) {
+					bool operator== (const Iterator& _obj) const {
 						if (    m_current == _obj.m_current
 						     && m_data == _obj.m_data) {
 							return true;
@@ -125,7 +124,7 @@ namespace appl {
 					 * @brief egality iterator
 					 * @return true if the iterator is identical pos
 					 */
-					bool operator!= (const Iterator& _obj) {
+					bool operator!= (const Iterator& _obj) const {
 						if (    m_current != _obj.m_current
 						     || m_data != _obj.m_data) {
 							return true;
@@ -141,8 +140,30 @@ namespace appl {
 					 * @brief Get the position in the buffer
 					 * @return The requested position.
 					 */
-					esize_t getPos(void) {
+					esize_t getPos(void) const {
 						return m_current;
+					}
+					/**
+					 * @brief move the element position
+					 * @return a new iterator.
+					 */
+					Iterator operator+ (const int32_t _val) const {
+						Iterator tmpp(*this);
+						for (int32_t iii=0; iii<_val; ++iii) {
+							++tmpp;
+						}
+						return tmpp;
+					}
+					/**
+					 * @brief move the element position
+					 * @return a new iterator.
+					 */
+					Iterator operator- (const int32_t _val) const {
+						Iterator tmpp(*this);
+						for (int32_t iii=0; iii<_val; ++iii) {
+							--tmpp;
+						}
+						return tmpp;
 					}
 				private:
 					Iterator(Buffer* _obj, int32_t _pos) :
@@ -172,23 +193,34 @@ namespace appl {
 			etk::Buffer& getData(void) {
 				return m_data;
 			};
-			/*
-			appl::History m_history;
-			Highlight m_highlight;
-			ejson::Value* m_property;
-			appl::Selection m_selection;
-			*/
 		public:
 			esize_t m_cursorPos; //!< cursor position.
 			int32_t m_cursorSelectPos; //!< cursor position.
+		public:
+			void setSelectionPos(const Iterator& _pos);
+			void unSelect(void);
+		protected:
 			float m_cursorPreferredCol; //!< position of the cursor when up and down is done.
+		public:
+			void setFavoriteUpDownPos(float _val) {
+				m_cursorPreferredCol = _val;
+			}
+			float getFavoriteUpDownPos(void) {
+				return m_cursorPreferredCol;
+			}
+		private:
 			bool m_selectMode; //!< when true, the select mode keep the moving selecting
+		public:
+			bool getSelectMode(void) {
+				return m_selectMode;
+			}
+			void setSelectMode(bool _status) {
+				m_selectMode = _status;
+			}
 			// note : We need the text drawer interface due to the fact that the move depend on the text display properties.
 			bool onEventEntry(const ewol::EventEntry& _event, ewol::Text& _textDrawer);
-			bool onEventInput(const ewol::EventInput& _event, ewol::Text& _textDrawer, const vec2& _relativePos);
+			//bool onEventInput(const ewol::EventInput& _event, ewol::Text& _textDrawer, const vec2& _relativePos);
 			void moveCursor(esize_t _pos);
-			void mouseEventDouble(void);
-			void mouseEventTriple(void);
 			/**
 			 * @brief Get the status of selection.
 			 * @return true if we have a curent selection, false otherwise.
@@ -210,30 +242,7 @@ namespace appl {
 			esize_t getStopSelectionPos(void) {
 				return etk_max(m_cursorPos, m_cursorSelectPos);
 			}
-			bool selectAround(int32_t _startPos, int32_t &_beginPos, int32_t &_endPos);
-			/**
-			 * @brief Get the position in the buffer of a display distance from the start of the line
-			 * @param[in] _startLinePos start of the line
-			 * @param[in] _distance Distane from the start of the line
-			 * @param[in] _textDrawer Drawer compositing element
-			 * @return position in the buffer
-			 */
-			esize_t getPosSize(esize_t _startLinePos, float _distance, ewol::Text& _textDrawer);
-			/**
-			 * @brief Get the real distance displayed from the start of the line to the element requested
-			 * @param[in] _startLinePos start of the line
-			 * @param[in] _stopPos Position that we want to have te distance
-			 * @param[in] _textDrawer Drawer compositing element
-			 * @return Distance from the start of the line
-			 */
-			float getScreenSize(esize_t _startLinePos, esize_t _stopPos, ewol::Text& _textDrawer);
-			/**
-			 * @brief Get the position on the buffer with the position on the mose in the screen
-			 * @param[in] _relativePos mouse position( standard GUI position (not ewol generic pos !!!)
-			 * @param[in] _textDrawer Drawer compositing element
-			 * @return Position in the buffer
-			 */
-			esize_t getMousePosition(const vec2& _relativePos, ewol::Text& _textDrawer);
+			bool getPosAround(const Iterator& _startPos, Iterator &_beginPos, Iterator &_endPos);
 			/**
 			 * @brief Expand the specify char to have a user frendly display for special char and tabs
 			 * @param[in] _indent Curent indentation in the line
@@ -241,44 +250,19 @@ namespace appl {
 			 * @param[out] _out String that represent the curent value to display
 			 */
 			void expand(esize_t& _indent, const etk::UChar& _value, etk::UString& _out) const;
-		private:
-			enum moveMode {
-				moveLetter,
-				moveWord,
-				moveEnd
-			};
-			/**
-			 * Move the cursor right in the line (no stop of a new line)
-			 * @param[in] _mode Moving mode char, word, ...
-			 */
-			void moveCursorRight(moveMode _mode = moveLetter);
-			/**
-			 * Move the cursor left in the line (no stop of a new line)
-			 * @param[in] _mode Moving mode char, word, ...
-			 */
-			void moveCursorLeft(moveMode _mode = moveLetter);
-			/**
-			 * @brief Move the cursor at an other position upper.
-			 * @param[in] _nbLine number of up line that might be moved
-			 */
-			void moveCursorUp(esize_t _nbLine, ewol::Text& _textDrawer);
-			/**
-			 * @brief Move the cursor at an other position under.
-			 * @param[in] _nbLine number of down line that might be moved
-			 */
-			void moveCursorDown(esize_t _nbLine, ewol::Text& _textDrawer);
+		public:
 			/**
 			 * @brief get the start of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.
 			 * @return The position in the buffer of the start of the line.
 			 */
-			esize_t startLine(esize_t _pos);
+			Iterator getStartLine(const Iterator& _pos);
 			/**
 			 * @brief get the end of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.
 			 * @return The position in the buffer of the end of the line.
 			 */
-			esize_t endLine(esize_t _pos);
+			Iterator getEndLine(const Iterator& _pos);
 			/**
 			 * @brief Search a character in the buffer.
 			 * @param[in] _pos Position to start the search of the element.
@@ -286,7 +270,7 @@ namespace appl {
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
-			bool search(esize_t _pos, const etk::UChar& _search, esize_t& _result);
+			bool search(const Iterator& _pos, const etk::UChar& _search, Iterator& _result);
 			/**
 			 * @brief Search a character in the buffer in back mode.
 			 * @param[in] _pos Position to start the search of the element.
@@ -294,37 +278,21 @@ namespace appl {
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
-			bool searchBack(esize_t _pos, const etk::UChar& _search, esize_t& _result);
-			/**
-			 * @brief Count the number of displayed characters between buffer position
-			 * displayed characters are the characters shown on the screen to represent characters in the 
-			 * buffer, where tabs and control characters are expanded
-			 * @param[in] _posStart start position
-			 * @param[in] _posEnd End position
-			 * @return the ID in the buffer of the requested char
-			 */
-			int32_t countDispChars(esize_t _posStart, esize_t _posEnd);
-			/**
-			 * @brief Return the position of the nth diplaye char
-			 * @param[in] _posStart Position of the start
-			 * @param[in] _nChars search in the next nChars elements
-			 * @return position of the char i the buffer
-			 */
-			esize_t countForwardDispChars(esize_t _posStart, int32_t _nChars);
+			bool searchBack(const Iterator& _pos, const etk::UChar& _search, Iterator& _result);
 			/**
 			 * @brief find the first character of the line "nLines" forward
 			 * @param[in,out] _startPos Start position.
 			 * @param[in,out] _nLines Number of line to count.
 			 * @return position of the starting the line.
 			 */
-			esize_t countForwardNLines(esize_t _startPos, int32_t _nLines);
+			Iterator countForwardNLines(const Iterator& _startPos, int32_t _nLines);
 			/**
 			 * @brief find the first character of the line "nLines" backwards
 			 * @param[in,out] _startPos Start position to count (this caracter is not counted)
 			 * @param[in,out] _nLines Number of line to count (if  == 0 means find the beginning of the line)
 			 * @return position of the starting the line
 			 */
-			esize_t countBackwardNLines(esize_t _startPos, int32_t _nLines);
+			Iterator countBackwardNLines(const Iterator& _startPos, int32_t _nLines);
 		public:
 			/**
 			 * @brief copy data in the _data ref value.
@@ -333,32 +301,45 @@ namespace appl {
 			 */
 			bool copy(etk::UString& _data);
 			/**
-			 * @brief past data from the _data ref value.
-			 * @param[in] _data Input stream to copy.
-			 * @return true of no error occured.
-			 */
-			bool paste(const etk::UString& _data);
-			/**
 			 * @brief Remove the selection of the buffer. (do nothing if no secection)
 			 */
 			void removeSelection(void);
+			
+			
+			bool write(const etk::UString& _data, const appl::Buffer::Iterator& _pos);
+			bool replace(const etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
 		public: // iterator section :
 			/**
 			 * @brief Get an iterator an an specific position
-			 * @param[in] _pos Requested position of the iterator in the vector
+			 * @param[in] _pos Requested position of the iterator.
 			 * @return The Iterator
 			 */
 			Iterator position(esize_t _pos);
 			/**
-			 * @brief Get an Iterator on the start position of the Vector
+			 * @brief Get an Iterator on the start position.
 			 * @return The Iterator
 			 */
 			Iterator begin(void);
 			/**
-			 * @brief Get an Iterator on the end position of the Vector
+			 * @brief Get an Iterator on the end position.
 			 * @return The Iterator
 			 */
 			Iterator end(void);
+			/**
+			 * @brief Get an Iterator on the cursor position.
+			 * @return The Iterator
+			 */
+			Iterator cursor(void);
+			/**
+			 * @brief Get an Iterator on the start selection.
+			 * @return The Iterator
+			 */
+			Iterator selectStart(void);
+			/**
+			 * @brief Get an Iterator on the stop selection.
+			 * @return The Iterator
+			 */
+			Iterator selectStop(void);
 	};
 };
 

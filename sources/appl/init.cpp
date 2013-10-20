@@ -29,6 +29,7 @@
 #include <ewol/commandLine.h>
 //#include <ewol/UserConfig.h>
 #include <ewol/renderer/eContext.h>
+#include <appl/Buffer/TextPluginManager.h>
 
 /**
  * @brief Main of the program (This can be set in every case, but it is not used in Andoid...).
@@ -78,6 +79,8 @@ bool APP_Init(ewol::eContext& _context)
 	HighlightManager::init();
 	HighlightManager::loadLanguages();
 	cTagsManager::init();
+	appl::textPluginManager::init();
+	appl::textPluginManager::addDefaultPlugin();
 	
 	// Request load of the user configuration ...
 	//ewol::userConfig::load();
@@ -137,7 +140,7 @@ void APP_UnInit(ewol::eContext& _context)
 		delete(tmpWindows);
 		tmpWindows = NULL;
 	}
-	
+	appl::textPluginManager::unInit();
 	cTagsManager::unInit();
 	
 	APPL_INFO("Stop Hightlight");

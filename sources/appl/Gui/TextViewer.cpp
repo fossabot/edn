@@ -16,6 +16,7 @@
 
 #include <ewol/widget/WidgetManager.h>
 #include <ewol/renderer/EObject.h>
+#include <appl/Buffer/TextPluginManager.h>
 
 #undef __class__
 #define __class__ "TextViewer"
@@ -26,9 +27,6 @@ appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
   m_insertMode(false) {
 	setCanHaveFocus(true);
 	registerMultiCast(ednMsgBufferId);
-	registerMultiCast(ednMsgGuiCopy);
-	registerMultiCast(ednMsgGuiPaste);
-	registerMultiCast(ednMsgGuiCut);
 	registerMultiCast(ednMsgGuiRedo);
 	registerMultiCast(ednMsgGuiUndo);
 	registerMultiCast(ednMsgGuiRm);
@@ -41,9 +39,6 @@ appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
 	
 	shortCutAdd("ctrl+w",       ednMsgGuiRm,     "Line");
 	shortCutAdd("ctrl+shift+w", ednMsgGuiRm,     "Paragraph");
-	shortCutAdd("ctrl+x",       ednMsgGuiCut,    "STD");
-	shortCutAdd("ctrl+c",       ednMsgGuiCopy,   "STD");
-	shortCutAdd("ctrl+v",       ednMsgGuiPaste,  "STD");
 	shortCutAdd("ctrl+a",       ednMsgGuiSelect, "ALL");
 	shortCutAdd("ctrl+shift+a", ednMsgGuiSelect, "NONE");
 	
@@ -56,10 +51,11 @@ appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
 	}
 	m_buffer->loadFile("./example.txt");
 	
+	appl::textPluginManager::connect(*this);
 }
 
 appl::TextViewer::~TextViewer(void) {
-	
+	appl::textPluginManager::disconnect(*this);
 }
 
 bool appl::TextViewer::calculateMinSize(void) {
@@ -177,8 +173,103 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 	if (m_buffer == NULL) {
 		return false;
 	}
+	// First call plugin
+	if (appl::textPluginManager::onEventEntry(*this, _event) == true) {
+		markToRedraw();
+		return true;
+	}
 	// just forward event  == > manage directly in the buffer
-	if (m_buffer->onEventEntry(_event, m_displayText) == true) {
+	if (_event.getType() == ewol::keyEvent::keyboardChar) {
+		//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
+		if (_event.getStatus() != ewol::keyEvent::statusDown) {
+			return false;
+		}
+		etk::UChar localValue = _event.getChar();
+		if (localValue == etk::UChar::Return) {
+			if (true == _event.getSpecialKey().isSetShift()) {
+				localValue = etk::UChar::CarrierReturn;
+			}
+		} else if (localValue == etk::UChar::Suppress ) {
+			//APPL_INFO("keyEvent : <suppr> pos=" << m_cursorPos);
+			if (m_buffer->hasTextSelected()) {
+				m_buffer->removeSelection();
+			} else {
+				appl::Buffer::Iterator pos = m_buffer->cursor();
+				appl::Buffer::Iterator posEnd = pos;
+				++posEnd;
+				replace("", pos, posEnd);
+			}
+			return true;
+		} else if (localValue == etk::UChar::Delete) {
+			//APPL_INFO("keyEvent : <del> pos=" << m_cursorPos);
+			if (m_buffer->hasTextSelected()) {
+				m_buffer->removeSelection();
+			} else {
+				appl::Buffer::Iterator pos = m_buffer->cursor();
+				appl::Buffer::Iterator posEnd = pos;
+				--pos;
+				replace("", pos, posEnd);
+			}
+			markToRedraw();
+			return true;
+		}
+		m_buffer->setSelectMode(false);
+		// normal adding char ...
+		char output[5];
+		int32_t nbElement = localValue.getUtf8(output);
+		if (    m_buffer->hasTextSelected() == false
+		     && _event.getSpecialKey().isSetInsert() == true) {
+			appl::Buffer::Iterator pos = m_buffer->cursor();
+			appl::Buffer::Iterator posEnd = pos;
+			++posEnd;
+			replace(localValue, pos, posEnd);
+		} else {
+			etk::UString myString = output;
+			write(myString);
+		}
+		markToRedraw();
+		return true;
+	}
+	// move events ...
+	if (_event.getStatus() == ewol::keyEvent::statusDown) {
+		bool needUpdatePosition = true;
+		// check selection event ...
+		switch(_event.getType()) {
+			case ewol::keyEvent::keyboardLeft:
+				//APPL_INFO("keyEvent : <LEFT>");
+				moveCursorLeft();
+				break;
+			case ewol::keyEvent::keyboardRight:
+				//APPL_INFO("keyEvent : <RIGHT>");
+				moveCursorRight();
+				break;
+			case ewol::keyEvent::keyboardUp:
+				//APPL_INFO("keyEvent : <UP>");
+				moveCursorUp(1);
+				break;
+			case ewol::keyEvent::keyboardDown:
+				//APPL_INFO("keyEvent : <DOWN>");
+				moveCursorDown(1);
+				break;
+			case ewol::keyEvent::keyboardPageUp:
+				//APPL_INFO("keyEvent : <PAGE-UP>");
+				//TextDMoveUp(m_displaySize.y());
+				break;
+			case ewol::keyEvent::keyboardPageDown:
+				//APPL_INFO("keyEvent : <PAGE-DOWN>");
+				//TextDMoveDown(m_displaySize.y());
+				break;
+			case ewol::keyEvent::keyboardStart:
+				//APPL_INFO("keyEvent : <Start of line>");
+				moveCursorLeft(moveEnd);
+				break;
+			case ewol::keyEvent::keyboardEnd:
+				//APPL_INFO("keyEvent : <End of line>");
+				moveCursorRight(moveEnd);
+				break;
+			default:
+				break;
+		}
 		markToRedraw();
 		return true;
 	}
@@ -190,44 +281,144 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 		return false;
 	}
 	keepFocus();
-	vec2 relativePos = relativePosition(_event.getPos());
-	// invert for the buffer event ...
-	relativePos.setY(m_size.y()-relativePos.y());
-	// just forward event  == > manage directly in the buffer
-	if (m_buffer->onEventInput(_event, m_displayText, relativePos) == true) {
+	// First call plugin
+	if (appl::textPluginManager::onEventInput(*this, _event) == true) {
 		markToRedraw();
 		return true;
 	}
-	return true;
+	vec2 relativePos = relativePosition(_event.getPos());
+	// invert for the buffer event ...
+	relativePos.setY(m_size.y()-relativePos.y());
+	if (relativePos.x()<0) {
+		relativePos.setX(0);
+	}
+	// just forward event  == > manage directly in the buffer
+	if (_event.getId() == 1) {
+		// mouse selection :
+		if (_event.getType() == ewol::keyEvent::typeMouse) {
+			if (_event.getStatus() == ewol::keyEvent::statusDown) {
+				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
+				moveCursor(newPos);
+				m_buffer->setSelectMode(true);
+				markToRedraw();
+				return true;
+			} else if (_event.getStatus() == ewol::keyEvent::statusUp) {
+				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
+				moveCursor(newPos);
+				m_buffer->setSelectMode(false);
+				// TODO : Copy selection :
+				//tmpBuffer->Copy(ewol::clipBoard::clipboardSelection);
+				markToRedraw();
+				return true;
+			}
+		}
+		if (_event.getStatus() == ewol::keyEvent::statusSingle) {
+			if (_event.getType() == ewol::keyEvent::typeMouse) {
+				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
+				moveCursor(newPos);
+				markToRedraw();
+				return true;
+			}
+		} else if (_event.getStatus() == ewol::keyEvent::statusDouble) {
+			mouseEventDouble();
+			markToRedraw();
+			return true;
+		} else if (_event.getStatus() == ewol::keyEvent::statusTriple) {
+			mouseEventTriple();
+			markToRedraw();
+			return true;
+		} else if (_event.getStatus() == ewol::keyEvent::statusMove) {
+			if (m_buffer->getSelectMode() == true) {
+				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
+				moveCursor(newPos);
+				markToRedraw();
+				return true;
+			}
+		}
+	} else if (2 == _event.getId()) {
+		if (ewol::keyEvent::statusSingle == _event.getStatus()) {
+			appl::Buffer::Iterator newPos = getMousePosition(relativePos);
+			moveCursor(newPos);
+			ewol::clipBoard::request(ewol::clipBoard::clipboardSelection);
+			markToRedraw();
+			return true;
+		}
+	}
+	return false;
+}
+
+
+void appl::TextViewer::mouseEventDouble(void) {
+	//m_selectMode = false;
+	appl::Buffer::Iterator beginPos, endPos;
+	if (true == m_buffer->getPosAround(m_buffer->cursor(), beginPos, endPos)) {
+		moveCursor(endPos);
+		m_buffer->setSelectionPos(beginPos);
+	}
+	// TODO : copy(ewol::clipBoard::clipboardSelection);
+}
+
+void appl::TextViewer::mouseEventTriple(void) {
+	//m_selectMode = false;
+	moveCursor(m_buffer->getEndLine(m_buffer->cursor()));
+	m_buffer->setSelectionPos(m_buffer->getStartLine(m_buffer->cursor()));
+	// TODO : copy(ewol::clipBoard::clipboardSelection);
+}
+
+appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativePos) {
+	etk::UChar currentValue;
+	vec3 positionCurentDisplay(0,0,0);
+	vec3 tmpLetterSize = m_displayText.calculateSize((etk::UChar)'A');
+	esize_t countColomn = 0;
+	etk::UString stringToDisplay;
+	m_displayText.clear();
+	m_displayText.forceLineReturn();
+	for (appl::Buffer::Iterator it = m_buffer->begin();
+	     it != m_buffer->end();
+	     ++it) {
+		currentValue = *it;
+		m_buffer->expand(countColomn, currentValue, stringToDisplay);
+		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
+			if (stringToDisplay[kkk] == etk::UChar::Return) {
+				// TODO : Remove this, use the automatic line manager ...
+				m_displayText.forceLineReturn();
+				countColomn = 0;
+			} else {
+				m_displayText.print(stringToDisplay[kkk]);
+			}
+		}
+		if (-_relativePos.y() >= positionCurentDisplay.y()) {
+			if (-_relativePos.y() < positionCurentDisplay.y()+tmpLetterSize.y()) {
+				//APPL_DEBUG("line position : " << _textDrawer.getPos() << " " << positionCurentDisplay );
+				if (    _relativePos.x() >= positionCurentDisplay.x()
+				     && _relativePos.x() < m_displayText.getPos().x() ) {
+					return it;
+				}
+			} else {
+				return --it;
+			}
+		}
+		positionCurentDisplay = m_displayText.getPos();
+		countColomn += stringToDisplay.size();
+	}
+	return m_buffer->end();
 }
 
 void appl::TextViewer::onEventClipboard(ewol::clipBoard::clipboardListe_te _clipboardID) {
 	if (m_buffer != NULL) {
 		etk::UString data = ewol::clipBoard::get(_clipboardID);
-		m_buffer->paste(data);
+		write(data);
 	}
 	markToRedraw();
 }
 
 void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
-	// force redraw of the widget
-	if (    _msg.getMessage() == ednMsgGuiCopy
-	     || _msg.getMessage() == ednMsgGuiCut) {
-		if (m_buffer != NULL) {
-			etk::UString value;
-			m_buffer->copy(value);
-			if (value.size() != 0) {
-				ewol::clipBoard::set(ewol::clipBoard::clipboardStd, value);
-			}
-		}
-		if (_msg.getMessage() == ednMsgGuiCut) {
-			m_buffer->removeSelection();
-		}
-	} else if (_msg.getMessage() == ednMsgGuiPaste) {
-		if (m_buffer != NULL) {
-			ewol::clipBoard::request(ewol::clipBoard::clipboardStd);
-		}
-	} else if (_msg.getMessage() == ednMsgGuiUndo) {
+	// First call plugin
+	if (appl::textPluginManager::onReceiveMessage(*this, _msg) == true) {
+		markToRedraw();
+		return;
+	}
+	if (_msg.getMessage() == ednMsgGuiUndo) {
 		if (m_buffer != NULL) {
 			//m_buffer->undo();
 		}
@@ -258,3 +449,231 @@ void appl::TextViewer::setFontName(const etk::UString& _fontName) {
 	m_displayText.setFontName(_fontName);
 }
 
+
+
+bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
+	if (m_buffer == NULL) {
+		return false;
+	}
+	if (appl::textPluginManager::onCursorMove(*this, _pos) == true) {
+		return true;
+	}
+	m_buffer->moveCursor((esize_t)_pos);
+	return true;
+}
+
+bool appl::TextViewer::write(const etk::UString& _data) {
+	if (m_buffer == NULL) {
+		return false;
+	}
+	if (m_buffer->hasTextSelected() == true) {
+		return replace(_data);
+	}
+	return write(_data, m_buffer->cursor());
+}
+
+bool appl::TextViewer::write(const etk::UString& _data, const appl::Buffer::Iterator& _pos) {
+	if (m_buffer == NULL) {
+		return false;
+	}
+	bool ret = false;
+	if (appl::textPluginManager::onWrite(*this, _pos, _data) == true) {
+		ret = true;
+	} else {
+		ret = m_buffer->write(_data, _pos);
+	}
+	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+	return ret;
+}
+
+bool appl::TextViewer::replace(const etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+	if (m_buffer == NULL) {
+		return false;
+	}
+	bool ret = false;
+	if (appl::textPluginManager::onReplace(*this, _pos, _data, _posEnd) == true) {
+		ret = true;
+	} else {
+		ret = m_buffer->replace(_data, _pos, _posEnd);
+	}
+	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+	return ret;
+}
+
+bool appl::TextViewer::replace(const etk::UString& _data) {
+	if (m_buffer == NULL) {
+		return false;
+	}
+	if (m_buffer->hasTextSelected() == false) {
+		return write(_data);
+	}
+	return replace(_data, m_buffer->selectStart(), m_buffer->selectStop());
+}
+
+void appl::TextViewer::remove(void) {
+	if (m_buffer == NULL) {
+		return;
+	}
+	if (m_buffer->hasTextSelected() == false) {
+		// nothing to do ...
+		return;
+	}
+	if (appl::textPluginManager::onRemove(*this, m_buffer->selectStart(), m_buffer->selectStop()) == false) {
+		m_buffer->removeSelection();
+	}
+	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+}
+
+
+
+void appl::TextViewer::moveCursorRight(appl::TextViewer::moveMode _mode) {
+	if (m_buffer == NULL) {
+		return;
+	}
+	appl::Buffer::Iterator it;
+	switch (_mode) {
+		default:
+		case moveLetter:
+			it = m_buffer->cursor();
+			++it;
+			moveCursor(it);
+			break;
+		case moveWord:
+			// TODO : ...
+			break;
+		case moveEnd:
+			it = m_buffer->getEndLine(m_buffer->cursor());
+			moveCursor(it);
+			break;
+	}
+}
+
+void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
+	if (m_buffer == NULL) {
+		return;
+	}
+	appl::Buffer::Iterator it;
+	switch (_mode) {
+		default:
+		case moveLetter:
+			it = m_buffer->cursor();;
+			--it;
+			moveCursor(it);
+			break;
+		case moveWord:
+			// TODO : ...
+			break;
+		case moveEnd:
+			it = m_buffer->getStartLine(m_buffer->cursor());
+			moveCursor(++it);
+			break;
+	}
+}
+
+void appl::TextViewer::moveCursorUp(esize_t _nbLine) {
+	if (m_buffer == NULL) {
+		return;
+	}
+	// find the position of the start of the line.
+	appl::Buffer::Iterator lineStartPos = m_buffer->getStartLine(m_buffer->cursor());
+	// check if we can go up ...
+	if (lineStartPos == m_buffer->begin()) {
+		return;
+	}
+	// Decide what column to move to, if there's a preferred column use that
+	if (m_buffer->getFavoriteUpDownPos() < 0) {
+		// TODO : Remove this +1 !!!
+		m_buffer->setFavoriteUpDownPos(getScreenSize(lineStartPos+1, m_buffer->cursor()));
+	}
+	EWOL_DEBUG("ploop : " << m_buffer->getFavoriteUpDownPos());
+	// get the previous line
+	appl::Buffer::Iterator prevLineStartPos = m_buffer->countBackwardNLines(lineStartPos, _nbLine);
+	//APPL_INFO("Move line UP result : prevLineStartPos=" << prevLineStartPos);
+	// get the display char position
+	appl::Buffer::Iterator newPos = getPosSize(prevLineStartPos, m_buffer->getFavoriteUpDownPos());
+	//APPL_INFO("Move to colomn : column=" << column << " newPos=" << newPos);
+	float posStore = m_buffer->getFavoriteUpDownPos();
+	moveCursor(newPos);
+	m_buffer->setFavoriteUpDownPos(posStore);
+}
+
+void appl::TextViewer::moveCursorDown(esize_t _nbLine) {
+	if (m_buffer == NULL) {
+		return;
+	}
+	// check if we are not at the end of Buffer
+	if (m_buffer->cursor() == m_buffer->end() ) {
+		return;
+	}
+	// find the position of the start of the line.
+	appl::Buffer::Iterator lineStartPos = m_buffer->getStartLine(m_buffer->cursor());
+	
+	if (m_buffer->getFavoriteUpDownPos() < 0) {
+		// TODO : Remove this +1 !!!
+		m_buffer->setFavoriteUpDownPos(getScreenSize(lineStartPos+1, m_buffer->cursor()));
+	}
+	EWOL_DEBUG("ploop : " << m_buffer->getFavoriteUpDownPos());
+	// get the next line :
+	appl::Buffer::Iterator nextLineStartPos = m_buffer->countForwardNLines(lineStartPos, _nbLine);
+	//APPL_INFO("Move line DOWN result : nextLineStartPos=" << nextLineStartPos);
+	// get the display char position
+	appl::Buffer::Iterator newPos = getPosSize(nextLineStartPos, m_buffer->getFavoriteUpDownPos());
+	//APPL_INFO("Move to colomn : column=" << column << " newPos=" << newPos);
+	float posStore = m_buffer->getFavoriteUpDownPos();
+	moveCursor(newPos);
+	m_buffer->setFavoriteUpDownPos(posStore);
+}
+
+// TODO : Rename ...
+appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator& _startLinePos, float _distance) {
+	etk::UChar currentValue;
+	esize_t countColomn = 0;
+	etk::UString stringToDisplay;
+	m_displayText.clear();
+	m_displayText.forceLineReturn();
+	for (appl::Buffer::Iterator it = _startLinePos;
+	     it != m_buffer->end();
+	     ++it) {
+		currentValue = *it;
+		m_buffer->expand(countColomn, currentValue, stringToDisplay);
+		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
+			if (stringToDisplay[kkk] == etk::UChar::Return) {
+				return it;
+			} else {
+				m_displayText.print(stringToDisplay[kkk]);
+			}
+		}
+		if (m_displayText.getPos().x() >= _distance) {
+			return it;
+		}
+		countColomn += stringToDisplay.size();
+	}
+	return m_buffer->end();
+}
+
+// TODO : Rename ...
+float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePos, const appl::Buffer::Iterator& _stopPos) {
+	float ret = 0;
+	etk::UChar currentValue;
+	esize_t countColomn = 0;
+	etk::UString stringToDisplay;
+	m_displayText.clear();
+	
+	for (appl::Buffer::Iterator it = _startLinePos;
+	     it != m_buffer->end() || it != _stopPos;
+	     ++it) {
+		currentValue = *it;
+		//APPL_DEBUG("parse : " << currentValue);
+		m_buffer->expand(countColomn, currentValue, stringToDisplay);
+		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
+			if (stringToDisplay[kkk] == etk::UChar::Return) {
+				return m_displayText.getPos().x() + 2; // TODO : Add the +2 for the end of line ...
+			} else {
+				m_displayText.print(stringToDisplay[kkk]);
+			}
+		}
+		ret = m_displayText.getPos().x();
+		countColomn += stringToDisplay.size();
+	}
+	return ret;
+}
