@@ -21,10 +21,12 @@ namespace appl {
 	class TextViewerPlugin;
 	class TextPluginCopy;
 	class TextPluginMultiLineTab;
+	class TextPluginAutoIndent;
 	class TextViewer : public widget::WidgetScrooled {
 		friend class appl::TextViewerPlugin;
 		friend class appl::TextPluginCopy;
 		friend class appl::TextPluginMultiLineTab;
+		friend class appl::TextPluginAutoIndent;
 		public:
 			TextViewer(const etk::UString& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);

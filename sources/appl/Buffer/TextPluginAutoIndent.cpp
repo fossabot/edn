@@ -1,38 +1,61 @@
+/**
+ * @author Edouard DUPIN
+ * 
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * 
+ * @license GPL v3 (see license file)
+ */
 
+
+#include <appl/Buffer/TextPluginAutoIndent.h>
+#include <ewol/clipBoard.h>
+#include <appl/Gui/TextViewer.h>
+
+
+appl::TextPluginAutoIndent::TextPluginAutoIndent(void) {
+	m_activateOnEventEntry = true;
+}
+
+bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
+                                              const ewol::EventEntry& _event) {
+	/*
+	if (enable == false) {
+		return false;
+	}
+	*/
 	// just forward event  == > manage directly in the buffer
-	if (_event.getType() == ewol::keyEvent::keyboardChar) {
-		//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
-		if (_event.getStatus() != ewol::keyEvent::statusDown) {
-			return false;
+	if (_event.getType() != ewol::keyEvent::keyboardChar) {
+		return false;
+	}
+	//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
+	if (_event.getStatus() != ewol::keyEvent::statusDown) {
+		return false;
+	}
+	if (_event.getChar() != etk::UChar::Return) {
+		return false;
+	}
+	if (_event.getSpecialKey().isSetShift() == false) {
+		return false;
+	}
+	appl::Buffer::Iterator startLine = _textDrawer.m_buffer->cursor();
+	if (_textDrawer.m_buffer->hasTextSelected() == true) {
+		startLine = _textDrawer.m_buffer->selectStart();
+	}
+	etk::UString data = etk::UChar::Return;
+	
+	for (appl::Buffer::Iterator it = startLine;
+	     it != _textDrawer.m_buffer->end();
+	     ++it) {
+		if (*it == etk::UChar::Space) {
+			data.append(etk::UChar::Space);
+		} else if(*it == etk::UChar::Tabulation) {
+			data.append(etk::UChar::Tabulation);
+		} else {
+			break;
 		}
-		etk::UChar localValue = _event.getChar();
-		if (localValue == etk::UChar::Return) {
-			if (true == _event.getSpecialKey().isSetShift()) {
-				localValue = etk::UChar::CarrierReturn;
-			} else {
-				/*
-				m_data.insert(m_cursorPos, '\n');
-				if (true == globals::isSetAutoIndent() ) {
-					int32_t l_lineStart;
-					// get the begin of the line or the begin of the line befor selection
-					if (false == haveSelectionActive) {
-						l_lineStart = m_EdnBuf.StartOfLine(m_cursorPos);
-					} else {
-						l_lineStart = m_EdnBuf.StartOfLine(SelectionStart);
-					}
-					// add same characters in the temporar buffer
-					for (int32_t kk=l_lineStart; kk<m_cursorPos; kk++) {
-						if (' ' == m_EdnBuf[kk]) {
-							tmpVect.pushBack(' ');
-						} else if('\t' == m_EdnBuf[kk]) {
-							tmpVect.pushBack('\t');
-						} else {
-							break;
-						}
-					}
-				}
-				m_selectMode = false;
-				moveCursor(m_cursorPos + 1);
-				return true;
-				*/
-			}
+	}
+	APPL_DEBUG("kjhkjhkjhkjh : '" << data << "'");
+	_textDrawer.write(data);
+	return true;
+}
+
