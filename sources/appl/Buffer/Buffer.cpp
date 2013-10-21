@@ -82,7 +82,8 @@ appl::Buffer::Iterator appl::Buffer::selectStop(void) {
 appl::Buffer::Buffer(void) :
   m_cursorPos(0),
   m_cursorSelectPos(-1),
-  m_cursorPreferredCol(-1) {
+  m_cursorPreferredCol(-1),
+  m_nbLines(0) {
 	
 }
 
@@ -93,7 +94,9 @@ bool appl::Buffer::loadFile(const etk::UString& _name) {
 	if (file.exist() == false) {
 		return false;
 	}
+	m_nbLines = 0;
 	if (true == m_data.dumpFrom(file) ) {
+		countNumberofLine();
 		return true;
 	}
 	return false;
@@ -101,6 +104,21 @@ bool appl::Buffer::loadFile(const etk::UString& _name) {
 
 void appl::Buffer::setFileName(const etk::UString& _name) {
 	// TODO : ...
+}
+
+
+void appl::Buffer::countNumberofLine(void) {
+	m_nbLines = 0;
+	for (Iterator it = begin();
+	     it != end();
+	     ++it) {
+		if (*it == etk::UChar::Return) {
+			++m_nbLines;
+		}
+	}
+	if (*end() == etk::UChar::Return) {
+		++m_nbLines;
+	}
 }
 
 
@@ -124,7 +142,7 @@ appl::Buffer::Iterator appl::Buffer::getEndLine(const appl::Buffer::Iterator& _p
 bool appl::Buffer::search(const appl::Buffer::Iterator& _pos, const etk::UChar& _search, appl::Buffer::Iterator& _result) {
 	// move in the string
 	etk::UChar value;
-	for (Iterator it = position(m_cursorPos);
+	for (Iterator it = _pos;
 	     it != end();
 	     ++it) {
 		if (*it == _search) {
@@ -139,7 +157,7 @@ bool appl::Buffer::search(const appl::Buffer::Iterator& _pos, const etk::UChar& 
 bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos, const etk::UChar& _search, appl::Buffer::Iterator& _result) {
 	// move in the string
 	etk::UChar value;
-	for (Iterator it = --position(m_cursorPos);
+	for (Iterator it = _pos - 1;
 	     it != begin();
 	     --it) {
 		//APPL_DEBUG("compare : " << *it << " ?= " << _search);
@@ -376,11 +394,24 @@ bool appl::Buffer::copy(etk::UString& _data) {
 	return false;
 }
 
+void appl::Buffer::copy(etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+	_data.clear();
+	esize_t startPos = getStartSelectionPos();
+	esize_t endPos = getStopSelectionPos();
+	for (Iterator it = _pos;
+	     it != _posEnd &&
+	     it != end();
+	     ++it) {
+		_data += *it;
+	}
+}
+
 bool appl::Buffer::write(const etk::UString& _data, const appl::Buffer::Iterator& _pos) {
 	etk::Char output = _data.c_str();
 	m_data.insert(_pos, (int8_t*)((void*)output), output.size());
 	m_selectMode = false;
 	moveCursor((esize_t)_pos+output.size());
+	countNumberofLine(); // TODO : use more intelligent counter
 	return true;
 }
 
@@ -389,6 +420,7 @@ bool appl::Buffer::replace(const etk::UString& _data, const appl::Buffer::Iterat
 	m_data.replace(_pos, (esize_t)_posEnd-(esize_t)_pos, (int8_t*)((void*)output), output.size());
 	m_selectMode = false;
 	moveCursor((esize_t)_pos+output.size());
+	countNumberofLine(); // TODO : use more intelligent counter
 	return true;
 }
 
@@ -399,6 +431,7 @@ void appl::Buffer::removeSelection(void) {
 		m_data.remove(startPos, endPos-startPos);
 		m_selectMode = false;
 		moveCursor(startPos);
+		countNumberofLine(); // TODO : use more intelligent counter
 	}
 }
 

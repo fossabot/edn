@@ -132,6 +132,58 @@ namespace appl {
 						return false;
 					}
 					/**
+					 * @brief <= iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator<= (const Iterator& _obj) const {
+						if (m_data != _obj.m_data) {
+							return false;
+						}
+						if (m_current <= _obj.m_current) {
+							return true;
+						}
+						return false;
+					}
+					/**
+					 * @brief >= iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator>= (const Iterator& _obj) const {
+						if (m_data != _obj.m_data) {
+							return false;
+						}
+						if (m_current >= _obj.m_current) {
+							return true;
+						}
+						return false;
+					}
+					/**
+					 * @brief < iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator< (const Iterator& _obj) const {
+						if (m_data != _obj.m_data) {
+							return false;
+						}
+						if (m_current < _obj.m_current) {
+							return true;
+						}
+						return false;
+					}
+					/**
+					 * @brief > iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator> (const Iterator& _obj) const {
+						if (m_data != _obj.m_data) {
+							return false;
+						}
+						if (m_current > _obj.m_current) {
+							return true;
+						}
+						return false;
+					}
+					/**
 					 * @brief Get the value on the current element
 					 * @return The request element value
 					 */
@@ -193,34 +245,26 @@ namespace appl {
 			etk::Buffer& getData(void) {
 				return m_data;
 			};
-		public:
+		protected:
 			esize_t m_cursorPos; //!< cursor position.
+		public:
+			void moveCursor(esize_t _pos);
+		protected:
 			int32_t m_cursorSelectPos; //!< cursor position.
 		public:
+			/**
+			 * @brief Set the selection position in the buffer.
+			 * @param[in] _pos Position of the selection.
+			 */
 			void setSelectionPos(const Iterator& _pos);
+			/**
+			 * @brief Un select request.
+			 */
 			void unSelect(void);
-		protected:
-			float m_cursorPreferredCol; //!< position of the cursor when up and down is done.
-		public:
-			void setFavoriteUpDownPos(float _val) {
-				m_cursorPreferredCol = _val;
-			}
-			float getFavoriteUpDownPos(void) {
-				return m_cursorPreferredCol;
-			}
-		private:
-			bool m_selectMode; //!< when true, the select mode keep the moving selecting
-		public:
-			bool getSelectMode(void) {
-				return m_selectMode;
-			}
-			void setSelectMode(bool _status) {
-				m_selectMode = _status;
-			}
-			// note : We need the text drawer interface due to the fact that the move depend on the text display properties.
-			bool onEventEntry(const ewol::EventEntry& _event, ewol::Text& _textDrawer);
-			//bool onEventInput(const ewol::EventInput& _event, ewol::Text& _textDrawer, const vec2& _relativePos);
-			void moveCursor(esize_t _pos);
+			/**
+			 * @brief Remove the selection of the buffer. (do nothing if no secection)
+			 */
+			void removeSelection(void);
 			/**
 			 * @brief Get the status of selection.
 			 * @return true if we have a curent selection, false otherwise.
@@ -242,6 +286,48 @@ namespace appl {
 			esize_t getStopSelectionPos(void) {
 				return etk_max(m_cursorPos, m_cursorSelectPos);
 			}
+		protected:
+			float m_cursorPreferredCol; //!< position of the cursor when up and down is done.
+		public:
+			/**
+			 * @brief Set the favorite up and down position (distance from the left of the screen.
+			 * @param[in] _val New distance (in pixels).
+			 */
+			void setFavoriteUpDownPos(float _val) {
+				m_cursorPreferredCol = _val;
+			}
+			/**
+			 * @brief Get the favorite distance from the left screen (For up and down moving).
+			 * @return The distance in pixels.
+			 */
+			float getFavoriteUpDownPos(void) {
+				return m_cursorPreferredCol;
+			}
+		protected:
+			bool m_selectMode; //!< when true, the select mode keep the moving selecting
+		public:
+			/**
+			 * @brief Set the selection mode (if true, the move event creata a selection)
+			 * @param[in] _status New status of the section.
+			 */
+			void setSelectMode(bool _status) {
+				m_selectMode = _status;
+			}
+			/**
+			 * @brief Get the selection mode (if true, the move event creata a selection)
+			 * @return The selecting mode.
+			 */
+			bool getSelectMode(void) {
+				return m_selectMode;
+			}
+		public:
+			/**
+			 * @brief Get the position of selection around (select word).
+			 * @param[in] _startPos Position to start the selection.
+			 * @param[out] _beginPos Position where the element start.
+			 * @param[out] _endPos Position where the element stop.
+			 * @return true if we find a selection around.
+			 */
 			bool getPosAround(const Iterator& _startPos, Iterator &_beginPos, Iterator &_endPos);
 			/**
 			 * @brief Expand the specify char to have a user frendly display for special char and tabs
@@ -250,7 +336,6 @@ namespace appl {
 			 * @param[out] _out String that represent the curent value to display
 			 */
 			void expand(esize_t& _indent, const etk::UChar& _value, etk::UString& _out) const;
-		public:
 			/**
 			 * @brief get the start of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.
@@ -281,15 +366,15 @@ namespace appl {
 			bool searchBack(const Iterator& _pos, const etk::UChar& _search, Iterator& _result);
 			/**
 			 * @brief find the first character of the line "nLines" forward
-			 * @param[in,out] _startPos Start position.
-			 * @param[in,out] _nLines Number of line to count.
+			 * @param[in] _startPos Start position.
+			 * @param[in] _nLines Number of line to count.
 			 * @return position of the starting the line.
 			 */
 			Iterator countForwardNLines(const Iterator& _startPos, int32_t _nLines);
 			/**
 			 * @brief find the first character of the line "nLines" backwards
-			 * @param[in,out] _startPos Start position to count (this caracter is not counted)
-			 * @param[in,out] _nLines Number of line to count (if  == 0 means find the beginning of the line)
+			 * @param[in] _startPos Start position to count (this caracter is not counted)
+			 * @param[in] _nLines Number of line to count (if  == 0 means find the beginning of the line)
 			 * @return position of the starting the line
 			 */
 			Iterator countBackwardNLines(const Iterator& _startPos, int32_t _nLines);
@@ -301,12 +386,26 @@ namespace appl {
 			 */
 			bool copy(etk::UString& _data);
 			/**
-			 * @brief Remove the selection of the buffer. (do nothing if no secection)
+			 * @brief copy data in the _data ref value.
+			 * @param[out] _data Output stream to copy.
+			 * @param[in] _pos Position to add the data.
+			 * @param[in] _posEnd End position to end replace the data.
 			 */
-			void removeSelection(void);
-			
-			
+			void copy(etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
+			/**
+			 * @brief Write data at a specific position
+			 * @param[in] _data Data to insert in the buffer
+			 * @param[in] _pos Position to add the data.
+			 * @return true if the write is done corectly
+			 */
 			bool write(const etk::UString& _data, const appl::Buffer::Iterator& _pos);
+			/**
+			 * @brief Write data at a specific position
+			 * @param[in] _data Data to insert in the buffer
+			 * @param[in] _pos Position to add the data.
+			 * @param[in] _posEnd End position to end replace the data.
+			 * @return true if the write is done corectly
+			 */
 			bool replace(const etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
 		public: // iterator section :
 			/**
@@ -340,6 +439,21 @@ namespace appl {
 			 * @return The Iterator
 			 */
 			Iterator selectStop(void);
+		protected:
+			esize_t m_nbLines; //!< number of line in the buffer
+		public:
+			/**
+			 * @brief Get the number of line in the buffer.
+			 * @return number of line in the Buffer.
+			 */
+			esize_t getNumberOfLines(void) {
+				return m_nbLines;
+			}
+		protected:
+			/**
+			 * @brief Count the number of line in the buffer
+			 */
+			void countNumberofLine(void);
 	};
 };
 

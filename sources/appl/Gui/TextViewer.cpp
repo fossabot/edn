@@ -63,10 +63,6 @@ bool appl::TextViewer::calculateMinSize(void) {
 	return true;
 }
 
-void appl::TextViewer::calculateMaxSize(void) {
-	m_maxSize.setX(256);
-	m_maxSize.setY(256);
-}
 
 void appl::TextViewer::onDraw(void) {
 	m_displayDrawing.draw();
@@ -79,7 +75,6 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		return;
 	}
 	// For the scrooling windows
-	calculateMaxSize();
 	m_displayDrawing.clear();
 	m_displayText.clear();
 	
@@ -89,6 +84,8 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	m_displayDrawing.rectangleWidth(m_size);
 	
 	if (m_buffer == NULL) {
+		m_maxSize.setX(256);
+		m_maxSize.setY(256);
 		m_displayText.setTextAlignement(10, m_size.x()-20, ewol::Text::alignLeft);
 		m_displayText.setRelPos(vec3(10, 0, 0));
 		etk::UString tmpString("<br/>\n"
@@ -118,23 +115,74 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	m_displayText.setColor(etk::Color<>(0, 0, 0, 256));
 	float countNbLine = 1;
 	esize_t countColomn = 0;
-	m_displayText.setPos(vec3(0.0f, m_size.y(), 0));
-	m_displayText.forceLineReturn();
 	// the siplay string :
 	etk::UString stringToDisplay;
 	esize_t bufferElementSize = 0;
 	etk::UChar currentValue;
 	bool isSelect = false;
-	int32_t selectPosStart = etk_min(m_buffer->m_cursorPos, m_buffer->m_cursorSelectPos);
-	int32_t selectPosStop = etk_max(m_buffer->m_cursorPos, m_buffer->m_cursorSelectPos);
-	if (m_buffer->m_cursorSelectPos<0) {
-		selectPosStart = -1;
-		selectPosStop = -1;
+	appl::Buffer::Iterator selectPosStart = m_buffer->begin();
+	appl::Buffer::Iterator selectPosStop = m_buffer->begin();
+	if (m_buffer->hasTextSelected() == true) {
+		selectPosStart = m_buffer->selectStart();
+		selectPosStop = m_buffer->selectStop();
 	}
-	for (appl::Buffer::Iterator it = m_buffer->begin();
+	m_displayText.setPos(vec3(-m_originScrooled.x(), m_size.y()+m_originScrooled.y(), 0));
+	m_displayText.forceLineReturn();
+	appl::Buffer::Iterator startingIt = m_buffer->begin();
+	int32_t startLineId = 0;
+	if (m_size.y() < m_displayText.getPos().y()) {
+		for (startingIt = m_buffer->begin();
+		     startingIt != m_buffer->end();
+		     ++startingIt) {
+			if (*startingIt == etk::UChar::Return) {
+				++startLineId;
+				m_displayText.forceLineReturn();
+				if (m_size.y() >= m_displayText.getPos().y()) {
+					++startingIt;
+					break;
+				}
+			}
+		}
+	}
+	// Display line number :
+	m_lastOffsetDisplay = 0;
+	{
+		esize_t nbLine = m_buffer->getNumberOfLines();
+		float nbLineCalc = nbLine;
+		vec3 tmpLetterSize = m_displayText.calculateSize((etk::UChar)'A');
+		int32_t nbChar = 0;
+		while (nbLineCalc >= 1.0f) {
+			++nbChar;
+			nbLineCalc /= 10.0f;
+		}
+		m_lastOffsetDisplay = tmpLetterSize.x() * (float)nbChar + 1.0f;
+		m_displayText.setColorBg(etk::Color<>(0xB0B0B0FF));
+		m_displayText.setColor(etk::Color<>(0x000080FF));
+		m_displayText.setClippingMode(false);
+		
+		vec3 startWriteRealPosition = m_displayText.getPos();
+		m_displayText.setPos(vec3(0.0f, startWriteRealPosition.y(), 0.0f));
+		for (int32_t iii=startLineId;
+		     iii<nbLine;
+		     ++iii) {
+			char tmpLineNumber[50];
+			sprintf(tmpLineNumber, "%*d", nbChar, iii);
+			m_displayText.print(tmpLineNumber);
+			m_displayText.forceLineReturn();
+			if (m_displayText.getPos().y() < -20.0f ) {
+				break;
+			}
+		}
+		m_displayText.setPos(vec3(-m_originScrooled.x()+m_lastOffsetDisplay, startWriteRealPosition.y(), 0.0f));
+		m_displayText.setColorBg(etk::Color<>(0xFFFFFF00));
+		m_displayText.setColor(etk::Color<>(0x000000FF));
+		m_displayText.setClipping(vec2(m_lastOffsetDisplay, 0), m_size);
+	}
+	float maxSizeX = 0;
+	for (appl::Buffer::Iterator it = startingIt;
 	     it != m_buffer->end();
 	     ++it) {
-		if ((esize_t)it == m_buffer->m_cursorPos) {
+		if (it == m_buffer->cursor()) {
 			// need to display the cursor :
 			tmpCursorPosition = m_displayText.getPos();
 		}
@@ -144,11 +192,16 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		if (currentValue == etk::UChar::Return) {
 			countNbLine += 1;
 			countColomn = 0;
+			maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
 			m_displayText.forceLineReturn();
+			m_displayText.setPos(vec3(-m_originScrooled.x()+m_lastOffsetDisplay, m_displayText.getPos().y(), 0.0f));
+			if (m_displayText.getPos().y() < -20.0f ) {
+				break;
+			}
 			continue;
 		}
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
-		if ((esize_t)it >= selectPosStart && (esize_t)it < selectPosStop) {
+		if (it >= selectPosStart && it < selectPosStop) {
 			m_displayText.setColorBg(etk::Color<>(0x00FF00FF));
 		} else {
 			m_displayText.setColorBg(etk::Color<>(0x00000000));
@@ -157,6 +210,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		m_displayText.print(stringToDisplay);
 		countColomn += stringToDisplay.size();
 	}
+	maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
 	if (tmpCursorPosition.z()!=-1) {
 		// display the cursor:
 		//APPL_DEBUG("display cursor at position : " << tmpCursorPosition);
@@ -165,6 +219,14 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		m_displayText.setColorBg(etk::Color<>(0xFF0000FF));
 		m_displayText.printCursor(m_insertMode);
 	}
+	// set maximum size (X&Y) :
+	{
+		vec3 tmpLetterSize = m_displayText.calculateSize((etk::UChar)'A');
+		esize_t nbLines = m_buffer->getNumberOfLines();
+		m_maxSize.setX(maxSizeX+m_originScrooled.x());
+		m_maxSize.setY((float)nbLines*tmpLetterSize.y());
+	}
+	
 	// call the herited class...
 	WidgetScrooled::onRegenerateDisplay();
 }
@@ -281,12 +343,21 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 		return false;
 	}
 	keepFocus();
-	// First call plugin
+	// First call the scrolling widget :
+	if (WidgetScrooled::onEventInput(_event) == true) {
+		markToRedraw();
+		return true;
+	}
+	// Second call plugin
 	if (appl::textPluginManager::onEventInput(*this, _event) == true) {
 		markToRedraw();
 		return true;
 	}
 	vec2 relativePos = relativePosition(_event.getPos());
+	// offset for the lineNumber:
+	relativePos -= vec2(m_lastOffsetDisplay, 0);
+	// offset for the scrolling:
+	relativePos += vec2(m_originScrooled.x(), -m_originScrooled.y());
 	// invert for the buffer event ...
 	relativePos.setY(m_size.y()-relativePos.y());
 	if (relativePos.x()<0) {
@@ -585,7 +656,7 @@ void appl::TextViewer::moveCursorUp(esize_t _nbLine) {
 		// TODO : Remove this +1 !!!
 		m_buffer->setFavoriteUpDownPos(getScreenSize(lineStartPos+1, m_buffer->cursor()));
 	}
-	EWOL_DEBUG("ploop : " << m_buffer->getFavoriteUpDownPos());
+	EWOL_DEBUG("move_up : " << m_buffer->getFavoriteUpDownPos());
 	// get the previous line
 	appl::Buffer::Iterator prevLineStartPos = m_buffer->countBackwardNLines(lineStartPos, _nbLine);
 	//APPL_INFO("Move line UP result : prevLineStartPos=" << prevLineStartPos);
@@ -612,7 +683,7 @@ void appl::TextViewer::moveCursorDown(esize_t _nbLine) {
 		// TODO : Remove this +1 !!!
 		m_buffer->setFavoriteUpDownPos(getScreenSize(lineStartPos+1, m_buffer->cursor()));
 	}
-	EWOL_DEBUG("ploop : " << m_buffer->getFavoriteUpDownPos());
+	EWOL_DEBUG("move down : " << m_buffer->getFavoriteUpDownPos());
 	// get the next line :
 	appl::Buffer::Iterator nextLineStartPos = m_buffer->countForwardNLines(lineStartPos, _nbLine);
 	//APPL_INFO("Move line DOWN result : nextLineStartPos=" << nextLineStartPos);
@@ -660,7 +731,7 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 	m_displayText.clear();
 	
 	for (appl::Buffer::Iterator it = _startLinePos;
-	     it != m_buffer->end() || it != _stopPos;
+	     it != m_buffer->end() && it <= _stopPos;
 	     ++it) {
 		currentValue = *it;
 		//APPL_DEBUG("parse : " << currentValue);

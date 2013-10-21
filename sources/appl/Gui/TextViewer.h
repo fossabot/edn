@@ -20,9 +20,11 @@
 namespace appl {
 	class TextViewerPlugin;
 	class TextPluginCopy;
+	class TextPluginMultiLineTab;
 	class TextViewer : public widget::WidgetScrooled {
 		friend class appl::TextViewerPlugin;
 		friend class appl::TextPluginCopy;
+		friend class appl::TextPluginMultiLineTab;
 		public:
 			TextViewer(const etk::UString& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);
@@ -33,8 +35,6 @@ namespace appl {
 		public:
 			void setFontSize(int32_t _size);
 			void setFontName(const etk::UString& _fontName);
-		private:
-			void calculateMaxSize(void);
 		protected: // derived function
 			virtual void onDraw(void);
 		public:  // Derived function
@@ -47,6 +47,8 @@ namespace appl {
 			virtual void onEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
 			virtual void onGetFocus(void);
 			virtual void onLostFocus(void);
+		private:
+			float m_lastOffsetDisplay; //!< Line number ofssed in the display
 		private:
 			bool m_insertMode; //!< the insert mode is enable
 		public:

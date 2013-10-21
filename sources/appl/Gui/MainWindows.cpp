@@ -140,12 +140,6 @@ MainWindows::MainWindows(void) {
 				myTextView->setExpand(bvec2(true,true));
 				myTextView->setFill(bvec2(true,true));
 				mySizerVert2->subWidgetAdd(myTextView);
-				/*
-				myCodeView = new CodeView("FreeMono;DejaVuSansMono", 11);
-				myCodeView->setExpand(bvec2(true,true));
-				myCodeView->setFill(bvec2(true,true));
-				mySizerVert2->subWidgetAdd(myCodeView);
-				*/
 				// search area : 
 				Search * mySearch = new Search();
 				mySizerVert2->subWidgetAdd(mySearch);

@@ -32,6 +32,7 @@ def Create(target):
 		'appl/Buffer/Buffer.cpp',
 		'appl/Buffer/TextPlugin.cpp',
 		'appl/Buffer/TextPluginCopy.cpp',
+		'appl/Buffer/TextPluginMultiLineTab.cpp',
 		'appl/Buffer/TextPluginManager.cpp',
 		'appl/Buffer/BufferManager.cpp'])
 	
