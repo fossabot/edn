@@ -27,8 +27,6 @@ appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
   m_insertMode(false) {
 	setCanHaveFocus(true);
 	registerMultiCast(ednMsgBufferId);
-	registerMultiCast(ednMsgGuiRedo);
-	registerMultiCast(ednMsgGuiUndo);
 	registerMultiCast(ednMsgGuiRm);
 	registerMultiCast(ednMsgGuiSelect);
 	registerMultiCast(ednMsgGuiChangeCharset);
@@ -146,10 +144,10 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	}
 	// Display line number :
 	m_lastOffsetDisplay = 0;
+	vec3 tmpLetterSize = m_displayText.calculateSize((etk::UChar)'A');
 	{
 		esize_t nbLine = m_buffer->getNumberOfLines();
 		float nbLineCalc = nbLine;
-		vec3 tmpLetterSize = m_displayText.calculateSize((etk::UChar)'A');
 		int32_t nbChar = 0;
 		while (nbLineCalc >= 1.0f) {
 			++nbChar;
@@ -193,6 +191,13 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			countNbLine += 1;
 			countColomn = 0;
 			maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
+			// display the end line position
+			if (it >= selectPosStart && it < selectPosStop) {
+				ewol::Drawing& draw = m_displayText.getDrawing();
+				draw.setColor(etk::Color<>(0xFF0000FF));
+				draw.setPos(m_displayText.getPos() + tmpLetterSize/4.0f);
+				draw.rectangle(m_displayText.getPos() + tmpLetterSize*3.0f/4.0f);
+			}
 			m_displayText.forceLineReturn();
 			m_displayText.setPos(vec3(-m_originScrooled.x()+m_lastOffsetDisplay, m_displayText.getPos().y(), 0.0f));
 			if (m_displayText.getPos().y() < -20.0f ) {
@@ -200,11 +205,16 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			}
 			continue;
 		}
+		m_displayText.setColorBg(etk::Color<>(0x00000000));
+		// TODO : move tis section in a plugin, but haw to do this ???
+		if (*it == etk::UChar::Space) {
+			m_displayText.setColorBg(etk::Color<>(0x00000022));
+		} else if (*it == etk::UChar::Tabulation) {
+			m_displayText.setColorBg(etk::Color<>(0x00000044));
+		}
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
 		if (it >= selectPosStart && it < selectPosStop) {
 			m_displayText.setColorBg(etk::Color<>(0x00FF00FF));
-		} else {
-			m_displayText.setColorBg(etk::Color<>(0x00000000));
 		}
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		m_displayText.print(stringToDisplay);
@@ -254,7 +264,7 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 		} else if (localValue == etk::UChar::Suppress ) {
 			//APPL_INFO("keyEvent : <suppr> pos=" << m_cursorPos);
 			if (m_buffer->hasTextSelected()) {
-				m_buffer->removeSelection();
+				remove();
 			} else {
 				appl::Buffer::Iterator pos = m_buffer->cursor();
 				appl::Buffer::Iterator posEnd = pos;
@@ -265,14 +275,13 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 		} else if (localValue == etk::UChar::Delete) {
 			//APPL_INFO("keyEvent : <del> pos=" << m_cursorPos);
 			if (m_buffer->hasTextSelected()) {
-				m_buffer->removeSelection();
+				remove();
 			} else {
 				appl::Buffer::Iterator pos = m_buffer->cursor();
 				appl::Buffer::Iterator posEnd = pos;
 				--pos;
 				replace("", pos, posEnd);
 			}
-			markToRedraw();
 			return true;
 		}
 		m_buffer->setSelectMode(false);
@@ -289,7 +298,6 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 			etk::UString myString = output;
 			write(myString);
 		}
-		markToRedraw();
 		return true;
 	}
 	// move events ...
@@ -332,7 +340,6 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 			default:
 				break;
 		}
-		markToRedraw();
 		return true;
 	}
 	return false;
@@ -489,15 +496,6 @@ void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
 		markToRedraw();
 		return;
 	}
-	if (_msg.getMessage() == ednMsgGuiUndo) {
-		if (m_buffer != NULL) {
-			//m_buffer->undo();
-		}
-	} else if (_msg.getMessage() == ednMsgGuiRedo) {
-		if (m_buffer != NULL) {
-			//m_buffer->redo();
-		}
-	}
 	markToRedraw();
 }
 
@@ -526,6 +524,7 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 	if (m_buffer == NULL) {
 		return false;
 	}
+	markToRedraw();
 	if (appl::textPluginManager::onCursorMove(*this, _pos) == true) {
 		return true;
 	}
@@ -547,12 +546,12 @@ bool appl::TextViewer::write(const etk::UString& _data, const appl::Buffer::Iter
 	if (m_buffer == NULL) {
 		return false;
 	}
-	bool ret = false;
+	markToRedraw();
 	if (appl::textPluginManager::onWrite(*this, _pos, _data) == true) {
-		ret = true;
-	} else {
-		ret = m_buffer->write(_data, _pos);
+		// no call of the move cursor, because pluging might call theses function to copy and cut data...
+		return true;
 	}
+	bool ret = m_buffer->write(_data, _pos);
 	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
 	return ret;
 }
@@ -561,12 +560,12 @@ bool appl::TextViewer::replace(const etk::UString& _data, const appl::Buffer::It
 	if (m_buffer == NULL) {
 		return false;
 	}
-	bool ret = false;
+	markToRedraw();
 	if (appl::textPluginManager::onReplace(*this, _pos, _data, _posEnd) == true) {
-		ret = true;
-	} else {
-		ret = m_buffer->replace(_data, _pos, _posEnd);
+		// no call of the move cursor, because pluging might call theses function to copy and cut data...
+		return true;
 	}
+	bool ret = m_buffer->replace(_data, _pos, _posEnd);
 	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
 	return ret;
 }
@@ -589,9 +588,11 @@ void appl::TextViewer::remove(void) {
 		// nothing to do ...
 		return;
 	}
-	if (appl::textPluginManager::onRemove(*this, m_buffer->selectStart(), m_buffer->selectStop()) == false) {
-		m_buffer->removeSelection();
+	markToRedraw();
+	if (appl::textPluginManager::onRemove(*this, m_buffer->selectStart(), m_buffer->selectStop()) == true) {
+		return;
 	}
+	m_buffer->removeSelection();
 	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
 }
 
@@ -601,6 +602,7 @@ void appl::TextViewer::moveCursorRight(appl::TextViewer::moveMode _mode) {
 	if (m_buffer == NULL) {
 		return;
 	}
+	markToRedraw();
 	appl::Buffer::Iterator it;
 	switch (_mode) {
 		default:
@@ -623,6 +625,7 @@ void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
 	if (m_buffer == NULL) {
 		return;
 	}
+	markToRedraw();
 	appl::Buffer::Iterator it;
 	switch (_mode) {
 		default:
@@ -645,6 +648,7 @@ void appl::TextViewer::moveCursorUp(esize_t _nbLine) {
 	if (m_buffer == NULL) {
 		return;
 	}
+	markToRedraw();
 	// find the position of the start of the line.
 	appl::Buffer::Iterator lineStartPos = m_buffer->getStartLine(m_buffer->cursor());
 	// check if we can go up ...
@@ -672,6 +676,7 @@ void appl::TextViewer::moveCursorDown(esize_t _nbLine) {
 	if (m_buffer == NULL) {
 		return;
 	}
+	markToRedraw();
 	// check if we are not at the end of Buffer
 	if (m_buffer->cursor() == m_buffer->end() ) {
 		return;

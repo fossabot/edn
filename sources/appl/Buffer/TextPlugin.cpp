@@ -10,9 +10,12 @@
 #include <appl/Buffer/TextPlugin.h>
 #include <appl/Debug.h>
 
+#undef __class__
+#define __class__ "TextViewerPlugin"
+
 
 appl::TextViewerPlugin::TextViewerPlugin(void) :
-  m_isEnable(false),
+  m_isEnable(true),
   m_activateOnEventEntry(false),
   m_activateOnEventInput(false),
   m_activateOnWrite(false),

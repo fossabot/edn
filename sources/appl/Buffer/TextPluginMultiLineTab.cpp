@@ -11,13 +11,18 @@
 #include <ewol/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
+#undef __class__
+#define __class__ "TextPluginMultiLineTab"
 
 appl::TextPluginMultiLineTab::TextPluginMultiLineTab(void) {
 	m_activateOnEventEntry = true;
 }
 
 bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
-                                              const ewol::EventEntry& _event) {
+                                                const ewol::EventEntry& _event) {
+	if (isEnable() == false) {
+		return false;
+	}
 	if (_event.getType() != ewol::keyEvent::keyboardChar) {
 		return false;
 	}
@@ -84,7 +89,6 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	}
 	// Real replace of DATA :
 	_textDrawer.replace(data, itStart, itStop);
-	//_textDrawer.moveCursor(itStart);
 	_textDrawer.m_buffer->setSelectionPos(itStart+1);
 	return true;
 }

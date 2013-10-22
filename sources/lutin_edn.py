@@ -34,6 +34,7 @@ def Create(target):
 		'appl/Buffer/TextPluginCopy.cpp',
 		'appl/Buffer/TextPluginMultiLineTab.cpp',
 		'appl/Buffer/TextPluginAutoIndent.cpp',
+		'appl/Buffer/TextPluginHistory.cpp',
 		'appl/Buffer/TextPluginManager.cpp',
 		'appl/Buffer/BufferManager.cpp'])
 	

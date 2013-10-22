@@ -11,6 +11,9 @@
 #include <ewol/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
+#undef __class__
+#define __class__ "TextPluginCopy"
+
 
 appl::TextPluginCopy::TextPluginCopy(void) {
 	m_activateOnReceiveMessage = true;
@@ -30,7 +33,11 @@ void appl::TextPluginCopy::onPluginDisable(appl::TextViewer& _textDrawer) {
 	// TODO : unknow function ...
 }
 
-bool appl::TextPluginCopy::onReceiveMessage(appl::TextViewer& _textDrawer, const ewol::EMessage& _msg) {
+bool appl::TextPluginCopy::onReceiveMessage(appl::TextViewer& _textDrawer,
+                                            const ewol::EMessage& _msg) {
+	if (isEnable() == false) {
+		return false;
+	}
 	if (    _msg.getMessage() == ednMsgGuiCopy
 	     || _msg.getMessage() == ednMsgGuiCut) {
 		if (_textDrawer.m_buffer != NULL) {

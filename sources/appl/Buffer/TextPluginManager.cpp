@@ -11,6 +11,10 @@
 #include <appl/Buffer/TextPluginCopy.h>
 #include <appl/Buffer/TextPluginMultiLineTab.h>
 #include <appl/Buffer/TextPluginAutoIndent.h>
+#include <appl/Buffer/TextPluginHistory.h>
+
+#undef __class__
+#define __class__ "textPluginManager"
 
 static etk::Vector<appl::TextViewerPlugin *>& getList(void) {
 	static etk::Vector<appl::TextViewerPlugin *> s_list;
@@ -73,6 +77,7 @@ void appl::textPluginManager::addDefaultPlugin(void) {
 	appl::textPluginManager::addPlugin(new appl::TextPluginCopy());
 	appl::textPluginManager::addPlugin(new appl::TextPluginMultiLineTab());
 	appl::textPluginManager::addPlugin(new appl::TextPluginAutoIndent());
+	appl::textPluginManager::addPlugin(new appl::TextPluginHistory());
 }
 
 void appl::textPluginManager::addPlugin(appl::TextViewerPlugin* _plugin) {
