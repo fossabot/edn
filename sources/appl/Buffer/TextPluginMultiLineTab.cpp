@@ -76,7 +76,9 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 		data.add(0, etk::UChar::Return);
 		for (esize_t iii=1; iii<data.size(); iii++) {
 			if (data[iii-1] == etk::UChar::Return) {
-				if (true == m_useTabs) {
+				if (true == _event.getSpecialKey().isSetCtrl() ) {
+					data.add(iii, etk::UChar::Space);
+				} else if (true == m_useTabs) {
 					data.add(iii, etk::UChar::Tabulation);
 				} else {
 					for (int32_t jjj=0; jjj<m_tabDist; jjj++) {
