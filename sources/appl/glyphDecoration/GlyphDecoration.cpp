@@ -8,24 +8,23 @@
 
 #include <appl/Debug.h>
 #include <appl/global.h>
-#include <Colorize.h>
-
+#include <appl/glyphDecoration/GlyphDecoration.h>
 
 #undef __class__
-#define __class__	"Colorize"
+#define __class__ "GlyphDecoration"
 
 
-Colorize::Colorize(const etk::UString &_newColorName) :
+appl::GlyphDecoration::GlyphDecoration(const etk::UString &_newColorName) :
 	m_colorName(_newColorName),
 	m_colorFG(etk::color::black),
 	m_colorBG(etk::color::none),
 	m_italic(false),
 	m_bold(false)
 {
-	APPL_VERBOSE("New(Colorise)");
+	APPL_VERBOSE("New(" << __class__ << ")");
 }
 
-void Colorize::setItalic(bool _enable)
+void appl::GlyphDecoration::setItalic(bool _enable)
 {
 	m_italic = _enable;
 	if (true == _enable) {
@@ -35,7 +34,7 @@ void Colorize::setItalic(bool _enable)
 	}
 }
 
-void Colorize::setBold(bool _enable)
+void appl::GlyphDecoration::setBold(bool _enable)
 {
 	m_bold = _enable;
 	if (true == _enable) {
@@ -45,5 +44,12 @@ void Colorize::setBold(bool _enable)
 	}
 }
 
-
-
+etk::CCout& appl::operator <<(etk::CCout& _os, const appl::GlyphDecoration& _obj)
+{
+	_os << "{fg=" << _obj.getForeground();
+	_os << ",bg=" << _obj.getBackground();
+	_os << ",italic=" << _obj.getItalic();
+	_os << ",bold=" << _obj.getBold();
+	_os << "name='" << _obj.getName() << "'}";
+	return _os;
+}

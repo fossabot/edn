@@ -40,14 +40,14 @@ def Create(target):
 	
 	# Generic color management for the text editor : 
 	myModule.AddSrcFile([
-		'appl/Colorize/Colorize.cpp',
-		'appl/Colorize/ColorizeManager.cpp'])
+		'appl/glyphDecoration/GlyphDecoration.cpp'])
+	#	'appl/Colorize/ColorizeManager.cpp'])
 	
 	# syntax coloration for the text editor
-	myModule.AddSrcFile([
-		'appl/Highlight/HighlightPattern.cpp',
-		'appl/Highlight/Highlight.cpp',
-		'appl/Highlight/HighlightManager.cpp'])
+	#myModule.AddSrcFile([
+	#	'appl/Highlight/HighlightPattern.cpp',
+	#	'appl/Highlight/Highlight.cpp',
+	#	'appl/Highlight/HighlightManager.cpp'])
 	
 	myModule.AddModuleDepend('ewol')
 	

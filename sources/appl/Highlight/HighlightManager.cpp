@@ -13,130 +13,65 @@
 #include <ewol/renderer/EObjectManager.h>
 
 #undef __class__
-#define __class__ "HighlightManager"
+#define __class__ "highlightManager"
 
-class localClassHighlightManager: public ewol::EObject {
-	private:
-		etk::Vector<Highlight*> listHighlight; //!< List of ALL hightlight modules
-	public:
-		// Constructeur
-		localClassHighlightManager(void) {
-			//ewol::widgetMessageMultiCast::add(getWidgetId(), ednMsgBufferColor);
-		};
-		~localClassHighlightManager(void) {
-			int32_t i;
-			// clean all Element
-			for (i=0; i< listHighlight.size(); i++) {
-				if (NULL != listHighlight[i]) {
-					delete(listHighlight[i]);
-					listHighlight[i] = NULL;
-				}
-			}
-			// clear the compleate list
-			listHighlight.clear();
-		};
-		
-		// herited function
-		const char * const getObjectType(void) {
-			return "ApplHighlightManager";
-		}
-		
-		// herited function
-		virtual void onReceiveMessage(const ewol::EMessage& _msg) {
-			/*
-			switch (id)
-			{
-				case APPL_MSG__COLOR_HAS_CHANGE:
-					APPL_INFO("UPDATE the color pointer on the HL");
-					for (int32_t i=0; i<listHighlight.size(); i++) {
-						if (NULL != listHighlight[i]) {
-							listHighlight[i]->ReloadColor();
-						}
-					}
-					break;
-			}
-			*/
-		}
-		
-		Highlight* get(etk::FSNode& _fileName) {
-			int32_t i;
-			for (i=0; i<listHighlight.size(); ++i) {
-				if (true == listHighlight[i]->fileNameCompatible(_fileName) ) {
-					return listHighlight[i];
-				}
-			}
-			return NULL;
-		}
-		
-		bool exist(etk::FSNode& _fileName) {
-			if (NULL != get(_fileName) ) {
-				return true;
-			}
-			return false;
-		}
-		
-		void loadLanguages(void) {
-			etk::FSNode myFile("DATA:languages/");
-			// get the subfolder list :
-			etk::Vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
-			for ( int32_t iii=0 ; iii<list.size() ; iii++ ) {
-				if (NULL!=list[iii]) {
-					if (list[iii]->getNodeType() == etk::FSN_FOLDER) {
-						etk::UString filename = list[iii]->getName() + "/highlight.xml";
-						APPL_DEBUG("Load xml name : " << filename);
-						Highlight *myHightline = new Highlight(filename);
-						listHighlight.pushBack(myHightline);
-					}
-				}
-			}
-			//myHightline->display();
-		}
-};
-
-static localClassHighlightManager * localManager = NULL;
+static etk::Vector<Highlight*>& s_list(void) {
+	static etk::Vector<Highlight*> list;
+	return list;
+}
 
 
-void HighlightManager::init(void) {
-	if (NULL != localManager) {
+void appl::highlightManager::init(void) {
+	etk::Vector<Highlight*>& hlList = s_list();
+	if (hlList.size() != 0) {
 		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
-		localManager = NULL;
+		hlList.clear();
 	}
-	localManager = new localClassHighlightManager();
-	
-	if (NULL == localManager) {
-		APPL_CRITICAL("Allocation of HighlightManager not done ...");
+	etk::FSNode myFile("DATA:languages/");
+	// get the subfolder list :
+	etk::Vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
+	for (esize_t iii=0;
+	     iii<list.size();
+	     ++iii ) {
+		if (list[iii] == NULL) {
+			continue;
+		}
+		if (list[iii]->getNodeType() != etk::FSN_FOLDER) {
+			continue;
+		}
+		etk::UString filename = list[iii]->getName() + "/highlight.xml";
+		APPL_DEBUG("Load xml name : " << filename);
+		appl::Highlight *myHightline = appl::Highlight::keep(filename);
+		hlList.pushBack(myHightline);
 	}
 }
 
-void HighlightManager::unInit(void) {
-	if (NULL == localManager) {
-		APPL_ERROR("HighlightManager  == > request UnInit, but does not exist ...");
+void appl::highlightManager::unInit(void) {
+	etk::Vector<Highlight*>& hlList = s_list();
+	if (hlList.size() == 0) {
+		APPL_DEBUG("HighlightManager  ==> no highlight");
+		hlList.clear();
 		return;
 	}
-	delete(localManager);
-	localManager = NULL;
-}
-
-void HighlightManager::loadLanguages(void) {
-	if (NULL == localManager) {
-		return;
+	for (esize_t iii = 0;
+	     iii < hlList.size();
+	     ++iii ) {
+		if (hlList[iii] == NULL) {
+			continue;
+		}
+		appl::Highlight::release(hlList[iii]);
+		hlList[iii] = NULL;
 	}
-	localManager->loadLanguages();
+	hlList.clear();
 }
 
-Highlight* HighlightManager::get(etk::FSNode& _fileName) {
-	if (NULL == localManager) {
-		return NULL;
-	}
-	return localManager->get(_fileName);
+etk::UString appl::highlightManager::getTypeExtention(const etk::UString& _extention) {
+	return "";
 }
 
-bool HighlightManager::exist(etk::FSNode& _fileName) {
-	if (NULL == localManager) {
-		return false;
-	}
-	return localManager->exist(_fileName);
+etk::Vector<etk::UString> appl::highlightManager::getTypeList(void) {
+	etk::Vector<etk::UString> ret;
+	return ret;
 }
-
 
 

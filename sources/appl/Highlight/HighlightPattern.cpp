@@ -49,7 +49,7 @@ void HighlightPattern::setEscapeChar(etk::UString& _EscapeChar) {
 	}
 }
 
-void  HighlightPattern::setColor(etk::UString& _colorName) {
+void  HighlightPattern::setColorGlyph(etk::UString& _colorName) {
 	m_colorName = _colorName;
 	m_color = ColorizeManager::get(m_colorName);
 }
@@ -79,11 +79,6 @@ void HighlightPattern::display(void) {
 		APPL_INFO("  == > multiline pattern: NO");
 	}
 	*/
-	// display all elements
-	for (int32_t i=0; i< m_subPatern.size(); i++) {
-		APPL_INFO("        " << i << " subPattern : " << m_subPatern[i]->getName() );
-		m_subPatern[i]->display();
-	}
 }
 
 void HighlightPattern::parseRules(exml::Element *child, int32_t level) {
@@ -141,18 +136,6 @@ void HighlightPattern::parseRules(exml::Element *child, int32_t level) {
 			etk::UString myEdnData = myData;
 			setEscapeChar(myEdnData);
 		}
-	}
-	xChild = (exml::Element*)child->getNamed("rule");
-	if (NULL != xChild) {
-		/*
-			// Create the patern ...
-			HighlightPattern *myPattern = new HighlightPattern();
-			// parse under Element
-			myPattern->ParseRules(ruleChild, level+1);
-			// add element in the list
-			m_subPatern.pushBack(myPattern);
-			//ParseRules(passChild, m_listHighlightPass1, level1++);
-		*/
 	}
 }
 

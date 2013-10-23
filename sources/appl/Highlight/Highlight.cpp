@@ -162,7 +162,7 @@ void Highlight::display(void) {
 // TODO : Celui qui appelle suprime des element pour rien ... Enfin c'est pas trègrave... Il suffirait juste de suprimer celuis d'avant si il n'est pas terminer...
 void Highlight::parse(int32_t start,
                       int32_t stop,
-                      etk::Vector<colorInformation_ts> &metaData,
+                      etk::Vector<appl::ColorInfo> &metaData,
                       int32_t addingPos,
                       etk::Buffer &buffer) {
 	if (0 > addingPos) {
@@ -171,7 +171,7 @@ void Highlight::parse(int32_t start,
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass1.size() << "  == > position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;
 	int32_t elementStop = stop;
-	colorInformation_ts resultat;
+	appl::ColorInfo resultat;
 	while (elementStart<elementStop) {
 		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have
@@ -225,12 +225,12 @@ void Highlight::parse(int32_t start,
  */
 void Highlight::parse2(int32_t start,
                        int32_t stop,
-                       etk::Vector<colorInformation_ts> &metaData,
+                       etk::Vector<appl::ColorInfo> &metaData,
                        etk::Buffer &buffer) {
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << "  == > position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;
 	int32_t elementStop = stop;
-	colorInformation_ts resultat;
+	appl::ColorInfo resultat;
 	while (elementStart<elementStop) {
 		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have

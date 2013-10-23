@@ -248,7 +248,7 @@ void EdnBuf::CleanHighLight(void)
 }
 
 
-colorInformation_ts *EdnBuf::getElementColorAtPosition(int32_t pos, int32_t &starPos)
+appl::ColorInfo *EdnBuf::getElementColorAtPosition(int32_t pos, int32_t &starPos)
 {
 	int32_t i;
 	int32_t start = etk_max(0, starPos-1);
@@ -334,7 +334,7 @@ void EdnBuf::HightlightGenerateLines(displayHLData_ts & MData, int32_t HLStart, 
 }
 
 
-colorInformation_ts * EdnBuf::getElementColorAtPosition(displayHLData_ts & MData, int32_t pos)
+appl::ColorInfo * EdnBuf::getElementColorAtPosition(displayHLData_ts & MData, int32_t pos)
 {
 	int32_t i;
 	int32_t start = etk_max(0, MData.posHLPass2-1);

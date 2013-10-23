@@ -106,7 +106,7 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 
 
 etk::Color<> BufferView::getBasicBG(void) {
-	return ColorizeManager::get(COLOR_LIST_BG_1);
+	return etk::color::none; //ColorizeManager::get(COLOR_LIST_BG_1);
 }
 
 uint32_t BufferView::getNuberOfColomn(void) {
@@ -123,6 +123,7 @@ uint32_t BufferView::getNuberOfRaw(void) {
 }
 
 bool BufferView::getElement(int32_t _colomn, int32_t _raw, etk::UString& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
+	/*
 	bool isModify;
 	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;
 	basicColor_te selectBG = COLOR_LIST_BG_1;
@@ -161,6 +162,7 @@ bool BufferView::getElement(int32_t _colomn, int32_t _raw, etk::UString& _myText
 	}
 	_fg = ColorizeManager::get(selectFG);
 	_bg = ColorizeManager::get(selectBG);
+	*/
 	return true;
 }
 

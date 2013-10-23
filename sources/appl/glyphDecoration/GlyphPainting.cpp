@@ -8,13 +8,86 @@
 
 #include <appl/Debug.h>
 #include <appl/global.h>
-#include <ColorizeManager.h>
+#include <appl/glyphDecoration/GlyphPainting.h>
 #include <exml/exml.h>
-#include <ewol/renderer/EObject.h>
-#include <ewol/renderer/EObjectManager.h>
 #include <etk/os/FSNode.h>
+#include <ewol/resources/ResourceManager.h>
 
-#define PFX	"ColorizeManager "
+#undef __class__
+#define __class__ "GlyphPainting"
+
+
+
+appl::GlyphPainting::GlyphPainting(const etk::UString& _filename) :
+  ewol::Resource(_filename) {
+	EWOL_DEBUG("SFP : load \"" << _filename << "\"");
+	reload();
+}
+
+appl::GlyphPainting::~GlyphPainting(void) {
+	// remove all element
+	for (int32_t iii=0; iii<m_list.size(); iii++){
+		if (NULL != m_list[iii]) {
+			delete(m_list[iii]);
+			m_list[iii] = NULL;
+		}
+	}
+	m_list.clear();
+}
+
+void appl::GlyphPainting::reload(void) {
+	
+}
+
+appl::GlyphPainting* appl::GlyphPainting::keep(const etk::UString& _filename) {
+	EWOL_INFO("KEEP : SimpleConfig : file : \"" << _filename << "\"");
+	appl::GlyphPainting* object = static_cast<appl::GlyphPainting*>(getManager().localKeep(_filename));
+	if (NULL != object) {
+		return object;
+	}
+	// this element create a new one every time ....
+	object = new appl::GlyphPainting(_filename);
+	if (NULL == object) {
+		EWOL_ERROR("allocation error of a resource : ??Mesh.obj??");
+		return NULL;
+	}
+	getManager().localAdd(object);
+	return object;
+}
+
+void appl::GlyphPainting::release(appl::GlyphPainting*& _object) {
+	if (NULL == _object) {
+		return;
+	}
+	ewol::Resource* object2 = static_cast<ewol::Resource*>(_object);
+	getManager().release(object2);
+	_object = NULL;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class classColorManager: public ewol::EObject {
 	private:
