@@ -9,7 +9,7 @@
 #include <appl/Debug.h>
 #include <appl/global.h>
 #include <appl/glyphDecoration/GlyphPainting.h>
-#include <exml/exml.h>
+#include <ejson/ejson.h>
 #include <etk/os/FSNode.h>
 #include <ewol/resources/ResourceManager.h>
 
@@ -25,18 +25,65 @@ appl::GlyphPainting::GlyphPainting(const etk::UString& _filename) :
 }
 
 appl::GlyphPainting::~GlyphPainting(void) {
-	// remove all element
-	for (int32_t iii=0; iii<m_list.size(); iii++){
-		if (NULL != m_list[iii]) {
-			delete(m_list[iii]);
-			m_list[iii] = NULL;
-		}
-	}
-	m_list.clear();
+	
 }
 
 void appl::GlyphPainting::reload(void) {
-	
+	ejson::Document doc;
+	if (false == doc.load(m_name)) {
+		APPL_ERROR("Can not load file : '" << m_name << "'");
+		return;
+	}
+	ejson::Array* baseArray = doc.getArray("ednColor");
+	if (baseArray == NULL) {
+		APPL_ERROR("Can not get basic array : 'ednColor'");
+		return;
+	}
+	for (esize_t iii = 0; iii < baseArray->size(); ++iii) {
+		ejson::Object* tmpObj = baseArray->getObject(iii);
+		if (tmpObj == NULL) {
+			APPL_DEBUG(" can not get object in 'ednColor' id=" << iii);
+			continue;
+		}
+		etk::UString name = tmpObj->getString("name");
+		etk::UString background = tmpObj->getString("background");
+		etk::UString foreground = tmpObj->getString("foreground");
+		bool italic = tmpObj->getString("italic");
+		bool bold = tmpObj->getString("bold");
+		bool findElement = false;
+		for (esize_t jjj=0; jjj<m_list.size(); ++jjj) {
+			if (m_list[jjj].getName() != name) {
+				continue;
+			}
+			m_list[jjj].setForeground(foreground);
+			m_list[jjj].setBackground(background);
+			m_list[jjj].setItalic(italic);
+			m_list[jjj].setBold(bold);
+			findElement == true;
+		}
+		if (findElement == true) {
+			continue;
+		}
+		appl::GlyphDecoration tmpDeco(name);
+		tmpDeco.setForeground(foreground);
+		tmpDeco.setBackground(background);
+		tmpDeco.setItalic(italic);
+		tmpDeco.setBold(bold);
+		m_list.pushBack(tmpDeco);
+	}
+}
+
+
+esize_t appl::GlyphPainting::request(const etk::UString& _name) {
+	for (esize_t iii=0; iii<m_list.size(); ++iii) {
+		if (m_list[iii].getName() == name) {
+			return iii;
+		}
+	}
+	// create an empty deco ...
+	appl::GlyphDecoration tmpDeco(name);
+	m_list.pushBack(tmpDeco);
+	return m_list.size()-1;
 }
 
 appl::GlyphPainting* appl::GlyphPainting::keep(const etk::UString& _filename) {

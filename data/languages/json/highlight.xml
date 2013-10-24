@@ -22,5 +22,13 @@
 			<color>functionName</color>
 			<start>([a-zA-Z0-9]|-|_)*</start>
 		</rule>
+		<rule name="numeric constant">
+			<color>number</color>
+			<start>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</start>
+		</rule>
+		<rule name="my boolean">
+			<color>boolean</color>
+			<start>\@true|false\@</start>
+		</rule>
 	</pass2>
 </EdnLang>

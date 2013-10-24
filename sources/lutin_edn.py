@@ -40,8 +40,8 @@ def Create(target):
 	
 	# Generic color management for the text editor : 
 	myModule.AddSrcFile([
-		'appl/glyphDecoration/GlyphDecoration.cpp'])
-	#	'appl/Colorize/ColorizeManager.cpp'])
+		'appl/glyphDecoration/GlyphDecoration.cpp',
+		'appl/glyphDecoration/GlyphPainting.cpp'])
 	
 	# syntax coloration for the text editor
 	#myModule.AddSrcFile([

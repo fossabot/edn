@@ -16,20 +16,20 @@
 		{ name="error", foreground="#FF0000"},
 		{ name="doubleQuoteText", foreground="#00fF00"},
 		
-		{ name="type", foreground="#56bf10", bold="yes"},
+		{ name="type", foreground="#56bf10", bold=true},
 		{ name="storageKeyword", foreground="#5c8fed"},
 		{ name="number", foreground="#00ff00"},
 		{ name="systemFunction", foreground="#ffff00"},
 		{ name="commonDefine", foreground="#56bf10"},
 		{ name="boolean", foreground="#214cf1"},
 		{ name="preprocesseur", foreground="#FF0000"},
-		{ name="comment", foreground="#ef4def", italic="yes"},
-		{ name="commentDoxygen", foreground="#ef4d00", bold="yes", italic="yes"},
-		{ name="keyword", foreground="#5c8fed", bold="yes"},
-		{ name="macro", foreground="#6c09c8", bold="yes"},
-		{ name="SYNTAX_ERROR", foreground="#000000", background="#FF0000", bold="yes"},
-		{ name="functionName", foreground="#24d1e0", bold="yes"},
-		{ name="TestResultOK", foreground="#000000", background="#00FF00", bold="yes"},
-		{ name="TestResultERROR", FG="#000000", background="#FF0000", bold="yes"}
+		{ name="comment", foreground="#ef4def", italic=true},
+		{ name="commentDoxygen", foreground="#ef4d00", bold=true, italic=true},
+		{ name="keyword", foreground="#5c8fed", bold=true},
+		{ name="macro", foreground="#6c09c8", bold=true},
+		{ name="SYNTAX_ERROR", foreground="#000000", background="#FF0000", bold=true},
+		{ name="functionName", foreground="#24d1e0", bold=true},
+		{ name="TestResultOK", foreground="#000000", background="#00FF00", bold=true},
+		{ name="TestResultERROR", FG="#000000", background="#FF0000", bold=true}
 	]
 }
