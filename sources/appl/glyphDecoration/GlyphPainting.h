@@ -25,8 +25,22 @@ namespace appl {
 			const char* getType(void) {
 				return "appl::GlyphPainting";
 			};
+			/**
+			 * @brief Load or reload data from config
+			 */
 			void reload(void);
-			
+			/**
+			 * @brief Register a decoration with his name and get the ref id.
+			 * @param[in] _name Name of the deco.
+			 * @return id of the deco.
+			 */
+			esize_t registerDeco(const etk::UString& _name);
+			/**
+			 * @brief Get Decoration handle.
+			 * @param[in] _id Id of the decoration.
+			 * @return pointer on deco.
+			 */
+			appl::GlyphDecoration* getDeco(esize_t _id);
 		public:
 			/**
 			 * @brief keep the resource pointer.
