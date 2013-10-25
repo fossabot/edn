@@ -12,7 +12,7 @@ def Create(target):
 		'appl/ctags/CTagsManager.cpp'])
 	
 	myModule.AddSrcFile([
-		'appl/Debug.cpp',
+		'appl/debug.cpp',
 		'appl/global.cpp',
 		'appl/globalMsg.cpp',
 		'appl/init.cpp'])

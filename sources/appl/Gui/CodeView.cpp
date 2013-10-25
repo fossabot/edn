@@ -8,7 +8,7 @@
 
 #include <CodeView.h>
 
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <appl/global.h>
 #include <CodeView.h>
 #include <BufferManager.h>

@@ -9,7 +9,7 @@
 #ifndef __TOOLS_GLOBALS_H__
 #define __TOOLS_GLOBALS_H__
 
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <ewol/widget/Sizer.h>
 
 

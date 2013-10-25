@@ -9,7 +9,7 @@
 #ifndef __APPL_TEXT_VIEWER_H__
 #define __APPL_TEXT_VIEWER_H__
 
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <appl/Buffer/Buffer.h>
 #include <appl/globalMsg.h>
 

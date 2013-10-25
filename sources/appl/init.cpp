@@ -12,7 +12,7 @@
 #include <ewol/renderer/EObject.h>
 #include <ewol/widget/WidgetManager.h>
 
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <appl/global.h>
 #include <etk/os/FSNode.h>
 #include <etk/tool.h>

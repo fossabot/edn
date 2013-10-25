@@ -8,7 +8,7 @@
 
 
 #include <appl/Buffer/Buffer.h>
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <ewol/clipBoard.h>
 
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {

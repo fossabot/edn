@@ -9,7 +9,7 @@
 #ifndef __SEARCH_H__
 #define __SEARCH_H__
 
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <ewol/widget/Sizer.h>
 #include <ewol/widget/Entry.h>
 

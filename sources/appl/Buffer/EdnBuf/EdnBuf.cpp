@@ -7,7 +7,7 @@
  */
 
 #include <etk/unicode.h>
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <appl/global.h>
 #include <EdnBuf.h>
 

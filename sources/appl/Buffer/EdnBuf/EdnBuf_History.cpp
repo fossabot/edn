@@ -6,7 +6,7 @@
  * @license GPL v3 (see license file)
  */
 
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <appl/global.h>
 #include <EdnBuf.h>
 

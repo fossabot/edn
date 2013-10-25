@@ -8,7 +8,7 @@
 
 
 #include <appl/Buffer/TextPlugin.h>
-#include <appl/Debug.h>
+#include <appl/debug.h>
 
 #undef __class__
 #define __class__ "TextViewerPlugin"

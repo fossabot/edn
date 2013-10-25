@@ -6,11 +6,11 @@
  * @license GPL v3 (see license file)
  */
 
-#ifndef __DEBUG_H__
-#define __DEBUG_H__
+#ifndef __APPL_DEBUG_H__
+#define __APPL_DEBUG_H__
 
 #include <etk/types.h>
-#include <etk/Debug.h>
+#include <etk/debugGeneric.h>
 
 extern const char * applLog;
 

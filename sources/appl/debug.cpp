@@ -6,4 +6,6 @@
  * @license GPL v3 (see license file)
  */
 
+#include <appl/debug.h>
+
 const char * applLog = "edn      ";

@@ -10,7 +10,7 @@
 #define __SEARCH_DATA_H__
 
 #include <etk/UString.h>
-#include <appl/Debug.h>
+#include <appl/debug.h>
 
 namespace SearchData
 {

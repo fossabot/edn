@@ -9,7 +9,7 @@
 #ifndef __CODE_VIEW_H__
 #define __CODE_VIEW_H__
 
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <CodeView.h>
 #include <BufferManager.h>
 #include <appl/globalMsg.h>

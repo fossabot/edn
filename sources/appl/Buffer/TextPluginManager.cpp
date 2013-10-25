@@ -7,7 +7,7 @@
  */
 
 #include <appl/Buffer/TextPluginManager.h>
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <appl/Buffer/TextPluginCopy.h>
 #include <appl/Buffer/TextPluginMultiLineTab.h>
 #include <appl/Buffer/TextPluginAutoIndent.h>

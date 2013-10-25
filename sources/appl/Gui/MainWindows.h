@@ -9,7 +9,7 @@
 #ifndef __MAIN_WINDOWS_H__
 #define __MAIN_WINDOWS_H__
 
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <appl/globalMsg.h>
 
 #include <BufferView.h>

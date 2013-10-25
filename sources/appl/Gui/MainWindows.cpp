@@ -7,7 +7,7 @@
  */
 
 
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <appl/global.h>
 #include <MainWindows.h>
 #include <BufferView.h>

@@ -9,7 +9,7 @@
 #ifndef __APPL_CTAGS_SELECTION_H__
 #define __APPL_CTAGS_SELECTION_H__
 
-#include <appl/Debug.h>
+#include <appl/debug.h>
 #include <ewol/widget/PopUp.h>
 #include <appl/Gui/TagFileList.h>
 
