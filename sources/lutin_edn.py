@@ -44,10 +44,10 @@ def Create(target):
 		'appl/glyphDecoration/GlyphPainting.cpp'])
 	
 	# syntax coloration for the text editor
-	#myModule.AddSrcFile([
-	#	'appl/Highlight/HighlightPattern.cpp',
-	#	'appl/Highlight/Highlight.cpp',
-	#	'appl/Highlight/HighlightManager.cpp'])
+	myModule.AddSrcFile([
+		'appl/Highlight/HighlightPattern.cpp',
+		'appl/Highlight/Highlight.cpp',
+		'appl/Highlight/HighlightManager.cpp'])
 	
 	myModule.AddModuleDepend('ewol')
 	
@@ -57,7 +57,7 @@ def Create(target):
 	myModule.CopyFile('../data/icon.png','icon.png')
 	
 	myModule.CopyFolder('../data/icon.*','')
-	myModule.CopyFolder('../data/color/*.xml','color/')
+	myModule.CopyFolder('../data/theme/default/color/*.xml','theme/default/color/')
 	myModule.CopyFolder('../data/languages/asm/*.xml','languages/asm/')
 	myModule.CopyFolder('../data/languages/bash/*.xml','languages/bash/')
 	myModule.CopyFolder('../data/languages/boo/*.xml','languages/boo/')

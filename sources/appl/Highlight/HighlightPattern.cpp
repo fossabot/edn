@@ -9,79 +9,79 @@
 #include <appl/Debug.h>
 #include <appl/global.h>
 #include <HighlightPattern.h>
-#include <ColorizeManager.h>
 
 #undef __class__
 #define __class__ "HighlightPattern"
 
-HighlightPattern::HighlightPattern(void) {
-	m_haveStopPatern = false;
-	m_multiline = false;
-	m_color = ColorizeManager::get("normal");
+appl::HighlightPattern::HighlightPattern(appl::GlyphPainting*& _glyphPainting) :
+  m_glyphPainting(_glyphPainting),
+  m_paternName(""),
+  m_regExpStart(NULL),
+  m_regExpStop(NULL),
+  m_colorName(""),
+  m_escapeChar(etk::UChar::Null),
+  m_multiline(false),
+  m_level(0) {
 	m_regExpStart = new etk::RegExp<etk::Buffer>();
-	m_regExpStop = new etk::RegExp<etk::Buffer>();
-	m_escapeChar = 0;
 }
 
-HighlightPattern::~HighlightPattern(void) {
-	delete(m_regExpStart);
-	delete(m_regExpStop);
+appl::HighlightPattern::~HighlightPattern(void) {
+	if (m_regExpStart != NULL) {
+		delete(m_regExpStart);
+		m_regExpStart = NULL;
+	}
+	if (m_regExpStop != NULL) {
+		delete(m_regExpStop);
+		m_regExpStop = NULL;
+	}
 }
 
-void HighlightPattern::setPaternStart(etk::UString& _regExp) {
+void appl::HighlightPattern::setPaternStart(etk::UString& _regExp) {
+	if (m_regExpStart == NULL) {
+		return;
+	}
 	m_regExpStart->setRegExp(_regExp);
 }
 
-void HighlightPattern::setPaternStop(etk::UString& _regExp) {
+void appl::HighlightPattern::setPaternStop(etk::UString& _regExp) {
+	if (m_regExpStop != NULL) {
+		delete(m_regExpStop);
+		m_regExpStop = NULL;
+	}
 	if (_regExp.size() != 0) {
-		m_regExpStop->setRegExp(_regExp);
-		m_haveStopPatern = true;
-	} else {
-		m_haveStopPatern = false;
+		m_regExpStop = new etk::RegExp<etk::Buffer>();
+		if (m_regExpStop != NULL) {
+			m_regExpStop->setRegExp(_regExp);
+		} else {
+			APPL_ERROR("Allocation error");
+		}
 	}
 }
 
-void HighlightPattern::setEscapeChar(etk::UString& _EscapeChar) {
-	if (_EscapeChar.size()>0) {
-		m_escapeChar = _EscapeChar[0];
-	} else {
-		m_escapeChar = 0;
-	}
+void appl::HighlightPattern::setEscapeChar(const etk::UChar& _EscapeChar) {
+	m_escapeChar = _EscapeChar;
 }
 
-void  HighlightPattern::setColorGlyph(etk::UString& _colorName) {
+void appl::HighlightPattern::setColorGlyph(etk::UString& _colorName) {
 	m_colorName = _colorName;
-	m_color = ColorizeManager::get(m_colorName);
+	m_colorId = m_glyphPainting->request(m_colorName);
 }
 
-bool HighlightPattern::isEnable(void) {
-	return true;
-}
-
-void HighlightPattern::reloadColor(void) {
-	m_color = ColorizeManager::get(m_colorName);
-}
-
-void HighlightPattern::display(void) {
-	/*
+void appl::HighlightPattern::display(void) {
 	APPL_INFO("patern : \"" << m_paternName << "\" level=" << m_level );
 	APPL_INFO("  == > colorName \"" << m_colorName << "\"");
 	APPL_INFO("  == > regExpStart \"" << m_regExpStart->getRegExp() << "\"");
-	APPL_INFO("  == > regExpStop \"" << m_regExpStop->getRegExp() << "\"");
-	if (true == m_haveStopPatern) {
-		APPL_INFO("  == > stop pattern: YES");
-	} else {
-		APPL_INFO("  == > stop pattern: NO");
+	if (m_regExpStop != NULL) {
+		APPL_INFO("  == > regExpStop \"" << m_regExpStop->getRegExp() << "\"");
 	}
-	if (true == m_multiline) {
+	if (m_multiline == true) {
 		APPL_INFO("  == > multiline pattern: YES");
 	} else {
 		APPL_INFO("  == > multiline pattern: NO");
 	}
-	*/
 }
 
-void HighlightPattern::parseRules(exml::Element *child, int32_t level) {
+void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 	//--------------------------------------------------------------------------------------------
 	/*
 		<rule name="my preprocesseur">
@@ -93,101 +93,92 @@ void HighlightPattern::parseRules(exml::Element *child, int32_t level) {
 	*/
 	//--------------------------------------------------------------------------------------------
 	// process attribute	
-	etk::UString highLightName = child->getAttribute("name");
+	etk::UString highLightName = _child->getAttribute("name");
 	etk::UString myEdnDataTmp = "???";
 	if (highLightName.size()!=0) {
 		myEdnDataTmp = highLightName;
 	}
 	setName(myEdnDataTmp);
-	setLevel(level);
+	setLevel(_level);
 	
-	exml::Element* xChild = (exml::Element*)child->getNamed("color");
+	exml::Element* xChild = _child->getNamed("color");
 	if (NULL != xChild) {
 		etk::UString myData = xChild->getText();
-		if (myData.size()!=0) {
+		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
-			setColor(myEdnData);
+			setColorGlyph(myEdnData);
 		}
 	}
-	xChild = (exml::Element*)child->getNamed("start");
+	xChild = _child->getNamed("start");
 	if (NULL != xChild) {
 		etk::UString myData = xChild->getText();
-		if (myData.size()!=0) {
+		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
 			setPaternStart(myEdnData);
 		}
 	}
-	xChild = (exml::Element*)child->getNamed("end");
+	xChild = _child->getNamed("end");
 	if (NULL != xChild) {
 		etk::UString myData = xChild->getText();
-		if (myData.size()!=0) {
+		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			etk::UString myEdnData = myData;
 			setPaternStop(myEdnData);
 		}
 	}
-	xChild = (exml::Element*)child->getNamed("EscapeChar");
+	xChild = _child->getNamed("EscapeChar");
 	if (NULL != xChild) {
 		etk::UString myData = xChild->getText();
-		if (myData.size()!=0) {
+		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			etk::UString myEdnData = myData;
-			setEscapeChar(myEdnData);
+			setEscapeChar(myData[0]);
 		}
 	}
 }
 
 
-/**
- * @brief find Element only in the specify start characters and find the end with the range done
- *
- * @param[in] start First character to search data (if recognise it start here)
- * @param[in] stop End of the possibility whe search can continue
- * @param[out] resultat Position where find data
- * @param[in] buffer : Where to search data
- *
- * @return HLP_FIND_OK We find a compleate pattern
- * @return HLP_FIND_OK_NO_END Xe find a partial pattern (missing end)
- * @return HLP_FIND_ERROR Not find the pattern
- */
-resultFind_te HighlightPattern::find(int32_t start, int32_t stop, colorInformation_ts &resultat, etk::Buffer &buffer) {
+resultFind_te appl::HighlightPattern::find(int32_t _start,
+                                     int32_t _stop,
+                                     appl::ColorInfo& _resultat,
+                                     etk::Buffer& _buffer) {
 	//APPL_DEBUG(" try to find the element");
-	resultat.beginStart = -1;
-	resultat.beginStop = -1;
-	resultat.endStart = -1;
-	resultat.endStop = -1;
-	resultat.notEnded = false;
-	resultat.patern = this;
+	_resultat.beginStart = -1;
+	_resultat.beginStop = -1;
+	_resultat.endStart = -1;
+	_resultat.endStop = -1;
+	_resultat.notEnded = false;
+	_resultat.patern = this;
 	
-	// when we have only one element : 
-	if (false == m_haveStopPatern) {
-		if (true == m_regExpStart->processOneElement(buffer, start, stop)) {
-			resultat.beginStart = m_regExpStart->start();
-			resultat.beginStop  = m_regExpStart->stop();
-			resultat.endStart = m_regExpStart->start();
-			resultat.endStop  = m_regExpStart->stop();
+	// when we have only one element:
+	if (m_regExpStop == NULL) {
+		if (true == m_regExpStart->processOneElement(_buffer, _start, _stop)) {
+			_resultat.beginStart = m_regExpStart->start();
+			_resultat.beginStop  = m_regExpStart->stop();
+			_resultat.endStart = m_regExpStart->start();
+			_resultat.endStop  = m_regExpStart->stop();
 			return HLP_FIND_OK;
 		}
 		//APPL_DEBUG("NOT find hightlightpatern ...");
-	} else {
-		// try while we find the first element
-		if (true == m_regExpStart->processOneElement(buffer, start, stop, m_escapeChar)) {
-			resultat.beginStart = m_regExpStart->start();
-			resultat.beginStop  = m_regExpStart->stop();
-			if (true == m_regExpStop->process(buffer, resultat.beginStop, stop, m_escapeChar)) {
-				resultat.endStart = m_regExpStop->start();
-				resultat.endStop  = m_regExpStop->stop();
-				return HLP_FIND_OK;
-			} else {
-				resultat.endStart = stop+1;
-				resultat.endStop = stop+1;
-				resultat.notEnded = true;
-				return HLP_FIND_OK_NO_END;
-			}
-		}
-		//APPL_DEBUG("NOT find start hightlightpatern ...");
+		return HLP_FIND_ERROR;
 	}
+	// try while we find the first element
+	if (m_regExpStart->processOneElement(_buffer, _start, _stop, m_escapeChar) == false) {
+		return HLP_FIND_ERROR;
+	}
+	_resultat.beginStart = m_regExpStart->start();
+	_resultat.beginStop  = m_regExpStart->stop();
+	if (m_regExpStop->process(_buffer, _resultat.beginStop, _stop, m_escapeChar) == true) {
+		_resultat.endStart = m_regExpStop->start();
+		_resultat.endStop  = m_regExpStop->stop();
+		return HLP_FIND_OK;
+	} else {
+		_resultat.endStart = _stop+1;
+		_resultat.endStop = _stop+1;
+		_resultat.notEnded = true;
+		return HLP_FIND_OK_NO_END;
+	}
+	//APPL_DEBUG("NOT find start hightlightpatern ...");
 	return HLP_FIND_ERROR;
 }

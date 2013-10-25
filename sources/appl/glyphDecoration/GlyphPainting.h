@@ -38,11 +38,19 @@ namespace appl {
 			/**
 			 * @brief Get Decoration handle.
 			 * @param[in] _id Id of the decoration.
-			 * @return pointer on deco.
+			 * @return reference on deco.
 			 */
 			const appl::GlyphDecoration& get(esize_t _id) const {
 				return m_list[_id];
 			};
+			/**
+			 * @brief Operator to get decoration handle.
+			 * @param[in] _pos Id of the decoration.
+			 * @return reference on deco.
+			 */
+			const appl::GlyphDecoration& operator[] (esize_t _pos) const {
+				return m_list[_pos];
+			}
 		public:
 			/**
 			 * @brief keep the resource pointer.
@@ -60,4 +68,4 @@ namespace appl {
 };
 
 #endif
-*/
+

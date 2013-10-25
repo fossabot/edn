@@ -18,7 +18,6 @@
 #include <etk/tool.h>
 #include <Gui/MainWindows.h>
 #include <BufferManager.h>
-#include <ColorizeManager.h>
 #include <HighlightManager.h>
 #include <Gui/Search.h>
 #include <unistd.h>
@@ -71,13 +70,7 @@ bool APP_Init(ewol::eContext& _context)
 	//(void)CTagsManager::getInstance();
 	BufferManager::init();
 	
-	// set color and other trucs...
-	ColorizeManager::init();
-	ColorizeManager::loadFile( "white" );
-	ColorizeManager::displayListOfColor();
-	
-	HighlightManager::init();
-	HighlightManager::loadLanguages();
+	appl::highlightManager::init();
 	cTagsManager::init();
 	appl::textPluginManager::init();
 	appl::textPluginManager::addDefaultPlugin();
@@ -144,12 +137,10 @@ void APP_UnInit(ewol::eContext& _context)
 	cTagsManager::unInit();
 	
 	APPL_INFO("Stop Hightlight");
-	HighlightManager::unInit();
+	appl::highlightManager::unInit();
 	//Kill all singleton
 	APPL_INFO("Stop BufferManager");
 	BufferManager::unInit();
-	APPL_INFO("Stop ColorizeManager");
-	ColorizeManager::unInit();
 	APPL_INFO(" == > Un-Init "PROJECT_NAME" (END)");
 }
 

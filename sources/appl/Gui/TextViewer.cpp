@@ -10,7 +10,7 @@
 #include <appl/global.h>
 #include <TextViewer.h>
 #include <BufferManager.h>
-#include <ColorizeManager.h>
+//#include <ColorizeManager.h>
 #include <ewol/clipBoard.h>
 #include <SearchData.h>
 

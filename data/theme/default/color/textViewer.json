@@ -5,12 +5,6 @@
 		{ name="CODE_tabulation", foreground="#444444" },
 		{ name="CODE_cursor", foreground="#eadd05" },
 		{ name="CODE_lineNumber", foreground="#fff725" },
-		{ name="LIST_backgroung1", foreground="#202020" },
-		{ name="LIST_backgroung2", foreground="#000000" },
-		{ name="LIST_backgroungSelected", foreground="#2f0ba4" },
-		{ name="LIST_textNormal", foreground="#EEEEEE" },
-		{ name="LIST_textModify", foreground="#FF0000" },
-		
 		{ name="normal", foreground="#EEEEEE"},
 		{ name="SelectedText", foreground="#AAAAAA", background="#225a09"},
 		{ name="error", foreground="#FF0000"},

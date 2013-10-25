@@ -10,11 +10,11 @@
 #define __HIGHLIGHT_H__
 
 
-class appl {
+namespace appl {
 	class Highlight;
 	class HighlightPattern;
 	
-	class ColorInfo{
+	class ColorInfo {
 		public:
 			int32_t beginStart;
 			int32_t beginStop;
@@ -27,20 +27,22 @@ class appl {
 
 #include <etk/os/FSNode.h>
 #include <HighlightPattern.h>
-#include <Colorize.h>
+#include <appl/glyphDecoration/GlyphPainting.h>
 #include <etk/Buffer.h>
 #include <exml/exml.h>
 
-class appl {
-	class Highlight : public ewol::EObject {
-		public:
+namespace appl {
+	class Highlight : public ewol::Resource {
+		private:
+			appl::GlyphPainting* m_paintingProperties;
+		protected:
 			// Constructeur
-			Highlight(const etk::UString& _xmlFilename);
+			Highlight(const etk::UString& _xmlFilename, const etk::UString& _colorFile);
 			~Highlight(void);
+		public:
 			bool hasExtention(const etk::UString& _ext);
-			bool fileNameCompatible(etk::FSNode &_fileName);
+			bool fileNameCompatible(const etk::UString& _fileName);
 			void display(void);
-			void reloadColor(void);
 			void parse(int32_t _start,
 			           int32_t _stop,
 			           etk::Vector<appl::ColorInfo> &_metaData,
@@ -58,6 +60,23 @@ class appl {
 			etk::Vector<etk::UString> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
 			etk::Vector<HighlightPattern*> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
 			etk::Vector<HighlightPattern*> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
+		public:
+			/**
+			 * @brief keep the resource pointer.
+			 * @note Never free this pointer by your own...
+			 * @param[in] _filename Name of the configuration file.
+			 * @return pointer on the resource or NULL if an error occured.
+			 */
+			static appl::Highlight* keep(const etk::UString& _filename);
+			/**
+			 * @brief release the keeped resources
+			 * @param[in,out] reference on the object pointer
+			 */
+			static void release(appl::Highlight*& _object);
+		public: // herited function :
+			virtual void updateContext(void) {
+				// no upfate to do ...
+			};
 	};
 };
 

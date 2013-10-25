@@ -15,7 +15,7 @@ class HighlightPattern;
 
 
 #include <etk/RegExp.h>
-#include <Colorize.h>
+#include <glyphDecoration/GlyphPainting.h>
 #include <etk/Vector.h>
 #include <exml/exml.h>
 #include <etk/Buffer.h>
@@ -28,9 +28,11 @@ typedef enum {
 
 namespace appl {
 	class HighlightPattern {
+		private:
+			appl::GlyphPainting*& m_glyphPainting;
 		public:
 			// Constructeur
-			HighlightPattern(void);
+			HighlightPattern(appl::GlyphPainting*& _glyphPainting);
 			~HighlightPattern(void);
 		private:
 			etk::UString m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")
@@ -46,22 +48,21 @@ namespace appl {
 		public:
 			void setPaternStart(etk::UString& _regExp);
 		private:
-			bool m_haveStopPatern; //!< Stop patern presence
 			etk::RegExp<etk::Buffer>* m_regExpStop; //!< Stop of Regular Expression
 		public:
 			void setPaternStop(etk::UString& _regExp);
 		private:
 			etk::UString m_colorName; //!< Current color name
-			appl::ColorGlyph* m_color; //!< Link to the color manager
+			esize_t m_colorId; //!< Id of the the glyph painting
 		public:
 			void setColorGlyph(etk::UString& _colorName);
-			appl::ColorGlyph* getColorGlyph(void) {
-				return m_color;
+			const appl::GlyphDecoration& getColorGlyph(void) {
+				return (*m_glyphPainting)[m_colorId];
 			};
 		private:
 			etk::UChar m_escapeChar; //!< Escape char to prevent exeit of patern ....
 		public:
-			void setEscapeChar(etk::UString& _EscapeChar);
+			void setEscapeChar(const etk::UChar& _EscapeChar);
 		private:
 			bool m_multiline; //!< The patern is multiline
 		public:
@@ -80,16 +81,23 @@ namespace appl {
 		private:
 			
 		public:
-			bool isEnable(void);
 			void display(void);
+			/**
+			 * @brief find Element only in the specify start characters and find the end with the range done
+			 * @param[in] _start First character to search data (if recognise it start here)
+			 * @param[in] _stop End of the possibility whe search can continue
+			 * @param[out] _resultat Position where find data
+			 * @param[in] _buffer : Where to search data
+			 * @return HLP_FIND_OK We find a compleate pattern
+			 * @return HLP_FIND_OK_NO_END Xe find a partial pattern (missing end)
+			 * @return HLP_FIND_ERROR Not find the pattern
+			 */
 			resultFind_te find(int32_t _start,
 			                   int32_t _stop,
-			                   colorInformation_ts& _resultat,
+			                   appl::ColorInfo& _resultat,
 			                   etk::Buffer& _buffer);
 			
 			void parseRules(exml::Element* _child, int32_t _level);
-			
-			void reloadColor(void);
 	};
 };
 

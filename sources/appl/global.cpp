@@ -7,7 +7,7 @@
  */
 
 #include <appl/global.h>
-#include <ColorizeManager.h>
+//#include <ColorizeManager.h>
 #include <appl/globalMsg.h>
 #include <ewol/renderer/EObject.h>
 #include <ewol/renderer/eContext.h>

@@ -10,7 +10,7 @@
 #include <appl/global.h>
 #include <BufferView.h>
 #include <BufferManager.h>
-#include <ColorizeManager.h>
+//#include <ColorizeManager.h>
 #include <MainWindows.h>
 #include <ewol/renderer/EObject.h>
 

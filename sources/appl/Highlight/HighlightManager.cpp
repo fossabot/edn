@@ -15,14 +15,14 @@
 #undef __class__
 #define __class__ "highlightManager"
 
-static etk::Vector<Highlight*>& s_list(void) {
-	static etk::Vector<Highlight*> list;
+static etk::Vector<appl::Highlight*>& s_list(void) {
+	static etk::Vector<appl::Highlight*> list;
 	return list;
 }
 
 
 void appl::highlightManager::init(void) {
-	etk::Vector<Highlight*>& hlList = s_list();
+	etk::Vector<appl::Highlight*>& hlList = s_list();
 	if (hlList.size() != 0) {
 		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
 		hlList.clear();
@@ -30,9 +30,7 @@ void appl::highlightManager::init(void) {
 	etk::FSNode myFile("DATA:languages/");
 	// get the subfolder list :
 	etk::Vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
-	for (esize_t iii=0;
-	     iii<list.size();
-	     ++iii ) {
+	for (esize_t iii = 0; iii < list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
 		}
@@ -41,8 +39,19 @@ void appl::highlightManager::init(void) {
 		}
 		etk::UString filename = list[iii]->getName() + "/highlight.xml";
 		APPL_DEBUG("Load xml name : " << filename);
-		appl::Highlight *myHightline = appl::Highlight::keep(filename);
-		hlList.pushBack(myHightline);
+		appl::Highlight *myHightLine = appl::Highlight::keep(filename);
+		if (myHightLine != NULL) {
+			hlList.pushBack(myHightLine);
+		} else {
+			APPL_ERROR("Can not allocate HighLight");
+		}
+	}
+	// display :
+	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
+		if (hlList[iii] == NULL) {
+			continue;
+		}
+		hlList[iii]->display();
 	}
 }
 
@@ -53,9 +62,7 @@ void appl::highlightManager::unInit(void) {
 		hlList.clear();
 		return;
 	}
-	for (esize_t iii = 0;
-	     iii < hlList.size();
-	     ++iii ) {
+	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;
 		}
