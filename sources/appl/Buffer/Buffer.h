@@ -24,26 +24,29 @@ namespace appl {
 			class Iterator {
 				// Private data :
 				private:
-					esize_t m_current; //!< curent Id in the Buffer
+					int64_t m_current; //!< curent Id in the Buffer
 					appl::Buffer* m_data; //!< Pointer on the curent Buffer
+					etk::UChar m_value; //!< store vlue to prevent multiple calcule of getting the data
 				public:
 					/**
 					 * @brief Basic itarator constructor with no link.
 					 */
 					Iterator(void):
 					  m_current(0),
-					  m_data(NULL) {
+					  m_data(NULL),
+					  m_value(etk::UChar::Null) {
 						// nothing to do ...
-					}
+					};
 					/**
 					 * @brief Recopy constructor.
 					 * @param[in] _obj The Iterator that might be copy
 					 */
 					Iterator(const Iterator & _obj):
 					  m_current(_obj.m_current),
-					  m_data(_obj.m_data) {
+					  m_data(_obj.m_data),
+					  m_value(etk::UChar::Null) {
 						// nothing to do ...
-					}
+					};
 					/**
 					 * @brief Asignation operator.
 					 * @param[in] _otherIterator The Iterator that might be copy
@@ -52,15 +55,17 @@ namespace appl {
 					Iterator& operator=(const Iterator & _obj) {
 						m_current = _obj.m_current;
 						m_data = _obj.m_data;
+						m_value = etk::UChar::Null;
 						return *this;
-					}
+					};
 					/**
 					 * @brief Basic destructor
 					 */
 					~Iterator(void) {
 						m_current = 0;
 						m_data = NULL;
-					}
+						m_value = etk::UChar::Null;
+					};
 					/**
 					 * @brief basic boolean cast
 					 * @return true if the element is present in buffer
@@ -69,8 +74,14 @@ namespace appl {
 						if (m_data == NULL) {
 							return false;
 						}
-						return (m_current < m_data->m_data.size());
-					}
+						if (m_current >= m_data->m_data.size()) {
+							return false;
+						}
+						if (m_current < 0) {
+							return false;
+						}
+						return true;
+					};
 					/**
 					 * @brief basic boolean cast
 					 * @return true if the element is present in buffer
@@ -79,8 +90,14 @@ namespace appl {
 						if (m_data == NULL) {
 							return 0;
 						}
+						if (m_current < 0) {
+							return 0;
+						}
+						if (m_current >= m_data->m_data.size()) {
+							return m_data->m_data.size()-1;
+						}
 						return m_current;
-					}
+					};
 					/**
 					 * @brief Incremental operator
 					 * @return Reference on the current iterator incremented
@@ -99,7 +116,7 @@ namespace appl {
 						Iterator it(*this);
 						++(*this);
 						return it;
-					}
+					};
 					/**
 					 * @brief Decremental operator
 					 * @return Reference on a new iterator and decrement the other one
@@ -108,7 +125,7 @@ namespace appl {
 						Iterator it(*this);
 						--(*this);
 						return it;
-					}
+					};
 					/**
 					 * @brief egality iterator
 					 * @return true if the iterator is identical pos
@@ -119,7 +136,7 @@ namespace appl {
 							return true;
 						}
 						return false;
-					}
+					};
 					/**
 					 * @brief egality iterator
 					 * @return true if the iterator is identical pos
@@ -130,7 +147,7 @@ namespace appl {
 							return true;
 						}
 						return false;
-					}
+					};
 					/**
 					 * @brief <= iterator
 					 * @return true if the iterator is identical pos
@@ -143,7 +160,7 @@ namespace appl {
 							return true;
 						}
 						return false;
-					}
+					};
 					/**
 					 * @brief >= iterator
 					 * @return true if the iterator is identical pos
@@ -156,7 +173,7 @@ namespace appl {
 							return true;
 						}
 						return false;
-					}
+					};
 					/**
 					 * @brief < iterator
 					 * @return true if the iterator is identical pos
@@ -169,7 +186,7 @@ namespace appl {
 							return true;
 						}
 						return false;
-					}
+					};
 					/**
 					 * @brief > iterator
 					 * @return true if the iterator is identical pos
@@ -182,19 +199,28 @@ namespace appl {
 							return true;
 						}
 						return false;
-					}
+					};
 					/**
 					 * @brief Get the value on the current element
 					 * @return The request element value
 					 */
-					etk::UChar operator* (void) const ;
+					etk::UChar operator* (void);
 					/**
 					 * @brief Get the position in the buffer
 					 * @return The requested position.
 					 */
 					esize_t getPos(void) const {
+						if (m_data == NULL) {
+							return 0;
+						}
+						if (m_current < 0) {
+							return 0;
+						}
+						if (m_current >= m_data->m_data.size()) {
+							return m_data->m_data.size()-1;
+						}
 						return m_current;
-					}
+					};
 					/**
 					 * @brief move the element position
 					 * @return a new iterator.
@@ -205,7 +231,7 @@ namespace appl {
 							++tmpp;
 						}
 						return tmpp;
-					}
+					};
 					/**
 					 * @brief move the element position
 					 * @return a new iterator.
@@ -216,13 +242,14 @@ namespace appl {
 							--tmpp;
 						}
 						return tmpp;
-					}
+					};
 				private:
 					Iterator(Buffer* _obj, int32_t _pos) :
 					  m_current(_pos),
-					  m_data(_obj) {
+					  m_data(_obj),
+					  m_value(etk::UChar::Null) {
 						// nothing to do ...
-					}
+					};
 					friend class Buffer;
 			};
 		public:
@@ -454,6 +481,25 @@ namespace appl {
 			 * @brief Count the number of line in the buffer
 			 */
 			void countNumberofLine(void);
+		protected:
+			etk::UString m_highlightType; //!< Name of the highlight type
+		public:
+			/**
+			 * @brief Find the Highligh capability
+			 */
+			void tryFindHighlightType(void);
+			/**
+			 * @brief Set type of highlight
+			 * @param[in] _type type of the highlight
+			 */
+			void setHighlightType(const etk::UString& _type);
+			/**
+			 * @brief Get type of highlight
+			 * @return Type of the highlight
+			 */
+			const etk::UString& setHighlightType(void) {
+				return m_highlightType;
+			};
 	};
 };
 

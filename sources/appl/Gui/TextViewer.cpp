@@ -130,7 +130,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	int32_t startLineId = 0;
 	if (m_size.y() < m_displayText.getPos().y()) {
 		for (startingIt = m_buffer->begin();
-		     startingIt != m_buffer->end();
+		     (bool)startingIt == true;
 		     ++startingIt) {
 			if (*startingIt == etk::UChar::Return) {
 				++startLineId;
@@ -178,7 +178,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	}
 	float maxSizeX = 0;
 	for (appl::Buffer::Iterator it = startingIt;
-	     it != m_buffer->end();
+	     (bool)it == true;
 	     ++it) {
 		if (it == m_buffer->cursor()) {
 			// need to display the cursor :
@@ -452,7 +452,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 	m_displayText.clear();
 	m_displayText.forceLineReturn();
 	for (appl::Buffer::Iterator it = m_buffer->begin();
-	     it != m_buffer->end();
+	     (bool)it == true;
 	     ++it) {
 		currentValue = *it;
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
@@ -708,7 +708,7 @@ appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator
 	m_displayText.clear();
 	m_displayText.forceLineReturn();
 	for (appl::Buffer::Iterator it = _startLinePos;
-	     it != m_buffer->end();
+	     (bool)it == true;
 	     ++it) {
 		currentValue = *it;
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
@@ -736,7 +736,7 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 	m_displayText.clear();
 	
 	for (appl::Buffer::Iterator it = _startLinePos;
-	     it != m_buffer->end() && it <= _stopPos;
+	     (bool)it == true && it <= _stopPos;
 	     ++it) {
 		currentValue = *it;
 		//APPL_DEBUG("parse : " << currentValue);

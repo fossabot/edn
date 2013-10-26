@@ -47,7 +47,7 @@ bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
 	
 	
 	for (appl::Buffer::Iterator it = startLine+1;
-	     it != _textDrawer.m_buffer->end();
+	     (bool)it == true;
 	     ++it) {
 		if (*it == etk::UChar::Space) {
 			data.append(etk::UChar::Space);

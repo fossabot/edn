@@ -6,8 +6,8 @@
  * @license GPL v3 (see license file)
  */
 
-#ifndef __GLYPH_DECORATION_MANAGER_H__
-#define __GLYPH_DECORATION_MANAGER_H__
+#ifndef __APPL_GLYPH_PAINTING_H__
+#define __APPL_GLYPH_PAINTING_H__
 
 #include <etk/types.h>
 #include <ewol/debug.h>
