@@ -1,0 +1,31 @@
+{
+	"ednColor": [
+		{ name:"CODE_basicBackgroung", foreground:"#d9d7d7"},
+		{ name:"CODE_space", foreground:"#b7b6b6"},
+		{ name:"CODE_tabulation", foreground:"#a7a5a5"},
+		{ name:"CODE_cursor", foreground:"#2a00ff"},
+		{ name:"CODE_lineNumber", foreground:"#1a00a0"},
+		{ name:"normal", foreground:"#000000"},
+		{ name:"SelectedText", foreground:"#292929", background:"#009ce7"},
+		{ name:"error", foreground:"#FF0000"},
+		{ name:"doubleQuoteText", foreground:"#008e00"},
+		{ name:"type", foreground:"#376d0a", bold:true},
+		{ name:"memberClass", foreground:"#7c5406", bold:true},
+		{ name:"inputFunction", foreground:"#B80000", bold:true, italic:true},
+		{ name:"storageKeyword", foreground:"#466cb4"},
+		{ name:"number", foreground:"#007b00"},
+		{ name:"systemFunction", foreground:"#acaa00"},
+		{ name:"commonDefine", foreground:"#3c850b"},
+		{ name:"boolean", foreground:"#1633a3"},
+		{ name:"preprocesseur", foreground:"#ac0000"},
+		{ name:"comment", foreground:"#b704b5", italic:true},
+		{ name:"commentDoxygen", foreground:"#bf3e00", bold:true, italic:true},
+		{ name:"keyword", foreground:"#215eb8", bold:true},
+		{ name:"macro", foreground:"#571793", bold:true},
+		{ name:"SYNTAX_ERROR", foreground:"#000000", background:"#c20000", bold:true},
+		{ name:"functionName", foreground:"#09857e", bold:true},
+		{ name:"TestResultOK", foreground:"#000000", background:"#009c00", bold:true},
+		{ name:"TestResultERROR", foreground:"#000000", background:"#c20000", bold:true}
+	]
+}
+

@@ -40,6 +40,17 @@ appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
 	shortCutAdd("ctrl+a",       ednMsgGuiSelect, "ALL");
 	shortCutAdd("ctrl+shift+a", ednMsgGuiSelect, "NONE");
 	
+	// load color properties
+	m_paintingProperties = appl::GlyphPainting::keep("THEME:COLOR:textViewer.json");
+	// get all id properties ...
+	m_colorBackground = m_paintingProperties->request("CODE_basicBackgroung");
+	m_colorSpace = m_paintingProperties->request("CODE_space");
+	m_colorTabulation = m_paintingProperties->request("CODE_tabulation");
+	m_colorCursor = m_paintingProperties->request("CODE_cursor");
+	m_colorLineNumber = m_paintingProperties->request("CODE_lineNumber");
+	m_colorSelection = m_paintingProperties->request("SelectedText");
+	m_colorNormal = m_paintingProperties->request("normal");
+	
 	// by default we load an example object:
 	
 	m_buffer = new appl::Buffer();
@@ -78,7 +89,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	
 	// reset the background :
 	m_displayDrawing.setPos(vec3(0, 0, 0));
-	m_displayDrawing.setColor(etk::Color<>(220, 220, 220, 256));
+	m_displayDrawing.setColor((*m_paintingProperties)[m_colorBackground].getForeground());
 	m_displayDrawing.rectangleWidth(m_size);
 	
 	if (m_buffer == NULL) {
@@ -116,7 +127,6 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	// the siplay string :
 	etk::UString stringToDisplay;
 	esize_t bufferElementSize = 0;
-	etk::UChar currentValue;
 	bool isSelect = false;
 	appl::Buffer::Iterator selectPosStart = m_buffer->begin();
 	appl::Buffer::Iterator selectPosStop = m_buffer->begin();
@@ -154,8 +164,10 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			nbLineCalc /= 10.0f;
 		}
 		m_lastOffsetDisplay = tmpLetterSize.x() * (float)nbChar + 1.0f;
-		m_displayText.setColorBg(etk::Color<>(0xB0B0B0FF));
-		m_displayText.setColor(etk::Color<>(0x000080FF));
+		m_displayText.setFontItalic((*m_paintingProperties)[m_colorLineNumber].getItalic());
+		m_displayText.setFontBold((*m_paintingProperties)[m_colorLineNumber].getBold());
+		m_displayText.setColorBg((*m_paintingProperties)[m_colorLineNumber].getBackground());
+		m_displayText.setColor((*m_paintingProperties)[m_colorLineNumber].getForeground());
 		m_displayText.setClippingMode(false);
 		
 		vec3 startWriteRealPosition = m_displayText.getPos();
@@ -172,11 +184,12 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			}
 		}
 		m_displayText.setPos(vec3(-m_originScrooled.x()+m_lastOffsetDisplay, startWriteRealPosition.y(), 0.0f));
-		m_displayText.setColorBg(etk::Color<>(0xFFFFFF00));
-		m_displayText.setColor(etk::Color<>(0x000000FF));
 		m_displayText.setClipping(vec2(m_lastOffsetDisplay, 0), m_size);
 	}
+	appl::DisplayHLData displayLocalSyntax;
+	m_buffer->hightlightGenerateLines(displayLocalSyntax, (esize_t)startingIt, m_size.y());
 	float maxSizeX = 0;
+	appl::HighlightInfo * HLColor = NULL;
 	for (appl::Buffer::Iterator it = startingIt;
 	     (bool)it == true;
 	     ++it) {
@@ -184,10 +197,9 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			// need to display the cursor :
 			tmpCursorPosition = m_displayText.getPos();
 		}
-		currentValue = *it;
 		//APPL_DEBUG("display element '" << currentValue << "'at pos : " << m_displayText.getPos() );
 		//APPL_DEBUG(" element size : " << iii << " : " << bufferElementSize);
-		if (currentValue == etk::UChar::Return) {
+		if (*it == etk::UChar::Return) {
 			countNbLine += 1;
 			countColomn = 0;
 			maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
@@ -205,16 +217,31 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			}
 			continue;
 		}
-		m_displayText.setColorBg(etk::Color<>(0x00000000));
-		// TODO : move tis section in a plugin, but haw to do this ???
-		if (*it == etk::UChar::Space) {
-			m_displayText.setColorBg(etk::Color<>(0x00000022));
-		} else if (*it == etk::UChar::Tabulation) {
-			m_displayText.setColorBg(etk::Color<>(0x00000044));
+		HLColor = m_buffer->getElementColorAtPosition(displayLocalSyntax, (esize_t)it);
+		bool haveBackground = false;
+		if (    HLColor != NULL
+		     && HLColor->patern != NULL) {
+			m_displayText.setColor(HLColor->patern->getColorGlyph().getForeground());
+			m_displayText.setColorBg(HLColor->patern->getColorGlyph().getBackground());
+			haveBackground = HLColor->patern->getColorGlyph().haveBackground();
+			m_displayText.setFontItalic(HLColor->patern->getColorGlyph().getItalic());
+			m_displayText.setFontBold(HLColor->patern->getColorGlyph().getBold());
+		} else {
+			m_displayText.setFontItalic((*m_paintingProperties)[m_colorNormal].getItalic());
+			m_displayText.setFontBold((*m_paintingProperties)[m_colorNormal].getBold());
+			m_displayText.setColorBg((*m_paintingProperties)[m_colorNormal].getBackground());
+			m_displayText.setColor((*m_paintingProperties)[m_colorNormal].getForeground());
 		}
-		m_buffer->expand(countColomn, currentValue, stringToDisplay);
+		if (haveBackground == false) {
+			if (*it == etk::UChar::Space) {
+				m_displayText.setColorBg((*m_paintingProperties)[m_colorSpace].getForeground());
+			} else if (*it == etk::UChar::Tabulation) {
+				m_displayText.setColorBg((*m_paintingProperties)[m_colorTabulation].getForeground());
+			}
+		}
+		m_buffer->expand(countColomn, *it, stringToDisplay);
 		if (it >= selectPosStart && it < selectPosStop) {
-			m_displayText.setColorBg(etk::Color<>(0x00FF00FF));
+			m_displayText.setColorBg((*m_paintingProperties)[m_colorSelection].getForeground());
 		}
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		m_displayText.print(stringToDisplay);
@@ -225,8 +252,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		// display the cursor:
 		//APPL_DEBUG("display cursor at position : " << tmpCursorPosition);
 		m_displayText.setPos(tmpCursorPosition);
-		m_displayText.setColor(etk::Color<>(0xFF0000FF));
-		m_displayText.setColorBg(etk::Color<>(0xFF0000FF));
+		m_displayText.setColorBg((*m_paintingProperties)[m_colorCursor].getForeground());
 		m_displayText.printCursor(m_insertMode);
 	}
 	// set maximum size (X&Y) :

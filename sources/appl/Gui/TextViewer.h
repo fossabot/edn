@@ -29,6 +29,15 @@ namespace appl {
 		friend class appl::TextPluginMultiLineTab;
 		friend class appl::TextPluginAutoIndent;
 		friend class appl::TextPluginHistory;
+		private:
+			appl::GlyphPainting* m_paintingProperties; //!< element painting property
+			esize_t m_colorBackground;
+			esize_t m_colorSpace;
+			esize_t m_colorTabulation;
+			esize_t m_colorCursor;
+			esize_t m_colorLineNumber;
+			esize_t m_colorSelection;
+			esize_t m_colorNormal;
 		public:
 			TextViewer(const etk::UString& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);

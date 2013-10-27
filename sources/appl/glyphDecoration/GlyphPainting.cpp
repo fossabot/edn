@@ -31,7 +31,7 @@ appl::GlyphPainting::~GlyphPainting(void) {
 void appl::GlyphPainting::reload(void) {
 	ejson::Document doc;
 	if (false == doc.load(m_name)) {
-		APPL_ERROR("Can not load file : '" << m_name << "'");
+		APPL_ERROR("Can not load file : '" << m_name << "' = " << etk::FSNode(m_name).getFileSystemName());
 		return;
 	}
 	ejson::Array* baseArray = doc.getArray("ednColor");
@@ -45,11 +45,12 @@ void appl::GlyphPainting::reload(void) {
 			APPL_DEBUG(" can not get object in 'ednColor' id=" << iii);
 			continue;
 		}
-		etk::UString name = tmpObj->getString("name");
-		etk::UString background = tmpObj->getString("background");
-		etk::UString foreground = tmpObj->getString("foreground");
-		bool italic = tmpObj->getString("italic");
-		bool bold = tmpObj->getString("bold");
+		etk::UString name = tmpObj->getStringValue("name", "");
+		etk::UString background = tmpObj->getStringValue("background", "#FFF0");
+		etk::UString foreground = tmpObj->getStringValue("foreground", "#000F");
+		bool italic = tmpObj->getBooleanValue("italic", false);
+		bool bold = tmpObj->getBooleanValue("bold", false);
+		APPL_DEBUG("find new color : '" << name << "' fg='" << foreground << "' bg='" << background << "' italic='" << italic << "' bold='" << bold << "'");
 		bool findElement = false;
 		for (esize_t jjj=0; jjj<m_list.size(); ++jjj) {
 			if (m_list[jjj].getName() != name) {

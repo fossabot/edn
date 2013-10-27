@@ -63,6 +63,9 @@ bool APP_Init(ewol::eContext& _context)
 	// set the application icon ...
 	_context.setIcon("DATA:icon.png");
 	
+	etk::theme::setName("COLOR", "colorBlack/");
+	etk::theme::setName("COLOR", "colorWhite/");
+	
 	// init internal global value
 	globals::init();
 	

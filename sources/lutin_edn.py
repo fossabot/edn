@@ -57,7 +57,6 @@ def Create(target):
 	myModule.CopyFile('../data/icon.png','icon.png')
 	
 	myModule.CopyFolder('../data/icon.*','')
-	myModule.CopyFolder('../data/theme/default/color/*.xml','theme/default/color/')
 	myModule.CopyFolder('../data/languages/asm/*.xml','languages/asm/')
 	myModule.CopyFolder('../data/languages/bash/*.xml','languages/bash/')
 	myModule.CopyFolder('../data/languages/boo/*.xml','languages/boo/')
@@ -73,6 +72,8 @@ def Create(target):
 	myModule.CopyFolder('../data/languages/xml/*.xml','languages/xml/')
 	myModule.CopyFolder('../data/languages/python/*.xml','languages/python/')
 	myModule.CopyFolder('../data/theme/default/*.svg','theme/default/')
+	myModule.CopyFolder('../data/theme/colorWhite/*.json','theme/colorWhite/')
+	myModule.CopyFolder('../data/theme/colorClack/*.json','theme/colorBlack/')
 	
 	myModule.AddPath(lutinTools.GetCurrentPath(__file__))
 	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl")

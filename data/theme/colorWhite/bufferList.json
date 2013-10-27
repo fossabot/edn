@@ -1,0 +1,9 @@
+{
+	"ednColor": [
+		{ name:"LIST_backgroung1", foreground:"#d9d7d7"},
+		{ name:"LIST_backgroung2", foreground:"#b7b6b6"},
+		{ name:"LIST_backgroungSelected", foreground:"#3da3f9"},
+		{ name:"LIST_textNormal", foreground:"#000000"},
+		{ name:"LIST_textModify", foreground:"#FF0000"}
+	]
+}
