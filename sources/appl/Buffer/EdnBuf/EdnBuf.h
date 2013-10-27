@@ -43,10 +43,10 @@ typedef struct {
 } selection;
 
 typedef struct {
-	etk::Vector<colorInformation_ts> HLData;
+	etk::Vector<appl::HighlightInfo> HLData;
 	int32_t posHLPass1;
 	int32_t posHLPass2;
-}displayHLData_ts;
+}appl::DisplayHLData;
 
 class EdnBuf {
 	// TODO : set an iterator to acces at every data without knowin the system ...
@@ -135,17 +135,17 @@ class EdnBuf {
 	// -----------------------------------------
 	private:
 		Highlight * m_Highlight; //!< internal link with the Highlight system
-		etk::Vector<colorInformation_ts> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
+		etk::Vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
 		void RegenerateHighLightAt(int32_t _pos, int32_t _nbDeleted, int32_t _nbAdded);
 		void generateHighLightAt(int32_t _pos, int32_t _endPos, int32_t _addinPos=0);
 		void CleanHighLight(void);
 		void findMainHighLightPosition(int32_t _startPos, int32_t _endPos, int32_t &_startId, int32_t &_stopId, bool _backPreviousNotEnded);
 	public:
 		void setHLSystem(Highlight* _newHLSystem);
-		void HightlightGenerateLines(displayHLData_ts& _MData, int32_t _startPos, int32_t _nbLines);
-		colorInformation_ts* getElementColorAtPosition(displayHLData_ts& _MData, int32_t _pos);
+		void HightlightGenerateLines(appl::DisplayHLData& _MData, int32_t _startPos, int32_t _nbLines);
+		appl::HighlightInfo* getElementColorAtPosition(appl::DisplayHLData& _MData, int32_t _pos);
 	private:
-		colorInformation_ts* getElementColorAtPosition(int32_t _pos, int32_t &_starPos);
+		appl::HighlightInfo* getElementColorAtPosition(int32_t _pos, int32_t &_starPos);
 
 	private:
 		etk::Buffer m_data; //!< buffer of the data in the mode int8_t

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EdnLang version="0.1" lang="c">
+<EdnLang version="0.1" lang="Python">
 	<ext>*.py</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline">

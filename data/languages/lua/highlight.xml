@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EdnLang version="0.1" lang="c">
+<EdnLang version="0.1" lang="Lua">
 	<ext>*.lua</ext>
 	<pass1>
 		<rule name="Comment multiline">

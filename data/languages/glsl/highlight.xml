@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EdnLang version="0.1" lang="glsl">
+<EdnLang version="0.1" lang="Glsl">
 	<ext>*.glsl</ext>
 	<ext>*.vert</ext>
 	<ext>*.frag</ext>

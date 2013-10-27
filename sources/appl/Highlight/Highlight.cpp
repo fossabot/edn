@@ -29,7 +29,8 @@ void appl::Highlight::parseRules(exml::Element* _child,
 }
 
 appl::Highlight::Highlight(const etk::UString& _xmlFilename, const etk::UString& _colorFile) :
-  ewol::Resource(_xmlFilename) {
+  ewol::Resource(_xmlFilename),
+  m_typeName("") {
 	// keep color propertiy file :
 	m_paintingProperties = appl::GlyphPainting::keep(_colorFile);
 	
@@ -43,6 +44,7 @@ appl::Highlight::Highlight(const etk::UString& _xmlFilename, const etk::UString&
 		APPL_ERROR("(l ?) main node not find: \"EdnLang\" ...");
 		return;
 	}
+	m_typeName = root->getAttribute("lang");
 	int32_t level1 = 0;
 	int32_t level2 = 0;
 	// parse all the elements :
@@ -156,7 +158,7 @@ void appl::Highlight::display(void) {
  */
 void appl::Highlight::parse(int32_t start,
                       int32_t stop,
-                      etk::Vector<appl::ColorInfo> &metaData,
+                      etk::Vector<appl::HighlightInfo> &metaData,
                       int32_t addingPos,
                       etk::Buffer &buffer) {
 	if (0 > addingPos) {
@@ -165,7 +167,7 @@ void appl::Highlight::parse(int32_t start,
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass1.size() << "  == > position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;
 	int32_t elementStop = stop;
-	appl::ColorInfo resultat;
+	appl::HighlightInfo resultat;
 	while (elementStart<elementStop) {
 		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have
@@ -219,12 +221,12 @@ void appl::Highlight::parse(int32_t start,
  */
 void appl::Highlight::parse2(int32_t start,
                        int32_t stop,
-                       etk::Vector<appl::ColorInfo> &metaData,
+                       etk::Vector<appl::HighlightInfo> &metaData,
                        etk::Buffer &buffer) {
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << "  == > position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;
 	int32_t elementStop = stop;
-	appl::ColorInfo resultat;
+	appl::HighlightInfo resultat;
 	while (elementStart<elementStop) {
 		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have

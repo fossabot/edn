@@ -141,7 +141,7 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 
 resultFind_te appl::HighlightPattern::find(int32_t _start,
                                      int32_t _stop,
-                                     appl::ColorInfo& _resultat,
+                                     appl::HighlightInfo& _resultat,
                                      etk::Buffer& _buffer) {
 	//APPL_DEBUG(" try to find the element");
 	_resultat.beginStart = -1;

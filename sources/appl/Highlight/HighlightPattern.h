@@ -94,7 +94,7 @@ namespace appl {
 			 */
 			resultFind_te find(int32_t _start,
 			                   int32_t _stop,
-			                   appl::ColorInfo& _resultat,
+			                   appl::HighlightInfo& _resultat,
 			                   etk::Buffer& _buffer);
 			
 			void parseRules(exml::Element* _child, int32_t _level);

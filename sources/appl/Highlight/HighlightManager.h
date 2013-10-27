@@ -32,6 +32,12 @@ namespace appl {
 		 */
 		etk::UString getTypeExtention(const etk::UString& _extention);
 		/**
+		 * @brief Get filename with type.
+		 * @param[in] _type Type name of the highlight.
+		 * @return filename of the highlight.
+		 */
+		etk::UString getFileWithTypeType(const etk::UString& _type);
+		/**
 		 * @brief Get the list of extention type
 		 * @return the requested list.
 		 */

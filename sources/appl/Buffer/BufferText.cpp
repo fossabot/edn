@@ -333,7 +333,7 @@ int32_t BufferText::display(ewol::Text& OOText,
 	
 	selHave = m_EdnBuf.getSelectionPos(selStart, selEnd, selIsRect, selRectStart, selRectEnd);
 	
-	colorInformation_ts * HLColor = NULL;
+	appl::HighlightInfo * HLColor = NULL;
 	
 	int32_t iii, new_i;
 	// get color : 
@@ -349,7 +349,7 @@ int32_t BufferText::display(ewol::Text& OOText,
 	int64_t startTime = ewol::getTime();
 	int displayLines = 0;
 	// Regenerate the colorizing if necessary ...
-	displayHLData_ts m_displayLocalSyntax;
+	appl::DisplayHLData m_displayLocalSyntax;
 	m_EdnBuf.HightlightGenerateLines(m_displayLocalSyntax, displayStartBufferPos, m_displaySize.y());
 	
 	int64_t stopTime = ewol::getTime();

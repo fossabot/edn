@@ -14,7 +14,7 @@ namespace appl {
 	class Highlight;
 	class HighlightPattern;
 	
-	class ColorInfo {
+	class HighlightInfo {
 		public:
 			int32_t beginStart;
 			int32_t beginStop;
@@ -39,18 +39,24 @@ namespace appl {
 			// Constructeur
 			Highlight(const etk::UString& _xmlFilename, const etk::UString& _colorFile);
 			~Highlight(void);
+		private:
+			etk::UString m_typeName; //!< descriptive string type like "C/C++"
+		public:
+			const etk::UString& getTypeName(void) {
+				return m_typeName;
+			}
 		public:
 			bool hasExtention(const etk::UString& _ext);
 			bool fileNameCompatible(const etk::UString& _fileName);
 			void display(void);
 			void parse(int32_t _start,
 			           int32_t _stop,
-			           etk::Vector<appl::ColorInfo> &_metaData,
+			           etk::Vector<appl::HighlightInfo> &_metaData,
 			           int32_t _addingPos,
 			           etk::Buffer &_buffer);
 			void parse2(int32_t _start,
 			            int32_t _stop,
-			            etk::Vector<appl::ColorInfo> &_metaData,
+			            etk::Vector<appl::HighlightInfo> &_metaData,
 			            etk::Buffer &_buffer);
 		private:
 			void parseRules(exml::Element* _child,

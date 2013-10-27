@@ -17,8 +17,16 @@
 #include <ewol/renderer/EObject.h>
 #include <ewol/widget/Widget.h>
 #include <ewol/compositing/Text.h>
+#include <appl/Highlight/Highlight.h>
 
 namespace appl {
+
+	class DisplayHLData {
+		public:
+			etk::Vector<appl::HighlightInfo> HLData;
+			int32_t posHLPass1;
+			int32_t posHLPass2;
+	};
 	class Buffer : public ewol::EObject {
 		public:
 			class Iterator {
@@ -254,7 +262,7 @@ namespace appl {
 			};
 		public:
 			Buffer(void);
-			~Buffer(void) { };
+			~Buffer(void);
 		private:
 			etk::UString m_fileName; //!< name of the file (with his path)
 		public:
@@ -483,6 +491,9 @@ namespace appl {
 			void countNumberofLine(void);
 		protected:
 			etk::UString m_highlightType; //!< Name of the highlight type
+			
+			appl::Highlight* m_highlight; //!< internal link with the Highlight system
+			etk::Vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
 		public:
 			/**
 			 * @brief Find the Highligh capability
@@ -500,6 +511,19 @@ namespace appl {
 			const etk::UString& setHighlightType(void) {
 				return m_highlightType;
 			};
+			
+			void regenerateHighLightAt(int32_t _pos, int32_t _nbDeleted, int32_t _nbAdded);
+			void findMainHighLightPosition(int32_t _startPos,
+                                             int32_t _endPos,
+                                             int32_t& _startId,
+                                             int32_t& _stopId,
+                                             bool _backPreviousNotEnded);
+			void generateHighLightAt(int32_t _pos, int32_t _endPos, int32_t _addingPos=0);
+			void cleanHighLight(void);
+			appl::HighlightInfo* getElementColorAtPosition(int32_t _pos, int32_t &_starPos);
+			void hightlightGenerateLines(appl::DisplayHLData& _MData, int32_t _HLStart, int32_t _nbLines);
+			appl::HighlightInfo* getElementColorAtPosition(appl::DisplayHLData& _MData, int32_t _pos);
+			
 	};
 };
 

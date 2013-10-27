@@ -8,7 +8,7 @@
 
 #include <appl/debug.h>
 #include <appl/global.h>
-#include <HighlightManager.h>
+#include <appl/Highlight/HighlightManager.h>
 #include <ewol/renderer/EObject.h>
 #include <ewol/renderer/EObjectManager.h>
 
@@ -73,6 +73,34 @@ void appl::highlightManager::unInit(void) {
 }
 
 etk::UString appl::highlightManager::getTypeExtention(const etk::UString& _extention) {
+	if (_extention.size() == 0) {
+		return "";
+	}
+	etk::Vector<Highlight*>& hlList = s_list();
+	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
+		if (hlList[iii] == NULL) {
+			continue;
+		}
+		if (hlList[iii]->hasExtention(_extention) == true) {
+			return hlList[iii]->getTypeName();
+		}
+	}
+	return "";
+}
+
+etk::UString appl::highlightManager::getFileWithTypeType(const etk::UString& _type) {
+	if (_type.size() == 0) {
+		return "";
+	}
+	etk::Vector<Highlight*>& hlList = s_list();
+	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
+		if (hlList[iii] == NULL) {
+			continue;
+		}
+		if (hlList[iii]->getTypeName() == _type) {
+			return hlList[iii]->getName();
+		}
+	}
 	return "";
 }
 
