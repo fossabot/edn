@@ -7,7 +7,7 @@
  */
 
 
-#include <appl/Buffer/TextPluginAutoIndent.h>
+#include <appl/TextPluginAutoIndent.h>
 #include <ewol/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 

@@ -15,7 +15,7 @@ class HighlightPattern;
 
 
 #include <etk/RegExp.h>
-#include <glyphDecoration/GlyphPainting.h>
+#include <appl/GlyphPainting.h>
 #include <etk/Vector.h>
 #include <exml/exml.h>
 #include <etk/Buffer.h>

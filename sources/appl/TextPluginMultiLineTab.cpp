@@ -7,7 +7,7 @@
  */
 
 
-#include <appl/Buffer/TextPluginMultiLineTab.h>
+#include <appl/TextPluginMultiLineTab.h>
 #include <ewol/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 

@@ -7,10 +7,10 @@
  */
 
 
-#include <appl/Buffer/TextPluginHistory.h>
+#include <appl/TextPluginHistory.h>
 #include <ewol/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
-#include <appl/Buffer/TextPluginManager.h>
+#include <appl/TextPluginManager.h>
 
 #undef __class__
 #define __class__ "TextPluginHistory"

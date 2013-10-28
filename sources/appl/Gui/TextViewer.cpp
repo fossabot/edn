@@ -16,7 +16,7 @@
 
 #include <ewol/widget/WidgetManager.h>
 #include <ewol/renderer/EObject.h>
-#include <appl/Buffer/TextPluginManager.h>
+#include <appl/TextPluginManager.h>
 
 #undef __class__
 #define __class__ "TextViewer"
@@ -52,14 +52,14 @@ appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
 	m_colorNormal = m_paintingProperties->request("normal");
 	
 	// by default we load an example object:
-	
+	/*
 	m_buffer = new appl::Buffer();
 	if (m_buffer == NULL) {
 		APPL_ERROR("can not create buffer ... ");
 		return;
 	}
 	m_buffer->loadFile("./example.txt");
-	
+	*/
 	appl::textPluginManager::connect(*this);
 }
 
@@ -241,7 +241,8 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		}
 		m_buffer->expand(countColomn, *it, stringToDisplay);
 		if (it >= selectPosStart && it < selectPosStop) {
-			m_displayText.setColorBg((*m_paintingProperties)[m_colorSelection].getForeground());
+			m_displayText.setColor((*m_paintingProperties)[m_colorSelection].getForeground());
+			m_displayText.setColorBg((*m_paintingProperties)[m_colorSelection].getBackground());
 		}
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		m_displayText.print(stringToDisplay);

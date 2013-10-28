@@ -7,7 +7,7 @@
  */
 
 
-#include <appl/Buffer/TextPluginCopy.h>
+#include <appl/TextPluginCopy.h>
 #include <ewol/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 

@@ -6,12 +6,12 @@
  * @license GPL v3 (see license file)
  */
 
-#include <appl/Buffer/TextPluginManager.h>
+#include <appl/TextPluginManager.h>
 #include <appl/debug.h>
-#include <appl/Buffer/TextPluginCopy.h>
-#include <appl/Buffer/TextPluginMultiLineTab.h>
-#include <appl/Buffer/TextPluginAutoIndent.h>
-#include <appl/Buffer/TextPluginHistory.h>
+#include <appl/TextPluginCopy.h>
+#include <appl/TextPluginMultiLineTab.h>
+#include <appl/TextPluginAutoIndent.h>
+#include <appl/TextPluginHistory.h>
 
 #undef __class__
 #define __class__ "textPluginManager"

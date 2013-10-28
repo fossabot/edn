@@ -10,7 +10,7 @@
 #define __APPL_TEXT_VIEWER_H__
 
 #include <appl/debug.h>
-#include <appl/Buffer/Buffer.h>
+#include <appl/Buffer.h>
 #include <appl/globalMsg.h>
 
 #include <ewol/widget/WidgetScrolled.h>

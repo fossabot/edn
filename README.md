@@ -102,3 +102,7 @@ License (GPLv3)
 	
 	You should have received a copy of the GNU General Public License
 	along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+Annexe
+==================
+	sudo cp data/edn.desktop /usr/share/applications/

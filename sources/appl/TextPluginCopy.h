@@ -13,7 +13,7 @@
 #include <ewol/renderer/EObject.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/compositing/Text.h>
-#include <appl/Buffer/TextPlugin.h>
+#include <appl/TextPlugin.h>
 
 namespace appl {
 	class TextPluginCopy : public appl::TextViewerPlugin {

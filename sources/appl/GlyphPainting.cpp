@@ -8,7 +8,7 @@
 
 #include <appl/debug.h>
 #include <appl/global.h>
-#include <appl/glyphDecoration/GlyphPainting.h>
+#include <appl/GlyphPainting.h>
 #include <ejson/ejson.h>
 #include <etk/os/FSNode.h>
 #include <ewol/resources/ResourceManager.h>
@@ -50,7 +50,7 @@ void appl::GlyphPainting::reload(void) {
 		etk::UString foreground = tmpObj->getStringValue("foreground", "#000F");
 		bool italic = tmpObj->getBooleanValue("italic", false);
 		bool bold = tmpObj->getBooleanValue("bold", false);
-		APPL_DEBUG("find new color : '" << name << "' fg='" << foreground << "' bg='" << background << "' italic='" << italic << "' bold='" << bold << "'");
+		APPL_VERBOSE("find new color : '" << name << "' fg='" << foreground << "' bg='" << background << "' italic='" << italic << "' bold='" << bold << "'");
 		bool findElement = false;
 		for (esize_t jjj=0; jjj<m_list.size(); ++jjj) {
 			if (m_list[jjj].getName() != name) {

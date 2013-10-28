@@ -17,7 +17,7 @@
 #include <ewol/renderer/EObject.h>
 #include <ewol/widget/Widget.h>
 #include <ewol/compositing/Text.h>
-#include <appl/Highlight/Highlight.h>
+#include <appl/Highlight.h>
 
 namespace appl {
 

@@ -8,7 +8,7 @@
 
 #include <appl/debug.h>
 #include <appl/global.h>
-#include <appl/Highlight/HighlightManager.h>
+#include <appl/HighlightManager.h>
 #include <ewol/renderer/EObject.h>
 #include <ewol/renderer/EObjectManager.h>
 
@@ -47,12 +47,14 @@ void appl::highlightManager::init(void) {
 		}
 	}
 	// display :
+	/*
 	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;
 		}
 		hlList[iii]->display();
 	}
+	*/
 }
 
 void appl::highlightManager::unInit(void) {

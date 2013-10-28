@@ -29,25 +29,25 @@ def Create(target):
 	
 	# All needed for the buffer management :
 	myModule.AddSrcFile([
-		'appl/Buffer/Buffer.cpp',
-		'appl/Buffer/TextPlugin.cpp',
-		'appl/Buffer/TextPluginCopy.cpp',
-		'appl/Buffer/TextPluginMultiLineTab.cpp',
-		'appl/Buffer/TextPluginAutoIndent.cpp',
-		'appl/Buffer/TextPluginHistory.cpp',
-		'appl/Buffer/TextPluginManager.cpp',
-		'appl/Buffer/BufferManager.cpp'])
+		'appl/Buffer.cpp',
+		'appl/BufferManager.cpp',
+		'appl/TextPlugin.cpp',
+		'appl/TextPluginCopy.cpp',
+		'appl/TextPluginMultiLineTab.cpp',
+		'appl/TextPluginAutoIndent.cpp',
+		'appl/TextPluginHistory.cpp',
+		'appl/TextPluginManager.cpp'])
 	
 	# Generic color management for the text editor : 
 	myModule.AddSrcFile([
-		'appl/glyphDecoration/GlyphDecoration.cpp',
-		'appl/glyphDecoration/GlyphPainting.cpp'])
+		'appl/GlyphDecoration.cpp',
+		'appl/GlyphPainting.cpp'])
 	
 	# syntax coloration for the text editor
 	myModule.AddSrcFile([
-		'appl/Highlight/HighlightPattern.cpp',
-		'appl/Highlight/Highlight.cpp',
-		'appl/Highlight/HighlightManager.cpp'])
+		'appl/HighlightPattern.cpp',
+		'appl/Highlight.cpp',
+		'appl/HighlightManager.cpp'])
 	
 	myModule.AddModuleDepend('ewol')
 	

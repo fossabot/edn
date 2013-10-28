@@ -13,17 +13,13 @@
 #include <ewol/renderer/EObjectManager.h>
 
 #undef __class__
-#define __class__	"classBufferManager"
-#if 0
+#define __class__ "BufferManager"
+
 class classBufferManager: public ewol::EObject {
 	public:
 		// Constructeur
 		classBufferManager(void);
 		~classBufferManager(void);
-		const char * const getObjectType(void)
-		{
-			return "ApplBufferManager";
-		}
 	public:
 		virtual void onReceiveMessage(const ewol::EMessage& _msg);
 	private:
@@ -398,123 +394,35 @@ int32_t classBufferManager::witchBuffer(int32_t iEmeElement) {
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  Namespace part : 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+appl::Buffer* get(const etk::UString& _filename);
+appl::Buffer* get(esize_t _bufferID);
+esize_t size(void):
 
-static classBufferManager * localManager = NULL;
-#endif
-void BufferManager::init(void) {
-	/*
-	if (NULL != localManager) {
-		EWOL_ERROR("classBufferManager  == > already exist, just unlink the previous ...");
-		localManager = NULL;
-	}
-	localManager = new classBufferManager();
-	
-	if (NULL == localManager) {
-		EWOL_CRITICAL("Allocation of classBufferManager not done ...");
-	}
-	*/
-}
 
-void BufferManager::unInit(void) {
-	/*
-	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
-		return;
-	}
-	delete(localManager);
-	localManager = NULL;
-	*/
-}
 
-int32_t BufferManager::getSelected(void) {
-	/*
-	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
-		return -1;
+appl::BufferManager* appl::BufferManager::keep(void) {
+	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
+	appl::GlyphPainting* object = static_cast<appl::GlyphPainting*>(getManager().localKeep("???BufferManager???"));
+	if (NULL != object) {
+		return object;
 	}
-	return localManager->getSelected();
-	*/
-	return -1;
-}
-
-appl::Buffer * BufferManager::get(int32_t BufferID) {
-	/*
-	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
+	// this element create a new one every time ....
+	EWOL_INFO("CREATE : appl::BufferManager: ???BufferManager???");
+	object = new appl::BufferManager();
+	if (NULL == object) {
+		EWOL_ERROR("allocation error of a resource : ???BufferManager???");
 		return NULL;
 	}
-	return localManager->get(BufferID);
-	*/
-	return NULL;
+	getManager().localAdd(object);
+	return object;
 }
 
-bool BufferManager::exist(int32_t BufferID) {
-	/*
-	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
-		return false;
+void appl::GlyphPainting::release(appl::BufferManager*& _object) {
+	if (NULL == _object) {
+		return;
 	}
-	return localManager->exist(BufferID);
-	*/
-	return false;
+	ewol::Resource* object2 = static_cast<ewol::Resource*>(_object);
+	getManager().release(object2);
+	_object = NULL;
 }
-
-bool BufferManager::exist(etk::FSNode &myFile) {
-	/*
-	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
-		return false;
-	}
-	return localManager->exist(myFile);
-	*/
-	return false;
-}
-
-int32_t BufferManager::getId(etk::FSNode &myFile) {
-	/*
-	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
-		return -1;
-	}
-	return localManager->getId(myFile);
-	*/
-	return -1;
-}
-
-uint32_t BufferManager::size(void) {
-	/*
-	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
-		return 0;
-	}
-	return localManager->size();
-	*/
-	return 0;
-}
-
-uint32_t BufferManager::sizeOpen(void) {
-	/*
-	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
-		return 0;
-	}
-	return localManager->sizeOpen();
-	*/
-	return 0;
-}
-
-int32_t BufferManager::witchBuffer(int32_t iEmeElement) {
-	/*
-	if (NULL == localManager) {
-		EWOL_ERROR("classBufferManager  == > request UnInit, but does not exist ...");
-		return -1;
-	}
-	return localManager->witchBuffer(iEmeElement);
-	*/
-	return -1;
-}
-
 

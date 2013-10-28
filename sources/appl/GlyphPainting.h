@@ -12,7 +12,7 @@
 #include <etk/types.h>
 #include <ewol/debug.h>
 #include <ewol/resources/Resource.h>
-#include <appl/glyphDecoration/GlyphDecoration.h>
+#include <appl/GlyphDecoration.h>
 
 namespace appl {
 	class GlyphPainting : public ewol::Resource {

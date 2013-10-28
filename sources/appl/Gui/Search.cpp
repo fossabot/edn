@@ -9,8 +9,8 @@
 #include "appl/global.h"
 #include "Search.h"
 #include "SearchData.h"
-#include "BufferManager.h"
-#include "MainWindows.h"
+#include "appl/BufferManager.h"
+#include "appl/Gui/MainWindows.h"
 #include "appl/globalMsg.h"
 
 #include <ewol/widget/Button.h>

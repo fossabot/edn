@@ -7,7 +7,7 @@
  */
 
 
-#include <appl/Buffer/TextPlugin.h>
+#include <appl/TextPlugin.h>
 #include <appl/debug.h>
 
 #undef __class__

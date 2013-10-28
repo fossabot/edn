@@ -8,7 +8,7 @@
 
 #include <appl/debug.h>
 #include <appl/global.h>
-#include <appl/glyphDecoration/GlyphDecoration.h>
+#include <appl/GlyphDecoration.h>
 
 #undef __class__
 #define __class__ "GlyphDecoration"

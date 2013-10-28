@@ -12,8 +12,8 @@
 #include <appl/debug.h>
 #include <appl/globalMsg.h>
 
-#include <BufferView.h>
-#include <BufferManager.h>
+#include <appl/Gui/BufferView.h>
+#include <appl/BufferManager.h>
 #include <ewol/widget/Label.h>
 
 class MainWindows : public ewol::Windows {

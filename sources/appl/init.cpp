@@ -16,19 +16,19 @@
 #include <appl/global.h>
 #include <etk/os/FSNode.h>
 #include <etk/tool.h>
-#include <Gui/MainWindows.h>
-#include <BufferManager.h>
-#include <HighlightManager.h>
-#include <Gui/Search.h>
 #include <unistd.h>
-#include <readtags.h>
-#include <CTagsManager.h>
-#include <globalMsg.h>
 //#include <ewol/config.h>
 #include <ewol/commandLine.h>
 //#include <ewol/UserConfig.h>
 #include <ewol/renderer/eContext.h>
-#include <appl/Buffer/TextPluginManager.h>
+#include <appl/TextPluginManager.h>
+#include <appl/BufferManager.h>
+#include <appl/HighlightManager.h>
+#include <appl/Gui/MainWindows.h>
+#include <appl/Gui/Search.h>
+#include <appl/ctags/readtags.h>
+#include <appl/ctags/CTagsManager.h>
+#include <appl/globalMsg.h>
 
 /**
  * @brief Main of the program (This can be set in every case, but it is not used in Andoid...).

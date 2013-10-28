@@ -7,10 +7,10 @@
  */
 
 
-#include <appl/Buffer/Buffer.h>
+#include <appl/Buffer.h>
 #include <appl/debug.h>
 #include <ewol/clipBoard.h>
-#include <appl/Highlight/HighlightManager.h>
+#include <appl/HighlightManager.h>
 
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
 	m_value = etk::UChar::Null;
@@ -463,9 +463,13 @@ void appl::Buffer::removeSelection(void) {
 }
 
 void appl::Buffer::tryFindHighlightType(void) {
-	// etk::UString appl::highlightManager::getTypeExtention(const etk::UString& _extention);
-	// TODO :...
-	setHighlightType("C/C++");
+	etk::FSNode file(m_name);
+	etk::UString type = appl::highlightManager::getTypeExtention(file.fileGetExtention());
+	if (type.size() == 0) {
+		return;
+	}
+	APPL_CRITICAL("Find extention : " << type);
+	setHighlightType(type);
 }
 
 void appl::Buffer::setHighlightType(const etk::UString& _type) {

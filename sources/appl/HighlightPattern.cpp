@@ -65,7 +65,7 @@ void appl::HighlightPattern::setEscapeChar(const etk::UChar& _EscapeChar) {
 void appl::HighlightPattern::setColorGlyph(etk::UString& _colorName) {
 	m_colorName = _colorName;
 	m_colorId = m_glyphPainting->request(m_colorName);
-	APPL_DEBUG("Resuest color name '" << m_colorName << "' => id=" << m_colorId);
+	APPL_VERBOSE("Resuest color name '" << m_colorName << "' => id=" << m_colorId);
 }
 
 void appl::HighlightPattern::display(void) {
