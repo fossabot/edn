@@ -282,15 +282,15 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		widget::FileChooser* tmpWidget = new widget::FileChooser();
 		tmpWidget->setTitle("Open files ...");
 		tmpWidget->setValidateLabel("Open");
+		/*
 		if (BufferManager::getSelected()!=-1) {
-			/*
 			BufferText * myBuffer = BufferManager::get(BufferManager::getSelected());
 			if (NULL!=myBuffer) {
 				etk::FSNode tmpFile = myBuffer->getFileName();
 				tmpWidget->setFolder(tmpFile.getNameFolder());
 			}
-			*/
 		}
+		*/
 		popUpWidgetPush(tmpWidget);
 		tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
 	} else if (_msg.getMessage() == ednEventPopUpFileSelected) {
@@ -302,15 +302,14 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		} else {
 			m_currentSavingAsIdBuffer = -1;
 			if (_msg.getData() == "current") {
-				m_currentSavingAsIdBuffer = BufferManager::getSelected();
+				m_currentSavingAsIdBuffer = -1;//BufferManager::getSelected();
 			} else {
 				sscanf(_msg.getData().c_str(), "%d", &m_currentSavingAsIdBuffer);
 			}
-			
+			/*
 			if (false == BufferManager::exist(m_currentSavingAsIdBuffer)) {
 				APPL_ERROR("Request saveAs on non existant Buffer ID=" << m_currentSavingAsIdBuffer);
 			} else {
-				/*
 				BufferText* myBuffer = BufferManager::get(m_currentSavingAsIdBuffer);
 				widget::FileChooser* tmpWidget = new widget::FileChooser();
 				if (NULL == tmpWidget) {
@@ -330,16 +329,17 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 					popUpWidgetPush(tmpWidget);
 					tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
 				}
-				*/
 			}
+			*/
 		}
 	} else if (_msg.getMessage() == ednEventPopUpFileSaveAs) {
 		// get the filename : 
 		etk::UString tmpData = _msg.getData();
 		APPL_DEBUG("Request Saving As file : " << tmpData);
-		
+		/*
 		BufferManager::get(m_currentSavingAsIdBuffer)->setFileName(tmpData);
 		sendMultiCast(ednMsgGuiSave, m_currentSavingAsIdBuffer);
+		*/
 	} else if(    _msg.getMessage() == ednMsgBufferState
 	           || _msg.getMessage() == ednMsgBufferId) {
 		// the buffer change we need to update the widget string

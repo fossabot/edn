@@ -118,6 +118,7 @@ bool appl::Buffer::loadFile(const etk::UString& _name) {
 	setHighlightType("");
 	etk::FSNode file(m_fileName);
 	if (file.exist() == false) {
+		APPL_INFO("File doesn not exist !!! " << file);
 		return false;
 	}
 	m_nbLines = 0;
@@ -753,3 +754,4 @@ appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(appl::DisplayHLData
 	}
 	return getElementColorAtPosition(_pos, _MData.posHLPass1);
 }
+

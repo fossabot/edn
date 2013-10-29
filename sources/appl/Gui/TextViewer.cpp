@@ -33,12 +33,16 @@ appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
 	registerMultiCast(ednMsgGuiFind);
 	registerMultiCast(ednMsgGuiReplace);
 	registerMultiCast(ednMsgGuiGotoLine);
+	registerMultiCast(appl::MsgSelectNewFile);
 	setLimitScrolling(0.2);
 	
 	shortCutAdd("ctrl+w",       ednMsgGuiRm,     "Line");
 	shortCutAdd("ctrl+shift+w", ednMsgGuiRm,     "Paragraph");
 	shortCutAdd("ctrl+a",       ednMsgGuiSelect, "ALL");
 	shortCutAdd("ctrl+shift+a", ednMsgGuiSelect, "NONE");
+	
+	// load buffer manager:
+	m_bufferManager = appl::BufferManager::keep();
 	
 	// load color properties
 	m_paintingProperties = appl::GlyphPainting::keep("THEME:COLOR:textViewer.json");
@@ -65,6 +69,12 @@ appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
 
 appl::TextViewer::~TextViewer(void) {
 	appl::textPluginManager::disconnect(*this);
+	if (m_paintingProperties != NULL) {
+		appl::GlyphPainting::release(m_paintingProperties);
+	}
+	if (m_bufferManager != NULL) {
+		appl::BufferManager::release(m_bufferManager);
+	}
 }
 
 bool appl::TextViewer::calculateMinSize(void) {
@@ -519,11 +529,22 @@ void appl::TextViewer::onEventClipboard(ewol::clipBoard::clipboardListe_te _clip
 
 void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
 	// First call plugin
+	//APPL_DEBUG("receive msg: " << _msg);
 	if (appl::textPluginManager::onReceiveMessage(*this, _msg) == true) {
 		markToRedraw();
 		return;
 	}
+	if (_msg.getMessage() == appl::MsgSelectNewFile) {
+		m_buffer = m_bufferManager->get(_msg.getData());
+	}
 	markToRedraw();
+}
+
+void appl::TextViewer::onObjectRemove(ewol::EObject* _removeObject) {
+	if (m_buffer == _removeObject) {
+		m_buffer = NULL;
+		markToRedraw();
+	}
 }
 
 void appl::TextViewer::onGetFocus(void) {

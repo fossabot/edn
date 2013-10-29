@@ -58,3 +58,6 @@ extern const char* const ednMsgBufferListChange    = "edn-Msg-BufferListChange";
 extern const char* const ednMsgBufferColor         = "edn-Msg-Buffer-Color";
 
 
+extern const char* const appl::MsgSelectNewFile    = "edn-msg-select-new-file";
+
+

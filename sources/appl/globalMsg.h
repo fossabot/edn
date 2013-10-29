@@ -57,6 +57,9 @@
 	
 	extern const char* const ednMsgBufferColor;      // data : "new"
 
+namespace appl {
+	extern const char* const MsgSelectNewFile;      // data : "buffer/name"
+};
 
 #endif
 

@@ -514,16 +514,15 @@ namespace appl {
 			
 			void regenerateHighLightAt(int32_t _pos, int32_t _nbDeleted, int32_t _nbAdded);
 			void findMainHighLightPosition(int32_t _startPos,
-                                             int32_t _endPos,
-                                             int32_t& _startId,
-                                             int32_t& _stopId,
-                                             bool _backPreviousNotEnded);
+			                               int32_t _endPos,
+			                               int32_t& _startId,
+			                               int32_t& _stopId,
+			                               bool _backPreviousNotEnded);
 			void generateHighLightAt(int32_t _pos, int32_t _endPos, int32_t _addingPos=0);
 			void cleanHighLight(void);
 			appl::HighlightInfo* getElementColorAtPosition(int32_t _pos, int32_t &_starPos);
 			void hightlightGenerateLines(appl::DisplayHLData& _MData, int32_t _HLStart, int32_t _nbLines);
 			appl::HighlightInfo* getElementColorAtPosition(appl::DisplayHLData& _MData, int32_t _pos);
-			
 	};
 };
 

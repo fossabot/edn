@@ -40,7 +40,7 @@ int main(int _argc, const char *_argv[])
 	// only one things to do:
 	return ewol::run(_argc, _argv);
 }
-
+appl::BufferManager* bufferManager = NULL;
 
 /**
  * @brief main application function initialisation
@@ -71,7 +71,7 @@ bool APP_Init(ewol::eContext& _context)
 	
 	// init ALL Singleton :
 	//(void)CTagsManager::getInstance();
-	BufferManager::init();
+	bufferManager = appl::BufferManager::keep();
 	
 	appl::highlightManager::init();
 	cTagsManager::init();
@@ -113,7 +113,7 @@ bool APP_Init(ewol::eContext& _context)
 			_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, tmpppp);
 		} else {
 			APPL_INFO("need load file : \"" << tmpppp << "\"" );
-			_context.getEObjectManager().multiCast().anonymousSend(ednMsgOpenFile, tmpppp);
+			bufferManager->open(tmpppp);
 		}
 	}
 	
@@ -142,8 +142,11 @@ void APP_UnInit(ewol::eContext& _context)
 	APPL_INFO("Stop Hightlight");
 	appl::highlightManager::unInit();
 	//Kill all singleton
-	APPL_INFO("Stop BufferManager");
-	BufferManager::unInit();
+	if (bufferManager != NULL) {
+		APPL_INFO("Stop BufferManager");
+		appl::BufferManager::release(bufferManager);
+		bufferManager = NULL;
+	}
 	APPL_INFO(" == > Un-Init "PROJECT_NAME" (END)");
 }
 

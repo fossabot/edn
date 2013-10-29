@@ -17,13 +17,31 @@
 namespace appl {
 	class BufferManager : public ewol::Resource {
 		protected:
-			void BufferManager(void);
-			void ~BufferManager(void);
+			BufferManager(void);
+			~BufferManager(void);
+		private:
+			etk::Vector<appl::Buffer*> m_list; // list of all buffer curently open
 		public:
-			appl::Buffer* get(const etk::UString& _filename);
+			/**
+			 * @brief Get a specific buffer with his name (can create a new buffer).
+			 * @param[in] _fileName Name of the file to open.
+			 * @param[in] _createIfNeeded Create the buffer if not existed.
+			 * @return a pointer on the buffer
+			 */
+			appl::Buffer* get(const etk::UString& _fileName, bool _createIfNeeded=false);
+			/**
+			 * @brief Load a specific file, event if it not existed:
+			 * @param[in] _fileName Name of the file to open or create.
+			 */
+			void open(const etk::UString& _fileName);
+			/*
 			appl::Buffer* get(esize_t _bufferID);
-			esize_t size(void):
-			
+			esize_t size(void);
+			*/
+		public: // herited function
+			void onReceiveMessage(const ewol::EMessage& _msg);
+			void onObjectRemove(ewol::EObject * _removeObject);
+		public: // resource manager
 			/**
 			 * @brief keep the resource pointer.
 			 * @note Never free this pointer by your own...

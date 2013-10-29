@@ -16,6 +16,7 @@
 #include <ewol/widget/WidgetScrolled.h>
 #include <ewol/compositing/Text.h>
 #include <ewol/compositing/Drawing.h>
+#include <appl/BufferManager.h>
 
 namespace appl {
 	class TextViewerPlugin;
@@ -38,6 +39,8 @@ namespace appl {
 			esize_t m_colorLineNumber;
 			esize_t m_colorSelection;
 			esize_t m_colorNormal;
+		private:
+			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 		public:
 			TextViewer(const etk::UString& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);
@@ -55,6 +58,7 @@ namespace appl {
 			virtual bool calculateMinSize(void);
 			virtual void onRegenerateDisplay(void);
 			virtual void onReceiveMessage(const ewol::EMessage& _msg);
+			virtual void onObjectRemove(ewol::EObject* _removeObject);
 			virtual bool onEventInput(const ewol::EventInput& _event);
 			virtual bool onEventEntry(const ewol::EventEntry& _event);
 			virtual void onEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);

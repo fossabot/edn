@@ -68,10 +68,10 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 		// clean The list
 		removeAllElement();
 		// get all the buffer name and properties:
-		int32_t nbBufferOpen = BufferManager::size();
+		int32_t nbBufferOpen = 0; // BufferManager::size();
 		for (int32_t iii=0; iii<nbBufferOpen; iii++) {
+			/*
 			if (BufferManager::exist(iii)) {
-				/*
 				BufferText* tmpBuffer = BufferManager::get(iii);
 				if (NULL != tmpBuffer) {
 					bool isModify  = tmpBuffer->isModify();
@@ -83,15 +83,15 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 						APPL_ERROR("Allocation error of the tmp buffer list element");
 					}
 				}
-				*/
 			}
+			*/
 		}
 		if (true == globals::OrderTheBufferList() ) {
 			SortElementList(m_list);
 		}
 		markToRedraw();
 	}else if (_msg.getMessage() == ednMsgBufferId) {
-		m_selectedIdRequested = BufferManager::getSelected();
+		m_selectedIdRequested = 0; //BufferManager::getSelected();
 		markToRedraw();
 	}else if (_msg.getMessage() == ednMsgBufferState) {
 		// update list of modify section ...
