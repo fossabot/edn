@@ -1,9 +1,9 @@
 {
 	"ednColor": [
-		{ name:"LIST_backgroung1", foreground:"#202020" },
-		{ name:"LIST_backgroung2", foreground:"#000000" },
-		{ name:"LIST_backgroungSelected", foreground:"#2f0ba4" },
-		{ name:"LIST_textNormal", foreground:"#EEEEEE" },
-		{ name:"LIST_textModify", foreground:"#FF0000" },
+		{ name:"backgroung1", foreground:"#202020" },
+		{ name:"backgroung2", foreground:"#000000" },
+		{ name:"backgroungSelected", foreground:"#2f0ba4" },
+		{ name:"textNormal", foreground:"#EEEEEE" },
+		{ name:"textModify", foreground:"#FF0000" },
 	]
 }

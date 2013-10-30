@@ -140,6 +140,11 @@ MainWindows::MainWindows(void) {
 				myTextView->setExpand(bvec2(true,true));
 				myTextView->setFill(bvec2(true,true));
 				mySizerVert2->subWidgetAdd(myTextView);
+				
+				myTextView = new appl::TextViewer("FreeMono;DejaVuSansMono;FreeSerif", 11);
+				myTextView->setExpand(bvec2(true,true));
+				myTextView->setFill(bvec2(true,true));
+				mySizerVert2->subWidgetAdd(myTextView);
 				// search area : 
 				Search * mySearch = new Search();
 				mySizerVert2->subWidgetAdd(mySearch);

@@ -12,6 +12,11 @@
 #include <ewol/clipBoard.h>
 #include <appl/HighlightManager.h>
 
+
+const char* const appl::Buffer::eventIsModify = "edn-is-modify";
+const char* const appl::Buffer::eventIsSave = "edn-is-save";
+const char* const appl::Buffer::eventSelectChange = "edn-select-change";
+
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
 	m_value = etk::UChar::Null;
 	if (    m_data != NULL
@@ -103,7 +108,9 @@ appl::Buffer::Buffer(void) :
   m_cursorPreferredCol(-1),
   m_nbLines(0),
   m_highlight(NULL) {
-	
+	addEventId(eventIsModify);
+	addEventId(eventIsSave);
+	addEventId(eventSelectChange);
 }
 
 appl::Buffer::~Buffer(void) {
@@ -208,11 +215,13 @@ void appl::Buffer::moveCursor(esize_t _pos) {
 		if (m_cursorPos == m_cursorSelectPos) {
 			m_cursorSelectPos = -1;
 		}
+		generateEventId(eventSelectChange);
 		return;
 	}
 	// move mode
 	m_cursorPos = _pos;
 	m_cursorSelectPos = -1;
+	generateEventId(eventSelectChange);
 }
 
 bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
@@ -304,10 +313,12 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 
 void appl::Buffer::setSelectionPos(const appl::Buffer::Iterator& _pos) {
 	m_cursorSelectPos = _pos;
+	generateEventId(eventSelectChange);
 }
 
 void appl::Buffer::unSelect(void) {
 	m_cursorSelectPos = -1;
+	generateEventId(eventSelectChange);
 }
 
 static const char *ControlCodeTable[32] = {
@@ -438,6 +449,7 @@ bool appl::Buffer::write(const etk::UString& _data, const appl::Buffer::Iterator
 	m_selectMode = false;
 	moveCursor((esize_t)_pos+output.size());
 	countNumberofLine(); // TODO : use more intelligent counter
+	generateEventId(eventIsModify);
 	return true;
 }
 
@@ -448,6 +460,7 @@ bool appl::Buffer::replace(const etk::UString& _data, const appl::Buffer::Iterat
 	m_selectMode = false;
 	moveCursor((esize_t)_pos+output.size());
 	countNumberofLine(); // TODO : use more intelligent counter
+	generateEventId(eventIsModify);
 	return true;
 }
 
@@ -460,6 +473,7 @@ void appl::Buffer::removeSelection(void) {
 		m_selectMode = false;
 		moveCursor(startPos);
 		countNumberofLine(); // TODO : use more intelligent counter
+		generateEventId(eventIsModify);
 	}
 }
 

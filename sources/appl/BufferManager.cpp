@@ -69,9 +69,23 @@ void appl::BufferManager::onObjectRemove(ewol::EObject * _removeObject) {
 	}
 }
 
+bool appl::BufferManager::exist(const etk::UString& _fileName) {
+	for (esize_t iii = 0; iii < m_list.size(); ++iii) {
+		if (m_list[iii] == NULL) {
+			continue;
+		}
+		if (m_list[iii]->getFileName() == _fileName) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void appl::BufferManager::open(const etk::UString& _fileName) {
-	(void)get(_fileName, true);
-	sendMultiCast(appl::MsgSelectNewFile, _fileName);
+	if (exist(_fileName) == false) {
+		(void)get(_fileName, true);
+		sendMultiCast(appl::MsgSelectNewFile, _fileName);
+	}
 }
 
 void appl::BufferManager::onReceiveMessage(const ewol::EMessage& _msg) {

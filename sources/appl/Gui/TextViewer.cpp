@@ -213,12 +213,14 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			countNbLine += 1;
 			countColomn = 0;
 			maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
-			// display the end line position
-			if (it >= selectPosStart && it < selectPosStop) {
-				ewol::Drawing& draw = m_displayText.getDrawing();
-				draw.setColor(etk::Color<>(0xFF0000FF));
-				draw.setPos(m_displayText.getPos() + tmpLetterSize/4.0f);
-				draw.rectangle(m_displayText.getPos() + tmpLetterSize*3.0f/4.0f);
+			// Display the end line position only if we have the focus ...
+			if (getFocus() == true) {
+				if (it >= selectPosStart && it < selectPosStop) {
+					ewol::Drawing& draw = m_displayText.getDrawing();
+					draw.setColor(etk::Color<>(0xFF0000FF));
+					draw.setPos(m_displayText.getPos() + tmpLetterSize/4.0f);
+					draw.rectangle(m_displayText.getPos() + tmpLetterSize*3.0f/4.0f);
+				}
 			}
 			m_displayText.forceLineReturn();
 			m_displayText.setPos(vec3(-m_originScrooled.x()+m_lastOffsetDisplay, m_displayText.getPos().y(), 0.0f));
@@ -250,16 +252,21 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			}
 		}
 		m_buffer->expand(countColomn, *it, stringToDisplay);
-		if (it >= selectPosStart && it < selectPosStop) {
-			m_displayText.setColor((*m_paintingProperties)[m_colorSelection].getForeground());
-			m_displayText.setColorBg((*m_paintingProperties)[m_colorSelection].getBackground());
+		// Display selection only if we have the focus ...
+		if (getFocus() == true) {
+			if (it >= selectPosStart && it < selectPosStop) {
+				m_displayText.setColor((*m_paintingProperties)[m_colorSelection].getForeground());
+				m_displayText.setColorBg((*m_paintingProperties)[m_colorSelection].getBackground());
+			}
 		}
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		m_displayText.print(stringToDisplay);
 		countColomn += stringToDisplay.size();
 	}
 	maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
-	if (tmpCursorPosition.z()!=-1) {
+	// Display cursor only if we have the focus ...
+	if (    tmpCursorPosition.z() != -1
+	     && getFocus() == true) {
 		// display the cursor:
 		//APPL_DEBUG("display cursor at position : " << tmpCursorPosition);
 		m_displayText.setPos(tmpCursorPosition);
@@ -528,19 +535,37 @@ void appl::TextViewer::onEventClipboard(ewol::clipBoard::clipboardListe_te _clip
 }
 
 void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
-	// First call plugin
+	widget::WidgetScrooled::onReceiveMessage(_msg);
 	//APPL_DEBUG("receive msg: " << _msg);
+	// First call plugin
 	if (appl::textPluginManager::onReceiveMessage(*this, _msg) == true) {
 		markToRedraw();
 		return;
 	}
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
+		if (m_buffer != NULL) {
+			m_buffer->unRegisterOnEvent(this);
+		}
 		m_buffer = m_bufferManager->get(_msg.getData());
+		if (m_buffer != NULL) {
+			m_buffer->registerOnEvent(this, appl::Buffer::eventIsModify);
+			m_buffer->registerOnEvent(this, appl::Buffer::eventSelectChange);
+		}
+		markToRedraw();
+		return;
 	}
-	markToRedraw();
+	if (_msg.getMessage() == appl::Buffer::eventIsModify) {
+		markToRedraw();
+		return;
+	}
+	if (_msg.getMessage() == appl::Buffer::eventSelectChange) {
+		markToRedraw();
+		return;
+	}
 }
 
 void appl::TextViewer::onObjectRemove(ewol::EObject* _removeObject) {
+	widget::WidgetScrooled::onObjectRemove(_removeObject);
 	if (m_buffer == _removeObject) {
 		m_buffer = NULL;
 		markToRedraw();

@@ -30,7 +30,6 @@ class MainWindows : public ewol::Windows {
 		virtual void onObjectRemove(ewol::EObject * _removeObject);
 };
 
-#define EDN_CAST_MAIN_WINDOWS(curentPointer) EWOL_CAST(TYPE_EOBJECT_EDN_MAIN_WINDOWS,MainWindows,curentPointer)
 
 #endif
 

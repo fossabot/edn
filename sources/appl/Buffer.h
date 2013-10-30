@@ -261,6 +261,10 @@ namespace appl {
 					friend class Buffer;
 			};
 		public:
+			static const char* const eventIsModify;
+			static const char* const eventIsSave;
+			static const char* const eventSelectChange;
+		public:
 			Buffer(void);
 			~Buffer(void);
 		private:

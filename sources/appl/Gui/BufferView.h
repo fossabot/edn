@@ -21,12 +21,10 @@ namespace appl
 	{
 		public:
 			etk::FSNode m_bufferName;
-			uint32_t    m_bufferID;
-			bool        m_isModify;
-			dataBufferStruct(etk::FSNode& _bufferName, int32_t _bufferID, bool _isModify) :
+			appl::Buffer* m_buffer;
+			dataBufferStruct(const etk::UString& _bufferName, appl::Buffer* _buffer) :
 			  m_bufferName(_bufferName),
-			  m_bufferID(_bufferID),
-			  m_isModify(_isModify) {
+			  m_buffer(_buffer) {
 				
 			};
 			~dataBufferStruct(void) { };
@@ -35,6 +33,15 @@ namespace appl
 
 class BufferView : public widget::List
 {
+	private:
+		appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
+	private:
+		appl::GlyphPainting* m_paintingProperties; //!< element painting property
+		esize_t m_colorBackground1;
+		esize_t m_colorBackground2;
+		esize_t m_colorBackgroundSelect;
+		esize_t m_colorTextNormal;
+		esize_t m_colorTextModify;
 	private:
 		int32_t m_selectedIdRequested;
 		int32_t m_selectedID;
@@ -47,6 +54,7 @@ class BufferView : public widget::List
 		const char * const getObjectType(void) { return "ApplBufferView"; };
 		// Derived function
 		virtual void onReceiveMessage(const ewol::EMessage& _msg);
+		virtual void onObjectRemove(ewol::EObject* _removeObject);
 	protected:
 		// function call to display the list :
 		virtual etk::Color<> getBasicBG(void);

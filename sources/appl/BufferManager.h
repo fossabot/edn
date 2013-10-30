@@ -34,6 +34,12 @@ namespace appl {
 			 * @param[in] _fileName Name of the file to open or create.
 			 */
 			void open(const etk::UString& _fileName);
+			/**
+			 * @brief Check if a buffer is already open.
+			 * @param[in] _fileName name of the file.
+			 * @return true if the buffer is already open.
+			 */
+			bool exist(const etk::UString& _fileName);
 			/*
 			appl::Buffer* get(esize_t _bufferID);
 			esize_t size(void);

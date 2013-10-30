@@ -44,8 +44,19 @@ BufferView::BufferView(void) {
 	registerMultiCast(ednMsgBufferListChange);
 	registerMultiCast(ednMsgBufferState);
 	registerMultiCast(ednMsgBufferId);
+	registerMultiCast(appl::MsgSelectNewFile);
 	m_selectedID = -1;
 	m_selectedIdRequested = -1;
+	// load buffer manager:
+	m_bufferManager = appl::BufferManager::keep();
+	// load color properties
+	m_paintingProperties = appl::GlyphPainting::keep("THEME:COLOR:bufferList.json");
+	// get all id properties ...
+	m_colorBackground1 = m_paintingProperties->request("backgroung1");
+	m_colorBackground2 = m_paintingProperties->request("backgroung2");
+	m_colorBackgroundSelect = m_paintingProperties->request("backgroungSelected");
+	m_colorTextNormal = m_paintingProperties->request("textNormal");
+	m_colorTextModify = m_paintingProperties->request("textModify");
 }
 
 BufferView::~BufferView(void) {
@@ -60,10 +71,27 @@ void BufferView::removeAllElement(void) {
 		}
 	}
 	m_list.clear();
+	if (m_bufferManager != NULL) {
+		appl::BufferManager::release(m_bufferManager);
+	}
 }
 
 void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 	widget::List::onReceiveMessage(_msg);
+	if (_msg.getMessage() == appl::MsgSelectNewFile) {
+		appl::Buffer* buffer = m_bufferManager->get(_msg.getData());
+		if (buffer == NULL) {
+			APPL_ERROR("event on element nor exist : " << _msg.getData());
+			return;
+		}
+		appl::dataBufferStruct* tmp = new appl::dataBufferStruct(_msg.getData(), buffer);
+		if (tmp == NULL) {
+			APPL_ERROR("Allocation error of the tmp buffer list element");
+			return;
+		}
+		m_list.pushBack(tmp);
+		markToRedraw();
+	}
 	if (_msg.getMessage() == ednMsgBufferListChange) {
 		// clean The list
 		removeAllElement();
@@ -104,9 +132,24 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 	}
 }
 
+void BufferView::onObjectRemove(ewol::EObject* _removeObject) {
+	widget::List::onObjectRemove(_removeObject);
+	for (esize_t iii=0; iii<m_list.size(); iii++) {
+		if (m_list[iii] == NULL) {
+			continue;
+		}
+		if (m_list[iii]->m_buffer != _removeObject) {
+			continue;
+		}
+		m_list.remove(iii);
+		markToRedraw();
+		return;
+	}
+}
+
 
 etk::Color<> BufferView::getBasicBG(void) {
-	return etk::color::none; //ColorizeManager::get(COLOR_LIST_BG_1);
+	return (*m_paintingProperties)[m_colorBackground1].getForeground();
 }
 
 uint32_t BufferView::getNuberOfColomn(void) {
@@ -123,6 +166,39 @@ uint32_t BufferView::getNuberOfRaw(void) {
 }
 
 bool BufferView::getElement(int32_t _colomn, int32_t _raw, etk::UString& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
+	if(    _raw >= 0
+	    && _raw<m_list.size()
+	    && NULL != m_list[_raw]) {
+		_myTextToWrite = m_list[_raw]->m_bufferName.getNameFile();
+		/*
+		if (true == m_list[_raw]->m_isModify) {
+			_fg = (*m_paintingProperties)[m_colorTextModify].getForeground();
+		} else */ {
+			_fg = (*m_paintingProperties)[m_colorTextModify].getForeground();
+		}
+		if (_raw%2 == 0) {
+			_bg = (*m_paintingProperties)[m_colorBackground1].getForeground();
+		} else {
+			_bg = (*m_paintingProperties)[m_colorBackground2].getForeground();
+		}
+		// the buffer change of selection ...
+		/*
+		if (m_selectedIdRequested == m_list[_raw]->m_bufferID) {
+			m_selectedID = _raw;
+			// stop searching
+			m_selectedIdRequested = -1;
+			// set the raw visible : 
+			setRawVisible(m_selectedID);
+		}
+		*/
+		/*
+		if (m_selectedID == _raw) {
+			_bg = (*m_paintingProperties)[m_colorBackgroundSelect].getForeground();
+		}
+		*/
+	} else {
+		_myTextToWrite = "ERROR";
+	}
 	/*
 	bool isModify;
 	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;
@@ -173,8 +249,8 @@ bool BufferView::onItemEvent(int32_t _IdInput, ewol::keyEvent::status_te _typeEv
 		if(    _raw >= 0
 		    && _raw<m_list.size()
 		    && NULL != m_list[_raw]) {
-			m_selectedIdRequested = m_list[_raw]->m_bufferID;
-			sendMultiCast(ednMsgBufferId, m_list[_raw]->m_bufferID);
+			//m_selectedIdRequested = m_list[_raw]->m_buffer;
+			//sendMultiCast(ednMsgBufferId, m_list[_raw]->m_buffer);
 		}
 	}
 	markToRedraw();
