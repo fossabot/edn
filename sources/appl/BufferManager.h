@@ -40,10 +40,36 @@ namespace appl {
 			 * @return true if the buffer is already open.
 			 */
 			bool exist(const etk::UString& _fileName);
-			/*
-			appl::Buffer* get(esize_t _bufferID);
-			esize_t size(void);
-			*/
+			/**
+			 * @brief Get count of all buffer availlable.
+			 * @return Number of buffer
+			 */
+			esize_t size(void) const {
+				return m_list.size();
+			}
+			/**
+			 * @brief Get a pointer on a buffer Id (never remember this ID!!!).
+			 * @param[in] _id Number of buffer
+			 * @return pointer on the buffer
+			 */
+			appl::Buffer* get(esize_t _id) {
+				return m_list[_id];
+			}
+		private:
+			appl::Buffer* m_bufferSelected;
+		public:
+			/**
+			 * @brief Set the current buffer selected
+			 * @param[in] _bufferSelected Pointer on the buffer selected
+			 */
+			void setBufferSelected(appl::Buffer* _bufferSelected);
+			/**
+			 * @brief Get the current buffer selected
+			 * @return Pointer on the buffer selected
+			 */
+			appl::Buffer* getBufferSelected(void) {
+				return m_bufferSelected;
+			};
 		public: // herited function
 			void onReceiveMessage(const ewol::EMessage& _msg);
 			void onObjectRemove(ewol::EObject * _removeObject);

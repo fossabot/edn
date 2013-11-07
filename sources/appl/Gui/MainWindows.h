@@ -15,6 +15,7 @@
 #include <appl/Gui/BufferView.h>
 #include <appl/BufferManager.h>
 #include <ewol/widget/Label.h>
+#include <appl/BufferManager.h>
 
 class MainWindows : public ewol::Windows {
 	private:
@@ -24,6 +25,8 @@ class MainWindows : public ewol::Windows {
 		// Constructeur
 		MainWindows(void);
 		~MainWindows(void);
+	private:
+		appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 	public: // Derived function
 		virtual const char * const getObjectType(void) { return "MainWindows"; };
 		virtual void onReceiveMessage(const ewol::EMessage& _msg);

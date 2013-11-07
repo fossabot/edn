@@ -122,6 +122,9 @@ MainWindows::MainWindows(void) {
 	BufferView * myBufferView = NULL;
 	widget::Menu * myMenu = NULL;
 	
+	// load buffer manager:
+	m_bufferManager = appl::BufferManager::keep();
+	
 	mySizerVert = new widget::Sizer(widget::Sizer::modeVert);
 	setSubWidget(mySizerVert);
 	
@@ -270,7 +273,9 @@ MainWindows::MainWindows(void) {
 
 
 MainWindows::~MainWindows(void) {
-	
+	if (m_bufferManager != NULL) {
+		appl::BufferManager::release(m_bufferManager);
+	}
 }
 
 
@@ -285,22 +290,80 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 	// open file Section ...
 	if (_msg.getMessage() == ednMsgGuiOpen) {
 		widget::FileChooser* tmpWidget = new widget::FileChooser();
+		if (tmpWidget == NULL) {
+			APPL_ERROR("Can not open File chooser !!! ");
+			return;
+		}
 		tmpWidget->setTitle("Open files ...");
 		tmpWidget->setValidateLabel("Open");
-		/*
-		if (BufferManager::getSelected()!=-1) {
-			BufferText * myBuffer = BufferManager::get(BufferManager::getSelected());
-			if (NULL!=myBuffer) {
-				etk::FSNode tmpFile = myBuffer->getFileName();
-				tmpWidget->setFolder(tmpFile.getNameFolder());
-			}
+		if (m_bufferManager == NULL) {
+			APPL_ERROR("can not call unexistant buffer manager ... ");
+			return;
 		}
-		*/
+		// Get a ref on the buffer selected (if null, no buffer was selected ...)
+		appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
+		if (tmpBuffer != NULL) {
+			etk::FSNode tmpFile = tmpBuffer->getFileName();
+			tmpWidget->setFolder(tmpFile.getNameFolder());
+		}
+		// apply widget pop-up ...
 		popUpWidgetPush(tmpWidget);
 		tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
 	} else if (_msg.getMessage() == ednEventPopUpFileSelected) {
 		APPL_DEBUG("Request opening the file : " << _msg.getData());
-		sendMultiCast(ednMsgOpenFile, _msg.getData());
+		if (m_bufferManager == NULL) {
+			APPL_ERROR("can not call unexistant buffer manager ... ");
+			return;
+		}
+		m_bufferManager->open(_msg.getData());
+	} else if (_msg.getMessage() == ednMsgGuiSave) {
+		APPL_DEBUG("Request saving the file : " << _msg.getData());
+		if (m_bufferManager == NULL) {
+			APPL_ERROR("can not call unexistant buffer manager ... ");
+			return;
+		}
+		if (_msg.getData().toLower() == "current") {
+			appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
+			if (tmpBuffer == NULL) {
+				APPL_WARNING("No buffer selected !!! ");
+				createPopUpMessage(widget::Windows::messageTypeError, "No buffer selected !!!");
+				return;
+			}
+			// Note : for direct saving, we do not chack the saving status ==> all time saving ...
+			if (tmpBuffer->getFileName() == "") {
+				// TODO : Has no name ==> must generate a a save AS !!!
+				APPL_TODO("Has no name ==> must generate a a save AS");
+				return;
+			}
+			if (tmpBuffer->storeFile() == false) {
+				// TODO : Generate a pop-up to inform error...
+				APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
+			}
+			return;
+		} else if (_msg.getData().toLower() == "all") {
+			APPL_TODO("Need to save all the buffers ... ");
+			for (esize_t iii=0; iii < m_bufferManager->size(); ++iii) {
+				appl::Buffer* tmpBuffer = m_bufferManager->get(iii);
+				if (tmpBuffer == NULL) {
+					continue;
+				}
+				if (tmpBuffer->isModify() == false) {
+					continue;
+				}
+				if (tmpBuffer->getFileName() == "") {
+					// TODO : Has no name ==> must generate a a save AS !!!
+					APPL_TODO("Has no name ==> must generate a a save AS");
+					continue;
+				}
+				if (tmpBuffer->storeFile() == false) {
+					// TODO : Generate a pop-up to inform error...
+					APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
+				}
+			}
+			return;
+		} else {
+			APPL_ERROR("UNKNOW request : " << _msg);
+		}
 	} else if (_msg.getMessage() == ednMsgGuiSaveAs) {
 		if (_msg.getData() == "") {
 			APPL_ERROR("Null data for Save As file ... ");
@@ -311,6 +374,7 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 			} else {
 				sscanf(_msg.getData().c_str(), "%d", &m_currentSavingAsIdBuffer);
 			}
+			
 			/*
 			if (false == BufferManager::exist(m_currentSavingAsIdBuffer)) {
 				APPL_ERROR("Request saveAs on non existant Buffer ID=" << m_currentSavingAsIdBuffer);

@@ -122,6 +122,7 @@ appl::Buffer::~Buffer(void) {
 bool appl::Buffer::loadFile(const etk::UString& _name) {
 	APPL_DEBUG("Load file : '" << _name << "'");
 	m_fileName = _name;
+	m_isModify = true;
 	setHighlightType("");
 	etk::FSNode file(m_fileName);
 	if (file.exist() == false) {
@@ -132,13 +133,40 @@ bool appl::Buffer::loadFile(const etk::UString& _name) {
 	if (true == m_data.dumpFrom(file) ) {
 		countNumberofLine();
 		tryFindHighlightType();
+		m_isModify = false;
 		return true;
 	}
 	return false;
 }
 
 void appl::Buffer::setFileName(const etk::UString& _name) {
-	// TODO : ...
+	if (m_fileName == _name) {
+		return;
+	}
+	m_fileName = _name;
+	setModification(true);
+}
+
+bool appl::Buffer::storeFile(void) {
+	etk::FSNode file(m_fileName);
+	if (true == m_data.dumpIn(file) ) {
+		APPL_INFO("saving file : " << file);
+		setModification(false);
+		return true;
+	}
+	return false;
+}
+
+void appl::Buffer::setModification(bool _status) {
+	if (m_isModify == _status) {
+		return;
+	}
+	m_isModify = _status;
+	if (m_isModify == true) {
+		generateEventId(eventIsModify);
+	} else {
+		generateEventId(eventIsSave);
+	}
 }
 
 
@@ -449,7 +477,7 @@ bool appl::Buffer::write(const etk::UString& _data, const appl::Buffer::Iterator
 	m_selectMode = false;
 	moveCursor((esize_t)_pos+output.size());
 	countNumberofLine(); // TODO : use more intelligent counter
-	generateEventId(eventIsModify);
+	setModification(true);
 	return true;
 }
 
@@ -460,7 +488,7 @@ bool appl::Buffer::replace(const etk::UString& _data, const appl::Buffer::Iterat
 	m_selectMode = false;
 	moveCursor((esize_t)_pos+output.size());
 	countNumberofLine(); // TODO : use more intelligent counter
-	generateEventId(eventIsModify);
+	setModification(true);
 	return true;
 }
 
@@ -473,7 +501,7 @@ void appl::Buffer::removeSelection(void) {
 		m_selectMode = false;
 		moveCursor(startPos);
 		countNumberofLine(); // TODO : use more intelligent counter
-		generateEventId(eventIsModify);
+		setModification(true);
 	}
 }
 

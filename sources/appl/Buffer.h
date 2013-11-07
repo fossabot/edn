@@ -276,9 +276,38 @@ namespace appl {
 			const etk::UString& getFileName(void) {
 				return m_fileName;
 			}
+			/**
+			 * @brief Load A specific file in this buffer.
+			 * @param[in] _name name of the file.
+			 * @return true if file corectly opened.
+			 */
 			bool loadFile(const etk::UString& _name);
+			/**
+			 * @brief Set a file name at this buffer (no saving ...)
+			 * @param[in] _name name of the file.
+			 */
 			void setFileName(const etk::UString& _name);
+			/**
+			 * @brief save the file in the specify path.
+			 * @return true is saving well done
+			 */
+			bool storeFile(void);
+		protected:
 			bool m_isModify; //!< true if the file is modify
+		public:
+			/**
+			 * @breif get the status of file modification.
+			 * @return true if file is modify.
+			 */
+			bool isModify(void) {
+				return m_isModify;
+			}
+			/**
+			 * @brief Set the file modification status.
+			 * @param[in] _status New modification status.
+			 */
+			void setModification(bool _status);
+		protected:
 			etk::Buffer m_data; //!< copy of the file buffer
 		public:
 			etk::Buffer& getData(void) {

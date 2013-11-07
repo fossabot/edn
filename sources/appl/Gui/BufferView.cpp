@@ -45,6 +45,7 @@ BufferView::BufferView(void) {
 	registerMultiCast(ednMsgBufferState);
 	registerMultiCast(ednMsgBufferId);
 	registerMultiCast(appl::MsgSelectNewFile);
+	registerMultiCast(appl::MsgSelectChange);
 	m_selectedID = -1;
 	m_selectedIdRequested = -1;
 	// load buffer manager:
@@ -84,6 +85,8 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 			APPL_ERROR("event on element nor exist : " << _msg.getData());
 			return;
 		}
+		buffer->registerOnEvent(this, appl::Buffer::eventIsSave);
+		buffer->registerOnEvent(this, appl::Buffer::eventIsModify);
 		appl::dataBufferStruct* tmp = new appl::dataBufferStruct(_msg.getData(), buffer);
 		if (tmp == NULL) {
 			APPL_ERROR("Allocation error of the tmp buffer list element");
@@ -91,6 +94,37 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 		}
 		m_list.pushBack(tmp);
 		markToRedraw();
+		return;
+	}
+	if (_msg.getMessage() == appl::Buffer::eventIsSave) {
+		markToRedraw();
+		return;
+	}
+	if (_msg.getMessage() == appl::Buffer::eventIsModify) {
+		markToRedraw();
+		return;
+	}
+	APPL_DEBUG("message : " << _msg);
+	if (_msg.getMessage() == appl::MsgSelectChange) {
+		m_selectedID = -1;
+		appl::Buffer* tmpBuffer = NULL;
+		if (m_bufferManager != NULL) {
+			tmpBuffer = m_bufferManager->getBufferSelected();
+		}
+		if (tmpBuffer != NULL) {
+			for (esize_t iii=0; iii<m_list.size(); iii++) {
+				if (m_list[iii] == NULL) {
+					continue;
+				}
+				if (m_list[iii]->m_buffer != tmpBuffer) {
+					continue;
+				}
+				m_selectedID = iii;
+				break;
+			}
+		}
+		markToRedraw();
+		return;
 	}
 	if (_msg.getMessage() == ednMsgBufferListChange) {
 		// clean The list
@@ -170,10 +204,11 @@ bool BufferView::getElement(int32_t _colomn, int32_t _raw, etk::UString& _myText
 	    && _raw<m_list.size()
 	    && NULL != m_list[_raw]) {
 		_myTextToWrite = m_list[_raw]->m_bufferName.getNameFile();
-		/*
-		if (true == m_list[_raw]->m_isModify) {
-			_fg = (*m_paintingProperties)[m_colorTextModify].getForeground();
-		} else */ {
+		
+		if (    m_list[_raw]->m_buffer != NULL
+		     && m_list[_raw]->m_buffer->isModify() == false) {
+			_fg = (*m_paintingProperties)[m_colorTextNormal].getForeground();
+		} else {
 			_fg = (*m_paintingProperties)[m_colorTextModify].getForeground();
 		}
 		if (_raw%2 == 0) {
@@ -182,63 +217,12 @@ bool BufferView::getElement(int32_t _colomn, int32_t _raw, etk::UString& _myText
 			_bg = (*m_paintingProperties)[m_colorBackground2].getForeground();
 		}
 		// the buffer change of selection ...
-		/*
-		if (m_selectedIdRequested == m_list[_raw]->m_bufferID) {
-			m_selectedID = _raw;
-			// stop searching
-			m_selectedIdRequested = -1;
-			// set the raw visible : 
-			setRawVisible(m_selectedID);
-		}
-		*/
-		/*
 		if (m_selectedID == _raw) {
 			_bg = (*m_paintingProperties)[m_colorBackgroundSelect].getForeground();
 		}
-		*/
 	} else {
 		_myTextToWrite = "ERROR";
 	}
-	/*
-	bool isModify;
-	basicColor_te selectFG = COLOR_LIST_TEXT_NORMAL;
-	basicColor_te selectBG = COLOR_LIST_BG_1;
-	// when requested a new display selection  == > reset the previous one ...
-	if (m_selectedIdRequested != -1) {
-		m_selectedID = -1;
-	}
-	if(    _raw >= 0
-	    && _raw<m_list.size()
-	    && NULL != m_list[_raw]) {
-		_myTextToWrite = m_list[_raw]->m_bufferName.getNameFile();
-		
-		if (true == m_list[_raw]->m_isModify) {
-			selectFG = COLOR_LIST_TEXT_MODIFY;
-		} else {
-			selectFG = COLOR_LIST_TEXT_NORMAL;
-		}
-		if (_raw%2 == 0) {
-			selectBG = COLOR_LIST_BG_1;
-		} else {
-			selectBG = COLOR_LIST_BG_2;
-		}
-		// the buffer change of selection ...
-		if (m_selectedIdRequested == m_list[_raw]->m_bufferID) {
-			m_selectedID = _raw;
-			// stop searching
-			m_selectedIdRequested = -1;
-			// set the raw visible : 
-			setRawVisible(m_selectedID);
-		}
-		if (m_selectedID == _raw) {
-			selectBG = COLOR_LIST_BG_SELECTED;
-		}
-	} else {
-		_myTextToWrite = "ERROR";
-	}
-	_fg = ColorizeManager::get(selectFG);
-	_bg = ColorizeManager::get(selectBG);
-	*/
 	return true;
 }
 
@@ -249,11 +233,14 @@ bool BufferView::onItemEvent(int32_t _IdInput, ewol::keyEvent::status_te _typeEv
 		if(    _raw >= 0
 		    && _raw<m_list.size()
 		    && NULL != m_list[_raw]) {
-			//m_selectedIdRequested = m_list[_raw]->m_buffer;
-			//sendMultiCast(ednMsgBufferId, m_list[_raw]->m_buffer);
+			if (m_list[_raw]->m_buffer != NULL) {
+				sendMultiCast(appl::MsgSelectNewFile, m_list[_raw]->m_buffer->getFileName());
+				m_selectedID = _raw;
+				markToRedraw();
+				return true;
+			}
 		}
 	}
-	markToRedraw();
 	return false;
 }
 

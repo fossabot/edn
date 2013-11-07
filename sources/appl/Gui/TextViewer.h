@@ -112,6 +112,17 @@ namespace appl {
 			
 			appl::Buffer::Iterator getPosSize(const appl::Buffer::Iterator& _startLinePos, float _distance);
 			float getScreenSize(const appl::Buffer::Iterator& _startLinePos, const appl::Buffer::Iterator& _stopPos);
+		private:
+			static TextViewer* m_currentBufferSelect; //!< to know which buffer is currently last selected
+			/**
+			 * @brief Set the current buffer selected
+			 */
+			void setCurrentSelect(void);
+			/**
+			 * @brief Check if the current buffer is last selected
+			 * @return true if selected last
+			 */
+			bool isSelectedLast(void);
 	};
 };
 

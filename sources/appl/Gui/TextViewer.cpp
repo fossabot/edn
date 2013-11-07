@@ -65,6 +65,8 @@ appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
 	m_buffer->loadFile("./example.txt");
 	*/
 	appl::textPluginManager::connect(*this);
+	// last created has focus ...
+	setCurrentSelect();
 }
 
 appl::TextViewer::~TextViewer(void) {
@@ -390,10 +392,12 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 }
 
 bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
+	if (_event.getId() != 0) {
+		keepFocus();
+	}
 	if (m_buffer == NULL) {
 		return false;
 	}
-	keepFocus();
 	// First call the scrolling widget :
 	if (WidgetScrooled::onEventInput(_event) == true) {
 		markToRedraw();
@@ -542,6 +546,19 @@ void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
 		markToRedraw();
 		return;
 	}
+	// event needed even if selection of buffer is not done ...
+	if (_msg.getMessage() == appl::Buffer::eventIsModify) {
+		markToRedraw();
+		return;
+	}
+	if (_msg.getMessage() == appl::Buffer::eventSelectChange) {
+		markToRedraw();
+		return;
+	}
+	// If not the last buffer selected, then no event parsing ...
+	if (isSelectedLast() == false) {
+		return;
+	}
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
 		if (m_buffer != NULL) {
 			m_buffer->unRegisterOnEvent(this);
@@ -551,14 +568,9 @@ void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
 			m_buffer->registerOnEvent(this, appl::Buffer::eventIsModify);
 			m_buffer->registerOnEvent(this, appl::Buffer::eventSelectChange);
 		}
-		markToRedraw();
-		return;
-	}
-	if (_msg.getMessage() == appl::Buffer::eventIsModify) {
-		markToRedraw();
-		return;
-	}
-	if (_msg.getMessage() == appl::Buffer::eventSelectChange) {
+		if (m_bufferManager != NULL) {
+			m_bufferManager->setBufferSelected(m_buffer);
+		}
 		markToRedraw();
 		return;
 	}
@@ -575,11 +587,14 @@ void appl::TextViewer::onObjectRemove(ewol::EObject* _removeObject) {
 void appl::TextViewer::onGetFocus(void) {
 	showKeyboard();
 	APPL_INFO("Focus - In");
+	setCurrentSelect();
+	markToRedraw();
 }
 
 void appl::TextViewer::onLostFocus(void) {
 	hideKeyboard();
 	APPL_INFO("Focus - out");
+	markToRedraw();
 }
 
 void appl::TextViewer::setFontSize(int32_t _size) {
@@ -590,8 +605,6 @@ void appl::TextViewer::setFontSize(int32_t _size) {
 void appl::TextViewer::setFontName(const etk::UString& _fontName) {
 	m_displayText.setFontName(_fontName);
 }
-
-
 
 bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 	if (m_buffer == NULL) {
@@ -825,4 +838,23 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 		countColomn += stringToDisplay.size();
 	}
 	return ret;
+}
+
+appl::TextViewer* appl::TextViewer::m_currentBufferSelect = NULL;
+
+void appl::TextViewer::setCurrentSelect(void) {
+	if (this == m_currentBufferSelect) {
+		return;
+	}
+	m_currentBufferSelect = this;
+	if (m_bufferManager != NULL) {
+		m_bufferManager->setBufferSelected(m_buffer);
+	}
+}
+
+bool appl::TextViewer::isSelectedLast(void) {
+	if (this == m_currentBufferSelect) {
+		return true;
+	}
+	return false;
 }

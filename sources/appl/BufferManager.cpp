@@ -16,7 +16,8 @@
 #define __class__ "BufferManager"
 
 appl::BufferManager::BufferManager(void) :
-  ewol::Resource("???BufferManager???") {
+  ewol::Resource("???BufferManager???"),
+  m_bufferSelected(NULL) {
 	
 }
 
@@ -57,8 +58,15 @@ appl::Buffer* appl::BufferManager::get(const etk::UString& _fileName, bool _crea
 	}
 	return NULL;
 }
+void appl::BufferManager::setBufferSelected(appl::Buffer* _bufferSelected) {
+	m_bufferSelected = _bufferSelected;
+	sendMultiCast(appl::MsgSelectChange, "");
+}
 
 void appl::BufferManager::onObjectRemove(ewol::EObject * _removeObject) {
+	if (m_bufferSelected == _removeObject) {
+		setBufferSelected(NULL);
+	}
 	for (esize_t iii = 0; iii < m_list.size(); ++iii) {
 		if (m_list[iii] != _removeObject) {
 			continue;
