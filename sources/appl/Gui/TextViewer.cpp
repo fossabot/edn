@@ -530,7 +530,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 	return m_buffer->end();
 }
 
-void appl::TextViewer::onEventClipboard(ewol::clipBoard::clipboardListe_te _clipboardID) {
+void appl::TextViewer::onEventClipboard(enum ewol::clipBoard::clipboardListe _clipboardID) {
 	if (m_buffer != NULL) {
 		etk::UString data = ewol::clipBoard::get(_clipboardID);
 		write(data);

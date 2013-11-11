@@ -85,7 +85,7 @@ bool appl::TagFileList::getElement(int32_t _colomn, int32_t _raw, etk::UString& 
 };
 
 
-bool appl::TagFileList::onItemEvent(int32_t _IdInput, ewol::keyEvent::status_te _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y) {
+bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum ewol::keyEvent::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y) {
 	if (_typeEvent == ewol::keyEvent::statusSingle) {
 		EWOL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
 		if (_IdInput == 1) {

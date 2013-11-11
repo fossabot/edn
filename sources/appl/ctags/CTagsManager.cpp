@@ -111,7 +111,7 @@ void CTagsManager::onReceiveMessage(const ewol::EMessage& _msg) {
 				tmpWidget->setTitle("Open Exuberant Ctags file");
 				tmpWidget->setValidateLabel("Open");
 				ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-				tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpCtagsLoadFile);
+				tmpWidget->registerOnEvent(this, widget::FileChooser::eventValidate, ednEventPopUpCtagsLoadFile);
 			}
 		} else if (_msg.getData() == "ReLoad") {
 			APPL_INFO("Request re-load ctag file");

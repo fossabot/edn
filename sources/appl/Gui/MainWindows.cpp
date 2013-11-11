@@ -308,7 +308,7 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		}
 		// apply widget pop-up ...
 		popUpWidgetPush(tmpWidget);
-		tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSelected);
+		tmpWidget->registerOnEvent(this, widget::FileChooser::eventValidate, ednEventPopUpFileSelected);
 	} else if (_msg.getMessage() == ednEventPopUpFileSelected) {
 		APPL_DEBUG("Request opening the file : " << _msg.getData());
 		if (m_bufferManager == NULL) {
@@ -326,7 +326,7 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 			appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
 			if (tmpBuffer == NULL) {
 				APPL_WARNING("No buffer selected !!! ");
-				createPopUpMessage(widget::Windows::messageTypeError, "No buffer selected !!!");
+				createPopUpMessage(ewol::Windows::messageTypeError, "No buffer selected !!!");
 				return;
 			}
 			// Note : for direct saving, we do not chack the saving status ==> all time saving ...

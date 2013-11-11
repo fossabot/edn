@@ -61,7 +61,7 @@ namespace appl {
 			virtual void onObjectRemove(ewol::EObject* _removeObject);
 			virtual bool onEventInput(const ewol::EventInput& _event);
 			virtual bool onEventEntry(const ewol::EventEntry& _event);
-			virtual void onEventClipboard(ewol::clipBoard::clipboardListe_te clipboardID);
+			virtual void onEventClipboard(enum ewol::clipBoard::clipboardListe _clipboardID);
 			virtual void onGetFocus(void);
 			virtual void onLostFocus(void);
 		private:

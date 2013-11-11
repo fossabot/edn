@@ -172,7 +172,7 @@ void appl::Highlight::parse(int32_t start,
 		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have
 		for (int32_t jjj=0; jjj<m_listHighlightPass1.size(); jjj++){
-			resultFind_te ret = HLP_FIND_OK;
+			enum resultFind ret = HLP_FIND_OK;
 			//APPL_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.size() << ")" );
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass1[jjj]->find(elementStart, buffer.size(), resultat, buffer);
@@ -232,7 +232,7 @@ void appl::Highlight::parse2(int32_t start,
 		//try to fond the HL in ALL of we have
 		int32_t jjj;
 		for (jjj=0; jjj<m_listHighlightPass2.size(); jjj++){
-			resultFind_te ret = HLP_FIND_OK;
+			enum resultFind ret = HLP_FIND_OK;
 			//APPL_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.size() << ")" );
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass2[jjj]->find(elementStart, elementStop, resultat, buffer);

@@ -29,25 +29,55 @@
 #include <appl/ctags/readtags.h>
 #include <appl/ctags/CTagsManager.h>
 #include <appl/globalMsg.h>
+#include <vector>
+#include <string>
+#include <etk/unicode.h>
+
+char32_t mychar32;
+
 
 /**
  * @brief Main of the program (This can be set in every case, but it is not used in Andoid...).
  * @param std IO
  * @return std IO
  */
-int main(int _argc, const char *_argv[])
-{
+int main(int _argc, const char *_argv[]) {
 	// only one things to do:
 	return ewol::run(_argc, _argv);
 }
 appl::BufferManager* bufferManager = NULL;
 
+etk::CCout& operator <<(etk::CCout& _os, const std::u32string& _obj) {
+	etk::Vector<etk::UChar> tmpp;
+	for (size_t iii=0; iii<_obj.size(); ++iii) {
+		tmpp.pushBack(_obj[iii]);
+	}
+	etk::Vector<char> output_UTF8;
+	unicode::convertUnicodeToUtf8(tmpp, output_UTF8);
+	output_UTF8.pushBack('\0');
+	_os << &output_UTF8[0];
+	return _os;
+}
+
 /**
  * @brief main application function initialisation
  */
-bool APP_Init(ewol::eContext& _context)
-{
+bool APP_Init(ewol::eContext& _context) {
 	APPL_INFO(" == > init APPL (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
+	
+	std::vector<int32_t> valueExample;
+	valueExample.push_back(23);
+	valueExample.push_back(23);
+	valueExample.push_back(23);
+	valueExample.push_back(23);
+	APPL_INFO("test de vector : " << valueExample[0]);
+	std::cout << "test de debug direct ..." << std::endl;
+	std::cerr << "test de debug direct .2." << std::endl;
+	std::u32string ploppppp;
+	ploppppp = U"exemple de texte sans accent : ";
+	APPL_INFO( "retert : " << ploppppp);
+	APPL_CRITICAL("kjkjhkjh");
+	
 	
 	// TODO : remove this : Move if in the windows properties
 	_context.setSize(vec2(800, 600));
@@ -117,7 +147,7 @@ bool APP_Init(ewol::eContext& _context)
 		}
 	}
 	
-	APPL_INFO(" == > init "PROJECT_NAME" (END)");
+	APPL_INFO(" == > init " PROJECT_NAME " (END)");
 	return true;
 }
 
@@ -125,9 +155,8 @@ bool APP_Init(ewol::eContext& _context)
 /**
  * @brief main application function Un-Initialisation
  */
-void APP_UnInit(ewol::eContext& _context)
-{
-	APPL_INFO(" == > Un-Init "PROJECT_NAME" (START)");
+void APP_UnInit(ewol::eContext& _context) {
+	APPL_INFO(" == > Un-Init " PROJECT_NAME " (START)");
 	ewol::Windows* tmpWindows = _context.getWindows();
 	
 	_context.setWindows(NULL);
@@ -147,6 +176,6 @@ void APP_UnInit(ewol::eContext& _context)
 		appl::BufferManager::release(bufferManager);
 		bufferManager = NULL;
 	}
-	APPL_INFO(" == > Un-Init "PROJECT_NAME" (END)");
+	APPL_INFO(" == > Un-Init " PROJECT_NAME " (END)");
 }
 

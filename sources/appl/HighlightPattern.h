@@ -20,11 +20,11 @@ class HighlightPattern;
 #include <exml/exml.h>
 #include <etk/Buffer.h>
 
-typedef enum {
+enum resultFind {
 	HLP_FIND_ERROR,
 	HLP_FIND_OK,
 	HLP_FIND_OK_NO_END,
-}resultFind_te;
+};
 
 namespace appl {
 	class HighlightPattern {
@@ -92,10 +92,10 @@ namespace appl {
 			 * @return HLP_FIND_OK_NO_END Xe find a partial pattern (missing end)
 			 * @return HLP_FIND_ERROR Not find the pattern
 			 */
-			resultFind_te find(int32_t _start,
-			                   int32_t _stop,
-			                   appl::HighlightInfo& _resultat,
-			                   etk::Buffer& _buffer);
+			enum resultFind find(int32_t _start,
+			                     int32_t _stop,
+			                     appl::HighlightInfo& _resultat,
+			                     etk::Buffer& _buffer);
 			
 			void parseRules(exml::Element* _child, int32_t _level);
 	};

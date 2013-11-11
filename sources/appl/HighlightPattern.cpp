@@ -140,7 +140,7 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 }
 
 
-resultFind_te appl::HighlightPattern::find(int32_t _start,
+enum resultFind appl::HighlightPattern::find(int32_t _start,
                                      int32_t _stop,
                                      appl::HighlightInfo& _resultat,
                                      etk::Buffer& _buffer) {
