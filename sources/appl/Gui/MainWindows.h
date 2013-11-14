@@ -27,6 +27,16 @@ class MainWindows : public ewol::Windows {
 		~MainWindows(void);
 	private:
 		appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
+		/**
+		 * @brief Display a pop-up to the select the name of the file.
+		 * @param[in] _buffer Buffer that might be saved with a new name.
+		 */
+		void saveAsPopUp(appl::Buffer* _buffer);
+		/**
+		 * @brief Display a pop-up to the user to confirm wat he want to do when he close a file not saved.
+		 * @param[in] _buffer Buffer that might be close.
+		 */
+		void closeNotSavedFile(appl::Buffer* _buffer);
 	public: // Derived function
 		virtual const char * const getObjectType(void) { return "MainWindows"; };
 		virtual void onReceiveMessage(const ewol::EMessage& _msg);

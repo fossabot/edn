@@ -268,6 +268,7 @@ namespace appl {
 			Buffer(void);
 			~Buffer(void);
 		private:
+			bool m_hasFileName; //!< when new file, the buffer has no name ==> but it might be reference with a single name ...
 			std::string m_fileName; //!< name of the file (with his path)
 		public:
 			/**
@@ -275,6 +276,13 @@ namespace appl {
 			 */
 			const std::string& getFileName(void) {
 				return m_fileName;
+			}
+			/**
+			 * @brief Check if the buffer has a real filename.
+			 * @return the status of the existance of a name.
+			 */
+			bool hasFileName(void) {
+				return m_hasFileName;
 			}
 			/**
 			 * @brief Load A specific file in this buffer.

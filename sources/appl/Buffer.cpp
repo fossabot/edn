@@ -103,11 +103,16 @@ appl::Buffer::Iterator appl::Buffer::selectStop(void) {
 
 
 appl::Buffer::Buffer(void) :
+  m_hasFileName(false),
+  m_fileName(""),
+  m_isModify(false),
   m_cursorPos(0),
   m_cursorSelectPos(-1),
   m_cursorPreferredCol(-1),
   m_nbLines(0),
   m_highlight(NULL) {
+	static int32_t bufferBaseId = 0;
+	m_fileName = "No Name " + std::to_string(bufferBaseId);
 	addEventId(eventIsModify);
 	addEventId(eventIsSave);
 	addEventId(eventSelectChange);
@@ -122,6 +127,7 @@ appl::Buffer::~Buffer(void) {
 bool appl::Buffer::loadFile(const std::string& _name) {
 	APPL_DEBUG("Load file : '" << _name << "'");
 	m_fileName = _name;
+	m_hasFileName = true;
 	m_isModify = true;
 	setHighlightType("");
 	etk::FSNode file(m_fileName);
@@ -144,6 +150,7 @@ void appl::Buffer::setFileName(const std::string& _name) {
 		return;
 	}
 	m_fileName = _name;
+	m_hasFileName = true;
 	setModification(true);
 }
 

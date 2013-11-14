@@ -31,6 +31,7 @@
 #include <ewol/renderer/EObject.h>
 #include <ewol/renderer/eContext.h>
 #include <date/date.h>
+#include <ewol/widget/meta/StdPopUp.h>
 
 namespace appl 
 {
@@ -103,11 +104,14 @@ class ParameterAboutGui : public widget::Sizer {
 			
 		};
 };
+// Local main windows event :
+static const char* mainWindowsRequestSaveFile = "appl-event-main-windows-save-file";
+static const char* mainWindowsRequestSaveFileAs = "appl-event-main-windows-save-file-as";
+static const char* mainWindowsRequestcloseFileNoCheck = "appl-event-main-windows-close-file-no-check";
 
-
-const char * l_smoothChick = "tmpEvent_smooth";
-const char * l_smoothMin = "tmpEvent_minChange";
-const char * l_smoothMax = "tmpEvent_maxChange";
+const char* l_smoothChick = "tmpEvent_smooth";
+const char* l_smoothMin = "tmpEvent_minChange";
+const char* l_smoothMax = "tmpEvent_maxChange";
 
 #undef __class__
 #define __class__ "MainWindows"
@@ -143,11 +147,12 @@ MainWindows::MainWindows(void) {
 				myTextView->setExpand(bvec2(true,true));
 				myTextView->setFill(bvec2(true,true));
 				mySizerVert2->subWidgetAdd(myTextView);
-				
+				/*
 				myTextView = new appl::TextViewer("FreeMono;DejaVuSansMono;FreeSerif", 11);
 				myTextView->setExpand(bvec2(true,true));
 				myTextView->setFill(bvec2(true,true));
 				mySizerVert2->subWidgetAdd(myTextView);
+				*/
 				// search area : 
 				Search * mySearch = new Search();
 				mySizerVert2->subWidgetAdd(mySearch);
@@ -265,6 +270,7 @@ MainWindows::MainWindows(void) {
 	registerMultiCast(ednMsgGuiSaveAs);
 	registerMultiCast(ednMsgProperties);
 	registerMultiCast(ednMsgGuiOpen);
+	registerMultiCast(ednMsgGuiClose);
 	// to update the title ... 
 	registerMultiCast(ednMsgBufferState);
 	registerMultiCast(ednMsgBufferId);
@@ -330,13 +336,12 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 				return;
 			}
 			// Note : for direct saving, we do not chack the saving status ==> all time saving ...
-			if (tmpBuffer->getFileName() == "") {
-				// TODO : Has no name ==> must generate a a save AS !!!
-				APPL_TODO("Has no name ==> must generate a a save AS");
+			if (tmpBuffer->hasFileName() == false) {
+				saveAsPopUp(tmpBuffer);
 				return;
 			}
 			if (tmpBuffer->storeFile() == false) {
-				// TODO : Generate a pop-up to inform error...
+				displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
 				APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
 			}
 			return;
@@ -350,13 +355,13 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 				if (tmpBuffer->isModify() == false) {
 					continue;
 				}
-				if (tmpBuffer->getFileName() == "") {
-					// TODO : Has no name ==> must generate a a save AS !!!
-					APPL_TODO("Has no name ==> must generate a a save AS");
+				if (tmpBuffer->hasFileName() == false) {
+					// TODO : Has no name ==> must generate a save AS !!!
+					APPL_TODO("Has no name ==> must generate a save AS");
 					continue;
 				}
 				if (tmpBuffer->storeFile() == false) {
-					// TODO : Generate a pop-up to inform error...
+					displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
 					APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
 				}
 			}
@@ -458,9 +463,143 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		ewol::getContext().forceRedrawAll();
 	} else if (_msg.getMessage() == ednMsgGuiExit) {
 		// TODO ...
+	} else if (_msg.getMessage() == ednMsgGuiClose) {
+		if (m_bufferManager == NULL) {
+			APPL_ERROR("can not call unexistant buffer manager ... ");
+			return;
+		}
+		// Get a ref on the buffer selected (if null, no buffer was selected ...)
+		if (_msg.getData() == "current") {
+			appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
+			if (tmpBuffer == NULL) {
+				APPL_ERROR("Error to get the buffer ... " << _msg.getData());
+				return;
+			}
+			if (tmpBuffer->isModify() == true) {
+				closeNotSavedFile(tmpBuffer);
+			} else {
+				tmpBuffer->removeObject();
+			}
+		} else {
+			// ALL !!!
+			// TODO : How to generate the save for all ...
+			APPL_TODO("Close all the buffer.");
+		}
+	} else if (_msg.getMessage() == mainWindowsRequestSaveFile) { // return after a choice of close...
+		if (m_bufferManager == NULL) {
+			APPL_ERROR("can not call unexistant buffer manager ... ");
+			return;
+		}
+		if (m_bufferManager->exist(_msg.getData()) == false) {
+			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
+			return;
+		}
+		appl::Buffer* tmpBuffer = m_bufferManager->get(_msg.getData());
+		if (tmpBuffer == NULL) {
+			APPL_ERROR("Error to get the buffer : " << _msg.getData());
+			return;
+		}
+		if (tmpBuffer->hasFileName() == false) {
+			APPL_ERROR("Will never arrive");
+			saveAsPopUp(tmpBuffer);
+		} else {
+			// TODO : Save the file ...
+		}
+	} else if (_msg.getMessage() == mainWindowsRequestSaveFileAs) { // return after a choice of close...
+		
+		if (m_bufferManager == NULL) {
+			APPL_ERROR("can not call unexistant buffer manager ... ");
+			return;
+		}
+		if (m_bufferManager->exist(_msg.getData()) == false) {
+			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
+			return;
+		}
+		appl::Buffer* tmpBuffer = m_bufferManager->get(_msg.getData());
+		if (tmpBuffer == NULL) {
+			APPL_ERROR("Error to get the buffer : " << _msg.getData());
+			return;
+		}
+		saveAsPopUp(tmpBuffer);
+	} else if (_msg.getMessage() == mainWindowsRequestcloseFileNoCheck) { // return after a choice of close...
+		if (m_bufferManager == NULL) {
+			APPL_ERROR("can not call unexistant buffer manager ... ");
+			return;
+		}
+		if (m_bufferManager->exist(_msg.getData()) == false) {
+			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
+			return;
+		}
+		appl::Buffer* tmpBuffer = m_bufferManager->get(_msg.getData());
+		if (tmpBuffer == NULL) {
+			APPL_ERROR("Error to get the buffer : " << _msg.getData());
+			return;
+		}
+		// note: just remove ==> no check : normal case ...
+		tmpBuffer->removeObject();
 	}
-	
 	return;
+}
+
+void MainWindows::saveAsPopUp(appl::Buffer* _buffer) {
+	if (_buffer == NULL) {
+		APPL_ERROR("Call With NULL input...");
+		return;
+	}
+	widget::FileChooser* tmpWidget = new widget::FileChooser();
+	if (NULL == tmpWidget) {
+		APPL_ERROR("Can not allocate widget  == > display might be in error");
+		return;
+	}
+	tmpWidget->setTitle("Save files As...");
+	tmpWidget->setValidateLabel("Save");
+	std::string folder = "/home/";
+	std::string fileName = "";
+	/*if (true == _buffer->hasFileName()) */{
+		etk::FSNode tmpName(_buffer->getFileName());
+		folder = tmpName.getNameFolder();
+		fileName = tmpName.getNameFile();
+	}
+	tmpWidget->setFolder(folder);
+	tmpWidget->setFileName(fileName);
+	popUpWidgetPush(tmpWidget);
+	//tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
+}
+
+void MainWindows::closeNotSavedFile(appl::Buffer* _buffer) {
+	if (_buffer == NULL) {
+		APPL_ERROR("Call With NULL input...");
+		return;
+	}
+	widget::StdPopUp* tmpPopUp = new widget::StdPopUp();
+	if (tmpPopUp == NULL) {
+		APPL_ERROR("Can not create a simple pop-up");
+		return;
+	}
+	tmpPopUp->setTitle("<bold>Close un-saved file:</bold>");
+	tmpPopUp->setComment("The file named : <i>\"" + _buffer->getFileName() + "\"</i> is curently modify.   <br/>If you don't saves these modifications,<br/>they will be definitly lost...");
+	ewol::Widget* bt = NULL;
+	if (_buffer->hasFileName() == true) {
+		bt = tmpPopUp->addButton("Save", true);
+		if (bt != NULL) {
+			// TODO : The element is removed before beeing pressed
+			bt->registerOnEvent(this, widget::Button::eventPressed, mainWindowsRequestSaveFile, _buffer->getFileName());
+			bt->registerOnEvent(this, widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		}
+	}
+	bt = tmpPopUp->addButton("Save As", true);
+	if (bt != NULL) {
+		bt->registerOnEvent(this, widget::Button::eventPressed, mainWindowsRequestSaveFileAs, _buffer->getFileName());
+		//bt->registerOnEvent(this, widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		// TODO : Request the close when saved ...
+	}
+	bt = tmpPopUp->addButton("Close", true);
+	if (bt != NULL) {
+		bt->registerOnEvent(this, widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+	}
+	tmpPopUp->addButton("Cancel", true);
+	tmpPopUp->setRemoveOnExternClick(true);
+	popUpWidgetPush(tmpPopUp);
 }
 
 void MainWindows::onObjectRemove(ewol::EObject * _removeObject) {
