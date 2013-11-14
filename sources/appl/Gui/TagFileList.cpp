@@ -41,7 +41,7 @@ uint32_t appl::TagFileList::getNuberOfColomn(void) {
 	return 2;
 }
 
-bool appl::TagFileList::getTitle(int32_t _colomn, etk::UString& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg) {
+bool appl::TagFileList::getTitle(int32_t _colomn, std::string& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg) {
 	_myTitle = "title";
 	return true;
 }
@@ -50,10 +50,10 @@ uint32_t appl::TagFileList::getNuberOfRaw(void) {
 	return m_list.size();
 }
 
-bool appl::TagFileList::getElement(int32_t _colomn, int32_t _raw, etk::UString& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
+bool appl::TagFileList::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
 	if (_raw >= 0 && _raw < m_list.size() && NULL != m_list[_raw]) {
 		if (0 == _colomn) {
-			_myTextToWrite = etk::UString(m_list[_raw]->fileLine);
+			_myTextToWrite = std::to_string(m_list[_raw]->fileLine);
 		} else {
 			_myTextToWrite = m_list[_raw]->filename;
 		}
@@ -102,7 +102,7 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum ewol::keyEvent::statu
 			if(    m_selectedLine  >= 0
 			    && m_selectedLine < m_list.size()
 			    && NULL != m_list[m_selectedLine] ) {
-				generateEventId(event, etk::UString(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+				generateEventId(event, std::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
 			} else {
 				generateEventId(applEventCtagsListUnSelect);
 			}
@@ -120,10 +120,10 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum ewol::keyEvent::statu
  * @param[in] file Compleate file name
  * @param[in] jump line id
  */
-void appl::TagFileList::add(etk::UString& _file, int32_t _line) {
+void appl::TagFileList::add(std::string& _file, int32_t _line) {
 	appl::TagListElement *tmpFile = new appl::TagListElement(_file, _line);
 	if (NULL != tmpFile) {
-		m_list.pushBack(tmpFile);
+		m_list.push_back(tmpFile);
 	}
 	markToRedraw();
 }

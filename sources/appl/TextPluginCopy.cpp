@@ -41,7 +41,7 @@ bool appl::TextPluginCopy::onReceiveMessage(appl::TextViewer& _textDrawer,
 	if (    _msg.getMessage() == ednMsgGuiCopy
 	     || _msg.getMessage() == ednMsgGuiCut) {
 		if (_textDrawer.m_buffer != NULL) {
-			etk::UString value;
+			std::string value;
 			_textDrawer.m_buffer->copy(value);
 			if (value.size() != 0) {
 				ewol::clipBoard::set(ewol::clipBoard::clipboardStd, value);

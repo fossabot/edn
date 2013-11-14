@@ -22,7 +22,7 @@ namespace appl
 		public:
 			etk::FSNode m_bufferName;
 			appl::Buffer* m_buffer;
-			dataBufferStruct(const etk::UString& _bufferName, appl::Buffer* _buffer) :
+			dataBufferStruct(const std::string& _bufferName, appl::Buffer* _buffer) :
 			  m_bufferName(_bufferName),
 			  m_buffer(_buffer) {
 				
@@ -45,7 +45,7 @@ class BufferView : public widget::List
 	private:
 		int32_t m_selectedIdRequested;
 		int32_t m_selectedID;
-		etk::Vector<appl::dataBufferStruct*> m_list;
+		std::vector<appl::dataBufferStruct*> m_list;
 	public:
 		// Constructeur
 		BufferView(void);
@@ -61,9 +61,9 @@ class BufferView : public widget::List
 		void removeAllElement(void);
 		// Derived function
 		virtual uint32_t getNuberOfColomn(void);
-		virtual bool getTitle(int32_t _colomn, etk::UString& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
+		virtual bool getTitle(int32_t _colomn, std::string& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
 		virtual uint32_t getNuberOfRaw(void);
-		virtual bool getElement(int32_t _colomn, int32_t _raw, etk::UString& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
+		virtual bool getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
 		virtual bool onItemEvent(int32_t _IdInput, enum ewol::keyEvent::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
 };
 

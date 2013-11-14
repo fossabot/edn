@@ -37,35 +37,35 @@ namespace appl {
 			appl::GlyphPainting* m_paintingProperties;
 		protected:
 			// Constructeur
-			Highlight(const etk::UString& _xmlFilename, const etk::UString& _colorFile);
+			Highlight(const std::string& _xmlFilename, const std::string& _colorFile);
 			~Highlight(void);
 		private:
-			etk::UString m_typeName; //!< descriptive string type like "C/C++"
+			std::string m_typeName; //!< descriptive string type like "C/C++"
 		public:
-			const etk::UString& getTypeName(void) {
+			const std::string& getTypeName(void) {
 				return m_typeName;
 			}
 		public:
-			bool hasExtention(const etk::UString& _ext);
-			bool fileNameCompatible(const etk::UString& _fileName);
+			bool hasExtention(const std::string& _ext);
+			bool fileNameCompatible(const std::string& _fileName);
 			void display(void);
 			void parse(int32_t _start,
 			           int32_t _stop,
-			           etk::Vector<appl::HighlightInfo> &_metaData,
+			           std::vector<appl::HighlightInfo> &_metaData,
 			           int32_t _addingPos,
 			           etk::Buffer &_buffer);
 			void parse2(int32_t _start,
 			            int32_t _stop,
-			            etk::Vector<appl::HighlightInfo> &_metaData,
+			            std::vector<appl::HighlightInfo> &_metaData,
 			            etk::Buffer &_buffer);
 		private:
 			void parseRules(exml::Element* _child,
-			                etk::Vector<HighlightPattern*> &_mListPatern,
+			                std::vector<HighlightPattern*> &_mListPatern,
 			                int32_t _level);
-			etk::UString m_styleName; //!< curent style name (like "c++" or "c" or "script Bash")
-			etk::Vector<etk::UString> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
-			etk::Vector<HighlightPattern*> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
-			etk::Vector<HighlightPattern*> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
+			std::string m_styleName; //!< curent style name (like "c++" or "c" or "script Bash")
+			std::vector<std::string> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
+			std::vector<HighlightPattern*> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
+			std::vector<HighlightPattern*> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
 		public:
 			/**
 			 * @brief keep the resource pointer.
@@ -73,7 +73,7 @@ namespace appl {
 			 * @param[in] _filename Name of the configuration file.
 			 * @return pointer on the resource or NULL if an error occured.
 			 */
-			static appl::Highlight* keep(const etk::UString& _filename);
+			static appl::Highlight* keep(const std::string& _filename);
 			/**
 			 * @brief release the keeped resources
 			 * @param[in,out] reference on the object pointer

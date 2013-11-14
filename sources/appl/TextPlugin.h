@@ -121,7 +121,7 @@ namespace appl {
 			 */
 			virtual bool onWrite(appl::TextViewer& _textDrawer,
 			                     const appl::Buffer::Iterator& _pos,
-			                     const etk::UString& _data) {
+			                     const std::string& _data) {
 				return false;
 			};
 		protected:
@@ -144,7 +144,7 @@ namespace appl {
 			 */
 			virtual bool onReplace(appl::TextViewer& _textDrawer,
 			                       const appl::Buffer::Iterator& _pos,
-			                       const etk::UString& _data,
+			                       const std::string& _data,
 			                       const appl::Buffer::Iterator& _posEnd) {
 				return false;
 			};

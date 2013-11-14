@@ -14,11 +14,11 @@
 
 namespace SearchData
 {
-	void setSearch(const etk::UString &myData);
-	void getSearch(etk::UString &myData);
+	void setSearch(const std::string &myData);
+	void getSearch(std::string &myData);
 	bool isSearchEmpty(void);
-	void setReplace(const etk::UString &myData);
-	void getReplace(etk::UString &myData);
+	void setReplace(const std::string &myData);
+	void getReplace(std::string &myData);
 	bool isReplaceEmpty(void);
 	void setCase(bool value);
 	bool getCase(void);

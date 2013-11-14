@@ -21,7 +21,7 @@
 #undef __class__
 #define __class__ "TextViewer"
 
-appl::TextViewer::TextViewer(const etk::UString& _fontName, int32_t _fontSize) :
+appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
   m_buffer(NULL),
   m_displayText(_fontName, _fontSize),
   m_insertMode(false) {
@@ -109,7 +109,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		m_maxSize.setY(256);
 		m_displayText.setTextAlignement(10, m_size.x()-20, ewol::Text::alignLeft);
 		m_displayText.setRelPos(vec3(10, 0, 0));
-		etk::UString tmpString("<br/>\n"
+		std::string tmpString("<br/>\n"
 		                       "<font color=\"red\">\n"
 		                       "	<b>\n"
 		                       "		edn - Editeur De N'ours\n"
@@ -137,7 +137,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	float countNbLine = 1;
 	esize_t countColomn = 0;
 	// the siplay string :
-	etk::UString stringToDisplay;
+	std::u32string stringToDisplay;
 	esize_t bufferElementSize = 0;
 	bool isSelect = false;
 	appl::Buffer::Iterator selectPosStart = m_buffer->begin();
@@ -166,7 +166,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	}
 	// Display line number :
 	m_lastOffsetDisplay = 0;
-	vec3 tmpLetterSize = m_displayText.calculateSize((etk::UChar)'A');
+	vec3 tmpLetterSize = m_displayText.calculateSize((char32_t)'A');
 	{
 		esize_t nbLine = m_buffer->getNumberOfLines();
 		float nbLineCalc = nbLine;
@@ -277,7 +277,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	}
 	// set maximum size (X&Y) :
 	{
-		vec3 tmpLetterSize = m_displayText.calculateSize((etk::UChar)'A');
+		vec3 tmpLetterSize = m_displayText.calculateSize((char32_t)'A');
 		esize_t nbLines = m_buffer->getNumberOfLines();
 		m_maxSize.setX(maxSizeX+m_originScrooled.x());
 		m_maxSize.setY((float)nbLines*tmpLetterSize.y());
@@ -302,7 +302,7 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 		if (_event.getStatus() != ewol::keyEvent::statusDown) {
 			return false;
 		}
-		etk::UChar localValue = _event.getChar();
+		char32_t localValue = _event.getChar();
 		if (localValue == etk::UChar::Return) {
 			if (true == _event.getSpecialKey().isSetShift()) {
 				localValue = etk::UChar::CarrierReturn;
@@ -333,15 +333,16 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 		m_buffer->setSelectMode(false);
 		// normal adding char ...
 		char output[5];
-		int32_t nbElement = localValue.getUtf8(output);
+		int32_t nbElement = etk::getUtf8(localValue, output);
 		if (    m_buffer->hasTextSelected() == false
 		     && _event.getSpecialKey().isSetInsert() == true) {
 			appl::Buffer::Iterator pos = m_buffer->cursor();
 			appl::Buffer::Iterator posEnd = pos;
 			++posEnd;
-			replace(localValue, pos, posEnd);
+			replace(output, pos, posEnd);
+			//TODO : choisce UTF  ... replace(localValue, pos, posEnd);
 		} else {
-			etk::UString myString = output;
+			std::string myString = output;
 			write(myString);
 		}
 		return true;
@@ -492,11 +493,11 @@ void appl::TextViewer::mouseEventTriple(void) {
 }
 
 appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativePos) {
-	etk::UChar currentValue;
+	char32_t currentValue;
 	vec3 positionCurentDisplay(0,0,0);
-	vec3 tmpLetterSize = m_displayText.calculateSize((etk::UChar)'A');
+	vec3 tmpLetterSize = m_displayText.calculateSize((char32_t)'A');
 	esize_t countColomn = 0;
-	etk::UString stringToDisplay;
+	std::u32string stringToDisplay;
 	m_displayText.clear();
 	m_displayText.forceLineReturn();
 	for (appl::Buffer::Iterator it = m_buffer->begin();
@@ -532,7 +533,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 
 void appl::TextViewer::onEventClipboard(enum ewol::clipBoard::clipboardListe _clipboardID) {
 	if (m_buffer != NULL) {
-		etk::UString data = ewol::clipBoard::get(_clipboardID);
+		std::string data = ewol::clipBoard::get(_clipboardID);
 		write(data);
 	}
 	markToRedraw();
@@ -602,7 +603,7 @@ void appl::TextViewer::setFontSize(int32_t _size) {
 	setScrollingSize(_size*3.0*1.46); // 1.46 is a magic number ...
 }
 
-void appl::TextViewer::setFontName(const etk::UString& _fontName) {
+void appl::TextViewer::setFontName(const std::string& _fontName) {
 	m_displayText.setFontName(_fontName);
 }
 
@@ -618,7 +619,7 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 	return true;
 }
 
-bool appl::TextViewer::write(const etk::UString& _data) {
+bool appl::TextViewer::write(const std::string& _data) {
 	if (m_buffer == NULL) {
 		return false;
 	}
@@ -628,7 +629,7 @@ bool appl::TextViewer::write(const etk::UString& _data) {
 	return write(_data, m_buffer->cursor());
 }
 
-bool appl::TextViewer::write(const etk::UString& _data, const appl::Buffer::Iterator& _pos) {
+bool appl::TextViewer::write(const std::string& _data, const appl::Buffer::Iterator& _pos) {
 	if (m_buffer == NULL) {
 		return false;
 	}
@@ -642,7 +643,7 @@ bool appl::TextViewer::write(const etk::UString& _data, const appl::Buffer::Iter
 	return ret;
 }
 
-bool appl::TextViewer::replace(const etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+bool appl::TextViewer::replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
 	if (m_buffer == NULL) {
 		return false;
 	}
@@ -656,7 +657,7 @@ bool appl::TextViewer::replace(const etk::UString& _data, const appl::Buffer::It
 	return ret;
 }
 
-bool appl::TextViewer::replace(const etk::UString& _data) {
+bool appl::TextViewer::replace(const std::string& _data) {
 	if (m_buffer == NULL) {
 		return false;
 	}
@@ -788,9 +789,9 @@ void appl::TextViewer::moveCursorDown(esize_t _nbLine) {
 
 // TODO : Rename ...
 appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator& _startLinePos, float _distance) {
-	etk::UChar currentValue;
+	char32_t currentValue;
 	esize_t countColomn = 0;
-	etk::UString stringToDisplay;
+	std::u32string stringToDisplay;
 	m_displayText.clear();
 	m_displayText.forceLineReturn();
 	for (appl::Buffer::Iterator it = _startLinePos;
@@ -816,9 +817,9 @@ appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator
 // TODO : Rename ...
 float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePos, const appl::Buffer::Iterator& _stopPos) {
 	float ret = 0;
-	etk::UChar currentValue;
+	char32_t currentValue;
 	esize_t countColomn = 0;
-	etk::UString stringToDisplay;
+	std::u32string stringToDisplay;
 	m_displayText.clear();
 	
 	for (appl::Buffer::Iterator it = _startLinePos;

@@ -15,21 +15,21 @@
 #undef __class__
 #define __class__ "highlightManager"
 
-static etk::Vector<appl::Highlight*>& s_list(void) {
-	static etk::Vector<appl::Highlight*> list;
+static std::vector<appl::Highlight*>& s_list(void) {
+	static std::vector<appl::Highlight*> list;
 	return list;
 }
 
 
 void appl::highlightManager::init(void) {
-	etk::Vector<appl::Highlight*>& hlList = s_list();
+	std::vector<appl::Highlight*>& hlList = s_list();
 	if (hlList.size() != 0) {
 		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
 		hlList.clear();
 	}
 	etk::FSNode myFile("DATA:languages/");
 	// get the subfolder list :
-	etk::Vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
+	std::vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
 	for (esize_t iii = 0; iii < list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -37,11 +37,11 @@ void appl::highlightManager::init(void) {
 		if (list[iii]->getNodeType() != etk::FSN_FOLDER) {
 			continue;
 		}
-		etk::UString filename = list[iii]->getName() + "/highlight.xml";
+		std::string filename = list[iii]->getName() + "/highlight.xml";
 		APPL_DEBUG("Load xml name : " << filename);
 		appl::Highlight *myHightLine = appl::Highlight::keep(filename);
 		if (myHightLine != NULL) {
-			hlList.pushBack(myHightLine);
+			hlList.push_back(myHightLine);
 		} else {
 			APPL_ERROR("Can not allocate HighLight");
 		}
@@ -58,7 +58,7 @@ void appl::highlightManager::init(void) {
 }
 
 void appl::highlightManager::unInit(void) {
-	etk::Vector<Highlight*>& hlList = s_list();
+	std::vector<Highlight*>& hlList = s_list();
 	if (hlList.size() == 0) {
 		APPL_DEBUG("HighlightManager  ==> no highlight");
 		hlList.clear();
@@ -74,27 +74,31 @@ void appl::highlightManager::unInit(void) {
 	hlList.clear();
 }
 
-etk::UString appl::highlightManager::getTypeExtention(const etk::UString& _extention) {
+std::string appl::highlightManager::getTypeExtention(const std::string& _extention) {
 	if (_extention.size() == 0) {
 		return "";
 	}
-	etk::Vector<Highlight*>& hlList = s_list();
+	APPL_VERBOSE("Try to find type for extention : '" << _extention << "' in " << s_list().size() << " types");
+	std::vector<Highlight*>& hlList = s_list();
 	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;
 		}
+		APPL_VERBOSE("    check : " << hlList[iii]->getTypeName());
 		if (hlList[iii]->hasExtention(_extention) == true) {
+			APPL_VERBOSE("Find type for extention : " << _extention
+			             << " type : " << hlList[iii]->getTypeName());
 			return hlList[iii]->getTypeName();
 		}
 	}
 	return "";
 }
 
-etk::UString appl::highlightManager::getFileWithTypeType(const etk::UString& _type) {
+std::string appl::highlightManager::getFileWithTypeType(const std::string& _type) {
 	if (_type.size() == 0) {
 		return "";
 	}
-	etk::Vector<Highlight*>& hlList = s_list();
+	std::vector<Highlight*>& hlList = s_list();
 	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;
@@ -106,8 +110,8 @@ etk::UString appl::highlightManager::getFileWithTypeType(const etk::UString& _ty
 	return "";
 }
 
-etk::Vector<etk::UString> appl::highlightManager::getTypeList(void) {
-	etk::Vector<etk::UString> ret;
+std::vector<std::string> appl::highlightManager::getTypeList(void) {
+	std::vector<std::string> ret;
 	return ret;
 }
 

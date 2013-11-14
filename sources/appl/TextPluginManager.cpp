@@ -16,36 +16,36 @@
 #undef __class__
 #define __class__ "textPluginManager"
 
-static etk::Vector<appl::TextViewerPlugin *>& getList(void) {
-	static etk::Vector<appl::TextViewerPlugin *> s_list;
+static std::vector<appl::TextViewerPlugin *>& getList(void) {
+	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static etk::Vector<appl::TextViewerPlugin *>& getListOnEventEntry(void) {
-	static etk::Vector<appl::TextViewerPlugin *> s_list;
+static std::vector<appl::TextViewerPlugin *>& getListOnEventEntry(void) {
+	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static etk::Vector<appl::TextViewerPlugin *>& getListOnEventInput(void) {
-	static etk::Vector<appl::TextViewerPlugin *> s_list;
+static std::vector<appl::TextViewerPlugin *>& getListOnEventInput(void) {
+	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static etk::Vector<appl::TextViewerPlugin *>& getListOnWrite(void) {
-	static etk::Vector<appl::TextViewerPlugin *> s_list;
+static std::vector<appl::TextViewerPlugin *>& getListOnWrite(void) {
+	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static etk::Vector<appl::TextViewerPlugin *>& getListOnReplace(void) {
-	static etk::Vector<appl::TextViewerPlugin *> s_list;
+static std::vector<appl::TextViewerPlugin *>& getListOnReplace(void) {
+	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static etk::Vector<appl::TextViewerPlugin *>& getListOnRemove(void) {
-	static etk::Vector<appl::TextViewerPlugin *> s_list;
+static std::vector<appl::TextViewerPlugin *>& getListOnRemove(void) {
+	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static etk::Vector<appl::TextViewerPlugin *>& getListOnReceiveMessage(void) {
-	static etk::Vector<appl::TextViewerPlugin *> s_list;
+static std::vector<appl::TextViewerPlugin *>& getListOnReceiveMessage(void) {
+	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static etk::Vector<appl::TextViewerPlugin *>& getListOnCursorMove(void) {
-	static etk::Vector<appl::TextViewerPlugin *> s_list;
+static std::vector<appl::TextViewerPlugin *>& getListOnCursorMove(void) {
+	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
 
@@ -84,27 +84,27 @@ void appl::textPluginManager::addPlugin(appl::TextViewerPlugin* _plugin) {
 	if (_plugin == NULL) {
 		return;
 	}
-	getList().pushBack(_plugin);
+	getList().push_back(_plugin);
 	if (_plugin->isAvaillableOnEventEntry() == true) {
-		getListOnEventEntry().pushBack(_plugin);
+		getListOnEventEntry().push_back(_plugin);
 	}
 	if (_plugin->isAvaillableOnEventInput() == true) {
-		getListOnEventInput().pushBack(_plugin);
+		getListOnEventInput().push_back(_plugin);
 	}
 	if (_plugin->isAvaillableOnWrite() == true) {
-		getListOnWrite().pushBack(_plugin);
+		getListOnWrite().push_back(_plugin);
 	}
 	if (_plugin->isAvaillableOnReplace() == true) {
-		getListOnReplace().pushBack(_plugin);
+		getListOnReplace().push_back(_plugin);
 	}
 	if (_plugin->isAvaillableOnRemove() == true) {
-		getListOnRemove().pushBack(_plugin);
+		getListOnRemove().push_back(_plugin);
 	}
 	if (_plugin->isAvaillableOnReceiveMessage() == true) {
-		getListOnReceiveMessage().pushBack(_plugin);
+		getListOnReceiveMessage().push_back(_plugin);
 	}
 	if (_plugin->isAvaillableOnCursorMove() == true) {
-		getListOnCursorMove().pushBack(_plugin);
+		getListOnCursorMove().push_back(_plugin);
 	}
 }
 
@@ -128,7 +128,7 @@ void appl::textPluginManager::disconnect(appl::TextViewer& _widget) {
 
 bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
                                            const ewol::EventEntry& _event) {
-	etk::Vector<appl::TextViewerPlugin *>& list = getListOnEventEntry();
+	std::vector<appl::TextViewerPlugin *>& list = getListOnEventEntry();
 	for (esize_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -142,7 +142,7 @@ bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onEventInput(appl::TextViewer& _textDrawer,
                                            const ewol::EventInput& _event) {
-	etk::Vector<appl::TextViewerPlugin *>& list = getListOnEventInput();
+	std::vector<appl::TextViewerPlugin *>& list = getListOnEventInput();
 	for (esize_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -156,8 +156,8 @@ bool appl::textPluginManager::onEventInput(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onWrite(appl::TextViewer& _textDrawer,
                                       const appl::Buffer::Iterator& _pos,
-                                      const etk::UString& _data) {
-	etk::Vector<appl::TextViewerPlugin *>& list = getListOnWrite();
+                                      const std::string& _data) {
+	std::vector<appl::TextViewerPlugin *>& list = getListOnWrite();
 	for (esize_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -171,9 +171,9 @@ bool appl::textPluginManager::onWrite(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onReplace(appl::TextViewer& _textDrawer,
                                         const appl::Buffer::Iterator& _pos,
-                                        const etk::UString& _data,
+                                        const std::string& _data,
                                         const appl::Buffer::Iterator& _posEnd) {
-	etk::Vector<appl::TextViewerPlugin *>& list = getListOnReplace();
+	std::vector<appl::TextViewerPlugin *>& list = getListOnReplace();
 	for (esize_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -188,7 +188,7 @@ bool appl::textPluginManager::onReplace(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
                                        const appl::Buffer::Iterator& _pos,
                                        const appl::Buffer::Iterator& _posEnd) {
-	etk::Vector<appl::TextViewerPlugin *>& list = getListOnRemove();
+	std::vector<appl::TextViewerPlugin *>& list = getListOnRemove();
 	for (esize_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -202,7 +202,7 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onReceiveMessage(appl::TextViewer& _textDrawer,
                                                const ewol::EMessage& _msg) {
-	etk::Vector<appl::TextViewerPlugin *>& list = getListOnReceiveMessage();
+	std::vector<appl::TextViewerPlugin *>& list = getListOnReceiveMessage();
 	for (esize_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -216,7 +216,7 @@ bool appl::textPluginManager::onReceiveMessage(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onCursorMove(appl::TextViewer& _textDrawer,
                                            const appl::Buffer::Iterator& _pos) {
-	etk::Vector<appl::TextViewerPlugin *>& list = getListOnCursorMove();
+	std::vector<appl::TextViewerPlugin *>& list = getListOnCursorMove();
 	for (esize_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;

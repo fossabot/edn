@@ -17,8 +17,8 @@
 #undef __class__
 #define __class__ "BufferView"
 
-static void SortElementList(etk::Vector<appl::dataBufferStruct*>& _list) {
-	etk::Vector<appl::dataBufferStruct *> tmpList = _list;
+static void SortElementList(std::vector<appl::dataBufferStruct*>& _list) {
+	std::vector<appl::dataBufferStruct *> tmpList = _list;
 	_list.clear();
 	for(int32_t iii=0; iii<tmpList.size(); iii++) {
 		if (NULL == tmpList[iii]) {
@@ -35,7 +35,7 @@ static void SortElementList(etk::Vector<appl::dataBufferStruct*>& _list) {
 			}
 		}
 		//EWOL_DEBUG("position="<<findPos);
-		_list.insert(findPos, tmpList[iii]);
+		_list.insert(_list.begin()+findPos, tmpList[iii]);
 	}
 }
 
@@ -92,7 +92,7 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 			APPL_ERROR("Allocation error of the tmp buffer list element");
 			return;
 		}
-		m_list.pushBack(tmp);
+		m_list.push_back(tmp);
 		markToRedraw();
 		return;
 	}
@@ -140,7 +140,7 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 					etk::FSNode name = tmpBuffer->getFileName();
 					appl::dataBufferStruct* tmpElement = new appl::dataBufferStruct(name, iii, isModify);
 					if (NULL != tmpElement) {
-						m_list.pushBack(tmpElement);
+						m_list.push_back(tmpElement);
 					} else {
 						APPL_ERROR("Allocation error of the tmp buffer list element");
 					}
@@ -175,7 +175,7 @@ void BufferView::onObjectRemove(ewol::EObject* _removeObject) {
 		if (m_list[iii]->m_buffer != _removeObject) {
 			continue;
 		}
-		m_list.remove(iii);
+		m_list.erase(m_list.begin()+iii);
 		markToRedraw();
 		return;
 	}
@@ -190,7 +190,7 @@ uint32_t BufferView::getNuberOfColomn(void) {
 	return 1;
 }
 
-bool BufferView::getTitle(int32_t _colomn, etk::UString &_myTitle, etk::Color<> &_fg, etk::Color<> &_bg) {
+bool BufferView::getTitle(int32_t _colomn, std::string &_myTitle, etk::Color<> &_fg, etk::Color<> &_bg) {
 	_myTitle = "Buffers : ";
 	return true;
 }
@@ -199,7 +199,7 @@ uint32_t BufferView::getNuberOfRaw(void) {
 	return m_list.size();
 }
 
-bool BufferView::getElement(int32_t _colomn, int32_t _raw, etk::UString& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
+bool BufferView::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
 	if(    _raw >= 0
 	    && _raw<m_list.size()
 	    && NULL != m_list[_raw]) {

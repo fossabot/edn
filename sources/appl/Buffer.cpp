@@ -50,7 +50,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- (void) {
 	return *this;
 }
 
-etk::UChar appl::Buffer::Iterator::operator* (void) {
+char32_t appl::Buffer::Iterator::operator* (void) {
 	if (m_value != etk::UChar::Null) {
 		return m_value;
 	}
@@ -71,7 +71,7 @@ etk::UChar appl::Buffer::Iterator::operator* (void) {
 		tmpVal[iii] = m_data->m_data[m_current+iii];
 	}
 	// transform ...
-	m_value.setUtf8(tmpVal);
+	m_value = etk::setUtf8(tmpVal);
 	return m_value;
 }
 
@@ -119,7 +119,7 @@ appl::Buffer::~Buffer(void) {
 	}
 }
 
-bool appl::Buffer::loadFile(const etk::UString& _name) {
+bool appl::Buffer::loadFile(const std::string& _name) {
 	APPL_DEBUG("Load file : '" << _name << "'");
 	m_fileName = _name;
 	m_isModify = true;
@@ -139,7 +139,7 @@ bool appl::Buffer::loadFile(const etk::UString& _name) {
 	return false;
 }
 
-void appl::Buffer::setFileName(const etk::UString& _name) {
+void appl::Buffer::setFileName(const std::string& _name) {
 	if (m_fileName == _name) {
 		return;
 	}
@@ -199,9 +199,9 @@ appl::Buffer::Iterator appl::Buffer::getEndLine(const appl::Buffer::Iterator& _p
 }
 
 
-bool appl::Buffer::search(const appl::Buffer::Iterator& _pos, const etk::UChar& _search, appl::Buffer::Iterator& _result) {
+bool appl::Buffer::search(const appl::Buffer::Iterator& _pos, const char32_t& _search, appl::Buffer::Iterator& _result) {
 	// move in the string
-	etk::UChar value;
+	char32_t value;
 	for (Iterator it = _pos;
 	     (bool)it == true;
 	     ++it) {
@@ -214,9 +214,9 @@ bool appl::Buffer::search(const appl::Buffer::Iterator& _pos, const etk::UChar& 
 	return false;
 }
 
-bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos, const etk::UChar& _search, appl::Buffer::Iterator& _result) {
+bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos, const char32_t& _search, appl::Buffer::Iterator& _result) {
 	// move in the string
-	etk::UChar value;
+	char32_t value;
 	for (Iterator it = _pos - 1;
 	     (bool)it == true;
 	     --it) {
@@ -255,7 +255,7 @@ void appl::Buffer::moveCursor(esize_t _pos) {
 bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
                                 appl::Buffer::Iterator &_beginPos,
                                 appl::Buffer::Iterator &_endPos) {
-	etk::UChar currentValue = *position(_startPos);
+	char32_t currentValue = *position(_startPos);
 	_beginPos = begin();
 	_endPos = end();
 	if (    currentValue == etk::UChar::Tabulation
@@ -284,7 +284,7 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 			}
 		}
 		return true;
-	} else if( false == currentValue.isSpecialChar()){
+	} else if( false == etk::isSpecialChar(currentValue)){
 		APPL_DEBUG("select normal Char");
 		// Search back
 		for (Iterator it = --position(_startPos);
@@ -292,7 +292,7 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 		     --it) {
 			currentValue = *it;
 			if (    currentValue != '_'
-			     && true == currentValue.isSpecialChar()) {
+			     && true == etk::isSpecialChar(currentValue)) {
 				_beginPos = ++it;
 				break;
 			}
@@ -303,7 +303,7 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 		     ++it) {
 			currentValue = *it;
 			if (    currentValue != '_'
-			     && true == currentValue.isSpecialChar()) {
+			     && true == etk::isSpecialChar(currentValue)) {
 				_endPos = it;
 				break;
 			}
@@ -311,7 +311,7 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 		return true;
 	} else {
 		APPL_DEBUG("select same char");
-		etk::UChar comparechar = currentValue;
+		char32_t comparechar = currentValue;
 		// Search back
 		for (Iterator it = --position(_startPos);
 		     (bool)it == true;
@@ -353,55 +353,47 @@ static const char *ControlCodeTable[32] = {
 	 "NUL", "soh", "stx", "etx", "eot", "enq", "ack", "bel", "bs",  "ht", "nl",  "vt",  "np", "cr", "so", "si",
 	 "dle", "dc1", "dc2", "dc3", "dc4", "nak", "syn", "etb", "can", "em", "sub", "esc", "fs", "gs", "rs", "us"};
 
-void appl::Buffer::expand(esize_t& _indent, const etk::UChar& _value, etk::UString& _out) const {
+void appl::Buffer::expand(esize_t& _indent, const char32_t& _value, std::u32string& _out) const {
 	_out.clear();
 	int32_t tabDist = 4;
 	if (_value == etk::UChar::Tabulation) {
 		int32_t nSpaces = tabDist - (_indent % tabDist);
 		for (int32_t iii=0; iii<nSpaces; iii++) {
-			_out.append(etk::UChar::Space);
+			_out += etk::UChar::Space;
 		}
 		return;
 	}
 	// convert ASCII control codes to readable character sequences
 	if (_value == etk::UChar::Null) {
-		_out.append(etk::UChar('<'));
-		_out.append(etk::UChar('n'));
-		_out.append(etk::UChar('u'));
-		_out.append(etk::UChar('l'));
-		_out.append(etk::UChar('>'));
+		_out += U"<nul>";
 		return;
 	}
 	if (_value == etk::UChar::Return) {
 		// nothing to display...
-		_out.append(etk::UChar::Return);
+		_out += etk::UChar::Return;
 		return;
 	}
-	if (_value.get() <= 31) {
-		_out.append(etk::UChar('<'));
-		const char * tmp = ControlCodeTable[_value.get()];
+	if (_value <= 31) {
+		_out += '<';
+		const char * tmp = ControlCodeTable[_value];
 		while (*tmp!='\0') {
-			_out.append(etk::UChar(*tmp));
+			_out += *tmp;
 			tmp++;
 		}
-		_out.append(etk::UChar('>'));
+		_out += '>';
 		return;
 	}
 	if (_value == etk::UChar::Delete) {
-		_out.append(etk::UChar('<'));
-		_out.append(etk::UChar('d'));
-		_out.append(etk::UChar('e'));
-		_out.append(etk::UChar('l'));
-		_out.append(etk::UChar('>'));
+		_out += U"<del>";
 		return;
 	}
 	// nothing to do ...
-	_out.append(_value);
+	_out += _value;
 	//APPL_DEBUG("plop : " << _out);
 }
 
 appl::Buffer::Iterator appl::Buffer::countForwardNLines(const appl::Buffer::Iterator& _startPos, int32_t _nLines) {
-	etk::UChar value;
+	char32_t value;
 	int32_t lineCount = 0;
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
 	for (Iterator it = ++position(_startPos);
@@ -422,7 +414,7 @@ appl::Buffer::Iterator appl::Buffer::countForwardNLines(const appl::Buffer::Iter
 
 appl::Buffer::Iterator appl::Buffer::countBackwardNLines(const appl::Buffer::Iterator& _startPos, int32_t _nLines) {
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
-	etk::UChar value;
+	char32_t value;
 	int32_t lineCount = 0;
 	for (Iterator it = --position(_startPos);
 	     it != begin();
@@ -442,7 +434,7 @@ appl::Buffer::Iterator appl::Buffer::countBackwardNLines(const appl::Buffer::Ite
 
 
 
-bool appl::Buffer::copy(etk::UString& _data) {
+bool appl::Buffer::copy(std::string& _data) {
 	_data.clear();
 	if (hasTextSelected() == true) {
 		esize_t startPos = getStartSelectionPos();
@@ -458,7 +450,7 @@ bool appl::Buffer::copy(etk::UString& _data) {
 	return false;
 }
 
-void appl::Buffer::copy(etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+void appl::Buffer::copy(std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
 	_data.clear();
 	esize_t startPos = getStartSelectionPos();
 	esize_t endPos = getStopSelectionPos();
@@ -470,58 +462,57 @@ void appl::Buffer::copy(etk::UString& _data, const appl::Buffer::Iterator& _pos,
 	}
 }
 
-bool appl::Buffer::write(const etk::UString& _data, const appl::Buffer::Iterator& _pos) {
-	etk::Char output = _data.c_str();
-	m_data.insert(_pos, (int8_t*)((void*)output), output.size());
-	regenerateHighLightAt(_pos, 0, output.size());
+bool appl::Buffer::write(const std::string& _data, const appl::Buffer::Iterator& _pos) {
+	m_data.insert(_pos, (int8_t*)(_data.c_str()), _data.size());
+	regenerateHighLightAt(_pos, 0, _data.size());
 	m_selectMode = false;
-	moveCursor((esize_t)_pos+output.size());
+	moveCursor((esize_t)_pos+_data.size());
 	countNumberofLine(); // TODO : use more intelligent counter
 	setModification(true);
 	return true;
 }
 
-bool appl::Buffer::replace(const etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
-	etk::Char output = _data.c_str();
-	m_data.replace(_pos, (esize_t)_posEnd-(esize_t)_pos, (int8_t*)((void*)output), output.size());
-	regenerateHighLightAt(_pos, (esize_t)_posEnd-(esize_t)_pos, output.size());
+bool appl::Buffer::replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+	m_data.replace(_pos, (esize_t)_posEnd-(esize_t)_pos, (int8_t*)(_data.c_str()), _data.size());
+	regenerateHighLightAt(_pos, (esize_t)_posEnd-(esize_t)_pos, _data.size());
 	m_selectMode = false;
-	moveCursor((esize_t)_pos+output.size());
+	moveCursor((esize_t)_pos+_data.size());
 	countNumberofLine(); // TODO : use more intelligent counter
 	setModification(true);
 	return true;
 }
 
 void appl::Buffer::removeSelection(void) {
-	if (hasTextSelected() == true) {
-		esize_t startPos = getStartSelectionPos();
-		esize_t endPos = getStopSelectionPos();
-		m_data.remove(startPos, endPos-startPos);
-		regenerateHighLightAt(startPos, endPos-startPos, 0);
-		m_selectMode = false;
-		moveCursor(startPos);
-		countNumberofLine(); // TODO : use more intelligent counter
-		setModification(true);
+	if (hasTextSelected() == false) {
+		return;
 	}
+	esize_t startPos = getStartSelectionPos();
+	esize_t endPos = getStopSelectionPos();
+	m_data.remove(startPos, endPos-startPos);
+	regenerateHighLightAt(startPos, endPos-startPos, 0);
+	m_selectMode = false;
+	moveCursor(startPos);
+	countNumberofLine(); // TODO : use more intelligent counter
+	setModification(true);
 }
 
 void appl::Buffer::tryFindHighlightType(void) {
-	etk::FSNode file(m_name);
-	etk::UString type = appl::highlightManager::getTypeExtention(file.fileGetExtention());
+	etk::FSNode file(m_fileName);
+	std::string type = appl::highlightManager::getTypeExtention(file.fileGetExtention());
 	if (type.size() == 0) {
 		return;
 	}
-	APPL_CRITICAL("Find extention : " << type);
+	APPL_DEBUG("Find extention type: " << type);
 	setHighlightType(type);
 }
 
-void appl::Buffer::setHighlightType(const etk::UString& _type) {
+void appl::Buffer::setHighlightType(const std::string& _type) {
 	m_highlightType = "";
 	cleanHighLight();
 	if (m_highlight == NULL) {
 		appl::Highlight::release(m_highlight);
 	}
-	etk::UString resourceName = appl::highlightManager::getFileWithTypeType(_type);
+	std::string resourceName = appl::highlightManager::getFileWithTypeType(_type);
 	if (resourceName == "") {
 		return;
 	}
@@ -548,67 +539,67 @@ void appl::Buffer::regenerateHighLightAt(int32_t _pos, int32_t _nbDeleted, int32
 	int32_t startId;
 	int32_t stopId;
 	// clean data if needed
-	if (0 != m_HLDataPass1.size() != 0) {
-		// find element previous
-		findMainHighLightPosition(_pos, posEnd, startId, stopId, true);
-
-		// remove deprecated element
-		if (    startId == -1
-		     && stopId == -1) {
-			m_HLDataPass1.clear();
-		} else if (startId == -1) {
-			if (stopId == 0){
-				m_HLDataPass1.erase(0);
-				//APPL_DEBUG("1 * Erase 0");
-			} else {
-				m_HLDataPass1.eraseLen(0, stopId);
-				//APPL_DEBUG("2 * Erase 0->" << stopId);
-			}
-		} else if (stopId == -1) {
-			//APPL_DEBUG("3 * Erase " << startId+1 << "-> end");
-			m_HLDataPass1.eraseLen(startId+1, m_HLDataPass1.size() - startId);
-			stopId = -1;
-		} else {
-			int32_t currentSize = m_HLDataPass1.size();
-			//APPL_DEBUG("4 * Erase " << startId+1 << "->" << stopId << " in " << currentSize << " elements" );
-			m_HLDataPass1.eraseLen(startId+1, stopId - startId);
-			if (stopId == currentSize-1) {
-				stopId = -1;
-			}
-		}
-		//APPL_DEBUG("new size=" << (int32_t)m_HLDataPass1.size()-1);
-		// update position after the range position : 
-		int32_t elemStart;
-		if (startId == -1) {
-			elemStart = 0;
-		} else {
-			elemStart = startId+1;
-		}
-		for (esize_t iii = elemStart; iii < m_HLDataPass1.size(); ++iii) {
-			//APPL_DEBUG("move element=" << i);
-			m_HLDataPass1[iii].beginStart += _nbAdded - _nbDeleted;
-			m_HLDataPass1[iii].beginStop  += _nbAdded - _nbDeleted;
-			m_HLDataPass1[iii].endStart   += _nbAdded - _nbDeleted;
-			m_HLDataPass1[iii].endStop    += _nbAdded - _nbDeleted;
-		}
-		//Regenerate Element inside range
-		if (    startId == -1
-		     && stopId == -1) {
-			//APPL_DEBUG("*******  Regenerate ALL");
-			generateHighLightAt(0, m_data.size());
-		} else if(-1 == startId) {
-			//APPL_DEBUG("*******  Regenerate START");
-			generateHighLightAt(0, m_HLDataPass1[0].beginStart, 0);
-		} else if(-1 == stopId) {
-			//APPL_DEBUG("*******  Regenerate STOP");
-			generateHighLightAt(m_HLDataPass1[m_HLDataPass1.size() -1].endStop, m_data.size(), m_HLDataPass1.size());
-		} else {
-			//APPL_DEBUG("*******  Regenerate RANGE");
-			generateHighLightAt(m_HLDataPass1[startId].endStop, m_HLDataPass1[startId+1].beginStart, startId+1);
-		}
-	} else {
+	if (m_HLDataPass1.size() == 0) {
 		// Parse the new element ...
 		generateHighLightAt(0, m_data.size());
+		return;
+	}
+	// find element previous
+	findMainHighLightPosition(_pos, posEnd, startId, stopId, true);
+
+	// remove deprecated element
+	if (    startId == -1
+	     && stopId == -1) {
+		m_HLDataPass1.clear();
+	} else if (startId == -1) {
+		if (stopId == 0){
+			m_HLDataPass1.erase(m_HLDataPass1.begin());
+			//APPL_DEBUG("1 * Erase 0");
+		} else {
+			m_HLDataPass1.erase(m_HLDataPass1.begin(), m_HLDataPass1.begin()+stopId);
+			//APPL_DEBUG("2 * Erase 0->" << stopId);
+		}
+	} else if (stopId == -1) {
+		//APPL_DEBUG("3 * Erase " << startId+1 << "-> end");
+		m_HLDataPass1.erase(m_HLDataPass1.begin()+startId+1, m_HLDataPass1.end());
+		stopId = -1;
+	} else {
+		int32_t currentSize = m_HLDataPass1.size();
+		//APPL_DEBUG("4 * Erase " << startId+1 << "->" << stopId << " in " << currentSize << " elements" );
+		m_HLDataPass1.erase(m_HLDataPass1.begin()+startId+1, m_HLDataPass1.begin()+stopId);
+		if (stopId == currentSize-1) {
+			stopId = -1;
+		}
+	}
+	//APPL_DEBUG("new size=" << (int32_t)m_HLDataPass1.size()-1);
+	// update position after the range position : 
+	int32_t elemStart;
+	if (startId == -1) {
+		elemStart = 0;
+	} else {
+		elemStart = startId+1;
+	}
+	for (esize_t iii = elemStart; iii < m_HLDataPass1.size(); ++iii) {
+		//APPL_DEBUG("move element=" << i);
+		m_HLDataPass1[iii].beginStart += _nbAdded - _nbDeleted;
+		m_HLDataPass1[iii].beginStop  += _nbAdded - _nbDeleted;
+		m_HLDataPass1[iii].endStart   += _nbAdded - _nbDeleted;
+		m_HLDataPass1[iii].endStop    += _nbAdded - _nbDeleted;
+	}
+	//Regenerate Element inside range
+	if (    startId == -1
+	     && stopId == -1) {
+		//APPL_DEBUG("*******  Regenerate ALL");
+		generateHighLightAt(0, m_data.size());
+	} else if(-1 == startId) {
+		//APPL_DEBUG("*******  Regenerate START");
+		generateHighLightAt(0, m_HLDataPass1[0].beginStart, 0);
+	} else if(-1 == stopId) {
+		//APPL_DEBUG("*******  Regenerate STOP");
+		generateHighLightAt(m_HLDataPass1[m_HLDataPass1.size() -1].endStop, m_data.size(), m_HLDataPass1.size());
+	} else {
+		//APPL_DEBUG("*******  Regenerate RANGE");
+		generateHighLightAt(m_HLDataPass1[startId].endStop, m_HLDataPass1[startId+1].beginStart, startId+1);
 	}
 }
 

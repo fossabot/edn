@@ -35,34 +35,34 @@ namespace appl {
 			HighlightPattern(appl::GlyphPainting*& _glyphPainting);
 			~HighlightPattern(void);
 		private:
-			etk::UString m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")
+			std::string m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")
 		public:
-			void setName(etk::UString& _name) {
+			void setName(std::string& _name) {
 				m_paternName = _name;
 			};
-			etk::UString getName(void) {
+			std::string getName(void) {
 				return m_paternName;
 			};
 		private:
 			etk::RegExp<etk::Buffer>* m_regExpStart; //!< Start of Regular expression
 		public:
-			void setPaternStart(etk::UString& _regExp);
+			void setPaternStart(std::string& _regExp);
 		private:
 			etk::RegExp<etk::Buffer>* m_regExpStop; //!< Stop of Regular Expression
 		public:
-			void setPaternStop(etk::UString& _regExp);
+			void setPaternStop(std::string& _regExp);
 		private:
-			etk::UString m_colorName; //!< Current color name
+			std::string m_colorName; //!< Current color name
 			esize_t m_colorId; //!< Id of the the glyph painting
 		public:
-			void setColorGlyph(etk::UString& _colorName);
+			void setColorGlyph(std::string& _colorName);
 			const appl::GlyphDecoration& getColorGlyph(void) {
 				return (*m_glyphPainting)[m_colorId];
 			};
 		private:
-			etk::UChar m_escapeChar; //!< Escape char to prevent exeit of patern ....
+			char32_t m_escapeChar; //!< Escape char to prevent exeit of patern ....
 		public:
-			void setEscapeChar(const etk::UChar& _EscapeChar);
+			void setEscapeChar(const char32_t& _EscapeChar);
 		private:
 			bool m_multiline; //!< The patern is multiline
 		public:

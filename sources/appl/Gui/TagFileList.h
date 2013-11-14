@@ -20,9 +20,9 @@ extern const char * const applEventCtagsListUnSelect;
 namespace appl {
 	class TagListElement {
 		public:
-			etk::UString filename;
+			std::string filename;
 			int32_t      fileLine;
-			TagListElement(etk::UString& _file, int32_t _line) :
+			TagListElement(std::string& _file, int32_t _line) :
 			  filename(_file),
 			  fileLine(_line) {
 				
@@ -34,16 +34,16 @@ namespace appl {
 	class TagFileList : public widget::List {
 		private:
 			int32_t m_selectedLine;
-			etk::Vector<appl::TagListElement*> m_list;
+			std::vector<appl::TagListElement*> m_list;
 		public:
 			TagFileList(void);
 			~TagFileList(void);
 			// display API :
 			virtual etk::Color<> getBasicBG(void);
 			uint32_t getNuberOfColomn(void);
-			bool getTitle(int32_t _colomn, etk::UString& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
+			bool getTitle(int32_t _colomn, std::string& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
 			uint32_t getNuberOfRaw(void);
-			bool getElement(int32_t _colomn, int32_t _raw, etk::UString& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
+			bool getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
 			bool onItemEvent(int32_t _IdInput, enum ewol::keyEvent::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
 			// derived function
 			const char * const getObjectType(void) {
@@ -55,7 +55,7 @@ namespace appl {
 			 * @param[in] file Compleate file name
 			 * @param[in] jump line id
 			 */
-			void add(etk::UString& _file, int32_t _line);
+			void add(std::string& _file, int32_t _line);
 	};
 };
 

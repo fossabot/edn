@@ -20,7 +20,7 @@ namespace appl {
 			BufferManager(void);
 			~BufferManager(void);
 		private:
-			etk::Vector<appl::Buffer*> m_list; // list of all buffer curently open
+			std::vector<appl::Buffer*> m_list; // list of all buffer curently open
 		public:
 			/**
 			 * @brief Get a specific buffer with his name (can create a new buffer).
@@ -28,18 +28,18 @@ namespace appl {
 			 * @param[in] _createIfNeeded Create the buffer if not existed.
 			 * @return a pointer on the buffer
 			 */
-			appl::Buffer* get(const etk::UString& _fileName, bool _createIfNeeded=false);
+			appl::Buffer* get(const std::string& _fileName, bool _createIfNeeded=false);
 			/**
 			 * @brief Load a specific file, event if it not existed:
 			 * @param[in] _fileName Name of the file to open or create.
 			 */
-			void open(const etk::UString& _fileName);
+			void open(const std::string& _fileName);
 			/**
 			 * @brief Check if a buffer is already open.
 			 * @param[in] _fileName name of the file.
 			 * @return true if the buffer is already open.
 			 */
-			bool exist(const etk::UString& _fileName);
+			bool exist(const std::string& _fileName);
 			/**
 			 * @brief Get count of all buffer availlable.
 			 * @return Number of buffer

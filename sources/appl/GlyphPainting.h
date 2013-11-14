@@ -17,9 +17,9 @@
 namespace appl {
 	class GlyphPainting : public ewol::Resource {
 		private:
-			etk::Vector<appl::GlyphDecoration> m_list;
+			std::vector<appl::GlyphDecoration> m_list;
 		protected:
-			GlyphPainting(const etk::UString& _filename);
+			GlyphPainting(const std::string& _filename);
 			virtual ~GlyphPainting(void);
 		public:
 			const char* getType(void) {
@@ -34,7 +34,7 @@ namespace appl {
 			 * @param[in] _name Name of the deco.
 			 * @return id of the deco.
 			 */
-			esize_t request(const etk::UString& _name);
+			esize_t request(const std::string& _name);
 			/**
 			 * @brief Get Decoration handle.
 			 * @param[in] _id Id of the decoration.
@@ -58,7 +58,7 @@ namespace appl {
 			 * @param[in] _filename Name of the configuration file.
 			 * @return pointer on the resource or NULL if an error occured.
 			 */
-			static appl::GlyphPainting* keep(const etk::UString& _filename);
+			static appl::GlyphPainting* keep(const std::string& _filename);
 			/**
 			 * @brief release the keeped resources
 			 * @param[in,out] reference on the object pointer

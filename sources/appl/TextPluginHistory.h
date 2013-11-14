@@ -24,8 +24,8 @@ namespace appl {
 			  m_endPosRemoved(0) {
 				
 			};
-			etk::UString m_addedText;
-			etk::UString m_removedText;
+			std::string m_addedText;
+			std::string m_removedText;
 			esize_t m_posAdded;
 			esize_t m_endPosAdded;
 			esize_t m_endPosRemoved;
@@ -35,8 +35,8 @@ namespace appl {
 			TextPluginHistory(void);
 			~TextPluginHistory(void);
 		private:
-			etk::Vector<History*> m_undo; //!< History storing data
-			etk::Vector<History*> m_redo; //!< History storing data
+			std::vector<History*> m_undo; //!< History storing data
+			std::vector<History*> m_redo; //!< History storing data
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
@@ -44,10 +44,10 @@ namespace appl {
 			                              const ewol::EMessage& _msg);
 			virtual bool onWrite(appl::TextViewer& _textDrawer,
 			                     const appl::Buffer::Iterator& _pos,
-			                     const etk::UString& _data);
+			                     const std::string& _data);
 			virtual bool onReplace(appl::TextViewer& _textDrawer,
 			                       const appl::Buffer::Iterator& _pos,
-			                       const etk::UString& _data,
+			                       const std::string& _data,
 			                       const appl::Buffer::Iterator& _posEnd);
 			virtual bool onRemove(appl::TextViewer& _textDrawer,
 			                      const appl::Buffer::Iterator& _pos,

@@ -18,17 +18,17 @@
 
 
 void appl::Highlight::parseRules(exml::Element* _child,
-                           etk::Vector<HighlightPattern*>& _mListPatern,
+                           std::vector<HighlightPattern*>& _mListPatern,
                            int32_t _level) {
 	// Create the patern ...
 	HighlightPattern *myPattern = new HighlightPattern(m_paintingProperties);
 	// parse under Element
 	myPattern->parseRules(_child, _level);
 	// add element in the list
-	_mListPatern.pushBack(myPattern);
+	_mListPatern.push_back(myPattern);
 }
 
-appl::Highlight::Highlight(const etk::UString& _xmlFilename, const etk::UString& _colorFile) :
+appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _colorFile) :
   ewol::Resource(_xmlFilename),
   m_typeName("") {
 	// keep color propertiy file :
@@ -55,10 +55,10 @@ appl::Highlight::Highlight(const etk::UString& _xmlFilename, const etk::UString&
 			continue;
 		}
 		if (child->getValue() == "ext") {
-			etk::UString myData = child->getText();
+			std::string myData = child->getText();
 			if (myData.size()!=0) {
 				//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
-				m_listExtentions.pushBack(myData);
+				m_listExtentions.push_back(myData);
 			}
 		} else if (child->getValue() == "pass1") {
 			// get sub Nodes ...
@@ -107,17 +107,19 @@ appl::Highlight::~Highlight(void) {
 	m_listExtentions.clear();
 }
 
-bool appl::Highlight::hasExtention(const etk::UString& _ext) {
+bool appl::Highlight::hasExtention(const std::string& _ext) {
 	for (int32_t iii=0; iii<m_listExtentions.size(); iii++) {
-		if (m_listExtentions[iii] == _ext) {
+		APPL_VERBOSE("        check : " << m_listExtentions[iii] << "=?=" << _ext);
+		if (    m_listExtentions[iii] == "*." + _ext
+		     || m_listExtentions[iii] == _ext) {
 			return true;
 		}
 	}
 	return false;
 }
 
-bool appl::Highlight::fileNameCompatible(const etk::UString& _fileName) {
-	etk::UString extention;
+bool appl::Highlight::fileNameCompatible(const std::string& _fileName) {
+	std::string extention;
 	etk::FSNode file(_fileName);
 	if (true == file.fileHasExtention() ) {
 		extention = "*.";
@@ -158,7 +160,7 @@ void appl::Highlight::display(void) {
  */
 void appl::Highlight::parse(int32_t start,
                       int32_t stop,
-                      etk::Vector<appl::HighlightInfo> &metaData,
+                      std::vector<appl::HighlightInfo> &metaData,
                       int32_t addingPos,
                       etk::Buffer &buffer) {
 	if (0 > addingPos) {
@@ -184,7 +186,8 @@ void appl::Highlight::parse(int32_t start,
 					if (metaData[kkk].beginStart <= resultat.endStop) {
 						// remove element
 						//APPL_INFO("Erase element=" << kkk);
-						metaData.eraseLen(kkk, kkk+1);
+						// TODO : maybe an error here ...
+						metaData.erase(metaData.begin()+kkk, metaData.begin()+kkk*2+1);
 						// Increase the end of search
 						if (kkk < metaData.size()) {
 							// just befor the end of the next element
@@ -199,7 +202,7 @@ void appl::Highlight::parse(int32_t start,
 					}
 				}
 				// add curent element in the list ...
-				metaData.insert(addingPos, resultat);
+				metaData.insert(metaData.begin()+addingPos, resultat);
 				//APPL_DEBUG("INSERT at "<< addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
 				// update the current research starting element: (set position at the end of the current element
 				elementStart = resultat.endStop-1;
@@ -221,7 +224,7 @@ void appl::Highlight::parse(int32_t start,
  */
 void appl::Highlight::parse2(int32_t start,
                        int32_t stop,
-                       etk::Vector<appl::HighlightInfo> &metaData,
+                       std::vector<appl::HighlightInfo> &metaData,
                        etk::Buffer &buffer) {
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << "  == > position search: (" << start << "," << stop << ")" );
 	int32_t elementStart = start;
@@ -239,7 +242,7 @@ void appl::Highlight::parse2(int32_t start,
 			if (HLP_FIND_ERROR != ret) {
 				//APPL_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
 				// add curent element in the list ...
-				metaData.pushBack(resultat);
+				metaData.push_back(resultat);
 				elementStart = resultat.endStop-1;
 				// Exit current cycle
 				break;
@@ -250,7 +253,7 @@ void appl::Highlight::parse2(int32_t start,
 	}
 }
 
-appl::Highlight* appl::Highlight::keep(const etk::UString& _filename) {
+appl::Highlight* appl::Highlight::keep(const std::string& _filename) {
 	//EWOL_INFO("KEEP : appl::Highlight : file : \"" << _filename << "\"");
 	appl::Highlight* object = static_cast<appl::Highlight*>(getManager().localKeep(_filename));
 	if (NULL != object) {

@@ -23,7 +23,7 @@ namespace appl {
 
 	class DisplayHLData {
 		public:
-			etk::Vector<appl::HighlightInfo> HLData;
+			std::vector<appl::HighlightInfo> HLData;
 			int32_t posHLPass1;
 			int32_t posHLPass2;
 	};
@@ -34,7 +34,7 @@ namespace appl {
 				private:
 					int64_t m_current; //!< curent Id in the Buffer
 					appl::Buffer* m_data; //!< Pointer on the curent Buffer
-					etk::UChar m_value; //!< store vlue to prevent multiple calcule of getting the data
+					char32_t m_value; //!< store vlue to prevent multiple calcule of getting the data
 				public:
 					/**
 					 * @brief Basic itarator constructor with no link.
@@ -212,7 +212,7 @@ namespace appl {
 					 * @brief Get the value on the current element
 					 * @return The request element value
 					 */
-					etk::UChar operator* (void);
+					char32_t operator* (void);
 					/**
 					 * @brief Get the position in the buffer
 					 * @return The requested position.
@@ -268,12 +268,12 @@ namespace appl {
 			Buffer(void);
 			~Buffer(void);
 		private:
-			etk::UString m_fileName; //!< name of the file (with his path)
+			std::string m_fileName; //!< name of the file (with his path)
 		public:
 			/**
 			 * @brief get the curent filename of the Buffer
 			 */
-			const etk::UString& getFileName(void) {
+			const std::string& getFileName(void) {
 				return m_fileName;
 			}
 			/**
@@ -281,12 +281,12 @@ namespace appl {
 			 * @param[in] _name name of the file.
 			 * @return true if file corectly opened.
 			 */
-			bool loadFile(const etk::UString& _name);
+			bool loadFile(const std::string& _name);
 			/**
 			 * @brief Set a file name at this buffer (no saving ...)
 			 * @param[in] _name name of the file.
 			 */
-			void setFileName(const etk::UString& _name);
+			void setFileName(const std::string& _name);
 			/**
 			 * @brief save the file in the specify path.
 			 * @return true is saving well done
@@ -403,7 +403,7 @@ namespace appl {
 			 * @param[in] _value Current value to transform
 			 * @param[out] _out String that represent the curent value to display
 			 */
-			void expand(esize_t& _indent, const etk::UChar& _value, etk::UString& _out) const;
+			void expand(esize_t& _indent, const char32_t& _value, std::u32string& _out) const;
 			/**
 			 * @brief get the start of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.
@@ -423,7 +423,7 @@ namespace appl {
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
-			bool search(const Iterator& _pos, const etk::UChar& _search, Iterator& _result);
+			bool search(const Iterator& _pos, const char32_t& _search, Iterator& _result);
 			/**
 			 * @brief Search a character in the buffer in back mode.
 			 * @param[in] _pos Position to start the search of the element.
@@ -431,7 +431,7 @@ namespace appl {
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
-			bool searchBack(const Iterator& _pos, const etk::UChar& _search, Iterator& _result);
+			bool searchBack(const Iterator& _pos, const char32_t& _search, Iterator& _result);
 			/**
 			 * @brief find the first character of the line "nLines" forward
 			 * @param[in] _startPos Start position.
@@ -452,21 +452,21 @@ namespace appl {
 			 * @param[out] _data Output stream to copy.
 			 * @return true of no error occured.
 			 */
-			bool copy(etk::UString& _data);
+			bool copy(std::string& _data);
 			/**
 			 * @brief copy data in the _data ref value.
 			 * @param[out] _data Output stream to copy.
 			 * @param[in] _pos Position to add the data.
 			 * @param[in] _posEnd End position to end replace the data.
 			 */
-			void copy(etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
+			void copy(std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
 			/**
 			 * @brief Write data at a specific position
 			 * @param[in] _data Data to insert in the buffer
 			 * @param[in] _pos Position to add the data.
 			 * @return true if the write is done corectly
 			 */
-			bool write(const etk::UString& _data, const appl::Buffer::Iterator& _pos);
+			bool write(const std::string& _data, const appl::Buffer::Iterator& _pos);
 			/**
 			 * @brief Write data at a specific position
 			 * @param[in] _data Data to insert in the buffer
@@ -474,7 +474,7 @@ namespace appl {
 			 * @param[in] _posEnd End position to end replace the data.
 			 * @return true if the write is done corectly
 			 */
-			bool replace(const etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
+			bool replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
 		public: // iterator section :
 			/**
 			 * @brief Get an iterator an an specific position
@@ -523,10 +523,10 @@ namespace appl {
 			 */
 			void countNumberofLine(void);
 		protected:
-			etk::UString m_highlightType; //!< Name of the highlight type
+			std::string m_highlightType; //!< Name of the highlight type
 			
 			appl::Highlight* m_highlight; //!< internal link with the Highlight system
-			etk::Vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
+			std::vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
 		public:
 			/**
 			 * @brief Find the Highligh capability
@@ -536,12 +536,12 @@ namespace appl {
 			 * @brief Set type of highlight
 			 * @param[in] _type type of the highlight
 			 */
-			void setHighlightType(const etk::UString& _type);
+			void setHighlightType(const std::string& _type);
 			/**
 			 * @brief Get type of highlight
 			 * @return Type of the highlight
 			 */
-			const etk::UString& setHighlightType(void) {
+			const std::string& setHighlightType(void) {
 				return m_highlightType;
 			};
 			

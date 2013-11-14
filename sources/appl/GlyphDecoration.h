@@ -16,25 +16,25 @@ namespace appl {
 	class GlyphDecoration {
 		public:
 			// Constructeur
-			GlyphDecoration(const etk::UString& _newColorName = "no_name");
+			GlyphDecoration(const std::string& _newColorName = "no_name");
 			~GlyphDecoration(void) {
 				// nothing to do ...
 			};
 		private:
-			etk::UString m_colorName; //!< curent color Name
+			std::string m_colorName; //!< curent color Name
 		public:
 			/**
 			 * @brief Set color name of the element.
 			 * @param[in] _newColorName new color name.
 			 */
-			void setName(const etk::UString& _newColorName) {
+			void setName(const std::string& _newColorName) {
 				m_colorName = _newColorName;
 			};
 			/**
 			 * @brief Get the color name.
 			 * @return The name of the color.
 			 */
-			const etk::UString& getName(void) const {
+			const std::string& getName(void) const {
 				return m_colorName;
 			};
 		private:
@@ -44,7 +44,7 @@ namespace appl {
 			 * @brief Set foreground color.
 			 * @param[in] _myColor new color description.
 			 */
-			void setForeground(const etk::UString& _myColor) {
+			void setForeground(const std::string& _myColor) {
 				m_colorFG = _myColor;
 			};
 			/**
@@ -68,7 +68,7 @@ namespace appl {
 			 * @brief Set background color.
 			 * @param[in] _myColor new color description.
 			 */
-			void setBackground(const etk::UString& _myColor) {
+			void setBackground(const std::string& _myColor) {
 				m_colorBG = _myColor;
 			};
 			/**

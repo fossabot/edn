@@ -14,7 +14,7 @@
 #define __class__ "GlyphDecoration"
 
 
-appl::GlyphDecoration::GlyphDecoration(const etk::UString &_newColorName) :
+appl::GlyphDecoration::GlyphDecoration(const std::string &_newColorName) :
 	m_colorName(_newColorName),
 	m_colorFG(etk::color::black),
 	m_colorBG(etk::color::none),

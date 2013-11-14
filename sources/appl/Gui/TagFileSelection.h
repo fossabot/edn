@@ -20,7 +20,7 @@ namespace appl {
 	class TagFileSelection : public widget::PopUp {
 		private:
 			appl::TagFileList* m_listTag;
-			etk::UString m_eventNamed;
+			std::string m_eventNamed;
 		public:
 			TagFileSelection(void);
 			virtual ~TagFileSelection(void);
@@ -29,7 +29,7 @@ namespace appl {
 			 * @param[in] file Compleate file name
 			 * @param[in] jump line id
 			 */
-			void addCtagsNewItem(etk::UString file, int32_t line);
+			void addCtagsNewItem(std::string file, int32_t line);
 		public: // herited function
 			const char * const getObjectType(void) { return "EwolFileChooser"; };
 			void onReceiveMessage(const ewol::EMessage& _msg);

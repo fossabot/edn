@@ -46,24 +46,24 @@ class myParamGlobal : public ewol::EObject {
 		bool onSetConfig(const ewol::EConfig& _conf) {
 			// Not set the EObject node parameter (name  == > not change ...)
 			if (_conf.getConfig() == configEOL) {
-				m_displayEOL = _conf.getData().toBool();
+				m_displayEOL = stobool(_conf.getData());
 				return true;
 			}
 			if (_conf.getConfig() == configAutoIndent) {
-				m_AutoIndent = _conf.getData().toBool();
+				m_AutoIndent = stobool(_conf.getData());
 				return true;
 			}
 			if (_conf.getConfig() == configShowTabChar) {
-				m_displayTabChar = _conf.getData().toBool();
+				m_displayTabChar = stobool(_conf.getData());
 				return true;
 			}
 			if (_conf.getConfig() == configShowSpaceChar) {
-				m_displaySpaceChar = _conf.getData().toBool();
+				m_displaySpaceChar = stobool(_conf.getData());
 				return true;
 			}
 			return false;
 		}
-		bool onGetConfig(const char* _config, etk::UString& _result) const {
+		bool onGetConfig(const char* _config, std::string& _result) const {
 			// Not set the EObject node parameter (name  == > not change ...)
 			if (_config == configEOL) {
 				if (true == m_displayEOL) {

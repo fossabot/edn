@@ -34,14 +34,14 @@
 
 namespace appl 
 {
-	etk::UString getVersion(void)
+	std::string getVersion(void)
 	{
 		#define FIRST_YEAR (2010)
-		etk::UString tmpOutput = (date::getYear()-FIRST_YEAR);
+		std::string tmpOutput = std::to_string(date::getYear()-FIRST_YEAR);
 		tmpOutput += ".";
-		tmpOutput += date::getMonth();
+		tmpOutput += std::to_string(date::getMonth());
 		tmpOutput += ".";
-		tmpOutput += date::getDay();
+		tmpOutput += std::to_string(date::getDay());
 		return tmpOutput;
 	}
 	
@@ -67,7 +67,7 @@ class ParameterAboutGui : public widget::Sizer {
 				mySpacer->setExpand(bvec2(true,true));
 				subWidgetAdd(mySpacer);
 			}
-			etk::UString tmpLabel = "<left>";
+			std::string tmpLabel = "<left>";
 			tmpLabel += "  <b>Editeur De N'ours</b> : v:";
 			tmpLabel += appl::getVersion();
 			tmpLabel += "<br/>";
@@ -239,7 +239,7 @@ MainWindows::MainWindows(void) {
 	
 	
 	// add generic shortcut ...
-	//                 (shift, control, alt,  meta,  etk::UChar unicodeValue, const char * generateEventId, etk::UString& data)
+	//                 (shift, control, alt,  meta,  char32_t unicodeValue, const char * generateEventId, std::string& data)
 	shortCutAdd("ctrl+o",       ednMsgGuiOpen, "", true);
 	shortCutAdd("ctrl+n",       ednMsgGuiNew,  "", true);
 	
@@ -322,7 +322,7 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 			APPL_ERROR("can not call unexistant buffer manager ... ");
 			return;
 		}
-		if (_msg.getData().toLower() == "current") {
+		if (to_lower(_msg.getData()) == "current") {
 			appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
 			if (tmpBuffer == NULL) {
 				APPL_WARNING("No buffer selected !!! ");
@@ -340,7 +340,7 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 				APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
 			}
 			return;
-		} else if (_msg.getData().toLower() == "all") {
+		} else if (to_lower(_msg.getData()) == "all") {
 			APPL_TODO("Need to save all the buffers ... ");
 			for (esize_t iii=0; iii < m_bufferManager->size(); ++iii) {
 				appl::Buffer* tmpBuffer = m_bufferManager->get(iii);
@@ -386,8 +386,8 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 				} else {
 					tmpWidget->setTitle("Save files As...");
 					tmpWidget->setValidateLabel("Save");
-					etk::UString folder = "/home/";
-					etk::UString fileName = "";
+					std::string folder = "/home/";
+					std::string fileName = "";
 					if (true == myBuffer->haveName()) {
 						etk::FSNode tmpName = myBuffer->getFileName();
 						folder = tmpName.getNameFolder();
@@ -403,7 +403,7 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		}
 	} else if (_msg.getMessage() == ednEventPopUpFileSaveAs) {
 		// get the filename : 
-		etk::UString tmpData = _msg.getData();
+		std::string tmpData = _msg.getData();
 		APPL_DEBUG("Request Saving As file : " << tmpData);
 		/*
 		BufferManager::get(m_currentSavingAsIdBuffer)->setFileName(tmpData);
@@ -417,14 +417,14 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		if (NULL != tmpBuffer) {
 			etk::FSNode compleateName = tmpBuffer->getFileName();
 			bool isModify = tmpBuffer->isModify();
-			etk::UString directName = compleateName.getName();
+			std::string directName = compleateName.getName();
 			if (true == isModify) {
 				directName += " *";
 			}
 			if (NULL != m_widgetLabelFileName) {
-				m_widgetLabelFileName->setLabel(etk::UString("<left>") + directName + "</left>");
+				m_widgetLabelFileName->setLabel(std::string("<left>") + directName + "</left>");
 			}
-			etk::UString windowsTitle = "edn - ";
+			std::string windowsTitle = "edn - ";
 			windowsTitle += directName;
 			setTitle(windowsTitle);
 			return;

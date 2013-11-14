@@ -49,12 +49,12 @@ bool appl::TextPluginHistory::onReceiveMessage(appl::TextViewer& _textDrawer,
 			return true;
 		}
 		if (m_redo[m_redo.size()-1] == NULL) {
-			m_redo.popBack();
+			m_redo.pop_back();
 			return true;
 		}
 		appl::History *tmpElement = m_redo[m_redo.size()-1];
-		m_redo.popBack();
-		m_undo.pushBack(tmpElement);
+		m_redo.pop_back();
+		m_undo.push_back(tmpElement);
 		_textDrawer.m_buffer->replace(tmpElement->m_addedText,
 		                              _textDrawer.m_buffer->position(tmpElement->m_posAdded),
 		                              _textDrawer.m_buffer->position(tmpElement->m_endPosRemoved) );
@@ -65,7 +65,7 @@ bool appl::TextPluginHistory::onReceiveMessage(appl::TextViewer& _textDrawer,
 			return true;
 		}
 		if (m_undo[m_undo.size()-1] == NULL) {
-			m_undo.popBack();
+			m_undo.pop_back();
 			return true;
 		}
 		/*
@@ -80,8 +80,8 @@ bool appl::TextPluginHistory::onReceiveMessage(appl::TextViewer& _textDrawer,
 		}
 		*/
 		appl::History *tmpElement = m_undo[m_undo.size()-1];
-		m_undo.popBack();
-		m_redo.pushBack(tmpElement);
+		m_undo.pop_back();
+		m_redo.push_back(tmpElement);
 		_textDrawer.m_buffer->replace(tmpElement->m_removedText,
 		                              _textDrawer.m_buffer->position(tmpElement->m_posAdded),
 		                              _textDrawer.m_buffer->position(tmpElement->m_endPosAdded) );
@@ -122,7 +122,7 @@ void appl::TextPluginHistory::clearUndo(void) {
 
 bool appl::TextPluginHistory::onWrite(appl::TextViewer& _textDrawer,
                                       const appl::Buffer::Iterator& _pos,
-                                      const etk::UString& _data) {
+                                      const std::string& _data) {
 	if (isEnable() == false) {
 		return false;
 	}
@@ -136,7 +136,7 @@ bool appl::TextPluginHistory::onWrite(appl::TextViewer& _textDrawer,
 	if (tmpElement != NULL) {
 		tmpElement->m_endPosAdded = (esize_t)_textDrawer.m_buffer->cursor();
 		clearRedo();
-		m_undo.pushBack(tmpElement);
+		m_undo.push_back(tmpElement);
 	}
 	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.m_buffer->cursor());
 	return true;
@@ -144,7 +144,7 @@ bool appl::TextPluginHistory::onWrite(appl::TextViewer& _textDrawer,
 
 bool appl::TextPluginHistory::onReplace(appl::TextViewer& _textDrawer,
                                         const appl::Buffer::Iterator& _pos,
-                                        const etk::UString& _data,
+                                        const std::string& _data,
                                         const appl::Buffer::Iterator& _posEnd) {
 	if (isEnable() == false) {
 		return false;
@@ -160,7 +160,7 @@ bool appl::TextPluginHistory::onReplace(appl::TextViewer& _textDrawer,
 	if (tmpElement != NULL) {
 		tmpElement->m_endPosAdded = (esize_t)_textDrawer.m_buffer->cursor();
 		clearRedo();
-		m_undo.pushBack(tmpElement);
+		m_undo.push_back(tmpElement);
 	}
 	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.m_buffer->cursor());
 	return true;
@@ -180,7 +180,7 @@ bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
 		tmpElement->m_endPosRemoved = (esize_t)_posEnd;
 		_textDrawer.m_buffer->copy(tmpElement->m_removedText, _pos, _posEnd);
 		clearRedo();
-		m_undo.pushBack(tmpElement);
+		m_undo.push_back(tmpElement);
 	}
 	_textDrawer.m_buffer->removeSelection();
 	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.m_buffer->cursor());

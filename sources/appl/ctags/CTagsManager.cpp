@@ -36,13 +36,13 @@ class CTagsManager: public ewol::EObject {
 		int32_t                     multipleJump(void);
 		void                        jumpTo(void);
 		void                        printTag(const tagEntry *entry);
-		etk::UString                getFolder(etk::UString &inputString);
-		etk::UString                m_tagFolderBase;
-		etk::UString                m_tagFilename;
+		std::string                getFolder(std::string &inputString);
+		std::string                m_tagFolderBase;
+		std::string                m_tagFilename;
 		tagFile *                   m_ctagFile;
 		// history system
 		int32_t                     m_historyPos;
-		etk::Vector<etk::FSNode*>   m_historyList;
+		std::vector<etk::FSNode*>   m_historyList;
 		void                        registerHistory(void);
 };
 
@@ -126,7 +126,7 @@ void CTagsManager::onReceiveMessage(const ewol::EMessage& _msg) {
 				// remove element ....
 				delete(m_historyList[id]);
 				m_historyList[id]=NULL;
-				m_historyList.popBack();
+				m_historyList.pop_back();
 			}
 		} else {
 			
@@ -140,7 +140,7 @@ void CTagsManager::onReceiveMessage(const ewol::EMessage& _msg) {
 		sscanf(_msg.getData().c_str(), "%d:%s", &lineID, tmp);
 		// generate envents
 		sendMultiCast(ednMsgOpenFile, tmp);
-		sendMultiCast(ednMsgGuiGotoLine, lineID - 1);
+		sendMultiCast(ednMsgGuiGotoLine, std::to_string(lineID - 1));
 	}
 }
 
@@ -174,7 +174,7 @@ void CTagsManager::registerHistory(void) {
 		etk::FSNode * bufferFilename = new etk::FSNode();
 		*bufferFilename = tmpBuf->getFileName();
 		// TODO : bufferFilename->setLineNumber(tmpBuf->getCurrentLine());
-		m_historyList.pushBack(bufferFilename);
+		m_historyList.push_back(bufferFilename);
 	}
 	*/
 }
@@ -182,7 +182,7 @@ void CTagsManager::registerHistory(void) {
 void CTagsManager::jumpTo(void) {
 	if (NULL != m_ctagFile) {
 		// get the middle button of the clipboard  == > represent the current selection ...
-		etk::UString data = ewol::clipBoard::get(ewol::clipBoard::clipboardSelection);
+		std::string data = ewol::clipBoard::get(ewol::clipBoard::clipboardSelection);
 		APPL_DEBUG("clipboard data : \"" << data << "\"");
 		if (data.size() == 0) {
 			APPL_INFO("No current selection");
@@ -194,7 +194,7 @@ void CTagsManager::jumpTo(void) {
 			int32_t numberOfTags = 0;
 			
 			// For all tags : Save in an internal Structure :
-			etk::UString tmpFile(m_tagFolderBase + "/" + entry.file);
+			std::string tmpFile(m_tagFolderBase + "/" + entry.file);
 			etk::FSNode myfile(tmpFile);
 			int32_t lineID = entry.address.lineNumber;
 			printTag(&entry);
@@ -220,7 +220,7 @@ void CTagsManager::jumpTo(void) {
 				registerHistory();
 				APPL_INFO(" OPEN the TAG file Destination : " << tmpFile );
 				sendMultiCast(ednMsgOpenFile, myfile.getName());
-				sendMultiCast(ednMsgGuiGotoLine, lineID - 1);
+				sendMultiCast(ednMsgGuiGotoLine, std::to_string(lineID - 1));
 			}
 		} else {
 			APPL_INFO("no tag find ...");

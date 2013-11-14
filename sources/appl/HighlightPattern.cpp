@@ -36,14 +36,14 @@ appl::HighlightPattern::~HighlightPattern(void) {
 	}
 }
 
-void appl::HighlightPattern::setPaternStart(etk::UString& _regExp) {
+void appl::HighlightPattern::setPaternStart(std::string& _regExp) {
 	if (m_regExpStart == NULL) {
 		return;
 	}
 	m_regExpStart->setRegExp(_regExp);
 }
 
-void appl::HighlightPattern::setPaternStop(etk::UString& _regExp) {
+void appl::HighlightPattern::setPaternStop(std::string& _regExp) {
 	if (m_regExpStop != NULL) {
 		delete(m_regExpStop);
 		m_regExpStop = NULL;
@@ -58,11 +58,11 @@ void appl::HighlightPattern::setPaternStop(etk::UString& _regExp) {
 	}
 }
 
-void appl::HighlightPattern::setEscapeChar(const etk::UChar& _EscapeChar) {
+void appl::HighlightPattern::setEscapeChar(const char32_t& _EscapeChar) {
 	m_escapeChar = _EscapeChar;
 }
 
-void appl::HighlightPattern::setColorGlyph(etk::UString& _colorName) {
+void appl::HighlightPattern::setColorGlyph(std::string& _colorName) {
 	m_colorName = _colorName;
 	m_colorId = m_glyphPainting->request(m_colorName);
 	APPL_VERBOSE("Resuest color name '" << m_colorName << "' => id=" << m_colorId);
@@ -94,8 +94,8 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 	*/
 	//--------------------------------------------------------------------------------------------
 	// process attribute	
-	etk::UString highLightName = _child->getAttribute("name");
-	etk::UString myEdnDataTmp = "???";
+	std::string highLightName = _child->getAttribute("name");
+	std::string myEdnDataTmp = "???";
 	if (highLightName.size()!=0) {
 		myEdnDataTmp = highLightName;
 	}
@@ -104,34 +104,34 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 	
 	exml::Element* xChild = _child->getNamed("color");
 	if (NULL != xChild) {
-		etk::UString myData = xChild->getText();
+		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			etk::UString myEdnData = myData;
+			std::string myEdnData = myData;
 			setColorGlyph(myEdnData);
 		}
 	}
 	xChild = _child->getNamed("start");
 	if (NULL != xChild) {
-		etk::UString myData = xChild->getText();
+		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			etk::UString myEdnData = myData;
+			std::string myEdnData = myData;
 			setPaternStart(myEdnData);
 		}
 	}
 	xChild = _child->getNamed("end");
 	if (NULL != xChild) {
-		etk::UString myData = xChild->getText();
+		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			etk::UString myEdnData = myData;
+			std::string myEdnData = myData;
 			setPaternStop(myEdnData);
 		}
 	}
 	xChild = _child->getNamed("EscapeChar");
 	if (NULL != xChild) {
-		etk::UString myData = xChild->getText();
+		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			setEscapeChar(myData[0]);

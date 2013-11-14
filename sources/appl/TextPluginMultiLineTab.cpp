@@ -30,7 +30,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	if (_event.getStatus() != ewol::keyEvent::statusDown) {
 		return false;
 	}
-	etk::UChar localValue = _event.getChar();
+	char32_t localValue = _event.getChar();
 	if (localValue != etk::UChar::Tabulation) {
 		return false;
 	}
@@ -43,7 +43,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	itStart = _textDrawer.m_buffer->getStartLine(itStart);
 	itStop = _textDrawer.m_buffer->getEndLine(itStop);
 	// copy the curent data in a classicle string:
-	etk::UString data;
+	std::string data;
 	_textDrawer.m_buffer->copy(data, itStart, itStop);
 	// TODO : Change this ...
 	bool m_useTabs = true;
@@ -51,17 +51,17 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	
 	if (true == _event.getSpecialKey().isSetShift() ) {
 		// un-indent
-		data.add(0, etk::UChar::Return);
+		data.insert(0, 1, etk::UChar::Return);
 		for (esize_t iii=1; iii<data.size(); ++iii) {
 			if (data[iii-1] == etk::UChar::Return) {
 				if(data[iii] == etk::UChar::Tabulation) {
-					data.remove(iii);
+					data.erase(iii);
 				} else if(data[iii] == etk::UChar::Space) {
 					for (esize_t jjj=0; jjj<m_tabDist && jjj+iii<data.size() ; jjj++) {
 						if(data[iii] == etk::UChar::Space) {
-							data.remove(iii);
+							data.erase(iii);
 						} else if(data[iii] == etk::UChar::Tabulation) {
-							data.remove(iii);
+							data.erase(iii);
 							break;
 						} else {
 							break;
@@ -70,24 +70,22 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 				}
 			}
 		}
-		data.remove(0);
+		data.erase(0);
 	} else {
 		// indent
-		data.add(0, etk::UChar::Return);
+		data.insert(0, 1, etk::UChar::Return);
 		for (esize_t iii=1; iii<data.size(); iii++) {
 			if (data[iii-1] == etk::UChar::Return) {
 				if (true == _event.getSpecialKey().isSetCtrl() ) {
-					data.add(iii, etk::UChar::Space);
+					data.insert(iii, 1, etk::UChar::Space);
 				} else if (true == m_useTabs) {
-					data.add(iii, etk::UChar::Tabulation);
+					data.insert(iii, 1, etk::UChar::Tabulation);
 				} else {
-					for (int32_t jjj=0; jjj<m_tabDist; jjj++) {
-						data.add(iii, etk::UChar::Space);
-					}
+					data.insert(iii, m_tabDist, etk::UChar::Space);
 				}
 			}
 		}
-		data.remove(0);
+		data.erase(0);
 	}
 	// Real replace of DATA :
 	_textDrawer.replace(data, itStart, itStop);

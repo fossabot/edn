@@ -43,16 +43,16 @@ bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
 		startLine = _textDrawer.m_buffer->selectStart();
 	}
 	startLine = _textDrawer.m_buffer->getStartLine(startLine);
-	etk::UString data = etk::UChar::Return;
+	std::string data = "\n";
 	
 	
 	for (appl::Buffer::Iterator it = startLine+1;
 	     (bool)it == true;
 	     ++it) {
 		if (*it == etk::UChar::Space) {
-			data.append(etk::UChar::Space);
+			data += etk::UChar::Space;
 		} else if(*it == etk::UChar::Tabulation) {
-			data.append(etk::UChar::Tabulation);
+			data += etk::UChar::Tabulation;
 		} else {
 			break;
 		}

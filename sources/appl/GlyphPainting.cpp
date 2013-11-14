@@ -18,7 +18,7 @@
 
 
 
-appl::GlyphPainting::GlyphPainting(const etk::UString& _filename) :
+appl::GlyphPainting::GlyphPainting(const std::string& _filename) :
   ewol::Resource(_filename) {
 	EWOL_DEBUG("SFP : load \"" << _filename << "\"");
 	reload();
@@ -34,6 +34,13 @@ void appl::GlyphPainting::reload(void) {
 		APPL_ERROR("Can not load file : '" << m_name << "' = " << etk::FSNode(m_name).getFileSystemName());
 		return;
 	}
+	// for debug only :
+	/*
+	APPL_WARNING("Load file : '" << m_name << "' = " << etk::FSNode(m_name).getFileSystemName());
+	std::string tmppppp;
+	doc.generate(tmppppp);
+	APPL_DEBUG(tmppppp);
+	*/
 	ejson::Array* baseArray = doc.getArray("ednColor");
 	if (baseArray == NULL) {
 		APPL_ERROR("Can not get basic array : 'ednColor'");
@@ -45,9 +52,9 @@ void appl::GlyphPainting::reload(void) {
 			APPL_DEBUG(" can not get object in 'ednColor' id=" << iii);
 			continue;
 		}
-		etk::UString name = tmpObj->getStringValue("name", "");
-		etk::UString background = tmpObj->getStringValue("background", "#FFF0");
-		etk::UString foreground = tmpObj->getStringValue("foreground", "#000F");
+		std::string name = tmpObj->getStringValue("name", "");
+		std::string background = tmpObj->getStringValue("background", "#FFF0");
+		std::string foreground = tmpObj->getStringValue("foreground", "#000F");
 		bool italic = tmpObj->getBooleanValue("italic", false);
 		bool bold = tmpObj->getBooleanValue("bold", false);
 		APPL_VERBOSE("find new color : '" << name << "' fg='" << foreground << "' bg='" << background << "' italic='" << italic << "' bold='" << bold << "'");
@@ -70,12 +77,12 @@ void appl::GlyphPainting::reload(void) {
 		tmpDeco.setBackground(background);
 		tmpDeco.setItalic(italic);
 		tmpDeco.setBold(bold);
-		m_list.pushBack(tmpDeco);
+		m_list.push_back(tmpDeco);
 	}
 }
 
 
-esize_t appl::GlyphPainting::request(const etk::UString& _name) {
+esize_t appl::GlyphPainting::request(const std::string& _name) {
 	for (esize_t iii=0; iii<m_list.size(); ++iii) {
 		if (m_list[iii].getName() == _name) {
 			return iii;
@@ -83,11 +90,11 @@ esize_t appl::GlyphPainting::request(const etk::UString& _name) {
 	}
 	// create an empty deco ...
 	appl::GlyphDecoration tmpDeco(_name);
-	m_list.pushBack(tmpDeco);
+	m_list.push_back(tmpDeco);
 	return m_list.size()-1;
 }
 
-appl::GlyphPainting* appl::GlyphPainting::keep(const etk::UString& _filename) {
+appl::GlyphPainting* appl::GlyphPainting::keep(const std::string& _filename) {
 	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
 	appl::GlyphPainting* object = static_cast<appl::GlyphPainting*>(getManager().localKeep(_filename));
 	if (NULL != object) {

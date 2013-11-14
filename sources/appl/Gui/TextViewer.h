@@ -42,7 +42,7 @@ namespace appl {
 		private:
 			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 		public:
-			TextViewer(const etk::UString& _fontName="", int32_t _fontSize=-1);
+			TextViewer(const std::string& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);
 		private:
 			appl::Buffer* m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
@@ -50,7 +50,7 @@ namespace appl {
 			ewol::Drawing m_displayDrawing; //!< Other diaplay requested.
 		public:
 			void setFontSize(int32_t _size);
-			void setFontName(const etk::UString& _fontName);
+			void setFontName(const std::string& _fontName);
 		protected: // derived function
 			virtual void onDraw(void);
 		public:  // Derived function
@@ -73,10 +73,10 @@ namespace appl {
 		public:
 			// TODO : Doc : write data on buffer
 			bool moveCursor(const appl::Buffer::Iterator& _pos);
-			bool write(const etk::UString& _data);
-			bool write(const etk::UString& _data, const appl::Buffer::Iterator& _pos);
-			bool replace(const etk::UString& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
-			bool replace(const etk::UString& _data);
+			bool write(const std::string& _data);
+			bool write(const std::string& _data, const appl::Buffer::Iterator& _pos);
+			bool replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
+			bool replace(const std::string& _data);
 			void remove(void);
 			
 			

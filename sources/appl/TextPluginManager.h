@@ -69,7 +69,7 @@ namespace appl {
 		 */
 		bool onWrite(appl::TextViewer& _textDrawer,
 		             const appl::Buffer::Iterator& _pos,
-		             const etk::UString& _data);
+		             const std::string& _data);
 		/**
 		 * @brief Called when data is written in the buffer, and some are removed.
 		 * @param[in] _widget Reference on the widget caller.
@@ -80,7 +80,7 @@ namespace appl {
 		 */
 		bool onReplace(appl::TextViewer& _textDrawer,
 		               const appl::Buffer::Iterator& _pos,
-		               const etk::UString& _data,
+		               const std::string& _data,
 		               const appl::Buffer::Iterator& _posEnd);
 		/**
 		 * @brief Called when data is removed.

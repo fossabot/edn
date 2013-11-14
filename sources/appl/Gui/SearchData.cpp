@@ -14,13 +14,13 @@
 #define __class__	"SearchData"
 
 
-static etk::UString m_findRequest = "";
+static std::string m_findRequest = "";
 
-void SearchData::setSearch(const etk::UString &myData)
+void SearchData::setSearch(const std::string &myData)
 {
 	m_findRequest = myData;
 }
-void SearchData::getSearch(etk::UString &myData)
+void SearchData::getSearch(std::string &myData)
 {
 	myData = m_findRequest;
 }
@@ -32,12 +32,12 @@ bool SearchData::isSearchEmpty(void)
 	return true;
 }
 
-static etk::UString m_replaceRequest = "";
-void SearchData::setReplace(const etk::UString &myData)
+static std::string m_replaceRequest = "";
+void SearchData::setReplace(const std::string &myData)
 {
 	m_replaceRequest = myData;
 }
-void SearchData::getReplace(etk::UString &myData)
+void SearchData::getReplace(std::string &myData)
 {
 	myData = m_replaceRequest;
 }

@@ -159,7 +159,7 @@ void appl::TagFileSelection::onReceiveMessage(const ewol::EMessage& _msg) {
  * @param[in] file Compleate file name
  * @param[in] jump line id
  */
-void appl::TagFileSelection::addCtagsNewItem(etk::UString _file, int32_t _line) {
+void appl::TagFileSelection::addCtagsNewItem(std::string _file, int32_t _line) {
 	if (NULL != m_listTag) {
 		m_listTag->add(_file, _line);
 	}

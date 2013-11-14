@@ -36,7 +36,7 @@ appl::BufferManager::~BufferManager(void) {
 	m_list.clear();
 }
 
-appl::Buffer* appl::BufferManager::get(const etk::UString& _fileName, bool _createIfNeeded) {
+appl::Buffer* appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
 	for (esize_t iii = 0; iii < m_list.size(); ++iii) {
 		if (m_list[iii] == NULL) {
 			continue;
@@ -53,7 +53,7 @@ appl::Buffer* appl::BufferManager::get(const etk::UString& _fileName, bool _crea
 			return NULL;
 		}
 		tmp->loadFile(_fileName);
-		m_list.pushBack(tmp);
+		m_list.push_back(tmp);
 		return tmp;
 	}
 	return NULL;
@@ -72,12 +72,12 @@ void appl::BufferManager::onObjectRemove(ewol::EObject * _removeObject) {
 			continue;
 		}
 		m_list[iii] = NULL;
-		m_list.remove(iii);
+		m_list.erase(m_list.begin()+iii);
 		return;
 	}
 }
 
-bool appl::BufferManager::exist(const etk::UString& _fileName) {
+bool appl::BufferManager::exist(const std::string& _fileName) {
 	for (esize_t iii = 0; iii < m_list.size(); ++iii) {
 		if (m_list[iii] == NULL) {
 			continue;
@@ -89,7 +89,7 @@ bool appl::BufferManager::exist(const etk::UString& _fileName) {
 	return false;
 }
 
-void appl::BufferManager::open(const etk::UString& _fileName) {
+void appl::BufferManager::open(const std::string& _fileName) {
 	if (exist(_fileName) == false) {
 		(void)get(_fileName, true);
 		sendMultiCast(appl::MsgSelectNewFile, _fileName);
@@ -160,7 +160,7 @@ class classBufferManager: public ewol::EObject {
 
 	private:
 		
-		etk::Vector<BufferText*> listBuffer;  //!< element List of the char Elements
+		std::vector<BufferText*> listBuffer;  //!< element List of the char Elements
 		
 		void        removeAll(void);          //!< remove all buffer
 		int32_t     m_idSelected;
@@ -363,7 +363,7 @@ int32_t	classBufferManager::create(void) {
 	// allocate a new Buffer
 	BufferText *myBuffer = new BufferText();
 	// add at the list of element
-	listBuffer.pushBack(myBuffer);
+	listBuffer.push_back(myBuffer);
 	int32_t basicID = listBuffer.size() - 1;
 	return basicID;
 }
@@ -380,7 +380,7 @@ int32_t classBufferManager::open(etk::FSNode &myFile) {
 		// allocate a new Buffer
 		BufferText *myBuffer = new BufferText(myFile);
 		// add at the list of element
-		listBuffer.pushBack(myBuffer);
+		listBuffer.push_back(myBuffer);
 		return listBuffer.size() - 1;
 	} else {
 		// the buffer already existed  == > we open it ...
@@ -510,7 +510,7 @@ int32_t classBufferManager::witchBuffer(int32_t iEmeElement) {
 }
 
 
-appl::Buffer* get(const etk::UString& _filename);
+appl::Buffer* get(const std::string& _filename);
 appl::Buffer* get(esize_t _bufferID);
 esize_t size(void):
 
