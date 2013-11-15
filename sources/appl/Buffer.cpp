@@ -16,6 +16,7 @@
 const char* const appl::Buffer::eventIsModify = "edn-is-modify";
 const char* const appl::Buffer::eventIsSave = "edn-is-save";
 const char* const appl::Buffer::eventSelectChange = "edn-select-change";
+const char* const appl::Buffer::eventChangeName = "edn-buffer-name-change";
 
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
 	m_value = etk::UChar::Null;
@@ -109,13 +110,15 @@ appl::Buffer::Buffer(void) :
   m_cursorPos(0),
   m_cursorSelectPos(-1),
   m_cursorPreferredCol(-1),
-  m_nbLines(0),
+  m_nbLines(1),
   m_highlight(NULL) {
 	static int32_t bufferBaseId = 0;
 	m_fileName = "No Name " + std::to_string(bufferBaseId);
+	bufferBaseId++;
 	addEventId(eventIsModify);
 	addEventId(eventIsSave);
 	addEventId(eventSelectChange);
+	addEventId(eventChangeName);
 }
 
 appl::Buffer::~Buffer(void) {
@@ -151,6 +154,7 @@ void appl::Buffer::setFileName(const std::string& _name) {
 	}
 	m_fileName = _name;
 	m_hasFileName = true;
+	generateEventId(eventChangeName);
 	setModification(true);
 }
 
@@ -178,6 +182,10 @@ void appl::Buffer::setModification(bool _status) {
 
 
 void appl::Buffer::countNumberofLine(void) {
+	if (m_data.size() == 0) {
+		m_nbLines = 1;
+		return;
+	}
 	m_nbLines = 0;
 	for (Iterator it = begin();
 	     (bool)it == true;
@@ -470,7 +478,11 @@ void appl::Buffer::copy(std::string& _data, const appl::Buffer::Iterator& _pos, 
 }
 
 bool appl::Buffer::write(const std::string& _data, const appl::Buffer::Iterator& _pos) {
-	m_data.insert(_pos, (int8_t*)(_data.c_str()), _data.size());
+	if ((esize_t)_pos <= 0) {
+		m_data.insert(0, (int8_t*)(_data.c_str()), _data.size());
+	} else {
+		m_data.insert(_pos, (int8_t*)(_data.c_str()), _data.size());
+	}
 	regenerateHighLightAt(_pos, 0, _data.size());
 	m_selectMode = false;
 	moveCursor((esize_t)_pos+_data.size());

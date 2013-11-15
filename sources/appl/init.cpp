@@ -34,9 +34,6 @@
 #include <regex>
 #include <etk/unicode.h>
 
-char32_t mychar32;
-
-
 /**
  * @brief Main of the program (This can be set in every case, but it is not used in Andoid...).
  * @param std IO

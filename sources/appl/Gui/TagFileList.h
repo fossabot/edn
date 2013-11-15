@@ -45,10 +45,6 @@ namespace appl {
 			uint32_t getNuberOfRaw(void);
 			bool getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
 			bool onItemEvent(int32_t _IdInput, enum ewol::keyEvent::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
-			// derived function
-			const char * const getObjectType(void) {
-				return "appl::TagFileList";
-			};
 		public:
 			/**
 			 * @brief add a Ctags item on the curent list

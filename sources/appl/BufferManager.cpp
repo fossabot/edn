@@ -36,12 +36,23 @@ appl::BufferManager::~BufferManager(void) {
 	m_list.clear();
 }
 
+
+appl::Buffer* appl::BufferManager::createNewBuffer(void) {
+	appl::Buffer* tmp = new appl::Buffer();
+	if (tmp == NULL) {
+		APPL_ERROR("Can not allocate the Buffer (empty).");
+		return NULL;
+	}
+	m_list.push_back(tmp);
+	sendMultiCast(appl::MsgSelectNewFile, tmp->getFileName());
+	return tmp;
+}
+
 appl::Buffer* appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
 	for (esize_t iii = 0; iii < m_list.size(); ++iii) {
 		if (m_list[iii] == NULL) {
 			continue;
 		}
-
 		if (m_list[iii]->getFileName() == _fileName) {
 			return m_list[iii];
 		}

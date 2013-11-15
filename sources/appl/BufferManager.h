@@ -55,6 +55,11 @@ namespace appl {
 			appl::Buffer* get(esize_t _id) {
 				return m_list[_id];
 			}
+			/**
+			 * @brief Create a new buffer empty.
+			 * @return Created buffer or NULL.
+			 */
+			appl::Buffer* createNewBuffer(void);
 		private:
 			appl::Buffer* m_bufferSelected;
 		public:

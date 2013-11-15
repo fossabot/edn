@@ -31,7 +31,6 @@ namespace appl {
 			 */
 			void addCtagsNewItem(std::string file, int32_t line);
 		public: // herited function
-			const char * const getObjectType(void) { return "EwolFileChooser"; };
 			void onReceiveMessage(const ewol::EMessage& _msg);
 			void onObjectRemove(ewol::EObject * _removeObject);
 	};

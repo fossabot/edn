@@ -32,6 +32,8 @@
 #include <ewol/renderer/eContext.h>
 #include <date/date.h>
 #include <ewol/widget/meta/StdPopUp.h>
+#include <appl/Gui/WorkerSaveFile.h>
+#include <appl/Gui/WorkerCloseFile.h>
 
 namespace appl 
 {
@@ -269,6 +271,7 @@ MainWindows::MainWindows(void) {
 	// Generic event ...
 	registerMultiCast(ednMsgGuiSaveAs);
 	registerMultiCast(ednMsgProperties);
+	registerMultiCast(ednMsgGuiNew);
 	registerMultiCast(ednMsgGuiOpen);
 	registerMultiCast(ednMsgGuiClose);
 	// to update the title ... 
@@ -279,9 +282,7 @@ MainWindows::MainWindows(void) {
 
 
 MainWindows::~MainWindows(void) {
-	if (m_bufferManager != NULL) {
-		appl::BufferManager::release(m_bufferManager);
-	}
+	appl::BufferManager::release(m_bufferManager);
 }
 
 
@@ -292,7 +293,7 @@ const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
 void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 	ewol::Windows::onReceiveMessage(_msg);
 	
-	//APPL_INFO("Receive Event from the main windows ... : \"" << eventId << "\"  == > data=\"" << data << "\"" );
+	APPL_INFO("Receive Event from the main windows: " << _msg );
 	// open file Section ...
 	if (_msg.getMessage() == ednMsgGuiOpen) {
 		widget::FileChooser* tmpWidget = new widget::FileChooser();
@@ -315,131 +316,6 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		// apply widget pop-up ...
 		popUpWidgetPush(tmpWidget);
 		tmpWidget->registerOnEvent(this, widget::FileChooser::eventValidate, ednEventPopUpFileSelected);
-	} else if (_msg.getMessage() == ednEventPopUpFileSelected) {
-		APPL_DEBUG("Request opening the file : " << _msg.getData());
-		if (m_bufferManager == NULL) {
-			APPL_ERROR("can not call unexistant buffer manager ... ");
-			return;
-		}
-		m_bufferManager->open(_msg.getData());
-	} else if (_msg.getMessage() == ednMsgGuiSave) {
-		APPL_DEBUG("Request saving the file : " << _msg.getData());
-		if (m_bufferManager == NULL) {
-			APPL_ERROR("can not call unexistant buffer manager ... ");
-			return;
-		}
-		if (to_lower(_msg.getData()) == "current") {
-			appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
-			if (tmpBuffer == NULL) {
-				APPL_WARNING("No buffer selected !!! ");
-				createPopUpMessage(ewol::Windows::messageTypeError, "No buffer selected !!!");
-				return;
-			}
-			// Note : for direct saving, we do not chack the saving status ==> all time saving ...
-			if (tmpBuffer->hasFileName() == false) {
-				saveAsPopUp(tmpBuffer);
-				return;
-			}
-			if (tmpBuffer->storeFile() == false) {
-				displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
-				APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
-			}
-			return;
-		} else if (to_lower(_msg.getData()) == "all") {
-			APPL_TODO("Need to save all the buffers ... ");
-			for (esize_t iii=0; iii < m_bufferManager->size(); ++iii) {
-				appl::Buffer* tmpBuffer = m_bufferManager->get(iii);
-				if (tmpBuffer == NULL) {
-					continue;
-				}
-				if (tmpBuffer->isModify() == false) {
-					continue;
-				}
-				if (tmpBuffer->hasFileName() == false) {
-					// TODO : Has no name ==> must generate a save AS !!!
-					APPL_TODO("Has no name ==> must generate a save AS");
-					continue;
-				}
-				if (tmpBuffer->storeFile() == false) {
-					displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
-					APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
-				}
-			}
-			return;
-		} else {
-			APPL_ERROR("UNKNOW request : " << _msg);
-		}
-	} else if (_msg.getMessage() == ednMsgGuiSaveAs) {
-		if (_msg.getData() == "") {
-			APPL_ERROR("Null data for Save As file ... ");
-		} else {
-			m_currentSavingAsIdBuffer = -1;
-			if (_msg.getData() == "current") {
-				m_currentSavingAsIdBuffer = -1;//BufferManager::getSelected();
-			} else {
-				sscanf(_msg.getData().c_str(), "%d", &m_currentSavingAsIdBuffer);
-			}
-			
-			/*
-			if (false == BufferManager::exist(m_currentSavingAsIdBuffer)) {
-				APPL_ERROR("Request saveAs on non existant Buffer ID=" << m_currentSavingAsIdBuffer);
-			} else {
-				BufferText* myBuffer = BufferManager::get(m_currentSavingAsIdBuffer);
-				widget::FileChooser* tmpWidget = new widget::FileChooser();
-				if (NULL == tmpWidget) {
-					APPL_ERROR("Can not allocate widget  == > display might be in error");
-				} else {
-					tmpWidget->setTitle("Save files As...");
-					tmpWidget->setValidateLabel("Save");
-					std::string folder = "/home/";
-					std::string fileName = "";
-					if (true == myBuffer->haveName()) {
-						etk::FSNode tmpName = myBuffer->getFileName();
-						folder = tmpName.getNameFolder();
-						fileName = tmpName.getNameFile();
-					}
-					tmpWidget->setFolder(folder);
-					tmpWidget->setFileName(fileName);
-					popUpWidgetPush(tmpWidget);
-					tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
-				}
-			}
-			*/
-		}
-	} else if (_msg.getMessage() == ednEventPopUpFileSaveAs) {
-		// get the filename : 
-		std::string tmpData = _msg.getData();
-		APPL_DEBUG("Request Saving As file : " << tmpData);
-		/*
-		BufferManager::get(m_currentSavingAsIdBuffer)->setFileName(tmpData);
-		sendMultiCast(ednMsgGuiSave, m_currentSavingAsIdBuffer);
-		*/
-	} else if(    _msg.getMessage() == ednMsgBufferState
-	           || _msg.getMessage() == ednMsgBufferId) {
-		// the buffer change we need to update the widget string
-		/*
-		BufferText* tmpBuffer = BufferManager::get(BufferManager::getSelected());
-		if (NULL != tmpBuffer) {
-			etk::FSNode compleateName = tmpBuffer->getFileName();
-			bool isModify = tmpBuffer->isModify();
-			std::string directName = compleateName.getName();
-			if (true == isModify) {
-				directName += " *";
-			}
-			if (NULL != m_widgetLabelFileName) {
-				m_widgetLabelFileName->setLabel(std::string("<left>") + directName + "</left>");
-			}
-			std::string windowsTitle = "edn - ";
-			windowsTitle += directName;
-			setTitle(windowsTitle);
-			return;
-		} else {
-			m_widgetLabelFileName->setLabel("");
-			setTitle("edn");
-		}
-		*/
-		return;
-		// TODO : set the Title ....
 	} else if (_msg.getMessage() == ednMsgProperties) {
 		// Request the parameter GUI
 		widget::Parameter* tmpWidget = new widget::Parameter();
@@ -462,14 +338,86 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();
 	} else if (_msg.getMessage() == ednMsgGuiExit) {
-		// TODO ...
-	} else if (_msg.getMessage() == ednMsgGuiClose) {
+		// TODO : ...
+	}
+	// Note : Fore all next message we need to acces to the buffer manager ==> just check one time ...
+	if (m_bufferManager == NULL) {
+		APPL_ERROR("can not call unexistant buffer manager ... ");
+		return;
+	}
+	if (_msg.getMessage() == ednMsgGuiNew) {
 		if (m_bufferManager == NULL) {
 			APPL_ERROR("can not call unexistant buffer manager ... ");
 			return;
 		}
+		(void)m_bufferManager->createNewBuffer();
+	} else if (_msg.getMessage() == ednEventPopUpFileSelected) {
+		APPL_DEBUG("Request opening the file : " << _msg.getData());
+		m_bufferManager->open(_msg.getData());
+	} else if (_msg.getMessage() == ednMsgGuiSave) {
+		APPL_DEBUG("Request saving the file : " << _msg.getData());
+		if (to_lower(_msg.getData()) == "current") {
+			appl::WorkerSaveFile* tmpWorker = new appl::WorkerSaveFile("");
+			#if 0
+			appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
+			if (tmpBuffer == NULL) {
+				APPL_WARNING("No buffer selected !!! ");
+				createPopUpMessage(ewol::Windows::messageTypeError, "No buffer selected !!!");
+				return;
+			}
+			// Note : for direct saving, we do not chack the saving status ==> all time saving ...
+			if (tmpBuffer->hasFileName() == false) {
+				saveAsPopUp(tmpBuffer);
+				return;
+			}
+			if (tmpBuffer->storeFile() == false) {
+				displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
+				APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
+			}
+			#endif
+			return;
+		} else if (to_lower(_msg.getData()) == "all") {
+			appl::WorkerSaveAllFile* tmpWorker = new appl::WorkerSaveAllFile();
+			#if 0
+			APPL_TODO("Need to save all the buffers ... ");
+			for (esize_t iii=0; iii < m_bufferManager->size(); ++iii) {
+				appl::Buffer* tmpBuffer = m_bufferManager->get(iii);
+				if (tmpBuffer == NULL) {
+					continue;
+				}
+				if (tmpBuffer->isModify() == false) {
+					continue;
+				}
+				if (tmpBuffer->hasFileName() == false) {
+					// TODO : Has no name ==> must generate a save AS !!!
+					APPL_TODO("Has no name ==> must generate a save AS");
+					continue;
+				}
+				if (tmpBuffer->storeFile() == false) {
+					displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
+					APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
+				}
+			}
+			#endif
+			return;
+		} else {
+			APPL_ERROR("UNKNOW request : " << _msg);
+		}
+	} else if (_msg.getMessage() == ednMsgGuiSaveAs) {
+		appl::WorkerSaveFile* tmpWorker = new appl::WorkerSaveFile("", true);
+		#if 0
+		appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
+		if (tmpBuffer == NULL) {
+			APPL_ERROR("Error to get the buffer ... " << _msg.getData());
+			return;
+		}
+		saveAsPopUp(tmpBuffer);
+		#endif
+	} else if (_msg.getMessage() == ednMsgGuiClose) {
 		// Get a ref on the buffer selected (if null, no buffer was selected ...)
 		if (_msg.getData() == "current") {
+			appl::WorkerCloseFile* tmpWorker = new appl::WorkerCloseFile("");
+			#if 0
 			appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
 			if (tmpBuffer == NULL) {
 				APPL_ERROR("Error to get the buffer ... " << _msg.getData());
@@ -480,16 +428,16 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 			} else {
 				tmpBuffer->removeObject();
 			}
+			#endif
 		} else {
 			// ALL !!!
+			appl::WorkerCloseAllFile* tmpWorker = new appl::WorkerCloseAllFile();
+			#if 0
 			// TODO : How to generate the save for all ...
 			APPL_TODO("Close all the buffer.");
+			#endif
 		}
 	} else if (_msg.getMessage() == mainWindowsRequestSaveFile) { // return after a choice of close...
-		if (m_bufferManager == NULL) {
-			APPL_ERROR("can not call unexistant buffer manager ... ");
-			return;
-		}
 		if (m_bufferManager->exist(_msg.getData()) == false) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
@@ -503,14 +451,12 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 			APPL_ERROR("Will never arrive");
 			saveAsPopUp(tmpBuffer);
 		} else {
-			// TODO : Save the file ...
+			if (tmpBuffer->storeFile() == false) {
+				APPL_ERROR("Error when loading the file " << _msg.getData());
+				displayErrorMessage("Error when loading the file <br/><i>" + _msg.getData() + "</i>");
+			}
 		}
 	} else if (_msg.getMessage() == mainWindowsRequestSaveFileAs) { // return after a choice of close...
-		
-		if (m_bufferManager == NULL) {
-			APPL_ERROR("can not call unexistant buffer manager ... ");
-			return;
-		}
 		if (m_bufferManager->exist(_msg.getData()) == false) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
@@ -522,10 +468,6 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		}
 		saveAsPopUp(tmpBuffer);
 	} else if (_msg.getMessage() == mainWindowsRequestcloseFileNoCheck) { // return after a choice of close...
-		if (m_bufferManager == NULL) {
-			APPL_ERROR("can not call unexistant buffer manager ... ");
-			return;
-		}
 		if (m_bufferManager->exist(_msg.getData()) == false) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
@@ -546,24 +488,7 @@ void MainWindows::saveAsPopUp(appl::Buffer* _buffer) {
 		APPL_ERROR("Call With NULL input...");
 		return;
 	}
-	widget::FileChooser* tmpWidget = new widget::FileChooser();
-	if (NULL == tmpWidget) {
-		APPL_ERROR("Can not allocate widget  == > display might be in error");
-		return;
-	}
-	tmpWidget->setTitle("Save files As...");
-	tmpWidget->setValidateLabel("Save");
-	std::string folder = "/home/";
-	std::string fileName = "";
-	/*if (true == _buffer->hasFileName()) */{
-		etk::FSNode tmpName(_buffer->getFileName());
-		folder = tmpName.getNameFolder();
-		fileName = tmpName.getNameFile();
-	}
-	tmpWidget->setFolder(folder);
-	tmpWidget->setFileName(fileName);
-	popUpWidgetPush(tmpWidget);
-	//tmpWidget->registerOnEvent(this, ewolEventFileChooserValidate, ednEventPopUpFileSaveAs);
+	appl::WorkerSaveFile* tmpObject = new appl::WorkerSaveFile(_buffer->getFileName());
 }
 
 void MainWindows::closeNotSavedFile(appl::Buffer* _buffer) {

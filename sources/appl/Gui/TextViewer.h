@@ -54,7 +54,6 @@ namespace appl {
 		protected: // derived function
 			virtual void onDraw(void);
 		public:  // Derived function
-			const char * const getObjectType(void) { return "appl::TextViewer"; };
 			virtual bool calculateMinSize(void);
 			virtual void onRegenerateDisplay(void);
 			virtual void onReceiveMessage(const ewol::EMessage& _msg);

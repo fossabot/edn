@@ -25,7 +25,11 @@ def Create(target):
 		'appl/Gui/Search.cpp',
 		'appl/Gui/SearchData.cpp',
 		'appl/Gui/TagFileSelection.cpp',
-		'appl/Gui/TagFileList.cpp'])
+		'appl/Gui/TagFileList.cpp',
+		'appl/Gui/WorkerSaveFile.cpp',
+		'appl/Gui/WorkerSaveAllFile.cpp',
+		'appl/Gui/WorkerCloseFile.cpp',
+		'appl/Gui/WorkerCloseAllFile.cpp'])
 	
 	# All needed for the buffer management :
 	myModule.AddSrcFile([

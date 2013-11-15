@@ -264,6 +264,7 @@ namespace appl {
 			static const char* const eventIsModify;
 			static const char* const eventIsSave;
 			static const char* const eventSelectChange;
+			static const char* const eventChangeName;
 		public:
 			Buffer(void);
 			~Buffer(void);

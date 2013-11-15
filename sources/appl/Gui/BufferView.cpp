@@ -46,6 +46,7 @@ BufferView::BufferView(void) {
 	registerMultiCast(ednMsgBufferId);
 	registerMultiCast(appl::MsgSelectNewFile);
 	registerMultiCast(appl::MsgSelectChange);
+	registerMultiCast(appl::MsgNameChange);
 	m_selectedID = -1;
 	m_selectedIdRequested = -1;
 	// load buffer manager:
@@ -87,12 +88,23 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 		}
 		buffer->registerOnEvent(this, appl::Buffer::eventIsSave);
 		buffer->registerOnEvent(this, appl::Buffer::eventIsModify);
+		buffer->registerOnEvent(this, appl::Buffer::eventChangeName);
 		appl::dataBufferStruct* tmp = new appl::dataBufferStruct(_msg.getData(), buffer);
 		if (tmp == NULL) {
 			APPL_ERROR("Allocation error of the tmp buffer list element");
 			return;
 		}
 		m_list.push_back(tmp);
+		markToRedraw();
+		return;
+	}
+	if (_msg.getMessage() == appl::Buffer::eventChangeName) {
+		for (auto element : m_list) {
+			if (element == NULL) {
+				continue;
+			}
+			element->m_bufferName = element->m_buffer->getFileName();
+		}
 		markToRedraw();
 		return;
 	}

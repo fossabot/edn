@@ -60,6 +60,7 @@
 namespace appl {
 	extern const char* const MsgSelectNewFile;      // data : "buffer/name"
 	extern const char* const MsgSelectChange;       // data : ""
+	extern const char* const MsgNameChange;         // data : ""
 };
 
 #endif

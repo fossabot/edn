@@ -38,7 +38,6 @@ class MainWindows : public ewol::Windows {
 		 */
 		void closeNotSavedFile(appl::Buffer* _buffer);
 	public: // Derived function
-		virtual const char * const getObjectType(void) { return "MainWindows"; };
 		virtual void onReceiveMessage(const ewol::EMessage& _msg);
 		virtual void onObjectRemove(ewol::EObject * _removeObject);
 };
