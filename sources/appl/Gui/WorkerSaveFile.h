@@ -17,7 +17,7 @@ namespace appl {
 		public:
 			static const char* eventSaveDone;
 		public:
-			WorkerSaveFile(const std::string& _bufferName, bool _forceSaveAs=false);
+			WorkerSaveFile(const std::string& _bufferName, bool _forceSaveAs=true);
 			virtual ~WorkerSaveFile(void);
 		private:
 			std::string m_bufferName;

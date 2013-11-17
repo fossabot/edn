@@ -9,19 +9,23 @@
 #include <ewol/renderer/eContext.h>
 #include <appl/debug.h>
 #include <appl/Gui/WorkerCloseFile.h>
+#include <ewol/widget/meta/StdPopUp.h>
 
 #undef __class__
 #define __class__ "WorkerCloseFile"
 
+const char* appl::WorkerCloseFile::eventCloseDone = "close-file-done";
+
 static const char* s_saveAsValidate = "save-as-validate";
 static const char* s_saveValidate = "save-validate";
 static const char* s_closeValidate = "close-validate";
+static const char* s_saveAsDone = "save-as-done";
 
 appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
-  m_closeAfter(_close),
   m_bufferName(_bufferName),
   m_worker(NULL),
   m_bufferManager(NULL) {
+	addEventId(eventCloseDone);
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
 	
@@ -29,6 +33,16 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		autoDestroy();
 		return;
+	}
+	if (m_bufferName == "") {
+		// need to find the curent file ...
+		appl::Buffer* tmpp = m_bufferManager->getBufferSelected();
+		if (tmpp == NULL) {
+			APPL_ERROR("No selected buffer now ...");
+			autoDestroy();
+			return;
+		}
+		m_bufferName = tmpp->getFileName();
 	}
 	if (m_bufferManager->exist(m_bufferName) == false) {
 		APPL_ERROR("Try to close an non-existant file :" << m_bufferName);
@@ -43,8 +57,7 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 	}
 	if (tmpBuffer->isModify() == false) {
 		tmpBuffer->removeObject();
-		// TODO : Send message ...
-		
+		generateEventId(eventCloseDone);
 		autoDestroy();
 		return;
 	}
@@ -94,10 +107,45 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::EMessage& _msg) {
 	APPL_DEBUG("have message : " << _msg);
 	if (_msg.getMessage() == s_saveAsValidate) {
 		
+		appl::WorkerSaveFile* tmpWorker = new appl::WorkerSaveFile(m_bufferName);
+		m_worker->registerOnEvent(this, appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
 	} else if (_msg.getMessage() == s_saveValidate) {
-		
-	} else if (_msg.getMessage() == s_closeValidate) {
-		
+		if (m_bufferManager->exist(m_bufferName) == false) {
+			APPL_ERROR("Try to close an non-existant file :" << m_bufferName);
+			autoDestroy();
+			return;
+		}
+		appl::Buffer* tmpBuffer = m_bufferManager->get(m_bufferName);
+		if (tmpBuffer == NULL) {
+			APPL_ERROR("Error to get the buffer : " << m_bufferName);
+			autoDestroy();
+			return;
+		}
+		if (tmpBuffer->storeFile() == false) {
+			ewol::Windows* tmpWindows = ewol::getContext().getWindows();
+			if (tmpWindows == NULL) {
+				return;
+			}
+			tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
+		} else {
+			generateEventId(eventCloseDone);
+		}
+	} else if (    _msg.getMessage() == s_closeValidate
+	            || _msg.getMessage() == s_saveAsDone) {
+		if (m_bufferManager->exist(m_bufferName) == false) {
+			APPL_ERROR("Try to close an non-existant file :" << m_bufferName);
+			autoDestroy();
+			return;
+		}
+		appl::Buffer* tmpBuffer = m_bufferManager->get(m_bufferName);
+		if (tmpBuffer == NULL) {
+			APPL_ERROR("Error to get the buffer : " << m_bufferName);
+			autoDestroy();
+			return;
+		}
+		tmpBuffer->removeObject();
+		generateEventId(eventCloseDone);
+		tmpBuffer = NULL;
 	}
 }
 

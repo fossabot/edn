@@ -8,10 +8,10 @@
 
 #include <ewol/renderer/eContext.h>
 #include <appl/debug.h>
-#include <appl/Gui/WorkerSaveFile.h>
+#include <appl/Gui/WorkerSaveAllFile.h>
 
 #undef __class__
-#define __class__ "WorkerSaveFile"
+#define __class__ "WorkerSaveAllFile"
 
 static const char* s_saveAsDone = "save-as-done";
 
@@ -49,7 +49,7 @@ appl::WorkerSaveAllFile::WorkerSaveAllFile(void) :
 	// create the worker :
 	m_worker = new appl::WorkerSaveFile(m_bufferNameList.front());
 	// remove first element :
-	m_bufferNameList.pop_front();
+	m_bufferNameList.erase(m_bufferNameList.begin());
 	if (m_bufferNameList.size() == 0) {
 		autoDestroy();
 		return;
@@ -74,7 +74,7 @@ void appl::WorkerSaveAllFile::onReceiveMessage(const ewol::EMessage& _msg) {
 		// create the worker :
 		m_worker = new appl::WorkerSaveFile(m_bufferNameList.front());
 		// remove first element :
-		m_bufferNameList.pop_front();
+		m_bufferNameList.erase(m_bufferNameList.begin());
 		if (m_bufferNameList.size() == 0) {
 			autoDestroy();
 			return;

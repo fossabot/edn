@@ -13,7 +13,7 @@
 #undef __class__
 #define __class__ "WorkerSaveFile"
 
-static const char* appl::WorkerSaveFile::eventSaveDone = "save-file-done";
+const char* appl::WorkerSaveFile::eventSaveDone = "save-file-done";
 
 static const char* s_saveAsValidate = "save-as-validate";
 
@@ -30,7 +30,16 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 		autoDestroy();
 		return;
 	}
-	// TODO : if "" ==> it is current buffer selected ...
+	if (m_bufferName == "") {
+		// need to find the curent file ...
+		appl::Buffer* tmpp = m_bufferManager->getBufferSelected();
+		if (tmpp == NULL) {
+			APPL_ERROR("No selected buffer now ...");
+			autoDestroy();
+			return;
+		}
+		m_bufferName = tmpp->getFileName();
+	}
 	if (m_bufferManager->exist(m_bufferName) == false) {
 		APPL_ERROR("Try to save an non-existant file :" << m_bufferName);
 		autoDestroy();
@@ -41,6 +50,14 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 		APPL_ERROR("Error to get the buffer : " << m_bufferName);
 		autoDestroy();
 		return;
+	}
+	if (_forceSaveAs == false) {
+		if (tmpBuffer->hasFileName() == true) {
+			tmpBuffer->storeFile();
+			generateEventId(eventSaveDone);
+			autoDestroy();
+			return;
+		}
 	}
 	m_chooser = new widget::FileChooser();
 	if (NULL == m_chooser) {
@@ -93,6 +110,8 @@ void appl::WorkerSaveFile::onReceiveMessage(const ewol::EMessage& _msg) {
 				return;
 			}
 			tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
+		} else {
+			generateEventId(eventSaveDone);
 		}
 	}
 }

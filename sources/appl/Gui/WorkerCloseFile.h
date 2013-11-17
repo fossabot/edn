@@ -16,6 +16,8 @@
 namespace appl {
 	class WorkerCloseFile : public ewol::EObject {
 		public:
+			static const char* eventCloseDone;
+		public:
 			// note : if == "" ==> current ...
 			WorkerCloseFile(const std::string& _bufferName);
 			virtual ~WorkerCloseFile(void);

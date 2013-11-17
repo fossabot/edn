@@ -33,7 +33,9 @@
 #include <date/date.h>
 #include <ewol/widget/meta/StdPopUp.h>
 #include <appl/Gui/WorkerSaveFile.h>
+#include <appl/Gui/WorkerSaveAllFile.h>
 #include <appl/Gui/WorkerCloseFile.h>
+#include <appl/Gui/WorkerCloseAllFile.h>
 
 namespace appl 
 {
@@ -357,7 +359,7 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 	} else if (_msg.getMessage() == ednMsgGuiSave) {
 		APPL_DEBUG("Request saving the file : " << _msg.getData());
 		if (to_lower(_msg.getData()) == "current") {
-			appl::WorkerSaveFile* tmpWorker = new appl::WorkerSaveFile("");
+			appl::WorkerSaveFile* tmpWorker = new appl::WorkerSaveFile("", false);
 			#if 0
 			appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
 			if (tmpBuffer == NULL) {
