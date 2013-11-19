@@ -419,6 +419,13 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 	if (relativePos.x()<0) {
 		relativePos.setX(0);
 	}
+	if (    _event.getId() == 12
+	     && _event.getStatus() == ewol::keyEvent::statusSingle) {
+		APPL_DEBUG("kjhkjhkjh");
+		// Rat5 save event
+		sendMultiCast(ednMsgGuiSave, "current");
+		return true;
+	}
 	// just forward event  == > manage directly in the buffer
 	if (_event.getId() == 1) {
 		// mouse selection :

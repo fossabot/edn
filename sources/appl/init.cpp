@@ -109,6 +109,9 @@ etk::CCout& operator <<(etk::CCout& _os, const std::regex_error& _e) {
 bool APP_Init(ewol::eContext& _context) {
 	APPL_INFO(" == > init APPL (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
 	
+	//etk::theme::setName("COLOR", "colorBlack/");
+	etk::theme::setName("COLOR", "colorWhite/");
+	
 	// TODO : remove this : Move if in the windows properties
 	_context.setSize(vec2(800, 600));
 	
@@ -122,9 +125,6 @@ bool APP_Init(ewol::eContext& _context) {
 	
 	// set the application icon ...
 	_context.setIcon("DATA:icon.png");
-	
-	etk::theme::setName("COLOR", "colorBlack/");
-	etk::theme::setName("COLOR", "colorWhite/");
 	
 	// init internal global value
 	globals::init();

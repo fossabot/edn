@@ -271,6 +271,7 @@ MainWindows::MainWindows(void) {
 	
 	
 	// Generic event ...
+	registerMultiCast(ednMsgGuiSave);
 	registerMultiCast(ednMsgGuiSaveAs);
 	registerMultiCast(ednMsgProperties);
 	registerMultiCast(ednMsgGuiNew);
@@ -360,84 +361,21 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		APPL_DEBUG("Request saving the file : " << _msg.getData());
 		if (to_lower(_msg.getData()) == "current") {
 			appl::WorkerSaveFile* tmpWorker = new appl::WorkerSaveFile("", false);
-			#if 0
-			appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
-			if (tmpBuffer == NULL) {
-				APPL_WARNING("No buffer selected !!! ");
-				createPopUpMessage(ewol::Windows::messageTypeError, "No buffer selected !!!");
-				return;
-			}
-			// Note : for direct saving, we do not chack the saving status ==> all time saving ...
-			if (tmpBuffer->hasFileName() == false) {
-				saveAsPopUp(tmpBuffer);
-				return;
-			}
-			if (tmpBuffer->storeFile() == false) {
-				displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
-				APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
-			}
-			#endif
 			return;
 		} else if (to_lower(_msg.getData()) == "all") {
 			appl::WorkerSaveAllFile* tmpWorker = new appl::WorkerSaveAllFile();
-			#if 0
-			APPL_TODO("Need to save all the buffers ... ");
-			for (esize_t iii=0; iii < m_bufferManager->size(); ++iii) {
-				appl::Buffer* tmpBuffer = m_bufferManager->get(iii);
-				if (tmpBuffer == NULL) {
-					continue;
-				}
-				if (tmpBuffer->isModify() == false) {
-					continue;
-				}
-				if (tmpBuffer->hasFileName() == false) {
-					// TODO : Has no name ==> must generate a save AS !!!
-					APPL_TODO("Has no name ==> must generate a save AS");
-					continue;
-				}
-				if (tmpBuffer->storeFile() == false) {
-					displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
-					APPL_ERROR("can not save the file !!! '" << tmpBuffer->getFileName() << "'");
-				}
-			}
-			#endif
 			return;
 		} else {
 			APPL_ERROR("UNKNOW request : " << _msg);
 		}
 	} else if (_msg.getMessage() == ednMsgGuiSaveAs) {
 		appl::WorkerSaveFile* tmpWorker = new appl::WorkerSaveFile("", true);
-		#if 0
-		appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
-		if (tmpBuffer == NULL) {
-			APPL_ERROR("Error to get the buffer ... " << _msg.getData());
-			return;
-		}
-		saveAsPopUp(tmpBuffer);
-		#endif
 	} else if (_msg.getMessage() == ednMsgGuiClose) {
 		// Get a ref on the buffer selected (if null, no buffer was selected ...)
 		if (_msg.getData() == "current") {
 			appl::WorkerCloseFile* tmpWorker = new appl::WorkerCloseFile("");
-			#if 0
-			appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
-			if (tmpBuffer == NULL) {
-				APPL_ERROR("Error to get the buffer ... " << _msg.getData());
-				return;
-			}
-			if (tmpBuffer->isModify() == true) {
-				closeNotSavedFile(tmpBuffer);
-			} else {
-				tmpBuffer->removeObject();
-			}
-			#endif
 		} else {
-			// ALL !!!
 			appl::WorkerCloseAllFile* tmpWorker = new appl::WorkerCloseAllFile();
-			#if 0
-			// TODO : How to generate the save for all ...
-			APPL_TODO("Close all the buffer.");
-			#endif
 		}
 	} else if (_msg.getMessage() == mainWindowsRequestSaveFile) { // return after a choice of close...
 		if (m_bufferManager->exist(_msg.getData()) == false) {

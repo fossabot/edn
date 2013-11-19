@@ -20,6 +20,7 @@
 
 appl::GlyphPainting::GlyphPainting(const std::string& _filename) :
   ewol::Resource(_filename) {
+	addObjectType("appl::GlyphPainting");
 	EWOL_DEBUG("SFP : load \"" << _filename << "\"");
 	reload();
 }

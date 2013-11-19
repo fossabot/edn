@@ -23,6 +23,7 @@ namespace appl {
 			virtual ~WorkerCloseFile(void);
 		private:
 			std::string m_bufferName;
+			appl::Buffer* m_buffer; //!< reference on the buffer (when rename, we have no more reference on the buffer
 			appl::WorkerSaveFile* m_worker; //! sub-worker element...
 			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 		public: // derived function

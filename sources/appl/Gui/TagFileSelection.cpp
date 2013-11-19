@@ -12,7 +12,7 @@
 #include <ewol/widget/Spacer.h>
 #include <ewol/widget/Image.h>
 #include <ewol/widget/WidgetManager.h>
-#include <etk/Vector.h>
+#include <vector>
 #include <etk/tool.h>
 #include <ewol/widget/Button.h>
 #include <ewol/widget/Label.h>

@@ -22,9 +22,6 @@ namespace appl {
 			GlyphPainting(const std::string& _filename);
 			virtual ~GlyphPainting(void);
 		public:
-			const char* getType(void) {
-				return "appl::GlyphPainting";
-			};
 			/**
 			 * @brief Load or reload data from config
 			 */
