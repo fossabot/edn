@@ -526,6 +526,11 @@ namespace appl {
 			esize_t getNumberOfLines(void) {
 				return m_nbLines;
 			}
+			/**
+			 * @brief Get the cursor line numberin the buffer.
+			 * @return the line id in the Buffer.
+			 */
+			uint32_t getCursorLinesId(void);
 		protected:
 			/**
 			 * @brief Count the number of line in the buffer

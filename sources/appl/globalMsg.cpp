@@ -33,8 +33,6 @@ extern const char* const ednMsgGuiSearch     = "edn-Msg-Gui-Search";
 extern const char* const ednMsgGuiReplace    = "edn-Msg-Gui-Replace";
 extern const char* const ednMsgGuiFind       = "edn-Msg-Gui-Find";
 
-extern const char* const ednMsgGuiChangeColor   = "edn-Msg-Gui-ChangeColor";
-extern const char* const ednMsgGuiChangeCharset = "edn-Msg-Gui-ChangeCharset";
 extern const char* const ednMsgGuiShowSpaces    = "edn-Msg-Gui-ShowSpaces";
 extern const char* const ednMsgGuiShowEndOfLine = "edn-Msg-Gui-ShowEndOfLine";
 
@@ -61,5 +59,6 @@ extern const char* const ednMsgBufferColor         = "edn-Msg-Buffer-Color";
 extern const char* const appl::MsgSelectNewFile    = "edn-msg-select-new-file";
 extern const char* const appl::MsgSelectChange     = "edn-msg-select-change";
 extern const char* const appl::MsgNameChange       = "edn-msg-buffer-name-change";
+extern const char* const appl::MsgNameGuiChangeColor = "edn-Msg-Gui-Change-color";
 
 

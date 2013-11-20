@@ -21,6 +21,7 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
   m_bufferName(_bufferName),
   m_chooser(NULL),
   m_bufferManager(NULL) {
+	addObjectType("appl::WorkerSaveFile");
 	addEventId(eventSaveDone);
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();

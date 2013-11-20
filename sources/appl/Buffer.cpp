@@ -112,6 +112,7 @@ appl::Buffer::Buffer(void) :
   m_cursorPreferredCol(-1),
   m_nbLines(1),
   m_highlight(NULL) {
+	addObjectType("appl::Buffer");
 	static int32_t bufferBaseId = 0;
 	m_fileName = "No Name " + std::to_string(bufferBaseId);
 	bufferBaseId++;
@@ -807,3 +808,17 @@ appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(appl::DisplayHLData
 	return getElementColorAtPosition(_pos, _MData.posHLPass1);
 }
 
+uint32_t appl::Buffer::getCursorLinesId(void) {
+	if (m_data.size() == 0) {
+		return 0;
+	}
+	uint32_t line = 0;
+	for (Iterator it = begin();
+	    (bool)it == true && it <= cursor();
+	     ++it) {
+		if (*it == etk::UChar::Return) {
+			++line;
+		}
+	}
+	return line;
+}

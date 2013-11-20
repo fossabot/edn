@@ -21,15 +21,23 @@
 #undef __class__
 #define __class__ "TextViewer"
 
+#define tic() \
+	int64_t startTime = ewol::getTime();
+
+#define toc(comment) \
+	int64_t endTime = ewol::getTime(); \
+	int64_t processTimeLocal = (endTime - startTime); \
+	APPL_DEBUG(comment << (float)((float)processTimeLocal / 1000.0) << "ms");
+
 appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
   m_buffer(NULL),
   m_displayText(_fontName, _fontSize),
   m_insertMode(false) {
+	addObjectType("appl::TextViewer");
 	setCanHaveFocus(true);
 	registerMultiCast(ednMsgBufferId);
 	registerMultiCast(ednMsgGuiRm);
 	registerMultiCast(ednMsgGuiSelect);
-	registerMultiCast(ednMsgGuiChangeCharset);
 	registerMultiCast(ednMsgGuiFind);
 	registerMultiCast(ednMsgGuiReplace);
 	registerMultiCast(ednMsgGuiGotoLine);
@@ -95,6 +103,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	if (false == needRedraw()) {
 		return;
 	}
+	//tic();
 	// For the scrooling windows
 	m_displayDrawing.clear();
 	m_displayText.clear();
@@ -188,7 +197,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		     iii<nbLine;
 		     ++iii) {
 			char tmpLineNumber[50];
-			sprintf(tmpLineNumber, "%*d", nbChar, iii);
+			sprintf(tmpLineNumber, "%*d", nbChar, iii+1);
 			m_displayText.print(tmpLineNumber);
 			m_displayText.forceLineReturn();
 			if (m_displayText.getPos().y() < -20.0f ) {
@@ -282,7 +291,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		m_maxSize.setX(maxSizeX+m_originScrooled.x());
 		m_maxSize.setY((float)nbLines*tmpLetterSize.y());
 	}
-	
+	//toc("Display time : ");
 	// call the herited class...
 	WidgetScrooled::onRegenerateDisplay();
 }
@@ -350,6 +359,8 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 	// move events ...
 	if (_event.getStatus() == ewol::keyEvent::statusDown) {
 		bool needUpdatePosition = true;
+		// selection when shift is set:
+		m_buffer->setSelectMode(_event.getSpecialKey().isSetShift());
 		// check selection event ...
 		switch(_event.getType()) {
 			case ewol::keyEvent::keyboardLeft:
@@ -370,11 +381,11 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 				break;
 			case ewol::keyEvent::keyboardPageUp:
 				//APPL_INFO("keyEvent : <PAGE-UP>");
-				//TextDMoveUp(m_displaySize.y());
+				moveCursorUp(15); // TODO : Set the real number of line ...
 				break;
 			case ewol::keyEvent::keyboardPageDown:
 				//APPL_INFO("keyEvent : <PAGE-DOWN>");
-				//TextDMoveDown(m_displaySize.y());
+				moveCursorDown(15); // TODO : Set the real number of line ...
 				break;
 			case ewol::keyEvent::keyboardStart:
 				//APPL_INFO("keyEvent : <Start of line>");
@@ -396,6 +407,7 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 	if (_event.getId() != 0) {
 		keepFocus();
 	}
+	//tic();
 	if (m_buffer == NULL) {
 		return false;
 	}
@@ -431,17 +443,23 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 		// mouse selection :
 		if (_event.getType() == ewol::keyEvent::typeMouse) {
 			if (_event.getStatus() == ewol::keyEvent::statusDown) {
-				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
-				moveCursor(newPos);
-				m_buffer->setSelectMode(true);
-				markToRedraw();
-				return true;
+				//if (_event.getSpecialKey().isSetShift() == false) {
+					appl::Buffer::Iterator newPos = getMousePosition(relativePos);
+					moveCursor(newPos);
+					m_buffer->setSelectMode(true);
+					markToRedraw();
+					return true;
+				//}
 			} else if (_event.getStatus() == ewol::keyEvent::statusUp) {
 				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
 				moveCursor(newPos);
 				m_buffer->setSelectMode(false);
-				// TODO : Copy selection :
-				//tmpBuffer->Copy(ewol::clipBoard::clipboardSelection);
+				// Copy selection :
+				std::string value;
+				m_buffer->copy(value);
+				if (value.size() != 0) {
+					ewol::clipBoard::set(ewol::clipBoard::clipboardSelection, value);
+				}
 				markToRedraw();
 				return true;
 			}
@@ -518,7 +536,10 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 				m_displayText.forceLineReturn();
 				countColomn = 0;
 			} else {
-				m_displayText.print(stringToDisplay[kkk]);
+				//note : Without this condithion the time od selection change to 0.6 ms to 8ms ...
+				if (-_relativePos.y() >= positionCurentDisplay.y()) {
+					m_displayText.print(stringToDisplay[kkk]);
+				}
 			}
 		}
 		if (-_relativePos.y() >= positionCurentDisplay.y()) {
@@ -548,7 +569,7 @@ void appl::TextViewer::onEventClipboard(enum ewol::clipBoard::clipboardListe _cl
 
 void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
 	widget::WidgetScrooled::onReceiveMessage(_msg);
-	//APPL_DEBUG("receive msg: " << _msg);
+	APPL_VERBOSE("receive msg: " << _msg);
 	// First call plugin
 	if (appl::textPluginManager::onReceiveMessage(*this, _msg) == true) {
 		markToRedraw();
@@ -614,15 +635,46 @@ void appl::TextViewer::setFontName(const std::string& _fontName) {
 	m_displayText.setFontName(_fontName);
 }
 
+void appl::TextViewer::updateScrolling(void) {
+	if (m_buffer == NULL) {
+		return;
+	}
+	vec2 realCursorPosition(0,0);
+	uint32_t lineId = m_buffer->getCursorLinesId();
+	m_displayText.clear();
+	m_displayText.forceLineReturn();
+	float lineSize = -m_displayText.getPos().y();
+	for (size_t iii=0; iii<lineId; ++iii) {
+		m_displayText.forceLineReturn();
+	}
+	realCursorPosition.setY(-m_displayText.getPos().y());
+	realCursorPosition.setX(getScreenSize(m_buffer->getStartLine(m_buffer->cursor())+1, m_buffer->cursor())-10);
+	APPL_VERBOSE("position=" << realCursorPosition << " scrool=" << m_originScrooled << " size" << m_size);
+	if (realCursorPosition.x() < m_originScrooled.x()-lineSize*2.0f) {
+		m_originScrooled.setX(realCursorPosition.x()-lineSize*2.0f);
+	} else if (realCursorPosition.x() > m_originScrooled.x()+m_size.x()-lineSize*2.0f-10) {
+		m_originScrooled.setX(realCursorPosition.x()-m_size.x()+lineSize*2.0f+10);
+	}
+	if (realCursorPosition.y() < m_originScrooled.y()+lineSize*2.0f) {
+		m_originScrooled.setY(realCursorPosition.y()-lineSize*2.0f);
+	} else if (realCursorPosition.y() > m_originScrooled.y()+m_size.y()-lineSize*2.0f) {
+		m_originScrooled.setY(realCursorPosition.y()-m_size.y()+lineSize*2.0f);
+	}
+	realCursorPosition.setMin(vec2(0,0));
+	
+}
+
 bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 	if (m_buffer == NULL) {
 		return false;
 	}
 	markToRedraw();
 	if (appl::textPluginManager::onCursorMove(*this, _pos) == true) {
+		updateScrolling();
 		return true;
 	}
 	m_buffer->moveCursor((esize_t)_pos);
+	updateScrolling();
 	return true;
 }
 

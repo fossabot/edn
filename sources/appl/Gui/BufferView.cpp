@@ -40,6 +40,7 @@ static void SortElementList(std::vector<appl::dataBufferStruct*>& _list) {
 }
 
 BufferView::BufferView(void) {
+	addObjectType("appl::BufferView");
 	setCanHaveFocus(true);
 	registerMultiCast(ednMsgBufferListChange);
 	registerMultiCast(ednMsgBufferState);

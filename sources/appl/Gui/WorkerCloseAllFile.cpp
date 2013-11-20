@@ -18,6 +18,7 @@ static const char* s_closeDone = "close-done";
 appl::WorkerCloseAllFile::WorkerCloseAllFile(void) :
   m_worker(NULL),
   m_bufferManager(NULL) {
+	addObjectType("appl::WorkerCloseAllFile");
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
 	

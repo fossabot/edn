@@ -33,8 +33,6 @@
 	extern const char* const ednMsgGuiReplace;    // data : "Normal" "All"
 	extern const char* const ednMsgGuiFind;       // data : "Next" "Previous" "All" "None"
 	
-	extern const char* const ednMsgGuiChangeColor;   // data : "Black" "White"
-	extern const char* const ednMsgGuiChangeCharset; // data : "UTF-8" "ISO-8859-1" "ISO-8859-15"
 	extern const char* const ednMsgGuiShowSpaces;    // data : "enable" "disable"
 	extern const char* const ednMsgGuiShowEndOfLine; // data : "enable" "disable"
 	
@@ -61,6 +59,7 @@ namespace appl {
 	extern const char* const MsgSelectNewFile;      // data : "buffer/name"
 	extern const char* const MsgSelectChange;       // data : ""
 	extern const char* const MsgNameChange;         // data : ""
+	extern const char* const MsgNameGuiChangeColor; // data : "Black" "White"
 };
 
 #endif

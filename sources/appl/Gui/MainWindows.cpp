@@ -121,6 +121,7 @@ const char* l_smoothMax = "tmpEvent_maxChange";
 #define __class__ "MainWindows"
 
 MainWindows::MainWindows(void) {
+	addObjectType("appl::MainWindows");
 	APPL_DEBUG("CREATE WINDOWS ... ");
 	widget::Sizer * mySizerVert = NULL;
 	widget::Sizer * mySizerVert2 = NULL;
@@ -232,12 +233,8 @@ MainWindows::MainWindows(void) {
 				(void)myMenu->add(idMenuCTags, "Jump",      "", ednMsgGuiCtags, "Jump");
 				(void)myMenu->add(idMenuCTags, "Back",      "", ednMsgGuiCtags, "Back");
 			int32_t idMenugDisplay = myMenu->addTitle("Display");
-				(void)myMenu->add(idMenugDisplay, "Charset UTF-8",        "", ednMsgGuiChangeCharset, "UTF-8");
-				(void)myMenu->add(idMenugDisplay, "Charset ISO-8859-1",   "", ednMsgGuiChangeCharset, "ISO-8859-1");
-				(void)myMenu->add(idMenugDisplay, "Charset ISO-8859-15",  "", ednMsgGuiChangeCharset, "ISO-8859-15");
-				(void)myMenu->addSpacer();
-				(void)myMenu->add(idMenugDisplay, "Color Black",          "", ednMsgGuiChangeColor, "Black");
-				(void)myMenu->add(idMenugDisplay, "Color White",          "", ednMsgGuiChangeColor, "White");
+				(void)myMenu->add(idMenugDisplay, "Color Black",          "", appl::MsgNameGuiChangeColor, "colorBlack/");
+				(void)myMenu->add(idMenugDisplay, "Color White",          "", appl::MsgNameGuiChangeColor, "colorWhite/");
 				(void)myMenu->addSpacer();
 				(void)myMenu->add(idMenugDisplay, "Reload openGl Shader", "", ednMsgGuiReloadShader);
 			
@@ -281,6 +278,7 @@ MainWindows::MainWindows(void) {
 	registerMultiCast(ednMsgBufferState);
 	registerMultiCast(ednMsgBufferId);
 	registerMultiCast(ednMsgGuiReloadShader);
+	registerMultiCast(appl::MsgNameGuiChangeColor);
 }
 
 
@@ -337,6 +335,10 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 			tmpSubWidget = new ParameterAboutGui();
 			tmpWidget->menuAdd("About",           "", tmpSubWidget);
 		}
+	} else if (_msg.getMessage() == appl::MsgNameGuiChangeColor) {
+		etk::theme::setName("COLOR", _msg.getData());
+		ewol::getContext().getResourcesManager().reLoadResources();
+		ewol::getContext().forceRedrawAll();
 	} else if (_msg.getMessage() == ednMsgGuiReloadShader) {
 		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();

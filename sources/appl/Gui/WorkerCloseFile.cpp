@@ -26,6 +26,7 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
   m_buffer(NULL),
   m_worker(NULL),
   m_bufferManager(NULL) {
+	addObjectType("appl::WorkerCloseFile");
 	addEventId(eventCloseDone);
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();

@@ -4,7 +4,7 @@
 		{ name:"CODE_space", foreground:"#b7b6b6"},
 		{ name:"CODE_tabulation", foreground:"#a7a5a5"},
 		{ name:"CODE_cursor", foreground:"#2a00ff"},
-		{ name:"CODE_lineNumber", foreground:"#1a00a0"},
+		{ name:"CODE_lineNumber", foreground:"#1a00a0", background:"#a2a2a2"},
 		{ name:"normal", foreground:"#000000"},
 		{ name:"SelectedText", foreground:"#292929", background:"#009ce7"},
 		{ name:"error", foreground:"#FF0000"},

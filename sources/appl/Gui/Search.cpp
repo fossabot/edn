@@ -35,6 +35,7 @@ Search::Search(void) :
   widget::Sizer(widget::Sizer::modeHori),
   m_searchEntry(NULL),
   m_replaceEntry(NULL) {
+	addObjectType("appl::Search");
 	m_forward = false;
 	// TODO : change the mode of creating interface : 
 	/* 

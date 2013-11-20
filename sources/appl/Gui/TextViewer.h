@@ -68,8 +68,11 @@ namespace appl {
 		private:
 			bool m_insertMode; //!< the insert mode is enable
 		public:
-			
-		public:
+			/**
+			 * @brief Update the scrolling position from the cursor position,
+			 * it might be be all time in the display screen.
+			 */
+			void updateScrolling(void);
 			// TODO : Doc : write data on buffer
 			bool moveCursor(const appl::Buffer::Iterator& _pos);
 			bool write(const std::string& _data);

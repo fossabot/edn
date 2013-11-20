@@ -53,19 +53,20 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 		// un-indent
 		data.insert(0, 1, etk::UChar::Return);
 		for (esize_t iii=1; iii<data.size(); ++iii) {
-			if (data[iii-1] == etk::UChar::Return) {
-				if(data[iii] == etk::UChar::Tabulation) {
-					data.erase(iii);
-				} else if(data[iii] == etk::UChar::Space) {
-					for (esize_t jjj=0; jjj<m_tabDist && jjj+iii<data.size() ; jjj++) {
-						if(data[iii] == etk::UChar::Space) {
-							data.erase(iii);
-						} else if(data[iii] == etk::UChar::Tabulation) {
-							data.erase(iii);
-							break;
-						} else {
-							break;
-						}
+			if (data[iii-1] != etk::UChar::Return) {
+				continue;
+			}
+			if(data[iii] == etk::UChar::Tabulation) {
+				data.erase(iii);
+			} else if(data[iii] == etk::UChar::Space) {
+				for (esize_t jjj=0; jjj<m_tabDist && jjj+iii<data.size() ; jjj++) {
+					if(data[iii] == etk::UChar::Space) {
+						data.erase(iii);
+					} else if(data[iii] == etk::UChar::Tabulation) {
+						data.erase(iii);
+						break;
+					} else {
+						break;
 					}
 				}
 			}
@@ -75,14 +76,15 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 		// indent
 		data.insert(0, 1, etk::UChar::Return);
 		for (esize_t iii=1; iii<data.size(); iii++) {
-			if (data[iii-1] == etk::UChar::Return) {
-				if (true == _event.getSpecialKey().isSetCtrl() ) {
-					data.insert(iii, 1, etk::UChar::Space);
-				} else if (true == m_useTabs) {
-					data.insert(iii, 1, etk::UChar::Tabulation);
-				} else {
-					data.insert(iii, m_tabDist, etk::UChar::Space);
-				}
+			if (data[iii-1] != etk::UChar::Return) {
+				continue;
+			}
+			if (true == _event.getSpecialKey().isSetCtrl() ) {
+				data.insert(iii, 1, etk::UChar::Space);
+			} else if (true == m_useTabs) {
+				data.insert(iii, 1, etk::UChar::Tabulation);
+			} else {
+				data.insert(iii, m_tabDist, etk::UChar::Space);
 			}
 		}
 		data.erase(0);

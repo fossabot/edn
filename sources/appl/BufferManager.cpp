@@ -18,7 +18,7 @@
 appl::BufferManager::BufferManager(void) :
   ewol::Resource("???BufferManager???"),
   m_bufferSelected(NULL) {
-	
+	addObjectType("appl::BufferManager");
 }
 
 appl::BufferManager::~BufferManager(void) {

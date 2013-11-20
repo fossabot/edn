@@ -17,6 +17,7 @@ extern const char * const applEventCtagsListUnSelect   = "appl-event-ctags-list-
 extern const char * const applEventCtagsListValidate   = "appl-event-ctags-list-validate";
 
 appl::TagFileList::TagFileList(void) {
+	addObjectType("appl::TagFileList");
 	m_selectedLine = -1;
 	addEventId(applEventCtagsListSelect);
 	addEventId(applEventCtagsListValidate);

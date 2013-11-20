@@ -18,6 +18,7 @@ static const char* s_saveAsDone = "save-as-done";
 appl::WorkerSaveAllFile::WorkerSaveAllFile(void) :
   m_worker(NULL),
   m_bufferManager(NULL) {
+	addObjectType("appl::WorkerSaveAllFile");
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
 	

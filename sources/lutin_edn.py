@@ -77,7 +77,7 @@ def Create(target):
 	myModule.CopyFolder('../data/languages/python/*.xml','languages/python/')
 	myModule.CopyFolder('../data/theme/default/*.svg','theme/default/')
 	myModule.CopyFolder('../data/theme/colorWhite/*.json','theme/colorWhite/')
-	myModule.CopyFolder('../data/theme/colorClack/*.json','theme/colorBlack/')
+	myModule.CopyFolder('../data/theme/colorBlack/*.json','theme/colorBlack/')
 	
 	myModule.AddPath(lutinTools.GetCurrentPath(__file__))
 	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl")
