@@ -17,6 +17,7 @@
 #include <ewol/compositing/Text.h>
 #include <ewol/compositing/Drawing.h>
 #include <appl/BufferManager.h>
+#include <tuple>
 
 namespace appl {
 	class TextViewerPlugin;
@@ -48,6 +49,7 @@ namespace appl {
 			appl::Buffer* m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
 			ewol::Text m_displayText; //!< Text display properties.
 			ewol::Drawing m_displayDrawing; //!< Other diaplay requested.
+			std::vector<std::pair<appl::Buffer*, vec2>> m_drawingRemenber;
 		public:
 			void setFontSize(int32_t _size);
 			void setFontName(const std::string& _fontName);

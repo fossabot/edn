@@ -473,10 +473,22 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 			}
 		} else if (_event.getStatus() == ewol::keyEvent::statusDouble) {
 			mouseEventDouble();
+			// Copy selection :
+			std::string value;
+			m_buffer->copy(value);
+			if (value.size() != 0) {
+				ewol::clipBoard::set(ewol::clipBoard::clipboardSelection, value);
+			}
 			markToRedraw();
 			return true;
 		} else if (_event.getStatus() == ewol::keyEvent::statusTriple) {
 			mouseEventTriple();
+			// Copy selection :
+			std::string value;
+			m_buffer->copy(value);
+			if (value.size() != 0) {
+				ewol::clipBoard::set(ewol::clipBoard::clipboardSelection, value);
+			}
 			markToRedraw();
 			return true;
 		} else if (_event.getStatus() == ewol::keyEvent::statusMove) {
@@ -589,16 +601,39 @@ void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
 		return;
 	}
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
+		// reset scroll:
 		if (m_buffer != NULL) {
 			m_buffer->unRegisterOnEvent(this);
+			bool needAdd = true;
+			for (size_t iii=0; iii<m_drawingRemenber.size(); ++iii) {
+				if (m_drawingRemenber[iii].first == m_buffer) {
+					m_drawingRemenber[iii].second = m_originScrooled;
+					APPL_VERBOSE("store origin : " << m_originScrooled);
+					needAdd = false;
+					break;
+				}
+			}
+			if (needAdd == true) {
+				m_drawingRemenber.push_back(std::make_pair(m_buffer, m_originScrooled));
+				APPL_VERBOSE("Push origin : " << m_originScrooled);
+			}
 		}
-		m_buffer = m_bufferManager->get(_msg.getData());
-		if (m_buffer != NULL) {
-			m_buffer->registerOnEvent(this, appl::Buffer::eventIsModify);
-			m_buffer->registerOnEvent(this, appl::Buffer::eventSelectChange);
-		}
+		m_originScrooled = vec2(0,0);
 		if (m_bufferManager != NULL) {
+			m_buffer = m_bufferManager->get(_msg.getData());
 			m_bufferManager->setBufferSelected(m_buffer);
+			if (m_buffer != NULL) {
+				m_buffer->registerOnEvent(this, appl::Buffer::eventIsModify);
+				m_buffer->registerOnEvent(this, appl::Buffer::eventSelectChange);
+				for (auto element : m_drawingRemenber) {
+					if (element.first == m_buffer) {
+						m_originScrooled = element.second;
+						APPL_VERBOSE("retrive origin : " << m_originScrooled);
+						// TODO : Check if this element is not out of the display text ...
+						break;
+					}
+				}
+			}
 		}
 		markToRedraw();
 		return;
