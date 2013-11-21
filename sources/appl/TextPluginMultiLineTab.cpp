@@ -40,7 +40,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	appl::Buffer::Iterator itStart = _textDrawer.m_buffer->selectStart();
 	appl::Buffer::Iterator itStop = _textDrawer.m_buffer->selectStop();
 	// get the compleate section of the buffer :
-	itStart = _textDrawer.m_buffer->getStartLine(itStart+1);
+	itStart = _textDrawer.m_buffer->getStartLine(itStart);
 	itStop = _textDrawer.m_buffer->getEndLine(itStop);
 	// copy the curent data in a classicle string:
 	std::string data;
@@ -91,6 +91,6 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	}
 	// Real replace of DATA :
 	_textDrawer.replace(data, itStart, itStop);
-	_textDrawer.m_buffer->setSelectionPos(itStart+1);
+	_textDrawer.m_buffer->setSelectionPos(itStart);
 	return true;
 }

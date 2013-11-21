@@ -20,6 +20,10 @@ const char* const appl::Buffer::eventChangeName = "edn-buffer-name-change";
 
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
 	m_value = etk::UChar::Null;
+	if (m_current<0) {
+		m_current = 0;
+		return *this;
+	}
 	if (    m_data != NULL
 	     && m_current < m_data->m_data.size() ) {
 		int8_t nbChar = etk::UChar::theoricUTF8Len(m_data->m_data[m_current]);
@@ -47,6 +51,8 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- (void) {
 			m_current = -1;
 		}
 		return *this;
+	} else {
+		m_current = -1;
 	}
 	return *this;
 }
@@ -91,6 +97,9 @@ appl::Buffer::Iterator appl::Buffer::end(void) {
 }
 
 appl::Buffer::Iterator appl::Buffer::cursor(void) {
+	if (m_cursorPos<= 0) {
+		return begin();
+	}
 	return position( m_cursorPos );
 }
 
@@ -107,7 +116,7 @@ appl::Buffer::Buffer(void) :
   m_hasFileName(false),
   m_fileName(""),
   m_isModify(false),
-  m_cursorPos(0),
+  m_cursorPos(-1),
   m_cursorSelectPos(-1),
   m_cursorPreferredCol(-1),
   m_nbLines(1),
@@ -133,6 +142,7 @@ bool appl::Buffer::loadFile(const std::string& _name) {
 	m_fileName = _name;
 	m_hasFileName = true;
 	m_isModify = true;
+	m_cursorPos = 0;
 	setHighlightType("");
 	etk::FSNode file(m_fileName);
 	if (file.exist() == false) {
@@ -181,12 +191,8 @@ void appl::Buffer::setModification(bool _status) {
 	}
 }
 
-
+// TODO : Naming error
 void appl::Buffer::countNumberofLine(void) {
-	if (m_data.size() == 0) {
-		m_nbLines = 1;
-		return;
-	}
 	m_nbLines = 0;
 	for (Iterator it = begin();
 	     (bool)it == true;
@@ -194,6 +200,9 @@ void appl::Buffer::countNumberofLine(void) {
 		if (*it == etk::UChar::Return) {
 			++m_nbLines;
 		}
+	}
+	if (m_nbLines == 0) {
+		m_nbLines = 1;
 	}
 }
 
@@ -203,7 +212,8 @@ appl::Buffer::Iterator appl::Buffer::getStartLine(const appl::Buffer::Iterator& 
 	if (false == searchBack(_pos, etk::UChar::Return, startPos)) {
 		return begin();
 	}
-	return startPos;
+	// note search will return the position of \n ==> the lione start just after ...
+	return startPos+1;
 }
 
 appl::Buffer::Iterator appl::Buffer::getEndLine(const appl::Buffer::Iterator& _pos) {
@@ -211,6 +221,7 @@ appl::Buffer::Iterator appl::Buffer::getEndLine(const appl::Buffer::Iterator& _p
 	if (false == search(_pos, etk::UChar::Return, endPos)) {
 		endPos = end();
 	}
+	// Note the line end at the \n
 	return endPos;
 }
 
@@ -412,7 +423,7 @@ appl::Buffer::Iterator appl::Buffer::countForwardNLines(const appl::Buffer::Iter
 	char32_t value;
 	int32_t lineCount = 0;
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
-	for (Iterator it = ++position(_startPos);
+	for (Iterator it = position(_startPos);
 	     (bool)it == true;
 	     ++it) {
 		value = *it;
@@ -433,7 +444,7 @@ appl::Buffer::Iterator appl::Buffer::countBackwardNLines(const appl::Buffer::Ite
 	char32_t value;
 	int32_t lineCount = 0;
 	for (Iterator it = --position(_startPos);
-	     it != begin();
+	     (bool)it == true;
 	     --it) {
 		value = *it;
 		if (value == etk::UChar::Return) {

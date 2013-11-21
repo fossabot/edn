@@ -48,7 +48,7 @@ bool appl::TextPluginCopy::onReceiveMessage(appl::TextViewer& _textDrawer,
 			}
 		}
 		if (_msg.getMessage() == ednMsgGuiCut) {
-			_textDrawer.m_buffer->removeSelection();
+			_textDrawer.remove();
 		}
 		return true;
 	} else if (_msg.getMessage() == ednMsgGuiPaste) {

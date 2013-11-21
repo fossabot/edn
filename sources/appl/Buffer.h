@@ -323,7 +323,7 @@ namespace appl {
 				return m_data;
 			};
 		protected:
-			esize_t m_cursorPos; //!< cursor position.
+			int64_t m_cursorPos; //!< cursor position.
 		public:
 			void moveCursor(esize_t _pos);
 		protected:
@@ -353,14 +353,14 @@ namespace appl {
 			 * @brief Get the Start position of the selection.
 			 * @return position of the start selection.
 			 */
-			esize_t getStartSelectionPos(void) {
+			int64_t getStartSelectionPos(void) {
 				return etk_min(m_cursorPos, m_cursorSelectPos);
 			}
 			/**
 			 * @brief Get the Stop position of the selection.
 			 * @return position of the stop selection.
 			 */
-			esize_t getStopSelectionPos(void) {
+			int64_t getStopSelectionPos(void) {
 				return etk_max(m_cursorPos, m_cursorSelectPos);
 			}
 		protected:

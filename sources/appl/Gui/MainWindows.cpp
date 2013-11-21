@@ -238,9 +238,9 @@ MainWindows::MainWindows(void) {
 				(void)myMenu->addSpacer();
 				(void)myMenu->add(idMenugDisplay, "Reload openGl Shader", "", ednMsgGuiReloadShader);
 			
-			m_widgetLabelFileName = new widget::Label("<left>FileName</left>");
+			m_widgetLabelFileName = new widget::Label("FileName");
 			m_widgetLabelFileName->setExpand(bvec2(true,false));
-			m_widgetLabelFileName->setFill(bvec2(false,true));;
+			m_widgetLabelFileName->setFill(bvec2(true,false));;
 			mySizerHori->subWidgetAdd(m_widgetLabelFileName);
 	
 	
@@ -279,6 +279,7 @@ MainWindows::MainWindows(void) {
 	registerMultiCast(ednMsgBufferId);
 	registerMultiCast(ednMsgGuiReloadShader);
 	registerMultiCast(appl::MsgNameGuiChangeColor);
+	registerMultiCast(appl::MsgSelectNewFile);
 }
 
 
@@ -350,11 +351,23 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
 	}
-	if (_msg.getMessage() == ednMsgGuiNew) {
-		if (m_bufferManager == NULL) {
-			APPL_ERROR("can not call unexistant buffer manager ... ");
-			return;
+	if (_msg.getMessage() == appl::MsgSelectNewFile) {
+		// select a new Buffer ==> change title:
+		appl::Buffer* tmpp = m_bufferManager->getBufferSelected();
+		if (tmpp == NULL) {
+			setTitle("Edn");
+			if (m_widgetLabelFileName != NULL) {
+				m_widgetLabelFileName->setLabel("");
+			}
+		} else {
+			setTitle(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + tmpp->getFileName());
+			if (m_widgetLabelFileName != NULL) {
+				m_widgetLabelFileName->setLabel(tmpp->getFileName() + (tmpp->isModify()==true?" *":""));
+			}
 		}
+		
+		
+	} else if (_msg.getMessage() == ednMsgGuiNew) {
 		(void)m_bufferManager->createNewBuffer();
 	} else if (_msg.getMessage() == ednEventPopUpFileSelected) {
 		APPL_DEBUG("Request opening the file : " << _msg.getData());

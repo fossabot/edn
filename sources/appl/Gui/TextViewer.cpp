@@ -696,7 +696,7 @@ void appl::TextViewer::updateScrolling(void) {
 		m_originScrooled.setY(realCursorPosition.y()-m_size.y()+lineSize*2.0f);
 	}
 	m_originScrooled.setMax(vec2(0,0));
-	
+	// TODO : Limit min position too ...
 }
 
 bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
@@ -790,6 +790,7 @@ void appl::TextViewer::moveCursorRight(appl::TextViewer::moveMode _mode) {
 		case moveLetter:
 			it = m_buffer->cursor();
 			++it;
+			APPL_ERROR("Cursor position : " << (esize_t)it);
 			moveCursor(it);
 			break;
 		case moveWord:
@@ -813,6 +814,7 @@ void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
 		case moveLetter:
 			it = m_buffer->cursor();;
 			--it;
+			APPL_ERROR("Cursor position : " << (esize_t)it);
 			moveCursor(it);
 			break;
 		case moveWord:
@@ -820,7 +822,7 @@ void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
 			break;
 		case moveEnd:
 			it = m_buffer->getStartLine(m_buffer->cursor());
-			moveCursor(++it);
+			moveCursor(it);
 			break;
 	}
 }
@@ -838,12 +840,11 @@ void appl::TextViewer::moveCursorUp(esize_t _nbLine) {
 	}
 	// Decide what column to move to, if there's a preferred column use that
 	if (m_buffer->getFavoriteUpDownPos() < 0) {
-		// TODO : Remove this +1 !!!
-		m_buffer->setFavoriteUpDownPos(getScreenSize(lineStartPos+1, m_buffer->cursor()));
+		m_buffer->setFavoriteUpDownPos(getScreenSize(lineStartPos, m_buffer->cursor()));
 	}
 	EWOL_DEBUG("move_up : " << m_buffer->getFavoriteUpDownPos());
 	// get the previous line
-	appl::Buffer::Iterator prevLineStartPos = m_buffer->countBackwardNLines(lineStartPos, _nbLine);
+	appl::Buffer::Iterator prevLineStartPos = m_buffer->countBackwardNLines(lineStartPos-1, _nbLine);
 	//APPL_INFO("Move line UP result : prevLineStartPos=" << prevLineStartPos);
 	// get the display char position
 	appl::Buffer::Iterator newPos = getPosSize(prevLineStartPos, m_buffer->getFavoriteUpDownPos());
@@ -866,8 +867,7 @@ void appl::TextViewer::moveCursorDown(esize_t _nbLine) {
 	appl::Buffer::Iterator lineStartPos = m_buffer->getStartLine(m_buffer->cursor());
 	
 	if (m_buffer->getFavoriteUpDownPos() < 0) {
-		// TODO : Remove this +1 !!!
-		m_buffer->setFavoriteUpDownPos(getScreenSize(lineStartPos+1, m_buffer->cursor()));
+		m_buffer->setFavoriteUpDownPos(getScreenSize(lineStartPos, m_buffer->cursor()));
 	}
 	EWOL_DEBUG("move down : " << m_buffer->getFavoriteUpDownPos());
 	// get the next line :
