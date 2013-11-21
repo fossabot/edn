@@ -40,7 +40,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	appl::Buffer::Iterator itStart = _textDrawer.m_buffer->selectStart();
 	appl::Buffer::Iterator itStop = _textDrawer.m_buffer->selectStop();
 	// get the compleate section of the buffer :
-	itStart = _textDrawer.m_buffer->getStartLine(itStart);
+	itStart = _textDrawer.m_buffer->getStartLine(itStart+1);
 	itStop = _textDrawer.m_buffer->getEndLine(itStop);
 	// copy the curent data in a classicle string:
 	std::string data;
@@ -57,13 +57,13 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 				continue;
 			}
 			if(data[iii] == etk::UChar::Tabulation) {
-				data.erase(iii);
+				data.erase(iii, 1);
 			} else if(data[iii] == etk::UChar::Space) {
 				for (esize_t jjj=0; jjj<m_tabDist && jjj+iii<data.size() ; jjj++) {
 					if(data[iii] == etk::UChar::Space) {
-						data.erase(iii);
+						data.erase(iii, 1);
 					} else if(data[iii] == etk::UChar::Tabulation) {
-						data.erase(iii);
+						data.erase(iii, 1);
 						break;
 					} else {
 						break;
@@ -71,7 +71,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 				}
 			}
 		}
-		data.erase(0);
+		data.erase(0, 1);
 	} else {
 		// indent
 		data.insert(0, 1, etk::UChar::Return);
@@ -87,7 +87,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 				data.insert(iii, m_tabDist, etk::UChar::Space);
 			}
 		}
-		data.erase(0);
+		data.erase(0, 1);
 	}
 	// Real replace of DATA :
 	_textDrawer.replace(data, itStart, itStop);
