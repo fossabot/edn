@@ -695,7 +695,7 @@ void appl::TextViewer::updateScrolling(void) {
 	} else if (realCursorPosition.y() > m_originScrooled.y()+m_size.y()-lineSize*2.0f) {
 		m_originScrooled.setY(realCursorPosition.y()-m_size.y()+lineSize*2.0f);
 	}
-	realCursorPosition.setMin(vec2(0,0));
+	m_originScrooled.setMax(vec2(0,0));
 	
 }
 
