@@ -186,8 +186,7 @@ void appl::Highlight::parse(int32_t start,
 					if (metaData[kkk].beginStart <= resultat.endStop) {
 						// remove element
 						//APPL_INFO("Erase element=" << kkk);
-						// TODO : maybe an error here ...
-						metaData.erase(metaData.begin()+kkk, metaData.begin()+kkk*2+1);
+						metaData.erase(metaData.begin()+kkk, metaData.begin()+kkk+1);
 						// Increase the end of search
 						if (kkk < metaData.size()) {
 							// just befor the end of the next element
