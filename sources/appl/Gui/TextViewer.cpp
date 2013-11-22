@@ -144,10 +144,10 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	etk::Buffer& buf = m_buffer->getData();
 	m_displayText.setColor(etk::Color<>(0, 0, 0, 256));
 	float countNbLine = 1;
-	esize_t countColomn = 0;
+	int32_t countColomn = 0;
 	// the siplay string :
 	std::u32string stringToDisplay;
-	esize_t bufferElementSize = 0;
+	int64_t bufferElementSize = 0;
 	bool isSelect = false;
 	appl::Buffer::Iterator selectPosStart = m_buffer->begin();
 	appl::Buffer::Iterator selectPosStop = m_buffer->begin();
@@ -158,7 +158,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	m_displayText.setPos(vec3(-m_originScrooled.x(), m_size.y()+m_originScrooled.y(), 0));
 	m_displayText.forceLineReturn();
 	appl::Buffer::Iterator startingIt = m_buffer->begin();
-	int32_t startLineId = 0;
+	int64_t startLineId = 0;
 	if (m_size.y() < m_displayText.getPos().y()) {
 		for (startingIt = m_buffer->begin();
 		     (bool)startingIt == true;
@@ -177,7 +177,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	m_lastOffsetDisplay = 0;
 	vec3 tmpLetterSize = m_displayText.calculateSize((char32_t)'A');
 	{
-		esize_t nbLine = m_buffer->getNumberOfLines();
+		int32_t nbLine = m_buffer->getNumberOfLines();
 		float nbLineCalc = nbLine;
 		int32_t nbChar = 0;
 		while (nbLineCalc >= 1.0f) {
@@ -208,7 +208,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		m_displayText.setClipping(vec2(m_lastOffsetDisplay, 0), m_size);
 	}
 	appl::DisplayHLData displayLocalSyntax;
-	m_buffer->hightlightGenerateLines(displayLocalSyntax, (esize_t)startingIt, m_size.y());
+	m_buffer->hightlightGenerateLines(displayLocalSyntax, (int64_t)startingIt, m_size.y());
 	float maxSizeX = 0;
 	appl::HighlightInfo * HLColor = NULL;
 	for (appl::Buffer::Iterator it = startingIt;
@@ -240,7 +240,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			}
 			continue;
 		}
-		HLColor = m_buffer->getElementColorAtPosition(displayLocalSyntax, (esize_t)it);
+		HLColor = m_buffer->getElementColorAtPosition(displayLocalSyntax, (int64_t)it);
 		bool haveBackground = false;
 		if (    HLColor != NULL
 		     && HLColor->patern != NULL) {
@@ -287,7 +287,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	// set maximum size (X&Y) :
 	{
 		vec3 tmpLetterSize = m_displayText.calculateSize((char32_t)'A');
-		esize_t nbLines = m_buffer->getNumberOfLines();
+		int64_t nbLines = m_buffer->getNumberOfLines();
 		m_maxSize.setX(maxSizeX+m_originScrooled.x());
 		m_maxSize.setY((float)nbLines*tmpLetterSize.y());
 	}
@@ -533,7 +533,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 	char32_t currentValue;
 	vec3 positionCurentDisplay(0,0,0);
 	vec3 tmpLetterSize = m_displayText.calculateSize((char32_t)'A');
-	esize_t countColomn = 0;
+	int32_t countColomn = 0;
 	std::u32string stringToDisplay;
 	m_displayText.clear();
 	m_displayText.forceLineReturn();
@@ -542,7 +542,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 	     ++it) {
 		currentValue = *it;
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
-		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
+		for (size_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
 			if (stringToDisplay[kkk] == etk::UChar::Return) {
 				// TODO : Remove this, use the automatic line manager ...
 				m_displayText.forceLineReturn();
@@ -708,7 +708,7 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 		updateScrolling();
 		return true;
 	}
-	m_buffer->moveCursor((esize_t)_pos);
+	m_buffer->moveCursor((int64_t)_pos);
 	updateScrolling();
 	return true;
 }
@@ -790,7 +790,7 @@ void appl::TextViewer::moveCursorRight(appl::TextViewer::moveMode _mode) {
 		case moveLetter:
 			it = m_buffer->cursor();
 			++it;
-			APPL_ERROR("Cursor position : " << (esize_t)it);
+			APPL_ERROR("Cursor position : " << (int64_t)it);
 			moveCursor(it);
 			break;
 		case moveWord:
@@ -814,7 +814,7 @@ void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
 		case moveLetter:
 			it = m_buffer->cursor();;
 			--it;
-			APPL_ERROR("Cursor position : " << (esize_t)it);
+			APPL_ERROR("Cursor position : " << (int64_t)it);
 			moveCursor(it);
 			break;
 		case moveWord:
@@ -827,7 +827,7 @@ void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
 	}
 }
 
-void appl::TextViewer::moveCursorUp(esize_t _nbLine) {
+void appl::TextViewer::moveCursorUp(uint32_t _nbLine) {
 	if (m_buffer == NULL) {
 		return;
 	}
@@ -854,7 +854,7 @@ void appl::TextViewer::moveCursorUp(esize_t _nbLine) {
 	m_buffer->setFavoriteUpDownPos(posStore);
 }
 
-void appl::TextViewer::moveCursorDown(esize_t _nbLine) {
+void appl::TextViewer::moveCursorDown(uint32_t _nbLine) {
 	if (m_buffer == NULL) {
 		return;
 	}
@@ -884,7 +884,7 @@ void appl::TextViewer::moveCursorDown(esize_t _nbLine) {
 // TODO : Rename ...
 appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator& _startLinePos, float _distance) {
 	char32_t currentValue;
-	esize_t countColomn = 0;
+	int32_t countColomn = 0;
 	std::u32string stringToDisplay;
 	m_displayText.clear();
 	m_displayText.forceLineReturn();
@@ -893,7 +893,7 @@ appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator
 	     ++it) {
 		currentValue = *it;
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
-		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
+		for (size_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
 			if (stringToDisplay[kkk] == etk::UChar::Return) {
 				return it;
 			} else {
@@ -912,7 +912,7 @@ appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator
 float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePos, const appl::Buffer::Iterator& _stopPos) {
 	float ret = 0;
 	char32_t currentValue;
-	esize_t countColomn = 0;
+	int32_t countColomn = 0;
 	std::u32string stringToDisplay;
 	m_displayText.clear();
 	
@@ -922,7 +922,7 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 		currentValue = *it;
 		//APPL_DEBUG("parse : " << currentValue);
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
-		for (esize_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
+		for (size_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
 			if (stringToDisplay[kkk] == etk::UChar::Return) {
 				return m_displayText.getPos().x() + 2; // TODO : Add the +2 for the end of line ...
 			} else {

@@ -107,12 +107,12 @@ namespace appl {
 			 * @brief Move the cursor at an other position upper.
 			 * @param[in] _nbLine number of up line that might be moved
 			 */
-			void moveCursorUp(esize_t _nbLine);
+			void moveCursorUp(uint32_t _nbLine);
 			/**
 			 * @brief Move the cursor at an other position under.
 			 * @param[in] _nbLine number of down line that might be moved
 			 */
-			void moveCursorDown(esize_t _nbLine);
+			void moveCursorDown(uint32_t _nbLine);
 			
 			appl::Buffer::Iterator getPosSize(const appl::Buffer::Iterator& _startLinePos, float _distance);
 			float getScreenSize(const appl::Buffer::Iterator& _startLinePos, const appl::Buffer::Iterator& _stopPos);

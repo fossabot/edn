@@ -83,7 +83,7 @@ char32_t appl::Buffer::Iterator::operator* (void) {
 }
 
 
-appl::Buffer::Iterator appl::Buffer::position(esize_t _pos) {
+appl::Buffer::Iterator appl::Buffer::position(int64_t _pos) {
 	return appl::Buffer::Iterator(this, _pos);
 }
 
@@ -258,12 +258,15 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos, const char32_t
 	return false;
 }
 
-void appl::Buffer::moveCursor(esize_t _pos) {
+void appl::Buffer::moveCursor(int64_t _pos) {
 	m_cursorPreferredCol = -1;
 	// selecting mode ...
 	if (m_selectMode == true) {
 		if (m_cursorSelectPos == -1) {
 			m_cursorSelectPos = m_cursorPos;
+			if (m_cursorSelectPos < 0) {
+				m_cursorSelectPos = 0;
+			}
 		}
 		//APPL_DEBUG("Select : " << m_cursorSelectPos << " ==> " << newPos);
 		m_cursorPos = _pos;
@@ -311,7 +314,8 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 			}
 		}
 		return true;
-	} else if( false == etk::isSpecialChar(currentValue)){
+	} else if(    etk::isSpecialChar(currentValue) == false
+	           || currentValue == '_') {
 		APPL_DEBUG("select normal Char");
 		// Search back
 		for (Iterator it = --position(_startPos);
@@ -479,8 +483,8 @@ bool appl::Buffer::copy(std::string& _data) {
 
 void appl::Buffer::copy(std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
 	_data.clear();
-	esize_t startPos = getStartSelectionPos();
-	esize_t endPos = getStopSelectionPos();
+	int64_t startPos = getStartSelectionPos();
+	int64_t endPos = getStopSelectionPos();
 	for (Iterator it = _pos;
 	     it != _posEnd &&
 	     (bool)it == true;
@@ -490,24 +494,32 @@ void appl::Buffer::copy(std::string& _data, const appl::Buffer::Iterator& _pos, 
 }
 
 bool appl::Buffer::write(const std::string& _data, const appl::Buffer::Iterator& _pos) {
-	if ((esize_t)_pos <= 0) {
-		m_data.insert(0, (int8_t*)(_data.c_str()), _data.size());
-	} else {
-		m_data.insert(_pos, (int8_t*)(_data.c_str()), _data.size());
+	int64_t position = (int64_t)_pos;
+	if (position < 0){
+		position = 0;
 	}
-	regenerateHighLightAt(_pos, 0, _data.size());
+	APPL_ERROR("writye at pos: " << (int64_t)_pos << " ==> " << position);
+	m_data.insert(position, (int8_t*)(_data.c_str()), _data.size());
+	if (m_cursorPos < 0) {
+		m_cursorPos = 0;
+	}
+	regenerateHighLightAt(position, 0, _data.size());
 	m_selectMode = false;
-	moveCursor((esize_t)_pos+_data.size());
+	moveCursor(position+_data.size());
 	countNumberofLine(); // TODO : use more intelligent counter
 	setModification(true);
 	return true;
 }
 
 bool appl::Buffer::replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
-	m_data.replace(_pos, (esize_t)_posEnd-(esize_t)_pos, (int8_t*)(_data.c_str()), _data.size());
-	regenerateHighLightAt(_pos, (esize_t)_posEnd-(esize_t)_pos, _data.size());
+	int64_t position = (int64_t)_pos;
+	if (position < 0){
+		position = 0;
+	}
+	m_data.replace(position, (int64_t)_posEnd-(int64_t)_pos, (int8_t*)(_data.c_str()), _data.size());
+	regenerateHighLightAt(position, (int64_t)_posEnd-(int64_t)_pos, _data.size());
 	m_selectMode = false;
-	moveCursor((esize_t)_pos+_data.size());
+	moveCursor(position+_data.size());
 	countNumberofLine(); // TODO : use more intelligent counter
 	setModification(true);
 	return true;
@@ -517,8 +529,8 @@ void appl::Buffer::removeSelection(void) {
 	if (hasTextSelected() == false) {
 		return;
 	}
-	esize_t startPos = getStartSelectionPos();
-	esize_t endPos = getStopSelectionPos();
+	int64_t startPos = getStartSelectionPos();
+	int64_t endPos = getStopSelectionPos();
 	m_data.remove(startPos, endPos-startPos);
 	regenerateHighLightAt(startPos, endPos-startPos, 0);
 	m_selectMode = false;
@@ -552,7 +564,7 @@ void appl::Buffer::setHighlightType(const std::string& _type) {
 	generateHighLightAt(0, m_data.size());
 }
 
-void appl::Buffer::regenerateHighLightAt(int32_t _pos, int32_t _nbDeleted, int32_t _nbAdded) {
+void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64_t _nbAdded) {
 	// prevent ERROR...
 	if (NULL == m_highlight) {
 		return;
@@ -564,11 +576,10 @@ void appl::Buffer::regenerateHighLightAt(int32_t _pos, int32_t _nbDeleted, int32
 	}
 	// normal case
 	//APPL_INFO("(pos="<<pos<<", nbDeleted="<<nbDeleted<<", nbAdded=" << nbAdded << "\");");
-	int32_t i;
-	int32_t posEnd = _pos + _nbDeleted;
+	int64_t posEnd = _pos + _nbDeleted;
 	// search position of the old element to reparse IT...
-	int32_t startId;
-	int32_t stopId;
+	int64_t startId;
+	int64_t stopId;
 	// clean data if needed
 	if (m_HLDataPass1.size() == 0) {
 		// Parse the new element ...
@@ -604,13 +615,13 @@ void appl::Buffer::regenerateHighLightAt(int32_t _pos, int32_t _nbDeleted, int32
 	}
 	//APPL_DEBUG("new size=" << (int32_t)m_HLDataPass1.size()-1);
 	// update position after the range position : 
-	int32_t elemStart;
+	int64_t elemStart;
 	if (startId == -1) {
 		elemStart = 0;
 	} else {
 		elemStart = startId+1;
 	}
-	for (esize_t iii = elemStart; iii < m_HLDataPass1.size(); ++iii) {
+	for (int64_t iii = elemStart; iii < m_HLDataPass1.size(); ++iii) {
 		//APPL_DEBUG("move element=" << i);
 		m_HLDataPass1[iii].beginStart += _nbAdded - _nbDeleted;
 		m_HLDataPass1[iii].beginStop  += _nbAdded - _nbDeleted;
@@ -634,10 +645,10 @@ void appl::Buffer::regenerateHighLightAt(int32_t _pos, int32_t _nbDeleted, int32
 	}
 }
 
-void appl::Buffer::findMainHighLightPosition(int32_t _startPos,
-                                             int32_t _endPos,
-                                             int32_t& _startId,
-                                             int32_t& _stopId,
+void appl::Buffer::findMainHighLightPosition(int64_t _startPos,
+                                             int64_t _endPos,
+                                             int64_t& _startId,
+                                             int64_t& _stopId,
                                              bool _backPreviousNotEnded) {
 	_startId = -1;
 	_stopId = -1;
@@ -693,7 +704,7 @@ void appl::Buffer::findMainHighLightPosition(int32_t _startPos,
 			_startId = iii-1;
 		}
 	}
-	int32_t elemStart;
+	int64_t elemStart;
 	if(_startId == -1) {
 		elemStart = 0;
 	} else {
@@ -707,7 +718,7 @@ void appl::Buffer::findMainHighLightPosition(int32_t _startPos,
 	}
 }
 
-void appl::Buffer::generateHighLightAt(int32_t _pos, int32_t _endPos, int32_t _addingPos) {
+void appl::Buffer::generateHighLightAt(int64_t _pos, int64_t _endPos, int64_t _addingPos) {
 	if (NULL == m_highlight) {
 		return;
 	}
@@ -721,7 +732,7 @@ void appl::Buffer::cleanHighLight(void) {
 }
 
 
-appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int32_t _pos, int32_t &_starPos) {
+appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int64_t _pos, int64_t &_starPos) {
 	int32_t start = etk_max(0, _starPos-1);
 	for (esize_t iii = start; iii < m_HLDataPass1.size(); ++iii) {
 		_starPos = iii;
@@ -737,7 +748,7 @@ appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int32_t _pos, int32
 }
 
 
-void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, int32_t _HLStart, int32_t _nbLines) {
+void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, int64_t _HLStart, int64_t _nbLines) {
 	_MData.posHLPass1 = 0;
 	_MData.posHLPass2 = 0;
 	if (NULL == m_highlight) {
@@ -747,13 +758,14 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, int32_t 
 	//g_get_current_time(&timeStart);
 	_HLStart = (esize_t)getStartLine(position(_HLStart));
 	_MData.HLData.clear();
-	int32_t HLStop = countForwardNLines(position(_HLStart), _nbLines);
-	int32_t startId, stopId;
+	int64_t HLStop = countForwardNLines(position(_HLStart), _nbLines);
+	int64_t startId = 0;
+	int64_t stopId = 0;
 	// find element previous
 	findMainHighLightPosition(_HLStart, HLStop, startId, stopId, true);
 
 	//APPL_DEBUG("List of section between : "<< startId << " & " << stopId);
-	int32_t endSearch = stopId+1;
+	int64_t endSearch = stopId+1;
 	if (stopId == -1) {
 		endSearch = m_HLDataPass1.size();
 	}
@@ -802,17 +814,16 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, int32_t 
 }
 
 
-appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(appl::DisplayHLData& _MData, int32_t _pos) {
-	int32_t i;
-	int32_t start = etk_max(0, _MData.posHLPass2-1);
-	for (i=start; i<(int32_t)_MData.HLData.size(); i++) {
-		_MData.posHLPass2 = i;
-		if(		_MData.HLData[i].beginStart <= _pos
-			&&	_MData.HLData[i].endStop    > _pos)
+appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(appl::DisplayHLData& _MData, int64_t _pos) {
+	int64_t start = etk_max(0, _MData.posHLPass2-1);
+	for (int64_t iii=start; iii<(int32_t)_MData.HLData.size(); iii++) {
+		_MData.posHLPass2 = iii;
+		if(		_MData.HLData[iii].beginStart <= _pos
+			&&	_MData.HLData[iii].endStop    > _pos)
 		{
-			return &_MData.HLData[i];
+			return &_MData.HLData[iii];
 		}
-		if(_MData.HLData[i].beginStart > _pos) {
+		if(_MData.HLData[iii].beginStart > _pos) {
 			return getElementColorAtPosition(_pos, _MData.posHLPass1);
 		}
 	}

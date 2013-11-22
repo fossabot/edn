@@ -24,8 +24,8 @@ namespace appl {
 	class DisplayHLData {
 		public:
 			std::vector<appl::HighlightInfo> HLData;
-			int32_t posHLPass1;
-			int32_t posHLPass2;
+			int64_t posHLPass1;
+			int64_t posHLPass2;
 	};
 	class Buffer : public ewol::EObject {
 		public:
@@ -94,7 +94,7 @@ namespace appl {
 					 * @brief basic boolean cast
 					 * @return true if the element is present in buffer
 					 */
-					operator esize_t (void) const {
+					operator int64_t (void) const {
 						if (m_data == NULL) {
 							return 0;
 						}
@@ -217,7 +217,7 @@ namespace appl {
 					 * @brief Get the position in the buffer
 					 * @return The requested position.
 					 */
-					esize_t getPos(void) const {
+					int64_t getPos(void) const {
 						if (m_data == NULL) {
 							return 0;
 						}
@@ -233,9 +233,16 @@ namespace appl {
 					 * @brief move the element position
 					 * @return a new iterator.
 					 */
+					Iterator operator+ (const int64_t _val) const {
+						Iterator tmpp(*this);
+						for (int64_t iii=0; iii<_val; ++iii) {
+							++tmpp;
+						}
+						return tmpp;
+					};
 					Iterator operator+ (const int32_t _val) const {
 						Iterator tmpp(*this);
-						for (int32_t iii=0; iii<_val; ++iii) {
+						for (int64_t iii=0; iii<_val; ++iii) {
 							++tmpp;
 						}
 						return tmpp;
@@ -244,15 +251,22 @@ namespace appl {
 					 * @brief move the element position
 					 * @return a new iterator.
 					 */
+					Iterator operator- (const int64_t _val) const {
+						Iterator tmpp(*this);
+						for (int64_t iii=0; iii<_val; ++iii) {
+							--tmpp;
+						}
+						return tmpp;
+					};
 					Iterator operator- (const int32_t _val) const {
 						Iterator tmpp(*this);
-						for (int32_t iii=0; iii<_val; ++iii) {
+						for (int64_t iii=0; iii<_val; ++iii) {
 							--tmpp;
 						}
 						return tmpp;
 					};
 				private:
-					Iterator(Buffer* _obj, int32_t _pos) :
+					Iterator(Buffer* _obj, int64_t _pos) :
 					  m_current(_pos),
 					  m_data(_obj),
 					  m_value(etk::UChar::Null) {
@@ -325,9 +339,9 @@ namespace appl {
 		protected:
 			int64_t m_cursorPos; //!< cursor position.
 		public:
-			void moveCursor(esize_t _pos);
+			void moveCursor(int64_t _pos);
 		protected:
-			int32_t m_cursorSelectPos; //!< cursor position.
+			int64_t m_cursorSelectPos; //!< cursor position.
 		public:
 			/**
 			 * @brief Set the selection position in the buffer.
@@ -490,7 +504,7 @@ namespace appl {
 			 * @param[in] _pos Requested position of the iterator.
 			 * @return The Iterator
 			 */
-			Iterator position(esize_t _pos);
+			Iterator position(int64_t _pos);
 			/**
 			 * @brief Get an Iterator on the start position.
 			 * @return The Iterator
@@ -559,17 +573,17 @@ namespace appl {
 				return m_highlightType;
 			};
 			
-			void regenerateHighLightAt(int32_t _pos, int32_t _nbDeleted, int32_t _nbAdded);
-			void findMainHighLightPosition(int32_t _startPos,
-			                               int32_t _endPos,
-			                               int32_t& _startId,
-			                               int32_t& _stopId,
+			void regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64_t _nbAdded);
+			void findMainHighLightPosition(int64_t _startPos,
+			                               int64_t _endPos,
+			                               int64_t& _startId,
+			                               int64_t& _stopId,
 			                               bool _backPreviousNotEnded);
-			void generateHighLightAt(int32_t _pos, int32_t _endPos, int32_t _addingPos=0);
+			void generateHighLightAt(int64_t _pos, int64_t _endPos, int64_t _addingPos=0);
 			void cleanHighLight(void);
-			appl::HighlightInfo* getElementColorAtPosition(int32_t _pos, int32_t &_starPos);
-			void hightlightGenerateLines(appl::DisplayHLData& _MData, int32_t _HLStart, int32_t _nbLines);
-			appl::HighlightInfo* getElementColorAtPosition(appl::DisplayHLData& _MData, int32_t _pos);
+			appl::HighlightInfo* getElementColorAtPosition(int64_t _pos, int64_t &_starPos);
+			void hightlightGenerateLines(appl::DisplayHLData& _MData, int64_t _HLStart, int64_t _nbLines);
+			appl::HighlightInfo* getElementColorAtPosition(appl::DisplayHLData& _MData, int64_t _pos);
 	};
 };
 

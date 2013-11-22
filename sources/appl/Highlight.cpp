@@ -158,22 +158,22 @@ void appl::Highlight::display(void) {
 /* TODO : Celui qui appelle suprime des element pour rien ... Enfin c'est pas très grave... 
  * Il suffirait juste de suprimer celui d'avant si il n'est pas terminer...
  */
-void appl::Highlight::parse(int32_t start,
-                      int32_t stop,
+void appl::Highlight::parse(int64_t start,
+                      int64_t stop,
                       std::vector<appl::HighlightInfo> &metaData,
-                      int32_t addingPos,
+                      int64_t addingPos,
                       etk::Buffer &buffer) {
 	if (0 > addingPos) {
 		addingPos = 0;
 	}
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass1.size() << "  == > position search: (" << start << "," << stop << ")" );
-	int32_t elementStart = start;
-	int32_t elementStop = stop;
+	int64_t elementStart = start;
+	int64_t elementStop = stop;
 	appl::HighlightInfo resultat;
 	while (elementStart<elementStop) {
 		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have
-		for (int32_t jjj=0; jjj<m_listHighlightPass1.size(); jjj++){
+		for (int64_t jjj=0; jjj<m_listHighlightPass1.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
 			//APPL_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.size() << ")" );
 			// Stop the search to the end (to get the end of the pattern)
@@ -181,7 +181,7 @@ void appl::Highlight::parse(int32_t start,
 			if (HLP_FIND_ERROR != ret) {
 				//APPL_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
 				// remove element in the current List where the current Element have a end inside the next...
-				int32_t kkk=addingPos;
+				int64_t kkk=addingPos;
 				while(kkk < metaData.size() ) {
 					if (metaData[kkk].beginStart <= resultat.endStop) {
 						// remove element
@@ -221,19 +221,18 @@ void appl::Highlight::parse(int32_t start,
  * @brief second pass of the hightlight
  *
  */
-void appl::Highlight::parse2(int32_t start,
-                       int32_t stop,
+void appl::Highlight::parse2(int64_t start,
+                       int64_t stop,
                        std::vector<appl::HighlightInfo> &metaData,
                        etk::Buffer &buffer) {
 	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << "  == > position search: (" << start << "," << stop << ")" );
-	int32_t elementStart = start;
-	int32_t elementStop = stop;
+	int64_t elementStart = start;
+	int64_t elementStop = stop;
 	appl::HighlightInfo resultat;
 	while (elementStart<elementStop) {
 		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
 		//try to fond the HL in ALL of we have
-		int32_t jjj;
-		for (jjj=0; jjj<m_listHighlightPass2.size(); jjj++){
+		for (int64_t jjj=0; jjj<m_listHighlightPass2.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
 			//APPL_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.size() << ")" );
 			// Stop the search to the end (to get the end of the pattern)

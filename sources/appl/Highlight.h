@@ -49,13 +49,13 @@ namespace appl {
 			bool hasExtention(const std::string& _ext);
 			bool fileNameCompatible(const std::string& _fileName);
 			void display(void);
-			void parse(int32_t _start,
-			           int32_t _stop,
+			void parse(int64_t _start,
+			           int64_t _stop,
 			           std::vector<appl::HighlightInfo> &_metaData,
-			           int32_t _addingPos,
+			           int64_t _addingPos,
 			           etk::Buffer &_buffer);
-			void parse2(int32_t _start,
-			            int32_t _stop,
+			void parse2(int64_t _start,
+			            int64_t _stop,
 			            std::vector<appl::HighlightInfo> &_metaData,
 			            etk::Buffer &_buffer);
 		private:
