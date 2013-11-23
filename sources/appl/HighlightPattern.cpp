@@ -8,7 +8,7 @@
 
 #include <appl/debug.h>
 #include <appl/global.h>
-#include <HighlightPattern.h>
+#include <appl/HighlightPattern.h>
 
 #undef __class__
 #define __class__ "HighlightPattern"

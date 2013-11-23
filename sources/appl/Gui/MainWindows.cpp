@@ -9,10 +9,10 @@
 
 #include <appl/debug.h>
 #include <appl/global.h>
-#include <MainWindows.h>
-#include <BufferView.h>
-#include <TextViewer.h>
-#include <Search.h>
+#include <appl/Gui/MainWindows.h>
+#include <appl/Gui/BufferView.h>
+#include <appl/Gui/TextViewer.h>
+#include <appl/Gui/Search.h>
 
 #include <ewol/widget/Button.h>
 #include <ewol/widget/CheckBox.h>
@@ -37,10 +37,8 @@
 #include <appl/Gui/WorkerCloseFile.h>
 #include <appl/Gui/WorkerCloseAllFile.h>
 
-namespace appl 
-{
-	std::string getVersion(void)
-	{
+namespace appl {
+	std::string getVersion(void) {
 		#define FIRST_YEAR (2010)
 		std::string tmpOutput = std::to_string(date::getYear()-FIRST_YEAR);
 		tmpOutput += ".";
@@ -482,7 +480,7 @@ void MainWindows::closeNotSavedFile(appl::Buffer* _buffer) {
 	popUpWidgetPush(tmpPopUp);
 }
 
-void MainWindows::onObjectRemove(ewol::EObject * _removeObject) {
+void MainWindows::onObjectRemove(ewol::EObject* _removeObject) {
 	ewol::Windows::onObjectRemove(_removeObject);
 	if (m_widgetLabelFileName == _removeObject) {
 		m_widgetLabelFileName = NULL;

@@ -17,6 +17,7 @@
 #include <ewol/compositing/Text.h>
 #include <ewol/compositing/Drawing.h>
 #include <appl/BufferManager.h>
+#include <appl/Gui/ViewerManager.h>
 #include <tuple>
 
 namespace appl {
@@ -42,6 +43,7 @@ namespace appl {
 			esize_t m_colorNormal;
 		private:
 			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
+			appl::ViewerManager* m_viewerManager; //!< handle on the buffer manager
 		public:
 			TextViewer(const std::string& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);
@@ -81,6 +83,9 @@ namespace appl {
 			bool write(const std::string& _data, const appl::Buffer::Iterator& _pos);
 			bool replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
 			bool replace(const std::string& _data);
+			bool replace(const std::u32string& _data) {
+				return replace(to_u8string(_data));
+			}
 			void remove(void);
 			
 			
@@ -117,7 +122,6 @@ namespace appl {
 			appl::Buffer::Iterator getPosSize(const appl::Buffer::Iterator& _startLinePos, float _distance);
 			float getScreenSize(const appl::Buffer::Iterator& _startLinePos, const appl::Buffer::Iterator& _stopPos);
 		private:
-			static TextViewer* m_currentBufferSelect; //!< to know which buffer is currently last selected
 			/**
 			 * @brief Set the current buffer selected
 			 */
@@ -127,6 +131,121 @@ namespace appl {
 			 * @return true if selected last
 			 */
 			bool isSelectedLast(void);
+		public:
+			/**
+			 * @brief Check if the buffer is availlable
+			 * @return true if a display buffer is present, false otherwise.
+			 */
+			virtual bool hasBuffer(void) {
+				return m_buffer != NULL;
+			}
+			/**
+			 * @brief Get the status of selection.
+			 * @return true if we have a current selection, false otherwise.
+			 */
+			virtual bool hasTextSelected(void) {
+				if (m_buffer==NULL) {
+					return false;
+				}
+				return m_buffer->hasTextSelected();
+			}
+			/**
+			 * @brief Remove Selection of the buffer.
+			 */
+			virtual void unSelect(void) {
+				if (m_buffer==NULL) {
+					return;
+				}
+				m_buffer->unSelect();
+			}
+			/**
+			 * @brief Select a section of text.
+			 * @param[in] _start Start position of the selection
+			 * @param[in] _stop Stop position of the selection (the curor is set at this position)
+			 */
+			virtual void select(appl::Buffer::Iterator& _start, appl::Buffer::Iterator& _stop) {
+				if (m_buffer==NULL) {
+					return;
+				}
+				moveCursor(_stop);
+				m_buffer->setSelectionPos(_start);
+			}
+			/**
+			 * @brief Find a string in the buffer.
+			 * @param[in] _pos Position to start the search of the element.
+			 * @param[in] _search String to search.
+			 * @param[out] _resultStart Find element start position.
+			 * @param[out] _resultStop Find element end position.
+			 * @param[in] _caseSensitive (optional) Search making attention of the case [default true]
+			 * @return true if pos if fined.
+			 */
+			virtual bool find(const appl::Buffer::Iterator& _pos,
+			                  const std::u32string& _search,
+			                  appl::Buffer::Iterator& _resultStart,
+			                  appl::Buffer::Iterator& _resultStop,
+			                  bool _caseSensitive = true) {
+				if (m_buffer==NULL) {
+					return false;
+				}
+				bool ret = m_buffer->search(_pos, _search, _resultStart, _caseSensitive);
+				if (ret == true) {
+					_resultStop = _resultStart + _search.size();
+				}
+				return ret;
+			}
+			/**
+			 * @brief revers find a string in the buffer.
+			 * @param[in] _pos Position to start the search of the element.
+			 * @param[in] _search String to search.
+			 * @param[out] _resultStart Find element start position.
+			 * @param[out] _resultStop Find element end position.
+			 * @param[in] _caseSensitive (optional) Search making attention of the case [default true]
+			 * @return true if pos if fined.
+			 */
+			virtual bool rfind(const appl::Buffer::Iterator& _pos,
+			                   const std::u32string& _search,
+			                   appl::Buffer::Iterator& _resultStart,
+			                   appl::Buffer::Iterator& _resultStop,
+			                   bool _caseSensitive = true) {
+				if (m_buffer==NULL) {
+					return false;
+				}
+				bool ret = m_buffer->searchBack(_pos, _search, _resultStart, _caseSensitive);
+				if (ret == true) {
+					_resultStop = _resultStart + _search.size();
+				}
+				return ret;
+			}
+			/**
+			 * @brief Get the cursor position.
+			 * @return The iterator on the cursor position
+			 */
+			appl::Buffer::Iterator cursor(void) {
+				if (m_buffer==NULL) {
+					return appl::Buffer::Iterator();
+				}
+				return m_buffer->cursor();
+			}
+			/**
+			 * @brief Get the begin position.
+			 * @return The iterator on the begin position
+			 */
+			appl::Buffer::Iterator begin(void) {
+				if (m_buffer==NULL) {
+					return appl::Buffer::Iterator();
+				}
+				return m_buffer->begin();
+			}
+			/**
+			 * @brief Get the end position.
+			 * @return The iterator on the end position
+			 */
+			appl::Buffer::Iterator end(void) {
+				if (m_buffer==NULL) {
+					return appl::Buffer::Iterator();
+				}
+				return m_buffer->end();
+			}
 	};
 };
 

@@ -9,7 +9,7 @@
 #ifndef __BUFFER_MANAGER_H__
 #define __BUFFER_MANAGER_H__
 
-#include <Buffer.h>
+#include <appl/Buffer.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/Widget.h>
 #include <ewol/resources/Resource.h>

@@ -27,7 +27,6 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
 	if (m_data != NULL) {
 		if (m_current < m_data->m_data.size() ) {
 			int8_t nbChar = etk::UChar::theoricUTF8Len(m_data->m_data[m_current]);
-			APPL_DEBUG("get pos=" << m_current << "len=" << nbChar);
 			if (nbChar != 0) {
 				m_current+=nbChar;
 			} else {
@@ -38,7 +37,6 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
 			m_current = m_data->m_data.size();
 		}
 	}
-	APPL_DEBUG("    ==> return " << m_current);
 	return *this;
 }
 
@@ -231,7 +229,6 @@ appl::Buffer::Iterator appl::Buffer::getEndLine(const appl::Buffer::Iterator& _p
 
 bool appl::Buffer::search(const appl::Buffer::Iterator& _pos, const char32_t& _search, appl::Buffer::Iterator& _result) {
 	// move in the string
-	char32_t value;
 	for (Iterator it = _pos;
 	     (bool)it == true;
 	     ++it) {
@@ -246,7 +243,6 @@ bool appl::Buffer::search(const appl::Buffer::Iterator& _pos, const char32_t& _s
 
 bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos, const char32_t& _search, appl::Buffer::Iterator& _result) {
 	// move in the string
-	char32_t value;
 	for (Iterator it = _pos - 1;
 	     (bool)it == true;
 	     --it) {
@@ -261,9 +257,150 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos, const char32_t
 	return false;
 }
 
+bool appl::Buffer::search(const appl::Buffer::Iterator& _pos,
+                          const std::u32string& _search,
+                          appl::Buffer::Iterator& _result,
+                          bool _caseSensitive) {
+	if (_search.size() <= 0 ) {
+		return false;
+	}
+	if (_caseSensitive == true) {
+		// move in the string
+		for (Iterator it = _pos;
+		     (bool)it == true;
+		     ++it) {
+			if (*it == _search[0]) {
+				// find the first char ==> check next...
+				bool find = true;
+				Iterator tmp = it;
+				for (size_t iii=0; iii<_search.size(); ++iii) {
+					if (*tmp != _search[iii]) {
+						find = false;
+						break;
+					}
+					++tmp;
+					if ((bool)tmp == false) {
+						if (iii != _search.size()-1) {
+							find = false;
+						}
+						break;
+					}
+				}
+				if (find == true) {
+					_result = it;
+					return true;
+				}
+			}
+		}
+	} else {
+		char32_t firstElement = tolower(_search[0]);
+		// move in the string
+		for (Iterator it = _pos;
+		     (bool)it == true;
+		     ++it) {
+			if (tolower(*it) == firstElement) {
+				// find the first char ==> check next...
+				bool find = true;
+				Iterator tmp = it;
+				for (size_t iii=0; iii<_search.size(); ++iii) {
+					if (tolower(*tmp) != tolower(_search[iii])) {
+						find = false;
+						break;
+					}
+					++tmp;
+					if ((bool)tmp == false) {
+						if (iii != _search.size()-1) {
+							find = false;
+						}
+						break;
+					}
+				}
+				if (find == true) {
+					_result = it;
+					return true;
+				}
+			}
+		}
+	}
+	_result = end();
+	return false;
+}
+
+bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos,
+                              const std::u32string& _search,
+                              appl::Buffer::Iterator& _result,
+                              bool _caseSensitive) {
+	if (_search.size() <= 0 ) {
+		return false;
+	}
+	char32_t lastElement = _search[_search.size()-1];
+	if (_caseSensitive == true) {
+		// move in the string
+		for (Iterator it = _pos - 1;
+		     (bool)it == true;
+		     --it) {
+			//APPL_DEBUG("compare : " << *it << " ?= " << _search);
+			if (*it == lastElement) {
+				// find the last char ==> check previous...
+				bool find = true;
+				_result = it;
+				for (int64_t iii=_search.size()-1; iii>=0; --iii) {
+					if (*_result != _search[iii]) {
+						find = false;
+						break;
+					}
+					--_result;
+					if ((bool)_result == false) {
+						if (iii != 0) {
+							find = false;
+						}
+						break;
+					}
+				}
+				if (find == true) {
+					_result++;
+					return true;
+				}
+			}
+		}
+	} else {
+		lastElement = tolower(lastElement);
+		// move in the string
+		for (Iterator it = _pos - 1;
+		     (bool)it == true;
+		     --it) {
+			//APPL_DEBUG("compare : " << *it << " ?= " << _search);
+			if (tolower(*it) == lastElement) {
+				// find the last char ==> check previous...
+				bool find = true;
+				_result = it;
+				for (int64_t iii=_search.size()-1; iii>=0; --iii) {
+					if (tolower(*_result) != tolower(_search[iii])) {
+						find = false;
+						break;
+					}
+					--_result;
+					if ((bool)_result == false) {
+						if (iii != 0) {
+							find = false;
+						}
+						break;
+					}
+				}
+				if (find == true) {
+					_result++;
+					return true;
+				}
+			}
+		}
+	}
+	_result = begin();
+	return false;
+}
+
 void appl::Buffer::moveCursor(int64_t _pos) {
 	m_cursorPreferredCol = -1;
-	APPL_DEBUG("move cursor : " << _pos << "/" << m_data.size());
+	APPL_VERBOSE("move cursor : " << _pos << "/" << m_data.size());
 	// selecting mode ...
 	if (m_selectMode == true) {
 		if (m_cursorSelectPos == -1) {

@@ -68,17 +68,6 @@ bool appl::TextPluginHistory::onReceiveMessage(appl::TextViewer& _textDrawer,
 			m_undo.pop_back();
 			return true;
 		}
-		/*
-		if (m_history[m_positionHistory]->m_removedText.size() == 0) {
-			// just insert mode
-		} else if (m_history[m_positionHistory]->m_posAdded == m_history[m_positionHistory]->m_endPosAdded) {
-			// just remove mode
-			
-		} else {
-			// just replace mode
-			
-		}
-		*/
 		appl::History *tmpElement = m_undo[m_undo.size()-1];
 		m_undo.pop_back();
 		m_redo.push_back(tmpElement);
@@ -95,7 +84,7 @@ void appl::TextPluginHistory::clearRedo(void) {
 	if (m_redo.size() == 0) {
 		return;
 	}
-	for (esize_t iii=0; iii<m_redo.size(); ++iii) {
+	for (size_t iii=0; iii<m_redo.size(); ++iii) {
 		if (m_redo[iii] == NULL) {
 			continue;
 		}
@@ -109,7 +98,7 @@ void appl::TextPluginHistory::clearUndo(void) {
 	if (m_undo.size() == 0) {
 		return;
 	}
-	for (esize_t iii=0; iii<m_undo.size(); ++iii) {
+	for (size_t iii=0; iii<m_undo.size(); ++iii) {
 		if (m_undo[iii] == NULL) {
 			continue;
 		}
@@ -129,12 +118,12 @@ bool appl::TextPluginHistory::onWrite(appl::TextViewer& _textDrawer,
 	appl::History *tmpElement = new appl::History();
 	if (tmpElement != NULL) {
 		tmpElement->m_addedText = _data;
-		tmpElement->m_posAdded = (esize_t)_pos;
-		tmpElement->m_endPosRemoved = (esize_t)_pos;
+		tmpElement->m_posAdded = (int64_t)_pos;
+		tmpElement->m_endPosRemoved = (int64_t)_pos;
 	}
 	_textDrawer.m_buffer->write(_data, _pos);
 	if (tmpElement != NULL) {
-		tmpElement->m_endPosAdded = (esize_t)_textDrawer.m_buffer->cursor();
+		tmpElement->m_endPosAdded = (int64_t)_textDrawer.m_buffer->cursor();
 		clearRedo();
 		m_undo.push_back(tmpElement);
 	}
@@ -151,14 +140,14 @@ bool appl::TextPluginHistory::onReplace(appl::TextViewer& _textDrawer,
 	}
 	appl::History *tmpElement = new appl::History();
 	if (tmpElement != NULL) {
-		tmpElement->m_posAdded = (esize_t)_pos;
+		tmpElement->m_posAdded = (int64_t)_pos;
 		tmpElement->m_addedText = _data;
-		tmpElement->m_endPosRemoved = (esize_t)_posEnd;
+		tmpElement->m_endPosRemoved = (int64_t)_posEnd;
 		_textDrawer.m_buffer->copy(tmpElement->m_removedText, _pos, _posEnd);
 	}
 	_textDrawer.m_buffer->replace(_data, _pos, _posEnd);
 	if (tmpElement != NULL) {
-		tmpElement->m_endPosAdded = (esize_t)_textDrawer.m_buffer->cursor();
+		tmpElement->m_endPosAdded = (int64_t)_textDrawer.m_buffer->cursor();
 		clearRedo();
 		m_undo.push_back(tmpElement);
 	}
@@ -175,9 +164,9 @@ bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
 	appl::History *tmpElement = new appl::History();
 	if (tmpElement != NULL) {
 		tmpElement->m_addedText = "";
-		tmpElement->m_posAdded = (esize_t)_pos;
+		tmpElement->m_posAdded = (int64_t)_pos;
 		tmpElement->m_endPosAdded = tmpElement->m_posAdded;
-		tmpElement->m_endPosRemoved = (esize_t)_posEnd;
+		tmpElement->m_endPosRemoved = (int64_t)_posEnd;
 		_textDrawer.m_buffer->copy(tmpElement->m_removedText, _pos, _posEnd);
 		clearRedo();
 		m_undo.push_back(tmpElement);

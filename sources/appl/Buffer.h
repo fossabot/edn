@@ -247,6 +247,13 @@ namespace appl {
 						}
 						return tmpp;
 					};
+					Iterator operator+ (const size_t _val) const {
+						Iterator tmpp(*this);
+						for (int64_t iii=0; iii<_val; ++iii) {
+							++tmpp;
+						}
+						return tmpp;
+					};
 					/**
 					 * @brief move the element position
 					 * @return a new iterator.
@@ -259,6 +266,13 @@ namespace appl {
 						return tmpp;
 					};
 					Iterator operator- (const int32_t _val) const {
+						Iterator tmpp(*this);
+						for (int64_t iii=0; iii<_val; ++iii) {
+							--tmpp;
+						}
+						return tmpp;
+					};
+					Iterator operator- (const size_t _val) const {
 						Iterator tmpp(*this);
 						for (int64_t iii=0; iii<_val; ++iii) {
 							--tmpp;
@@ -349,7 +363,7 @@ namespace appl {
 			 */
 			void setSelectionPos(const Iterator& _pos);
 			/**
-			 * @brief Un select request.
+			 * @brief Remove Selection of the buffer.
 			 */
 			void unSelect(void);
 			/**
@@ -446,6 +460,7 @@ namespace appl {
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
+			// TODO : rename find
 			bool search(const Iterator& _pos, const char32_t& _search, Iterator& _result);
 			/**
 			 * @brief Search a character in the buffer in back mode.
@@ -454,7 +469,28 @@ namespace appl {
 			 * @param[out] _result Research position.
 			 * @return true if pos if fined.
 			 */
+			// TODO : rename rfind
 			bool searchBack(const Iterator& _pos, const char32_t& _search, Iterator& _result);
+			/**
+			 * @brief Search a string in the buffer.
+			 * @param[in] _pos Position to start the search of the element.
+			 * @param[in] _search String to search.
+			 * @param[out] _result Research position.
+			 * @param[in] _caseSensitive (optional) Search making attention of the case [default true]
+			 * @return true if pos if fined.
+			 */
+			// TODO : rename find
+			bool search(const Iterator& _pos, const std::u32string& _search, Iterator& _result, bool _caseSensitive = true);
+			/**
+			 * @brief Search a string in the buffer in back mode.
+			 * @param[in] _pos Position to start the search of the element.
+			 * @param[in] _search String to search.
+			 * @param[out] _result Research position.
+			 * @param[in] _caseSensitive (optional) Search making attention of the case [default true]
+			 * @return true if pos if fined.
+			 */
+			// TODO : rename rfind
+			bool searchBack(const Iterator& _pos, const std::u32string& _search, Iterator& _result, bool _caseSensitive = true);
 			/**
 			 * @brief find the first character of the line "nLines" forward
 			 * @param[in] _startPos Start position.

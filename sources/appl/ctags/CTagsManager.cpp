@@ -8,8 +8,8 @@
 
 #include <appl/debug.h>
 #include <appl/global.h>
-#include <CTagsManager.h>
-#include <BufferManager.h>
+#include <appl/ctags/CTagsManager.h>
+#include <appl/BufferManager.h>
 #include <ewol/renderer/EObject.h>
 #include <ewol/renderer/eContext.h>
 #include <ewol/widget/meta/FileChooser.h>

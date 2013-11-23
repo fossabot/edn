@@ -26,9 +26,9 @@ namespace appl {
 			};
 			std::string m_addedText;
 			std::string m_removedText;
-			esize_t m_posAdded;
-			esize_t m_endPosAdded;
-			esize_t m_endPosRemoved;
+			int64_t m_posAdded;
+			int64_t m_endPosAdded;
+			int64_t m_endPosRemoved;
 	};
 	class TextPluginHistory : public appl::TextViewerPlugin {
 		public:

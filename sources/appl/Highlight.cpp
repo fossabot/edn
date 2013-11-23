@@ -8,7 +8,7 @@
 
 #include <appl/debug.h>
 #include <appl/global.h>
-#include <Highlight.h>
+#include <appl/Highlight.h>
 #include <exml/exml.h>
 #include <ewol/resources/ResourceManager.h>
 

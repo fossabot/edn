@@ -7,14 +7,11 @@
  */
 
 #include "appl/global.h"
-#include "Search.h"
-#include "SearchData.h"
+#include "appl/Gui/Search.h"
 #include "appl/BufferManager.h"
+#include "appl/Gui/TextViewer.h"
 #include "appl/Gui/MainWindows.h"
 #include "appl/globalMsg.h"
-
-#include <ewol/widget/Button.h>
-#include <ewol/widget/Image.h>
 
 
 #undef __class__
@@ -32,217 +29,118 @@ const char* const l_eventForwardCb = "appl-forward-CheckBox";
 const char* const l_eventHideBt = "appl-hide-button";
 
 Search::Search(void) :
-  widget::Sizer(widget::Sizer::modeHori),
+  widget::Composer(widget::Composer::file, "DATA:GUI-Search.xml"),
+  m_viewerManager(NULL),
+  m_forward(true),
+  m_caseSensitive(false),
+  m_wrap(true),
   m_searchEntry(NULL),
   m_replaceEntry(NULL) {
 	addObjectType("appl::Search");
-	m_forward = false;
-	// TODO : change the mode of creating interface : 
-	/* 
-	<composer>
-		<sizer mode="hori" expand="true,false" fill="true" lock="true">
-			<button name="SEARCH:close">
-				<image src="THEME:GUI:Remove.svg" fill="true" size="70,70mm"/>
-			</button>
-			<entry name="SEARCH:search-entry" expand="true" fill="true"/>
-			<button name="SEARCH:search">
-				<image src="THEME:GUI:Search.svg" fill="true" size="70,70mm"/>
-			</button>
-			<entry name="SEARCH:replace-entry" expand="true" fill="true"/>
-			<button name="SEARCH:replace">
-				<image src="THEME:GUI:Replace.svg" fill="true" size="70,70mm"/>
-			</button>
-			<button name="SEARCH:case">
-				<image src="THEME:GUI:CaseSensitive.svg" fill="true" size="70,70mm" hover="Close search bar"/>
-				<image src="THEME:GUI:CaseSensitive.svg" fill="true" size="70,70mm" hover="Close search bar"/>
-			</button>
-			<button name="SEARCH:wrap">
-				<image src="THEME:GUI:WrapAround.svg" fill="true" size="70,70mm" hover="Close search bar"/>
-				<image src="THEME:GUI:WrapAround.svg" fill="true" size="70,70mm" hover="Close search bar"/>
-			</button>
-			<button name="SEARCH:up-down">
-				<image src="THEME:GUI:Up.svg" fill="true" size="70,70mm" hover="Close search bar"/>
-				<image src="THEME:GUI:Down.svg" fill="true" size="70,70mm" hover="Close search bar"/>
-			</button>
-		</size>
-	</composer>
-	*/
-	widget::Button * myButtonImage = NULL;
-	myButtonImage = new widget::Button();
-	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error  == > it will missing in the display");
-	} else {
-		widget::Image* tmpImage = new widget::Image("THEME:GUI:Remove.svg");
-		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->setSubWidget(tmpImage);
-		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventHideBt);
-		subWidgetAdd(myButtonImage);
-	}
-	
-	m_searchEntry = new widget::Entry();
-	if (NULL == m_searchEntry) {
-		APPL_ERROR("Widget allocation error  == > it will missing in the display");
-	} else {
-		m_searchEntry->registerOnEvent(this, widget::Entry::eventModify, l_eventSearchEntry);
-		m_searchEntry->registerOnEvent(this, widget::Entry::eventEnter,  l_eventSearchEntryEnter);
-		m_searchEntry->setExpand(bvec2(true,false));
-		m_searchEntry->setFill(bvec2(true,false));
-		subWidgetAdd(m_searchEntry);
-	}
-	
-	myButtonImage = new widget::Button();
-	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error  == > it will missing in the display");
-	} else {
-		widget::Image* tmpImage = new widget::Image("THEME:GUI:Search.svg");
-		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->setSubWidget(tmpImage);
-		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventSearchBt);
-		subWidgetAdd(myButtonImage);
-	}
-	
-	m_replaceEntry = new widget::Entry();
-	if (NULL == m_replaceEntry) {
-		APPL_ERROR("Widget allocation error  == > it will missing in the display");
-	} else {
-		m_replaceEntry->registerOnEvent(this, widget::Entry::eventModify, l_eventReplaceEntry);
-		m_replaceEntry->registerOnEvent(this, widget::Entry::eventEnter, l_eventReplaceEntryEnter);
-		m_replaceEntry->setExpand(bvec2(true,false));
-		m_replaceEntry->setFill(bvec2(true,false));
-		subWidgetAdd(m_replaceEntry);
-	}
-	
-	myButtonImage = new widget::Button();
-	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error  == > it will missing in the display");
-	} else {
-		widget::Image* tmpImage = new widget::Image("THEME:GUI:Replace.svg");
-		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->setSubWidget(tmpImage);
-		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventReplaceBt);
-		subWidgetAdd(myButtonImage);
-	}
-	
-	myButtonImage = new widget::Button();
-	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error  == > it will missing in the display");
-	} else {
-		myButtonImage->setToggleMode(true);
-		
-		widget::Image* tmpImage = new widget::Image("THEME:GUI:CaseSensitive.svg");
-		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->setSubWidget(tmpImage);
-		
-		tmpImage = new widget::Image("THEME:GUI:CaseSensitive.svg"); // TODO : set color on Image .... 0xFFFFFF5F
-		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->setSubWidgetToggle(tmpImage);
-		
-		myButtonImage->setValue(!SearchData::getCase());
-		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventCaseCb);
-		subWidgetAdd(myButtonImage);
-	}
-	
-	myButtonImage = new widget::Button();
-	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error  == > it will missing in the display");
-	} else {
-		myButtonImage->setToggleMode(true);
-		
-		widget::Image* tmpImage = new widget::Image("THEME:GUI:WrapAround.svg");
-		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->setSubWidget(tmpImage);
-		
-		tmpImage = new widget::Image("THEME:GUI:WrapAround.svg"); // TODO : set color on Image .... 0xFFFFFF5F
-		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->setSubWidgetToggle(tmpImage);
-		
-		myButtonImage->setValue(!SearchData::getWrap());
-		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventWrapCb);
-		subWidgetAdd(myButtonImage);
-	}
-	
-	myButtonImage = new widget::Button();
-	if (NULL == myButtonImage) {
-		APPL_ERROR("Widget allocation error  == > it will missing in the display");
-	} else {
-		myButtonImage->setToggleMode(true);
-		
-		widget::Image* tmpImage = new widget::Image("THEME:GUI:Up.svg");
-		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->setSubWidget(tmpImage);
-		
-		tmpImage = new widget::Image("THEME:GUI:Down.svg");
-		tmpImage->setImageSize(ewol::Dimension(vec2(8,8), ewol::Dimension::Millimeter));
-		myButtonImage->setSubWidgetToggle(tmpImage);
-		
-		myButtonImage->setValue(!m_forward);
-		myButtonImage->registerOnEvent(this, widget::Button::eventPressed, l_eventForwardCb);
-		subWidgetAdd(myButtonImage);
-	}
-	
+	// load buffer manager:
+	m_viewerManager = appl::ViewerManager::keep();
+	// link event
+	registerOnEventNameWidget(this, "SEARCH:close",         "pressed", l_eventHideBt);
+	registerOnEventNameWidget(this, "SEARCH:search-entry",  "modify",  l_eventSearchEntry);
+	registerOnEventNameWidget(this, "SEARCH:search-entry",  "enter",   l_eventSearchEntryEnter);
+	registerOnEventNameWidget(this, "SEARCH:search",        "pressed", l_eventSearchBt);
+	registerOnEventNameWidget(this, "SEARCH:replace-entry", "modify",  l_eventReplaceEntry);
+	registerOnEventNameWidget(this, "SEARCH:replace-entry", "enter",   l_eventReplaceEntryEnter);
+	registerOnEventNameWidget(this, "SEARCH:replace",       "pressed", l_eventReplaceBt);
+	registerOnEventNameWidget(this, "SEARCH:case",          "value",   l_eventCaseCb);
+	registerOnEventNameWidget(this, "SEARCH:wrap",          "value",   l_eventWrapCb);
+	registerOnEventNameWidget(this, "SEARCH:up-down",       "value",   l_eventForwardCb);
+	// set default properties
+	setConfigNamed("SEARCH:case", "value", std::to_string(m_caseSensitive));
+	setConfigNamed("SEARCH:wrap", "value", std::to_string(m_wrap));
+	setConfigNamed("SEARCH:up-down", "value", std::to_string(m_forward));
+	// get widget
+	m_searchEntry = dynamic_cast<widget::Entry*>(getWidgetNamed("SEARCH:search-entry"));
+	m_replaceEntry = dynamic_cast<widget::Entry*>(getWidgetNamed("SEARCH:replace-entry"));
+	// Display and hide event:
 	registerMultiCast(ednMsgGuiSearch);
 	// basicly hiden ...
 	hide();
 }
 
 Search::~Search(void) {
-	
+	appl::ViewerManager::release(m_viewerManager);
+}
+
+void Search::find(void) {
+	if (m_viewerManager == NULL) {
+		APPL_WARNING("No viewer manager selected!!!");
+		return;
+	}
+	appl::TextViewer* viewer = m_viewerManager->getViewerSelected();
+	if (viewer == NULL) {
+		APPL_INFO("No viewer selected!!!");
+		return;
+	}
+	viewer->unSelect();
+	appl::Buffer::Iterator resultStart;
+	appl::Buffer::Iterator resultStop;
+	if (m_forward == true) {
+		if (viewer->find(viewer->cursor(), m_searchData, resultStart, resultStop, m_caseSensitive) == false) {
+			if (    m_wrap == false 
+			     || viewer->find(viewer->begin(), m_searchData, resultStart, resultStop, m_caseSensitive) == false) {
+				// TODO : Display an IHM pop-up
+				APPL_WARNING("No element find ...");
+				return;
+			}
+		}
+		viewer->select(resultStart, resultStop);
+	} else {
+		if (viewer->rfind(viewer->cursor(), m_searchData, resultStart, resultStop, m_caseSensitive) == false) {
+			if (    m_wrap == false 
+			     || viewer->rfind(viewer->end(), m_searchData, resultStart, resultStop, m_caseSensitive) == false) {
+				// TODO : Display an IHM pop-up
+				APPL_WARNING("No element find ...");
+				return;
+			}
+		}
+		viewer->select(resultStop, resultStart);
+	}
+}
+
+void Search::replace(void) {
+	if (m_viewerManager == NULL) {
+		APPL_WARNING("No viewer manager selected!!!");
+		return;
+	}
+	appl::TextViewer* viewer = m_viewerManager->getViewerSelected();
+	if (viewer == NULL) {
+		APPL_INFO("No viewer selected!!!");
+		return;
+	}
+	if (viewer->hasTextSelected() == false) {
+		// nothing to replace ...
+		return;
+	}
+	viewer->replace(m_replaceData);
 }
 
 
 void Search::onReceiveMessage(const ewol::EMessage& _msg) {
-	widget::Sizer::onReceiveMessage(_msg);
-	//APPL_INFO("Search receive message : \"" << eventId << "\" data=\"" << data << "\"");
+	widget::Composer::onReceiveMessage(_msg);
+	APPL_INFO("Search receive message : " << _msg);
 	if ( _msg.getMessage() == l_eventSearchEntry) {
-		SearchData::setSearch(_msg.getData());
-	} else if ( _msg.getMessage() == l_eventSearchEntryEnter) {
-		SearchData::setSearch(_msg.getData());
-		if (true == m_forward) {
-			sendMultiCast(ednMsgGuiFind, "Previous");
-		} else {
-			sendMultiCast(ednMsgGuiFind, "Next");
-		}
+		m_searchData = to_u32string(_msg.getData());
+	} else if (    _msg.getMessage() == l_eventSearchEntryEnter
+	            || _msg.getMessage() == l_eventSearchBt) {
+		find();
 	} else if ( _msg.getMessage() == l_eventReplaceEntry) {
-		SearchData::setReplace(_msg.getData());
-	} else if ( _msg.getMessage() == l_eventReplaceEntryEnter) {
-		SearchData::setReplace(_msg.getData());
-		sendMultiCast(ednMsgGuiReplace, "Normal");
-		if (true == m_forward) {
-			sendMultiCast(ednMsgGuiFind, "Previous");
-		} else {
-			sendMultiCast(ednMsgGuiFind, "Next");
-		}
-	} else if ( _msg.getMessage() == l_eventSearchBt) {
-		if (true == m_forward) {
-			sendMultiCast(ednMsgGuiFind, "Previous");
-		} else {
-			sendMultiCast(ednMsgGuiFind, "Next");
-		}
-	} else if ( _msg.getMessage() == l_eventReplaceBt) {
-		sendMultiCast(ednMsgGuiReplace, "Normal");
-		if (true == m_forward) {
-			sendMultiCast(ednMsgGuiFind, "Previous");
-		} else {
-			sendMultiCast(ednMsgGuiFind, "Next");
-		}
+		m_replaceData = to_u32string(_msg.getData());
+	} else if (    _msg.getMessage() == l_eventReplaceEntryEnter
+	            || _msg.getMessage() == l_eventReplaceBt) {
+		replace();
+		find();
 	} else if ( _msg.getMessage() == l_eventCaseCb) {
-		if (_msg.getData() == "true") {
-			SearchData::setCase(false);
-		} else {
-			SearchData::setCase(true);
-		}
+		m_caseSensitive = stobool(_msg.getData());
 	} else if ( _msg.getMessage() == l_eventWrapCb) {
-		if (_msg.getData() == "true") {
-			SearchData::setWrap(false);
-		} else {
-			SearchData::setWrap(true);
-		}
+		m_wrap = stobool(_msg.getData());
 	} else if ( _msg.getMessage() == l_eventForwardCb) {
-		if (_msg.getData() == "true") {
-			m_forward = false;
-		} else {
-			m_forward = true;
-		}
+		m_forward = stobool(_msg.getData());
 	} else if ( _msg.getMessage() == l_eventHideBt) {
 		hide();
 	} else if ( _msg.getMessage() == ednMsgGuiSearch) {
@@ -265,12 +163,15 @@ void Search::onReceiveMessage(const ewol::EMessage& _msg) {
 }
 
 void Search::onObjectRemove(ewol::EObject * _removeObject) {
-	widget::Sizer::onObjectRemove(_removeObject);
+	widget::Composer::onObjectRemove(_removeObject);
 	if (_removeObject == m_searchEntry) {
 		m_searchEntry = NULL;
 	}
 	if (_removeObject == m_replaceEntry) {
 		m_replaceEntry = NULL;
+	}
+	if (_removeObject == m_viewerManager) {
+		m_viewerManager = NULL;
 	}
 }
 

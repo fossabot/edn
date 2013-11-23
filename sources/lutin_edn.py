@@ -21,9 +21,9 @@ def Create(target):
 	myModule.AddSrcFile([
 		'appl/Gui/BufferView.cpp',
 		'appl/Gui/TextViewer.cpp',
+		'appl/Gui/ViewerManager.cpp',
 		'appl/Gui/MainWindows.cpp',
 		'appl/Gui/Search.cpp',
-		'appl/Gui/SearchData.cpp',
 		'appl/Gui/TagFileSelection.cpp',
 		'appl/Gui/TagFileList.cpp',
 		'appl/Gui/WorkerSaveFile.cpp',
@@ -78,15 +78,9 @@ def Create(target):
 	myModule.CopyFolder('../data/theme/default/*.svg','theme/default/')
 	myModule.CopyFolder('../data/theme/colorWhite/*.json','theme/colorWhite/')
 	myModule.CopyFolder('../data/theme/colorBlack/*.json','theme/colorBlack/')
+	myModule.CopyFolder('../data/GUI-Search.xml','')
 	
 	myModule.AddPath(lutinTools.GetCurrentPath(__file__))
-	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl")
-	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl/Buffer")
-	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl/Buffer/EdnBuf")
-	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl/Colorize")
-	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl/ctags")
-	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl/Gui")
-	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/appl/Highlight")
 	
 	
 	myModule.CopyFile("../data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")

@@ -6,7 +6,7 @@
  * @license GPL v3 (see license file)
  */
 
-#include <Highlight.h>
+#include <appl/Highlight.h>
 
 #ifndef __HIGHLIGHT_PATTERN_H__
 #define __HIGHLIGHT_PATTERN_H__

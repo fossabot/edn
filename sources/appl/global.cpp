@@ -7,13 +7,11 @@
  */
 
 #include <appl/global.h>
-//#include <ColorizeManager.h>
 #include <appl/globalMsg.h>
 #include <ewol/renderer/EObject.h>
 #include <ewol/renderer/eContext.h>
 #include <ewol/resources/ResourceManager.h>
 #include <etk/os/FSNode.h>
-//#include <ewol/UserConfig.h>
 
 #undef __class__
 #define __class__ "globals"

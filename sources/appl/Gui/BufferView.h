@@ -10,7 +10,7 @@
 #define __BUFFER_VIEW_H__
 
 #include <appl/debug.h>
-#include <BufferManager.h>
+#include <appl/BufferManager.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/List.h>
 #include <ewol/widget/Windows.h>

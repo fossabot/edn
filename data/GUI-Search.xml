@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composer>
+	<sizer mode="hori" expand="true,false" fill="true" lock="true">
+		<button name="SEARCH:close">
+			<image src="THEME:GUI:Remove.svg" fill="true" size="7,7mm"/>
+		</button>
+		<entry name="SEARCH:search-entry" expand="true" fill="true"/>
+		<button name="SEARCH:search">
+			<image src="THEME:GUI:Search.svg" fill="true" size="7,7mm"/>
+		</button>
+		<entry name="SEARCH:replace-entry" expand="true" fill="true"/>
+		<button name="SEARCH:replace">
+			<image src="THEME:GUI:Replace.svg" fill="true" size="7,7mm"/>
+		</button>
+		<button name="SEARCH:case">
+			<image src="THEME:GUI:CaseSensitive.svg" fill="true" size="7,7mm" hover="Close search bar"/>
+			<image src="THEME:GUI:CaseSensitive.svg" fill="true" size="7,7mm" hover="Close search bar"/>
+		</button>
+		<button name="SEARCH:wrap">
+			<image src="THEME:GUI:WrapAround.svg" fill="true" size="7,7mm" hover="Close search bar"/>
+			<image src="THEME:GUI:WrapAround.svg" fill="true" size="7,7mm" hover="Close search bar"/>
+		</button>
+		<button name="SEARCH:up-down">
+			<image src="THEME:GUI:Up.svg" fill="true" size="7,7mm" hover="Close search bar"/>
+			<image src="THEME:GUI:Down.svg" fill="true" size="7,7mm" hover="Close search bar"/>
+		</button>
+	</sizer>
+</composer>

@@ -8,13 +8,12 @@
 
 #include <appl/debug.h>
 #include <appl/global.h>
-#include <TextViewer.h>
-#include <BufferManager.h>
-//#include <ColorizeManager.h>
+#include <appl/Gui/TextViewer.h>
+#include <appl/BufferManager.h>
 #include <ewol/clipBoard.h>
-#include <SearchData.h>
 
 #include <ewol/widget/WidgetManager.h>
+#include <appl/Gui/ViewerManager.h>
 #include <ewol/renderer/EObject.h>
 #include <appl/TextPluginManager.h>
 
@@ -51,6 +50,7 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
+	m_viewerManager = appl::ViewerManager::keep();
 	
 	// load color properties
 	m_paintingProperties = appl::GlyphPainting::keep("THEME:COLOR:textViewer.json");
@@ -79,12 +79,9 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 
 appl::TextViewer::~TextViewer(void) {
 	appl::textPluginManager::disconnect(*this);
-	if (m_paintingProperties != NULL) {
-		appl::GlyphPainting::release(m_paintingProperties);
-	}
-	if (m_bufferManager != NULL) {
-		appl::BufferManager::release(m_bufferManager);
-	}
+	appl::GlyphPainting::release(m_paintingProperties);
+	appl::BufferManager::release(m_bufferManager);
+	appl::ViewerManager::release(m_viewerManager);
 }
 
 bool appl::TextViewer::calculateMinSize(void) {
@@ -211,6 +208,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	m_buffer->hightlightGenerateLines(displayLocalSyntax, (int64_t)startingIt, m_size.y());
 	float maxSizeX = 0;
 	appl::HighlightInfo * HLColor = NULL;
+	bool DisplayCursorAndSelection = isSelectedLast();
 	appl::Buffer::Iterator it;
 	for (it = startingIt;
 	     (bool)it == true;
@@ -226,7 +224,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			countColomn = 0;
 			maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
 			// Display the end line position only if we have the focus ...
-			if (getFocus() == true) {
+			if (DisplayCursorAndSelection == true) {
 				if (it >= selectPosStart && it < selectPosStop) {
 					ewol::Drawing& draw = m_displayText.getDrawing();
 					draw.setColor(etk::Color<>(0xFF0000FF));
@@ -265,7 +263,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		}
 		m_buffer->expand(countColomn, *it, stringToDisplay);
 		// Display selection only if we have the focus ...
-		if (getFocus() == true) {
+		if (DisplayCursorAndSelection == true) {
 			if (it >= selectPosStart && it < selectPosStop) {
 				m_displayText.setColor((*m_paintingProperties)[m_colorSelection].getForeground());
 				m_displayText.setColorBg((*m_paintingProperties)[m_colorSelection].getBackground());
@@ -687,12 +685,12 @@ void appl::TextViewer::updateScrolling(void) {
 		m_displayText.forceLineReturn();
 	}
 	realCursorPosition.setY(-m_displayText.getPos().y());
-	realCursorPosition.setX(getScreenSize(m_buffer->getStartLine(m_buffer->cursor())+1, m_buffer->cursor())-10);
+	realCursorPosition.setX(getScreenSize(m_buffer->getStartLine(m_buffer->cursor()), m_buffer->cursor()));
 	APPL_VERBOSE("position=" << realCursorPosition << " scrool=" << m_originScrooled << " size" << m_size);
-	if (realCursorPosition.x() < m_originScrooled.x()-lineSize*2.0f) {
+	if (realCursorPosition.x() < m_originScrooled.x()+lineSize*2.0f) {
 		m_originScrooled.setX(realCursorPosition.x()-lineSize*2.0f);
-	} else if (realCursorPosition.x() > m_originScrooled.x()+m_size.x()-lineSize*2.0f-10) {
-		m_originScrooled.setX(realCursorPosition.x()-m_size.x()+lineSize*2.0f+10);
+	} else if (realCursorPosition.x() > m_originScrooled.x()+(m_size.x()-m_lastOffsetDisplay)-lineSize*2.0f-10) {
+		m_originScrooled.setX(realCursorPosition.x()-(m_size.x()-m_lastOffsetDisplay)+lineSize*2.0f+10);
 	}
 	if (realCursorPosition.y() < m_originScrooled.y()+lineSize*2.0f) {
 		m_originScrooled.setY(realCursorPosition.y()-lineSize*2.0f);
@@ -704,7 +702,6 @@ void appl::TextViewer::updateScrolling(void) {
 }
 
 bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
-	APPL_ERROR(" request move cursor : " << (int64_t)_pos);
 	if (m_buffer == NULL) {
 		return false;
 	}
@@ -713,7 +710,6 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 		updateScrolling();
 		return true;
 	}
-	APPL_ERROR(" call move cursor : " << (int64_t)_pos);
 	m_buffer->moveCursor((int64_t)_pos);
 	updateScrolling();
 	return true;
@@ -795,9 +791,7 @@ void appl::TextViewer::moveCursorRight(appl::TextViewer::moveMode _mode) {
 		default:
 		case moveLetter:
 			it = m_buffer->cursor();
-			APPL_ERROR("Cursor position : " << (int64_t)it);
 			++it;
-			APPL_ERROR("Cursor position new : " << (int64_t)it);
 			moveCursor(it);
 			break;
 		case moveWord:
@@ -821,7 +815,6 @@ void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
 		case moveLetter:
 			it = m_buffer->cursor();
 			--it;
-			APPL_ERROR("Cursor position : " << (int64_t)it);
 			moveCursor(it);
 			break;
 		case moveWord:
@@ -849,7 +842,6 @@ void appl::TextViewer::moveCursorUp(uint32_t _nbLine) {
 	if (m_buffer->getFavoriteUpDownPos() < 0) {
 		m_buffer->setFavoriteUpDownPos(getScreenSize(lineStartPos, m_buffer->cursor()));
 	}
-	EWOL_DEBUG("move_up : " << m_buffer->getFavoriteUpDownPos());
 	// get the previous line
 	appl::Buffer::Iterator prevLineStartPos = m_buffer->countBackwardNLines(lineStartPos-1, _nbLine);
 	//APPL_INFO("Move line UP result : prevLineStartPos=" << prevLineStartPos);
@@ -876,7 +868,6 @@ void appl::TextViewer::moveCursorDown(uint32_t _nbLine) {
 	if (m_buffer->getFavoriteUpDownPos() < 0) {
 		m_buffer->setFavoriteUpDownPos(getScreenSize(lineStartPos, m_buffer->cursor()));
 	}
-	EWOL_DEBUG("move down : " << m_buffer->getFavoriteUpDownPos());
 	// get the next line :
 	appl::Buffer::Iterator nextLineStartPos = m_buffer->countForwardNLines(lineStartPos, _nbLine);
 	//APPL_INFO("Move line DOWN result : nextLineStartPos=" << nextLineStartPos);
@@ -942,21 +933,15 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 	return ret;
 }
 
-appl::TextViewer* appl::TextViewer::m_currentBufferSelect = NULL;
-
 void appl::TextViewer::setCurrentSelect(void) {
-	if (this == m_currentBufferSelect) {
-		return;
-	}
-	m_currentBufferSelect = this;
-	if (m_bufferManager != NULL) {
-		m_bufferManager->setBufferSelected(m_buffer);
+	if (m_viewerManager != NULL) {
+		m_viewerManager->setViewerSelected(this, m_buffer);
 	}
 }
 
 bool appl::TextViewer::isSelectedLast(void) {
-	if (this == m_currentBufferSelect) {
-		return true;
+	if (m_viewerManager != NULL) {
+		return m_viewerManager->isLastSelected(this);
 	}
 	return false;
 }

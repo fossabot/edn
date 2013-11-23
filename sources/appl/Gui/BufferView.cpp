@@ -8,10 +8,10 @@
 
 #include <appl/debug.h>
 #include <appl/global.h>
-#include <BufferView.h>
-#include <BufferManager.h>
+#include <appl/Gui/BufferView.h>
+#include <appl/BufferManager.h>
 //#include <ColorizeManager.h>
-#include <MainWindows.h>
+#include <appl/Gui/MainWindows.h>
 #include <ewol/renderer/EObject.h>
 
 #undef __class__

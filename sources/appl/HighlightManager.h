@@ -12,7 +12,7 @@
 
 #include <etk/UString.h>
 #include <appl/globalMsg.h>
-#include <Highlight.h>
+#include <appl/Highlight.h>
 #include <ewol/widget/Widget.h>
 
 namespace appl {
