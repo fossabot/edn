@@ -211,7 +211,8 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	m_buffer->hightlightGenerateLines(displayLocalSyntax, (int64_t)startingIt, m_size.y());
 	float maxSizeX = 0;
 	appl::HighlightInfo * HLColor = NULL;
-	for (appl::Buffer::Iterator it = startingIt;
+	appl::Buffer::Iterator it;
+	for (it = startingIt;
 	     (bool)it == true;
 	     ++it) {
 		if (it == m_buffer->cursor()) {
@@ -273,6 +274,9 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		m_displayText.print(stringToDisplay);
 		countColomn += stringToDisplay.size();
+	}
+	if (it == m_buffer->cursor()) {
+		tmpCursorPosition = m_displayText.getPos();
 	}
 	maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
 	// Display cursor only if we have the focus ...
@@ -700,6 +704,7 @@ void appl::TextViewer::updateScrolling(void) {
 }
 
 bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
+	APPL_ERROR(" request move cursor : " << (int64_t)_pos);
 	if (m_buffer == NULL) {
 		return false;
 	}
@@ -708,6 +713,7 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 		updateScrolling();
 		return true;
 	}
+	APPL_ERROR(" call move cursor : " << (int64_t)_pos);
 	m_buffer->moveCursor((int64_t)_pos);
 	updateScrolling();
 	return true;
@@ -789,8 +795,9 @@ void appl::TextViewer::moveCursorRight(appl::TextViewer::moveMode _mode) {
 		default:
 		case moveLetter:
 			it = m_buffer->cursor();
-			++it;
 			APPL_ERROR("Cursor position : " << (int64_t)it);
+			++it;
+			APPL_ERROR("Cursor position new : " << (int64_t)it);
 			moveCursor(it);
 			break;
 		case moveWord:
@@ -812,7 +819,7 @@ void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
 	switch (_mode) {
 		default:
 		case moveLetter:
-			it = m_buffer->cursor();;
+			it = m_buffer->cursor();
 			--it;
 			APPL_ERROR("Cursor position : " << (int64_t)it);
 			moveCursor(it);

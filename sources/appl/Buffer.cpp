@@ -20,19 +20,25 @@ const char* const appl::Buffer::eventChangeName = "edn-buffer-name-change";
 
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
 	m_value = etk::UChar::Null;
-	if (m_current<0) {
+	if (m_current < 0) {
 		m_current = 0;
 		return *this;
 	}
-	if (    m_data != NULL
-	     && m_current < m_data->m_data.size() ) {
-		int8_t nbChar = etk::UChar::theoricUTF8Len(m_data->m_data[m_current]);
-		if (m_current+nbChar >= m_data->m_data.size()) {
-			m_current = m_data->m_data.size();
-			return *this;
+	if (m_data != NULL) {
+		if (m_current < m_data->m_data.size() ) {
+			int8_t nbChar = etk::UChar::theoricUTF8Len(m_data->m_data[m_current]);
+			APPL_DEBUG("get pos=" << m_current << "len=" << nbChar);
+			if (nbChar != 0) {
+				m_current+=nbChar;
+			} else {
+				m_current++;
+			}
 		}
-		m_current+=nbChar;
+		if (m_current >= m_data->m_data.size()) {
+			m_current = m_data->m_data.size();
+		}
 	}
+	APPL_DEBUG("    ==> return " << m_current);
 	return *this;
 }
 
@@ -93,7 +99,7 @@ appl::Buffer::Iterator appl::Buffer::begin(void) {
 
 appl::Buffer::Iterator appl::Buffer::end(void) {
 	// TODO : chek the validity of the char ...
-	return position( m_data.size()-1 );
+	return position( m_data.size() );
 }
 
 appl::Buffer::Iterator appl::Buffer::cursor(void) {
@@ -116,7 +122,7 @@ appl::Buffer::Buffer(void) :
   m_hasFileName(false),
   m_fileName(""),
   m_isModify(false),
-  m_cursorPos(-1),
+  m_cursorPos(0),
   m_cursorSelectPos(-1),
   m_cursorPreferredCol(-1),
   m_nbLines(1),
@@ -193,16 +199,13 @@ void appl::Buffer::setModification(bool _status) {
 
 // TODO : Naming error
 void appl::Buffer::countNumberofLine(void) {
-	m_nbLines = 0;
+	m_nbLines = 1;
 	for (Iterator it = begin();
 	     (bool)it == true;
 	     ++it) {
 		if (*it == etk::UChar::Return) {
 			++m_nbLines;
 		}
-	}
-	if (m_nbLines == 0) {
-		m_nbLines = 1;
 	}
 }
 
@@ -260,6 +263,7 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos, const char32_t
 
 void appl::Buffer::moveCursor(int64_t _pos) {
 	m_cursorPreferredCol = -1;
+	APPL_DEBUG("move cursor : " << _pos << "/" << m_data.size());
 	// selecting mode ...
 	if (m_selectMode == true) {
 		if (m_cursorSelectPos == -1) {
@@ -268,7 +272,7 @@ void appl::Buffer::moveCursor(int64_t _pos) {
 				m_cursorSelectPos = 0;
 			}
 		}
-		//APPL_DEBUG("Select : " << m_cursorSelectPos << " ==> " << newPos);
+		//APPL_DEBUG("Select : " << m_cursorSelectPos << " ==> " << _pos);
 		m_cursorPos = _pos;
 		if (m_cursorPos == m_cursorSelectPos) {
 			m_cursorSelectPos = -1;

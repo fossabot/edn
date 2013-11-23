@@ -101,8 +101,8 @@ namespace appl {
 						if (m_current < 0) {
 							return 0;
 						}
-						if (m_current >= m_data->m_data.size()) {
-							return m_data->m_data.size()-1;
+						if (m_current > m_data->m_data.size()) {
+							return m_data->m_data.size();
 						}
 						return m_current;
 					};
