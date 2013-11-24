@@ -40,6 +40,7 @@ def Create(target):
 		'appl/TextPluginMultiLineTab.cpp',
 		'appl/TextPluginAutoIndent.cpp',
 		'appl/TextPluginHistory.cpp',
+		'appl/TextPluginRmLine.cpp',
 		'appl/TextPluginManager.cpp'])
 	
 	# Generic color management for the text editor : 

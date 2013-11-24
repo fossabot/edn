@@ -246,6 +246,67 @@ namespace appl {
 				}
 				return m_buffer->end();
 			}
+			/**
+			 * @brief Get an Iterator on the start selection.
+			 * @return The Iterator
+			 */
+			appl::Buffer::Iterator selectStart(void) {
+				if (m_buffer==NULL) {
+					return appl::Buffer::Iterator();
+				}
+				return m_buffer->selectStart();
+			}
+			/**
+			 * @brief Get an Iterator on the stop selection.
+			 * @return The Iterator
+			 */
+			appl::Buffer::Iterator selectStop(void) {
+				if (m_buffer==NULL) {
+					return appl::Buffer::Iterator();
+				}
+				return m_buffer->selectStop();
+			}
+			/**
+			 * @brief get the start of a line with the position in the buffer.
+			 * @param[in] _pos position in the buffer.
+			 * @return The position in the buffer of the start of the line.
+			 */
+			appl::Buffer::Iterator getStartLine(const appl::Buffer::Iterator& _pos) {
+				if (m_buffer==NULL) {
+					return appl::Buffer::Iterator();
+				}
+				return m_buffer->getStartLine(_pos);
+			}
+			/**
+			 * @brief get the end of a line with the position in the buffer.
+			 * @param[in] _pos position in the buffer.
+			 * @return The position in the buffer of the end of the line.
+			 */
+			appl::Buffer::Iterator getEndLine(const appl::Buffer::Iterator& _pos) {
+				if (m_buffer==NULL) {
+					return appl::Buffer::Iterator();
+				}
+				return m_buffer->getEndLine(_pos);
+			}
+			/**
+			 * @brief Register of the arrival of a Multicast message
+			 * @param[in] _messageId Event Id waiting for...
+			 */
+			void ext_registerMultiCast(const char* const _messageId) {
+				registerMultiCast(_messageId);
+			}
+			/**
+			 * @brief add a specific shortcut with his description
+			 * @param[in] _descriptiveString Description string of the shortcut
+			 * @param[in] _generateEventId Event generic of the element
+			 * @param[in] _data Associate data wit the event
+			 */
+			virtual void ext_shortCutAdd(const char * _descriptiveString,
+			                         const char * _generateEventId,
+			                         std::string _data="",
+			                         bool _broadcast=false) {
+				shortCutAdd(_descriptiveString, _generateEventId, _data, _broadcast);
+			}
 	};
 };
 

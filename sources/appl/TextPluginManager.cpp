@@ -12,6 +12,7 @@
 #include <appl/TextPluginMultiLineTab.h>
 #include <appl/TextPluginAutoIndent.h>
 #include <appl/TextPluginHistory.h>
+#include <appl/TextPluginRmLine.h>
 
 #undef __class__
 #define __class__ "textPluginManager"
@@ -78,6 +79,7 @@ void appl::textPluginManager::addDefaultPlugin(void) {
 	appl::textPluginManager::addPlugin(new appl::TextPluginMultiLineTab());
 	appl::textPluginManager::addPlugin(new appl::TextPluginAutoIndent());
 	appl::textPluginManager::addPlugin(new appl::TextPluginHistory());
+	appl::textPluginManager::addPlugin(new appl::TextPluginRmLine());
 }
 
 void appl::textPluginManager::addPlugin(appl::TextViewerPlugin* _plugin) {
