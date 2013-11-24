@@ -35,7 +35,6 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	addObjectType("appl::TextViewer");
 	setCanHaveFocus(true);
 	registerMultiCast(ednMsgBufferId);
-	registerMultiCast(ednMsgGuiRm);
 	registerMultiCast(ednMsgGuiSelect);
 	registerMultiCast(ednMsgGuiFind);
 	registerMultiCast(ednMsgGuiReplace);
@@ -43,8 +42,6 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	registerMultiCast(appl::MsgSelectNewFile);
 	setLimitScrolling(0.2);
 	
-	shortCutAdd("ctrl+w",       ednMsgGuiRm,     "Line");
-	shortCutAdd("ctrl+shift+w", ednMsgGuiRm,     "Paragraph");
 	shortCutAdd("ctrl+a",       ednMsgGuiSelect, "ALL");
 	shortCutAdd("ctrl+shift+a", ednMsgGuiSelect, "NONE");
 	
@@ -521,14 +518,12 @@ void appl::TextViewer::mouseEventDouble(void) {
 		moveCursor(endPos);
 		m_buffer->setSelectionPos(beginPos);
 	}
-	// TODO : copy(ewol::clipBoard::clipboardSelection);
 }
 
 void appl::TextViewer::mouseEventTriple(void) {
 	//m_selectMode = false;
 	moveCursor(m_buffer->getEndLine(m_buffer->cursor()));
 	m_buffer->setSelectionPos(m_buffer->getStartLine(m_buffer->cursor()));
-	// TODO : copy(ewol::clipBoard::clipboardSelection);
 }
 
 appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativePos) {
@@ -546,7 +541,6 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
 		for (size_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
 			if (stringToDisplay[kkk] == etk::UChar::Return) {
-				// TODO : Remove this, use the automatic line manager ...
 				m_displayText.forceLineReturn();
 				countColomn = 0;
 			} else {
@@ -554,21 +548,23 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 				if (-_relativePos.y() >= positionCurentDisplay.y()) {
 					m_displayText.print(stringToDisplay[kkk]);
 				}
+				++countColomn;
 			}
 		}
 		if (-_relativePos.y() >= positionCurentDisplay.y()) {
 			if (-_relativePos.y() < positionCurentDisplay.y()+tmpLetterSize.y()) {
-				//APPL_DEBUG("line position : " << _textDrawer.getPos() << " " << positionCurentDisplay );
+				APPL_VERBOSE("line position : '" << (char)(*it) << "' = '" << stringToDisplay << "' n=" << countColomn << " " <<positionCurentDisplay.x() << " < " << _relativePos.x() << " < " << m_displayText.getPos().x() );
 				if (    _relativePos.x() >= positionCurentDisplay.x()
 				     && _relativePos.x() < m_displayText.getPos().x() ) {
+					APPL_VERBOSE("find ...");
 					return it;
 				}
 			} else {
+				// previous line ...
 				return --it;
 			}
 		}
 		positionCurentDisplay = m_displayText.getPos();
-		countColomn += stringToDisplay.size();
 	}
 	return m_buffer->end();
 }
