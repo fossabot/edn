@@ -21,17 +21,7 @@
 #include <tuple>
 
 namespace appl {
-	class TextViewerPlugin;
-	class TextPluginCopy;
-	class TextPluginMultiLineTab;
-	class TextPluginAutoIndent;
-	class TextPluginHistory;
 	class TextViewer : public widget::WidgetScrooled {
-		friend class appl::TextViewerPlugin;
-		friend class appl::TextPluginCopy;
-		friend class appl::TextPluginMultiLineTab;
-		friend class appl::TextPluginAutoIndent;
-		friend class appl::TextPluginHistory;
 		private:
 			appl::GlyphPainting* m_paintingProperties; //!< element painting property
 			esize_t m_colorBackground;
@@ -86,8 +76,68 @@ namespace appl {
 			bool replace(const std::u32string& _data) {
 				return replace(to_u8string(_data));
 			}
+			/**
+			 * @brief Remove selected data ...
+			 */
 			void remove(void);
+			/**
+			 * @brief Remove selected data ... (No plugin call)
+			 */
+			void removeDirect(void) {
+				if (m_buffer==NULL) {
+					return;
+				}
+				m_buffer->removeSelection();
+			}
 			
+			/**
+			 * @brief copy data in the _data ref value.
+			 * @param[out] _data Output stream to copy.
+			 * @return true of no error occured.
+			 */
+			bool copy(std::string& _data) {
+				if (m_buffer==NULL) {
+					return false;
+				}
+				return m_buffer->copy(_data);
+			}
+			/**
+			 * @brief copy data in the _data ref value.
+			 * @param[out] _data Output stream to copy.
+			 * @param[in] _pos Position to add the data.
+			 * @param[in] _posEnd End position to end replace the data.
+			 */
+			void copy(std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+				if (m_buffer==NULL) {
+					return;
+				}
+				m_buffer->copy(_data, _pos, _posEnd);
+			}
+			/**
+			 * @brief Write data at a specific position (No plugin call)
+			 * @param[in] _data Data to insert in the buffer
+			 * @param[in] _pos Position to add the data.
+			 * @return true if the write is done corectly
+			 */
+			bool writeDirect(const std::string& _data, const appl::Buffer::Iterator& _pos) {
+				if (m_buffer==NULL) {
+					return false;
+				}
+				return m_buffer->write(_data, _pos);
+			}
+			/**
+			 * @brief Write data at a specific position (No plugin call)
+			 * @param[in] _data Data to insert in the buffer
+			 * @param[in] _pos Position to add the data.
+			 * @param[in] _posEnd End position to end replace the data.
+			 * @return true if the write is done corectly
+			 */
+			bool replaceDirect(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+				if (m_buffer==NULL) {
+					return false;
+				}
+				return m_buffer->replace(_data, _pos, _posEnd);
+			}
 			
 			appl::Buffer::Iterator getMousePosition(const vec2& _relativePos);
 			void mouseEventDouble(void);
@@ -163,7 +213,7 @@ namespace appl {
 			 * @param[in] _start Start position of the selection
 			 * @param[in] _stop Stop position of the selection (the curor is set at this position)
 			 */
-			virtual void select(appl::Buffer::Iterator& _start, appl::Buffer::Iterator& _stop) {
+			virtual void select(const appl::Buffer::Iterator& _start, const appl::Buffer::Iterator& _stop) {
 				if (m_buffer==NULL) {
 					return;
 				}
@@ -215,6 +265,17 @@ namespace appl {
 					_resultStop = _resultStart + _search.size();
 				}
 				return ret;
+			}
+			/**
+			 * @brief Get an iterator an an specific position
+			 * @param[in] _pos Requested position of the iterator.
+			 * @return The Iterator
+			 */
+			appl::Buffer::Iterator position(int64_t _pos) {
+				if (m_buffer==NULL) {
+					return appl::Buffer::Iterator();
+				}
+				return m_buffer->position(_pos);
 			}
 			/**
 			 * @brief Get the cursor position.

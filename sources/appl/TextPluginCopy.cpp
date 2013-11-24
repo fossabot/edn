@@ -21,12 +21,12 @@ appl::TextPluginCopy::TextPluginCopy(void) {
 
 void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
-	_textDrawer.registerMultiCast(ednMsgGuiCopy);
-	_textDrawer.registerMultiCast(ednMsgGuiPaste);
-	_textDrawer.registerMultiCast(ednMsgGuiCut);
-	_textDrawer.shortCutAdd("ctrl+x", ednMsgGuiCut,   "STD");
-	_textDrawer.shortCutAdd("ctrl+c", ednMsgGuiCopy,  "STD");
-	_textDrawer.shortCutAdd("ctrl+v", ednMsgGuiPaste, "STD");
+	_textDrawer.ext_registerMultiCast(ednMsgGuiCopy);
+	_textDrawer.ext_registerMultiCast(ednMsgGuiPaste);
+	_textDrawer.ext_registerMultiCast(ednMsgGuiCut);
+	_textDrawer.ext_shortCutAdd("ctrl+x", ednMsgGuiCut,   "STD");
+	_textDrawer.ext_shortCutAdd("ctrl+c", ednMsgGuiCopy,  "STD");
+	_textDrawer.ext_shortCutAdd("ctrl+v", ednMsgGuiPaste, "STD");
 }
 
 void appl::TextPluginCopy::onPluginDisable(appl::TextViewer& _textDrawer) {
@@ -40,9 +40,9 @@ bool appl::TextPluginCopy::onReceiveMessage(appl::TextViewer& _textDrawer,
 	}
 	if (    _msg.getMessage() == ednMsgGuiCopy
 	     || _msg.getMessage() == ednMsgGuiCut) {
-		if (_textDrawer.m_buffer != NULL) {
+		if (_textDrawer.hasBuffer() == true) {
 			std::string value;
-			_textDrawer.m_buffer->copy(value);
+			_textDrawer.copy(value);
 			if (value.size() != 0) {
 				ewol::clipBoard::set(ewol::clipBoard::clipboardStd, value);
 			}
@@ -52,7 +52,7 @@ bool appl::TextPluginCopy::onReceiveMessage(appl::TextViewer& _textDrawer,
 		}
 		return true;
 	} else if (_msg.getMessage() == ednMsgGuiPaste) {
-		if (_textDrawer.m_buffer != NULL) {
+		if (_textDrawer.hasBuffer() == true) {
 			ewol::clipBoard::request(ewol::clipBoard::clipboardStd);
 		}
 		return true;

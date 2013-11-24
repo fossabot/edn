@@ -293,7 +293,7 @@ const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
 void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 	ewol::Windows::onReceiveMessage(_msg);
 	
-	APPL_INFO("Receive Event from the main windows: " << _msg );
+	APPL_VERBOSE("Receive Event from the main windows: " << _msg );
 	// open file Section ...
 	if (_msg.getMessage() == ednMsgGuiOpen) {
 		widget::FileChooser* tmpWidget = new widget::FileChooser();

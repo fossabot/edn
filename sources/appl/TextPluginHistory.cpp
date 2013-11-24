@@ -29,10 +29,10 @@ appl::TextPluginHistory::~TextPluginHistory(void) {
 
 void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
-	_textDrawer.registerMultiCast(ednMsgGuiRedo);
-	_textDrawer.registerMultiCast(ednMsgGuiUndo);
-	_textDrawer.shortCutAdd("ctrl+z", ednMsgGuiUndo);
-	_textDrawer.shortCutAdd("ctrl+shift+z", ednMsgGuiRedo);
+	_textDrawer.ext_registerMultiCast(ednMsgGuiRedo);
+	_textDrawer.ext_registerMultiCast(ednMsgGuiUndo);
+	_textDrawer.ext_shortCutAdd("ctrl+z", ednMsgGuiUndo);
+	_textDrawer.ext_shortCutAdd("ctrl+shift+z", ednMsgGuiRedo);
 }
 
 void appl::TextPluginHistory::onPluginDisable(appl::TextViewer& _textDrawer) {
@@ -55,9 +55,9 @@ bool appl::TextPluginHistory::onReceiveMessage(appl::TextViewer& _textDrawer,
 		appl::History *tmpElement = m_redo[m_redo.size()-1];
 		m_redo.pop_back();
 		m_undo.push_back(tmpElement);
-		_textDrawer.m_buffer->replace(tmpElement->m_addedText,
-		                              _textDrawer.m_buffer->position(tmpElement->m_posAdded),
-		                              _textDrawer.m_buffer->position(tmpElement->m_endPosRemoved) );
+		_textDrawer.replaceDirect(tmpElement->m_addedText,
+		                          _textDrawer.position(tmpElement->m_posAdded),
+		                          _textDrawer.position(tmpElement->m_endPosRemoved) );
 		
 		return true;
 	} else if (_msg.getMessage() == ednMsgGuiUndo) {
@@ -71,9 +71,9 @@ bool appl::TextPluginHistory::onReceiveMessage(appl::TextViewer& _textDrawer,
 		appl::History *tmpElement = m_undo[m_undo.size()-1];
 		m_undo.pop_back();
 		m_redo.push_back(tmpElement);
-		_textDrawer.m_buffer->replace(tmpElement->m_removedText,
-		                              _textDrawer.m_buffer->position(tmpElement->m_posAdded),
-		                              _textDrawer.m_buffer->position(tmpElement->m_endPosAdded) );
+		_textDrawer.replaceDirect(tmpElement->m_removedText,
+		                          _textDrawer.position(tmpElement->m_posAdded),
+		                          _textDrawer.position(tmpElement->m_endPosAdded) );
 		
 		return true;
 	}
@@ -121,13 +121,13 @@ bool appl::TextPluginHistory::onWrite(appl::TextViewer& _textDrawer,
 		tmpElement->m_posAdded = (int64_t)_pos;
 		tmpElement->m_endPosRemoved = (int64_t)_pos;
 	}
-	_textDrawer.m_buffer->write(_data, _pos);
+	_textDrawer.writeDirect(_data, _pos);
 	if (tmpElement != NULL) {
-		tmpElement->m_endPosAdded = (int64_t)_textDrawer.m_buffer->cursor();
+		tmpElement->m_endPosAdded = (int64_t)_textDrawer.cursor();
 		clearRedo();
 		m_undo.push_back(tmpElement);
 	}
-	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.m_buffer->cursor());
+	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.cursor());
 	return true;
 }
 
@@ -143,15 +143,15 @@ bool appl::TextPluginHistory::onReplace(appl::TextViewer& _textDrawer,
 		tmpElement->m_posAdded = (int64_t)_pos;
 		tmpElement->m_addedText = _data;
 		tmpElement->m_endPosRemoved = (int64_t)_posEnd;
-		_textDrawer.m_buffer->copy(tmpElement->m_removedText, _pos, _posEnd);
+		_textDrawer.copy(tmpElement->m_removedText, _pos, _posEnd);
 	}
-	_textDrawer.m_buffer->replace(_data, _pos, _posEnd);
+	_textDrawer.replaceDirect(_data, _pos, _posEnd);
 	if (tmpElement != NULL) {
-		tmpElement->m_endPosAdded = (int64_t)_textDrawer.m_buffer->cursor();
+		tmpElement->m_endPosAdded = (int64_t)_textDrawer.cursor();
 		clearRedo();
 		m_undo.push_back(tmpElement);
 	}
-	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.m_buffer->cursor());
+	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.cursor());
 	return true;
 }
 
@@ -167,12 +167,12 @@ bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
 		tmpElement->m_posAdded = (int64_t)_pos;
 		tmpElement->m_endPosAdded = tmpElement->m_posAdded;
 		tmpElement->m_endPosRemoved = (int64_t)_posEnd;
-		_textDrawer.m_buffer->copy(tmpElement->m_removedText, _pos, _posEnd);
+		_textDrawer.copy(tmpElement->m_removedText, _pos, _posEnd);
 		clearRedo();
 		m_undo.push_back(tmpElement);
 	}
-	_textDrawer.m_buffer->removeSelection();
-	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.m_buffer->cursor());
+	_textDrawer.removeDirect();
+	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.cursor());
 	return true;
 }
 

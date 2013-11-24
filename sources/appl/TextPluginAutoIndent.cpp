@@ -38,11 +38,11 @@ bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
 	if (_event.getSpecialKey().isSetShift() == true) {
 		return false;
 	}
-	appl::Buffer::Iterator startLine = _textDrawer.m_buffer->cursor();
-	if (_textDrawer.m_buffer->hasTextSelected() == true) {
-		startLine = _textDrawer.m_buffer->selectStart();
+	appl::Buffer::Iterator startLine = _textDrawer.cursor();
+	if (_textDrawer.hasTextSelected() == true) {
+		startLine = _textDrawer.selectStart();
 	}
-	startLine = _textDrawer.m_buffer->getStartLine(startLine);
+	startLine = _textDrawer.getStartLine(startLine);
 	std::string data = "\n";
 	
 	

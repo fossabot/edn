@@ -34,17 +34,17 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	if (localValue != etk::UChar::Tabulation) {
 		return false;
 	}
-	if (_textDrawer.m_buffer->hasTextSelected() == false) {
+	if (_textDrawer.hasTextSelected() == false) {
 		return false;
 	}
-	appl::Buffer::Iterator itStart = _textDrawer.m_buffer->selectStart();
-	appl::Buffer::Iterator itStop = _textDrawer.m_buffer->selectStop();
+	appl::Buffer::Iterator itStart = _textDrawer.selectStart();
+	appl::Buffer::Iterator itStop = _textDrawer.selectStop();
 	// get the compleate section of the buffer :
-	itStart = _textDrawer.m_buffer->getStartLine(itStart);
-	itStop = _textDrawer.m_buffer->getEndLine(itStop);
+	itStart = _textDrawer.getStartLine(itStart);
+	itStop = _textDrawer.getEndLine(itStop);
 	// copy the curent data in a classicle string:
 	std::string data;
-	_textDrawer.m_buffer->copy(data, itStart, itStop);
+	_textDrawer.copy(data, itStart, itStop);
 	// TODO : Change this ...
 	bool m_useTabs = true;
 	int32_t m_tabDist = 4;
@@ -91,6 +91,6 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	}
 	// Real replace of DATA :
 	_textDrawer.replace(data, itStart, itStop);
-	_textDrawer.m_buffer->setSelectionPos(itStart);
+	_textDrawer.select(itStart, itStart+data.size());
 	return true;
 }
