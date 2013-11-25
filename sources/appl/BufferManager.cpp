@@ -58,6 +58,10 @@ appl::Buffer* appl::BufferManager::get(const std::string& _fileName, bool _creat
 		}
 	}
 	if (_createIfNeeded == true) {
+		if (etk::FSNodeGetType(_fileName) == etk::FSN_FOLDER) {
+			APPL_INFO("try open a folder : " << _fileName);
+			return NULL;
+		}
 		appl::Buffer* tmp = new appl::Buffer();
 		if (tmp == NULL) {
 			APPL_ERROR("Can not allocate the Buffer class : " << _fileName);
@@ -101,10 +105,13 @@ bool appl::BufferManager::exist(const std::string& _fileName) {
 }
 
 void appl::BufferManager::open(const std::string& _fileName) {
-	if (exist(_fileName) == false) {
-		(void)get(_fileName, true);
-		sendMultiCast(appl::MsgSelectNewFile, _fileName);
+	if (exist(_fileName) == true) {
+		return;
 	}
+	if (get(_fileName, true) == NULL) {
+		return;
+	}
+	sendMultiCast(appl::MsgSelectNewFile, _fileName);
 }
 
 void appl::BufferManager::onReceiveMessage(const ewol::EMessage& _msg) {
