@@ -13,6 +13,8 @@
 #include <appl/TextPluginAutoIndent.h>
 #include <appl/TextPluginHistory.h>
 #include <appl/TextPluginRmLine.h>
+#include <appl/TextPluginSelectAll.h>
+#include <appl/TextPluginCtags.h>
 
 #undef __class__
 #define __class__ "textPluginManager"
@@ -80,6 +82,8 @@ void appl::textPluginManager::addDefaultPlugin(void) {
 	appl::textPluginManager::addPlugin(new appl::TextPluginAutoIndent());
 	appl::textPluginManager::addPlugin(new appl::TextPluginHistory());
 	appl::textPluginManager::addPlugin(new appl::TextPluginRmLine());
+	appl::textPluginManager::addPlugin(new appl::TextPluginSelectAll());
+	appl::textPluginManager::addPlugin(new appl::TextPluginCtags());
 }
 
 void appl::textPluginManager::addPlugin(appl::TextViewerPlugin* _plugin) {

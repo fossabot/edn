@@ -261,7 +261,7 @@ MainWindows::MainWindows(void) {
 	shortCutAdd("ctrl+f",       ednMsgGuiSearch, "", true);
 	shortCutAdd("F12",          ednMsgGuiReloadShader, "", true);
 	
-	shortCutAdd("ctrl+d",       ednMsgGuiCtags, "Jump", true);
+	//shortCutAdd("ctrl+d",       ednMsgGuiCtags, "Jump", true);
 	
 	
 	

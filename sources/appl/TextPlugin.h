@@ -19,7 +19,7 @@ namespace appl {
 		friend class appl::TextViewer;
 		public:
 			TextViewerPlugin(void);
-			~TextViewerPlugin(void);
+			virtual ~TextViewerPlugin(void);
 		private:
 			bool m_isEnable; //!< The plugin is enable or not (for all viewer).
 		public:

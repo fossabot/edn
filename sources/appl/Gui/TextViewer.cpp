@@ -35,15 +35,11 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	addObjectType("appl::TextViewer");
 	setCanHaveFocus(true);
 	registerMultiCast(ednMsgBufferId);
-	registerMultiCast(ednMsgGuiSelect);
 	registerMultiCast(ednMsgGuiFind);
 	registerMultiCast(ednMsgGuiReplace);
 	registerMultiCast(ednMsgGuiGotoLine);
 	registerMultiCast(appl::MsgSelectNewFile);
 	setLimitScrolling(0.2);
-	
-	shortCutAdd("ctrl+a",       ednMsgGuiSelect, "ALL");
-	shortCutAdd("ctrl+shift+a", ednMsgGuiSelect, "NONE");
 	
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
@@ -60,15 +56,6 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	m_colorSelection = m_paintingProperties->request("SelectedText");
 	m_colorNormal = m_paintingProperties->request("normal");
 	
-	// by default we load an example object:
-	/*
-	m_buffer = new appl::Buffer();
-	if (m_buffer == NULL) {
-		APPL_ERROR("can not create buffer ... ");
-		return;
-	}
-	m_buffer->loadFile("./example.txt");
-	*/
 	appl::textPluginManager::connect(*this);
 	// last created has focus ...
 	setCurrentSelect();

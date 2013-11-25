@@ -41,6 +41,8 @@ def Create(target):
 		'appl/TextPluginAutoIndent.cpp',
 		'appl/TextPluginHistory.cpp',
 		'appl/TextPluginRmLine.cpp',
+		'appl/TextPluginSelectAll.cpp',
+		'appl/TextPluginCtags.cpp',
 		'appl/TextPluginManager.cpp'])
 	
 	# Generic color management for the text editor : 

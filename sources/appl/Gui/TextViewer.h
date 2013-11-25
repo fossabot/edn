@@ -37,8 +37,9 @@ namespace appl {
 		public:
 			TextViewer(const std::string& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);
-		private:
+		public:
 			appl::Buffer* m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
+		private:
 			ewol::Text m_displayText; //!< Text display properties.
 			ewol::Drawing m_displayDrawing; //!< Other diaplay requested.
 			std::vector<std::pair<appl::Buffer*, vec2>> m_drawingRemenber;
@@ -265,6 +266,21 @@ namespace appl {
 					_resultStop = _resultStart + _search.size();
 				}
 				return ret;
+			}
+			/**
+			 * @brief Get the position of selection around (select word).
+			 * @param[in] _pos Position to start the selection.
+			 * @param[out] _beginPos Position where the element start.
+			 * @param[out] _endPos Position where the element stop.
+			 * @return true if we find a selection around.
+			 */
+			bool getPosAround(const appl::Buffer::Iterator& _pos,
+			                  appl::Buffer::Iterator &_beginPos,
+			                  appl::Buffer::Iterator &_endPos) {
+				if (m_buffer==NULL) {
+					return false;
+				}
+				return m_buffer->getPosAround(_pos, _beginPos, _endPos);
 			}
 			/**
 			 * @brief Get an iterator an an specific position
