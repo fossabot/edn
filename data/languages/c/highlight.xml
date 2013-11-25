@@ -85,7 +85,11 @@
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<start>\@bool|BOOL|char|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128)\@</start>
+			<start>\@bool|BOOL|char(16_t|32_t)?|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128)\@</start>
+		</rule>
+		<rule name="std type">
+			<color>type</color>
+			<start>\@std::(vector|(u16|u32|w)?string|codecvt_utf(16|8_utf16|8)+|complex|iterator(_traits)?|tuple(_element|_size)?|pair)\@</start>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
