@@ -46,7 +46,7 @@ bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
 	std::string data = "\n";
 	
 	
-	for (appl::Buffer::Iterator it = startLine+1;
+	for (appl::Buffer::Iterator it = startLine;
 	     (bool)it == true;
 	     ++it) {
 		if (*it == etk::UChar::Space) {
