@@ -349,7 +349,10 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
 	}
-	if (_msg.getMessage() == appl::MsgSelectNewFile) {
+	if (    _msg.getMessage() == appl::MsgSelectNewFile
+	     || _msg.getMessage() == appl::Buffer::eventIsModify
+	     || _msg.getMessage() == appl::Buffer::eventIsSave
+	     || _msg.getMessage() == appl::Buffer::eventChangeName) {
 		// select a new Buffer ==> change title:
 		appl::Buffer* tmpp = m_bufferManager->getBufferSelected();
 		if (tmpp == NULL) {
@@ -358,6 +361,11 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 				m_widgetLabelFileName->setLabel("");
 			}
 		} else {
+			if (_msg.getMessage() == appl::MsgSelectNewFile) {
+				tmpp->registerOnEvent(this, appl::Buffer::eventIsModify);
+				tmpp->registerOnEvent(this, appl::Buffer::eventIsSave);
+				tmpp->registerOnEvent(this, appl::Buffer::eventChangeName);
+			}
 			setTitle(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + tmpp->getFileName());
 			if (m_widgetLabelFileName != NULL) {
 				m_widgetLabelFileName->setLabel(tmpp->getFileName() + (tmpp->isModify()==true?" *":""));
