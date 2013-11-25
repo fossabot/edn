@@ -46,15 +46,20 @@ class BufferView : public widget::List
 		int32_t m_selectedIdRequested;
 		int32_t m_selectedID;
 		std::vector<appl::dataBufferStruct*> m_list;
+		/**
+		 * @brief Insert the element in the alphabetic order.
+		 * @param[in] _dataStruct element to add.
+		 */
+		void insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _selectNewPosition = false);
 	public:
 		// Constructeur
 		BufferView(void);
 		~BufferView(void);
 		// Derived function
-		const char * const getObjectType(void) { return "ApplBufferView"; };
-		// Derived function
 		virtual void onReceiveMessage(const ewol::EMessage& _msg);
 		virtual void onObjectRemove(ewol::EObject* _removeObject);
+	private:
+		bool m_openOrderMode; //!< true if the order is the opening order mode, otherwise, Alphabetic order
 	protected:
 		// function call to display the list :
 		virtual etk::Color<> getBasicBG(void);

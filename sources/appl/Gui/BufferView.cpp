@@ -39,7 +39,8 @@ static void SortElementList(std::vector<appl::dataBufferStruct*>& _list) {
 	}
 }
 
-BufferView::BufferView(void) {
+BufferView::BufferView(void) :
+  m_openOrderMode(false) {
 	addObjectType("appl::BufferView");
 	setCanHaveFocus(true);
 	registerMultiCast(ednMsgBufferListChange);
@@ -79,6 +80,33 @@ void BufferView::removeAllElement(void) {
 	}
 }
 
+void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _selectNewPosition) {
+	if (_dataStruct == NULL) {
+		return;
+	}
+	// alphabetical order:
+	for (size_t iii = 0; iii < m_list.size(); ++iii) {
+		if (m_list[iii] == NULL) {
+			continue;
+		}
+		if (to_lower(m_list[iii]->m_bufferName.getNameFile()) > to_lower(_dataStruct->m_bufferName.getNameFile())) {
+			m_list.insert(m_list.begin() + iii, _dataStruct);
+			_dataStruct = NULL;
+			if (_selectNewPosition == true) {
+				m_selectedID = iii;
+			}
+			break;
+		}
+	}
+	if (_dataStruct != NULL) {
+		m_list.push_back(_dataStruct);
+		if (_selectNewPosition == true) {
+			m_selectedID = m_list.size()-1;
+		}
+	}
+}
+
+
 void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 	widget::List::onReceiveMessage(_msg);
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
@@ -95,16 +123,30 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 			APPL_ERROR("Allocation error of the tmp buffer list element");
 			return;
 		}
-		m_list.push_back(tmp);
+		if (m_openOrderMode == true) {
+			m_list.push_back(tmp);
+		} else {
+			insertAlphabetic(tmp);
+		}
 		markToRedraw();
 		return;
 	}
 	if (_msg.getMessage() == appl::Buffer::eventChangeName) {
-		for (auto element : m_list) {
-			if (element == NULL) {
+		for (size_t iii = 0; iii < m_list.size(); ++iii) {
+			if (m_list[iii] == NULL) {
 				continue;
 			}
-			element->m_bufferName = element->m_buffer->getFileName();
+			if (m_list[iii]->m_bufferName != m_list[iii]->m_buffer->getFileName()) {
+				m_list[iii]->m_bufferName = m_list[iii]->m_buffer->getFileName();
+				if (m_openOrderMode == false) {
+					// re-order the fine in the correct position
+					appl::dataBufferStruct* tmp = m_list[iii];
+					m_list[iii] = NULL;
+					m_list.erase(m_list.begin() + iii);
+					insertAlphabetic(tmp, (iii == m_selectedID));
+					break;
+				}
+			}
 		}
 		markToRedraw();
 		return;
