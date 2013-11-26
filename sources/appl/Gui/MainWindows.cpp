@@ -225,11 +225,13 @@ MainWindows::MainWindows(void) {
 				(void)myMenu->add(idMenuSearch, "Find (next)",    "", ednMsgGuiFind, "Next");
 				(void)myMenu->add(idMenuSearch, "Find (all)",     "", ednMsgGuiFind, "All");
 				(void)myMenu->add(idMenuSearch, "Un-Select",      "", ednMsgGuiFind, "None");
+			/* ==> must be in the pluggin list control ...
 			int32_t idMenuCTags = myMenu->addTitle("C-tags");
 				(void)myMenu->add(idMenuCTags, "Load",      "", ednMsgGuiCtags, "Load");
 				(void)myMenu->add(idMenuCTags, "ReLoad",    "", ednMsgGuiCtags, "ReLoad");
 				(void)myMenu->add(idMenuCTags, "Jump",      "", ednMsgGuiCtags, "Jump");
 				(void)myMenu->add(idMenuCTags, "Back",      "", ednMsgGuiCtags, "Back");
+			*/
 			int32_t idMenugDisplay = myMenu->addTitle("Display");
 				(void)myMenu->add(idMenugDisplay, "Color Black",          "", appl::MsgNameGuiChangeColor, "colorBlack/");
 				(void)myMenu->add(idMenugDisplay, "Color White",          "", appl::MsgNameGuiChangeColor, "colorWhite/");

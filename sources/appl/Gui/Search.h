@@ -15,8 +15,7 @@
 #include <appl/Buffer.h>
 #include <appl/Gui/ViewerManager.h>
 
-class Search : public widget::Composer
-{
+class Search : public widget::Composer {
 	private:
 		appl::ViewerManager* m_viewerManager; //!< handle on the buffer manager
 		bool m_forward;

@@ -60,5 +60,7 @@ extern const char* const appl::MsgSelectNewFile    = "edn-msg-select-new-file";
 extern const char* const appl::MsgSelectChange     = "edn-msg-select-change";
 extern const char* const appl::MsgNameChange       = "edn-msg-buffer-name-change";
 extern const char* const appl::MsgNameGuiChangeColor = "edn-Msg-Gui-Change-color";
+extern const char* const appl::MsgSelectGotoLine   = "edn-Msg-Gui-goto-line";
+extern const char* const appl::MsgSelectGotoLineSelect   = "edn-Msg-Gui-goto-line-select";
 
 

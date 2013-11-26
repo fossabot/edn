@@ -27,7 +27,6 @@
 #include <appl/Gui/MainWindows.h>
 #include <appl/Gui/Search.h>
 #include <appl/ctags/readtags.h>
-#include <appl/ctags/CTagsManager.h>
 #include <appl/globalMsg.h>
 #include <vector>
 #include <string>
@@ -87,7 +86,6 @@ bool APP_Init(ewol::eContext& _context) {
 	bufferManager = appl::BufferManager::keep();
 	
 	appl::highlightManager::init();
-	cTagsManager::init();
 	appl::textPluginManager::init();
 	appl::textPluginManager::addDefaultPlugin();
 	
@@ -149,7 +147,6 @@ void APP_UnInit(ewol::eContext& _context) {
 		tmpWindows = NULL;
 	}
 	appl::textPluginManager::unInit();
-	cTagsManager::unInit();
 	
 	APPL_INFO("Stop Hightlight");
 	appl::highlightManager::unInit();

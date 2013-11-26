@@ -60,6 +60,8 @@ namespace appl {
 	extern const char* const MsgSelectChange;       // data : ""
 	extern const char* const MsgNameChange;         // data : ""
 	extern const char* const MsgNameGuiChangeColor; // data : "Black" "White"
+	extern const char* const MsgSelectGotoLine;     // data : "75822"
+	extern const char* const MsgSelectGotoLineSelect; // data : "75822"
 };
 
 #endif

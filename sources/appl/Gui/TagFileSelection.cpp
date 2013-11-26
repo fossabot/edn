@@ -55,53 +55,31 @@ appl::TagFileSelection::TagFileSelection(void) {
 		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		mySizerVert->lockExpand(bvec2(true,true));
+		mySizerVert->setExpand(bvec2(true,true));
 		// set it in the pop-up-system : 
 		setSubWidget(mySizerVert);
-		
-		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
-		if (NULL == mySizerHori) {
-			EWOL_ERROR("Can not allocate widget  == > display might be in error");
-		} else {
-			mySizerVert->subWidgetAdd(mySizerHori);
-			mySpacer = new widget::Spacer();
-			if (NULL == mySpacer) {
-				EWOL_ERROR("Can not allocate widget  == > display might be in error");
-			} else {
-				mySpacer->setExpand(bvec2(true,false));
-				mySizerHori->subWidgetAdd(mySpacer);
-			}
-			myWidgetValidate = new widget::Button();
-			if (NULL == myWidgetValidate) {
-				EWOL_ERROR("Can not allocate widget  == > display might be in error");
-			} else {
-				myWidgetValidate->setSubWidget(
-				    new widget::Composer(widget::Composer::String,
-				        "<composer>\n"
-				        "	<sizer mode=\"hori\">\n"
-				        "		<image src=\"THEME:GUI:icon/Load.svg\" fill=\"true\" size=\"70,70mm\"/>\n"
-				        "		<label>Jump</label>\n"
-				        "	</sizer>\n"
-				        "</composer\n"));
-				
-				myWidgetValidate->registerOnEvent(this, widget::Button::eventPressed, applEventctagsSelection);
-				mySizerHori->subWidgetAdd(myWidgetValidate);
-			}
-			myWidgetCancel = new widget::Button();
-			if (NULL == myWidgetCancel) {
-				EWOL_ERROR("Can not allocate widget  == > display might be in error");
-			} else {
-				myWidgetCancel->setSubWidget(
-				    new widget::Composer(widget::Composer::String,
-				        "<composer>\n"
-				        "	<sizer mode=\"hori\">\n"
-				        "		<image src=\"THEME:GUI:icon/Remove.svg\" fill=\"true\" size=\"70,70mm\"/>\n"
-				        "		<label>Cancel</label>\n"
-				        "	</sizer>\n"
-				        "</composer\n"));
-				myWidgetCancel->registerOnEvent(this, widget::Button::eventPressed, applEventctagsCancel);
-				mySizerHori->subWidgetAdd(myWidgetCancel);
-			}
-		}
+		widget::Composer* compose = new widget::Composer(widget::Composer::String,
+		   "<sizer mode=\"hori\" expand=\"true,false\" lock=\"false,true\">\n"
+		   "	<spacer expand=\"true,false\"/>\n"
+		   "	<button name=\"PLUGIN-CTAGS-jump\" expand=\"false\" fill=\"true\">"
+		   "		<sizer mode=\"hori\">\n"
+		   "			<image src=\"THEME:GUI:Load.svg\" fill=\"true\" size=\"10,10mm\"/>\n"
+		   "			<label>Jump</label>\n"
+		   "		</sizer>\n"
+		   "	</button>\n"
+		   "	<button name=\"PLUGIN-CTAGS-cancel\" expand=\"false\" fill=\"true\">"
+		   "		<sizer mode=\"hori\">\n"
+		   "			<image src=\"THEME:GUI:Remove.svg\" fill=\"true\" size=\"10,10mm\"/>\n"
+		   "			<label>Cancel</label>\n"
+		   "		</sizer>\n"
+		   "	</button>\n"
+		   "</sizer>\n");
+		compose->setExpand(bvec2(true,false));
+		compose->setFill(bvec2(true,true));
+		mySizerVert->subWidgetAdd(compose);
+		compose->registerOnEventNameWidget(this, "PLUGIN-CTAGS-jump", "pressed", applEventctagsSelection);
+		compose->registerOnEventNameWidget(this, "PLUGIN-CTAGS-cancel", "pressed", applEventctagsCancel);
+			
 		m_listTag = new appl::TagFileList();
 		if (NULL == m_listTag) {
 			EWOL_ERROR("Can not allocate widget  == > display might be in error");

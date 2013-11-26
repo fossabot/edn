@@ -37,8 +37,9 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	registerMultiCast(ednMsgBufferId);
 	registerMultiCast(ednMsgGuiFind);
 	registerMultiCast(ednMsgGuiReplace);
-	registerMultiCast(ednMsgGuiGotoLine);
+	registerMultiCast(appl::MsgSelectGotoLine);
 	registerMultiCast(appl::MsgSelectNewFile);
+	registerMultiCast(appl::MsgSelectGotoLineSelect);
 	setLimitScrolling(0.2);
 	
 	// load buffer manager:
@@ -583,6 +584,24 @@ void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
 	}
 	// If not the last buffer selected, then no event parsing ...
 	if (isSelectedLast() == false) {
+		return;
+	}
+	if (_msg.getMessage() == appl::MsgSelectGotoLineSelect) {
+		if (m_buffer == NULL) {
+			return;
+		}
+		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), std::stoi(_msg.getData()));
+		select(it, m_buffer->getEndLine(it));
+		markToRedraw();
+		return;
+	}
+	if (_msg.getMessage() == appl::MsgSelectGotoLine) {
+		if (m_buffer == NULL) {
+			return;
+		}
+		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), std::stoi(_msg.getData()));
+		moveCursor(it);
+		markToRedraw();
 		return;
 	}
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {

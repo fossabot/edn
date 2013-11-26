@@ -8,8 +8,7 @@ def Create(target):
 	myModule = lutinModule.module(__file__, 'edn', 'PACKAGE')
 	# add the file to compile:
 	myModule.AddSrcFile([
-		'appl/ctags/readtags.cpp',
-		'appl/ctags/CTagsManager.cpp'])
+		'appl/ctags/readtags.cpp'])
 	
 	myModule.AddSrcFile([
 		'appl/debug.cpp',
