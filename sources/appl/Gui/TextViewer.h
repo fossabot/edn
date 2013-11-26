@@ -37,8 +37,16 @@ namespace appl {
 		public:
 			TextViewer(const std::string& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer(void);
-		public:
+		private:
 			appl::Buffer* m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
+		public:
+			/**
+			 * @brief Get the buffer property (only for the class : template <typename TYPE> class TextViewerPluginData)
+			 * @return pointer on buffer
+			 */
+			appl::Buffer* internalGetBuffer(void) {
+				return m_buffer;
+			}
 		private:
 			ewol::Text m_displayText; //!< Text display properties.
 			ewol::Drawing m_displayDrawing; //!< Other diaplay requested.

@@ -36,9 +36,7 @@ namespace appl {
 		protected:
 			TYPE* getDataRef(appl::TextViewer& _textDrawer) {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
-					APPL_DEBUG("compare " << (int64_t)m_specificData[iii].first << " && " << (int64_t)&_textDrawer);
-					if (m_specificData[iii].first == _textDrawer.m_buffer) {
-						APPL_DEBUG("find data : " << iii);
+					if (m_specificData[iii].first == _textDrawer.internalGetBuffer()) {
 						return m_specificData[iii].second;
 					}
 				}
@@ -46,25 +44,11 @@ namespace appl {
 				if (data == NULL) {
 					return NULL;
 				}
-				m_specificData.push_back(std::make_pair(_textDrawer.m_buffer, data));
+				m_specificData.push_back(std::make_pair(_textDrawer.internalGetBuffer(), data));
 				// create a new one ...
 				return data;
 			}
 		protected: // Wrap all element with their internal data: (do not use theses function)
-			void onPluginEnable(appl::TextViewer& _textDrawer) {
-				TYPE* data = getDataRef(_textDrawer);
-				if (data == NULL) {
-					return;
-				}
-				return onPluginEnable(_textDrawer, *data);
-			}
-			void onPluginDisable(appl::TextViewer& _textDrawer) {
-				TYPE* data = getDataRef(_textDrawer);
-				if (data == NULL) {
-					return;
-				}
-				return onPluginDisable(_textDrawer, *data);
-			}
 			bool onReceiveMessage(appl::TextViewer& _textDrawer,
 			                      const ewol::EMessage& _msg) {
 				TYPE* data = getDataRef(_textDrawer);
@@ -103,14 +87,6 @@ namespace appl {
 			}
 			
 		public:
-			virtual void onPluginEnable(appl::TextViewer& _textDrawer,
-			                            TYPE& _data) {
-				return;
-			}
-			virtual void onPluginDisable(appl::TextViewer& _textDrawer,
-			                             TYPE& _data) {
-				return;
-			}
 			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer,
 			                              const ewol::EMessage& _msg,
 			                              TYPE& _data) {
