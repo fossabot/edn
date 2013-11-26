@@ -522,6 +522,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 	std::u32string stringToDisplay;
 	m_displayText.clear();
 	m_displayText.forceLineReturn();
+	positionCurentDisplay = m_displayText.getPos();
 	for (appl::Buffer::Iterator it = m_buffer->begin();
 	     (bool)it == true;
 	     ++it) {
