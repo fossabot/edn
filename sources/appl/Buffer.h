@@ -440,7 +440,7 @@ namespace appl {
 			 * @param[in] _value Current value to transform
 			 * @param[out] _out String that represent the curent value to display
 			 */
-			void expand(esize_t& _indent, const char32_t& _value, std::u32string& _out) const;
+			void expand(int32_t& _indent, const char32_t& _value, std::u32string& _out) const;
 			/**
 			 * @brief get the start of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.
@@ -567,13 +567,13 @@ namespace appl {
 			 */
 			Iterator selectStop(void);
 		protected:
-			esize_t m_nbLines; //!< number of line in the buffer
+			int32_t m_nbLines; //!< number of line in the buffer
 		public:
 			/**
 			 * @brief Get the number of line in the buffer.
 			 * @return number of line in the Buffer.
 			 */
-			esize_t getNumberOfLines(void) {
+			int32_t getNumberOfLines(void) {
 				return m_nbLines;
 			}
 			/**

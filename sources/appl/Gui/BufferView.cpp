@@ -167,7 +167,7 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 			tmpBuffer = m_bufferManager->getBufferSelected();
 		}
 		if (tmpBuffer != NULL) {
-			for (esize_t iii=0; iii<m_list.size(); iii++) {
+			for (int32_t iii=0; iii<m_list.size(); iii++) {
 				if (m_list[iii] == NULL) {
 					continue;
 				}
@@ -223,7 +223,7 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 
 void BufferView::onObjectRemove(ewol::EObject* _removeObject) {
 	widget::List::onObjectRemove(_removeObject);
-	for (esize_t iii=0; iii<m_list.size(); iii++) {
+	for (int32_t iii=0; iii<m_list.size(); iii++) {
 		if (m_list[iii] == NULL) {
 			continue;
 		}

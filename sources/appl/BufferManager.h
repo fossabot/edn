@@ -44,7 +44,7 @@ namespace appl {
 			 * @brief Get count of all buffer availlable.
 			 * @return Number of buffer
 			 */
-			esize_t size(void) const {
+			int32_t size(void) const {
 				return m_list.size();
 			}
 			/**
@@ -52,7 +52,7 @@ namespace appl {
 			 * @param[in] _id Number of buffer
 			 * @return pointer on the buffer
 			 */
-			appl::Buffer* get(esize_t _id) {
+			appl::Buffer* get(int32_t _id) {
 				return m_list[_id];
 			}
 			/**

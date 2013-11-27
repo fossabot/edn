@@ -52,14 +52,14 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	if (true == _event.getSpecialKey().isSetShift() ) {
 		// un-indent
 		data.insert(0, 1, etk::UChar::Return);
-		for (esize_t iii=1; iii<data.size(); ++iii) {
+		for (int32_t iii=1; iii<data.size(); ++iii) {
 			if (data[iii-1] != etk::UChar::Return) {
 				continue;
 			}
 			if(data[iii] == etk::UChar::Tabulation) {
 				data.erase(iii, 1);
 			} else if(data[iii] == etk::UChar::Space) {
-				for (esize_t jjj=0; jjj<m_tabDist && jjj+iii<data.size() ; jjj++) {
+				for (int32_t jjj=0; jjj<m_tabDist && jjj+iii<data.size() ; jjj++) {
 					if(data[iii] == etk::UChar::Space) {
 						data.erase(iii, 1);
 					} else if(data[iii] == etk::UChar::Tabulation) {
@@ -75,7 +75,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	} else {
 		// indent
 		data.insert(0, 1, etk::UChar::Return);
-		for (esize_t iii=1; iii<data.size(); iii++) {
+		for (int32_t iii=1; iii<data.size(); iii++) {
 			if (data[iii-1] != etk::UChar::Return) {
 				continue;
 			}

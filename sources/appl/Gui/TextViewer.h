@@ -24,13 +24,13 @@ namespace appl {
 	class TextViewer : public widget::WidgetScrooled {
 		private:
 			appl::GlyphPainting* m_paintingProperties; //!< element painting property
-			esize_t m_colorBackground;
-			esize_t m_colorSpace;
-			esize_t m_colorTabulation;
-			esize_t m_colorCursor;
-			esize_t m_colorLineNumber;
-			esize_t m_colorSelection;
-			esize_t m_colorNormal;
+			int32_t m_colorBackground;
+			int32_t m_colorSpace;
+			int32_t m_colorTabulation;
+			int32_t m_colorCursor;
+			int32_t m_colorLineNumber;
+			int32_t m_colorSelection;
+			int32_t m_colorNormal;
 		private:
 			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 			appl::ViewerManager* m_viewerManager; //!< handle on the buffer manager

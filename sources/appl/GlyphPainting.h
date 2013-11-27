@@ -31,13 +31,13 @@ namespace appl {
 			 * @param[in] _name Name of the deco.
 			 * @return id of the deco.
 			 */
-			esize_t request(const std::string& _name);
+			int32_t request(const std::string& _name);
 			/**
 			 * @brief Get Decoration handle.
 			 * @param[in] _id Id of the decoration.
 			 * @return reference on deco.
 			 */
-			const appl::GlyphDecoration& get(esize_t _id) const {
+			const appl::GlyphDecoration& get(int32_t _id) const {
 				return m_list[_id];
 			};
 			/**
@@ -45,7 +45,7 @@ namespace appl {
 			 * @param[in] _pos Id of the decoration.
 			 * @return reference on deco.
 			 */
-			const appl::GlyphDecoration& operator[] (esize_t _pos) const {
+			const appl::GlyphDecoration& operator[] (int32_t _pos) const {
 				return m_list[_pos];
 			}
 		public:

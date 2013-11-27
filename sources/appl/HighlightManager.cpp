@@ -30,7 +30,7 @@ void appl::highlightManager::init(void) {
 	etk::FSNode myFile("DATA:languages/");
 	// get the subfolder list :
 	std::vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
-	for (esize_t iii = 0; iii < list.size(); ++iii) {
+	for (int32_t iii = 0; iii < list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
 		}
@@ -48,7 +48,7 @@ void appl::highlightManager::init(void) {
 	}
 	// display :
 	/*
-	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
+	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;
 		}
@@ -64,7 +64,7 @@ void appl::highlightManager::unInit(void) {
 		hlList.clear();
 		return;
 	}
-	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
+	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;
 		}
@@ -80,7 +80,7 @@ std::string appl::highlightManager::getTypeExtention(const std::string& _extenti
 	}
 	APPL_VERBOSE("Try to find type for extention : '" << _extention << "' in " << s_list().size() << " types");
 	std::vector<Highlight*>& hlList = s_list();
-	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
+	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;
 		}
@@ -99,7 +99,7 @@ std::string appl::highlightManager::getFileWithTypeType(const std::string& _type
 		return "";
 	}
 	std::vector<Highlight*>& hlList = s_list();
-	for (esize_t iii = 0; iii < hlList.size(); ++iii) {
+	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;
 		}

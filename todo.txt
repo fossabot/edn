@@ -1,0 +1,132 @@
+List of  all thing to do to have a corect text editor :
+	edn :
+		- Correct the pb on highlight
+		- Ctags back event
+		- in inset mode the cursor does not change size ...
+		- Buffer view list open file : 
+			[ c ] [ h ] filename
+			[c++] [ h ] filename2
+			            unknow.plop
+		- Close windows ==> call to save file not saved
+		- Close windows ==> when multiple file confirm close
+		- Speed optimisation when select...
+		- List of function in file in
+			- c
+			- c++
+			- python
+			- lua
+			- c++
+			- java
+			...
+				+-------+------------+
+				|       |            |
+				|       |            |
+				|       |            |
+				+-------+            |
+				|aaa()  |            |
+				|plop() |            |
+				|       |            |
+				+-------+------------+
+		- Undo / Redo modification position event (now undo but the windows is not update ...)
+		- Add workspace
+		- Add hexadecimal editor
+		- Add a cocillage
+		- Goto Line
+		- Buffer view : update display position when change buffer
+		- Add a real stable version number
+		- word moving and word removing (ctrl+ '->' && ctrl+ '<-') && (ctrl+ 'del' && ctrl+ 'suppr')
+	etk :
+		- path : Remove /./
+	ewol :
+		- A spliter of windows (increase siaze of the buffer list & have multiple windows:
+			+-------+------------+
+			|       |            |
+			|       |            |
+			|       |            |
+			|     <-|->          |
+			|       |            |
+			|       |            |
+			|       |            |
+			+-------+------------+
+			+-------+------------+
+			|       |            |
+			|       |      n     |
+			|       |      |     |
+			|       +------------+
+			|       |      |     |
+			|       |      v     |
+			|       |            |
+			+-------+------------+
+		- File chooser update:
+			- Click on folder to select the requested folder (+ctrl)
+			- write a path on the path folder name (call to create a new folder if needed)
+			- Help with a sub path list
+			- Scrool in the list of file when writing a new one (same as path...)
+		- Config and property of all element (==> not easy ...)
+		- separate the graphyc theme and the color theme
+		- set the checkbow display correct again
+		- Reverse remove eObject ?? je sais plus ce que c'est ... ???
+		- Remove a eObject from a specific event
+		- Remove a eObject from a global event
+		- Show if it is possible to create a variant type for message
+		- Ephemere windows message:
+			1:
+				+-------+------------+
+				|       |            |
+				|       |            |
+				|       |            |
+				|       |            |
+				|       |            |
+				|       |            |
+				|       |            |
+				+-------+------------+
+			2:
+				+-------+------------+
+				|       |            |
+				|       |         +---
+				|       |         | He
+				|       |         +---
+				|       |            |
+				|       |            |
+				|       |            |
+				+-------+------------+
+			3:
+				+-------+------------+
+				|       |            |
+				|       |     +------+
+				|       |     | Hello|
+				|       |     +------+
+				|       |            |
+				|       |            |
+				|       |            |
+				+-------+------------+
+			4:
+				+-------+------------+
+				|       |            |
+				|       |         +---
+				|       |         | He
+				|       |         +---
+				|       |            |
+				|       |            |
+				|       |            |
+				+-------+------------+
+			5:
+				+-------+------------+
+				|       |            |
+				|       |            |
+				|       |            |
+				|       |            |
+				|       |            |
+				|       |            |
+				|       |            |
+				+-------+------------+
+	
+-Wsign-compare
+-Wreturn-type
+-Wunused-but-set-variable
+-Wint-to-pointer-cast
+
+- must cp data/edn.desktop /usr/share/applications/edn.desktop
+
+
+

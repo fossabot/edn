@@ -248,7 +248,7 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos, const char32_t
 	     --it) {
 		//APPL_DEBUG("compare : " << *it << " ?= " << _search);
 		if (*it == _search) {
-			//APPL_DEBUG("find : " << (esize_t)it);
+			//APPL_DEBUG("find : " << (int32_t)it);
 			_result = it;
 			return true;
 		}
@@ -525,7 +525,7 @@ static const char *ControlCodeTable[32] = {
 	 "NUL", "soh", "stx", "etx", "eot", "enq", "ack", "bel", "bs",  "ht", "nl",  "vt",  "np", "cr", "so", "si",
 	 "dle", "dc1", "dc2", "dc3", "dc4", "nak", "syn", "etb", "can", "em", "sub", "esc", "fs", "gs", "rs", "us"};
 
-void appl::Buffer::expand(esize_t& _indent, const char32_t& _value, std::u32string& _out) const {
+void appl::Buffer::expand(int32_t& _indent, const char32_t& _value, std::u32string& _out) const {
 	_out.clear();
 	int32_t tabDist = 4;
 	if (_value == etk::UChar::Tabulation) {
@@ -609,8 +609,8 @@ appl::Buffer::Iterator appl::Buffer::countBackwardNLines(const appl::Buffer::Ite
 bool appl::Buffer::copy(std::string& _data) {
 	_data.clear();
 	if (hasTextSelected() == true) {
-		esize_t startPos = getStartSelectionPos();
-		esize_t endPos = getStopSelectionPos();
+		int32_t startPos = getStartSelectionPos();
+		int32_t endPos = getStopSelectionPos();
 		for (Iterator it = position(startPos);
 		     it != position(endPos) &&
 		     (bool)it == true;
@@ -830,7 +830,7 @@ void appl::Buffer::findMainHighLightPosition(int64_t _startPos,
 			                 ------------          -------------            ----------
 			      S=-1      ***************        E                                  
 	*/
-	for (esize_t iii = 0; iii < m_HLDataPass1.size(); ++iii) {
+	for (int32_t iii = 0; iii < m_HLDataPass1.size(); ++iii) {
 		if (m_HLDataPass1[iii].endStop > _startPos) {
 			break;
 		}
@@ -851,7 +851,7 @@ void appl::Buffer::findMainHighLightPosition(int64_t _startPos,
 	} else {
 		elemStart = _startId+1;
 	}
-	for (esize_t iii = elemStart; iii < m_HLDataPass1.size(); ++iii) {
+	for (int32_t iii = elemStart; iii < m_HLDataPass1.size(); ++iii) {
 		if (m_HLDataPass1[iii].beginStart > _endPos) {
 			_stopId = iii;
 			break;
@@ -875,7 +875,7 @@ void appl::Buffer::cleanHighLight(void) {
 
 appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int64_t _pos, int64_t &_starPos) {
 	int32_t start = etk_max(0, _starPos-1);
-	for (esize_t iii = start; iii < m_HLDataPass1.size(); ++iii) {
+	for (int32_t iii = start; iii < m_HLDataPass1.size(); ++iii) {
 		_starPos = iii;
 		if (    m_HLDataPass1[iii].beginStart <= _pos
 		     && m_HLDataPass1[iii].endStop > _pos) {
@@ -897,7 +897,7 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, int64_t 
 	}
 	//GTimeVal timeStart;
 	//g_get_current_time(&timeStart);
-	_HLStart = (esize_t)getStartLine(position(_HLStart));
+	_HLStart = (int32_t)getStartLine(position(_HLStart));
 	_MData.HLData.clear();
 	int64_t HLStop = countForwardNLines(position(_HLStart), _nbLines);
 	int64_t startId = 0;

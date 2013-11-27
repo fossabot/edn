@@ -66,7 +66,7 @@ void appl::textPluginManager::unInit(void) {
 	getListOnReceiveMessage().clear();
 	getListOnCursorMove().clear();
 	// remove all plugin:
-	for (esize_t iii=0; iii<getList().size(); ++iii) {
+	for (int32_t iii=0; iii<getList().size(); ++iii) {
 		if (getList()[iii] == NULL) {
 			continue;
 		}
@@ -115,7 +115,7 @@ void appl::textPluginManager::addPlugin(appl::TextViewerPlugin* _plugin) {
 }
 
 void appl::textPluginManager::connect(appl::TextViewer& _widget) {
-	for (esize_t iii=0; iii<getList().size(); ++iii) {
+	for (int32_t iii=0; iii<getList().size(); ++iii) {
 		if (getList()[iii] == NULL) {
 			continue;
 		}
@@ -124,7 +124,7 @@ void appl::textPluginManager::connect(appl::TextViewer& _widget) {
 }
 
 void appl::textPluginManager::disconnect(appl::TextViewer& _widget) {
-	for (esize_t iii=0; iii<getList().size(); ++iii) {
+	for (int32_t iii=0; iii<getList().size(); ++iii) {
 		if (getList()[iii] == NULL) {
 			continue;
 		}
@@ -135,7 +135,7 @@ void appl::textPluginManager::disconnect(appl::TextViewer& _widget) {
 bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
                                            const ewol::EventEntry& _event) {
 	std::vector<appl::TextViewerPlugin *>& list = getListOnEventEntry();
-	for (esize_t iii=0; iii<list.size(); ++iii) {
+	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
 		}
@@ -149,7 +149,7 @@ bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onEventInput(appl::TextViewer& _textDrawer,
                                            const ewol::EventInput& _event) {
 	std::vector<appl::TextViewerPlugin *>& list = getListOnEventInput();
-	for (esize_t iii=0; iii<list.size(); ++iii) {
+	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
 		}
@@ -164,7 +164,7 @@ bool appl::textPluginManager::onWrite(appl::TextViewer& _textDrawer,
                                       const appl::Buffer::Iterator& _pos,
                                       const std::string& _data) {
 	std::vector<appl::TextViewerPlugin *>& list = getListOnWrite();
-	for (esize_t iii=0; iii<list.size(); ++iii) {
+	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
 		}
@@ -180,7 +180,7 @@ bool appl::textPluginManager::onReplace(appl::TextViewer& _textDrawer,
                                         const std::string& _data,
                                         const appl::Buffer::Iterator& _posEnd) {
 	std::vector<appl::TextViewerPlugin *>& list = getListOnReplace();
-	for (esize_t iii=0; iii<list.size(); ++iii) {
+	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
 		}
@@ -195,7 +195,7 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
                                        const appl::Buffer::Iterator& _pos,
                                        const appl::Buffer::Iterator& _posEnd) {
 	std::vector<appl::TextViewerPlugin *>& list = getListOnRemove();
-	for (esize_t iii=0; iii<list.size(); ++iii) {
+	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
 		}
@@ -209,7 +209,7 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onReceiveMessage(appl::TextViewer& _textDrawer,
                                                const ewol::EMessage& _msg) {
 	std::vector<appl::TextViewerPlugin *>& list = getListOnReceiveMessage();
-	for (esize_t iii=0; iii<list.size(); ++iii) {
+	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
 		}
@@ -223,7 +223,7 @@ bool appl::textPluginManager::onReceiveMessage(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onCursorMove(appl::TextViewer& _textDrawer,
                                            const appl::Buffer::Iterator& _pos) {
 	std::vector<appl::TextViewerPlugin *>& list = getListOnCursorMove();
-	for (esize_t iii=0; iii<list.size(); ++iii) {
+	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
 		}

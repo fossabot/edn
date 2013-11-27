@@ -37,11 +37,11 @@ class BufferView : public widget::List
 		appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 	private:
 		appl::GlyphPainting* m_paintingProperties; //!< element painting property
-		esize_t m_colorBackground1;
-		esize_t m_colorBackground2;
-		esize_t m_colorBackgroundSelect;
-		esize_t m_colorTextNormal;
-		esize_t m_colorTextModify;
+		int32_t m_colorBackground1;
+		int32_t m_colorBackground2;
+		int32_t m_colorBackgroundSelect;
+		int32_t m_colorTextNormal;
+		int32_t m_colorTextModify;
 	private:
 		int32_t m_selectedIdRequested;
 		int32_t m_selectedID;

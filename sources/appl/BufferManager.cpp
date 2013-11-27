@@ -22,8 +22,8 @@ appl::BufferManager::BufferManager(void) :
 }
 
 appl::BufferManager::~BufferManager(void) {
-	esize_t previousCount = m_list.size();
-	for (esize_t iii = m_list.size()-1; iii >= 0 ; --iii) {
+	int32_t previousCount = m_list.size();
+	for (int32_t iii = m_list.size()-1; iii >= 0 ; --iii) {
 		if (m_list[iii] == NULL) {
 			continue;
 		}
@@ -49,7 +49,7 @@ appl::Buffer* appl::BufferManager::createNewBuffer(void) {
 }
 
 appl::Buffer* appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
-	for (esize_t iii = 0; iii < m_list.size(); ++iii) {
+	for (int32_t iii = 0; iii < m_list.size(); ++iii) {
 		if (m_list[iii] == NULL) {
 			continue;
 		}
@@ -82,7 +82,7 @@ void appl::BufferManager::onObjectRemove(ewol::EObject * _removeObject) {
 	if (m_bufferSelected == _removeObject) {
 		setBufferSelected(NULL);
 	}
-	for (esize_t iii = 0; iii < m_list.size(); ++iii) {
+	for (int32_t iii = 0; iii < m_list.size(); ++iii) {
 		if (m_list[iii] != _removeObject) {
 			continue;
 		}
@@ -93,7 +93,7 @@ void appl::BufferManager::onObjectRemove(ewol::EObject * _removeObject) {
 }
 
 bool appl::BufferManager::exist(const std::string& _fileName) {
-	for (esize_t iii = 0; iii < m_list.size(); ++iii) {
+	for (int32_t iii = 0; iii < m_list.size(); ++iii) {
 		if (m_list[iii] == NULL) {
 			continue;
 		}

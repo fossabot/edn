@@ -53,7 +53,7 @@ namespace appl {
 			void setPaternStop(std::string& _regExp);
 		private:
 			std::string m_colorName; //!< Current color name
-			esize_t m_colorId; //!< Id of the the glyph painting
+			int32_t m_colorId; //!< Id of the the glyph painting
 		public:
 			void setColorGlyph(std::string& _colorName);
 			const appl::GlyphDecoration& getColorGlyph(void) {
