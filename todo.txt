@@ -26,7 +26,6 @@ List of  all thing to do to have a corect text editor :
 				|plop() |            |
 				|       |            |
 				+-------+------------+
-		- Undo / Redo modification position event (now undo but the windows is not update ...)
 		- Add workspace
 		- Add hexadecimal editor
 		- Add a cocillage

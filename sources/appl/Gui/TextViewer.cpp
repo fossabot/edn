@@ -757,10 +757,12 @@ bool appl::TextViewer::write(const std::string& _data, const appl::Buffer::Itera
 	markToRedraw();
 	if (appl::textPluginManager::onWrite(*this, _pos, _data) == true) {
 		// no call of the move cursor, because pluging might call theses function to copy and cut data...
+		updateScrolling();
 		return true;
 	}
 	bool ret = m_buffer->write(_data, _pos);
 	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+	updateScrolling();
 	return ret;
 }
 
@@ -771,10 +773,12 @@ bool appl::TextViewer::replace(const std::string& _data, const appl::Buffer::Ite
 	markToRedraw();
 	if (appl::textPluginManager::onReplace(*this, _pos, _data, _posEnd) == true) {
 		// no call of the move cursor, because pluging might call theses function to copy and cut data...
+		updateScrolling();
 		return true;
 	}
 	bool ret = m_buffer->replace(_data, _pos, _posEnd);
 	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+	updateScrolling();
 	return ret;
 }
 

@@ -97,6 +97,7 @@ namespace appl {
 					return;
 				}
 				m_buffer->removeSelection();
+				updateScrolling();
 			}
 			
 			/**
@@ -132,7 +133,9 @@ namespace appl {
 				if (m_buffer==NULL) {
 					return false;
 				}
-				return m_buffer->write(_data, _pos);
+				bool ret = m_buffer->write(_data, _pos);
+				updateScrolling();
+				return ret;
 			}
 			/**
 			 * @brief Write data at a specific position (No plugin call)
@@ -145,7 +148,9 @@ namespace appl {
 				if (m_buffer==NULL) {
 					return false;
 				}
-				return m_buffer->replace(_data, _pos, _posEnd);
+				bool ret = m_buffer->replace(_data, _pos, _posEnd);
+				updateScrolling();
+				return ret;
 			}
 			
 			appl::Buffer::Iterator getMousePosition(const vec2& _relativePos);
