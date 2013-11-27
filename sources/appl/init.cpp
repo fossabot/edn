@@ -30,7 +30,6 @@
 #include <appl/globalMsg.h>
 #include <vector>
 #include <string>
-#include <regex>
 #include <etk/unicode.h>
 
 /**

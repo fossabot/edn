@@ -18,7 +18,7 @@
 #include <ewol/compositing/Drawing.h>
 #include <appl/BufferManager.h>
 #include <appl/Gui/ViewerManager.h>
-#include <tuple>
+#include <utility>
 
 namespace appl {
 	class TextViewer : public widget::WidgetScrooled {
