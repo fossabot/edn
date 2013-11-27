@@ -2,7 +2,6 @@ List of  all thing to do to have a corect text editor :
 	edn :
 		- Correct the pb on highlight
 		- Ctags back event
-		- in inset mode the cursor does not change size ...
 		- Buffer view list open file : 
 			[ c ] [ h ] filename
 			[c++] [ h ] filename2
@@ -35,8 +34,6 @@ List of  all thing to do to have a corect text editor :
 		- Buffer view : update display position when change buffer
 		- Add a real stable version number
 		- word moving and word removing (ctrl+ '->' && ctrl+ '<-') && (ctrl+ 'del' && ctrl+ 'suppr')
-	etk :
-		- path : Remove /./
 	ewol :
 		- A spliter of windows (increase siaze of the buffer list & have multiple windows:
 			+-------+------------+
@@ -120,11 +117,6 @@ List of  all thing to do to have a corect text editor :
 				|       |            |
 				|       |            |
 				+-------+------------+
-	
--Wsign-compare
--Wreturn-type
--Wunused-but-set-variable
--Wint-to-pointer-cast
 
 - must cp data/edn.desktop /usr/share/applications/edn.desktop
 

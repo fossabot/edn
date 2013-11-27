@@ -122,6 +122,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	}
 	// normal displa of the buffer :
 	vec3 tmpCursorPosition(0, 0, -1);
+	float tmpCursorLenght = -1.0;
 	// real display ...
 	etk::Buffer& buf = m_buffer->getData();
 	m_displayText.setColor(etk::Color<>(0, 0, 0, 256));
@@ -201,6 +202,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		if (it == m_buffer->cursor()) {
 			// need to display the cursor :
 			tmpCursorPosition = m_displayText.getPos();
+			tmpCursorLenght = 0.0f;
 		}
 		//APPL_DEBUG("display element '" << currentValue << "'at pos : " << m_displayText.getPos() );
 		//APPL_DEBUG(" element size : " << iii << " : " << bufferElementSize);
@@ -216,6 +218,9 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 					draw.setPos(m_displayText.getPos() + tmpLetterSize/4.0f);
 					draw.rectangle(m_displayText.getPos() + tmpLetterSize*3.0f/4.0f);
 				}
+			}
+			if (tmpCursorLenght == 0.0f) {
+				tmpCursorLenght = tmpLetterSize.x();
 			}
 			m_displayText.forceLineReturn();
 			m_displayText.setPos(vec3(-m_originScrooled.x()+m_lastOffsetDisplay, m_displayText.getPos().y(), 0.0f));
@@ -256,10 +261,14 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		}
 		//APPL_DEBUG("display : '" << currentValue << "'  == > '" << stringToDisplay << "'");
 		m_displayText.print(stringToDisplay);
+		if (tmpCursorLenght == 0.0f) {
+			tmpCursorLenght = m_displayText.getPos().x()-tmpCursorPosition.x();
+		}
 		countColomn += stringToDisplay.size();
 	}
 	if (it == m_buffer->cursor()) {
 		tmpCursorPosition = m_displayText.getPos();
+		tmpCursorLenght = 5;
 	}
 	maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
 	// Display cursor only if we have the focus ...
@@ -268,8 +277,17 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		// display the cursor:
 		//APPL_DEBUG("display cursor at position : " << tmpCursorPosition);
 		m_displayText.setPos(tmpCursorPosition);
-		m_displayText.setColorBg((*m_paintingProperties)[m_colorCursor].getForeground());
-		m_displayText.printCursor(m_insertMode);
+		if (m_buffer->hasTextSelected() == true) {
+			m_displayText.setColorBg((*m_paintingProperties)[m_colorCursor].getForeground());
+			m_displayText.printCursor(false);
+		} else {
+			if (m_insertMode == true) {
+				m_displayText.setColorBg((*m_paintingProperties)[m_colorSelection].getBackground());
+			} else {
+				m_displayText.setColorBg((*m_paintingProperties)[m_colorCursor].getForeground());
+			}
+			m_displayText.printCursor(m_insertMode, tmpCursorLenght);
+		}
 	}
 	// set maximum size (X&Y) :
 	{
@@ -350,6 +368,10 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 		m_buffer->setSelectMode(_event.getSpecialKey().isSetShift());
 		// check selection event ...
 		switch(_event.getType()) {
+			case ewol::keyEvent::keyboardInsert:
+				m_insertMode = m_insertMode==true?false:true;
+				markToRedraw();
+				break;
 			case ewol::keyEvent::keyboardLeft:
 				//APPL_INFO("keyEvent : <LEFT>");
 				moveCursorLeft();
