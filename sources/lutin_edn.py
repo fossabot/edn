@@ -59,7 +59,8 @@ def Create(target):
 	myModule.AddModuleDepend('ewol')
 	
 	myModule.CompileFlags_CC([
-		"-DPROJECT_NAME=\"\\\""+myModule.name+"\\\"\""])
+		"-DPROJECT_NAME=\"\\\""+myModule.name+"\\\"\""
+		])
 	
 	myModule.CopyFile('../data/icon.png','icon.png')
 	
@@ -88,11 +89,11 @@ def Create(target):
 	myModule.CopyFile("../data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")
 	myModule.CopyFolder("../data/Font/freefont/FreeMon*.ttf","fonts/")
 	
-	
 	tagFile = lutinTools.GetCurrentPath(__file__) + "/tag"
 	versionID = lutinTools.FileReadData(tagFile)
-	
-	debug.info(" edn versionId = '" + versionID + "'")
+	myModule.CompileFlags_CC([
+		"-DAPPL_VERSION=\"\\\"" + versionID + "\\\"\""
+		])
 	
 	# set the package properties :
 	myModule.pkgSet("VERSION", versionID)

@@ -59,7 +59,7 @@ etk::CCout& operator <<(etk::CCout& _os, const std::u32string& _obj) {
  * @brief main application function initialisation
  */
 bool APP_Init(ewol::eContext& _context) {
-	APPL_INFO(" == > init APPL (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
+	APPL_INFO(" == > init APPL v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
 	
 	etk::theme::setName("COLOR", "colorWhite/");
 	
