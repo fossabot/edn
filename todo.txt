@@ -31,7 +31,6 @@ List of  all thing to do to have a corect text editor :
 		- Add a cocillage
 		- Goto Line
 		- Buffer view : update display position when change buffer
-		- Add a real stable version number
 		- word moving and word removing (ctrl+ '->' && ctrl+ '<-') && (ctrl+ 'del' && ctrl+ 'suppr')
 	ewol :
 		- A spliter of windows (increase siaze of the buffer list & have multiple windows:

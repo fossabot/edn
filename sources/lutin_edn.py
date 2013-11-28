@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import lutinModule
 import lutinTools
+import lutinDebug as debug
 import datetime
 
 def Create(target):
@@ -84,12 +85,14 @@ def Create(target):
 	
 	myModule.AddPath(lutinTools.GetCurrentPath(__file__))
 	
-	
 	myModule.CopyFile("../data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")
 	myModule.CopyFolder("../data/Font/freefont/FreeMon*.ttf","fonts/")
 	
-	now = datetime.datetime.now()
-	versionID=str(now.year-2012)+"."+str(now.month)+"."+str(now.day)
+	
+	tagFile = lutinTools.GetCurrentPath(__file__) + "/tag"
+	versionID = lutinTools.FileReadData(tagFile)
+	
+	debug.info(" edn versionId = '" + versionID + "'")
 	
 	# set the package properties :
 	myModule.pkgSet("VERSION", versionID)
