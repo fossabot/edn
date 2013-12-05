@@ -16,6 +16,13 @@
 #undef __class__
 #define __class__ "Highlight"
 
+// first pass
+//#define HL_DEBUG APPL_INFO
+#define HL_DEBUG APPL_VERBOSE
+
+// second pass
+//#define HL2_DEBUG APPL_INFO
+#define HL2_DEBUG APPL_VERBOSE
 
 void appl::Highlight::parseRules(exml::Element* _child,
                            std::vector<HighlightPattern*>& _mListPatern,
@@ -57,7 +64,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 		if (child->getValue() == "ext") {
 			std::string myData = child->getText();
 			if (myData.size()!=0) {
-				//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
+				//HL_DEBUG("(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
 				m_listExtentions.push_back(myData);
 			}
 		} else if (child->getValue() == "pass1") {
@@ -158,42 +165,42 @@ void appl::Highlight::display(void) {
 /* TODO : Celui qui appelle suprime des element pour rien ... Enfin c'est pas très grave... 
  * Il suffirait juste de suprimer celui d'avant si il n'est pas terminer...
  */
-void appl::Highlight::parse(int64_t start,
-                      int64_t stop,
-                      std::vector<appl::HighlightInfo> &metaData,
-                      int64_t addingPos,
-                      etk::Buffer &buffer) {
-	if (0 > addingPos) {
-		addingPos = 0;
+void appl::Highlight::parse(int64_t _start,
+                            int64_t _stop,
+                            std::vector<appl::HighlightInfo> & _metaData,
+                            int64_t _addingPos,
+                            etk::Buffer & _buffer) {
+	if (0 > _addingPos) {
+		_addingPos = 0;
 	}
-	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass1.size() << "  == > position search: (" << start << "," << stop << ")" );
-	int64_t elementStart = start;
-	int64_t elementStop = stop;
+	HL_DEBUG("Parse element 0 => " << m_listHighlightPass1.size() << "  == > position search: (" << _start << "," << _stop << ")" );
+	int64_t elementStart = _start;
+	int64_t elementStop = _stop;
 	appl::HighlightInfo resultat;
-	while (elementStart<elementStop) {
-		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
+	while (elementStart <= elementStop) {
+		HL_DEBUG("Parse element in the buffer pos=" << elementStart);
 		//try to fond the HL in ALL of we have
 		for (int64_t jjj=0; jjj<m_listHighlightPass1.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
-			//APPL_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.size() << ")" );
+			HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ")" );
 			// Stop the search to the end (to get the end of the pattern)
-			ret = m_listHighlightPass1[jjj]->find(elementStart, buffer.size(), resultat, buffer);
+			ret = m_listHighlightPass1[jjj]->find(elementStart, _buffer.size(), resultat, _buffer);
 			if (HLP_FIND_ERROR != ret) {
-				//APPL_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
+				HL_DEBUG("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
 				// remove element in the current List where the current Element have a end inside the next...
-				int64_t kkk=addingPos;
-				while(kkk < metaData.size() ) {
-					if (metaData[kkk].beginStart <= resultat.endStop) {
+				int64_t kkk=_addingPos;
+				while(kkk < _metaData.size() ) {
+					if (_metaData[kkk].beginStart <= resultat.endStop) {
 						// remove element
-						//APPL_INFO("Erase element=" << kkk);
-						metaData.erase(metaData.begin()+kkk, metaData.begin()+kkk+1);
+						HL_DEBUG("Erase element=" << kkk);
+						_metaData.erase(_metaData.begin()+kkk, _metaData.begin()+kkk+1);
 						// Increase the end of search
-						if (kkk < metaData.size()) {
+						if (kkk < _metaData.size()) {
 							// just befor the end of the next element
-							elementStop = metaData[kkk].beginStart-1;
+							elementStop = _metaData[kkk].beginStart-1;
 						} else {
 							// end of the buffer
-							elementStop = buffer.size();
+							elementStop = _buffer.size();
 						}
 					} else {
 						// Not find  == > exit the cycle : 
@@ -201,12 +208,12 @@ void appl::Highlight::parse(int64_t start,
 					}
 				}
 				// add curent element in the list ...
-				metaData.insert(metaData.begin()+addingPos, resultat);
-				//APPL_DEBUG("INSERT at "<< addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
+				_metaData.insert(_metaData.begin()+_addingPos, resultat);
+				HL_DEBUG("INSERT at "<< _addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
 				// update the current research starting element: (set position at the end of the current element
 				elementStart = resultat.endStop-1;
 				// increment the position of insertion:
-				addingPos++;
+				_addingPos++;
 				// We find a pattern  == > Stop search for the current element
 				break;
 			}
@@ -221,26 +228,29 @@ void appl::Highlight::parse(int64_t start,
  * @brief second pass of the hightlight
  *
  */
-void appl::Highlight::parse2(int64_t start,
-                       int64_t stop,
-                       std::vector<appl::HighlightInfo> &metaData,
-                       etk::Buffer &buffer) {
-	//APPL_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() << "  == > position search: (" << start << "," << stop << ")" );
-	int64_t elementStart = start;
-	int64_t elementStop = stop;
+void appl::Highlight::parse2(int64_t _start,
+                             int64_t _stop,
+                             std::vector<appl::HighlightInfo> &_metaData,
+                             etk::Buffer &_buffer) {
+	HL2_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() <<
+	          "  == > position search: (" << _start << "," << _stop << ")" );
+	int64_t elementStart = _start;
+	int64_t elementStop = _stop;
 	appl::HighlightInfo resultat;
-	while (elementStart<elementStop) {
-		//APPL_DEBUG("Parse element in the buffer id=" << elementStart);
+	
+	while (elementStart < elementStop) {
+		//HL2_DEBUG("Parse element in the buffer pos=" << elementStart << "," << _buffer.size() << ")" );
 		//try to fond the HL in ALL of we have
 		for (int64_t jjj=0; jjj<m_listHighlightPass2.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
-			//APPL_DEBUG("Parse HL id=" << jjj << " position search: (" << start << "," << buffer.size() << ")" );
+			HL2_DEBUG("Parse HL id=" << jjj << " position search: (" <<
+			          _start << "," << _buffer.size() << ")" );
 			// Stop the search to the end (to get the end of the pattern)
-			ret = m_listHighlightPass2[jjj]->find(elementStart, elementStop, resultat, buffer);
+			ret = m_listHighlightPass2[jjj]->find(elementStart, elementStop, resultat, _buffer);
 			if (HLP_FIND_ERROR != ret) {
-				//APPL_INFO("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
+				HL2_DEBUG("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
 				// add curent element in the list ...
-				metaData.push_back(resultat);
+				_metaData.push_back(resultat);
 				elementStart = resultat.endStop-1;
 				// Exit current cycle
 				break;

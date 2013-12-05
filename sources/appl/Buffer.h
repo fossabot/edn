@@ -618,7 +618,7 @@ namespace appl {
 			void generateHighLightAt(int64_t _pos, int64_t _endPos, int64_t _addingPos=0);
 			void cleanHighLight(void);
 			appl::HighlightInfo* getElementColorAtPosition(int64_t _pos, int64_t &_starPos);
-			void hightlightGenerateLines(appl::DisplayHLData& _MData, int64_t _HLStart, int64_t _nbLines);
+			void hightlightGenerateLines(appl::DisplayHLData& _MData, const appl::Buffer::Iterator& _HLStart, int64_t _nbLines);
 			appl::HighlightInfo* getElementColorAtPosition(appl::DisplayHLData& _MData, int64_t _pos);
 	};
 };

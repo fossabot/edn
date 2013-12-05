@@ -889,17 +889,18 @@ appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int64_t _pos, int64
 }
 
 
-void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, int64_t _HLStart, int64_t _nbLines) {
+void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const appl::Buffer::Iterator& _HLStart, int64_t _nbLines) {
 	_MData.posHLPass1 = 0;
 	_MData.posHLPass2 = 0;
 	if (NULL == m_highlight) {
 		return;
 	}
-	//GTimeVal timeStart;
-	//g_get_current_time(&timeStart);
-	_HLStart = (int32_t)getStartLine(position(_HLStart));
+	//int64_t timeStart = ewol::getTime();
+	
+	appl::Buffer::Iterator HLStartLine = getStartLine(_HLStart);
+	int64_t HLStartPos = (int64_t)HLStartLine;
 	_MData.HLData.clear();
-	int64_t HLStop = countForwardNLines(position(_HLStart), _nbLines);
+	int64_t HLStop = (int64_t)countForwardNLines(HLStartLine, _nbLines);
 	int64_t startId = 0;
 	int64_t stopId = 0;
 	// find element previous
@@ -914,15 +915,19 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, int64_t 
 	for (kkk = etk_max(startId, 0); kkk < endSearch; ++kkk) {
 		// empty section :
 		if (kkk == 0) {
-			if (_HLStart < m_HLDataPass1[kkk].beginStart) {
-				//APPL_DEBUG("   == > (empty section 1 ) k="<<k<<" start="<<HLStart<<" stop="<<m_HLDataPass1[k].beginStart );
-				m_highlight->parse2(_HLStart,
+			if (HLStartPos < m_HLDataPass1[kkk].beginStart) {
+				APPL_VERBOSE("   == > (empty section 1 ) kkk=" << kkk <<
+				             " start=" << HLStartPos <<
+				             " stop=" << m_HLDataPass1[kkk].beginStart );
+				m_highlight->parse2(HLStartPos,
 									m_HLDataPass1[kkk].beginStart,
 									_MData.HLData,
 									m_data);
 			} // else : nothing to do ...
 		} else {
-			//APPL_DEBUG("   == > (empty section 2 ) k="<<k<<" start="<<m_HLDataPass1[k-1].endStop<<" stop="<<m_HLDataPass1[k].beginStart );
+			APPL_VERBOSE("   == > (empty section 2 ) kkk=" << kkk <<
+			             " start=" << m_HLDataPass1[kkk-1].endStop <<
+			             " stop=" << m_HLDataPass1[kkk].beginStart );
 			m_highlight->parse2(m_HLDataPass1[kkk-1].endStop,
 								m_HLDataPass1[kkk].beginStart,
 								_MData.HLData,
@@ -935,23 +940,26 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, int64_t 
 	if (endSearch == (int32_t)m_HLDataPass1.size() ){
 		//if(		k < (int32_t)m_HLDataPass1.size()) {
 		if (m_HLDataPass1.size() != 0) {
-			//APPL_DEBUG("   == > (empty section 3 ) k="<<k<<" start="<<m_HLDataPass1[k-1].endStop<<" stop="<<HLStop );
+			APPL_VERBOSE("   == > (empty section 3 ) kkk=" << kkk <<
+			             " start=" << m_HLDataPass1[kkk-1].endStop <<
+			             " stop=" << HLStop );
 			m_highlight->parse2(m_HLDataPass1[kkk-1].endStop,
 								HLStop,
 								_MData.HLData,
 								m_data);
 		} else {
-			//APPL_DEBUG("   == > (empty section 4 ) k="<<k<<" start=0 stop="<<HLStop );
+			APPL_VERBOSE("   == > (empty section 4 ) kkk=" << kkk <<
+			             " start=0 stop=" << HLStop );
 			m_highlight->parse2(0,
 								HLStop,
 								_MData.HLData,
 								m_data);
 		}
 	}
-	
-	//GTimeVal timeStop;
-	//g_get_current_time(&timeStop);
-	//APPL_DEBUG("Display reAnnalyse = " << timeStop.tv_usec - timeStart.tv_usec << " micro-s");
+	/*
+	int64_t timeStop = ewol::getTime();
+	APPL_DEBUG("Display 2nd pass = " << (timeStop-timeStart)/1000.0f << " milli-second");
+	*/
 }
 
 

@@ -191,7 +191,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		m_displayText.setClipping(vec2(m_lastOffsetDisplay, 0), m_size);
 	}
 	appl::DisplayHLData displayLocalSyntax;
-	m_buffer->hightlightGenerateLines(displayLocalSyntax, (int64_t)startingIt, m_size.y());
+	m_buffer->hightlightGenerateLines(displayLocalSyntax, startingIt, (m_size.y()/tmpLetterSize.y()) + 5);
 	float maxSizeX = 0;
 	appl::HighlightInfo * HLColor = NULL;
 	bool DisplayCursorAndSelection = isSelectedLast();
@@ -502,9 +502,18 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 			return true;
 		} else if (_event.getStatus() == ewol::keyEvent::statusMove) {
 			if (m_buffer->getSelectMode() == true) {
+				//int64_t timeStart = ewol::getTime();
 				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
+				//int64_t timeMedium1 = ewol::getTime();
 				moveCursor(newPos);
+				//int64_t timeMedium2 = ewol::getTime();
 				markToRedraw();
+				/*
+				int64_t timeStop = ewol::getTime();
+				APPL_DEBUG("Display selection=" << (timeStop-timeStart)/1000.0f << " ms");
+				APPL_DEBUG("                1=" << (timeMedium1-timeStart)/1000.0f << " ms");
+				APPL_DEBUG("                2=" << (timeMedium2-timeMedium1)/1000.0f << " ms");
+				*/
 				return true;
 			}
 		}
@@ -536,6 +545,7 @@ void appl::TextViewer::mouseEventTriple(void) {
 	m_buffer->setSelectionPos(m_buffer->getStartLine(m_buffer->cursor()));
 }
 
+// TODO : optimise this with retaine the display position buffer and his position in the real view ...
 appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativePos) {
 	char32_t currentValue;
 	vec3 positionCurentDisplay(0,0,0);
@@ -549,17 +559,23 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 	     (bool)it == true;
 	     ++it) {
 		currentValue = *it;
-		m_buffer->expand(countColomn, currentValue, stringToDisplay);
-		for (size_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
-			if (stringToDisplay[kkk] == etk::UChar::Return) {
-				m_displayText.forceLineReturn();
-				countColomn = 0;
-			} else {
-				//note : Without this condithion the time od selection change to 0.6 ms to 8ms ...
-				if (-_relativePos.y() >= positionCurentDisplay.y()) {
-					m_displayText.print(stringToDisplay[kkk]);
+		if (currentValue == etk::UChar::Return) {
+			m_displayText.forceLineReturn();
+			countColomn = 0;
+		} else {
+			if (-_relativePos.y() >= positionCurentDisplay.y()) {
+				m_buffer->expand(countColomn, currentValue, stringToDisplay);
+				for (size_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
+					if (stringToDisplay[kkk] == etk::UChar::Return) {
+						m_displayText.forceLineReturn();
+						countColomn = 0;
+					} else {
+						//note : Without this condithion the time od selection change to 0.6 ms to 8ms ...
+						//APPL_DEBUG("check : " << -_relativePos.y() << ">=" << positionCurentDisplay.y());
+						m_displayText.print(stringToDisplay[kkk]);
+						++countColomn;
+					}
 				}
-				++countColomn;
 			}
 		}
 		if (-_relativePos.y() >= positionCurentDisplay.y()) {
@@ -697,6 +713,7 @@ void appl::TextViewer::setFontName(const std::string& _fontName) {
 	m_displayText.setFontName(_fontName);
 }
 
+// TODO : Update process time ==> a little expensive (2->4ms) in end of file
 void appl::TextViewer::updateScrolling(void) {
 	if (m_buffer == NULL) {
 		return;
