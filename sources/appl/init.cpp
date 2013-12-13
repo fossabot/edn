@@ -9,8 +9,8 @@
 #include <etk/types.h>
 #include <etk/UString.h>
 #include <ewol/ewol.h>
-#include <ewol/renderer/EObject.h>
-#include <ewol/widget/WidgetManager.h>
+#include <ewol/object/Object.h>
+#include <ewol/widget/Manager.h>
 
 #include <appl/debug.h>
 #include <appl/global.h>
@@ -18,9 +18,9 @@
 #include <etk/tool.h>
 #include <unistd.h>
 //#include <ewol/config.h>
-#include <ewol/commandLine.h>
+#include <ewol/context/commandLine.h>
 //#include <ewol/UserConfig.h>
-#include <ewol/renderer/eContext.h>
+#include <ewol/context/Context.h>
 #include <appl/TextPluginManager.h>
 #include <appl/BufferManager.h>
 #include <appl/HighlightManager.h>
@@ -58,7 +58,7 @@ etk::CCout& operator <<(etk::CCout& _os, const std::u32string& _obj) {
 /**
  * @brief main application function initialisation
  */
-bool APP_Init(ewol::eContext& _context) {
+bool APP_Init(ewol::Context& _context) {
 	APPL_INFO(" == > init APPL v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
 	
 	etk::theme::setName("COLOR", "colorWhite/");
@@ -135,9 +135,9 @@ bool APP_Init(ewol::eContext& _context) {
 /**
  * @brief main application function Un-Initialisation
  */
-void APP_UnInit(ewol::eContext& _context) {
+void APP_UnInit(ewol::Context& _context) {
 	APPL_INFO(" == > Un-Init " PROJECT_NAME " (START)");
-	ewol::Windows* tmpWindows = _context.getWindows();
+	ewol::widget::Windows* tmpWindows = _context.getWindows();
 	
 	_context.setWindows(NULL);
 	

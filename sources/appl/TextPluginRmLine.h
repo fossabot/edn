@@ -10,7 +10,7 @@
 #define __APPL_TEXT_RM_LINE_H__
 
 #include <etk/types.h>
-#include <ewol/renderer/EObject.h>
+#include <ewol/object/Object.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/compositing/Text.h>
 #include <appl/TextPlugin.h>
@@ -25,7 +25,7 @@ namespace appl {
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
-			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer, const ewol::EMessage& _msg);
+			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer, const ewol::object::Message& _msg);
 	};
 };
 

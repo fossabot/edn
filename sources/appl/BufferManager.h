@@ -12,7 +12,7 @@
 #include <appl/Buffer.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/Widget.h>
-#include <ewol/resources/Resource.h>
+#include <ewol/resource/Resource.h>
 
 namespace appl {
 	class BufferManager : public ewol::Resource {
@@ -76,8 +76,8 @@ namespace appl {
 				return m_bufferSelected;
 			};
 		public: // herited function
-			void onReceiveMessage(const ewol::EMessage& _msg);
-			void onObjectRemove(ewol::EObject * _removeObject);
+			void onReceiveMessage(const ewol::object::Message& _msg);
+			void onObjectRemove(ewol::Object * _removeObject);
 		public: // resource manager
 			/**
 			 * @brief keep the resource pointer.

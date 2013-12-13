@@ -8,7 +8,7 @@
 
 
 #include <appl/TextPluginAutoIndent.h>
-#include <ewol/clipBoard.h>
+#include <ewol/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
 #undef __class__
@@ -20,22 +20,22 @@ appl::TextPluginAutoIndent::TextPluginAutoIndent(void) {
 }
 
 bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
-                                              const ewol::EventEntry& _event) {
+                                              const ewol::event::Entry& _event) {
 	if (isEnable() == false) {
 		return false;
 	}
 	//APPL_DEBUG("KB EVENT : " << _event);
 	// just forward event  == > manage directly in the buffer
-	if (_event.getType() != ewol::keyEvent::keyboardChar) {
+	if (_event.getType() != ewol::key::keyboardChar) {
 		return false;
 	}
-	if (_event.getStatus() != ewol::keyEvent::statusDown) {
+	if (_event.getStatus() != ewol::key::statusDown) {
 		return false;
 	}
 	if (_event.getChar() != etk::UChar::Return) {
 		return false;
 	}
-	if (_event.getSpecialKey().isSetShift() == true) {
+	if (_event.getSpecialKey().getShift() == true) {
 		return false;
 	}
 	appl::Buffer::Iterator startLine = _textDrawer.cursor();

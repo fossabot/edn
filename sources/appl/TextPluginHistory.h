@@ -10,7 +10,7 @@
 #define __APPL_TEXT_PLUGIN_HISTORY_H__
 
 #include <etk/types.h>
-#include <ewol/renderer/EObject.h>
+#include <ewol/object/Object.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/compositing/Text.h>
 #include <appl/TextPluginData.h>
@@ -44,7 +44,7 @@ namespace appl {
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
 			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                              const ewol::EMessage& _msg,
+			                              const ewol::object::Message& _msg,
 			                              appl::PluginHistoryData& _data);
 			virtual bool onWrite(appl::TextViewer& _textDrawer,
 			                     const appl::Buffer::Iterator& _pos,
@@ -67,7 +67,7 @@ namespace appl {
 			void clearRedo(appl::PluginHistoryData& _data);
 			void clearUndo(appl::PluginHistoryData& _data);
 		public:
-			virtual void onObjectRemove(ewol::EObject* _removeObject);
+			virtual void onObjectRemove(ewol::Object* _removeObject);
 	};
 };
 

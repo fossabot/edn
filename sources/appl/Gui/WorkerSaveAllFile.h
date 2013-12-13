@@ -13,7 +13,7 @@
 #include <appl/Gui/WorkerSaveFile.h>
 
 namespace appl {
-	class WorkerSaveAllFile : public ewol::EObject {
+	class WorkerSaveAllFile : public ewol::Object {
 		public:
 			WorkerSaveAllFile(void);
 			virtual ~WorkerSaveAllFile(void);
@@ -22,8 +22,8 @@ namespace appl {
 			appl::WorkerSaveFile* m_worker; //! pop-up element that is open...
 			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 		public: // derived function
-			virtual void onReceiveMessage(const ewol::EMessage& _msg);
-			virtual void onObjectRemove(ewol::EObject * _removeObject);
+			virtual void onReceiveMessage(const ewol::object::Message& _msg);
+			virtual void onObjectRemove(ewol::Object * _removeObject);
 	};
 };
 

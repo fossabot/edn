@@ -8,7 +8,7 @@
 
 
 #include <appl/TextPluginSelectAll.h>
-#include <ewol/clipBoard.h>
+#include <ewol/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
 #undef __class__
@@ -32,7 +32,7 @@ void appl::TextPluginSelectAll::onPluginDisable(appl::TextViewer& _textDrawer) {
 }
 
 bool appl::TextPluginSelectAll::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                                 const ewol::EMessage& _msg) {
+                                                 const ewol::object::Message& _msg) {
 	if (isEnable() == false) {
 		return false;
 	}

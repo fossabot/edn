@@ -9,7 +9,7 @@
 
 #include <appl/Buffer.h>
 #include <appl/debug.h>
-#include <ewol/clipBoard.h>
+#include <ewol/context/clipBoard.h>
 #include <appl/HighlightManager.h>
 
 

@@ -9,8 +9,8 @@
 #include <appl/debug.h>
 #include <appl/global.h>
 #include <appl/HighlightManager.h>
-#include <ewol/renderer/EObject.h>
-#include <ewol/renderer/EObjectManager.h>
+#include <ewol/object/Object.h>
+#include <ewol/object/Manager.h>
 
 #undef __class__
 #define __class__ "highlightManager"

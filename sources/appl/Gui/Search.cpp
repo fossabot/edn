@@ -29,7 +29,7 @@ const char* const l_eventForwardCb = "appl-forward-CheckBox";
 const char* const l_eventHideBt = "appl-hide-button";
 
 Search::Search(void) :
-  widget::Composer(widget::Composer::file, "DATA:GUI-Search.xml"),
+  ewol::widget::Composer(ewol::widget::Composer::file, "DATA:GUI-Search.xml"),
   m_viewerManager(NULL),
   m_forward(true),
   m_caseSensitive(false),
@@ -55,8 +55,8 @@ Search::Search(void) :
 	setConfigNamed("SEARCH:wrap", "value", std::to_string(m_wrap));
 	setConfigNamed("SEARCH:up-down", "value", std::to_string(m_forward));
 	// get widget
-	m_searchEntry = dynamic_cast<widget::Entry*>(getWidgetNamed("SEARCH:search-entry"));
-	m_replaceEntry = dynamic_cast<widget::Entry*>(getWidgetNamed("SEARCH:replace-entry"));
+	m_searchEntry = dynamic_cast<ewol::widget::Entry*>(getWidgetNamed("SEARCH:search-entry"));
+	m_replaceEntry = dynamic_cast<ewol::widget::Entry*>(getWidgetNamed("SEARCH:replace-entry"));
 	// Display and hide event:
 	registerMultiCast(ednMsgGuiSearch);
 	// basicly hiden ...
@@ -121,8 +121,8 @@ void Search::replace(void) {
 }
 
 
-void Search::onReceiveMessage(const ewol::EMessage& _msg) {
-	widget::Composer::onReceiveMessage(_msg);
+void Search::onReceiveMessage(const ewol::object::Message& _msg) {
+	ewol::widget::Composer::onReceiveMessage(_msg);
 	APPL_INFO("Search receive message : " << _msg);
 	if ( _msg.getMessage() == l_eventSearchEntry) {
 		m_searchData = to_u32string(_msg.getData());
@@ -162,8 +162,8 @@ void Search::onReceiveMessage(const ewol::EMessage& _msg) {
 	}
 }
 
-void Search::onObjectRemove(ewol::EObject * _removeObject) {
-	widget::Composer::onObjectRemove(_removeObject);
+void Search::onObjectRemove(ewol::Object * _removeObject) {
+	ewol::widget::Composer::onObjectRemove(_removeObject);
 	if (_removeObject == m_searchEntry) {
 		m_searchEntry = NULL;
 	}

@@ -10,11 +10,11 @@
 #include <appl/global.h>
 #include <appl/Gui/TextViewer.h>
 #include <appl/BufferManager.h>
-#include <ewol/clipBoard.h>
+#include <ewol/context/clipBoard.h>
 
-#include <ewol/widget/WidgetManager.h>
+#include <ewol/widget/Manager.h>
 #include <appl/Gui/ViewerManager.h>
-#include <ewol/renderer/EObject.h>
+#include <ewol/object/Object.h>
 #include <appl/TextPluginManager.h>
 
 #undef __class__
@@ -98,7 +98,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	if (m_buffer == NULL) {
 		m_maxSize.setX(256);
 		m_maxSize.setY(256);
-		m_displayText.setTextAlignement(10, m_size.x()-20, ewol::Text::alignLeft);
+		m_displayText.setTextAlignement(10, m_size.x()-20, ewol::compositing::Text::alignLeft);
 		m_displayText.setRelPos(vec3(10, 0, 0));
 		std::string tmpString("<br/>\n"
 		                       "<font color=\"red\">\n"
@@ -213,7 +213,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			// Display the end line position only if we have the focus ...
 			if (DisplayCursorAndSelection == true) {
 				if (it >= selectPosStart && it < selectPosStop) {
-					ewol::Drawing& draw = m_displayText.getDrawing();
+					ewol::compositing::Drawing& draw = m_displayText.getDrawing();
 					draw.setColor(etk::Color<>(0xFF0000FF));
 					draw.setPos(m_displayText.getPos() + tmpLetterSize/4.0f);
 					draw.rectangle(m_displayText.getPos() + tmpLetterSize*3.0f/4.0f);
@@ -301,7 +301,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	WidgetScrooled::onRegenerateDisplay();
 }
 
-bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
+bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 	if (m_buffer == NULL) {
 		return false;
 	}
@@ -311,14 +311,14 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 		return true;
 	}
 	// just forward event  == > manage directly in the buffer
-	if (_event.getType() == ewol::keyEvent::keyboardChar) {
+	if (_event.getType() == ewol::key::keyboardChar) {
 		//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
-		if (_event.getStatus() != ewol::keyEvent::statusDown) {
+		if (_event.getStatus() != ewol::key::statusDown) {
 			return false;
 		}
 		char32_t localValue = _event.getChar();
 		if (localValue == etk::UChar::Return) {
-			if (true == _event.getSpecialKey().isSetShift()) {
+			if (true == _event.getSpecialKey().getShift()) {
 				localValue = etk::UChar::CarrierReturn;
 			}
 		} else if (localValue == etk::UChar::Suppress ) {
@@ -349,7 +349,7 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 		char output[5];
 		int32_t nbElement = etk::getUtf8(localValue, output);
 		if (    m_buffer->hasTextSelected() == false
-		     && _event.getSpecialKey().isSetInsert() == true) {
+		     && _event.getSpecialKey().getInsert() == true) {
 			appl::Buffer::Iterator pos = m_buffer->cursor();
 			appl::Buffer::Iterator posEnd = pos;
 			++posEnd;
@@ -362,45 +362,45 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 		return true;
 	}
 	// move events ...
-	if (_event.getStatus() == ewol::keyEvent::statusDown) {
+	if (_event.getStatus() == ewol::key::statusDown) {
 		bool needUpdatePosition = true;
 		// selection when shift is set:
-		m_buffer->setSelectMode(_event.getSpecialKey().isSetShift());
+		m_buffer->setSelectMode(_event.getSpecialKey().getShift());
 		// check selection event ...
 		switch(_event.getType()) {
-			case ewol::keyEvent::keyboardInsert:
+			case ewol::key::keyboardInsert:
 				m_insertMode = m_insertMode==true?false:true;
 				markToRedraw();
 				break;
-			case ewol::keyEvent::keyboardLeft:
+			case ewol::key::keyboardLeft:
 				//APPL_INFO("keyEvent : <LEFT>");
 				moveCursorLeft();
 				break;
-			case ewol::keyEvent::keyboardRight:
+			case ewol::key::keyboardRight:
 				//APPL_INFO("keyEvent : <RIGHT>");
 				moveCursorRight();
 				break;
-			case ewol::keyEvent::keyboardUp:
+			case ewol::key::keyboardUp:
 				//APPL_INFO("keyEvent : <UP>");
 				moveCursorUp(1);
 				break;
-			case ewol::keyEvent::keyboardDown:
+			case ewol::key::keyboardDown:
 				//APPL_INFO("keyEvent : <DOWN>");
 				moveCursorDown(1);
 				break;
-			case ewol::keyEvent::keyboardPageUp:
+			case ewol::key::keyboardPageUp:
 				//APPL_INFO("keyEvent : <PAGE-UP>");
 				moveCursorUp(15); // TODO : Set the real number of line ...
 				break;
-			case ewol::keyEvent::keyboardPageDown:
+			case ewol::key::keyboardPageDown:
 				//APPL_INFO("keyEvent : <PAGE-DOWN>");
 				moveCursorDown(15); // TODO : Set the real number of line ...
 				break;
-			case ewol::keyEvent::keyboardStart:
+			case ewol::key::keyboardStart:
 				//APPL_INFO("keyEvent : <Start of line>");
 				moveCursorLeft(moveEnd);
 				break;
-			case ewol::keyEvent::keyboardEnd:
+			case ewol::key::keyboardEnd:
 				//APPL_INFO("keyEvent : <End of line>");
 				moveCursorRight(moveEnd);
 				break;
@@ -412,7 +412,7 @@ bool appl::TextViewer::onEventEntry(const ewol::EventEntry& _event) {
 	return false;
 }
 
-bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
+bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 	if (_event.getId() != 0) {
 		keepFocus();
 	}
@@ -441,7 +441,7 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 		relativePos.setX(0);
 	}
 	if (    _event.getId() == 12
-	     && _event.getStatus() == ewol::keyEvent::statusSingle) {
+	     && _event.getStatus() == ewol::key::statusSingle) {
 		APPL_DEBUG("kjhkjhkjh");
 		// Rat5 save event
 		sendMultiCast(ednMsgGuiSave, "current");
@@ -450,8 +450,8 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 	// just forward event  == > manage directly in the buffer
 	if (_event.getId() == 1) {
 		// mouse selection :
-		if (_event.getType() == ewol::keyEvent::typeMouse) {
-			if (_event.getStatus() == ewol::keyEvent::statusDown) {
+		if (_event.getType() == ewol::key::typeMouse) {
+			if (_event.getStatus() == ewol::key::statusDown) {
 				//if (_event.getSpecialKey().isSetShift() == false) {
 					appl::Buffer::Iterator newPos = getMousePosition(relativePos);
 					moveCursor(newPos);
@@ -459,7 +459,7 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 					markToRedraw();
 					return true;
 				//}
-			} else if (_event.getStatus() == ewol::keyEvent::statusUp) {
+			} else if (_event.getStatus() == ewol::key::statusUp) {
 				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
 				moveCursor(newPos);
 				m_buffer->setSelectMode(false);
@@ -467,40 +467,40 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 				std::string value;
 				m_buffer->copy(value);
 				if (value.size() != 0) {
-					ewol::clipBoard::set(ewol::clipBoard::clipboardSelection, value);
+					ewol::context::clipBoard::set(ewol::context::clipBoard::clipboardSelection, value);
 				}
 				markToRedraw();
 				return true;
 			}
 		}
-		if (_event.getStatus() == ewol::keyEvent::statusSingle) {
-			if (_event.getType() == ewol::keyEvent::typeMouse) {
+		if (_event.getStatus() == ewol::key::statusSingle) {
+			if (_event.getType() == ewol::key::typeMouse) {
 				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
 				moveCursor(newPos);
 				markToRedraw();
 				return true;
 			}
-		} else if (_event.getStatus() == ewol::keyEvent::statusDouble) {
+		} else if (_event.getStatus() == ewol::key::statusDouble) {
 			mouseEventDouble();
 			// Copy selection :
 			std::string value;
 			m_buffer->copy(value);
 			if (value.size() != 0) {
-				ewol::clipBoard::set(ewol::clipBoard::clipboardSelection, value);
+				ewol::context::clipBoard::set(ewol::context::clipBoard::clipboardSelection, value);
 			}
 			markToRedraw();
 			return true;
-		} else if (_event.getStatus() == ewol::keyEvent::statusTriple) {
+		} else if (_event.getStatus() == ewol::key::statusTriple) {
 			mouseEventTriple();
 			// Copy selection :
 			std::string value;
 			m_buffer->copy(value);
 			if (value.size() != 0) {
-				ewol::clipBoard::set(ewol::clipBoard::clipboardSelection, value);
+				ewol::context::clipBoard::set(ewol::context::clipBoard::clipboardSelection, value);
 			}
 			markToRedraw();
 			return true;
-		} else if (_event.getStatus() == ewol::keyEvent::statusMove) {
+		} else if (_event.getStatus() == ewol::key::statusMove) {
 			if (m_buffer->getSelectMode() == true) {
 				//int64_t timeStart = ewol::getTime();
 				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
@@ -518,10 +518,10 @@ bool appl::TextViewer::onEventInput(const ewol::EventInput& _event) {
 			}
 		}
 	} else if (2 == _event.getId()) {
-		if (ewol::keyEvent::statusSingle == _event.getStatus()) {
+		if (ewol::key::statusSingle == _event.getStatus()) {
 			appl::Buffer::Iterator newPos = getMousePosition(relativePos);
 			moveCursor(newPos);
-			ewol::clipBoard::request(ewol::clipBoard::clipboardSelection);
+			ewol::context::clipBoard::request(ewol::context::clipBoard::clipboardSelection);
 			markToRedraw();
 			return true;
 		}
@@ -596,16 +596,16 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 	return m_buffer->end();
 }
 
-void appl::TextViewer::onEventClipboard(enum ewol::clipBoard::clipboardListe _clipboardID) {
+void appl::TextViewer::onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID) {
 	if (m_buffer != NULL) {
-		std::string data = ewol::clipBoard::get(_clipboardID);
+		std::string data = ewol::context::clipBoard::get(_clipboardID);
 		write(data);
 	}
 	markToRedraw();
 }
 
-void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
-	widget::WidgetScrooled::onReceiveMessage(_msg);
+void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
+	ewol::widget::WidgetScrooled::onReceiveMessage(_msg);
 	APPL_VERBOSE("receive msg: " << _msg);
 	// First call plugin
 	if (appl::textPluginManager::onReceiveMessage(*this, _msg) == true) {
@@ -683,8 +683,8 @@ void appl::TextViewer::onReceiveMessage(const ewol::EMessage& _msg) {
 	}
 }
 
-void appl::TextViewer::onObjectRemove(ewol::EObject* _removeObject) {
-	widget::WidgetScrooled::onObjectRemove(_removeObject);
+void appl::TextViewer::onObjectRemove(ewol::Object* _removeObject) {
+	ewol::widget::WidgetScrooled::onObjectRemove(_removeObject);
 	if (m_buffer == _removeObject) {
 		m_buffer = NULL;
 		markToRedraw();

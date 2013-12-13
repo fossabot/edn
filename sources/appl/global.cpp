@@ -8,15 +8,15 @@
 
 #include <appl/global.h>
 #include <appl/globalMsg.h>
-#include <ewol/renderer/EObject.h>
-#include <ewol/renderer/eContext.h>
-#include <ewol/resources/ResourceManager.h>
+#include <ewol/object/Object.h>
+#include <ewol/context/Context.h>
+#include <ewol/resource/Manager.h>
 #include <etk/os/FSNode.h>
 
 #undef __class__
 #define __class__ "globals"
 
-class myParamGlobal : public ewol::EObject {
+class myParamGlobal : public ewol::Object {
 	public:
 		static const char * const configEOL;
 		static const char * const configAutoIndent;
@@ -41,7 +41,7 @@ class myParamGlobal : public ewol::EObject {
 			registerConfig(configShowSpaceChar, "bool", NULL, "Display the space char");
 		}
 		
-		bool onSetConfig(const ewol::EConfig& _conf) {
+		bool onSetConfig(const ewol::object::Config& _conf) {
 			// Not set the EObject node parameter (name  == > not change ...)
 			if (_conf.getConfig() == configEOL) {
 				m_displayEOL = stobool(_conf.getData());
@@ -180,18 +180,18 @@ static const char * const l_changeEndOfLine   = "edn-event-change-endOfLine";
 static const char * const l_changeRounded     = "edn-event-change-rounded";
 
 globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
-  widget::Sizer(widget::Sizer::modeVert) {
-	widget::CheckBox* myCheckbox = NULL;
-	widget::Spacer* mySpacer = NULL;
+  ewol::widget::Sizer(ewol::widget::Sizer::modeVert) {
+	ewol::widget::CheckBox* myCheckbox = NULL;
+	ewol::widget::Spacer* mySpacer = NULL;
 	
-	mySpacer = new widget::Spacer();
+	mySpacer = new ewol::widget::Spacer();
 	if (NULL == mySpacer) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		mySpacer->setExpand(bvec2(true,true));
 		subWidgetAdd(mySpacer);
 	}
-	myCheckbox = new widget::CheckBox("Automatic Indentation");
+	myCheckbox = new ewol::widget::CheckBox("Automatic Indentation");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
@@ -200,7 +200,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeIndentation);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new widget::CheckBox("Display space char (' ')");
+	myCheckbox = new ewol::widget::CheckBox("Display space char (' ')");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
@@ -209,7 +209,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeSpace);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new widget::CheckBox("Display tabulation char ('\\t')");
+	myCheckbox = new ewol::widget::CheckBox("Display tabulation char ('\\t')");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
@@ -218,7 +218,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeTabulation);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new widget::CheckBox("Display end of line ('\\n')");
+	myCheckbox = new ewol::widget::CheckBox("Display end of line ('\\n')");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
@@ -227,7 +227,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeEndOfLine);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new widget::CheckBox("switch Rounded/default");
+	myCheckbox = new ewol::widget::CheckBox("switch Rounded/default");
 	if (NULL == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
@@ -243,8 +243,8 @@ globals::ParameterGlobalsGui::~ParameterGlobalsGui(void) {
 }
 
 
-void globals::ParameterGlobalsGui::onReceiveMessage(const ewol::EMessage& _msg) {
-	widget::Sizer::onReceiveMessage(_msg);
+void globals::ParameterGlobalsGui::onReceiveMessage(const ewol::object::Message& _msg) {
+	ewol::widget::Sizer::onReceiveMessage(_msg);
 	
 	if (_msg.getMessage() == l_changeEndOfLine) {
 		if (_msg.getData() == "true") {

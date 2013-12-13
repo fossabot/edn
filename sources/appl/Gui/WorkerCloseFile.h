@@ -14,7 +14,7 @@
 #include <appl/Gui/WorkerSaveFile.h>
 
 namespace appl {
-	class WorkerCloseFile : public ewol::EObject {
+	class WorkerCloseFile : public ewol::Object {
 		public:
 			static const char* eventCloseDone;
 		public:
@@ -27,8 +27,8 @@ namespace appl {
 			appl::WorkerSaveFile* m_worker; //! sub-worker element...
 			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 		public: // derived function
-			virtual void onReceiveMessage(const ewol::EMessage& _msg);
-			virtual void onObjectRemove(ewol::EObject * _removeObject);
+			virtual void onReceiveMessage(const ewol::object::Message& _msg);
+			virtual void onObjectRemove(ewol::Object * _removeObject);
 	};
 };
 

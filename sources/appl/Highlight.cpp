@@ -10,7 +10,7 @@
 #include <appl/global.h>
 #include <appl/Highlight.h>
 #include <exml/exml.h>
-#include <ewol/resources/ResourceManager.h>
+#include <ewol/resource/Manager.h>
 
 
 #undef __class__

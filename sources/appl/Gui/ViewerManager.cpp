@@ -10,8 +10,9 @@
 #include <appl/global.h>
 #include <appl/Gui/ViewerManager.h>
 #include <appl/Gui/TextViewer.h>
-#include <ewol/renderer/EObject.h>
-#include <ewol/renderer/EObjectManager.h>
+#include <ewol/object/Object.h>
+#include <ewol/object/Manager.h>
+#include <ewol/resource/Manager.h>
 
 #undef __class__
 #define __class__ "ViewerManager"
@@ -38,11 +39,11 @@ void appl::ViewerManager::setViewerSelected(appl::TextViewer* _viewer, appl::Buf
 	}
 }
 
-void appl::ViewerManager::onReceiveMessage(const ewol::EMessage& _msg) {
+void appl::ViewerManager::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_DEBUG("receive message !!! " << _msg);
 }
 
-void appl::ViewerManager::onObjectRemove(ewol::EObject* _removeObject) {
+void appl::ViewerManager::onObjectRemove(ewol::Object* _removeObject) {
 	ewol::Resource:: onObjectRemove(_removeObject);
 	if (_removeObject == m_viewer) {
 		m_viewer = NULL;

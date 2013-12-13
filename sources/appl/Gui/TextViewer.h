@@ -21,7 +21,7 @@
 #include <utility>
 
 namespace appl {
-	class TextViewer : public widget::WidgetScrooled {
+	class TextViewer : public ewol::widget::WidgetScrooled {
 		private:
 			appl::GlyphPainting* m_paintingProperties; //!< element painting property
 			int32_t m_colorBackground;
@@ -48,8 +48,8 @@ namespace appl {
 				return m_buffer;
 			}
 		private:
-			ewol::Text m_displayText; //!< Text display properties.
-			ewol::Drawing m_displayDrawing; //!< Other diaplay requested.
+			ewol::compositing::Text m_displayText; //!< Text display properties.
+			ewol::compositing::Drawing m_displayDrawing; //!< Other diaplay requested.
 			std::vector<std::pair<appl::Buffer*, vec2>> m_drawingRemenber;
 		public:
 			void setFontSize(int32_t _size);
@@ -59,11 +59,11 @@ namespace appl {
 		public:  // Derived function
 			virtual bool calculateMinSize(void);
 			virtual void onRegenerateDisplay(void);
-			virtual void onReceiveMessage(const ewol::EMessage& _msg);
-			virtual void onObjectRemove(ewol::EObject* _removeObject);
-			virtual bool onEventInput(const ewol::EventInput& _event);
-			virtual bool onEventEntry(const ewol::EventEntry& _event);
-			virtual void onEventClipboard(enum ewol::clipBoard::clipboardListe _clipboardID);
+			virtual void onReceiveMessage(const ewol::object::Message& _msg);
+			virtual void onObjectRemove(ewol::Object* _removeObject);
+			virtual bool onEventInput(const ewol::event::Input& _event);
+			virtual bool onEventEntry(const ewol::event::Entry& _event);
+			virtual void onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID);
 			virtual void onGetFocus(void);
 			virtual void onLostFocus(void);
 		private:

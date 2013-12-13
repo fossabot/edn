@@ -36,12 +36,12 @@ namespace globals
 	
 	bool OrderTheBufferList(void);
 	
-	class ParameterGlobalsGui : public widget::Sizer {
+	class ParameterGlobalsGui : public ewol::widget::Sizer {
 		public :
 			ParameterGlobalsGui(void);
 			~ParameterGlobalsGui(void);
 			// herited function
-			virtual void onReceiveMessage(const ewol::EMessage& _msg);
+			virtual void onReceiveMessage(const ewol::object::Message& _msg);
 	};
 
 }

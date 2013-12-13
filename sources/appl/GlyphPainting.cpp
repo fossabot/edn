@@ -11,7 +11,7 @@
 #include <appl/GlyphPainting.h>
 #include <ejson/ejson.h>
 #include <etk/os/FSNode.h>
-#include <ewol/resources/ResourceManager.h>
+#include <ewol/resource/Manager.h>
 
 #undef __class__
 #define __class__ "GlyphPainting"

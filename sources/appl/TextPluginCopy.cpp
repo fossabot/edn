@@ -8,7 +8,7 @@
 
 
 #include <appl/TextPluginCopy.h>
-#include <ewol/clipBoard.h>
+#include <ewol/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
 #undef __class__
@@ -34,7 +34,7 @@ void appl::TextPluginCopy::onPluginDisable(appl::TextViewer& _textDrawer) {
 }
 
 bool appl::TextPluginCopy::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                            const ewol::EMessage& _msg) {
+                                            const ewol::object::Message& _msg) {
 	if (isEnable() == false) {
 		return false;
 	}
@@ -44,7 +44,7 @@ bool appl::TextPluginCopy::onReceiveMessage(appl::TextViewer& _textDrawer,
 			std::string value;
 			_textDrawer.copy(value);
 			if (value.size() != 0) {
-				ewol::clipBoard::set(ewol::clipBoard::clipboardStd, value);
+				ewol::context::clipBoard::set(ewol::context::clipBoard::clipboardStd, value);
 			}
 		}
 		if (_msg.getMessage() == ednMsgGuiCut) {
@@ -53,7 +53,7 @@ bool appl::TextPluginCopy::onReceiveMessage(appl::TextViewer& _textDrawer,
 		return true;
 	} else if (_msg.getMessage() == ednMsgGuiPaste) {
 		if (_textDrawer.hasBuffer() == true) {
-			ewol::clipBoard::request(ewol::clipBoard::clipboardStd);
+			ewol::context::clipBoard::request(ewol::context::clipBoard::clipboardStd);
 		}
 		return true;
 	}

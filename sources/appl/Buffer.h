@@ -14,7 +14,7 @@
 #include <etk/unicode.h>
 #include <ewol/ewol.h>
 #include <etk/Buffer.h>
-#include <ewol/renderer/EObject.h>
+#include <ewol/object/Object.h>
 #include <ewol/widget/Widget.h>
 #include <ewol/compositing/Text.h>
 #include <appl/Highlight.h>
@@ -27,7 +27,7 @@ namespace appl {
 			int64_t posHLPass1;
 			int64_t posHLPass2;
 	};
-	class Buffer : public ewol::EObject {
+	class Buffer : public ewol::Object {
 		public:
 			class Iterator {
 				// Private data :

@@ -13,7 +13,7 @@
 #include <appl/BufferManager.h>
 
 namespace appl {
-	class WorkerSaveFile : public ewol::EObject {
+	class WorkerSaveFile : public ewol::Object {
 		public:
 			static const char* eventSaveDone;
 		public:
@@ -21,11 +21,11 @@ namespace appl {
 			virtual ~WorkerSaveFile(void);
 		private:
 			std::string m_bufferName;
-			widget::FileChooser* m_chooser; //! pop-up element that is open...
+			ewol::widget::FileChooser* m_chooser; //! pop-up element that is open...
 			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 		public: // derived function
-			virtual void onReceiveMessage(const ewol::EMessage& _msg);
-			virtual void onObjectRemove(ewol::EObject * _removeObject);
+			virtual void onReceiveMessage(const ewol::object::Message& _msg);
+			virtual void onObjectRemove(ewol::Object * _removeObject);
 	};
 };
 

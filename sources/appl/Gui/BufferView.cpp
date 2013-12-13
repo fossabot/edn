@@ -12,7 +12,7 @@
 #include <appl/BufferManager.h>
 //#include <ColorizeManager.h>
 #include <appl/Gui/MainWindows.h>
-#include <ewol/renderer/EObject.h>
+#include <ewol/object/Object.h>
 
 #undef __class__
 #define __class__ "BufferView"
@@ -107,8 +107,8 @@ void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _sel
 }
 
 
-void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
-	widget::List::onReceiveMessage(_msg);
+void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
+	ewol::widget::List::onReceiveMessage(_msg);
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
 		appl::Buffer* buffer = m_bufferManager->get(_msg.getData());
 		if (buffer == NULL) {
@@ -221,8 +221,8 @@ void BufferView::onReceiveMessage(const ewol::EMessage& _msg) {
 	}
 }
 
-void BufferView::onObjectRemove(ewol::EObject* _removeObject) {
-	widget::List::onObjectRemove(_removeObject);
+void BufferView::onObjectRemove(ewol::Object* _removeObject) {
+	ewol::widget::List::onObjectRemove(_removeObject);
 	for (int32_t iii=0; iii<m_list.size(); iii++) {
 		if (m_list[iii] == NULL) {
 			continue;
@@ -281,9 +281,9 @@ bool BufferView::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextT
 	return true;
 }
 
-bool BufferView::onItemEvent(int32_t _IdInput, enum ewol::keyEvent::status _typeEvent,  int32_t _colomn, int32_t _raw, float _x, float _y)
+bool BufferView::onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent,  int32_t _colomn, int32_t _raw, float _x, float _y)
 {
-	if (1 == _IdInput && _typeEvent == ewol::keyEvent::statusSingle) {
+	if (1 == _IdInput && _typeEvent == ewol::key::statusSingle) {
 		APPL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
 		if(    _raw >= 0
 		    && _raw<m_list.size()

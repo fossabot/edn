@@ -10,7 +10,7 @@
 #define __APPL_TEXT_PLUGIN_MANAGER_H__
 
 #include <etk/types.h>
-#include <ewol/renderer/EObject.h>
+#include <ewol/object/Object.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/compositing/Text.h>
 #include <appl/TextPlugin.h>
@@ -51,7 +51,7 @@ namespace appl {
 		 * @return true if the event might not propagate anymore.
 		 */
 		bool onEventEntry(appl::TextViewer& _widget,
-		                  const ewol::EventEntry& _event);
+		                  const ewol::event::Entry& _event);
 		/**
 		 * @brief On Input event call.
 		 * @param[in] _widget Reference on the widget caller.
@@ -59,7 +59,7 @@ namespace appl {
 		 * @return true if the event might not propagate anymore
 		 */
 		bool onEventInput(appl::TextViewer& _textDrawer,
-		                  const ewol::EventInput& _event);
+		                  const ewol::event::Input& _event);
 		/**
 		 * @brief Called when data is written in the buffer.
 		 * @param[in] _widget Reference on the widget caller.
@@ -99,7 +99,7 @@ namespace appl {
 		 * @return true if the event might not propagate anymore
 		 */
 		bool onReceiveMessage(appl::TextViewer& _textDrawer,
-		                      const ewol::EMessage& _msg);
+		                      const ewol::object::Message& _msg);
 		/**
 		 * @brief Called when Cursor move of position.
 		 * @param[in] _widget Reference on the widget caller.

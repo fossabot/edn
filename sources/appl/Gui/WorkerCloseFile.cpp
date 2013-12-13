@@ -6,7 +6,7 @@
  * @license GPL v3 (see license file)
  */
 
-#include <ewol/renderer/eContext.h>
+#include <ewol/context/Context.h>
 #include <appl/debug.h>
 #include <appl/Gui/WorkerCloseFile.h>
 #include <ewol/widget/meta/StdPopUp.h>
@@ -63,7 +63,7 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 		return;
 	}
 	
-	widget::StdPopUp* tmpPopUp = new widget::StdPopUp();
+	ewol::widget::StdPopUp* tmpPopUp = new ewol::widget::StdPopUp();
 	if (tmpPopUp == NULL) {
 		APPL_ERROR("Can not create a simple pop-up");
 		return;
@@ -74,20 +74,20 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 	if (m_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("Save", true);
 		if (bt != NULL) {
-			bt->registerOnEvent(this, widget::Button::eventPressed, s_saveValidate);
+			bt->registerOnEvent(this, ewol::widget::Button::eventPressed, s_saveValidate);
 		}
 	}
 	bt = tmpPopUp->addButton("Save As", true);
 	if (bt != NULL) {
-		bt->registerOnEvent(this, widget::Button::eventPressed, s_saveAsValidate);
+		bt->registerOnEvent(this, ewol::widget::Button::eventPressed, s_saveAsValidate);
 	}
 	bt = tmpPopUp->addButton("Close", true);
 	if (bt != NULL) {
-		bt->registerOnEvent(this, widget::Button::eventPressed, s_closeValidate);
+		bt->registerOnEvent(this, ewol::widget::Button::eventPressed, s_closeValidate);
 	}
 	tmpPopUp->addButton("Cancel", true);
 	tmpPopUp->setRemoveOnExternClick(true);
-	ewol::Windows* tmpWindows = ewol::getContext().getWindows();
+	ewol::widget::Windows* tmpWindows = ewol::getContext().getWindows();
 	if (tmpWindows == NULL) {
 		APPL_ERROR("Error to get the windows.");
 		autoDestroy();
@@ -100,7 +100,7 @@ appl::WorkerCloseFile::~WorkerCloseFile(void) {
 	appl::BufferManager::release(m_bufferManager);
 }
 
-void appl::WorkerCloseFile::onReceiveMessage(const ewol::EMessage& _msg) {
+void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) {
 	if (m_bufferManager == NULL) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
@@ -118,7 +118,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::EMessage& _msg) {
 			return;
 		}
 		if (m_buffer->storeFile() == false) {
-			ewol::Windows* tmpWindows = ewol::getContext().getWindows();
+			ewol::widget::Windows* tmpWindows = ewol::getContext().getWindows();
 			if (tmpWindows == NULL) {
 				return;
 			}
@@ -138,7 +138,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::EMessage& _msg) {
 	}
 }
 
-void appl::WorkerCloseFile::onObjectRemove(ewol::EObject* _removeObject) {
+void appl::WorkerCloseFile::onObjectRemove(ewol::Object* _removeObject) {
 	if (_removeObject == m_worker) {
 		m_worker = NULL;
 		APPL_VERBOSE("AutoRemove After closing sub widget ...");

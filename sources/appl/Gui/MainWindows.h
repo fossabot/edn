@@ -17,10 +17,10 @@
 #include <ewol/widget/Label.h>
 #include <appl/BufferManager.h>
 
-class MainWindows : public ewol::Windows {
+class MainWindows : public ewol::widget::Windows {
 	private:
 		int32_t m_currentSavingAsIdBuffer;
-		widget::Label* m_widgetLabelFileName;
+		ewol::widget::Label* m_widgetLabelFileName;
 	public:
 		// Constructeur
 		MainWindows(void);
@@ -38,8 +38,8 @@ class MainWindows : public ewol::Windows {
 		 */
 		void closeNotSavedFile(appl::Buffer* _buffer);
 	public: // Derived function
-		virtual void onReceiveMessage(const ewol::EMessage& _msg);
-		virtual void onObjectRemove(ewol::EObject * _removeObject);
+		virtual void onReceiveMessage(const ewol::object::Message& _msg);
+		virtual void onObjectRemove(ewol::Object * _removeObject);
 };
 
 

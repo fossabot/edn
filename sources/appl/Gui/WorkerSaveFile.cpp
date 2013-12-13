@@ -6,7 +6,7 @@
  * @license GPL v3 (see license file)
  */
 
-#include <ewol/renderer/eContext.h>
+#include <ewol/context/Context.h>
 #include <appl/debug.h>
 #include <appl/Gui/WorkerSaveFile.h>
 
@@ -60,7 +60,7 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 			return;
 		}
 	}
-	m_chooser = new widget::FileChooser();
+	m_chooser = new ewol::widget::FileChooser();
 	if (NULL == m_chooser) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 		autoDestroy();
@@ -71,21 +71,21 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 	etk::FSNode tmpName(m_bufferName);
 	m_chooser->setFolder(tmpName.getNameFolder());
 	m_chooser->setFileName(tmpName.getNameFile());
-	ewol::Windows* tmpWindows = ewol::getContext().getWindows();
+	ewol::widget::Windows* tmpWindows = ewol::getContext().getWindows();
 	if (tmpWindows == NULL) {
 		APPL_ERROR("Error to get the windows.");
 		autoDestroy();
 		return;
 	}
 	tmpWindows->popUpWidgetPush(m_chooser);
-	m_chooser->registerOnEvent(this, widget::FileChooser::eventValidate, s_saveAsValidate);
+	m_chooser->registerOnEvent(this, ewol::widget::FileChooser::eventValidate, s_saveAsValidate);
 }
 
 appl::WorkerSaveFile::~WorkerSaveFile(void) {
 	appl::BufferManager::release(m_bufferManager);
 }
 
-void appl::WorkerSaveFile::onReceiveMessage(const ewol::EMessage& _msg) {
+void appl::WorkerSaveFile::onReceiveMessage(const ewol::object::Message& _msg) {
 	if (m_bufferManager == NULL) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
@@ -106,7 +106,7 @@ void appl::WorkerSaveFile::onReceiveMessage(const ewol::EMessage& _msg) {
 		}
 		tmpBuffer->setFileName(_msg.getData());
 		if (tmpBuffer->storeFile() == false) {
-			ewol::Windows* tmpWindows = ewol::getContext().getWindows();
+			ewol::widget::Windows* tmpWindows = ewol::getContext().getWindows();
 			if (tmpWindows == NULL) {
 				return;
 			}
@@ -117,7 +117,7 @@ void appl::WorkerSaveFile::onReceiveMessage(const ewol::EMessage& _msg) {
 	}
 }
 
-void appl::WorkerSaveFile::onObjectRemove(ewol::EObject* _removeObject) {
+void appl::WorkerSaveFile::onObjectRemove(ewol::Object* _removeObject) {
 	if (_removeObject == m_chooser) {
 		m_chooser = NULL;
 		APPL_VERBOSE("AutoRemove After closing sub widget ...");

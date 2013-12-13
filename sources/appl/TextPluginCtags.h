@@ -10,7 +10,7 @@
 #define __APPL_TEXT_PLUGIN_CTAGS_H__
 
 #include <etk/types.h>
-#include <ewol/renderer/EObject.h>
+#include <ewol/object/Object.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/compositing/Text.h>
 #include <appl/TextPlugin.h>
@@ -38,9 +38,9 @@ namespace appl {
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
 			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                              const ewol::EMessage& _msg);
+			                              const ewol::object::Message& _msg);
 			// internal message :
-			virtual void onReceiveMessage(const ewol::EMessage& _msg);
+			virtual void onReceiveMessage(const ewol::object::Message& _msg);
 	};
 };
 

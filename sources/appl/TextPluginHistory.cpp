@@ -8,7 +8,7 @@
 
 
 #include <appl/TextPluginHistory.h>
-#include <ewol/clipBoard.h>
+#include <ewol/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 #include <appl/TextPluginManager.h>
 
@@ -35,7 +35,7 @@ void appl::TextPluginHistory::onPluginDisable(appl::TextViewer& _textDrawer) {
 }
 
 bool appl::TextPluginHistory::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                               const ewol::EMessage& _msg,
+                                               const ewol::object::Message& _msg,
                                                appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
@@ -176,7 +176,7 @@ bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
 }
 
 
-void appl::TextPluginHistory::onObjectRemove(ewol::EObject* _removeObject) {
+void appl::TextPluginHistory::onObjectRemove(ewol::Object* _removeObject) {
 	// TODO : Dependence with buffer removing ...
 }
 

@@ -31,7 +31,7 @@ namespace appl {
 				
 			};
 	};
-	class TagFileList : public widget::List {
+	class TagFileList : public ewol::widget::List {
 		private:
 			int32_t m_selectedLine;
 			std::vector<appl::TagListElement*> m_list;
@@ -44,7 +44,7 @@ namespace appl {
 			bool getTitle(int32_t _colomn, std::string& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
 			uint32_t getNuberOfRaw(void);
 			bool getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
-			bool onItemEvent(int32_t _IdInput, enum ewol::keyEvent::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
+			bool onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
 		public:
 			/**
 			 * @brief add a Ctags item on the curent list

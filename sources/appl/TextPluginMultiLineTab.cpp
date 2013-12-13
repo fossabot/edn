@@ -8,7 +8,7 @@
 
 
 #include <appl/TextPluginMultiLineTab.h>
-#include <ewol/clipBoard.h>
+#include <ewol/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
 #undef __class__
@@ -19,15 +19,15 @@ appl::TextPluginMultiLineTab::TextPluginMultiLineTab(void) {
 }
 
 bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
-                                                const ewol::EventEntry& _event) {
+                                                const ewol::event::Entry& _event) {
 	if (isEnable() == false) {
 		return false;
 	}
-	if (_event.getType() != ewol::keyEvent::keyboardChar) {
+	if (_event.getType() != ewol::key::keyboardChar) {
 		return false;
 	}
 	//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
-	if (_event.getStatus() != ewol::keyEvent::statusDown) {
+	if (_event.getStatus() != ewol::key::statusDown) {
 		return false;
 	}
 	char32_t localValue = _event.getChar();
@@ -49,7 +49,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	bool m_useTabs = true;
 	int32_t m_tabDist = 4;
 	
-	if (true == _event.getSpecialKey().isSetShift() ) {
+	if (true == _event.getSpecialKey().getShift() ) {
 		// un-indent
 		data.insert(0, 1, etk::UChar::Return);
 		for (int32_t iii=1; iii<data.size(); ++iii) {
@@ -79,7 +79,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 			if (data[iii-1] != etk::UChar::Return) {
 				continue;
 			}
-			if (true == _event.getSpecialKey().isSetCtrl() ) {
+			if (true == _event.getSpecialKey().getCtrl() ) {
 				data.insert(iii, 1, etk::UChar::Space);
 			} else if (true == m_useTabs) {
 				data.insert(iii, 1, etk::UChar::Tabulation);

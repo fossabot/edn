@@ -9,8 +9,10 @@
 #include <appl/debug.h>
 #include <appl/global.h>
 #include <appl/BufferManager.h>
-#include <ewol/renderer/EObject.h>
-#include <ewol/renderer/EObjectManager.h>
+#include <etk/UString.h>
+#include <ewol/object/Object.h>
+#include <ewol/object/Manager.h>
+#include <ewol/resource/Manager.h>
 
 #undef __class__
 #define __class__ "BufferManager"
@@ -78,7 +80,7 @@ void appl::BufferManager::setBufferSelected(appl::Buffer* _bufferSelected) {
 	sendMultiCast(appl::MsgSelectChange, "");
 }
 
-void appl::BufferManager::onObjectRemove(ewol::EObject * _removeObject) {
+void appl::BufferManager::onObjectRemove(ewol::Object * _removeObject) {
 	if (m_bufferSelected == _removeObject) {
 		setBufferSelected(NULL);
 	}
@@ -114,7 +116,7 @@ void appl::BufferManager::open(const std::string& _fileName) {
 	sendMultiCast(appl::MsgSelectNewFile, _fileName);
 }
 
-void appl::BufferManager::onReceiveMessage(const ewol::EMessage& _msg) {
+void appl::BufferManager::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_DEBUG("receive message !!! " << _msg);
 }
 

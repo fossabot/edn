@@ -11,7 +11,7 @@
 
 #include <etk/types.h>
 #include <ewol/debug.h>
-#include <ewol/resources/Resource.h>
+#include <ewol/resource/Resource.h>
 #include <appl/GlyphDecoration.h>
 
 namespace appl {

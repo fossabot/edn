@@ -27,9 +27,9 @@
 #include <ewol/widget/Menu.h>
 #include <ewol/widget/meta/FileChooser.h>
 #include <ewol/widget/meta/Parameter.h>
-#include <ewol/widget/WidgetManager.h>
-#include <ewol/renderer/EObject.h>
-#include <ewol/renderer/eContext.h>
+#include <ewol/widget/Manager.h>
+#include <ewol/object/Object.h>
+#include <ewol/context/Context.h>
 #include <date/date.h>
 #include <ewol/widget/meta/StdPopUp.h>
 #include <appl/Gui/WorkerSaveFile.h>
@@ -57,13 +57,13 @@ namespace appl {
 #include <ewol/widget/Label.h>
 #include <ewol/widget/Spacer.h>
 
-class ParameterAboutGui : public widget::Sizer {
+class ParameterAboutGui : public ewol::widget::Sizer {
 	public :
 		ParameterAboutGui(void) :
-		  widget::Sizer(widget::Sizer::modeVert) {
-			widget::Spacer* mySpacer = NULL;
+		  ewol::widget::Sizer(ewol::widget::Sizer::modeVert) {
+			ewol::widget::Spacer* mySpacer = NULL;
 			
-			mySpacer = new widget::Spacer();
+			mySpacer = new ewol::widget::Spacer();
 			if (NULL == mySpacer) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
@@ -93,7 +93,7 @@ class ParameterAboutGui : public widget::Sizer {
 			tmpLabel += "    libPng, ogg-tremor, portaudio, libZip<br/>";
 			tmpLabel += "    tinyXml, freetype, agg2.4, etk<br/>";
 			tmpLabel += "</left>";
-			widget::Label* myLabel = new widget::Label(tmpLabel);
+			ewol::widget::Label* myLabel = new ewol::widget::Label(tmpLabel);
 			if (NULL == myLabel) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
@@ -121,28 +121,28 @@ const char* l_smoothMax = "tmpEvent_maxChange";
 MainWindows::MainWindows(void) {
 	addObjectType("appl::MainWindows");
 	APPL_DEBUG("CREATE WINDOWS ... ");
-	widget::Sizer * mySizerVert = NULL;
-	widget::Sizer * mySizerVert2 = NULL;
-	widget::Sizer * mySizerHori = NULL;
+	ewol::widget::Sizer * mySizerVert = NULL;
+	ewol::widget::Sizer * mySizerVert2 = NULL;
+	ewol::widget::Sizer * mySizerHori = NULL;
 	//ewol::Button * myButton = NULL;
 	appl::TextViewer * myTextView = NULL;
 	BufferView * myBufferView = NULL;
-	widget::Menu * myMenu = NULL;
+	ewol::widget::Menu * myMenu = NULL;
 	
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
 	
-	mySizerVert = new widget::Sizer(widget::Sizer::modeVert);
+	mySizerVert = new ewol::widget::Sizer(ewol::widget::Sizer::modeVert);
 	setSubWidget(mySizerVert);
 	
-		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
+		mySizerHori = new ewol::widget::Sizer(ewol::widget::Sizer::modeHori);
 		mySizerVert->subWidgetAdd(mySizerHori);
 			myBufferView = new BufferView();
 			myBufferView->setExpand(bvec2(false,true));
 			myBufferView->setFill(bvec2(true,true));
 			mySizerHori->subWidgetAdd(myBufferView);
 			
-			mySizerVert2 = new widget::Sizer(widget::Sizer::modeVert);
+			mySizerVert2 = new ewol::widget::Sizer(ewol::widget::Sizer::modeVert);
 			mySizerHori->subWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
@@ -161,14 +161,14 @@ MainWindows::MainWindows(void) {
 				mySizerVert2->subWidgetAdd(mySearch);
 				#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
 				{
-					widget::Sizer * mySizerHori2 = new widget::Sizer(widget::Sizer::modeHori);
+					ewol::widget::Sizer * mySizerHori2 = new widget::Sizer(ewol::widget::Sizer::modeHori);
 					mySizerVert2->subWidgetAdd(mySizerHori2);
 						
-						widget::CheckBox* tmpCheck = new widget::CheckBox("smooth");
+						ewol::widget::CheckBox* tmpCheck = new widget::CheckBox("smooth");
 						mySizerHori2->subWidgetAdd(tmpCheck);
 						tmpCheck->registerOnEvent(this, ewolEventCheckBoxClicked, l_smoothChick);
 						
-						widget::Slider* tmpSlider = new widget::Slider();
+						ewol::widget::Slider* tmpSlider = new widget::Slider();
 						mySizerHori2->subWidgetAdd(tmpSlider);
 						tmpSlider->registerOnEvent(this, ewolEventSliderChange, l_smoothMin);
 						tmpSlider->setExpand(bvec2(true,false));
@@ -177,7 +177,7 @@ MainWindows::MainWindows(void) {
 						tmpSlider->setValue(0450);
 						tmpSliderMin = tmpSlider;
 						
-						tmpSlider = new widget::Slider();
+						tmpSlider = new ewol::widget::Slider();
 						mySizerHori2->subWidgetAdd(tmpSlider);
 						tmpSlider->registerOnEvent(this, ewolEventSliderChange, l_smoothMax);
 						tmpSlider->setExpand(bvec2(true,false));
@@ -188,10 +188,10 @@ MainWindows::MainWindows(void) {
 				}
 				#endif
 			
-		mySizerHori = new widget::Sizer(widget::Sizer::modeHori);
+		mySizerHori = new ewol::widget::Sizer(ewol::widget::Sizer::modeHori);
 		mySizerVert->subWidgetAdd(mySizerHori);
 			
-			myMenu = new widget::Menu();
+			myMenu = new ewol::widget::Menu();
 			mySizerHori->subWidgetAdd(myMenu);
 			int32_t idMenuFile = myMenu->addTitle("File");
 				(void)myMenu->add(idMenuFile, "New",          "", ednMsgGuiNew);
@@ -238,7 +238,7 @@ MainWindows::MainWindows(void) {
 				(void)myMenu->addSpacer();
 				(void)myMenu->add(idMenugDisplay, "Reload openGl Shader", "", ednMsgGuiReloadShader);
 			
-			m_widgetLabelFileName = new widget::Label("FileName");
+			m_widgetLabelFileName = new ewol::widget::Label("FileName");
 			m_widgetLabelFileName->setExpand(bvec2(true,false));
 			m_widgetLabelFileName->setFill(bvec2(true,false));;
 			mySizerHori->subWidgetAdd(m_widgetLabelFileName);
@@ -292,13 +292,13 @@ const char *const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
 const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
 
 
-void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
-	ewol::Windows::onReceiveMessage(_msg);
+void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
+	ewol::widget::Windows::onReceiveMessage(_msg);
 	
 	APPL_VERBOSE("Receive Event from the main windows: " << _msg );
 	// open file Section ...
 	if (_msg.getMessage() == ednMsgGuiOpen) {
-		widget::FileChooser* tmpWidget = new widget::FileChooser();
+		ewol::widget::FileChooser* tmpWidget = new ewol::widget::FileChooser();
 		if (tmpWidget == NULL) {
 			APPL_ERROR("Can not open File chooser !!! ");
 			return;
@@ -317,10 +317,10 @@ void MainWindows::onReceiveMessage(const ewol::EMessage& _msg) {
 		}
 		// apply widget pop-up ...
 		popUpWidgetPush(tmpWidget);
-		tmpWidget->registerOnEvent(this, widget::FileChooser::eventValidate, ednEventPopUpFileSelected);
+		tmpWidget->registerOnEvent(this, ewol::widget::FileChooser::eventValidate, ednEventPopUpFileSelected);
 	} else if (_msg.getMessage() == ednMsgProperties) {
 		// Request the parameter GUI
-		widget::Parameter* tmpWidget = new widget::Parameter();
+		ewol::widget::Parameter* tmpWidget = new ewol::widget::Parameter();
 		if (NULL == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
@@ -459,7 +459,7 @@ void MainWindows::closeNotSavedFile(appl::Buffer* _buffer) {
 		APPL_ERROR("Call With NULL input...");
 		return;
 	}
-	widget::StdPopUp* tmpPopUp = new widget::StdPopUp();
+	ewol::widget::StdPopUp* tmpPopUp = new ewol::widget::StdPopUp();
 	if (tmpPopUp == NULL) {
 		APPL_ERROR("Can not create a simple pop-up");
 		return;
@@ -471,27 +471,27 @@ void MainWindows::closeNotSavedFile(appl::Buffer* _buffer) {
 		bt = tmpPopUp->addButton("Save", true);
 		if (bt != NULL) {
 			// TODO : The element is removed before beeing pressed
-			bt->registerOnEvent(this, widget::Button::eventPressed, mainWindowsRequestSaveFile, _buffer->getFileName());
-			bt->registerOnEvent(this, widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+			bt->registerOnEvent(this, ewol::widget::Button::eventPressed, mainWindowsRequestSaveFile, _buffer->getFileName());
+			bt->registerOnEvent(this, ewol::widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		}
 	}
 	bt = tmpPopUp->addButton("Save As", true);
 	if (bt != NULL) {
-		bt->registerOnEvent(this, widget::Button::eventPressed, mainWindowsRequestSaveFileAs, _buffer->getFileName());
-		//bt->registerOnEvent(this, widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		bt->registerOnEvent(this, ewol::widget::Button::eventPressed, mainWindowsRequestSaveFileAs, _buffer->getFileName());
+		//bt->registerOnEvent(this, ewol::widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		// TODO : Request the close when saved ...
 	}
 	bt = tmpPopUp->addButton("Close", true);
 	if (bt != NULL) {
-		bt->registerOnEvent(this, widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		bt->registerOnEvent(this, ewol::widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 	}
 	tmpPopUp->addButton("Cancel", true);
 	tmpPopUp->setRemoveOnExternClick(true);
 	popUpWidgetPush(tmpPopUp);
 }
 
-void MainWindows::onObjectRemove(ewol::EObject* _removeObject) {
-	ewol::Windows::onObjectRemove(_removeObject);
+void MainWindows::onObjectRemove(ewol::Object* _removeObject) {
+	ewol::widget::Windows::onObjectRemove(_removeObject);
 	if (m_widgetLabelFileName == _removeObject) {
 		m_widgetLabelFileName = NULL;
 	}

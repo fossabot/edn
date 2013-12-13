@@ -8,10 +8,10 @@
 
 
 #include <appl/TextPluginCtags.h>
-#include <ewol/clipBoard.h>
+#include <ewol/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/widget/meta/FileChooser.h>
-#include <ewol/renderer/eContext.h>
+#include <ewol/context/Context.h>
 #include <appl/Gui/TagFileSelection.h>
 
 #undef __class__
@@ -150,7 +150,7 @@ void appl::TextPluginCtags::printTag(const tagEntry *_entry) {
 	#endif
 }
 
-void appl::TextPluginCtags::onReceiveMessage(const ewol::EMessage& _msg) {
+void appl::TextPluginCtags::onReceiveMessage(const ewol::object::Message& _msg) {
 	if (_msg.getMessage() == eventOpenCtagsOpenFileReturn) {
 		// open the new one :
 		etk::FSNode tmpFilename = _msg.getData();
@@ -168,20 +168,20 @@ void appl::TextPluginCtags::onReceiveMessage(const ewol::EMessage& _msg) {
 	}
 }
 bool appl::TextPluginCtags::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                             const ewol::EMessage& _msg) {
+                                             const ewol::object::Message& _msg) {
 	if (isEnable() == false) {
 		return false;
 	}
 	if (_msg.getMessage() == eventOpenCtagsFile) {
 		APPL_INFO("Request opening ctag file");
-		widget::FileChooser* tmpWidget = new widget::FileChooser();
+		ewol::widget::FileChooser* tmpWidget = new ewol::widget::FileChooser();
 		if (NULL == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
 			tmpWidget->setTitle("Open Exuberant Ctags file");
 			tmpWidget->setValidateLabel("Open");
 			ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-			tmpWidget->registerOnEvent(this, widget::FileChooser::eventValidate, eventOpenCtagsOpenFileReturn);
+			tmpWidget->registerOnEvent(this, ewol::widget::FileChooser::eventValidate, eventOpenCtagsOpenFileReturn);
 		}
 		return true;
 	} else if (_msg.getMessage() == eventJumpDestination) {

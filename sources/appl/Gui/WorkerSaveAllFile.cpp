@@ -6,7 +6,7 @@
  * @license GPL v3 (see license file)
  */
 
-#include <ewol/renderer/eContext.h>
+#include <ewol/context/Context.h>
 #include <appl/debug.h>
 #include <appl/Gui/WorkerSaveAllFile.h>
 
@@ -62,7 +62,7 @@ appl::WorkerSaveAllFile::~WorkerSaveAllFile(void) {
 	appl::BufferManager::release(m_bufferManager);
 }
 
-void appl::WorkerSaveAllFile::onReceiveMessage(const ewol::EMessage& _msg) {
+void appl::WorkerSaveAllFile::onReceiveMessage(const ewol::object::Message& _msg) {
 	if (m_bufferManager == NULL) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
@@ -84,7 +84,7 @@ void appl::WorkerSaveAllFile::onReceiveMessage(const ewol::EMessage& _msg) {
 	}
 }
 
-void appl::WorkerSaveAllFile::onObjectRemove(ewol::EObject* _removeObject) {
+void appl::WorkerSaveAllFile::onObjectRemove(ewol::Object* _removeObject) {
 	if (_removeObject == m_worker) {
 		m_worker = NULL;
 		APPL_VERBOSE("AutoRemove After saving sub widget ...");

@@ -10,7 +10,7 @@
 #define __APPL_TEXT_PLUGIN_DATA_H__
 
 #include <etk/types.h>
-#include <ewol/renderer/EObject.h>
+#include <ewol/object/Object.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/compositing/Text.h>
 #include <appl/TextPlugin.h>
@@ -50,7 +50,7 @@ namespace appl {
 			}
 		protected: // Wrap all element with their internal data: (do not use theses function)
 			bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                      const ewol::EMessage& _msg) {
+			                      const ewol::object::Message& _msg) {
 				TYPE* data = getDataRef(_textDrawer);
 				if (data == NULL) {
 					return false;
@@ -88,7 +88,7 @@ namespace appl {
 			
 		public:
 			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                              const ewol::EMessage& _msg,
+			                              const ewol::object::Message& _msg,
 			                              TYPE& _data) {
 				return false;
 			}
@@ -115,7 +115,7 @@ namespace appl {
 				return;
 			};
 		public:
-			virtual void onObjectRemove(ewol::EObject* _removeObject) {
+			virtual void onObjectRemove(ewol::Object* _removeObject) {
 				// TODO : plop
 			};
 	};

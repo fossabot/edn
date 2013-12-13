@@ -10,12 +10,12 @@
 #define __APPL_TEXT_PLUGIN_H__
 
 #include <etk/types.h>
-#include <ewol/renderer/EObject.h>
+#include <ewol/object/Object.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/compositing/Text.h>
 
 namespace appl {
-	class TextViewerPlugin : public ewol::EObject {
+	class TextViewerPlugin : public ewol::Object {
 		friend class appl::TextViewer;
 		public:
 			TextViewerPlugin(void);
@@ -79,7 +79,7 @@ namespace appl {
 			 * @return true if the event might not propagate anymore.
 			 */
 			virtual bool onEventEntry(appl::TextViewer& _textDrawer,
-			                          const ewol::EventEntry& _event) {
+			                          const ewol::event::Entry& _event) {
 				return false;
 			};
 		protected:
@@ -99,7 +99,7 @@ namespace appl {
 			 * @return true if the event might not propagate anymore
 			 */
 			virtual bool onEventInput(appl::TextViewer& _textDrawer,
-			                          const ewol::EventInput& _event) {
+			                          const ewol::event::Input& _event) {
 				return false;
 			};
 		protected:
@@ -187,7 +187,7 @@ namespace appl {
 			 * @return true if the event might not propagate anymore
 			 */
 			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                              const ewol::EMessage& _msg) {
+			                              const ewol::object::Message& _msg) {
 				return false;
 			}
 		protected:

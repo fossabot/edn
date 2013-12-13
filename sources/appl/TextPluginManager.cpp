@@ -133,7 +133,7 @@ void appl::textPluginManager::disconnect(appl::TextViewer& _widget) {
 }
 
 bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
-                                           const ewol::EventEntry& _event) {
+                                           const ewol::event::Entry& _event) {
 	std::vector<appl::TextViewerPlugin *>& list = getListOnEventEntry();
 	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
@@ -147,7 +147,7 @@ bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
 }
 
 bool appl::textPluginManager::onEventInput(appl::TextViewer& _textDrawer,
-                                           const ewol::EventInput& _event) {
+                                           const ewol::event::Input& _event) {
 	std::vector<appl::TextViewerPlugin *>& list = getListOnEventInput();
 	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
@@ -207,7 +207,7 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
 }
 
 bool appl::textPluginManager::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                               const ewol::EMessage& _msg) {
+                                               const ewol::object::Message& _msg) {
 	std::vector<appl::TextViewerPlugin *>& list = getListOnReceiveMessage();
 	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
