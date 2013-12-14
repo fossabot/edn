@@ -9,6 +9,10 @@ def Create(target):
 	myModule = lutinModule.module(__file__, 'edn', 'PACKAGE')
 	# enable doculentation :
 	myModule.doc_enable()
+	myModule.documentation.set_website("http://HeeroYui.github.io/edn/")
+	myModule.documentation.set_path(lutinTools.GetCurrentPath(__file__) + "/appl/")
+	myModule.documentation.set_external_link(['ewol'])
+	
 	# add the file to compile:
 	myModule.AddSrcFile([
 		'appl/ctags/readtags.cpp'])
