@@ -78,15 +78,15 @@ std::string appl::highlightManager::getTypeExtention(const std::string& _extenti
 	if (_extention.size() == 0) {
 		return "";
 	}
-	APPL_VERBOSE("Try to find type for extention : '" << _extention << "' in " << s_list().size() << " types");
+	APPL_DEBUG("Try to find type for extention : '" << _extention << "' in " << s_list().size() << " types");
 	std::vector<Highlight*>& hlList = s_list();
 	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;
 		}
-		APPL_VERBOSE("    check : " << hlList[iii]->getTypeName());
+		APPL_DEBUG("    check : " << hlList[iii]->getTypeName());
 		if (hlList[iii]->hasExtention(_extention) == true) {
-			APPL_VERBOSE("Find type for extention : " << _extention
+			APPL_DEBUG("Find type for extention : " << _extention
 			             << " type : " << hlList[iii]->getTypeName());
 			return hlList[iii]->getTypeName();
 		}

@@ -474,7 +474,8 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 			}
 		}
 		if (_event.getStatus() == ewol::key::statusSingle) {
-			if (_event.getType() == ewol::key::typeMouse) {
+			if (    _event.getType() == ewol::key::typeMouse
+			     || _event.getType() == ewol::key::typeFinger) {
 				appl::Buffer::Iterator newPos = getMousePosition(relativePos);
 				moveCursor(newPos);
 				markToRedraw();

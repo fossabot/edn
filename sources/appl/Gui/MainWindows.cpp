@@ -146,7 +146,11 @@ MainWindows::MainWindows(void) {
 			mySizerHori->subWidgetAdd(mySizerVert2);
 				
 				// main buffer Area :
-				myTextView = new appl::TextViewer("FreeMono;DejaVuSansMono;FreeSerif", 11);
+				#if defined(__TARGET_OS__Android)
+					myTextView = new appl::TextViewer("FreeMono;DejaVuSansMono;FreeSerif", 16);
+				#else
+					myTextView = new appl::TextViewer("FreeMono;DejaVuSansMono;FreeSerif", 11);
+				#endif
 				myTextView->setExpand(bvec2(true,true));
 				myTextView->setFill(bvec2(true,true));
 				mySizerVert2->subWidgetAdd(myTextView);
