@@ -2,5 +2,5 @@
 import lutinModule
 import lutinTools
 
-lutinModule.ImportPath(lutinTools.GetCurrentPath(__file__) + "/sources/")
-lutinModule.ImportPath(lutinTools.GetCurrentPath(__file__) + "/../ewol/")
+lutinModule.import_path(lutinTools.get_current_path(__file__) + "/sources/")
+lutinModule.import_path(lutinTools.get_current_path(__file__) + "/../ewol/")

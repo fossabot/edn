@@ -1,30 +1,29 @@
 #!/usr/bin/python
-import lutinModule
-import lutinTools
+import lutinModule as module
+import lutinTools as tools
 import lutinDebug as debug
 import datetime
 
-def Create(target):
+
+def get_desc():
+	return "EDN application N'ours editor (Editeur De N'ours)"
+
+def create(target):
 	# module name is 'edn' and type binary.
-	myModule = lutinModule.module(__file__, 'edn', 'PACKAGE')
-	# enable doculentation :
-	myModule.doc_enable()
-	myModule.documentation.set_website("http://HeeroYui.github.io/edn/")
-	myModule.documentation.set_path(lutinTools.GetCurrentPath(__file__) + "/appl/")
-	myModule.documentation.set_external_link(['ewol'])
+	myModule = module.Module(__file__, 'edn', 'PACKAGE')
 	
 	# add the file to compile:
-	myModule.AddSrcFile([
+	myModule.add_src_file([
 		'appl/ctags/readtags.cpp'])
 	
-	myModule.AddSrcFile([
+	myModule.add_src_file([
 		'appl/debug.cpp',
 		'appl/global.cpp',
 		'appl/globalMsg.cpp',
 		'appl/init.cpp'])
 	
 	# Gui:
-	myModule.AddSrcFile([
+	myModule.add_src_file([
 		'appl/Gui/BufferView.cpp',
 		'appl/Gui/TextViewer.cpp',
 		'appl/Gui/ViewerManager.cpp',
@@ -38,7 +37,7 @@ def Create(target):
 		'appl/Gui/WorkerCloseAllFile.cpp'])
 	
 	# All needed for the buffer management :
-	myModule.AddSrcFile([
+	myModule.add_src_file([
 		'appl/Buffer.cpp',
 		'appl/BufferManager.cpp',
 		'appl/TextPlugin.cpp',
@@ -52,72 +51,69 @@ def Create(target):
 		'appl/TextPluginManager.cpp'])
 	
 	# Generic color management for the text editor : 
-	myModule.AddSrcFile([
+	myModule.add_src_file([
 		'appl/GlyphDecoration.cpp',
 		'appl/GlyphPainting.cpp'])
 	
 	# syntax coloration for the text editor
-	myModule.AddSrcFile([
+	myModule.add_src_file([
 		'appl/HighlightPattern.cpp',
 		'appl/Highlight.cpp',
 		'appl/HighlightManager.cpp'])
 	
-	myModule.AddModuleDepend('ewol')
+	myModule.add_module_depend('ewol')
 	
-	myModule.CompileFlags_CC([
+	myModule.compile_flags_CC([
 		"-DPROJECT_NAME=\"\\\""+myModule.name+"\\\"\""
 		])
 	
-	myModule.CopyFile('../data/icon.png','icon.png')
+	myModule.copy_file('../data/icon.png','icon.png')
 	
-	myModule.CopyFolder('../data/icon.*','')
-	myModule.CopyFolder('../data/languages/asm/*.xml','languages/asm/')
-	myModule.CopyFolder('../data/languages/bash/*.xml','languages/bash/')
-	myModule.CopyFolder('../data/languages/boo/*.xml','languages/boo/')
-	myModule.CopyFolder('../data/languages/c/*.xml','languages/c/')
-	myModule.CopyFolder('../data/languages/glsl/*.xml','languages/glsl/')
-	myModule.CopyFolder('../data/languages/in/*.xml','languages/in/')
-	myModule.CopyFolder('../data/languages/java/*.xml','languages/java/')
-	myModule.CopyFolder('../data/languages/json/*.xml','languages/json/')
-	myModule.CopyFolder('../data/languages/lua/*.xml','languages/lua/')
-	myModule.CopyFolder('../data/languages/makefile/*.xml','languages/makefile/')
-	myModule.CopyFolder('../data/languages/matlab/*.xml','languages/matlab/')
-	myModule.CopyFolder('../data/languages/php/*.xml','languages/php/')
-	myModule.CopyFolder('../data/languages/xml/*.xml','languages/xml/')
-	myModule.CopyFolder('../data/languages/python/*.xml','languages/python/')
-	myModule.CopyFolder('../data/theme/default/*.svg','theme/default/')
-	myModule.CopyFolder('../data/theme/colorWhite/*.json','theme/colorWhite/')
-	myModule.CopyFolder('../data/theme/colorBlack/*.json','theme/colorBlack/')
-	myModule.CopyFolder('../data/GUI-Search.xml','')
+	myModule.copy_folder('../data/icon.*','')
+	myModule.copy_folder('../data/languages/asm/*.xml','languages/asm/')
+	myModule.copy_folder('../data/languages/bash/*.xml','languages/bash/')
+	myModule.copy_folder('../data/languages/boo/*.xml','languages/boo/')
+	myModule.copy_folder('../data/languages/c/*.xml','languages/c/')
+	myModule.copy_folder('../data/languages/glsl/*.xml','languages/glsl/')
+	myModule.copy_folder('../data/languages/in/*.xml','languages/in/')
+	myModule.copy_folder('../data/languages/java/*.xml','languages/java/')
+	myModule.copy_folder('../data/languages/json/*.xml','languages/json/')
+	myModule.copy_folder('../data/languages/lua/*.xml','languages/lua/')
+	myModule.copy_folder('../data/languages/makefile/*.xml','languages/makefile/')
+	myModule.copy_folder('../data/languages/matlab/*.xml','languages/matlab/')
+	myModule.copy_folder('../data/languages/php/*.xml','languages/php/')
+	myModule.copy_folder('../data/languages/xml/*.xml','languages/xml/')
+	myModule.copy_folder('../data/languages/python/*.xml','languages/python/')
+	myModule.copy_folder('../data/theme/default/*.svg','theme/default/')
+	myModule.copy_folder('../data/theme/colorWhite/*.json','theme/colorWhite/')
+	myModule.copy_folder('../data/theme/colorBlack/*.json','theme/colorBlack/')
+	myModule.copy_folder('../data/GUI-Search.xml','')
 	
-	myModule.AddPath(lutinTools.GetCurrentPath(__file__))
+	myModule.add_path(tools.get_current_path(__file__))
 	
-	myModule.CopyFile("../data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")
-	myModule.CopyFolder("../data/Font/freefont/FreeMon*.ttf","fonts/")
+	myModule.copy_file("../data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")
+	myModule.copy_folder("../data/Font/freefont/FreeMon*.ttf","fonts/")
 	
-	tagFile = lutinTools.GetCurrentPath(__file__) + "/tag"
-	versionID = lutinTools.FileReadData(tagFile)
-	myModule.CompileFlags_CC([
+	tagFile = tools.get_current_path(__file__) + "/tag"
+	versionID = tools.file_read_data(tagFile)
+	myModule.compile_flags_CC([
 		"-DAPPL_VERSION=\"\\\"" + versionID + "\\\"\""
 		])
 	
 	# set the package properties :
-	myModule.pkgSet("VERSION", versionID)
-	myModule.pkgSet("COMPAGNY_TYPE", "org")
-	myModule.pkgSet("COMPAGNY_NAME", "Edouard DUPIN")
-	myModule.pkgSet("MAINTAINER", ["Mr DUPIN Edouard <yui.heero@gmail.com>"])
-	myModule.pkgSet("ICON", lutinTools.GetCurrentPath(__file__) + "/../data/icon.png")
-	myModule.pkgSet("SECTION", ["Development", "Editors"])
-	myModule.pkgSet("PRIORITY", "optional")
-	myModule.pkgSet("DESCRIPTION", "Text editor for sources code with ctags management")
-	myModule.pkgSet("NAME", "Editeur de N'ours")
+	myModule.pkg_set("VERSION", versionID)
+	myModule.pkg_set("COMPAGNY_TYPE", "org")
+	myModule.pkg_set("COMPAGNY_NAME", "Edouard DUPIN")
+	myModule.pkg_set("MAINTAINER", ["Mr DUPIN Edouard <yui.heero@gmail.com>"])
+	myModule.pkg_set("ICON", tools.get_current_path(__file__) + "/../data/icon.png")
+	myModule.pkg_set("SECTION", ["Development", "Editors"])
+	myModule.pkg_set("PRIORITY", "optional")
+	myModule.pkg_set("DESCRIPTION", "Text editor for sources code with ctags management")
+	myModule.pkg_set("NAME", "Editeur de N'ours")
 	
-	myModule.pkgAdd("RIGHT", "WRITE_EXTERNAL_STORAGE")
-	myModule.pkgAdd("RIGHT", "SET_ORIENTATION")
+	myModule.pkg_add("RIGHT", "WRITE_EXTERNAL_STORAGE")
+	myModule.pkg_add("RIGHT", "SET_ORIENTATION")
 	
 	# add the currrent module at the 
 	return myModule
-
-
-
 
