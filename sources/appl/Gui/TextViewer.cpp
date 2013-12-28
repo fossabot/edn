@@ -146,7 +146,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		for (startingIt = m_buffer->begin();
 		     (bool)startingIt == true;
 		     ++startingIt) {
-			if (*startingIt == etk::UChar::Return) {
+			if (*startingIt == u32char::Return) {
 				++startLineId;
 				m_displayText.forceLineReturn();
 				if (m_size.y() >= m_displayText.getPos().y()) {
@@ -206,7 +206,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		}
 		//APPL_DEBUG("display element '" << currentValue << "'at pos : " << m_displayText.getPos() );
 		//APPL_DEBUG(" element size : " << iii << " : " << bufferElementSize);
-		if (*it == etk::UChar::Return) {
+		if (*it == u32char::Return) {
 			countNbLine += 1;
 			countColomn = 0;
 			maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
@@ -245,9 +245,9 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 			m_displayText.setColor((*m_paintingProperties)[m_colorNormal].getForeground());
 		}
 		if (haveBackground == false) {
-			if (*it == etk::UChar::Space) {
+			if (*it == u32char::Space) {
 				m_displayText.setColorBg((*m_paintingProperties)[m_colorSpace].getForeground());
-			} else if (*it == etk::UChar::Tabulation) {
+			} else if (*it == u32char::Tabulation) {
 				m_displayText.setColorBg((*m_paintingProperties)[m_colorTabulation].getForeground());
 			}
 		}
@@ -317,11 +317,11 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 			return false;
 		}
 		char32_t localValue = _event.getChar();
-		if (localValue == etk::UChar::Return) {
+		if (localValue == u32char::Return) {
 			if (true == _event.getSpecialKey().getShift()) {
-				localValue = etk::UChar::CarrierReturn;
+				localValue = u32char::CarrierReturn;
 			}
-		} else if (localValue == etk::UChar::Suppress ) {
+		} else if (localValue == u32char::Suppress ) {
 			//APPL_INFO("keyEvent : <suppr> pos=" << m_cursorPos);
 			if (m_buffer->hasTextSelected()) {
 				remove();
@@ -332,7 +332,7 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 				replace("", pos, posEnd);
 			}
 			return true;
-		} else if (localValue == etk::UChar::Delete) {
+		} else if (localValue == u32char::Delete) {
 			//APPL_INFO("keyEvent : <del> pos=" << m_cursorPos);
 			if (m_buffer->hasTextSelected()) {
 				remove();
@@ -347,7 +347,7 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 		m_buffer->setSelectMode(false);
 		// normal adding char ...
 		char output[5];
-		int32_t nbElement = etk::getUtf8(localValue, output);
+		int32_t nbElement = u32char::convertUtf8(localValue, output);
 		if (    m_buffer->hasTextSelected() == false
 		     && _event.getSpecialKey().getInsert() == true) {
 			appl::Buffer::Iterator pos = m_buffer->cursor();
@@ -560,14 +560,14 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 	     (bool)it == true;
 	     ++it) {
 		currentValue = *it;
-		if (currentValue == etk::UChar::Return) {
+		if (currentValue == u32char::Return) {
 			m_displayText.forceLineReturn();
 			countColomn = 0;
 		} else {
 			if (-_relativePos.y() >= positionCurentDisplay.y()) {
 				m_buffer->expand(countColomn, currentValue, stringToDisplay);
 				for (size_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
-					if (stringToDisplay[kkk] == etk::UChar::Return) {
+					if (stringToDisplay[kkk] == u32char::Return) {
 						m_displayText.forceLineReturn();
 						countColomn = 0;
 					} else {
@@ -939,7 +939,7 @@ appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator
 		currentValue = *it;
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
 		for (size_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
-			if (stringToDisplay[kkk] == etk::UChar::Return) {
+			if (stringToDisplay[kkk] == u32char::Return) {
 				return it;
 			} else {
 				m_displayText.print(stringToDisplay[kkk]);
@@ -968,7 +968,7 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 		//APPL_DEBUG("parse : " << currentValue);
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
 		for (size_t kkk=0; kkk<stringToDisplay.size(); ++kkk) {
-			if (stringToDisplay[kkk] == etk::UChar::Return) {
+			if (stringToDisplay[kkk] == u32char::Return) {
 				return m_displayText.getPos().x() + 2; // TODO : Add the +2 for the end of line ...
 			} else {
 				m_displayText.print(stringToDisplay[kkk]);

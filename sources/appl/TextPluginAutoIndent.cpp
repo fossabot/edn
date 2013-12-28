@@ -32,7 +32,7 @@ bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
 	if (_event.getStatus() != ewol::key::statusDown) {
 		return false;
 	}
-	if (_event.getChar() != etk::UChar::Return) {
+	if (_event.getChar() != u32char::Return) {
 		return false;
 	}
 	if (_event.getSpecialKey().getShift() == true) {
@@ -49,10 +49,10 @@ bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
 	for (appl::Buffer::Iterator it = startLine;
 	     (bool)it == true;
 	     ++it) {
-		if (*it == etk::UChar::Space) {
-			data += etk::UChar::Space;
-		} else if(*it == etk::UChar::Tabulation) {
-			data += etk::UChar::Tabulation;
+		if (*it == u32char::Space) {
+			data += u32char::Space;
+		} else if(*it == u32char::Tabulation) {
+			data += u32char::Tabulation;
 		} else {
 			break;
 		}

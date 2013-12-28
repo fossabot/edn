@@ -31,7 +31,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 		return false;
 	}
 	char32_t localValue = _event.getChar();
-	if (localValue != etk::UChar::Tabulation) {
+	if (localValue != u32char::Tabulation) {
 		return false;
 	}
 	if (_textDrawer.hasTextSelected() == false) {
@@ -51,18 +51,18 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	
 	if (true == _event.getSpecialKey().getShift() ) {
 		// un-indent
-		data.insert(0, 1, etk::UChar::Return);
+		data.insert(0, 1, u32char::Return);
 		for (int32_t iii=1; iii<data.size(); ++iii) {
-			if (data[iii-1] != etk::UChar::Return) {
+			if (data[iii-1] != u32char::Return) {
 				continue;
 			}
-			if(data[iii] == etk::UChar::Tabulation) {
+			if(data[iii] == u32char::Tabulation) {
 				data.erase(iii, 1);
-			} else if(data[iii] == etk::UChar::Space) {
+			} else if(data[iii] == u32char::Space) {
 				for (int32_t jjj=0; jjj<m_tabDist && jjj+iii<data.size() ; jjj++) {
-					if(data[iii] == etk::UChar::Space) {
+					if(data[iii] == u32char::Space) {
 						data.erase(iii, 1);
-					} else if(data[iii] == etk::UChar::Tabulation) {
+					} else if(data[iii] == u32char::Tabulation) {
 						data.erase(iii, 1);
 						break;
 					} else {
@@ -74,17 +74,17 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 		data.erase(0, 1);
 	} else {
 		// indent
-		data.insert(0, 1, etk::UChar::Return);
+		data.insert(0, 1, u32char::Return);
 		for (int32_t iii=1; iii<data.size(); iii++) {
-			if (data[iii-1] != etk::UChar::Return) {
+			if (data[iii-1] != u32char::Return) {
 				continue;
 			}
 			if (true == _event.getSpecialKey().getCtrl() ) {
-				data.insert(iii, 1, etk::UChar::Space);
+				data.insert(iii, 1, u32char::Space);
 			} else if (true == m_useTabs) {
-				data.insert(iii, 1, etk::UChar::Tabulation);
+				data.insert(iii, 1, u32char::Tabulation);
 			} else {
-				data.insert(iii, m_tabDist, etk::UChar::Space);
+				data.insert(iii, m_tabDist, u32char::Space);
 			}
 		}
 		data.erase(0, 1);

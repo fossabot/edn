@@ -9,7 +9,7 @@
 #include <appl/debug.h>
 #include <appl/global.h>
 #include <appl/BufferManager.h>
-#include <etk/UString.h>
+#include <etk/types.h>
 #include <ewol/object/Object.h>
 #include <ewol/object/Manager.h>
 #include <ewol/resource/Manager.h>

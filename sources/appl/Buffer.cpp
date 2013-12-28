@@ -7,6 +7,7 @@
  */
 
 
+#include <etk/types.h>
 #include <appl/Buffer.h>
 #include <appl/debug.h>
 #include <ewol/context/clipBoard.h>
@@ -19,14 +20,14 @@ const char* const appl::Buffer::eventSelectChange = "edn-select-change";
 const char* const appl::Buffer::eventChangeName = "edn-buffer-name-change";
 
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
-	m_value = etk::UChar::Null;
+	m_value = u32char::Null;
 	if (m_current < 0) {
 		m_current = 0;
 		return *this;
 	}
 	if (m_data != NULL) {
 		if (m_current < m_data->m_data.size() ) {
-			int8_t nbChar = etk::UChar::theoricUTF8Len(m_data->m_data[m_current]);
+			int8_t nbChar = utf8::theoricLen(m_data->m_data[m_current]);
 			if (nbChar != 0) {
 				m_current+=nbChar;
 			} else {
@@ -41,11 +42,11 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
 }
 
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- (void) {
-	m_value = etk::UChar::Null;
+	m_value = u32char::Null;
 	if (m_data != NULL) {
 		if (m_current > 0) {
 			int32_t iii = -1;
-			while(    etk::UChar::theoricUTF8First(m_data->m_data[m_current+iii]) == false
+			while(    utf8::theoricFirst(m_data->m_data[m_current+iii]) == false
 			       && iii >= -6
 			       && m_current-iii>0) {
 				--iii;
@@ -62,7 +63,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- (void) {
 }
 
 char32_t appl::Buffer::Iterator::operator* (void) {
-	if (m_value != etk::UChar::Null) {
+	if (m_value != u32char::Null) {
 		return m_value;
 	}
 	if (m_data == NULL) {
@@ -77,12 +78,12 @@ char32_t appl::Buffer::Iterator::operator* (void) {
 	char tmpVal[5];
 	memset(tmpVal, 0, sizeof(tmpVal));
 	tmpVal[0] = m_data->m_data[m_current];
-	int8_t nbChar = etk::UChar::theoricUTF8Len(tmpVal[0]);
+	int8_t nbChar = utf8::theoricLen(tmpVal[0]);
 	for (int32_t iii=1; iii<nbChar && m_current+iii<m_data->m_data.size(); ++iii) {
 		tmpVal[iii] = m_data->m_data[m_current+iii];
 	}
 	// transform ...
-	m_value = etk::setUtf8(tmpVal);
+	m_value = utf8::convertChar32(tmpVal);
 	return m_value;
 }
 
@@ -148,13 +149,8 @@ bool appl::Buffer::loadFile(const std::string& _name) {
 	m_isModify = true;
 	m_cursorPos = 0;
 	setHighlightType("");
-	etk::FSNode file(m_fileName);
-	if (file.exist() == false) {
-		APPL_INFO("File doesn not exist !!! " << file);
-		return false;
-	}
 	m_nbLines = 0;
-	if (true == m_data.dumpFrom(file) ) {
+	if (m_data.dumpFrom(m_fileName) == true ) {
 		countNumberofLine();
 		tryFindHighlightType();
 		m_isModify = false;
@@ -174,9 +170,8 @@ void appl::Buffer::setFileName(const std::string& _name) {
 }
 
 bool appl::Buffer::storeFile(void) {
-	etk::FSNode file(m_fileName);
-	if (true == m_data.dumpIn(file) ) {
-		APPL_INFO("saving file : " << file);
+	if (m_data.dumpIn(m_fileName) == true) {
+		APPL_INFO("saving file : " << m_fileName);
 		setModification(false);
 		return true;
 	}
@@ -201,7 +196,7 @@ void appl::Buffer::countNumberofLine(void) {
 	for (Iterator it = begin();
 	     (bool)it == true;
 	     ++it) {
-		if (*it == etk::UChar::Return) {
+		if (*it == u32char::Return) {
 			++m_nbLines;
 		}
 	}
@@ -210,7 +205,7 @@ void appl::Buffer::countNumberofLine(void) {
 
 appl::Buffer::Iterator appl::Buffer::getStartLine(const appl::Buffer::Iterator& _pos) {
 	appl::Buffer::Iterator startPos;
-	if (false == searchBack(_pos, etk::UChar::Return, startPos)) {
+	if (false == searchBack(_pos, u32char::Return, startPos)) {
 		return begin();
 	}
 	// note search will return the position of \n ==> the lione start just after ...
@@ -219,7 +214,7 @@ appl::Buffer::Iterator appl::Buffer::getStartLine(const appl::Buffer::Iterator& 
 
 appl::Buffer::Iterator appl::Buffer::getEndLine(const appl::Buffer::Iterator& _pos) {
 	appl::Buffer::Iterator endPos;
-	if (false == search(_pos, etk::UChar::Return, endPos)) {
+	if (false == search(_pos, u32char::Return, endPos)) {
 		endPos = end();
 	}
 	// Note the line end at the \n
@@ -429,16 +424,16 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 	char32_t currentValue = *position(_startPos);
 	_beginPos = begin();
 	_endPos = end();
-	if (    currentValue == etk::UChar::Tabulation
-	     || currentValue == etk::UChar::Space) {
+	if (    currentValue == u32char::Tabulation
+	     || currentValue == u32char::Space) {
 		APPL_DEBUG("select spacer");
 		// Search back
 		for (Iterator it = --position(_startPos);
 		     (bool)it == true;
 		     --it) {
 			currentValue = *it;
-			if (    currentValue != etk::UChar::Tabulation
-			     && currentValue != etk::UChar::Space) {
+			if (    currentValue != u32char::Tabulation
+			     && currentValue != u32char::Space) {
 				_beginPos = ++it;
 				break;
 			}
@@ -448,14 +443,14 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 		     (bool)it == true;
 		     ++it) {
 			currentValue = *it;
-			if (    currentValue != etk::UChar::Tabulation
-			     && currentValue != etk::UChar::Space) {
+			if (    currentValue != u32char::Tabulation
+			     && currentValue != u32char::Space) {
 				_endPos = it;
 				break;
 			}
 		}
 		return true;
-	} else if(    etk::isSpecialChar(currentValue) == false
+	} else if(    u32char::isSpecialChar(currentValue) == false
 	           || currentValue == '_') {
 		APPL_DEBUG("select normal Char");
 		// Search back
@@ -464,7 +459,7 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 		     --it) {
 			currentValue = *it;
 			if (    currentValue != '_'
-			     && true == etk::isSpecialChar(currentValue)) {
+			     && u32char::isSpecialChar(currentValue) == true) {
 				_beginPos = ++it;
 				break;
 			}
@@ -475,7 +470,7 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 		     ++it) {
 			currentValue = *it;
 			if (    currentValue != '_'
-			     && true == etk::isSpecialChar(currentValue)) {
+			     && u32char::isSpecialChar(currentValue) == true) {
 				_endPos = it;
 				break;
 			}
@@ -528,21 +523,21 @@ static const char *ControlCodeTable[32] = {
 void appl::Buffer::expand(int32_t& _indent, const char32_t& _value, std::u32string& _out) const {
 	_out.clear();
 	int32_t tabDist = 4;
-	if (_value == etk::UChar::Tabulation) {
+	if (_value == u32char::Tabulation) {
 		int32_t nSpaces = tabDist - (_indent % tabDist);
 		for (int32_t iii=0; iii<nSpaces; iii++) {
-			_out += etk::UChar::Space;
+			_out += u32char::Space;
 		}
 		return;
 	}
 	// convert ASCII control codes to readable character sequences
-	if (_value == etk::UChar::Null) {
+	if (_value == u32char::Null) {
 		_out += U"<nul>";
 		return;
 	}
-	if (_value == etk::UChar::Return) {
+	if (_value == u32char::Return) {
 		// nothing to display...
-		_out += etk::UChar::Return;
+		_out += u32char::Return;
 		return;
 	}
 	if (_value <= 31) {
@@ -555,7 +550,7 @@ void appl::Buffer::expand(int32_t& _indent, const char32_t& _value, std::u32stri
 		_out += '>';
 		return;
 	}
-	if (_value == etk::UChar::Delete) {
+	if (_value == u32char::Delete) {
 		_out += U"<del>";
 		return;
 	}
@@ -572,7 +567,7 @@ appl::Buffer::Iterator appl::Buffer::countForwardNLines(const appl::Buffer::Iter
 	     (bool)it == true;
 	     ++it) {
 		value = *it;
-		if (value == etk::UChar::Return) {
+		if (value == u32char::Return) {
 			lineCount++;
 			if (lineCount == _nLines) {
 				//APPL_INFO("    == > (1) at position=" << myPosIt.Position()+1 );
@@ -592,7 +587,7 @@ appl::Buffer::Iterator appl::Buffer::countBackwardNLines(const appl::Buffer::Ite
 	     (bool)it == true;
 	     --it) {
 		value = *it;
-		if (value == etk::UChar::Return) {
+		if (value == u32char::Return) {
 			lineCount++;
 			if (lineCount >= _nLines) {
 				//APPL_INFO("    == > (1) at position=" << myPosIt.Position()+1 );
@@ -987,7 +982,7 @@ uint32_t appl::Buffer::getCursorLinesId(void) {
 	for (Iterator it = begin();
 	    (bool)it == true && it <= cursor();
 	     ++it) {
-		if (*it == etk::UChar::Return) {
+		if (*it == u32char::Return) {
 			++line;
 		}
 	}

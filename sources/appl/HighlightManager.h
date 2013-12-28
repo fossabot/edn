@@ -10,7 +10,7 @@
 #define __HIGHLIGHT_MANAGER_H__
 
 
-#include <etk/UString.h>
+#include <etk/types.h>
 #include <appl/globalMsg.h>
 #include <appl/Highlight.h>
 #include <ewol/widget/Widget.h>

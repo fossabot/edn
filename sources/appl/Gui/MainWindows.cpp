@@ -386,10 +386,10 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		m_bufferManager->open(_msg.getData());
 	} else if (_msg.getMessage() == ednMsgGuiSave) {
 		APPL_DEBUG("Request saving the file : " << _msg.getData());
-		if (to_lower(_msg.getData()) == "current") {
+		if (std::tolower(_msg.getData()) == "current") {
 			appl::WorkerSaveFile* tmpWorker = new appl::WorkerSaveFile("", false);
 			return;
-		} else if (to_lower(_msg.getData()) == "all") {
+		} else if (std::tolower(_msg.getData()) == "all") {
 			appl::WorkerSaveAllFile* tmpWorker = new appl::WorkerSaveAllFile();
 			return;
 		} else {

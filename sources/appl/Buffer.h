@@ -9,9 +9,8 @@
 #ifndef __APPL_BUFFER_H__
 #define __APPL_BUFFER_H__
 
-#include <etk/UString.h>
+#include <etk/types.h>
 #include <etk/os/FSNode.h>
-#include <etk/unicode.h>
 #include <ewol/ewol.h>
 #include <etk/Buffer.h>
 #include <ewol/object/Object.h>
@@ -42,7 +41,7 @@ namespace appl {
 					Iterator(void):
 					  m_current(0),
 					  m_data(NULL),
-					  m_value(etk::UChar::Null) {
+					  m_value(u32char::Null) {
 						// nothing to do ...
 					};
 					/**
@@ -52,7 +51,7 @@ namespace appl {
 					Iterator(const Iterator & _obj):
 					  m_current(_obj.m_current),
 					  m_data(_obj.m_data),
-					  m_value(etk::UChar::Null) {
+					  m_value(u32char::Null) {
 						// nothing to do ...
 					};
 					/**
@@ -63,7 +62,7 @@ namespace appl {
 					Iterator& operator=(const Iterator & _obj) {
 						m_current = _obj.m_current;
 						m_data = _obj.m_data;
-						m_value = etk::UChar::Null;
+						m_value = u32char::Null;
 						return *this;
 					};
 					/**
@@ -72,7 +71,7 @@ namespace appl {
 					~Iterator(void) {
 						m_current = 0;
 						m_data = NULL;
-						m_value = etk::UChar::Null;
+						m_value = u32char::Null;
 					};
 					/**
 					 * @brief basic boolean cast
@@ -283,7 +282,7 @@ namespace appl {
 					Iterator(Buffer* _obj, int64_t _pos) :
 					  m_current(_pos),
 					  m_data(_obj),
-					  m_value(etk::UChar::Null) {
+					  m_value(u32char::Null) {
 						// nothing to do ...
 					};
 					friend class Buffer;

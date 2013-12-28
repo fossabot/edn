@@ -19,7 +19,7 @@ appl::HighlightPattern::HighlightPattern(appl::GlyphPainting*& _glyphPainting) :
   m_regExpStart(NULL),
   m_regExpStop(NULL),
   m_colorName(""),
-  m_escapeChar(etk::UChar::Null),
+  m_escapeChar(u32char::Null),
   m_multiline(false),
   m_level(0) {
 	m_regExpStart = new etk::RegExp<etk::Buffer>();
@@ -40,7 +40,7 @@ void appl::HighlightPattern::setPaternStart(std::string& _regExp) {
 	if (m_regExpStart == NULL) {
 		return;
 	}
-	m_regExpStart->setRegExp(_regExp);
+	m_regExpStart->compile(_regExp);
 }
 
 void appl::HighlightPattern::setPaternStop(std::string& _regExp) {
@@ -51,7 +51,7 @@ void appl::HighlightPattern::setPaternStop(std::string& _regExp) {
 	if (_regExp.size() != 0) {
 		m_regExpStop = new etk::RegExp<etk::Buffer>();
 		if (m_regExpStop != NULL) {
-			m_regExpStop->setRegExp(_regExp);
+			m_regExpStop->compile(_regExp);
 		} else {
 			APPL_ERROR("Allocation error");
 		}
@@ -170,7 +170,7 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 	}
 	_resultat.beginStart = m_regExpStart->start();
 	_resultat.beginStop  = m_regExpStart->stop();
-	if (m_regExpStop->process(_buffer, _resultat.beginStop, _stop, m_escapeChar) == true) {
+	if (m_regExpStop->parse(_buffer, _resultat.beginStop, _stop, m_escapeChar) == true) {
 		_resultat.endStart = m_regExpStop->start();
 		_resultat.endStop  = m_regExpStop->stop();
 		return HLP_FIND_OK;

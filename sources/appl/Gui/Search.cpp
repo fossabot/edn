@@ -136,11 +136,11 @@ void Search::onReceiveMessage(const ewol::object::Message& _msg) {
 		replace();
 		find();
 	} else if ( _msg.getMessage() == l_eventCaseCb) {
-		m_caseSensitive = stobool(_msg.getData());
+		m_caseSensitive = std::stob(_msg.getData());
 	} else if ( _msg.getMessage() == l_eventWrapCb) {
-		m_wrap = stobool(_msg.getData());
+		m_wrap = std::stob(_msg.getData());
 	} else if ( _msg.getMessage() == l_eventForwardCb) {
-		m_forward = stobool(_msg.getData());
+		m_forward = std::stob(_msg.getData());
 	} else if ( _msg.getMessage() == l_eventHideBt) {
 		hide();
 	} else if ( _msg.getMessage() == ednMsgGuiSearch) {

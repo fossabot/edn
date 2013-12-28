@@ -7,7 +7,6 @@
  */
 
 #include <etk/types.h>
-#include <etk/UString.h>
 #include <ewol/ewol.h>
 #include <ewol/object/Object.h>
 #include <ewol/widget/Manager.h>
@@ -28,9 +27,6 @@
 #include <appl/Gui/Search.h>
 #include <appl/ctags/readtags.h>
 #include <appl/globalMsg.h>
-#include <vector>
-#include <string>
-#include <etk/unicode.h>
 
 /**
  * @brief Main of the program (This can be set in every case, but it is not used in Andoid...).
@@ -42,18 +38,6 @@ int main(int _argc, const char *_argv[]) {
 	return ewol::run(_argc, _argv);
 }
 appl::BufferManager* bufferManager = NULL;
-
-etk::CCout& operator <<(etk::CCout& _os, const std::u32string& _obj) {
-	std::vector<char32_t> tmpp;
-	for (size_t iii=0; iii<_obj.size(); ++iii) {
-		tmpp.push_back(_obj[iii]);
-	}
-	std::vector<char> output_UTF8;
-	unicode::convertUnicodeToUtf8(tmpp, output_UTF8);
-	output_UTF8.push_back('\0');
-	_os << &output_UTF8[0];
-	return _os;
-}
 
 /**
  * @brief main application function initialisation

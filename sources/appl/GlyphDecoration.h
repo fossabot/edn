@@ -10,7 +10,7 @@
 #define __GLYPH_DECORATION_H__
 
 #include <etk/Color.h>
-#include <etk/UString.h>
+#include <etk/types.h>
 
 namespace appl {
 	class GlyphDecoration {
