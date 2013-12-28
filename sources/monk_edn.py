@@ -13,6 +13,7 @@ def create():
 	myModule = module.Module(__file__, 'edn', 'APPLICATION')
 	# enable doculentation :
 	myModule.set_website("http://heeroyui.github.io/edn/")
+	myModule.set_website_sources("http://github.com/heeroyui/edn/")
 	myModule.set_path(tools.get_current_path(__file__) + "/appl/")
 	
 	# add the currrent module at the 
