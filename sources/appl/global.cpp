@@ -197,7 +197,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetAutoIndent());
-		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeIndentation);
+		myCheckbox->registerOnEvent(this, "clicked", l_changeIndentation);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = new ewol::widget::CheckBox("Display space char (' ')");
@@ -206,7 +206,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplaySpaceChar());
-		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeSpace);
+		myCheckbox->registerOnEvent(this, "clicked", l_changeSpace);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = new ewol::widget::CheckBox("Display tabulation char ('\\t')");
@@ -215,7 +215,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplayTabChar());
-		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeTabulation);
+		myCheckbox->registerOnEvent(this, "clicked", l_changeTabulation);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = new ewol::widget::CheckBox("Display end of line ('\\n')");
@@ -224,7 +224,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplayEndOfLine());
-		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeEndOfLine);
+		myCheckbox->registerOnEvent(this, "clicked", l_changeEndOfLine);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = new ewol::widget::CheckBox("switch Rounded/default");
@@ -233,7 +233,7 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui(void) :
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplayEndOfLine());
-		myCheckbox->registerOnEvent(this, ewolEventCheckBoxClicked, l_changeRounded);
+		myCheckbox->registerOnEvent(this, "clicked", l_changeRounded);
 		subWidgetAdd(myCheckbox);
 	}
 }

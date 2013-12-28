@@ -181,7 +181,7 @@ bool appl::TextPluginCtags::onReceiveMessage(appl::TextViewer& _textDrawer,
 			tmpWidget->setTitle("Open Exuberant Ctags file");
 			tmpWidget->setValidateLabel("Open");
 			ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-			tmpWidget->registerOnEvent(this, ewol::widget::FileChooser::eventValidate, eventOpenCtagsOpenFileReturn);
+			tmpWidget->registerOnEvent(this, "validate", eventOpenCtagsOpenFileReturn);
 		}
 		return true;
 	} else if (_msg.getMessage() == eventJumpDestination) {

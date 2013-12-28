@@ -170,11 +170,11 @@ MainWindows::MainWindows(void) {
 						
 						ewol::widget::CheckBox* tmpCheck = new widget::CheckBox("smooth");
 						mySizerHori2->subWidgetAdd(tmpCheck);
-						tmpCheck->registerOnEvent(this, ewolEventCheckBoxClicked, l_smoothChick);
+						tmpCheck->registerOnEvent(this, "clicked", l_smoothChick);
 						
 						ewol::widget::Slider* tmpSlider = new widget::Slider();
 						mySizerHori2->subWidgetAdd(tmpSlider);
-						tmpSlider->registerOnEvent(this, ewolEventSliderChange, l_smoothMin);
+						tmpSlider->registerOnEvent(this, "change", l_smoothMin);
 						tmpSlider->setExpand(bvec2(true,false));
 						tmpSlider->setMin(0);
 						tmpSlider->setMax(1000);
@@ -183,7 +183,7 @@ MainWindows::MainWindows(void) {
 						
 						tmpSlider = new ewol::widget::Slider();
 						mySizerHori2->subWidgetAdd(tmpSlider);
-						tmpSlider->registerOnEvent(this, ewolEventSliderChange, l_smoothMax);
+						tmpSlider->registerOnEvent(this, "change", l_smoothMax);
 						tmpSlider->setExpand(bvec2(true,false));
 						tmpSlider->setMin(0);
 						tmpSlider->setMax(1000);
@@ -321,7 +321,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		}
 		// apply widget pop-up ...
 		popUpWidgetPush(tmpWidget);
-		tmpWidget->registerOnEvent(this, ewol::widget::FileChooser::eventValidate, ednEventPopUpFileSelected);
+		tmpWidget->registerOnEvent(this, "validate", ednEventPopUpFileSelected);
 	} else if (_msg.getMessage() == ednMsgProperties) {
 		// Request the parameter GUI
 		ewol::widget::Parameter* tmpWidget = new ewol::widget::Parameter();
@@ -475,19 +475,19 @@ void MainWindows::closeNotSavedFile(appl::Buffer* _buffer) {
 		bt = tmpPopUp->addButton("Save", true);
 		if (bt != NULL) {
 			// TODO : The element is removed before beeing pressed
-			bt->registerOnEvent(this, ewol::widget::Button::eventPressed, mainWindowsRequestSaveFile, _buffer->getFileName());
-			bt->registerOnEvent(this, ewol::widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+			bt->registerOnEvent(this, "pressed", mainWindowsRequestSaveFile, _buffer->getFileName());
+			bt->registerOnEvent(this, "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		}
 	}
 	bt = tmpPopUp->addButton("Save As", true);
 	if (bt != NULL) {
-		bt->registerOnEvent(this, ewol::widget::Button::eventPressed, mainWindowsRequestSaveFileAs, _buffer->getFileName());
-		//bt->registerOnEvent(this, ewol::widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		bt->registerOnEvent(this, "pressed", mainWindowsRequestSaveFileAs, _buffer->getFileName());
+		//bt->registerOnEvent(this, "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		// TODO : Request the close when saved ...
 	}
 	bt = tmpPopUp->addButton("Close", true);
 	if (bt != NULL) {
-		bt->registerOnEvent(this, ewol::widget::Button::eventPressed, mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		bt->registerOnEvent(this, "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 	}
 	tmpPopUp->addButton("Cancel", true);
 	tmpPopUp->setRemoveOnExternClick(true);

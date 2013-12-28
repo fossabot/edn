@@ -74,16 +74,16 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 	if (m_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("Save", true);
 		if (bt != NULL) {
-			bt->registerOnEvent(this, ewol::widget::Button::eventPressed, s_saveValidate);
+			bt->registerOnEvent(this, "pressed", s_saveValidate);
 		}
 	}
 	bt = tmpPopUp->addButton("Save As", true);
 	if (bt != NULL) {
-		bt->registerOnEvent(this, ewol::widget::Button::eventPressed, s_saveAsValidate);
+		bt->registerOnEvent(this, "pressed", s_saveAsValidate);
 	}
 	bt = tmpPopUp->addButton("Close", true);
 	if (bt != NULL) {
-		bt->registerOnEvent(this, ewol::widget::Button::eventPressed, s_closeValidate);
+		bt->registerOnEvent(this, "pressed", s_closeValidate);
 	}
 	tmpPopUp->addButton("Cancel", true);
 	tmpPopUp->setRemoveOnExternClick(true);
