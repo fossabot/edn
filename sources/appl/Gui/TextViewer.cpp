@@ -450,10 +450,11 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 	// just forward event  == > manage directly in the buffer
 	if (_event.getId() == 1) {
 		// mouse selection :
-		if (_event.getType() == ewol::key::typeMouse) {
+		//if (_event.getType() == ewol::key::typeMouse) {
 			if (_event.getStatus() == ewol::key::statusDown) {
 				//if (_event.getSpecialKey().isSetShift() == false) {
 					appl::Buffer::Iterator newPos = getMousePosition(relativePos);
+					m_buffer->setSelectMode(false);
 					moveCursor(newPos);
 					m_buffer->setSelectMode(true);
 					markToRedraw();
@@ -472,7 +473,7 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 				markToRedraw();
 				return true;
 			}
-		}
+		//}
 		if (_event.getStatus() == ewol::key::statusSingle) {
 			if (    _event.getType() == ewol::key::typeMouse
 			     || _event.getType() == ewol::key::typeFinger) {

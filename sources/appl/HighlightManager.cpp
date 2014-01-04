@@ -27,6 +27,7 @@ void appl::highlightManager::init(void) {
 		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
 		hlList.clear();
 	}
+	APPL_DEBUG("HighlightManager  == > INIT");
 	etk::FSNode myFile("DATA:languages/");
 	// get the subfolder list :
 	std::vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
