@@ -67,7 +67,7 @@ def create(target):
 		"-DPROJECT_NAME=\"\\\""+myModule.name+"\\\"\""
 		])
 	
-	myModule.copy_file('../data/icon.png','icon.png')
+	#myModule.copy_file('../data/icon.png','icon.png')
 	
 	myModule.copy_folder('../data/icon.*','')
 	myModule.copy_folder('../data/languages/asm/*.xml','languages/asm/')
@@ -105,7 +105,11 @@ def create(target):
 	myModule.pkg_set("COMPAGNY_TYPE", "org")
 	myModule.pkg_set("COMPAGNY_NAME", "Edouard DUPIN")
 	myModule.pkg_set("MAINTAINER", ["Mr DUPIN Edouard <yui.heero@gmail.com>"])
-	myModule.pkg_set("ICON", tools.get_current_path(__file__) + "/../data/icon.png")
+	if target.name=="MacOs":
+		myModule.pkg_set("ICON", tools.get_current_path(__file__) + "/../data/icon.icns")
+	else:
+		myModule.pkg_set("ICON", tools.get_current_path(__file__) + "/../data/icon.png")
+	
 	myModule.pkg_set("SECTION", ["Development", "Editors"])
 	myModule.pkg_set("PRIORITY", "optional")
 	myModule.pkg_set("DESCRIPTION", "Text editor for sources code with ctags management")
