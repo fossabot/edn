@@ -69,6 +69,11 @@ appl::TextViewer::~TextViewer(void) {
 	appl::ViewerManager::release(m_viewerManager);
 }
 
+void appl::TextViewer::changeZoom(float _range) {
+	m_displayText.setFontSize(m_displayText.getSize() + _range);
+	markToRedraw();
+}
+
 bool appl::TextViewer::calculateMinSize(void) {
 	m_minSize.setValue(50,50);
 	return true;
@@ -98,7 +103,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	if (m_buffer == NULL) {
 		m_maxSize.setX(256);
 		m_maxSize.setY(256);
-		m_displayText.setTextAlignement(10, m_size.x()-20, ewol::compositing::Text::alignLeft);
+		m_displayText.setTextAlignement(10, m_size.x()-20, ewol::compositing::alignLeft);
 		m_displayText.setRelPos(vec3(10, 0, 0));
 		std::string tmpString("<br/>\n"
 		                       "<font color=\"red\">\n"
@@ -574,7 +579,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 					} else {
 						//note : Without this condithion the time od selection change to 0.6 ms to 8ms ...
 						//APPL_DEBUG("check : " << -_relativePos.y() << ">=" << positionCurentDisplay.y());
-						m_displayText.print(stringToDisplay[kkk]);
+						m_displayText.printChar(stringToDisplay[kkk]);
 						++countColomn;
 					}
 				}
@@ -943,7 +948,7 @@ appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator
 			if (stringToDisplay[kkk] == u32char::Return) {
 				return it;
 			} else {
-				m_displayText.print(stringToDisplay[kkk]);
+				m_displayText.printChar(stringToDisplay[kkk]);
 			}
 		}
 		if (m_displayText.getPos().x() >= _distance) {
@@ -972,7 +977,7 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 			if (stringToDisplay[kkk] == u32char::Return) {
 				return m_displayText.getPos().x() + 2; // TODO : Add the +2 for the end of line ...
 			} else {
-				m_displayText.print(stringToDisplay[kkk]);
+				m_displayText.printChar(stringToDisplay[kkk]);
 			}
 		}
 		ret = m_displayText.getPos().x();

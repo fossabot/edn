@@ -15,6 +15,7 @@
 
 #include <ewol/widget/WidgetScrolled.h>
 #include <ewol/compositing/Text.h>
+#include <ewol/compositing/TextDF.h>
 #include <ewol/compositing/Drawing.h>
 #include <appl/BufferManager.h>
 #include <appl/Gui/ViewerManager.h>
@@ -66,6 +67,7 @@ namespace appl {
 			virtual void onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID);
 			virtual void onGetFocus(void);
 			virtual void onLostFocus(void);
+			virtual void changeZoom(float _range);
 		private:
 			float m_lastOffsetDisplay; //!< Line number ofssed in the display
 		private:
