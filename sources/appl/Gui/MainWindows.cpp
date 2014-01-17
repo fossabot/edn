@@ -237,8 +237,8 @@ MainWindows::MainWindows(void) {
 				(void)myMenu->add(idMenuCTags, "Back",      "", ednMsgGuiCtags, "Back");
 			*/
 			int32_t idMenugDisplay = myMenu->addTitle("Display");
-				(void)myMenu->add(idMenugDisplay, "Color Black",          "", appl::MsgNameGuiChangeColor, "colorBlack/");
-				(void)myMenu->add(idMenugDisplay, "Color White",          "", appl::MsgNameGuiChangeColor, "colorWhite/");
+				(void)myMenu->add(idMenugDisplay, "Color Black",          "", appl::MsgNameGuiChangeColor, "color/black/");
+				(void)myMenu->add(idMenugDisplay, "Color White",          "", appl::MsgNameGuiChangeColor, "color/white/");
 				(void)myMenu->addSpacer();
 				(void)myMenu->add(idMenugDisplay, "Reload openGl Shader", "", ednMsgGuiReloadShader);
 			

@@ -49,7 +49,7 @@ namespace appl {
 				return m_buffer;
 			}
 		private:
-			ewol::compositing::Text m_displayText; //!< Text display properties.
+			ewol::compositing::TextDF m_displayText; //!< Text display properties.
 			ewol::compositing::Drawing m_displayDrawing; //!< Other diaplay requested.
 			std::vector<std::pair<appl::Buffer*, vec2>> m_drawingRemenber;
 		public:

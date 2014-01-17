@@ -45,7 +45,7 @@ appl::BufferManager* bufferManager = NULL;
 bool APP_Init(ewol::Context& _context) {
 	APPL_INFO(" == > init APPL v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
 	
-	etk::theme::setName("COLOR", "colorWhite/");
+	etk::theme::setName("COLOR", "color/black/");
 	
 	// TODO : remove this : Move if in the windows properties
 	_context.setSize(vec2(800, 600));

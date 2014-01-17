@@ -84,9 +84,9 @@ def create(target):
 	myModule.copy_folder('../data/languages/php/*.xml','languages/php/')
 	myModule.copy_folder('../data/languages/xml/*.xml','languages/xml/')
 	myModule.copy_folder('../data/languages/python/*.xml','languages/python/')
-	myModule.copy_folder('../data/theme/default/*.svg','theme/default/')
-	myModule.copy_folder('../data/theme/colorWhite/*.json','theme/colorWhite/')
-	myModule.copy_folder('../data/theme/colorBlack/*.json','theme/colorBlack/')
+	myModule.copy_folder('../data/theme/default/*.svg','theme/shape/square/')
+	myModule.copy_folder('../data/theme/colorWhite/*.json','theme/color/white/')
+	myModule.copy_folder('../data/theme/colorBlack/*.json','theme/color/black/')
 	myModule.copy_folder('../data/GUI-Search.xml','')
 	
 	myModule.add_path(tools.get_current_path(__file__))
