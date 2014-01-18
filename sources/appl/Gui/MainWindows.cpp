@@ -110,6 +110,7 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 static const char* mainWindowsRequestSaveFile = "appl-event-main-windows-save-file";
 static const char* mainWindowsRequestSaveFileAs = "appl-event-main-windows-save-file-as";
 static const char* mainWindowsRequestcloseFileNoCheck = "appl-event-main-windows-close-file-no-check";
+static const char* l_MsgNameGuiChangeShape = "appl-event-main-windows-Change-shape";
 
 const char* l_smoothChick = "tmpEvent_smooth";
 const char* l_smoothMin = "tmpEvent_minChange";
@@ -239,6 +240,8 @@ MainWindows::MainWindows(void) {
 			int32_t idMenugDisplay = myMenu->addTitle("Display");
 				(void)myMenu->add(idMenugDisplay, "Color Black",          "", appl::MsgNameGuiChangeColor, "color/black/");
 				(void)myMenu->add(idMenugDisplay, "Color White",          "", appl::MsgNameGuiChangeColor, "color/white/");
+				(void)myMenu->add(idMenugDisplay, "Shape square",         "", l_MsgNameGuiChangeShape, "shape/square/");
+				(void)myMenu->add(idMenugDisplay, "Shape round",          "", l_MsgNameGuiChangeShape, "shape/round/");
 				(void)myMenu->addSpacer();
 				(void)myMenu->add(idMenugDisplay, "Reload openGl Shader", "", ednMsgGuiReloadShader);
 			
@@ -283,6 +286,7 @@ MainWindows::MainWindows(void) {
 	registerMultiCast(ednMsgBufferId);
 	registerMultiCast(ednMsgGuiReloadShader);
 	registerMultiCast(appl::MsgNameGuiChangeColor);
+	registerMultiCast(l_MsgNameGuiChangeShape);
 	registerMultiCast(appl::MsgSelectNewFile);
 }
 
@@ -342,6 +346,10 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		}
 	} else if (_msg.getMessage() == appl::MsgNameGuiChangeColor) {
 		etk::theme::setName("COLOR", _msg.getData());
+		ewol::getContext().getResourcesManager().reLoadResources();
+		ewol::getContext().forceRedrawAll();
+	} else if (_msg.getMessage() == l_MsgNameGuiChangeShape) {
+		etk::theme::setName("GUI", _msg.getData());
 		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();
 	} else if (_msg.getMessage() == ednMsgGuiReloadShader) {
