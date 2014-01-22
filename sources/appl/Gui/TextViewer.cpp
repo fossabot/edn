@@ -83,7 +83,7 @@ bool appl::TextViewer::calculateMinSize(void) {
 void appl::TextViewer::onDraw(void) {
 	m_displayDrawing.draw();
 	m_displayText.draw();
-	WidgetScrooled::onDraw();
+	WidgetScrolled::onDraw();
 }
 
 void appl::TextViewer::onRegenerateDisplay(void) {
@@ -122,7 +122,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 		m_displayText.forceLineReturn();
 		m_displayText.printDecorated(tmpString);
 		// call the herited class...
-		WidgetScrooled::onRegenerateDisplay();
+		WidgetScrolled::onRegenerateDisplay();
 		return;
 	}
 	// normal displa of the buffer :
@@ -303,7 +303,7 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	}
 	//toc("Display time : ");
 	// call the herited class...
-	WidgetScrooled::onRegenerateDisplay();
+	WidgetScrolled::onRegenerateDisplay();
 }
 
 bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
@@ -426,7 +426,7 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 		return false;
 	}
 	// First call the scrolling widget :
-	if (WidgetScrooled::onEventInput(_event) == true) {
+	if (WidgetScrolled::onEventInput(_event) == true) {
 		markToRedraw();
 		return true;
 	}
@@ -612,7 +612,7 @@ void appl::TextViewer::onEventClipboard(enum ewol::context::clipBoard::clipboard
 }
 
 void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
-	ewol::widget::WidgetScrooled::onReceiveMessage(_msg);
+	ewol::widget::WidgetScrolled::onReceiveMessage(_msg);
 	APPL_VERBOSE("receive msg: " << _msg);
 	// First call plugin
 	if (appl::textPluginManager::onReceiveMessage(*this, _msg) == true) {
@@ -691,7 +691,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 }
 
 void appl::TextViewer::onObjectRemove(ewol::Object* _removeObject) {
-	ewol::widget::WidgetScrooled::onObjectRemove(_removeObject);
+	ewol::widget::WidgetScrolled::onObjectRemove(_removeObject);
 	if (m_buffer == _removeObject) {
 		m_buffer = NULL;
 		markToRedraw();

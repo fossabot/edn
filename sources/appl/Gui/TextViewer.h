@@ -22,7 +22,7 @@
 #include <utility>
 
 namespace appl {
-	class TextViewer : public ewol::widget::WidgetScrooled {
+	class TextViewer : public ewol::widget::WidgetScrolled {
 		private:
 			appl::GlyphPainting* m_paintingProperties; //!< element painting property
 			int32_t m_colorBackground;
