@@ -12,15 +12,15 @@
 		<button name="SEARCH:replace">
 			<image src="THEME:GUI:Replace.edf" fill="true" size="7,7mm" distance-field="true"/>
 		</button>
-		<button name="SEARCH:case">
+		<button name="SEARCH:case" toggle="true">
 			<image src="THEME:GUI:CaseSensitive.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
 			<image src="THEME:GUI:CaseSensitive.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
 		</button>
-		<button name="SEARCH:wrap">
+		<button name="SEARCH:wrap" toggle="true">
 			<image src="THEME:GUI:WrapAround.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
 			<image src="THEME:GUI:WrapAround.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
 		</button>
-		<button name="SEARCH:up-down">
+		<button name="SEARCH:up-down" toggle="true">
 			<image src="THEME:GUI:Up.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
 			<image src="THEME:GUI:Down.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
 		</button>
