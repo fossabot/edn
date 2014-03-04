@@ -19,7 +19,6 @@
 
 class MainWindows : public ewol::widget::Windows {
 	private:
-		int32_t m_currentSavingAsIdBuffer;
 		ewol::widget::Label* m_widgetLabelFileName;
 	public:
 		// Constructeur

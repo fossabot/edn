@@ -395,22 +395,22 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 	} else if (_msg.getMessage() == ednMsgGuiSave) {
 		APPL_DEBUG("Request saving the file : " << _msg.getData());
 		if (std::tolower(_msg.getData()) == "current") {
-			appl::WorkerSaveFile* tmpWorker = new appl::WorkerSaveFile("", false);
+			new appl::WorkerSaveFile("", false);
 			return;
 		} else if (std::tolower(_msg.getData()) == "all") {
-			appl::WorkerSaveAllFile* tmpWorker = new appl::WorkerSaveAllFile();
+			new appl::WorkerSaveAllFile();
 			return;
 		} else {
 			APPL_ERROR("UNKNOW request : " << _msg);
 		}
 	} else if (_msg.getMessage() == ednMsgGuiSaveAs) {
-		appl::WorkerSaveFile* tmpWorker = new appl::WorkerSaveFile("", true);
+		new appl::WorkerSaveFile("", true);
 	} else if (_msg.getMessage() == ednMsgGuiClose) {
 		// Get a ref on the buffer selected (if null, no buffer was selected ...)
 		if (_msg.getData() == "current") {
-			appl::WorkerCloseFile* tmpWorker = new appl::WorkerCloseFile("");
+			new appl::WorkerCloseFile("");
 		} else {
-			appl::WorkerCloseAllFile* tmpWorker = new appl::WorkerCloseAllFile();
+			new appl::WorkerCloseAllFile();
 		}
 	} else if (_msg.getMessage() == mainWindowsRequestSaveFile) { // return after a choice of close...
 		if (m_bufferManager->exist(_msg.getData()) == false) {

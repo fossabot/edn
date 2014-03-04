@@ -100,7 +100,6 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 }
 
 appl::Highlight::~Highlight(void) {
-	int32_t i;
 	// clean all Element
 	for (int32_t iii = 0; iii < m_listHighlightPass1.size(); ++iii) {
 		if (m_listHighlightPass1[iii] != NULL) {

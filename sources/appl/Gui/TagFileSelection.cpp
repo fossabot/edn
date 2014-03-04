@@ -36,12 +36,8 @@ appl::TagFileSelection::TagFileSelection(void) {
 	addEventId(applEventctagsCancel);
 	
 	ewol::widget::Label* myWidgetTitle = NULL;
-	ewol::widget::Button* myWidgetValidate = NULL;
-	ewol::widget::Button* myWidgetCancel = NULL;
 	
 	ewol::widget::Sizer * mySizerVert = NULL;
-	ewol::widget::Sizer * mySizerHori = NULL;
-	ewol::widget::Spacer * mySpacer = NULL;
 	#if defined(__TARGET_OS__Android)
 		setMinSize(ewol::Dimension(vec2(90,90),ewol::Dimension::Pourcent));
 	#elif defined(__TARGET_OS__Windows)

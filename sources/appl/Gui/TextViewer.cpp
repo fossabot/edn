@@ -129,14 +129,11 @@ void appl::TextViewer::onRegenerateDisplay(void) {
 	vec3 tmpCursorPosition(0, 0, -1);
 	float tmpCursorLenght = -1.0;
 	// real display ...
-	etk::Buffer& buf = m_buffer->getData();
 	m_displayText.setColor(etk::Color<>(0, 0, 0, 256));
 	float countNbLine = 1;
 	int32_t countColomn = 0;
 	// the siplay string :
 	std::u32string stringToDisplay;
-	int64_t bufferElementSize = 0;
-	bool isSelect = false;
 	appl::Buffer::Iterator selectPosStart = m_buffer->begin();
 	appl::Buffer::Iterator selectPosStop = m_buffer->begin();
 	if (m_buffer->hasTextSelected() == true) {
@@ -352,7 +349,6 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 		m_buffer->setSelectMode(false);
 		// normal adding char ...
 		char output[5];
-		int32_t nbElement = u32char::convertUtf8(localValue, output);
 		if (    m_buffer->hasTextSelected() == false
 		     && _event.getSpecialKey().getInsert() == true) {
 			appl::Buffer::Iterator pos = m_buffer->cursor();
@@ -368,7 +364,6 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 	}
 	// move events ...
 	if (_event.getStatus() == ewol::key::statusDown) {
-		bool needUpdatePosition = true;
 		// selection when shift is set:
 		m_buffer->setSelectMode(_event.getSpecialKey().getShift());
 		// check selection event ...

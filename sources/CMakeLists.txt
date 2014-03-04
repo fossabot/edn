@@ -64,6 +64,13 @@ set(src_files
 add_definitions( -DDEBUG_LEVEL=3 )
 add_definitions( -DDEBUG=1 )
 add_definitions( -DPROJECT_NAME="edn" )
+if (APPLE)
+	add_definitions( -D__TARGET_OS__MacOs )
+elseif (UNIX)
+	add_definitions( -D__TARGET_OS__Linux )
+elseif (WIN32)
+	add_definitions( -D__TARGET_OS__Windows )
+endif ()
 # read version :
 file (STRINGS "tag" BUILD_VERSION)
 add_definitions( -DAPPL_VERSION="${BUILD_VERSION}" )
@@ -86,7 +93,18 @@ include_directories(${ewol_SOURCE_DIR})
 
 #target_link_libraries(edn ewol)
 target_link_libraries(edn ewol linearmath zlib etk freetype exml ejson egami edtaa3 date esvg png)
-target_link_libraries(edn -lGL -lX11 -lpthread)
 
-add_definitions( -D__TARGET_OS__Linux )
+if (APPLE)
+	target_link_libraries(edn
+		"-framework Cocoa"
+		"-framework OpenGL"
+		"-framework QuartzCore"
+		"-framework AppKit"
+	)
+elseif (UNIX)
+target_link_libraries(edn -lGL -lX11 -lpthread)
+elseif (WIN32)
+
+endif ()
+
 

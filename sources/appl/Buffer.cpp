@@ -619,8 +619,6 @@ bool appl::Buffer::copy(std::string& _data) {
 
 void appl::Buffer::copy(std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
 	_data.clear();
-	int64_t startPos = getStartSelectionPos();
-	int64_t endPos = getStopSelectionPos();
 	for (Iterator it = _pos;
 	     it != _posEnd &&
 	     (bool)it == true;
