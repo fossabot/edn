@@ -42,7 +42,8 @@ appl::BufferManager* bufferManager = NULL;
 /**
  * @brief main application function initialisation
  */
-bool APP_Init(ewol::Context& _context) {
+bool APP_Init(ewol::Context& _context, size_t _initId, size_t& _nbInitStep) {
+	_nbInitStep = 1;
 	APPL_INFO(" == > init APPL v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
 	
 	etk::theme::setName("COLOR", "color/black/");
