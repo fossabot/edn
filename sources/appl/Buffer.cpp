@@ -632,7 +632,7 @@ bool appl::Buffer::write(const std::string& _data, const appl::Buffer::Iterator&
 	if (position < 0){
 		position = 0;
 	}
-	APPL_ERROR("writye at pos: " << (int64_t)_pos << " ==> " << position);
+	APPL_VERBOSE("write at pos: " << (int64_t)_pos << " ==> " << position << " data : " << _data);
 	m_data.insert(position, (int8_t*)(_data.c_str()), _data.size());
 	if (m_cursorPos < 0) {
 		m_cursorPos = 0;

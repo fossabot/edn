@@ -349,6 +349,8 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 		m_buffer->setSelectMode(false);
 		// normal adding char ...
 		char output[5];
+		output[0] = '0';
+		u32char::convertUtf8(localValue, output);
 		if (    m_buffer->hasTextSelected() == false
 		     && _event.getSpecialKey().getInsert() == true) {
 			appl::Buffer::Iterator pos = m_buffer->cursor();
