@@ -164,34 +164,6 @@ MainWindows::MainWindows(void) {
 				// search area : 
 				Search * mySearch = new Search();
 				mySizerVert2->subWidgetAdd(mySearch);
-				#ifdef APPL_BUFFER_FONT_DISTANCE_FIELD
-				{
-					ewol::widget::Sizer * mySizerHori2 = new widget::Sizer(ewol::widget::Sizer::modeHori);
-					mySizerVert2->subWidgetAdd(mySizerHori2);
-						
-						ewol::widget::CheckBox* tmpCheck = new widget::CheckBox("smooth");
-						mySizerHori2->subWidgetAdd(tmpCheck);
-						tmpCheck->registerOnEvent(this, "clicked", l_smoothChick);
-						
-						ewol::widget::Slider* tmpSlider = new widget::Slider();
-						mySizerHori2->subWidgetAdd(tmpSlider);
-						tmpSlider->registerOnEvent(this, "change", l_smoothMin);
-						tmpSlider->setExpand(bvec2(true,false));
-						tmpSlider->setMin(0);
-						tmpSlider->setMax(1000);
-						tmpSlider->setValue(0450);
-						tmpSliderMin = tmpSlider;
-						
-						tmpSlider = new ewol::widget::Slider();
-						mySizerHori2->subWidgetAdd(tmpSlider);
-						tmpSlider->registerOnEvent(this, "change", l_smoothMax);
-						tmpSlider->setExpand(bvec2(true,false));
-						tmpSlider->setMin(0);
-						tmpSlider->setMax(1000);
-						tmpSlider->setValue(0550);
-						tmpSliderMax = tmpSlider;
-				}
-				#endif
 			
 		mySizerHori = new ewol::widget::Sizer(ewol::widget::Sizer::modeHori);
 		mySizerVert->subWidgetAdd(mySizerHori);
