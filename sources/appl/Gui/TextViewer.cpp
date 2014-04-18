@@ -41,6 +41,7 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	registerMultiCast(appl::MsgSelectNewFile);
 	registerMultiCast(appl::MsgSelectGotoLineSelect);
 	setLimitScrolling(0.2);
+	setSingleFinger(false);
 	
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
@@ -423,15 +424,17 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 		return false;
 	}
 	// First call the scrolling widget :
-	if (WidgetScrolled::onEventInput(_event) == true) {
+	if (ewol::widget::WidgetScrolled::onEventInput(_event) == true) {
 		markToRedraw();
 		return true;
 	}
+	APPL_VERBOSE("event : " << _event);
 	// Second call plugin
 	if (appl::textPluginManager::onEventInput(*this, _event) == true) {
 		markToRedraw();
 		return true;
 	}
+	APPL_VERBOSE("event2 : " << _event);
 	vec2 relativePos = relativePosition(_event.getPos());
 	// offset for the lineNumber:
 	relativePos -= vec2(m_lastOffsetDisplay, 0);
