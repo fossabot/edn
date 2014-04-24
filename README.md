@@ -46,8 +46,8 @@ download the software :
 		http://developer.android.com/tools/sdk/ndk/index.html
 		http://developer.android.com/sdk/index.html
 		==> you need to download sub package of the NDK (refer to the NDK doccumentation) but only supported android version >4.0
-	cd ../edn
-	# generate .so
+	cd ..
+	# Generate package and install on Android device (in debug mode a generic key is set)
 	../ewol/build/lutin.py --color --target=Android --mode=debug edn-install
 	# to show the log :
 	../ewol/build/lutin.py --target=Android edn-log
@@ -55,8 +55,11 @@ download the software :
 
 (Windows) Compile software & install
 
-	cd yourDevFolder/edn
-	../ewol/build/lutin.py --color --target=Windows --mode=debug
+	cd yourDevFolder
+	../ewol/build/lutin.py --color --target=Windows --mode=debug edn
+	
+	#we have many problem for windows compilation now...
+	
 
 
 (MAC) All needed and some useful packages
@@ -65,8 +68,27 @@ download the software :
 	- Xcode ==> for all developement packages
 		- in Xcode : XCode->Setting->Download and install component: "Command Line Tools"
 	
-	cd yourDevFolder/edn
-	../ewol/build/lutin.py --color --mode=debug
+	cd yourDevFolder
+	../ewol/build/lutin.py --color --mode=debug edn
+
+
+(IOs) All needed and some useful packages
+
+	- Git access (client you want or : http://code.google.com/p/git-osx-installer/ ==>need a ctrl+click to remove the normal installation control)
+	- Xcode ==> for all developement packages
+		- in Xcode : XCode->Setting->Download and install component: "Command Line Tools"
+	
+	for porting on IOs you need a developper account
+	
+	cd yourDevFolder
+	# compile and install on simulator (no developper account needed)
+	../ewol/build/lutin.py --color --target=IOs --mode=debug --simulation edn-intall
+	# launch IOs simulator in xcode, and your application will appear on the second page (32 bit mode only)
+	
+	# compile and install on board
+	../ewol/build/lutin.py --color --target=IOs --mode=debug edn-intall
+	# compile and install on board and debug mode :
+	../ewol/build/lutin.py --color --target=IOs --mode=debug edn-log
 
 
 On linux you can generate 3 board in one time
