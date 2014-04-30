@@ -152,6 +152,7 @@ MainWindows::MainWindows(void) {
 				#else
 					myTextView = new appl::TextViewer("FreeMono;DejaVuSansMono;FreeSerif", 11);
 				#endif
+				myTextView->setName("appl-text-viewer");
 				myTextView->setExpand(bvec2(true,true));
 				myTextView->setFill(bvec2(true,true));
 				mySizerVert2->subWidgetAdd(myTextView);
@@ -304,6 +305,37 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		if (NULL == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
+			#ifdef SDGSDFGSDFGSDFGSDFGSTERGDHFGHFDS
+			std::string menuDescription = "<title>Properties</title>\n";
+			menuDescription += "<group>\n";
+			menuDescription += "	<title>Editor</title>\n";
+			menuDescription += "	<menu>\n";
+			menuDescription += "		<title>Editor Interface</title>\n";
+			menuDescription += "		<short-title>Editor</short-title>\n";
+			menuDescription += "		<widget>appl-text-viewer</widget>\n";
+			menuDescription += "	</menu>\n";
+			menuDescription += "</group>\n";
+			menuDescription += "<group>\n";
+			menuDescription += "	<title>Gui</title>\n";
+			menuDescription += "	<menu>\n";
+			menuDescription += "		<title>Font selection</title>\n";
+			menuDescription += "		<short-title>Font</short-title>\n";
+			menuDescription += "		<widget></widget>\n";
+			menuDescription += "	</menu>\n";
+			menuDescription += "	<menu>\n";
+			menuDescription += "		<title>Color selection</title>\n";
+			menuDescription += "		<short-title>Color</short-title>\n";
+			menuDescription += "		<widget></widget>\n";
+			menuDescription += "	</menu>\n";
+			menuDescription += "	<menu>\n";
+			menuDescription += "		<title>Theme selection</title>\n";
+			menuDescription += "		<short-title>Theme</short-title>\n";
+			menuDescription += "		<widget></widget>\n";
+			menuDescription += "	</menu>\n";
+			menuDescription += "</group>\n";
+			
+			tmpWidget->setMenu(menuDescription);
+			#endif
 			tmpWidget->setTitle("Properties");
 			popUpWidgetPush(tmpWidget);
 			tmpWidget->menuAddGroup("Editor");

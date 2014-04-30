@@ -44,7 +44,7 @@ void appl::GlyphDecoration::setBold(bool _enable)
 	}
 }
 
-etk::CCout& appl::operator <<(etk::CCout& _os, const appl::GlyphDecoration& _obj)
+std::ostream& appl::operator <<(std::ostream& _os, const appl::GlyphDecoration& _obj)
 {
 	_os << "{fg=" << _obj.getForeground();
 	_os << ",bg=" << _obj.getBackground();

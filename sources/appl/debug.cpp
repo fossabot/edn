@@ -8,4 +8,8 @@
 
 #include <appl/debug.h>
 
-const char * applLog = "edn      ";
+int32_t appl::getLogId(void) {
+	static int32_t g_val = etk::log::registerInstance("edn");
+	return g_val;
+}
+

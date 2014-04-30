@@ -116,7 +116,7 @@ namespace appl {
 				return m_bold;
 			};
 	};
-	etk::CCout& operator <<(etk::CCout& _os, const appl::GlyphDecoration& _obj);
+	std::ostream& operator <<(std::ostream& _os, const appl::GlyphDecoration& _obj);
 }
 
 #endif
