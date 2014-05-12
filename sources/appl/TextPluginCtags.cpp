@@ -177,12 +177,18 @@ bool appl::TextPluginCtags::onReceiveMessage(appl::TextViewer& _textDrawer,
 		ewol::widget::FileChooser* tmpWidget = new ewol::widget::FileChooser();
 		if (NULL == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
-		} else {
-			tmpWidget->setTitle("Open Exuberant Ctags file");
-			tmpWidget->setValidateLabel("Open");
-			ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-			tmpWidget->registerOnEvent(this, "validate", eventOpenCtagsOpenFileReturn);
+			return true;
 		}
+		tmpWidget->setTitle("Open Exuberant Ctags file");
+		tmpWidget->setValidateLabel("Open");
+		// try to get the current folder :
+		std::string path = _textDrawer.getBufferPath();
+		APPL_ERROR("get path : '" << path << "'");
+		if (path != "") {
+			tmpWidget->setFolder(path);
+		}
+		ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
+		tmpWidget->registerOnEvent(this, "validate", eventOpenCtagsOpenFileReturn);
 		return true;
 	} else if (_msg.getMessage() == eventJumpDestination) {
 		if (_textDrawer.hasBuffer() == false) {

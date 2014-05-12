@@ -70,6 +70,18 @@ appl::TextViewer::~TextViewer(void) {
 	appl::ViewerManager::release(m_viewerManager);
 }
 
+std::string appl::TextViewer::getBufferPath(void) {
+	if (m_buffer == NULL) {
+		return "";
+	}
+	std::string filename = m_buffer->getFileName();
+	size_t pos = filename.rfind('/');
+	if (pos == std::string::npos) {
+		return "";
+	}
+	return std::string(filename, 0, pos);
+}
+
 void appl::TextViewer::changeZoom(float _range) {
 	m_displayText.setFontSize(m_displayText.getSize() + _range);
 	markToRedraw();

@@ -22,16 +22,23 @@ appl::TagFileList::TagFileList(void) {
 	addEventId(applEventCtagsListSelect);
 	addEventId(applEventCtagsListValidate);
 	setMouseLimit(1);
+	// Load color properties: (use file list to be generic ...)
+	m_colorProperty = ewol::resource::ColorFile::keep("THEME:COLOR:ListFileSystem.json");
+	if (m_colorProperty != NULL) {
+		m_colorIdText = m_colorProperty->request("text");
+		m_colorIdBackground1 = m_colorProperty->request("background1");
+		m_colorIdBackground2 = m_colorProperty->request("background2");
+		m_colorIdBackgroundSelected = m_colorProperty->request("selected");
+	}
 }
 
 
 appl::TagFileList::~TagFileList(void) {
 	for (int32_t iii=0; iii<m_list.size(); iii++) {
-		if (NULL != m_list[iii]) {
-			delete(m_list[iii]);
-			m_list[iii] = NULL;
-		}
+		delete(m_list[iii]);
+		m_list[iii] = NULL;
 	}
+	ewol::resource::ColorFile::release(m_colorProperty);
 }
 
 etk::Color<> appl::TagFileList::getBasicBG(void) {
@@ -61,26 +68,14 @@ bool appl::TagFileList::getElement(int32_t _colomn, int32_t _raw, std::string& _
 	} else {
 		_myTextToWrite = "ERROR";
 	}
-	_fg = etk::color::black;
+	_fg = m_colorProperty->get(m_colorIdText);
 	if (_raw % 2) {
-		if (_colomn%2 == 0) {
-			_bg = 0xFFFFFF00;
-		} else {
-			_bg = 0xFFFFFF10;
-		}
+		_bg = m_colorProperty->get(m_colorIdBackground1);
 	} else {
-		if (_colomn%2 == 0) {
-			_bg = 0xBFBFBFFF;
-		} else {
-			_bg = 0xCFCFCFFF;
-		}
+		_bg = m_colorProperty->get(m_colorIdBackground2);
 	}
 	if (m_selectedLine == _raw) {
-		if (_colomn%2 == 0) {
-			_bg = 0x8F8FFFFF;
-		} else {
-			_bg = 0x7F7FFFFF;
-		}
+		_bg = m_colorProperty->get(m_colorIdBackgroundSelected);
 	}
 	return true;
 };

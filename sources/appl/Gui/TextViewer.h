@@ -199,6 +199,11 @@ namespace appl {
 			bool isSelectedLast(void);
 		public:
 			/**
+			 * @brief get the path of the current buffer
+			 * @return Path of the buffer (remove the ended name)
+			 */
+			virtual std::string getBufferPath(void);
+			/**
 			 * @brief Check if the buffer is availlable
 			 * @return true if a display buffer is present, false otherwise.
 			 */

@@ -16,6 +16,9 @@
 #include <appl/TextPlugin.h>
 #include <appl/ctags/readtags.h>
 
+// create ctags file : "ctags-exuberant --fields=n -R"
+// --fields=n add the line number needed for this software version ..
+
 namespace appl {
 	class TextPluginCtags : public appl::TextViewerPlugin {
 		private:
