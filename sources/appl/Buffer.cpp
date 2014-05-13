@@ -13,6 +13,8 @@
 #include <ewol/context/clipBoard.h>
 #include <appl/HighlightManager.h>
 
+#undef __class__
+#define __class__ "Buffer"
 
 const char* const appl::Buffer::eventIsModify = "edn-is-modify";
 const char* const appl::Buffer::eventIsSave = "edn-is-save";
@@ -143,8 +145,11 @@ appl::Buffer::~Buffer(void) {
 }
 
 bool appl::Buffer::loadFile(const std::string& _name) {
-	APPL_DEBUG("Load file : '" << _name << "'");
-	m_fileName = _name;
+	APPL_DEBUG("Convert filename :'" << _name << "'");
+	etk::FSNode file(_name);
+	std::string name = file.getName();
+	APPL_INFO("Load file : '" << name << "'");
+	m_fileName = name;
 	m_hasFileName = true;
 	m_isModify = true;
 	m_cursorPos = 0;
@@ -160,10 +165,13 @@ bool appl::Buffer::loadFile(const std::string& _name) {
 }
 
 void appl::Buffer::setFileName(const std::string& _name) {
-	if (m_fileName == _name) {
+	APPL_DEBUG("Convert filename :'" << _name << "'");
+	etk::FSNode file(_name);
+	std::string name = file.getName();
+	if (m_fileName == name) {
 		return;
 	}
-	m_fileName = _name;
+	m_fileName = name;
 	m_hasFileName = true;
 	generateEventId(eventChangeName);
 	setModification(true);

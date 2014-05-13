@@ -82,13 +82,13 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 		if (NULL == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
-			tmpWidget->addCtagsNewItem(myfile.getName(), lineID);
+			tmpWidget->addCtagsNewItem(myfile.getFileSystemName(), lineID);
 			do {
 				tmpFile = m_tagFolderBase + "/" + entry.file;
 				myfile = tmpFile;
 				lineID = entry.address.lineNumber;
 				printTag(&entry);
-				tmpWidget->addCtagsNewItem(myfile.getName(), lineID);
+				tmpWidget->addCtagsNewItem(myfile.getFileSystemName(), lineID);
 			} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
 			ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
 			tmpWidget->registerOnEvent(this, applEventctagsSelection, eventOpenCtagsSelectReturn);
@@ -156,7 +156,7 @@ void appl::TextPluginCtags::onReceiveMessage(const ewol::object::Message& _msg) 
 		etk::FSNode tmpFilename = _msg.getData();
 		m_tagFilename = tmpFilename.getNameFile();
 		m_tagFolderBase = tmpFilename.getNameFolder();
-		APPL_DEBUG("Receive load Ctags file : " << m_tagFolderBase << "/" << m_tagFilename << " ");
+		APPL_INFO("Receive load Ctags file : " << m_tagFolderBase << "/" << m_tagFilename << " ");
 		loadTagFile();
 	} else if (_msg.getMessage() == eventOpenCtagsSelectReturn) {
 		// parse the input data

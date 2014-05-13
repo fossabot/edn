@@ -103,12 +103,16 @@ bool APP_Init(ewol::Context& _context, size_t _initId, size_t& _nbInitStep) {
 		if (tmpppp == "-t") {
 			ctagDetected = true;
 		} else if (true == ctagDetected) {
-			APPL_INFO("Load ctag file : \"" << tmpppp << "\"" );
+			etk::FSNode file(tmpppp);
+			std::string name = file.getName();
+			APPL_INFO("Load ctag file : \"" << name << "\"" );
 			ctagDetected = false;
-			_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, tmpppp);
+			_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, name);
 		} else {
-			APPL_INFO("need load file : \"" << tmpppp << "\"" );
-			bufferManager->open(tmpppp);
+			etk::FSNode file(tmpppp);
+			std::string name = file.getName();
+			APPL_INFO("need load file : \"" << name << "\"" );
+			bufferManager->open(name);
 		}
 	}
 	

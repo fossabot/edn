@@ -384,9 +384,10 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 				tmpp->registerOnEvent(this, appl::Buffer::eventIsSave);
 				tmpp->registerOnEvent(this, appl::Buffer::eventChangeName);
 			}
-			setTitle(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + tmpp->getFileName());
+			std::string nameFileSystem = etk::FSNode(tmpp->getFileName()).getFileSystemName();
+			setTitle(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);
 			if (m_widgetLabelFileName != NULL) {
-				m_widgetLabelFileName->setLabel(tmpp->getFileName() + (tmpp->isModify()==true?" *":""));
+				m_widgetLabelFileName->setLabel(nameFileSystem + (tmpp->isModify()==true?" *":""));
 			}
 		}
 		

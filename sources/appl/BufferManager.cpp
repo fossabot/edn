@@ -6,10 +6,11 @@
  * @license GPL v3 (see license file)
  */
 
+#include <etk/types.h>
+#include <etk/os/FSNode.h>
 #include <appl/debug.h>
 #include <appl/global.h>
 #include <appl/BufferManager.h>
-#include <etk/types.h>
 #include <ewol/object/Object.h>
 #include <ewol/object/Manager.h>
 #include <ewol/resource/Manager.h>
@@ -51,6 +52,7 @@ appl::Buffer* appl::BufferManager::createNewBuffer(void) {
 }
 
 appl::Buffer* appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
+	APPL_INFO("get(" << _fileName << "," << _createIfNeeded << ")");
 	for (int32_t iii = 0; iii < m_list.size(); ++iii) {
 		if (m_list[iii] == NULL) {
 			continue;
@@ -61,7 +63,8 @@ appl::Buffer* appl::BufferManager::get(const std::string& _fileName, bool _creat
 	}
 	if (_createIfNeeded == true) {
 		if (etk::FSNodeGetType(_fileName) == etk::FSN_FOLDER) {
-			APPL_INFO("try open a folder : " << _fileName);
+			APPL_WARNING("try open a folder : " << _fileName);
+			APPL_CRITICAL("plop");
 			return NULL;
 		}
 		appl::Buffer* tmp = new appl::Buffer();
