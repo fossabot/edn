@@ -21,7 +21,7 @@ const char* const appl::Buffer::eventIsSave = "edn-is-save";
 const char* const appl::Buffer::eventSelectChange = "edn-select-change";
 const char* const appl::Buffer::eventChangeName = "edn-buffer-name-change";
 
-appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
+appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 	m_value = u32char::Null;
 	if (m_current < 0) {
 		m_current = 0;
@@ -43,7 +43,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ (void) {
 	return *this;
 }
 
-appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- (void) {
+appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- () {
 	m_value = u32char::Null;
 	if (m_data != NULL) {
 		if (m_current > 0) {
@@ -64,7 +64,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- (void) {
 	return *this;
 }
 
-char32_t appl::Buffer::Iterator::operator* (void) {
+char32_t appl::Buffer::Iterator::operator* () {
 	if (m_value != u32char::Null) {
 		return m_value;
 	}
@@ -94,32 +94,32 @@ appl::Buffer::Iterator appl::Buffer::position(int64_t _pos) {
 	return appl::Buffer::Iterator(this, _pos);
 }
 
-appl::Buffer::Iterator appl::Buffer::begin(void) {
+appl::Buffer::Iterator appl::Buffer::begin() {
 	return position(0);
 }
 
-appl::Buffer::Iterator appl::Buffer::end(void) {
+appl::Buffer::Iterator appl::Buffer::end() {
 	// TODO : chek the validity of the char ...
 	return position( m_data.size() );
 }
 
-appl::Buffer::Iterator appl::Buffer::cursor(void) {
+appl::Buffer::Iterator appl::Buffer::cursor() {
 	if (m_cursorPos<= 0) {
 		return begin();
 	}
 	return position( m_cursorPos );
 }
 
-appl::Buffer::Iterator appl::Buffer::selectStart(void) {
+appl::Buffer::Iterator appl::Buffer::selectStart() {
 	return position( getStartSelectionPos() );
 }
 
-appl::Buffer::Iterator appl::Buffer::selectStop(void) {
+appl::Buffer::Iterator appl::Buffer::selectStop() {
 	return position( getStopSelectionPos() );
 }
 
 
-appl::Buffer::Buffer(void) :
+appl::Buffer::Buffer() :
   m_hasFileName(false),
   m_fileName(""),
   m_isModify(false),
@@ -138,7 +138,7 @@ appl::Buffer::Buffer(void) :
 	addEventId(eventChangeName);
 }
 
-appl::Buffer::~Buffer(void) {
+appl::Buffer::~Buffer() {
 	if (m_highlight == NULL) {
 		appl::Highlight::release(m_highlight);
 	}
@@ -177,7 +177,7 @@ void appl::Buffer::setFileName(const std::string& _name) {
 	setModification(true);
 }
 
-bool appl::Buffer::storeFile(void) {
+bool appl::Buffer::storeFile() {
 	if (m_data.dumpIn(m_fileName) == true) {
 		APPL_INFO("saving file : " << m_fileName);
 		setModification(false);
@@ -199,7 +199,7 @@ void appl::Buffer::setModification(bool _status) {
 }
 
 // TODO : Naming error
-void appl::Buffer::countNumberofLine(void) {
+void appl::Buffer::countNumberofLine() {
 	m_nbLines = 1;
 	for (Iterator it = begin();
 	     (bool)it == true;
@@ -519,7 +519,7 @@ void appl::Buffer::setSelectionPos(const appl::Buffer::Iterator& _pos) {
 	generateEventId(eventSelectChange);
 }
 
-void appl::Buffer::unSelect(void) {
+void appl::Buffer::unSelect() {
 	m_cursorSelectPos = -1;
 	generateEventId(eventSelectChange);
 }
@@ -667,7 +667,7 @@ bool appl::Buffer::replace(const std::string& _data, const appl::Buffer::Iterato
 	return true;
 }
 
-void appl::Buffer::removeSelection(void) {
+void appl::Buffer::removeSelection() {
 	if (hasTextSelected() == false) {
 		return;
 	}
@@ -681,7 +681,7 @@ void appl::Buffer::removeSelection(void) {
 	setModification(true);
 }
 
-void appl::Buffer::tryFindHighlightType(void) {
+void appl::Buffer::tryFindHighlightType() {
 	etk::FSNode file(m_fileName);
 	std::string type = appl::highlightManager::getTypeExtention(file.fileGetExtention());
 	if (type.size() == 0) {
@@ -868,7 +868,7 @@ void appl::Buffer::generateHighLightAt(int64_t _pos, int64_t _endPos, int64_t _a
 	m_highlight->parse(_pos, _endPos, m_HLDataPass1, _addingPos, m_data);
 }
 
-void appl::Buffer::cleanHighLight(void) {
+void appl::Buffer::cleanHighLight() {
 	// remove all element in the list...
 	m_HLDataPass1.clear();
 }
@@ -980,7 +980,7 @@ appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(appl::DisplayHLData
 	return getElementColorAtPosition(_pos, _MData.posHLPass1);
 }
 
-uint32_t appl::Buffer::getCursorLinesId(void) {
+uint32_t appl::Buffer::getCursorLinesId() {
 	if (m_data.size() == 0) {
 		return 0;
 	}

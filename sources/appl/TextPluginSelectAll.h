@@ -18,8 +18,8 @@
 namespace appl {
 	class TextPluginSelectAll : public appl::TextViewerPlugin {
 		public:
-			TextPluginSelectAll(void);
-			~TextPluginSelectAll(void) {
+			TextPluginSelectAll();
+			~TextPluginSelectAll() {
 				// nothing to do ...
 			};
 		public:

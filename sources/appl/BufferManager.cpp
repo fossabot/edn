@@ -18,13 +18,13 @@
 #undef __class__
 #define __class__ "BufferManager"
 
-appl::BufferManager::BufferManager(void) :
+appl::BufferManager::BufferManager() :
   ewol::Resource("???BufferManager???"),
   m_bufferSelected(NULL) {
 	addObjectType("appl::BufferManager");
 }
 
-appl::BufferManager::~BufferManager(void) {
+appl::BufferManager::~BufferManager() {
 	int32_t previousCount = m_list.size();
 	for (int32_t iii = m_list.size()-1; iii >= 0 ; --iii) {
 		if (m_list[iii] == NULL) {
@@ -40,7 +40,7 @@ appl::BufferManager::~BufferManager(void) {
 }
 
 
-appl::Buffer* appl::BufferManager::createNewBuffer(void) {
+appl::Buffer* appl::BufferManager::createNewBuffer() {
 	appl::Buffer* tmp = new appl::Buffer();
 	if (tmp == NULL) {
 		APPL_ERROR("Can not allocate the Buffer (empty).");
@@ -123,7 +123,7 @@ void appl::BufferManager::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_DEBUG("receive message !!! " << _msg);
 }
 
-appl::BufferManager* appl::BufferManager::keep(void) {
+appl::BufferManager* appl::BufferManager::keep() {
 	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
 	appl::BufferManager* object = static_cast<appl::BufferManager*>(getManager().localKeep("???BufferManager???"));
 	if (NULL != object) {

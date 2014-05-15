@@ -846,7 +846,7 @@ static void findTag (const char *const name, const int options)
 	}
 }
 
-static void listTags (void)
+static void listTags ()
 {
 	tagFileInfo info;
 	tagEntry entry;

@@ -28,7 +28,7 @@ namespace appl {
 			  fileLine(_line) {
 				
 			};
-			~TagListElement(void) {
+			~TagListElement() {
 				
 			};
 	};
@@ -43,13 +43,13 @@ namespace appl {
 			int32_t m_colorIdBackground2; //!< Color of the Background 2.
 			int32_t m_colorIdBackgroundSelected; //!< Color of line selected.
 		public:
-			TagFileList(void);
-			~TagFileList(void);
+			TagFileList();
+			~TagFileList();
 			// display API :
-			virtual etk::Color<> getBasicBG(void);
-			uint32_t getNuberOfColomn(void);
+			virtual etk::Color<> getBasicBG();
+			uint32_t getNuberOfColomn();
 			bool getTitle(int32_t _colomn, std::string& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
-			uint32_t getNuberOfRaw(void);
+			uint32_t getNuberOfRaw();
 			bool getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
 			bool onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
 		public:

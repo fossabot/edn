@@ -18,7 +18,7 @@ namespace appl {
 			static const char* eventSaveDone;
 		public:
 			WorkerSaveFile(const std::string& _bufferName, bool _forceSaveAs=true);
-			virtual ~WorkerSaveFile(void);
+			virtual ~WorkerSaveFile();
 		private:
 			std::string m_bufferName;
 			ewol::widget::FileChooser* m_chooser; //! pop-up element that is open...

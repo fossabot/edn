@@ -25,11 +25,11 @@ appl::GlyphPainting::GlyphPainting(const std::string& _filename) :
 	reload();
 }
 
-appl::GlyphPainting::~GlyphPainting(void) {
+appl::GlyphPainting::~GlyphPainting() {
 	
 }
 
-void appl::GlyphPainting::reload(void) {
+void appl::GlyphPainting::reload() {
 	ejson::Document doc;
 	if (false == doc.load(m_name)) {
 		APPL_ERROR("Can not load file : '" << m_name << "' = " << etk::FSNode(m_name).getFileSystemName());

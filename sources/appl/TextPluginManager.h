@@ -20,15 +20,15 @@ namespace appl {
 		/**
 		 * @brief Init the plugin manager for writer.
 		 */
-		void init(void);
+		void init();
 		/**
 		 * @brief UnInit the plugin manager for writer.
 		 */
-		void unInit(void);
+		void unInit();
 		/**
 		 * @brief Add default plugin list
 		 */
-		void addDefaultPlugin(void);
+		void addDefaultPlugin();
 		/**
 		 * @brief Add a plugin.
 		 * @param[in] _plugin Plugin pointer to add.

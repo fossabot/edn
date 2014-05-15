@@ -17,7 +17,7 @@ namespace appl {
 		public:
 			// Constructeur
 			GlyphDecoration(const std::string& _newColorName = "no_name");
-			~GlyphDecoration(void) {
+			~GlyphDecoration() {
 				// nothing to do ...
 			};
 		private:
@@ -34,7 +34,7 @@ namespace appl {
 			 * @brief Get the color name.
 			 * @return The name of the color.
 			 */
-			const std::string& getName(void) const {
+			const std::string& getName() const {
 				return m_colorName;
 			};
 		private:
@@ -51,14 +51,14 @@ namespace appl {
 			 * @brief Get the foreground color.
 			 * @return The color.
 			 */
-			const etk::Color<>& getForeground(void) const {
+			const etk::Color<>& getForeground() const {
 				return m_colorFG;
 			};
 			/**
 			 * @brief Get the foreground color status.
 			 * @return true if the color is visible.
 			 */
-			bool haveFg(void) const {
+			bool haveFg() const {
 				return m_colorFG.a() != 0;
 			};
 		private:
@@ -75,14 +75,14 @@ namespace appl {
 			 * @brief Get the background color.
 			 * @return The color.
 			 */
-			const etk::Color<>& getBackground(void) const {
+			const etk::Color<>& getBackground() const {
 				return m_colorBG;
 			};
 			/**
 			 * @brief Get the background color status.
 			 * @return true if the color is visible.
 			 */
-			bool haveBackground(void) const {
+			bool haveBackground() const {
 				return m_colorBG.a()!=0;
 			};
 		private:
@@ -97,7 +97,7 @@ namespace appl {
 			 * @brief Get the italic status.
 			 * @return true if the glyph might be display in italic.
 			 */
-			bool getItalic(void) const {
+			bool getItalic() const {
 				return m_italic;
 			};
 		private:
@@ -112,7 +112,7 @@ namespace appl {
 			 * @brief Get the bold status.
 			 * @return true if the glyph might be display in bold.
 			 */
-			bool getBold(void) const {
+			bool getBold() const {
 				return m_bold;
 			};
 	};

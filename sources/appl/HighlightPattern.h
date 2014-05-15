@@ -33,14 +33,14 @@ namespace appl {
 		public:
 			// Constructeur
 			HighlightPattern(appl::GlyphPainting*& _glyphPainting);
-			~HighlightPattern(void);
+			~HighlightPattern();
 		private:
 			std::string m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")
 		public:
 			void setName(std::string& _name) {
 				m_paternName = _name;
 			};
-			std::string getName(void) {
+			std::string getName() {
 				return m_paternName;
 			};
 		private:
@@ -56,7 +56,7 @@ namespace appl {
 			int32_t m_colorId; //!< Id of the the glyph painting
 		public:
 			void setColorGlyph(std::string& _colorName);
-			const appl::GlyphDecoration& getColorGlyph(void) {
+			const appl::GlyphDecoration& getColorGlyph() {
 				return (*m_glyphPainting)[m_colorId];
 			};
 		private:
@@ -75,13 +75,13 @@ namespace appl {
 			void setLevel(int32_t _newLevel) {
 				m_level = _newLevel;
 			};
-			int32_t getLevel(void) {
+			int32_t getLevel() {
 				return m_level;
 			};
 		private:
 			
 		public:
-			void display(void);
+			void display();
 			/**
 			 * @brief find Element only in the specify start characters and find the end with the range done
 			 * @param[in] _start First character to search data (if recognise it start here)

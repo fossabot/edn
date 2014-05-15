@@ -18,10 +18,10 @@
 namespace appl {
 	template <typename TYPE> class TextViewerPluginData : public appl::TextViewerPlugin {
 		public:
-			TextViewerPluginData(void) {
+			TextViewerPluginData() {
 				// nothing to do ...
 			}
-			virtual ~TextViewerPluginData(void) {
+			virtual ~TextViewerPluginData() {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
 					if (m_specificData[iii].second != NULL) {
 						remove(*m_specificData[iii].second);

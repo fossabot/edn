@@ -22,8 +22,8 @@ namespace appl {
 			appl::TagFileList* m_listTag;
 			std::string m_eventNamed;
 		public:
-			TagFileSelection(void);
-			virtual ~TagFileSelection(void);
+			TagFileSelection();
+			virtual ~TagFileSelection();
 			/**
 			 * @brief add a Ctags item on the curent list
 			 * @param[in] file Compleate file name

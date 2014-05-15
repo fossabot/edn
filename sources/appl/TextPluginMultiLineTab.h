@@ -18,8 +18,8 @@
 namespace appl {
 	class TextPluginMultiLineTab : public appl::TextViewerPlugin {
 		public:
-			TextPluginMultiLineTab(void);
-			~TextPluginMultiLineTab(void) {
+			TextPluginMultiLineTab();
+			~TextPluginMultiLineTab() {
 				// nothing to do ...
 			};
 		public:

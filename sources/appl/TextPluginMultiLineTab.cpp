@@ -14,7 +14,7 @@
 #undef __class__
 #define __class__ "TextPluginMultiLineTab"
 
-appl::TextPluginMultiLineTab::TextPluginMultiLineTab(void) {
+appl::TextPluginMultiLineTab::TextPluginMultiLineTab() {
 	m_activateOnEventEntry = true;
 }
 

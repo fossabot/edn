@@ -15,7 +15,7 @@
 #define __class__ "TextPluginSelectAll"
 
 
-appl::TextPluginSelectAll::TextPluginSelectAll(void) {
+appl::TextPluginSelectAll::TextPluginSelectAll() {
 	m_activateOnReceiveMessage = true;
 }
 

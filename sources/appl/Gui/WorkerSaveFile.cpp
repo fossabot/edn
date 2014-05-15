@@ -81,7 +81,7 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 	m_chooser->registerOnEvent(this, ewol::widget::FileChooser::eventValidate, s_saveAsValidate);
 }
 
-appl::WorkerSaveFile::~WorkerSaveFile(void) {
+appl::WorkerSaveFile::~WorkerSaveFile() {
 	appl::BufferManager::release(m_bufferManager);
 }
 

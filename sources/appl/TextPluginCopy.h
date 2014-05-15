@@ -18,8 +18,8 @@
 namespace appl {
 	class TextPluginCopy : public appl::TextViewerPlugin {
 		public:
-			TextPluginCopy(void);
-			~TextPluginCopy(void) {
+			TextPluginCopy();
+			~TextPluginCopy() {
 				// nothing to do ...
 			};
 		public:

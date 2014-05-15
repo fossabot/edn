@@ -16,7 +16,7 @@ extern const char * const applEventCtagsListSelect     = "appl-event-ctags-list-
 extern const char * const applEventCtagsListUnSelect   = "appl-event-ctags-list-un-select";
 extern const char * const applEventCtagsListValidate   = "appl-event-ctags-list-validate";
 
-appl::TagFileList::TagFileList(void) {
+appl::TagFileList::TagFileList() {
 	addObjectType("appl::TagFileList");
 	m_selectedLine = -1;
 	addEventId(applEventCtagsListSelect);
@@ -33,7 +33,7 @@ appl::TagFileList::TagFileList(void) {
 }
 
 
-appl::TagFileList::~TagFileList(void) {
+appl::TagFileList::~TagFileList() {
 	for (int32_t iii=0; iii<m_list.size(); iii++) {
 		delete(m_list[iii]);
 		m_list[iii] = NULL;
@@ -41,11 +41,11 @@ appl::TagFileList::~TagFileList(void) {
 	ewol::resource::ColorFile::release(m_colorProperty);
 }
 
-etk::Color<> appl::TagFileList::getBasicBG(void) {
+etk::Color<> appl::TagFileList::getBasicBG() {
 	return 0x00000010;
 }
 
-uint32_t appl::TagFileList::getNuberOfColomn(void) {
+uint32_t appl::TagFileList::getNuberOfColomn() {
 	return 2;
 }
 
@@ -54,7 +54,7 @@ bool appl::TagFileList::getTitle(int32_t _colomn, std::string& _myTitle, etk::Co
 	return true;
 }
 
-uint32_t appl::TagFileList::getNuberOfRaw(void) {
+uint32_t appl::TagFileList::getNuberOfRaw() {
 	return m_list.size();
 }
 

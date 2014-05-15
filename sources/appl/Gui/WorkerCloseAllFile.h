@@ -15,8 +15,8 @@
 namespace appl {
 	class WorkerCloseAllFile : public ewol::Object {
 		public:
-			WorkerCloseAllFile(void);
-			virtual ~WorkerCloseAllFile(void);
+			WorkerCloseAllFile();
+			virtual ~WorkerCloseAllFile();
 		private:
 			std::vector<std::string> m_bufferNameList;
 			appl::WorkerCloseFile* m_worker; //! pop-up element that is open...

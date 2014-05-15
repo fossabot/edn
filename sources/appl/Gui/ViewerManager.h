@@ -19,8 +19,8 @@ namespace appl {
 	class TextViewer;
 	class ViewerManager : public ewol::Resource {
 		protected:
-			ViewerManager(void);
-			~ViewerManager(void);
+			ViewerManager();
+			~ViewerManager();
 		private:
 			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 			appl::TextViewer* m_viewer;
@@ -34,7 +34,7 @@ namespace appl {
 			 * @brief Get the current buffer selected
 			 * @return Pointer on the buffer selected
 			 */
-			appl::TextViewer* getViewerSelected(void) {
+			appl::TextViewer* getViewerSelected() {
 				return m_viewer;
 			};
 			/**
@@ -55,7 +55,7 @@ namespace appl {
 			 * @param[in] _filename Name of the configuration file.
 			 * @return pointer on the resource or NULL if an error occured.
 			 */
-			static appl::ViewerManager* keep(void);
+			static appl::ViewerManager* keep();
 			/**
 			 * @brief release the keeped resources
 			 * @param[in,out] reference on the object pointer

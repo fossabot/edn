@@ -20,11 +20,11 @@ namespace appl {
 		/**
 		 * @brief Init the Highlight manager
 		 */
-		void init(void);
+		void init();
 		/**
 		 * @brief Un-Init the Highlight manager
 		 */
-		void unInit(void);
+		void unInit();
 		/**
 		 * @brief Un-Init the Highlight manager
 		 * @param[in] extention of the file
@@ -41,7 +41,7 @@ namespace appl {
 		 * @brief Get the list of extention type
 		 * @return the requested list.
 		 */
-		std::vector<std::string> getTypeList(void);
+		std::vector<std::string> getTypeList();
 	};
 };
 

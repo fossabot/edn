@@ -14,7 +14,7 @@
 #define __class__ "TextViewerPlugin"
 
 
-appl::TextViewerPlugin::TextViewerPlugin(void) :
+appl::TextViewerPlugin::TextViewerPlugin() :
   m_isEnable(true),
   m_activateOnEventEntry(false),
   m_activateOnEventInput(false),
@@ -26,7 +26,7 @@ appl::TextViewerPlugin::TextViewerPlugin(void) :
 	
 }
 
-appl::TextViewerPlugin::~TextViewerPlugin(void) {
+appl::TextViewerPlugin::~TextViewerPlugin() {
 	if (m_isEnable == false) {
 		return;
 	}

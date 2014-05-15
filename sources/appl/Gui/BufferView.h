@@ -27,7 +27,7 @@ namespace appl
 			  m_buffer(_buffer) {
 				
 			};
-			~dataBufferStruct(void) { };
+			~dataBufferStruct() { };
 	};
 };
 
@@ -53,8 +53,8 @@ class BufferView : public ewol::widget::List
 		void insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _selectNewPosition = false);
 	public:
 		// Constructeur
-		BufferView(void);
-		~BufferView(void);
+		BufferView();
+		~BufferView();
 		// Derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
 		virtual void onObjectRemove(ewol::Object* _removeObject);
@@ -62,12 +62,12 @@ class BufferView : public ewol::widget::List
 		bool m_openOrderMode; //!< true if the order is the opening order mode, otherwise, Alphabetic order
 	protected:
 		// function call to display the list :
-		virtual etk::Color<> getBasicBG(void);
-		void removeAllElement(void);
+		virtual etk::Color<> getBasicBG();
+		void removeAllElement();
 		// Derived function
-		virtual uint32_t getNuberOfColomn(void);
+		virtual uint32_t getNuberOfColomn();
 		virtual bool getTitle(int32_t _colomn, std::string& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
-		virtual uint32_t getNuberOfRaw(void);
+		virtual uint32_t getNuberOfRaw();
 		virtual bool getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
 		virtual bool onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
 };

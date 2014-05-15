@@ -15,7 +15,7 @@
 #define __class__ "TextPluginAutoIndent"
 
 
-appl::TextPluginAutoIndent::TextPluginAutoIndent(void) {
+appl::TextPluginAutoIndent::TextPluginAutoIndent() {
 	m_activateOnEventEntry = true;
 }
 

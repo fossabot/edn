@@ -15,8 +15,8 @@
 namespace appl {
 	class WorkerSaveAllFile : public ewol::Object {
 		public:
-			WorkerSaveAllFile(void);
-			virtual ~WorkerSaveAllFile(void);
+			WorkerSaveAllFile();
+			virtual ~WorkerSaveAllFile();
 		private:
 			std::vector<std::string> m_bufferNameList;
 			appl::WorkerSaveFile* m_worker; //! pop-up element that is open...

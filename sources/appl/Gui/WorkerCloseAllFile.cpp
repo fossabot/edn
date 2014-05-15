@@ -15,7 +15,7 @@
 
 static const char* s_closeDone = "close-done";
 
-appl::WorkerCloseAllFile::WorkerCloseAllFile(void) :
+appl::WorkerCloseAllFile::WorkerCloseAllFile() :
   m_worker(NULL),
   m_bufferManager(NULL) {
 	addObjectType("appl::WorkerCloseAllFile");
@@ -55,7 +55,7 @@ appl::WorkerCloseAllFile::WorkerCloseAllFile(void) :
 	m_worker->registerOnEvent(this, appl::WorkerCloseFile::eventCloseDone, s_closeDone);
 }
 
-appl::WorkerCloseAllFile::~WorkerCloseAllFile(void) {
+appl::WorkerCloseAllFile::~WorkerCloseAllFile() {
 	appl::BufferManager::release(m_bufferManager);
 }
 

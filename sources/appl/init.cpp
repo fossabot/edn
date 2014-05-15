@@ -66,7 +66,7 @@ bool APP_Init(ewol::Context& _context, size_t _initId, size_t& _nbInitStep) {
 	globals::init();
 	
 	// init ALL Singleton :
-	//(void)CTagsManager::getInstance();
+	//()CTagsManager::getInstance();
 	bufferManager = appl::BufferManager::keep();
 	
 	appl::highlightManager::init();

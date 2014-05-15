@@ -25,7 +25,7 @@ appl::HighlightPattern::HighlightPattern(appl::GlyphPainting*& _glyphPainting) :
 	m_regExpStart = new etk::RegExp<etk::Buffer>();
 }
 
-appl::HighlightPattern::~HighlightPattern(void) {
+appl::HighlightPattern::~HighlightPattern() {
 	if (m_regExpStart != NULL) {
 		delete(m_regExpStart);
 		m_regExpStart = NULL;
@@ -68,7 +68,7 @@ void appl::HighlightPattern::setColorGlyph(std::string& _colorName) {
 	APPL_VERBOSE("Resuest color name '" << m_colorName << "' => id=" << m_colorId);
 }
 
-void appl::HighlightPattern::display(void) {
+void appl::HighlightPattern::display() {
 	APPL_INFO("patern : \"" << m_paternName << "\" level=" << m_level );
 	APPL_INFO("  == > colorName \"" << m_colorName << "\"");
 	APPL_INFO("  == > regExpStart \"" << m_regExpStart->getRegExp() << "\"");

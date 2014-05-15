@@ -27,17 +27,17 @@ class Search : public ewol::widget::Composer {
 		std::u32string m_replaceData;
 	public:
 		// Constructeur
-		Search(void);
-		~Search(void);
+		Search();
+		~Search();
 	private:
 		/**
 		 * @brief Find the next element that corespond at the search
 		 */
-		void find(void);
+		void find();
 		/**
 		 * @brief Replace the current selected text.
 		 */
-		void replace(void);
+		void replace();
 	public: // derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
 		virtual void onObjectRemove(ewol::Object * _removeObject);

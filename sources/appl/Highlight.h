@@ -38,17 +38,17 @@ namespace appl {
 		protected:
 			// Constructeur
 			Highlight(const std::string& _xmlFilename, const std::string& _colorFile);
-			~Highlight(void);
+			~Highlight();
 		private:
 			std::string m_typeName; //!< descriptive string type like "C/C++"
 		public:
-			const std::string& getTypeName(void) {
+			const std::string& getTypeName() {
 				return m_typeName;
 			}
 		public:
 			bool hasExtention(const std::string& _ext);
 			bool fileNameCompatible(const std::string& _fileName);
-			void display(void);
+			void display();
 			void parse(int64_t _start,
 			           int64_t _stop,
 			           std::vector<appl::HighlightInfo> &_metaData,
@@ -80,7 +80,7 @@ namespace appl {
 			 */
 			static void release(appl::Highlight*& _object);
 		public: // herited function :
-			virtual void updateContext(void) {
+			virtual void updateContext() {
 				// no upfate to do ...
 			};
 	};

@@ -15,7 +15,7 @@
 
 static const char* s_saveAsDone = "save-as-done";
 
-appl::WorkerSaveAllFile::WorkerSaveAllFile(void) :
+appl::WorkerSaveAllFile::WorkerSaveAllFile() :
   m_worker(NULL),
   m_bufferManager(NULL) {
 	addObjectType("appl::WorkerSaveAllFile");
@@ -58,7 +58,7 @@ appl::WorkerSaveAllFile::WorkerSaveAllFile(void) :
 	m_worker->registerOnEvent(this, appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
 }
 
-appl::WorkerSaveAllFile::~WorkerSaveAllFile(void) {
+appl::WorkerSaveAllFile::~WorkerSaveAllFile() {
 	appl::BufferManager::release(m_bufferManager);
 }
 

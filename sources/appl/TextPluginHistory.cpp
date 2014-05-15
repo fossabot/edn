@@ -15,7 +15,7 @@
 #undef __class__
 #define __class__ "TextPluginHistory"
 
-appl::TextPluginHistory::TextPluginHistory(void) {
+appl::TextPluginHistory::TextPluginHistory() {
 	m_activateOnReceiveMessage = true;
 	m_activateOnWrite = true;
 	m_activateOnReplace = true;

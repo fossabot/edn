@@ -18,8 +18,8 @@
 namespace appl {
 	class TextPluginRmLine : public appl::TextViewerPlugin {
 		public:
-			TextPluginRmLine(void);
-			~TextPluginRmLine(void) {
+			TextPluginRmLine();
+			~TextPluginRmLine() {
 				// nothing to do ...
 			};
 		public:

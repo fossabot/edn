@@ -18,7 +18,7 @@
 #define __class__ "TextPluginCtags"
 
 
-appl::TextPluginCtags::TextPluginCtags(void) :
+appl::TextPluginCtags::TextPluginCtags() :
   m_tagFilename(""),
   m_tagFolderBase(""),
   m_ctagFile(NULL) {
@@ -26,7 +26,7 @@ appl::TextPluginCtags::TextPluginCtags(void) :
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
 }
-appl::TextPluginCtags::~TextPluginCtags(void) {
+appl::TextPluginCtags::~TextPluginCtags() {
 	appl::BufferManager::release(m_bufferManager);
 }
 
@@ -108,7 +108,7 @@ void appl::TextPluginCtags::jumpFile(const std::string& _filename, int64_t _line
 	sendMultiCast(appl::MsgSelectGotoLineSelect, std::to_string(_lineId));
 }
 
-void appl::TextPluginCtags::loadTagFile(void) {
+void appl::TextPluginCtags::loadTagFile() {
 	tagFileInfo info;
 	// close previous tag file
 	if (NULL != m_ctagFile) {

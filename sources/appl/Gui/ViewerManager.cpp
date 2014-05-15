@@ -17,7 +17,7 @@
 #undef __class__
 #define __class__ "ViewerManager"
 
-appl::ViewerManager::ViewerManager(void) :
+appl::ViewerManager::ViewerManager() :
   ewol::Resource("???ViewerManager???"),
   m_viewer(NULL) {
 	addObjectType("appl::ViewerManager");
@@ -25,7 +25,7 @@ appl::ViewerManager::ViewerManager(void) :
 	m_bufferManager = appl::BufferManager::keep();
 }
 
-appl::ViewerManager::~ViewerManager(void) {
+appl::ViewerManager::~ViewerManager() {
 	appl::BufferManager::release(m_bufferManager);
 }
 
@@ -51,7 +51,7 @@ void appl::ViewerManager::onObjectRemove(ewol::Object* _removeObject) {
 	}
 }
 
-appl::ViewerManager* appl::ViewerManager::keep(void) {
+appl::ViewerManager* appl::ViewerManager::keep() {
 	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
 	appl::ViewerManager* object = static_cast<appl::ViewerManager*>(getManager().localKeep("???ViewerManager???"));
 	if (NULL != object) {

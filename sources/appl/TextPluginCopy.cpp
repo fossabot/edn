@@ -15,7 +15,7 @@
 #define __class__ "TextPluginCopy"
 
 
-appl::TextPluginCopy::TextPluginCopy(void) {
+appl::TextPluginCopy::TextPluginCopy() {
 	m_activateOnReceiveMessage = true;
 }
 

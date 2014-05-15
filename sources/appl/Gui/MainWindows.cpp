@@ -38,7 +38,7 @@
 #include <appl/Gui/WorkerCloseAllFile.h>
 
 namespace appl {
-	std::string getVersion(void) {
+	std::string getVersion() {
 		#define FIRST_YEAR (2010)
 		std::string tmpOutput = std::to_string(date::getYear()-FIRST_YEAR);
 		tmpOutput += ".";
@@ -59,7 +59,7 @@ namespace appl {
 
 class ParameterAboutGui : public ewol::widget::Sizer {
 	public :
-		ParameterAboutGui(void) :
+		ParameterAboutGui() :
 		  ewol::widget::Sizer(ewol::widget::Sizer::modeVert) {
 			ewol::widget::Spacer* mySpacer = NULL;
 			
@@ -102,7 +102,7 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			}
 		};
 		
-		~ParameterAboutGui(void) {
+		~ParameterAboutGui() {
 			
 		};
 };
@@ -119,7 +119,7 @@ const char* l_smoothMax = "tmpEvent_maxChange";
 #undef __class__
 #define __class__ "MainWindows"
 
-MainWindows::MainWindows(void) {
+MainWindows::MainWindows() {
 	addObjectType("appl::MainWindows");
 	APPL_DEBUG("CREATE WINDOWS ... ");
 	ewol::widget::Sizer * mySizerVert = NULL;
@@ -172,51 +172,51 @@ MainWindows::MainWindows(void) {
 			myMenu = new ewol::widget::Menu();
 			mySizerHori->subWidgetAdd(myMenu);
 			int32_t idMenuFile = myMenu->addTitle("File");
-				(void)myMenu->add(idMenuFile, "New",          "", ednMsgGuiNew);
-				(void)myMenu->addSpacer();
-				(void)myMenu->add(idMenuFile, "Open",         "THEME:GUI:Load.edf", ednMsgGuiOpen);
-				(void)myMenu->add(idMenuFile, "Close",        "THEME:GUI:Close.edf", ednMsgGuiClose, "current");
-				(void)myMenu->add(idMenuFile, "Close (all)",  "", ednMsgGuiClose, "All");
-				(void)myMenu->add(idMenuFile, "Save",         "THEME:GUI:Save.edf", ednMsgGuiSave, "current");
-				(void)myMenu->add(idMenuFile, "Save As ...",  "", ednMsgGuiSaveAs);
-				(void)myMenu->addSpacer();
-				//(void)myMenu->add(idMenuFile, "Exit", "", ednMsgGuiExit);
-				(void)myMenu->addSpacer();
-				(void)myMenu->add(idMenuFile, "Properties",   "THEME:GUI:Parameter.edf", ednMsgProperties);
+				myMenu->add(idMenuFile, "New",          "", ednMsgGuiNew);
+				myMenu->addSpacer();
+				myMenu->add(idMenuFile, "Open",         "THEME:GUI:Load.edf", ednMsgGuiOpen);
+				myMenu->add(idMenuFile, "Close",        "THEME:GUI:Close.edf", ednMsgGuiClose, "current");
+				myMenu->add(idMenuFile, "Close (all)",  "", ednMsgGuiClose, "All");
+				myMenu->add(idMenuFile, "Save",         "THEME:GUI:Save.edf", ednMsgGuiSave, "current");
+				myMenu->add(idMenuFile, "Save As ...",  "", ednMsgGuiSaveAs);
+				myMenu->addSpacer();
+				//myMenu->add(idMenuFile, "Exit", "", ednMsgGuiExit);
+				myMenu->addSpacer();
+				myMenu->add(idMenuFile, "Properties",   "THEME:GUI:Parameter.edf", ednMsgProperties);
 			int32_t idMenuEdit = myMenu->addTitle("Edit");
-				(void)myMenu->add(idMenuEdit, "Undo",         "THEME:GUI:Undo.edf", ednMsgGuiUndo);
-				(void)myMenu->add(idMenuEdit, "Redo",         "THEME:GUI:Redo.edf", ednMsgGuiRedo);
-				(void)myMenu->addSpacer();
-				(void)myMenu->add(idMenuEdit, "Copy",         "", ednMsgGuiCopy, "STD");
-				(void)myMenu->add(idMenuEdit, "Cut",          "", ednMsgGuiCut, "STD");
-				(void)myMenu->add(idMenuEdit, "Paste",        "", ednMsgGuiPaste, "STD");
-				(void)myMenu->add(idMenuEdit, "Remove",       "", ednMsgGuiRm);
-				(void)myMenu->addSpacer();
-				(void)myMenu->add(idMenuEdit, "Select All","", ednMsgGuiSelect, "ALL");
-				(void)myMenu->add(idMenuEdit, "Un-Select","", ednMsgGuiSelect, "NONE");
-				(void)myMenu->add(idMenuEdit, "Goto line ...","", ednMsgGuiGotoLine, "???");
+				myMenu->add(idMenuEdit, "Undo",         "THEME:GUI:Undo.edf", ednMsgGuiUndo);
+				myMenu->add(idMenuEdit, "Redo",         "THEME:GUI:Redo.edf", ednMsgGuiRedo);
+				myMenu->addSpacer();
+				myMenu->add(idMenuEdit, "Copy",         "", ednMsgGuiCopy, "STD");
+				myMenu->add(idMenuEdit, "Cut",          "", ednMsgGuiCut, "STD");
+				myMenu->add(idMenuEdit, "Paste",        "", ednMsgGuiPaste, "STD");
+				myMenu->add(idMenuEdit, "Remove",       "", ednMsgGuiRm);
+				myMenu->addSpacer();
+				myMenu->add(idMenuEdit, "Select All","", ednMsgGuiSelect, "ALL");
+				myMenu->add(idMenuEdit, "Un-Select","", ednMsgGuiSelect, "NONE");
+				myMenu->add(idMenuEdit, "Goto line ...","", ednMsgGuiGotoLine, "???");
 			int32_t idMenuSearch = myMenu->addTitle("Search");
-				(void)myMenu->add(idMenuSearch, "Search",         "THEME:GUI:Search.edf", ednMsgGuiSearch);
-				(void)myMenu->add(idMenuSearch, "Replace",        "THEME:GUI:Replace.edf", ednMsgGuiReplace);
-				(void)myMenu->addSpacer();
-				(void)myMenu->add(idMenuSearch, "Find (previous)","", ednMsgGuiFind, "Previous");
-				(void)myMenu->add(idMenuSearch, "Find (next)",    "", ednMsgGuiFind, "Next");
-				(void)myMenu->add(idMenuSearch, "Find (all)",     "", ednMsgGuiFind, "All");
-				(void)myMenu->add(idMenuSearch, "Un-Select",      "", ednMsgGuiFind, "None");
+				myMenu->add(idMenuSearch, "Search",         "THEME:GUI:Search.edf", ednMsgGuiSearch);
+				myMenu->add(idMenuSearch, "Replace",        "THEME:GUI:Replace.edf", ednMsgGuiReplace);
+				myMenu->addSpacer();
+				myMenu->add(idMenuSearch, "Find (previous)","", ednMsgGuiFind, "Previous");
+				myMenu->add(idMenuSearch, "Find (next)",    "", ednMsgGuiFind, "Next");
+				myMenu->add(idMenuSearch, "Find (all)",     "", ednMsgGuiFind, "All");
+				myMenu->add(idMenuSearch, "Un-Select",      "", ednMsgGuiFind, "None");
 			/* ==> must be in the pluggin list control ...
 			int32_t idMenuCTags = myMenu->addTitle("C-tags");
-				(void)myMenu->add(idMenuCTags, "Load",      "", ednMsgGuiCtags, "Load");
-				(void)myMenu->add(idMenuCTags, "ReLoad",    "", ednMsgGuiCtags, "ReLoad");
-				(void)myMenu->add(idMenuCTags, "Jump",      "", ednMsgGuiCtags, "Jump");
-				(void)myMenu->add(idMenuCTags, "Back",      "", ednMsgGuiCtags, "Back");
+				myMenu->add(idMenuCTags, "Load",      "", ednMsgGuiCtags, "Load");
+				myMenu->add(idMenuCTags, "ReLoad",    "", ednMsgGuiCtags, "ReLoad");
+				myMenu->add(idMenuCTags, "Jump",      "", ednMsgGuiCtags, "Jump");
+				myMenu->add(idMenuCTags, "Back",      "", ednMsgGuiCtags, "Back");
 			*/
 			int32_t idMenugDisplay = myMenu->addTitle("Display");
-				(void)myMenu->add(idMenugDisplay, "Color Black",          "", appl::MsgNameGuiChangeColor, "color/black/");
-				(void)myMenu->add(idMenugDisplay, "Color White",          "", appl::MsgNameGuiChangeColor, "color/white/");
-				(void)myMenu->add(idMenugDisplay, "Shape square",         "", l_MsgNameGuiChangeShape, "shape/square/");
-				(void)myMenu->add(idMenugDisplay, "Shape round",          "", l_MsgNameGuiChangeShape, "shape/round/");
-				(void)myMenu->addSpacer();
-				(void)myMenu->add(idMenugDisplay, "Reload openGl Shader", "", ednMsgGuiReloadShader);
+				myMenu->add(idMenugDisplay, "Color Black",          "", appl::MsgNameGuiChangeColor, "color/black/");
+				myMenu->add(idMenugDisplay, "Color White",          "", appl::MsgNameGuiChangeColor, "color/white/");
+				myMenu->add(idMenugDisplay, "Shape square",         "", l_MsgNameGuiChangeShape, "shape/square/");
+				myMenu->add(idMenugDisplay, "Shape round",          "", l_MsgNameGuiChangeShape, "shape/round/");
+				myMenu->addSpacer();
+				myMenu->add(idMenugDisplay, "Reload openGl Shader", "", ednMsgGuiReloadShader);
 			
 			m_widgetLabelFileName = new ewol::widget::Label("FileName");
 			m_widgetLabelFileName->setExpand(bvec2(true,false));
@@ -264,7 +264,7 @@ MainWindows::MainWindows(void) {
 }
 
 
-MainWindows::~MainWindows(void) {
+MainWindows::~MainWindows() {
 	appl::BufferManager::release(m_bufferManager);
 }
 
@@ -393,7 +393,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		
 		
 	} else if (_msg.getMessage() == ednMsgGuiNew) {
-		(void)m_bufferManager->createNewBuffer();
+		m_bufferManager->createNewBuffer();
 	} else if (_msg.getMessage() == ednEventPopUpFileSelected) {
 		APPL_DEBUG("Request opening the file : " << _msg.getData());
 		m_bufferManager->open(_msg.getData());

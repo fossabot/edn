@@ -15,13 +15,13 @@
 #undef __class__
 #define __class__ "highlightManager"
 
-static std::vector<appl::Highlight*>& s_list(void) {
+static std::vector<appl::Highlight*>& s_list() {
 	static std::vector<appl::Highlight*> list;
 	return list;
 }
 
 
-void appl::highlightManager::init(void) {
+void appl::highlightManager::init() {
 	std::vector<appl::Highlight*>& hlList = s_list();
 	if (hlList.size() != 0) {
 		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
@@ -58,7 +58,7 @@ void appl::highlightManager::init(void) {
 	*/
 }
 
-void appl::highlightManager::unInit(void) {
+void appl::highlightManager::unInit() {
 	std::vector<Highlight*>& hlList = s_list();
 	if (hlList.size() == 0) {
 		APPL_DEBUG("HighlightManager  ==> no highlight");
@@ -111,7 +111,7 @@ std::string appl::highlightManager::getFileWithTypeType(const std::string& _type
 	return "";
 }
 
-std::vector<std::string> appl::highlightManager::getTypeList(void) {
+std::vector<std::string> appl::highlightManager::getTypeList() {
 	std::vector<std::string> ret;
 	return ret;
 }

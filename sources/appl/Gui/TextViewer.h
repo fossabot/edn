@@ -37,7 +37,7 @@ namespace appl {
 			appl::ViewerManager* m_viewerManager; //!< handle on the buffer manager
 		public:
 			TextViewer(const std::string& _fontName="", int32_t _fontSize=-1);
-			virtual ~TextViewer(void);
+			virtual ~TextViewer();
 		private:
 			appl::Buffer* m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
 		public:
@@ -45,7 +45,7 @@ namespace appl {
 			 * @brief Get the buffer property (only for the class : template <typename TYPE> class TextViewerPluginData)
 			 * @return pointer on buffer
 			 */
-			appl::Buffer* internalGetBuffer(void) {
+			appl::Buffer* internalGetBuffer() {
 				return m_buffer;
 			}
 		private:
@@ -56,17 +56,17 @@ namespace appl {
 			void setFontSize(int32_t _size);
 			void setFontName(const std::string& _fontName);
 		protected: // derived function
-			virtual void onDraw(void);
+			virtual void onDraw();
 		public:  // Derived function
-			virtual bool calculateMinSize(void);
-			virtual void onRegenerateDisplay(void);
+			virtual bool calculateMinSize();
+			virtual void onRegenerateDisplay();
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
 			virtual void onObjectRemove(ewol::Object* _removeObject);
 			virtual bool onEventInput(const ewol::event::Input& _event);
 			virtual bool onEventEntry(const ewol::event::Entry& _event);
 			virtual void onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID);
-			virtual void onGetFocus(void);
-			virtual void onLostFocus(void);
+			virtual void onGetFocus();
+			virtual void onLostFocus();
 			virtual void changeZoom(float _range);
 		private:
 			float m_lastOffsetDisplay; //!< Line number ofssed in the display
@@ -77,7 +77,7 @@ namespace appl {
 			 * @brief Update the scrolling position from the cursor position,
 			 * it might be be all time in the display screen.
 			 */
-			void updateScrolling(void);
+			void updateScrolling();
 			// TODO : Doc : write data on buffer
 			bool moveCursor(const appl::Buffer::Iterator& _pos);
 			bool write(const std::string& _data);
@@ -90,11 +90,11 @@ namespace appl {
 			/**
 			 * @brief Remove selected data ...
 			 */
-			void remove(void);
+			void remove();
 			/**
 			 * @brief Remove selected data ... (No plugin call)
 			 */
-			void removeDirect(void) {
+			void removeDirect() {
 				if (m_buffer==NULL) {
 					return;
 				}
@@ -156,8 +156,8 @@ namespace appl {
 			}
 			
 			appl::Buffer::Iterator getMousePosition(const vec2& _relativePos);
-			void mouseEventDouble(void);
-			void mouseEventTriple(void);
+			void mouseEventDouble();
+			void mouseEventTriple();
 		private:
 			enum moveMode {
 				moveLetter,
@@ -191,30 +191,30 @@ namespace appl {
 			/**
 			 * @brief Set the current buffer selected
 			 */
-			void setCurrentSelect(void);
+			void setCurrentSelect();
 			/**
 			 * @brief Check if the current buffer is last selected
 			 * @return true if selected last
 			 */
-			bool isSelectedLast(void);
+			bool isSelectedLast();
 		public:
 			/**
 			 * @brief get the path of the current buffer
 			 * @return Path of the buffer (remove the ended name)
 			 */
-			virtual std::string getBufferPath(void);
+			virtual std::string getBufferPath();
 			/**
 			 * @brief Check if the buffer is availlable
 			 * @return true if a display buffer is present, false otherwise.
 			 */
-			virtual bool hasBuffer(void) {
+			virtual bool hasBuffer() {
 				return m_buffer != NULL;
 			}
 			/**
 			 * @brief Get the status of selection.
 			 * @return true if we have a current selection, false otherwise.
 			 */
-			virtual bool hasTextSelected(void) {
+			virtual bool hasTextSelected() {
 				if (m_buffer==NULL) {
 					return false;
 				}
@@ -223,7 +223,7 @@ namespace appl {
 			/**
 			 * @brief Remove Selection of the buffer.
 			 */
-			virtual void unSelect(void) {
+			virtual void unSelect() {
 				if (m_buffer==NULL) {
 					return;
 				}
@@ -317,7 +317,7 @@ namespace appl {
 			 * @brief Get the cursor position.
 			 * @return The iterator on the cursor position
 			 */
-			appl::Buffer::Iterator cursor(void) {
+			appl::Buffer::Iterator cursor() {
 				if (m_buffer==NULL) {
 					return appl::Buffer::Iterator();
 				}
@@ -327,7 +327,7 @@ namespace appl {
 			 * @brief Get the begin position.
 			 * @return The iterator on the begin position
 			 */
-			appl::Buffer::Iterator begin(void) {
+			appl::Buffer::Iterator begin() {
 				if (m_buffer==NULL) {
 					return appl::Buffer::Iterator();
 				}
@@ -337,7 +337,7 @@ namespace appl {
 			 * @brief Get the end position.
 			 * @return The iterator on the end position
 			 */
-			appl::Buffer::Iterator end(void) {
+			appl::Buffer::Iterator end() {
 				if (m_buffer==NULL) {
 					return appl::Buffer::Iterator();
 				}
@@ -347,7 +347,7 @@ namespace appl {
 			 * @brief Get an Iterator on the start selection.
 			 * @return The Iterator
 			 */
-			appl::Buffer::Iterator selectStart(void) {
+			appl::Buffer::Iterator selectStart() {
 				if (m_buffer==NULL) {
 					return appl::Buffer::Iterator();
 				}
@@ -357,7 +357,7 @@ namespace appl {
 			 * @brief Get an Iterator on the stop selection.
 			 * @return The Iterator
 			 */
-			appl::Buffer::Iterator selectStop(void) {
+			appl::Buffer::Iterator selectStop() {
 				if (m_buffer==NULL) {
 					return appl::Buffer::Iterator();
 				}

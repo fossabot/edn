@@ -15,7 +15,7 @@
 #define __class__ "TextPluginRmLine"
 
 
-appl::TextPluginRmLine::TextPluginRmLine(void) {
+appl::TextPluginRmLine::TextPluginRmLine() {
 	m_activateOnReceiveMessage = true;
 }
 

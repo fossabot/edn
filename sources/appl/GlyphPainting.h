@@ -20,12 +20,12 @@ namespace appl {
 			std::vector<appl::GlyphDecoration> m_list;
 		protected:
 			GlyphPainting(const std::string& _filename);
-			virtual ~GlyphPainting(void);
+			virtual ~GlyphPainting();
 		public:
 			/**
 			 * @brief Load or reload data from config
 			 */
-			void reload(void);
+			void reload();
 			/**
 			 * @brief Register a decoration with his name and get the ref id.
 			 * @param[in] _name Name of the deco.

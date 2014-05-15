@@ -20,7 +20,7 @@ namespace appl {
 		public:
 			// note : if == "" ==> current ...
 			WorkerCloseFile(const std::string& _bufferName);
-			virtual ~WorkerCloseFile(void);
+			virtual ~WorkerCloseFile();
 		private:
 			std::string m_bufferName;
 			appl::Buffer* m_buffer; //!< reference on the buffer (when rename, we have no more reference on the buffer

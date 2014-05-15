@@ -18,8 +18,8 @@ namespace appl {
 	class TextViewerPlugin : public ewol::Object {
 		friend class appl::TextViewer;
 		public:
-			TextViewerPlugin(void);
-			virtual ~TextViewerPlugin(void);
+			TextViewerPlugin();
+			virtual ~TextViewerPlugin();
 		private:
 			bool m_isEnable; //!< The plugin is enable or not (for all viewer).
 		public:
@@ -32,20 +32,20 @@ namespace appl {
 			 * @brief Get the activity status.
 			 * @return true if the plugin is active, false otherwise.
 			 */
-			bool isEnable(void) {
+			bool isEnable() {
 				return m_isEnable;
 			};
 		public:
 			/**
 			 * @brief On plugin global enable.
 			 */
-			virtual void onPluginEnable(void) {
+			virtual void onPluginEnable() {
 				// nothing to do here ...
 			};
 			/**
 			 * @brief On plugin global disable.
 			 */
-			virtual void onPluginDisable(void) {
+			virtual void onPluginDisable() {
 				// nothing to do here ...
 			};
 			/**
@@ -69,7 +69,7 @@ namespace appl {
 			 * @brief Get the availlability of a callback
 			 * @return true if availlable
 			 */
-			bool isAvaillableOnEventEntry(void) {
+			bool isAvaillableOnEventEntry() {
 				return m_activateOnEventEntry;
 			}
 			/**
@@ -89,7 +89,7 @@ namespace appl {
 			 * @brief Get the availlability of a callback
 			 * @return true if availlable
 			 */
-			bool isAvaillableOnEventInput(void) {
+			bool isAvaillableOnEventInput() {
 				return m_activateOnEventInput;
 			}
 			/**
@@ -109,7 +109,7 @@ namespace appl {
 			 * @brief Get the availlability of a callback
 			 * @return true if availlable
 			 */
-			bool isAvaillableOnWrite(void) {
+			bool isAvaillableOnWrite() {
 				return m_activateOnWrite;
 			}
 			/**
@@ -131,7 +131,7 @@ namespace appl {
 			 * @brief Get the availlability of a callback
 			 * @return true if availlable
 			 */
-			bool isAvaillableOnReplace(void) {
+			bool isAvaillableOnReplace() {
 				return m_activateOnReplace;
 			}
 			/**
@@ -155,7 +155,7 @@ namespace appl {
 			 * @brief Get the availlability of a callback
 			 * @return true if availlable
 			 */
-			bool isAvaillableOnRemove(void) {
+			bool isAvaillableOnRemove() {
 				return m_activateOnRemove;
 			}
 			/**
@@ -177,7 +177,7 @@ namespace appl {
 			 * @brief Get the availlability of a callback
 			 * @return true if availlable
 			 */
-			bool isAvaillableOnReceiveMessage(void) {
+			bool isAvaillableOnReceiveMessage() {
 				return m_activateOnReceiveMessage;
 			}
 			/**
@@ -197,7 +197,7 @@ namespace appl {
 			 * @brief Get the availlability of a callback
 			 * @return true if availlable
 			 */
-			bool isAvaillableOnCursorMove(void) {
+			bool isAvaillableOnCursorMove() {
 				return m_activateOnCursorMove;
 			}
 			/**

@@ -30,7 +30,7 @@ extern const char * const applEventctagsSelection = "appl-event-ctags-validate";
 extern const char * const applEventctagsCancel    = "appl-event-ctags-cancel";
 
 
-appl::TagFileSelection::TagFileSelection(void) {
+appl::TagFileSelection::TagFileSelection() {
 	addObjectType("appl::TagFileSelection");
 	addEventId(applEventctagsSelection);
 	addEventId(applEventctagsCancel);
@@ -98,7 +98,7 @@ appl::TagFileSelection::TagFileSelection(void) {
 }
 
 
-appl::TagFileSelection::~TagFileSelection(void) {
+appl::TagFileSelection::~TagFileSelection() {
 	
 }
 

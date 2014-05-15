@@ -96,7 +96,7 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 	tmpWindows->popUpWidgetPush(tmpPopUp);
 }
 
-appl::WorkerCloseFile::~WorkerCloseFile(void) {
+appl::WorkerCloseFile::~WorkerCloseFile() {
 	appl::BufferManager::release(m_bufferManager);
 }
 

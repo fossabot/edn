@@ -18,7 +18,7 @@
 namespace appl {
 	class History {
 		public:
-			History(void) :
+			History() :
 			  m_posAdded(0),
 			  m_endPosAdded(0),
 			  m_endPosRemoved(0) {
@@ -37,8 +37,8 @@ namespace appl {
 	};
 	class TextPluginHistory : public appl::TextViewerPluginData<appl::PluginHistoryData> {
 		public:
-			TextPluginHistory(void);
-			virtual ~TextPluginHistory(void) { };
+			TextPluginHistory();
+			virtual ~TextPluginHistory() { };
 		private:
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);

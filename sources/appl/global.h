@@ -15,31 +15,31 @@
 
 namespace globals
 {
-	void init(void);
-	void UnInit(void);
-	int32_t getNbColoneBorder(void);
-	int32_t getNbLineBorder(void);
+	void init();
+	void UnInit();
+	int32_t getNbColoneBorder();
+	int32_t getNbLineBorder();
 
-	bool isSetDisplayEndOfLine(void);
+	bool isSetDisplayEndOfLine();
 	void setDisplayEndOfLine(bool _newVal);
 	
-	bool isSetDisplaySpaceChar(void);
+	bool isSetDisplaySpaceChar();
 	void setDisplaySpaceChar(bool _newVal);
 	
-	bool isSetDisplayTabChar(void);
+	bool isSetDisplayTabChar();
 	void setDisplayTabChar(bool _newVal);
 	
-	bool isSetAutoIndent(void);
+	bool isSetAutoIndent();
 	void setAutoIndent(bool _newVal);
 
-	void init2(void);
+	void init2();
 	
-	bool OrderTheBufferList(void);
+	bool OrderTheBufferList();
 	
 	class ParameterGlobalsGui : public ewol::widget::Sizer {
 		public :
-			ParameterGlobalsGui(void);
-			~ParameterGlobalsGui(void);
+			ParameterGlobalsGui();
+			~ParameterGlobalsGui();
 			// herited function
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
 	};

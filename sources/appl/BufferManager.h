@@ -17,8 +17,8 @@
 namespace appl {
 	class BufferManager : public ewol::Resource {
 		protected:
-			BufferManager(void);
-			~BufferManager(void);
+			BufferManager();
+			~BufferManager();
 		private:
 			std::vector<appl::Buffer*> m_list; // list of all buffer curently open
 		public:
@@ -44,7 +44,7 @@ namespace appl {
 			 * @brief Get count of all buffer availlable.
 			 * @return Number of buffer
 			 */
-			int32_t size(void) const {
+			int32_t size() const {
 				return m_list.size();
 			}
 			/**
@@ -59,7 +59,7 @@ namespace appl {
 			 * @brief Create a new buffer empty.
 			 * @return Created buffer or NULL.
 			 */
-			appl::Buffer* createNewBuffer(void);
+			appl::Buffer* createNewBuffer();
 		private:
 			appl::Buffer* m_bufferSelected;
 		public:
@@ -72,7 +72,7 @@ namespace appl {
 			 * @brief Get the current buffer selected
 			 * @return Pointer on the buffer selected
 			 */
-			appl::Buffer* getBufferSelected(void) {
+			appl::Buffer* getBufferSelected() {
 				return m_bufferSelected;
 			};
 		public: // herited function
@@ -85,7 +85,7 @@ namespace appl {
 			 * @param[in] _filename Name of the configuration file.
 			 * @return pointer on the resource or NULL if an error occured.
 			 */
-			static appl::BufferManager* keep(void);
+			static appl::BufferManager* keep();
 			/**
 			 * @brief release the keeped resources
 			 * @param[in,out] reference on the object pointer

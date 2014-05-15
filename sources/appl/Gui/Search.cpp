@@ -28,7 +28,7 @@ const char* const l_eventWrapCb = "appl-wrap-CheckBox";
 const char* const l_eventForwardCb = "appl-forward-CheckBox";
 const char* const l_eventHideBt = "appl-hide-button";
 
-Search::Search(void) :
+Search::Search() :
   ewol::widget::Composer(ewol::widget::Composer::file, "DATA:GUI-Search.xml"),
   m_viewerManager(NULL),
   m_forward(true),
@@ -63,11 +63,11 @@ Search::Search(void) :
 	hide();
 }
 
-Search::~Search(void) {
+Search::~Search() {
 	appl::ViewerManager::release(m_viewerManager);
 }
 
-void Search::find(void) {
+void Search::find() {
 	if (m_viewerManager == NULL) {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
@@ -103,7 +103,7 @@ void Search::find(void) {
 	}
 }
 
-void Search::replace(void) {
+void Search::replace() {
 	if (m_viewerManager == NULL) {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;

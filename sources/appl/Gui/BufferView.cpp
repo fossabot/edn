@@ -39,7 +39,7 @@ static void SortElementList(std::vector<appl::dataBufferStruct*>& _list) {
 	}
 }
 
-BufferView::BufferView(void) :
+BufferView::BufferView() :
   m_openOrderMode(false) {
 	addObjectType("appl::BufferView");
 	setCanHaveFocus(true);
@@ -63,11 +63,11 @@ BufferView::BufferView(void) :
 	m_colorTextModify = m_paintingProperties->request("textModify");
 }
 
-BufferView::~BufferView(void) {
+BufferView::~BufferView() {
 	removeAllElement();
 }
 
-void BufferView::removeAllElement(void) {
+void BufferView::removeAllElement() {
 	for(int32_t iii=0; iii<m_list.size(); iii++) {
 		if (NULL!=m_list[iii]) {
 			delete(m_list[iii]);
@@ -237,11 +237,11 @@ void BufferView::onObjectRemove(ewol::Object* _removeObject) {
 }
 
 
-etk::Color<> BufferView::getBasicBG(void) {
+etk::Color<> BufferView::getBasicBG() {
 	return (*m_paintingProperties)[m_colorBackground1].getForeground();
 }
 
-uint32_t BufferView::getNuberOfColomn(void) {
+uint32_t BufferView::getNuberOfColomn() {
 	return 1;
 }
 
@@ -250,7 +250,7 @@ bool BufferView::getTitle(int32_t _colomn, std::string &_myTitle, etk::Color<> &
 	return true;
 }
 
-uint32_t BufferView::getNuberOfRaw(void) {
+uint32_t BufferView::getNuberOfRaw() {
 	return m_list.size();
 }
 

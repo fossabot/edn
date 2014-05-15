@@ -99,7 +99,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 	}
 }
 
-appl::Highlight::~Highlight(void) {
+appl::Highlight::~Highlight() {
 	// clean all Element
 	for (int32_t iii = 0; iii < m_listHighlightPass1.size(); ++iii) {
 		if (m_listHighlightPass1[iii] != NULL) {
@@ -144,7 +144,7 @@ bool appl::Highlight::fileNameCompatible(const std::string& _fileName) {
 }
 
 
-void appl::Highlight::display(void) {
+void appl::Highlight::display() {
 	APPL_INFO("List of ALL Highlight : ");
 	for (int32_t iii=0; iii< m_listExtentions.size(); iii++) {
 		APPL_INFO("        Extention : " << iii << " : " << m_listExtentions[iii] );

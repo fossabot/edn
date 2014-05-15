@@ -22,8 +22,8 @@ class MainWindows : public ewol::widget::Windows {
 		ewol::widget::Label* m_widgetLabelFileName;
 	public:
 		// Constructeur
-		MainWindows(void);
-		~MainWindows(void);
+		MainWindows();
+		~MainWindows();
 	private:
 		appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 		/**

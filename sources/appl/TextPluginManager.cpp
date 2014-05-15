@@ -19,44 +19,44 @@
 #undef __class__
 #define __class__ "textPluginManager"
 
-static std::vector<appl::TextViewerPlugin *>& getList(void) {
+static std::vector<appl::TextViewerPlugin *>& getList() {
 	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnEventEntry(void) {
+static std::vector<appl::TextViewerPlugin *>& getListOnEventEntry() {
 	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnEventInput(void) {
+static std::vector<appl::TextViewerPlugin *>& getListOnEventInput() {
 	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnWrite(void) {
+static std::vector<appl::TextViewerPlugin *>& getListOnWrite() {
 	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnReplace(void) {
+static std::vector<appl::TextViewerPlugin *>& getListOnReplace() {
 	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnRemove(void) {
+static std::vector<appl::TextViewerPlugin *>& getListOnRemove() {
 	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnReceiveMessage(void) {
+static std::vector<appl::TextViewerPlugin *>& getListOnReceiveMessage() {
 	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnCursorMove(void) {
+static std::vector<appl::TextViewerPlugin *>& getListOnCursorMove() {
 	static std::vector<appl::TextViewerPlugin *> s_list;
 	return s_list;
 }
 
-void appl::textPluginManager::init(void) {
+void appl::textPluginManager::init() {
 	
 }
 
-void appl::textPluginManager::unInit(void) {
+void appl::textPluginManager::unInit() {
 	// remove all sub plugin class:
 	getListOnEventEntry().clear();
 	getListOnEventInput().clear();
@@ -76,7 +76,7 @@ void appl::textPluginManager::unInit(void) {
 	getList().clear();
 }
 
-void appl::textPluginManager::addDefaultPlugin(void) {
+void appl::textPluginManager::addDefaultPlugin() {
 	appl::textPluginManager::addPlugin(new appl::TextPluginCopy());
 	appl::textPluginManager::addPlugin(new appl::TextPluginMultiLineTab());
 	appl::textPluginManager::addPlugin(new appl::TextPluginAutoIndent());

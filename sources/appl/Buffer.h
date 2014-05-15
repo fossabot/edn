@@ -38,7 +38,7 @@ namespace appl {
 					/**
 					 * @brief Basic itarator constructor with no link.
 					 */
-					Iterator(void):
+					Iterator():
 					  m_current(0),
 					  m_data(NULL),
 					  m_value(u32char::Null) {
@@ -68,7 +68,7 @@ namespace appl {
 					/**
 					 * @brief Basic destructor
 					 */
-					~Iterator(void) {
+					~Iterator() {
 						m_current = 0;
 						m_data = NULL;
 						m_value = u32char::Null;
@@ -77,7 +77,7 @@ namespace appl {
 					 * @brief basic boolean cast
 					 * @return true if the element is present in buffer
 					 */
-					operator bool (void) const {
+					operator bool () const {
 						if (m_data == NULL) {
 							return false;
 						}
@@ -93,7 +93,7 @@ namespace appl {
 					 * @brief basic boolean cast
 					 * @return true if the element is present in buffer
 					 */
-					operator int64_t (void) const {
+					operator int64_t () const {
 						if (m_data == NULL) {
 							return 0;
 						}
@@ -109,12 +109,12 @@ namespace appl {
 					 * @brief Incremental operator
 					 * @return Reference on the current iterator incremented
 					 */
-					Iterator& operator++ (void);
+					Iterator& operator++ ();
 					/**
 					 * @brief Decremental operator
 					 * @return Reference on the current iterator decremented
 					 */
-					Iterator& operator-- (void);
+					Iterator& operator-- ();
 					/**
 					 * @brief Incremental operator
 					 * @return Reference on a new iterator and increment the other one
@@ -211,12 +211,12 @@ namespace appl {
 					 * @brief Get the value on the current element
 					 * @return The request element value
 					 */
-					char32_t operator* (void);
+					char32_t operator* ();
 					/**
 					 * @brief Get the position in the buffer
 					 * @return The requested position.
 					 */
-					int64_t getPos(void) const {
+					int64_t getPos() const {
 						if (m_data == NULL) {
 							return 0;
 						}
@@ -293,8 +293,8 @@ namespace appl {
 			static const char* const eventSelectChange;
 			static const char* const eventChangeName;
 		public:
-			Buffer(void);
-			~Buffer(void);
+			Buffer();
+			~Buffer();
 		private:
 			bool m_hasFileName; //!< when new file, the buffer has no name ==> but it might be reference with a single name ...
 			std::string m_fileName; //!< name of the file (with his path)
@@ -302,14 +302,14 @@ namespace appl {
 			/**
 			 * @brief get the curent filename of the Buffer
 			 */
-			const std::string& getFileName(void) {
+			const std::string& getFileName() {
 				return m_fileName;
 			}
 			/**
 			 * @brief Check if the buffer has a real filename.
 			 * @return the status of the existance of a name.
 			 */
-			bool hasFileName(void) {
+			bool hasFileName() {
 				return m_hasFileName;
 			}
 			/**
@@ -327,7 +327,7 @@ namespace appl {
 			 * @brief save the file in the specify path.
 			 * @return true is saving well done
 			 */
-			bool storeFile(void);
+			bool storeFile();
 		protected:
 			bool m_isModify; //!< true if the file is modify
 		public:
@@ -335,7 +335,7 @@ namespace appl {
 			 * @breif get the status of file modification.
 			 * @return true if file is modify.
 			 */
-			bool isModify(void) {
+			bool isModify() {
 				return m_isModify;
 			}
 			/**
@@ -346,7 +346,7 @@ namespace appl {
 		protected:
 			etk::Buffer m_data; //!< copy of the file buffer
 		public:
-			etk::Buffer& getData(void) {
+			etk::Buffer& getData() {
 				return m_data;
 			};
 		protected:
@@ -364,30 +364,30 @@ namespace appl {
 			/**
 			 * @brief Remove Selection of the buffer.
 			 */
-			void unSelect(void);
+			void unSelect();
 			/**
 			 * @brief Remove the selection of the buffer. (do nothing if no secection)
 			 */
-			void removeSelection(void);
+			void removeSelection();
 			/**
 			 * @brief Get the status of selection.
 			 * @return true if we have a curent selection, false otherwise.
 			 */
-			bool hasTextSelected(void) {
+			bool hasTextSelected() {
 				return m_cursorSelectPos >= 0;
 			}
 			/**
 			 * @brief Get the Start position of the selection.
 			 * @return position of the start selection.
 			 */
-			int64_t getStartSelectionPos(void) {
+			int64_t getStartSelectionPos() {
 				return etk_min(m_cursorPos, m_cursorSelectPos);
 			}
 			/**
 			 * @brief Get the Stop position of the selection.
 			 * @return position of the stop selection.
 			 */
-			int64_t getStopSelectionPos(void) {
+			int64_t getStopSelectionPos() {
 				return etk_max(m_cursorPos, m_cursorSelectPos);
 			}
 		protected:
@@ -404,7 +404,7 @@ namespace appl {
 			 * @brief Get the favorite distance from the left screen (For up and down moving).
 			 * @return The distance in pixels.
 			 */
-			float getFavoriteUpDownPos(void) {
+			float getFavoriteUpDownPos() {
 				return m_cursorPreferredCol;
 			}
 		protected:
@@ -421,7 +421,7 @@ namespace appl {
 			 * @brief Get the selection mode (if true, the move event creata a selection)
 			 * @return The selecting mode.
 			 */
-			bool getSelectMode(void) {
+			bool getSelectMode() {
 				return m_selectMode;
 			}
 		public:
@@ -544,27 +544,27 @@ namespace appl {
 			 * @brief Get an Iterator on the start position.
 			 * @return The Iterator
 			 */
-			Iterator begin(void);
+			Iterator begin();
 			/**
 			 * @brief Get an Iterator on the end position.
 			 * @return The Iterator
 			 */
-			Iterator end(void);
+			Iterator end();
 			/**
 			 * @brief Get an Iterator on the cursor position.
 			 * @return The Iterator
 			 */
-			Iterator cursor(void);
+			Iterator cursor();
 			/**
 			 * @brief Get an Iterator on the start selection.
 			 * @return The Iterator
 			 */
-			Iterator selectStart(void);
+			Iterator selectStart();
 			/**
 			 * @brief Get an Iterator on the stop selection.
 			 * @return The Iterator
 			 */
-			Iterator selectStop(void);
+			Iterator selectStop();
 		protected:
 			int32_t m_nbLines; //!< number of line in the buffer
 		public:
@@ -572,19 +572,19 @@ namespace appl {
 			 * @brief Get the number of line in the buffer.
 			 * @return number of line in the Buffer.
 			 */
-			int32_t getNumberOfLines(void) {
+			int32_t getNumberOfLines() {
 				return m_nbLines;
 			}
 			/**
 			 * @brief Get the cursor line numberin the buffer.
 			 * @return the line id in the Buffer.
 			 */
-			uint32_t getCursorLinesId(void);
+			uint32_t getCursorLinesId();
 		protected:
 			/**
 			 * @brief Count the number of line in the buffer
 			 */
-			void countNumberofLine(void);
+			void countNumberofLine();
 		protected:
 			std::string m_highlightType; //!< Name of the highlight type
 			
@@ -594,7 +594,7 @@ namespace appl {
 			/**
 			 * @brief Find the Highligh capability
 			 */
-			void tryFindHighlightType(void);
+			void tryFindHighlightType();
 			/**
 			 * @brief Set type of highlight
 			 * @param[in] _type type of the highlight
@@ -604,7 +604,7 @@ namespace appl {
 			 * @brief Get type of highlight
 			 * @return Type of the highlight
 			 */
-			const std::string& setHighlightType(void) {
+			const std::string& setHighlightType() {
 				return m_highlightType;
 			};
 			
@@ -615,7 +615,7 @@ namespace appl {
 			                               int64_t& _stopId,
 			                               bool _backPreviousNotEnded);
 			void generateHighLightAt(int64_t _pos, int64_t _endPos, int64_t _addingPos=0);
-			void cleanHighLight(void);
+			void cleanHighLight();
 			appl::HighlightInfo* getElementColorAtPosition(int64_t _pos, int64_t &_starPos);
 			void hightlightGenerateLines(appl::DisplayHLData& _MData, const appl::Buffer::Iterator& _HLStart, int64_t _nbLines);
 			appl::HighlightInfo* getElementColorAtPosition(appl::DisplayHLData& _MData, int64_t _pos);

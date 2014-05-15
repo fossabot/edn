@@ -63,14 +63,14 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	setCurrentSelect();
 }
 
-appl::TextViewer::~TextViewer(void) {
+appl::TextViewer::~TextViewer() {
 	appl::textPluginManager::disconnect(*this);
 	appl::GlyphPainting::release(m_paintingProperties);
 	appl::BufferManager::release(m_bufferManager);
 	appl::ViewerManager::release(m_viewerManager);
 }
 
-std::string appl::TextViewer::getBufferPath(void) {
+std::string appl::TextViewer::getBufferPath() {
 	if (m_buffer == NULL) {
 		return "";
 	}
@@ -87,19 +87,19 @@ void appl::TextViewer::changeZoom(float _range) {
 	markToRedraw();
 }
 
-bool appl::TextViewer::calculateMinSize(void) {
+bool appl::TextViewer::calculateMinSize() {
 	m_minSize.setValue(50,50);
 	return true;
 }
 
 
-void appl::TextViewer::onDraw(void) {
+void appl::TextViewer::onDraw() {
 	m_displayDrawing.draw();
 	m_displayText.draw();
 	WidgetScrolled::onDraw();
 }
 
-void appl::TextViewer::onRegenerateDisplay(void) {
+void appl::TextViewer::onRegenerateDisplay() {
 	if (false == needRedraw()) {
 		return;
 	}
@@ -549,7 +549,7 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 }
 
 
-void appl::TextViewer::mouseEventDouble(void) {
+void appl::TextViewer::mouseEventDouble() {
 	//m_selectMode = false;
 	appl::Buffer::Iterator beginPos, endPos;
 	if (true == m_buffer->getPosAround(m_buffer->cursor(), beginPos, endPos)) {
@@ -558,7 +558,7 @@ void appl::TextViewer::mouseEventDouble(void) {
 	}
 }
 
-void appl::TextViewer::mouseEventTriple(void) {
+void appl::TextViewer::mouseEventTriple() {
 	//m_selectMode = false;
 	moveCursor(m_buffer->getEndLine(m_buffer->cursor()));
 	m_buffer->setSelectionPos(m_buffer->getStartLine(m_buffer->cursor()));
@@ -710,14 +710,14 @@ void appl::TextViewer::onObjectRemove(ewol::Object* _removeObject) {
 	}
 }
 
-void appl::TextViewer::onGetFocus(void) {
+void appl::TextViewer::onGetFocus() {
 	showKeyboard();
 	APPL_INFO("Focus - In");
 	setCurrentSelect();
 	markToRedraw();
 }
 
-void appl::TextViewer::onLostFocus(void) {
+void appl::TextViewer::onLostFocus() {
 	hideKeyboard();
 	APPL_INFO("Focus - out");
 	markToRedraw();
@@ -733,7 +733,7 @@ void appl::TextViewer::setFontName(const std::string& _fontName) {
 }
 
 // TODO : Update process time ==> a little expensive (2->4ms) in end of file
-void appl::TextViewer::updateScrolling(void) {
+void appl::TextViewer::updateScrolling() {
 	if (m_buffer == NULL) {
 		return;
 	}
@@ -828,7 +828,7 @@ bool appl::TextViewer::replace(const std::string& _data) {
 	return replace(_data, m_buffer->selectStart(), m_buffer->selectStop());
 }
 
-void appl::TextViewer::remove(void) {
+void appl::TextViewer::remove() {
 	if (m_buffer == NULL) {
 		return;
 	}
@@ -998,13 +998,13 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 	return ret;
 }
 
-void appl::TextViewer::setCurrentSelect(void) {
+void appl::TextViewer::setCurrentSelect() {
 	if (m_viewerManager != NULL) {
 		m_viewerManager->setViewerSelected(this, m_buffer);
 	}
 }
 
-bool appl::TextViewer::isSelectedLast(void) {
+bool appl::TextViewer::isSelectedLast() {
 	if (m_viewerManager != NULL) {
 		return m_viewerManager->isLastSelected(this);
 	}

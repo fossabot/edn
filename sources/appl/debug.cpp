@@ -8,7 +8,7 @@
 
 #include <appl/debug.h>
 
-int32_t appl::getLogId(void) {
+int32_t appl::getLogId() {
 	static int32_t g_val = etk::log::registerInstance("edn");
 	return g_val;
 }
