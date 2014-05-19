@@ -29,7 +29,11 @@ appl::ViewerManager::~ViewerManager() {
 	appl::BufferManager::release(m_bufferManager);
 }
 
-void appl::ViewerManager::setViewerSelected(appl::TextViewer* _viewer, appl::Buffer* _buffer) {
+bool appl::ViewerManager::isLastSelected(ewol::object::Shared<appl::TextViewer> _viewer) {
+	return m_viewer == _viewer;
+}
+
+void appl::ViewerManager::setViewerSelected(const ewol::object::Shared<appl::TextViewer>& _viewer, appl::Buffer* _buffer) {
 	if (m_viewer == _viewer) {
 		return;
 	}
@@ -43,10 +47,10 @@ void appl::ViewerManager::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_DEBUG("receive message !!! " << _msg);
 }
 
-void appl::ViewerManager::onObjectRemove(ewol::Object* _removeObject) {
+void appl::ViewerManager::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 	ewol::Resource:: onObjectRemove(_removeObject);
 	if (_removeObject == m_viewer) {
-		m_viewer = NULL;
+		m_viewer.reset();
 		return;
 	}
 }

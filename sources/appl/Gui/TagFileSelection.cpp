@@ -139,7 +139,7 @@ void appl::TagFileSelection::addCtagsNewItem(std::string _file, int32_t _line) {
 	}
 }
 
-void appl::TagFileSelection::onObjectRemove(ewol::Object * _removeObject) {
+void appl::TagFileSelection::onObjectRemove(const ewol::object::Shared<ewol::Object> _removeObject) {
 	// First step call parrent : 
 	ewol::widget::PopUp::onObjectRemove(_removeObject);
 	// second step find if in all the elements ...

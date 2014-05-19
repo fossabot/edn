@@ -55,8 +55,8 @@ Search::Search() :
 	setConfigNamed("SEARCH:wrap", "value", std::to_string(m_wrap));
 	setConfigNamed("SEARCH:up-down", "value", std::to_string(m_forward));
 	// get widget
-	m_searchEntry = dynamic_cast<ewol::widget::Entry*>(getWidgetNamed("SEARCH:search-entry"));
-	m_replaceEntry = dynamic_cast<ewol::widget::Entry*>(getWidgetNamed("SEARCH:replace-entry"));
+	m_searchEntry = ewol::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:search-entry"));
+	m_replaceEntry = ewol::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:replace-entry"));
 	// Display and hide event:
 	registerMultiCast(ednMsgGuiSearch);
 	// basicly hiden ...
@@ -72,7 +72,7 @@ void Search::find() {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
 	}
-	appl::TextViewer* viewer = m_viewerManager->getViewerSelected();
+	ewol::object::Shared<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
 	if (viewer == NULL) {
 		APPL_INFO("No viewer selected!!!");
 		return;
@@ -108,7 +108,7 @@ void Search::replace() {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
 	}
-	appl::TextViewer* viewer = m_viewerManager->getViewerSelected();
+	ewol::object::Shared<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
 	if (viewer == NULL) {
 		APPL_INFO("No viewer selected!!!");
 		return;
@@ -162,7 +162,7 @@ void Search::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void Search::onObjectRemove(ewol::Object * _removeObject) {
+void Search::onObjectRemove(const ewol::object::Shared<ewol::Object> _removeObject) {
 	ewol::widget::Composer::onObjectRemove(_removeObject);
 	if (_removeObject == m_searchEntry) {
 		m_searchEntry = NULL;

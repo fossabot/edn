@@ -84,7 +84,7 @@ void appl::WorkerSaveAllFile::onReceiveMessage(const ewol::object::Message& _msg
 	}
 }
 
-void appl::WorkerSaveAllFile::onObjectRemove(ewol::Object* _removeObject) {
+void appl::WorkerSaveAllFile::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 	if (_removeObject == m_worker) {
 		m_worker = NULL;
 		APPL_VERBOSE("AutoRemove After saving sub widget ...");

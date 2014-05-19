@@ -138,7 +138,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 	}
 }
 
-void appl::WorkerCloseFile::onObjectRemove(ewol::Object* _removeObject) {
+void appl::WorkerCloseFile::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 	if (_removeObject == m_worker) {
 		m_worker = NULL;
 		APPL_VERBOSE("AutoRemove After closing sub widget ...");

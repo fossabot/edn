@@ -21,11 +21,11 @@ namespace appl {
 			virtual ~WorkerSaveFile();
 		private:
 			std::string m_bufferName;
-			ewol::widget::FileChooser* m_chooser; //! pop-up element that is open...
+			ewol::object::Shared<ewol::widget::FileChooser> m_chooser; //! pop-up element that is open...
 			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
 		public: // derived function
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
-			virtual void onObjectRemove(ewol::Object * _removeObject);
+			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 	};
 };
 

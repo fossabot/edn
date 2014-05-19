@@ -23,18 +23,18 @@ namespace appl {
 			~ViewerManager();
 		private:
 			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
-			appl::TextViewer* m_viewer;
+			ewol::object::Shared<appl::TextViewer> m_viewer;
 		public:
 			/**
 			 * @brief Set the current buffer selected
 			 * @param[in] _viewer Pointer on the viewer selected
 			 */
-			void setViewerSelected(appl::TextViewer* _viewer, appl::Buffer* _buffer);
+			void setViewerSelected(const ewol::object::Shared<appl::TextViewer>& _viewer, appl::Buffer* _buffer);
 			/**
 			 * @brief Get the current buffer selected
 			 * @return Pointer on the buffer selected
 			 */
-			appl::TextViewer* getViewerSelected() {
+			ewol::object::Shared<appl::TextViewer> getViewerSelected() {
 				return m_viewer;
 			};
 			/**
@@ -42,12 +42,10 @@ namespace appl {
 			 * @param[in] _viewer element selected.
 			 * @return true if the element is selected
 			 */
-			bool isLastSelected(appl::TextViewer* _viewer) {
-				return m_viewer == _viewer;
-			};
+			bool isLastSelected(ewol::object::Shared<appl::TextViewer> _viewer);
 		public: // herited function
 			void onReceiveMessage(const ewol::object::Message& _msg);
-			void onObjectRemove(ewol::Object* _removeObject);
+			void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 		public: // resource manager
 			/**
 			 * @brief keep the resource pointer.

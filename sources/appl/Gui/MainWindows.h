@@ -19,7 +19,7 @@
 
 class MainWindows : public ewol::widget::Windows {
 	private:
-		ewol::widget::Label* m_widgetLabelFileName;
+		ewol::object::Shared<ewol::widget::Label> m_widgetLabelFileName;
 	public:
 		// Constructeur
 		MainWindows();
@@ -38,7 +38,7 @@ class MainWindows : public ewol::widget::Windows {
 		void closeNotSavedFile(appl::Buffer* _buffer);
 	public: // Derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
-		virtual void onObjectRemove(ewol::Object * _removeObject);
+		virtual void onObjectRemove(const ewol::object::Shared<ewol::Object> _removeObject);
 };
 
 

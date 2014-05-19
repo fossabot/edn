@@ -21,8 +21,8 @@ class Search : public ewol::widget::Composer {
 		bool m_forward;
 		bool m_caseSensitive;
 		bool m_wrap;
-		ewol::widget::Entry* m_searchEntry;
-		ewol::widget::Entry* m_replaceEntry;
+		ewol::object::Shared<ewol::widget::Entry> m_searchEntry;
+		ewol::object::Shared<ewol::widget::Entry> m_replaceEntry;
 		std::u32string m_searchData;
 		std::u32string m_replaceData;
 	public:
@@ -40,7 +40,7 @@ class Search : public ewol::widget::Composer {
 		void replace();
 	public: // derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
-		virtual void onObjectRemove(ewol::Object * _removeObject);
+		virtual void onObjectRemove(const ewol::object::Shared<ewol::Object> _removeObject);
 };
 
 #endif

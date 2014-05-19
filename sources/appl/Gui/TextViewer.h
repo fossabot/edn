@@ -33,8 +33,8 @@ namespace appl {
 			int32_t m_colorSelection;
 			int32_t m_colorNormal;
 		private:
-			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
-			appl::ViewerManager* m_viewerManager; //!< handle on the buffer manager
+			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			ewol::object::Shared<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
 		public:
 			TextViewer(const std::string& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer();
@@ -61,7 +61,7 @@ namespace appl {
 			virtual bool calculateMinSize();
 			virtual void onRegenerateDisplay();
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
-			virtual void onObjectRemove(ewol::Object* _removeObject);
+			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 			virtual bool onEventInput(const ewol::event::Input& _event);
 			virtual bool onEventEntry(const ewol::event::Entry& _event);
 			virtual void onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID);

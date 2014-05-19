@@ -702,7 +702,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void appl::TextViewer::onObjectRemove(ewol::Object* _removeObject) {
+void appl::TextViewer::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 	ewol::widget::WidgetScrolled::onObjectRemove(_removeObject);
 	if (m_buffer == _removeObject) {
 		m_buffer = NULL;
