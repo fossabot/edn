@@ -75,9 +75,6 @@ void BufferView::removeAllElement() {
 		}
 	}
 	m_list.clear();
-	if (m_bufferManager != NULL) {
-		appl::BufferManager::release(m_bufferManager);
-	}
 }
 
 void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _selectNewPosition) {
@@ -110,7 +107,7 @@ void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _sel
 void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::List::onReceiveMessage(_msg);
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
-		appl::Buffer* buffer = m_bufferManager->get(_msg.getData());
+		ewol::object::Shared<appl::Buffer> buffer = m_bufferManager->get(_msg.getData());
 		if (buffer == NULL) {
 			APPL_ERROR("event on element nor exist : " << _msg.getData());
 			return;
@@ -162,7 +159,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_DEBUG("message : " << _msg);
 	if (_msg.getMessage() == appl::MsgSelectChange) {
 		m_selectedID = -1;
-		appl::Buffer* tmpBuffer = NULL;
+		ewol::object::Shared<appl::Buffer> tmpBuffer;
 		if (m_bufferManager != NULL) {
 			tmpBuffer = m_bufferManager->getBufferSelected();
 		}
@@ -221,7 +218,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void BufferView::onObjectRemove(ewol::Object* _removeObject) {
+void BufferView::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 	ewol::widget::List::onObjectRemove(_removeObject);
 	for (int32_t iii=0; iii<m_list.size(); iii++) {
 		if (m_list[iii] == NULL) {

@@ -64,7 +64,7 @@ Search::Search() :
 }
 
 Search::~Search() {
-	appl::ViewerManager::release(m_viewerManager);
+	
 }
 
 void Search::find() {
@@ -165,13 +165,13 @@ void Search::onReceiveMessage(const ewol::object::Message& _msg) {
 void Search::onObjectRemove(const ewol::object::Shared<ewol::Object> _removeObject) {
 	ewol::widget::Composer::onObjectRemove(_removeObject);
 	if (_removeObject == m_searchEntry) {
-		m_searchEntry = NULL;
+		m_searchEntry.reset();
 	}
 	if (_removeObject == m_replaceEntry) {
-		m_replaceEntry = NULL;
+		m_replaceEntry.reset();
 	}
 	if (_removeObject == m_viewerManager) {
-		m_viewerManager = NULL;
+		m_viewerManager.reset();
 	}
 }
 

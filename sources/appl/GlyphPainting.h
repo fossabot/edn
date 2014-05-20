@@ -20,6 +20,7 @@ namespace appl {
 			std::vector<appl::GlyphDecoration> m_list;
 		protected:
 			GlyphPainting(const std::string& _filename);
+		public:
 			virtual ~GlyphPainting();
 		public:
 			/**
@@ -55,12 +56,7 @@ namespace appl {
 			 * @param[in] _filename Name of the configuration file.
 			 * @return pointer on the resource or NULL if an error occured.
 			 */
-			static appl::GlyphPainting* keep(const std::string& _filename);
-			/**
-			 * @brief release the keeped resources
-			 * @param[in,out] reference on the object pointer
-			 */
-			static void release(appl::GlyphPainting*& _object);
+			static ewol::object::Shared<appl::GlyphPainting> keep(const std::string& _filename);
 	};
 };
 

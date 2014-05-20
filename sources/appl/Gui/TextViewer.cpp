@@ -29,7 +29,6 @@
 	APPL_DEBUG(comment << (float)((float)processTimeLocal / 1000.0) << "ms");
 
 appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
-  m_buffer(NULL),
   m_displayText(_fontName, _fontSize),
   m_insertMode(false) {
 	addObjectType("appl::TextViewer");
@@ -65,9 +64,6 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 
 appl::TextViewer::~TextViewer() {
 	appl::textPluginManager::disconnect(*this);
-	appl::GlyphPainting::release(m_paintingProperties);
-	appl::BufferManager::release(m_bufferManager);
-	appl::ViewerManager::release(m_viewerManager);
 }
 
 std::string appl::TextViewer::getBufferPath() {

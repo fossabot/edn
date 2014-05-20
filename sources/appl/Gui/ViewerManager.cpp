@@ -26,14 +26,14 @@ appl::ViewerManager::ViewerManager() :
 }
 
 appl::ViewerManager::~ViewerManager() {
-	appl::BufferManager::release(m_bufferManager);
+	
 }
 
-bool appl::ViewerManager::isLastSelected(ewol::object::Shared<appl::TextViewer> _viewer) {
+bool appl::ViewerManager::isLastSelected(const ewol::object::Shared<appl::TextViewer>& _viewer) {
 	return m_viewer == _viewer;
 }
 
-void appl::ViewerManager::setViewerSelected(const ewol::object::Shared<appl::TextViewer>& _viewer, appl::Buffer* _buffer) {
+void appl::ViewerManager::setViewerSelected(const ewol::object::Shared<appl::TextViewer>& _viewer, const ewol::object::Shared<appl::Buffer>& _buffer) {
 	if (m_viewer == _viewer) {
 		return;
 	}
@@ -55,28 +55,19 @@ void appl::ViewerManager::onObjectRemove(const ewol::object::Shared<ewol::Object
 	}
 }
 
-appl::ViewerManager* appl::ViewerManager::keep() {
+ewol::object::Shared<appl::ViewerManager> appl::ViewerManager::keep() {
 	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
-	appl::ViewerManager* object = static_cast<appl::ViewerManager*>(getManager().localKeep("???ViewerManager???"));
+	ewol::object::Shared<appl::ViewerManager> object = ewol::dynamic_pointer_cast<appl::ViewerManager>(getManager().localKeep("???ViewerManager???"));
 	if (NULL != object) {
 		return object;
 	}
 	// this element create a new one every time ....
 	EWOL_INFO("CREATE : appl::ViewerManager: ???ViewerManager???");
-	object = new appl::ViewerManager();
+	object = ewol::object::makeShared(new appl::ViewerManager());
 	if (NULL == object) {
 		EWOL_ERROR("allocation error of a resource : ???ViewerManager???");
 		return NULL;
 	}
 	getManager().localAdd(object);
 	return object;
-}
-
-void appl::ViewerManager::release(appl::ViewerManager*& _object) {
-	if (NULL == _object) {
-		return;
-	}
-	ewol::Resource* object2 = static_cast<ewol::Resource*>(_object);
-	getManager().release(object2);
-	_object = NULL;
 }

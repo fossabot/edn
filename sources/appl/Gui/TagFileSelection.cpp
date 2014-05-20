@@ -35,9 +35,9 @@ appl::TagFileSelection::TagFileSelection() {
 	addEventId(applEventctagsSelection);
 	addEventId(applEventctagsCancel);
 	
-	ewol::widget::Label* myWidgetTitle = NULL;
+	ewol::object::Shared<ewol::widget::Label> myWidgetTitle;
 	
-	ewol::widget::Sizer * mySizerVert = NULL;
+	ewol::object::Shared<ewol::widget::Sizer> mySizerVert;
 	#if defined(__TARGET_OS__Android)
 		setMinSize(ewol::Dimension(vec2(90,90),ewol::Dimension::Pourcent));
 	#elif defined(__TARGET_OS__Windows)
@@ -46,7 +46,7 @@ appl::TagFileSelection::TagFileSelection() {
 		setMinSize(ewol::Dimension(vec2(80,80),ewol::Dimension::Pourcent));
 	#endif
 	
-	mySizerVert = new ewol::widget::Sizer(ewol::widget::Sizer::modeVert);
+	mySizerVert = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeVert));
 	if (NULL == mySizerVert) {
 		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
@@ -54,7 +54,7 @@ appl::TagFileSelection::TagFileSelection() {
 		mySizerVert->setExpand(bvec2(true,true));
 		// set it in the pop-up-system : 
 		setSubWidget(mySizerVert);
-		ewol::widget::Composer* compose = new ewol::widget::Composer(ewol::widget::Composer::String,
+		ewol::object::Shared<ewol::widget::Composer> compose = ewol::object::makeShared(new ewol::widget::Composer(ewol::widget::Composer::String,
 		   "<sizer mode=\"hori\" expand=\"true,false\" lock=\"false,true\">\n"
 		   "	<spacer expand=\"true,false\"/>\n"
 		   "	<button name=\"PLUGIN-CTAGS-jump\" expand=\"false\" fill=\"true\">"
@@ -69,14 +69,14 @@ appl::TagFileSelection::TagFileSelection() {
 		   "			<label>Cancel</label>\n"
 		   "		</sizer>\n"
 		   "	</button>\n"
-		   "</sizer>\n");
+		   "</sizer>\n"));
 		compose->setExpand(bvec2(true,false));
 		compose->setFill(bvec2(true,true));
 		mySizerVert->subWidgetAdd(compose);
 		compose->registerOnEventNameWidget(this, "PLUGIN-CTAGS-jump", "pressed", applEventctagsSelection);
 		compose->registerOnEventNameWidget(this, "PLUGIN-CTAGS-cancel", "pressed", applEventctagsCancel);
 			
-		m_listTag = new appl::TagFileList();
+		m_listTag = ewol::object::makeShared(new appl::TagFileList());
 		if (NULL == m_listTag) {
 			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
@@ -139,7 +139,7 @@ void appl::TagFileSelection::addCtagsNewItem(std::string _file, int32_t _line) {
 	}
 }
 
-void appl::TagFileSelection::onObjectRemove(const ewol::object::Shared<ewol::Object> _removeObject) {
+void appl::TagFileSelection::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 	// First step call parrent : 
 	ewol::widget::PopUp::onObjectRemove(_removeObject);
 	// second step find if in all the elements ...

@@ -38,7 +38,7 @@ appl::TagFileList::~TagFileList() {
 		delete(m_list[iii]);
 		m_list[iii] = NULL;
 	}
-	ewol::resource::ColorFile::release(m_colorProperty);
+	
 }
 
 etk::Color<> appl::TagFileList::getBasicBG() {

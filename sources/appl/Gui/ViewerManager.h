@@ -20,16 +20,17 @@ namespace appl {
 	class ViewerManager : public ewol::Resource {
 		protected:
 			ViewerManager();
+		public:
 			~ViewerManager();
 		private:
-			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
+			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 			ewol::object::Shared<appl::TextViewer> m_viewer;
 		public:
 			/**
 			 * @brief Set the current buffer selected
 			 * @param[in] _viewer Pointer on the viewer selected
 			 */
-			void setViewerSelected(const ewol::object::Shared<appl::TextViewer>& _viewer, appl::Buffer* _buffer);
+			void setViewerSelected(const ewol::object::Shared<appl::TextViewer>& _viewer, const ewol::object::Shared<appl::Buffer>& _buffer);
 			/**
 			 * @brief Get the current buffer selected
 			 * @return Pointer on the buffer selected
@@ -42,7 +43,7 @@ namespace appl {
 			 * @param[in] _viewer element selected.
 			 * @return true if the element is selected
 			 */
-			bool isLastSelected(ewol::object::Shared<appl::TextViewer> _viewer);
+			bool isLastSelected(const ewol::object::Shared<appl::TextViewer>& _viewer);
 		public: // herited function
 			void onReceiveMessage(const ewol::object::Message& _msg);
 			void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
@@ -53,12 +54,7 @@ namespace appl {
 			 * @param[in] _filename Name of the configuration file.
 			 * @return pointer on the resource or NULL if an error occured.
 			 */
-			static appl::ViewerManager* keep();
-			/**
-			 * @brief release the keeped resources
-			 * @param[in,out] reference on the object pointer
-			 */
-			static void release(appl::ViewerManager*& _object);
+			static ewol::object::Shared<appl::ViewerManager> keep();
 	};
 };
 

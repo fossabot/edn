@@ -24,7 +24,7 @@
 namespace appl {
 	class TextViewer : public ewol::widget::WidgetScrolled {
 		private:
-			appl::GlyphPainting* m_paintingProperties; //!< element painting property
+			ewol::object::Shared<appl::GlyphPainting> m_paintingProperties; //!< element painting property
 			int32_t m_colorBackground;
 			int32_t m_colorSpace;
 			int32_t m_colorTabulation;
@@ -39,19 +39,19 @@ namespace appl {
 			TextViewer(const std::string& _fontName="", int32_t _fontSize=-1);
 			virtual ~TextViewer();
 		private:
-			appl::Buffer* m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
+			ewol::object::Shared<appl::Buffer> m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
 		public:
 			/**
 			 * @brief Get the buffer property (only for the class : template <typename TYPE> class TextViewerPluginData)
 			 * @return pointer on buffer
 			 */
-			appl::Buffer* internalGetBuffer() {
+			ewol::object::Shared<appl::Buffer> internalGetBuffer() {
 				return m_buffer;
 			}
 		private:
 			ewol::compositing::Text m_displayText; //!< Text display properties.
 			ewol::compositing::Drawing m_displayDrawing; //!< Other diaplay requested.
-			std::vector<std::pair<appl::Buffer*, vec2>> m_drawingRemenber;
+			std::vector<std::pair<ewol::object::Shared<appl::Buffer>, vec2>> m_drawingRemenber;
 		public:
 			void setFontSize(int32_t _size);
 			void setFontName(const std::string& _fontName);
@@ -399,9 +399,9 @@ namespace appl {
 			 * @param[in] _data Associate data wit the event
 			 */
 			virtual void ext_shortCutAdd(const char * _descriptiveString,
-			                         const char * _generateEventId,
-			                         std::string _data="",
-			                         bool _broadcast=false) {
+			                             const char * _generateEventId,
+			                             std::string _data="",
+			                             bool _broadcast=false) {
 				shortCutAdd(_descriptiveString, _generateEventId, _data, _broadcast);
 			}
 	};

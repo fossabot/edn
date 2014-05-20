@@ -61,9 +61,9 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 	public :
 		ParameterAboutGui() :
 		  ewol::widget::Sizer(ewol::widget::Sizer::modeVert) {
-			ewol::widget::Spacer* mySpacer = NULL;
+			ewol::object::Shared<ewol::widget::Spacer> mySpacer = NULL;
 			
-			mySpacer = new ewol::widget::Spacer();
+			mySpacer = ewol::object::makeShared(new ewol::widget::Spacer());
 			if (NULL == mySpacer) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
@@ -93,7 +93,7 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			tmpLabel += "    libPng, ogg-tremor, portaudio, libZip<br/>";
 			tmpLabel += "    tinyXml, freetype, agg2.4, etk<br/>";
 			tmpLabel += "</left>";
-			ewol::widget::Label* myLabel = new ewol::widget::Label(tmpLabel);
+			ewol::object::Shared<ewol::widget::Label> myLabel = ewol::object::makeShared(new ewol::widget::Label(tmpLabel));
 			if (NULL == myLabel) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
@@ -264,7 +264,7 @@ MainWindows::MainWindows() {
 
 
 MainWindows::~MainWindows() {
-	appl::BufferManager::release(m_bufferManager);
+	
 }
 
 
@@ -290,7 +290,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 			return;
 		}
 		// Get a ref on the buffer selected (if null, no buffer was selected ...)
-		appl::Buffer* tmpBuffer = m_bufferManager->getBufferSelected();
+		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->getBufferSelected();
 		if (tmpBuffer != NULL) {
 			etk::FSNode tmpFile = tmpBuffer->getFileName();
 			tmpWidget->setFolder(tmpFile.getNameFolder());
@@ -371,7 +371,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 	     || _msg.getMessage() == appl::Buffer::eventIsSave
 	     || _msg.getMessage() == appl::Buffer::eventChangeName) {
 		// select a new Buffer ==> change title:
-		appl::Buffer* tmpp = m_bufferManager->getBufferSelected();
+		ewol::object::Shared<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 		if (tmpp == NULL) {
 			setTitle("Edn");
 			if (m_widgetLabelFileName != NULL) {
@@ -421,7 +421,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
 		}
-		appl::Buffer* tmpBuffer = m_bufferManager->get(_msg.getData());
+		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
 		if (tmpBuffer == NULL) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
@@ -440,7 +440,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
 		}
-		appl::Buffer* tmpBuffer = m_bufferManager->get(_msg.getData());
+		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
 		if (tmpBuffer == NULL) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
@@ -451,7 +451,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
 		}
-		appl::Buffer* tmpBuffer = m_bufferManager->get(_msg.getData());
+		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
 		if (tmpBuffer == NULL) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
@@ -462,7 +462,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 	return;
 }
 
-void MainWindows::saveAsPopUp(appl::Buffer* _buffer) {
+void MainWindows::saveAsPopUp(const ewol::object::Shared<appl::Buffer>& _buffer) {
 	if (_buffer == NULL) {
 		APPL_ERROR("Call With NULL input...");
 		return;
@@ -470,7 +470,7 @@ void MainWindows::saveAsPopUp(appl::Buffer* _buffer) {
 	appl::WorkerSaveFile* tmpObject = new appl::WorkerSaveFile(_buffer->getFileName());
 }
 
-void MainWindows::closeNotSavedFile(appl::Buffer* _buffer) {
+void MainWindows::closeNotSavedFile(const ewol::object::Shared<appl::Buffer>& _buffer) {
 	if (_buffer == NULL) {
 		APPL_ERROR("Call With NULL input...");
 		return;
@@ -506,7 +506,7 @@ void MainWindows::closeNotSavedFile(appl::Buffer* _buffer) {
 	popUpWidgetPush(tmpPopUp);
 }
 
-void MainWindows::onObjectRemove(const ewol::object::Shared<ewol::Object> _removeObject) {
+void MainWindows::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 	ewol::widget::Windows::onObjectRemove(_removeObject);
 	if (m_widgetLabelFileName == _removeObject) {
 		m_widgetLabelFileName = NULL;

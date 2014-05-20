@@ -17,7 +17,7 @@
 
 class Search : public ewol::widget::Composer {
 	private:
-		appl::ViewerManager* m_viewerManager; //!< handle on the buffer manager
+		ewol::object::Shared<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
 		bool m_forward;
 		bool m_caseSensitive;
 		bool m_wrap;
