@@ -67,7 +67,7 @@ namespace appl {
 			void clearRedo(appl::PluginHistoryData& _data);
 			void clearUndo(appl::PluginHistoryData& _data);
 		public:
-			virtual void onObjectRemove(ewol::Object* _removeObject);
+			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 	};
 };
 

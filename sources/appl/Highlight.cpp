@@ -260,29 +260,20 @@ void appl::Highlight::parse2(int64_t _start,
 	}
 }
 
-appl::Highlight* appl::Highlight::keep(const std::string& _filename) {
+ewol::object::Shared<appl::Highlight> appl::Highlight::keep(const std::string& _filename) {
 	//EWOL_INFO("KEEP : appl::Highlight : file : \"" << _filename << "\"");
-	appl::Highlight* object = static_cast<appl::Highlight*>(getManager().localKeep(_filename));
+	ewol::object::Shared<appl::Highlight> object = ewol::dynamic_pointer_cast<appl::Highlight>(getManager().localKeep(_filename));
 	if (NULL != object) {
 		return object;
 	}
 	EWOL_INFO("CREATE : appl::Highlight : file : \"" << _filename << "\"");
 	// this element create a new one every time ....
-	object = new appl::Highlight(_filename, "THEME:COLOR:textViewer.json");
+	object = ewol::object::makeShared(new appl::Highlight(_filename, "THEME:COLOR:textViewer.json"));
 	if (NULL == object) {
 		EWOL_ERROR("allocation error of a resource : ??Highlight??");
 		return NULL;
 	}
 	getManager().localAdd(object);
 	return object;
-	
 }
 
-void appl::Highlight::release(appl::Highlight*& _object) {
-	if (NULL == _object) {
-		return;
-	}
-	ewol::Resource* object2 = static_cast<ewol::Resource*>(_object);
-	getManager().release(object2);
-	_object = NULL;
-}

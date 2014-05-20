@@ -33,7 +33,7 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 	}
 	if (m_bufferName == "") {
 		// need to find the curent file ...
-		appl::Buffer* tmpp = m_bufferManager->getBufferSelected();
+		ewol::object::Shared<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 		if (tmpp == NULL) {
 			APPL_ERROR("No selected buffer now ...");
 			autoDestroy();
@@ -46,7 +46,7 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 		autoDestroy();
 		return;
 	}
-	appl::Buffer* tmpBuffer = m_bufferManager->get(m_bufferName);
+	ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(m_bufferName);
 	if (tmpBuffer == NULL) {
 		APPL_ERROR("Error to get the buffer : " << m_bufferName);
 		autoDestroy();
@@ -60,7 +60,7 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 			return;
 		}
 	}
-	m_chooser = new ewol::widget::FileChooser();
+	m_chooser = ewol::object::makeShared(new ewol::widget::FileChooser());
 	if (NULL == m_chooser) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 		autoDestroy();
@@ -71,7 +71,7 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 	etk::FSNode tmpName(m_bufferName);
 	m_chooser->setFolder(tmpName.getNameFolder());
 	m_chooser->setFileName(tmpName.getNameFile());
-	ewol::widget::Windows* tmpWindows = ewol::getContext().getWindows();
+	ewol::object::Shared<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
 	if (tmpWindows == NULL) {
 		APPL_ERROR("Error to get the windows.");
 		autoDestroy();
@@ -82,7 +82,7 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 }
 
 appl::WorkerSaveFile::~WorkerSaveFile() {
-	appl::BufferManager::release(m_bufferManager);
+	
 }
 
 void appl::WorkerSaveFile::onReceiveMessage(const ewol::object::Message& _msg) {
@@ -99,14 +99,14 @@ void appl::WorkerSaveFile::onReceiveMessage(const ewol::object::Message& _msg) {
 			APPL_ERROR("Try to save an non-existant file :" << m_bufferName);
 			return;
 		}
-		appl::Buffer* tmpBuffer = m_bufferManager->get(m_bufferName);
+		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(m_bufferName);
 		if (tmpBuffer == NULL) {
 			APPL_ERROR("Error to get the buffer : " << m_bufferName);
 			return;
 		}
 		tmpBuffer->setFileName(_msg.getData());
 		if (tmpBuffer->storeFile() == false) {
-			ewol::widget::Windows* tmpWindows = ewol::getContext().getWindows();
+			ewol::object::Shared<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
 			if (tmpWindows == NULL) {
 				return;
 			}

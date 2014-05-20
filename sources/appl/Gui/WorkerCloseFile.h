@@ -23,9 +23,9 @@ namespace appl {
 			virtual ~WorkerCloseFile();
 		private:
 			std::string m_bufferName;
-			appl::Buffer* m_buffer; //!< reference on the buffer (when rename, we have no more reference on the buffer
-			appl::WorkerSaveFile* m_worker; //! sub-worker element...
-			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
+			ewol::object::Shared<appl::Buffer> m_buffer; //!< reference on the buffer (when rename, we have no more reference on the buffer
+			ewol::object::Shared<appl::WorkerSaveFile> m_worker; //! sub-worker element...
+			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // derived function
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
 			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);

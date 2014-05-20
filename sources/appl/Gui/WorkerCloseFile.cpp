@@ -38,7 +38,7 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 	}
 	if (m_bufferName == "") {
 		// need to find the curent file ...
-		appl::Buffer* tmpp = m_bufferManager->getBufferSelected();
+		ewol::object::Shared<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 		if (tmpp == NULL) {
 			APPL_ERROR("No selected buffer now ...");
 			autoDestroy();
@@ -63,14 +63,14 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 		return;
 	}
 	
-	ewol::widget::StdPopUp* tmpPopUp = new ewol::widget::StdPopUp();
+	ewol::object::Shared<ewol::widget::StdPopUp> tmpPopUp = ewol::object::makeShared(new ewol::widget::StdPopUp());
 	if (tmpPopUp == NULL) {
 		APPL_ERROR("Can not create a simple pop-up");
 		return;
 	}
 	tmpPopUp->setTitle("<bold>Close un-saved file:</bold>");
 	tmpPopUp->setComment("The file named : <i>\"" + m_buffer->getFileName() + "\"</i> is curently modify.   <br/>If you don't saves these modifications,<br/>they will be definitly lost...");
-	ewol::Widget* bt = NULL;
+	ewol::object::Shared<ewol::Widget> bt = NULL;
 	if (m_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("Save", true);
 		if (bt != NULL) {
@@ -87,7 +87,7 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 	}
 	tmpPopUp->addButton("Cancel", true);
 	tmpPopUp->setRemoveOnExternClick(true);
-	ewol::widget::Windows* tmpWindows = ewol::getContext().getWindows();
+	ewol::object::Shared<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
 	if (tmpWindows == NULL) {
 		APPL_ERROR("Error to get the windows.");
 		autoDestroy();
@@ -97,7 +97,7 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 }
 
 appl::WorkerCloseFile::~WorkerCloseFile() {
-	appl::BufferManager::release(m_bufferManager);
+	
 }
 
 void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) {
@@ -107,7 +107,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 	}
 	APPL_DEBUG("have message : " << _msg);
 	if (_msg.getMessage() == s_saveAsValidate) {
-		m_worker = new appl::WorkerSaveFile(m_bufferName);
+		m_worker = ewol::object::makeShared(new appl::WorkerSaveFile(m_bufferName));
 		if (m_worker != NULL) {
 			m_worker->registerOnEvent(this, appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
 		}
@@ -118,7 +118,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 			return;
 		}
 		if (m_buffer->storeFile() == false) {
-			ewol::widget::Windows* tmpWindows = ewol::getContext().getWindows();
+			ewol::object::Shared<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
 			if (tmpWindows == NULL) {
 				return;
 			}

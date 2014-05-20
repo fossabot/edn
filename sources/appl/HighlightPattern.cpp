@@ -13,7 +13,7 @@
 #undef __class__
 #define __class__ "HighlightPattern"
 
-appl::HighlightPattern::HighlightPattern(appl::GlyphPainting*& _glyphPainting) :
+appl::HighlightPattern::HighlightPattern(const ewol::object::Shared<appl::GlyphPainting>& _glyphPainting) :
   m_glyphPainting(_glyphPainting),
   m_paternName(""),
   m_regExpStart(NULL),

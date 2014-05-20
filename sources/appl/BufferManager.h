@@ -21,7 +21,7 @@ namespace appl {
 		public:
 			~BufferManager();
 		private:
-			std::vector<ewol::object::Owner<appl::Buffer>> m_list; // list of all buffer curently open
+			std::vector<ewol::object::Shared<appl::Buffer>> m_list; // list of all buffer curently open
 		public:
 			/**
 			 * @brief Get a specific buffer with his name (can create a new buffer).

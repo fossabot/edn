@@ -27,7 +27,7 @@ appl::TextPluginCtags::TextPluginCtags() :
 	m_bufferManager = appl::BufferManager::keep();
 }
 appl::TextPluginCtags::~TextPluginCtags() {
-	appl::BufferManager::release(m_bufferManager);
+	
 }
 
 const char* eventJumpDestination = "event-plugin-ctags-jump-destination";
@@ -78,7 +78,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 	
 	if (tagsFindNext (m_ctagFile, &entry) == TagSuccess) {
 		APPL_INFO("Multiple file destination ...");
-		appl::TagFileSelection* tmpWidget = new appl::TagFileSelection();
+		ewol::object::Shared<appl::TagFileSelection> tmpWidget = ewol::object::makeShared(new appl::TagFileSelection());
 		if (NULL == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
@@ -174,7 +174,7 @@ bool appl::TextPluginCtags::onReceiveMessage(appl::TextViewer& _textDrawer,
 	}
 	if (_msg.getMessage() == eventOpenCtagsFile) {
 		APPL_INFO("Request opening ctag file");
-		ewol::widget::FileChooser* tmpWidget = new ewol::widget::FileChooser();
+		ewol::object::Shared<ewol::widget::FileChooser> tmpWidget = ewol::object::makeShared(new ewol::widget::FileChooser());
 		if (NULL == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 			return true;

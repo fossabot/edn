@@ -15,14 +15,14 @@
 #undef __class__
 #define __class__ "highlightManager"
 
-static std::vector<appl::Highlight*>& s_list() {
-	static std::vector<appl::Highlight*> list;
+static std::vector<ewol::object::Shared<appl::Highlight>>& s_list() {
+	static std::vector<ewol::object::Shared<appl::Highlight>> list;
 	return list;
 }
 
 
 void appl::highlightManager::init() {
-	std::vector<appl::Highlight*>& hlList = s_list();
+	std::vector<ewol::object::Shared<appl::Highlight>>& hlList = s_list();
 	if (hlList.size() != 0) {
 		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
 		hlList.clear();
@@ -40,7 +40,7 @@ void appl::highlightManager::init() {
 		}
 		std::string filename = list[iii]->getName() + "/highlight.xml";
 		APPL_DEBUG("Load xml name : " << filename);
-		appl::Highlight *myHightLine = appl::Highlight::keep(filename);
+		ewol::object::Shared<appl::Highlight> myHightLine = appl::Highlight::keep(filename);
 		if (myHightLine != NULL) {
 			hlList.push_back(myHightLine);
 		} else {
@@ -59,18 +59,11 @@ void appl::highlightManager::init() {
 }
 
 void appl::highlightManager::unInit() {
-	std::vector<Highlight*>& hlList = s_list();
+	std::vector<ewol::object::Shared<Highlight>>& hlList = s_list();
 	if (hlList.size() == 0) {
 		APPL_DEBUG("HighlightManager  ==> no highlight");
 		hlList.clear();
 		return;
-	}
-	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
-		if (hlList[iii] == NULL) {
-			continue;
-		}
-		appl::Highlight::release(hlList[iii]);
-		hlList[iii] = NULL;
 	}
 	hlList.clear();
 }
@@ -80,7 +73,7 @@ std::string appl::highlightManager::getTypeExtention(const std::string& _extenti
 		return "";
 	}
 	APPL_DEBUG("Try to find type for extention : '" << _extention << "' in " << s_list().size() << " types");
-	std::vector<Highlight*>& hlList = s_list();
+	std::vector<ewol::object::Shared<Highlight>>& hlList = s_list();
 	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;
@@ -99,7 +92,7 @@ std::string appl::highlightManager::getFileWithTypeType(const std::string& _type
 	if (_type.size() == 0) {
 		return "";
 	}
-	std::vector<Highlight*>& hlList = s_list();
+	std::vector<ewol::object::Shared<Highlight>>& hlList = s_list();
 	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
 		if (hlList[iii] == NULL) {
 			continue;

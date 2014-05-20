@@ -19,8 +19,8 @@ namespace appl {
 			virtual ~WorkerSaveAllFile();
 		private:
 			std::vector<std::string> m_bufferNameList;
-			appl::WorkerSaveFile* m_worker; //! pop-up element that is open...
-			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
+			ewol::object::Shared<appl::WorkerSaveFile> m_worker; //! pop-up element that is open...
+			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // derived function
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
 			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);

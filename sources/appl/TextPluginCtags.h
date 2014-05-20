@@ -33,7 +33,7 @@ namespace appl {
 			void printTag(const tagEntry *_entry);
 			void jumpTo(const std::string& _name);
 			void jumpFile(const std::string& _filename, int64_t _lineId);
-			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
+			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public:
 			TextPluginCtags();
 			~TextPluginCtags();

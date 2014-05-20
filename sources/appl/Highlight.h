@@ -34,10 +34,11 @@ namespace appl {
 namespace appl {
 	class Highlight : public ewol::Resource {
 		private:
-			appl::GlyphPainting* m_paintingProperties;
+			ewol::object::Shared<appl::GlyphPainting> m_paintingProperties;
 		protected:
 			// Constructeur
 			Highlight(const std::string& _xmlFilename, const std::string& _colorFile);
+		public:
 			~Highlight();
 		private:
 			std::string m_typeName; //!< descriptive string type like "C/C++"
@@ -73,12 +74,7 @@ namespace appl {
 			 * @param[in] _filename Name of the configuration file.
 			 * @return pointer on the resource or NULL if an error occured.
 			 */
-			static appl::Highlight* keep(const std::string& _filename);
-			/**
-			 * @brief release the keeped resources
-			 * @param[in,out] reference on the object pointer
-			 */
-			static void release(appl::Highlight*& _object);
+			static ewol::object::Shared<appl::Highlight> keep(const std::string& _filename);
 		public: // herited function :
 			virtual void updateContext() {
 				// no upfate to do ...

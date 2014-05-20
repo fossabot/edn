@@ -588,7 +588,7 @@ namespace appl {
 		protected:
 			std::string m_highlightType; //!< Name of the highlight type
 			
-			appl::Highlight* m_highlight; //!< internal link with the Highlight system
+			ewol::object::Shared<appl::Highlight> m_highlight; //!< internal link with the Highlight system
 			std::vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
 		public:
 			/**

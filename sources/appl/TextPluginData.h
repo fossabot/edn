@@ -32,7 +32,7 @@ namespace appl {
 				m_specificData.clear();
 			}
 		private:
-			std::vector<std::pair<appl::Buffer* ,TYPE* >> m_specificData;
+			std::vector<std::pair<ewol::object::Shared<appl::Buffer> ,TYPE* >> m_specificData;
 		protected:
 			TYPE* getDataRef(appl::TextViewer& _textDrawer) {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
@@ -115,7 +115,7 @@ namespace appl {
 				return;
 			};
 		public:
-			virtual void onObjectRemove(ewol::Object* _removeObject) {
+			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 				// TODO : plop
 			};
 	};

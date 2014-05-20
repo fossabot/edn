@@ -29,10 +29,10 @@ enum resultFind {
 namespace appl {
 	class HighlightPattern {
 		private:
-			appl::GlyphPainting*& m_glyphPainting;
+			ewol::object::Shared<appl::GlyphPainting> m_glyphPainting;
 		public:
 			// Constructeur
-			HighlightPattern(appl::GlyphPainting*& _glyphPainting);
+			HighlightPattern(const ewol::object::Shared<appl::GlyphPainting>& _glyphPainting);
 			~HighlightPattern();
 		private:
 			std::string m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")

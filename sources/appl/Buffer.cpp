@@ -139,9 +139,7 @@ appl::Buffer::Buffer() :
 }
 
 appl::Buffer::~Buffer() {
-	if (m_highlight == NULL) {
-		appl::Highlight::release(m_highlight);
-	}
+	
 }
 
 bool appl::Buffer::loadFile(const std::string& _name) {
@@ -694,9 +692,7 @@ void appl::Buffer::tryFindHighlightType() {
 void appl::Buffer::setHighlightType(const std::string& _type) {
 	m_highlightType = "";
 	cleanHighLight();
-	if (m_highlight == NULL) {
-		appl::Highlight::release(m_highlight);
-	}
+	m_highlight.reset();
 	std::string resourceName = appl::highlightManager::getFileWithTypeType(_type);
 	if (resourceName == "") {
 		return;

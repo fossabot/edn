@@ -126,16 +126,8 @@ bool APP_Init(ewol::Context& _context, size_t _initId, size_t& _nbInitStep) {
  */
 void APP_UnInit(ewol::Context& _context) {
 	APPL_INFO(" == > Un-Init " PROJECT_NAME " (START)");
-	ewol::object::Shared<ewol::widget::Windows> tmpWindows = _context.getWindows();
-	
 	_context.setWindows(NULL);
-	
-	if (NULL != tmpWindows) {
-		delete(tmpWindows);
-		tmpWindows = NULL;
-	}
 	appl::textPluginManager::unInit();
-	
 	APPL_INFO("Stop Hightlight");
 	appl::highlightManager::unInit();
 	//Kill all singleton
