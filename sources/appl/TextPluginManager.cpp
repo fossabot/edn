@@ -19,36 +19,36 @@
 #undef __class__
 #define __class__ "textPluginManager"
 
-static std::vector<appl::TextViewerPlugin *>& getList() {
-	static std::vector<appl::TextViewerPlugin *> s_list;
+static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getList() {
+	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnEventEntry() {
-	static std::vector<appl::TextViewerPlugin *> s_list;
+static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnEventEntry() {
+	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnEventInput() {
-	static std::vector<appl::TextViewerPlugin *> s_list;
+static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnEventInput() {
+	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnWrite() {
-	static std::vector<appl::TextViewerPlugin *> s_list;
+static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnWrite() {
+	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnReplace() {
-	static std::vector<appl::TextViewerPlugin *> s_list;
+static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnReplace() {
+	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnRemove() {
-	static std::vector<appl::TextViewerPlugin *> s_list;
+static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnRemove() {
+	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnReceiveMessage() {
-	static std::vector<appl::TextViewerPlugin *> s_list;
+static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnReceiveMessage() {
+	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<appl::TextViewerPlugin *>& getListOnCursorMove() {
-	static std::vector<appl::TextViewerPlugin *> s_list;
+static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnCursorMove() {
+	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
 
@@ -65,28 +65,20 @@ void appl::textPluginManager::unInit() {
 	getListOnRemove().clear();
 	getListOnReceiveMessage().clear();
 	getListOnCursorMove().clear();
-	// remove all plugin:
-	for (int32_t iii=0; iii<getList().size(); ++iii) {
-		if (getList()[iii] == NULL) {
-			continue;
-		}
-		delete(getList()[iii]);
-		getList()[iii] = NULL;
-	}
 	getList().clear();
 }
 
 void appl::textPluginManager::addDefaultPlugin() {
-	appl::textPluginManager::addPlugin(new appl::TextPluginCopy());
-	appl::textPluginManager::addPlugin(new appl::TextPluginMultiLineTab());
-	appl::textPluginManager::addPlugin(new appl::TextPluginAutoIndent());
-	appl::textPluginManager::addPlugin(new appl::TextPluginHistory());
-	appl::textPluginManager::addPlugin(new appl::TextPluginRmLine());
-	appl::textPluginManager::addPlugin(new appl::TextPluginSelectAll());
-	appl::textPluginManager::addPlugin(new appl::TextPluginCtags());
+	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginCopy()));
+	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginMultiLineTab()));
+	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginAutoIndent()));
+	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginHistory()));
+	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginRmLine()));
+	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginSelectAll()));
+	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginCtags()));
 }
 
-void appl::textPluginManager::addPlugin(appl::TextViewerPlugin* _plugin) {
+void appl::textPluginManager::addPlugin(const ewol::object::Shared<appl::TextViewerPlugin>& _plugin) {
 	if (_plugin == NULL) {
 		return;
 	}
@@ -134,7 +126,7 @@ void appl::textPluginManager::disconnect(appl::TextViewer& _widget) {
 
 bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
                                            const ewol::event::Entry& _event) {
-	std::vector<appl::TextViewerPlugin *>& list = getListOnEventEntry();
+	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnEventEntry();
 	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -148,7 +140,7 @@ bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onEventInput(appl::TextViewer& _textDrawer,
                                            const ewol::event::Input& _event) {
-	std::vector<appl::TextViewerPlugin *>& list = getListOnEventInput();
+	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnEventInput();
 	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -163,7 +155,7 @@ bool appl::textPluginManager::onEventInput(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onWrite(appl::TextViewer& _textDrawer,
                                       const appl::Buffer::Iterator& _pos,
                                       const std::string& _data) {
-	std::vector<appl::TextViewerPlugin *>& list = getListOnWrite();
+	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnWrite();
 	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -179,7 +171,7 @@ bool appl::textPluginManager::onReplace(appl::TextViewer& _textDrawer,
                                         const appl::Buffer::Iterator& _pos,
                                         const std::string& _data,
                                         const appl::Buffer::Iterator& _posEnd) {
-	std::vector<appl::TextViewerPlugin *>& list = getListOnReplace();
+	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnReplace();
 	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -194,7 +186,7 @@ bool appl::textPluginManager::onReplace(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
                                        const appl::Buffer::Iterator& _pos,
                                        const appl::Buffer::Iterator& _posEnd) {
-	std::vector<appl::TextViewerPlugin *>& list = getListOnRemove();
+	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnRemove();
 	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -208,7 +200,7 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onReceiveMessage(appl::TextViewer& _textDrawer,
                                                const ewol::object::Message& _msg) {
-	std::vector<appl::TextViewerPlugin *>& list = getListOnReceiveMessage();
+	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnReceiveMessage();
 	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
@@ -222,7 +214,7 @@ bool appl::textPluginManager::onReceiveMessage(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onCursorMove(appl::TextViewer& _textDrawer,
                                            const appl::Buffer::Iterator& _pos) {
-	std::vector<appl::TextViewerPlugin *>& list = getListOnCursorMove();
+	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnCursorMove();
 	for (int32_t iii=0; iii<list.size(); ++iii) {
 		if (list[iii] == NULL) {
 			continue;
