@@ -86,7 +86,7 @@ bool APP_Init(ewol::Context& _context, size_t _initId, size_t& _nbInitStep) {
 	
 	ewol::object::Shared<MainWindows> basicWindows = ewol::object::makeShared(new MainWindows());
 	
-	if (NULL == basicWindows) {
+	if (basicWindows == nullptr) {
 		APPL_ERROR("Can not allocate the basic windows");
 		_context.stop();
 		return false;
@@ -126,7 +126,6 @@ bool APP_Init(ewol::Context& _context, size_t _initId, size_t& _nbInitStep) {
  */
 void APP_UnInit(ewol::Context& _context) {
 	APPL_INFO(" == > Un-Init " PROJECT_NAME " (START)");
-	_context.setWindows(NULL);
 	appl::textPluginManager::unInit();
 	APPL_INFO("Stop Hightlight");
 	appl::highlightManager::unInit();
