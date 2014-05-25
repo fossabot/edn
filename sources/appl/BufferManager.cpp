@@ -42,12 +42,12 @@ ewol::object::Shared<appl::Buffer> appl::BufferManager::createNewBuffer() {
 
 ewol::object::Shared<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
 	APPL_INFO("get(" << _fileName << "," << _createIfNeeded << ")");
-	for (int32_t iii = 0; iii < m_list.size(); ++iii) {
-		if (m_list[iii] == NULL) {
+	for (auto &it : m_list) {
+		if (it == NULL) {
 			continue;
 		}
-		if (m_list[iii]->getFileName() == _fileName) {
-			return m_list[iii];
+		if (it->getFileName() == _fileName) {
+			return it;
 		}
 	}
 	if (_createIfNeeded == true) {
@@ -76,22 +76,32 @@ void appl::BufferManager::onObjectRemove(const ewol::object::Shared<ewol::Object
 	if (m_bufferSelected == _removeObject) {
 		setBufferSelected(NULL);
 	}
-	for (int32_t iii = 0; iii < m_list.size(); ++iii) {
-		if (m_list[iii] != _removeObject) {
+	for (auto it(m_list.begin()); it!=m_list.end(); ++it) {
+		if (*it != _removeObject) {
 			continue;
 		}
-		m_list[iii] = NULL;
-		m_list.erase(m_list.begin()+iii);
-		return;
+		m_list.erase(it);
+		it = m_list.begin();
 	}
 }
 
+ewol::object::Shared<appl::Buffer> appl::BufferManager::get(int32_t _id) {
+	int32_t id = 0;
+	for (auto it : m_list) {
+		if (id == _id) {
+			return it;
+		}
+		id++;
+	}
+	return m_list.back();
+}
+
 bool appl::BufferManager::exist(const std::string& _fileName) {
-	for (int32_t iii = 0; iii < m_list.size(); ++iii) {
-		if (m_list[iii] == NULL) {
+	for (auto it : m_list) {
+		if (it == nullptr) {
 			continue;
 		}
-		if (m_list[iii]->getFileName() == _fileName) {
+		if (it->getFileName() == _fileName) {
 			return true;
 		}
 	}

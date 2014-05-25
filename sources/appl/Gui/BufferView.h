@@ -15,10 +15,8 @@
 #include <ewol/widget/List.h>
 #include <ewol/widget/Windows.h>
 
-namespace appl
-{
-	class dataBufferStruct
-	{
+namespace appl {
+	class dataBufferStruct {
 		public:
 			etk::FSNode m_bufferName;
 			ewol::object::Shared<appl::Buffer> m_buffer;
@@ -31,8 +29,7 @@ namespace appl
 	};
 };
 
-class BufferView : public ewol::widget::List
-{
+class BufferView : public ewol::widget::List {
 	private:
 		ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 	private:

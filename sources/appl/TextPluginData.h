@@ -116,7 +116,12 @@ namespace appl {
 			};
 		public:
 			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
-				// TODO : plop
+				for (auto it(m_specificData.begin()); it != m_specificData.end(); ++it) {
+					if (it->first == _removeObject) {
+						m_specificData.erase(it);
+						it = m_specificData.begin();
+					}
+				}
 			};
 	};
 };

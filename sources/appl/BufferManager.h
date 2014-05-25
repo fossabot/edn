@@ -9,6 +9,7 @@
 #ifndef __BUFFER_MANAGER_H__
 #define __BUFFER_MANAGER_H__
 
+#include <list>
 #include <appl/Buffer.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/Widget.h>
@@ -21,7 +22,7 @@ namespace appl {
 		public:
 			~BufferManager();
 		private:
-			std::vector<ewol::object::Shared<appl::Buffer>> m_list; // list of all buffer curently open
+			std::list<ewol::object::Owner<appl::Buffer>> m_list; // list of all buffer curently open
 		public:
 			/**
 			 * @brief Get a specific buffer with his name (can create a new buffer).
@@ -53,9 +54,7 @@ namespace appl {
 			 * @param[in] _id Number of buffer
 			 * @return pointer on the buffer
 			 */
-			ewol::object::Shared<appl::Buffer> get(int32_t _id) {
-				return m_list[_id];
-			}
+			ewol::object::Shared<appl::Buffer> get(int32_t _id);
 			/**
 			 * @brief Create a new buffer empty.
 			 * @return Created buffer or NULL.
