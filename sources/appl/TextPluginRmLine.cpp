@@ -17,6 +17,7 @@
 
 appl::TextPluginRmLine::TextPluginRmLine() {
 	m_activateOnReceiveMessage = true;
+	addObjectType("appl::TextPluginRmLine");
 }
 
 void appl::TextPluginRmLine::onPluginEnable(appl::TextViewer& _textDrawer) {

@@ -162,15 +162,15 @@ void Search::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void Search::onObjectRemove(const ewol::object::Shared<ewol::Object> _removeObject) {
-	ewol::widget::Composer::onObjectRemove(_removeObject);
-	if (_removeObject == m_searchEntry) {
+void Search::onObjectRemove(const ewol::object::Shared<ewol::Object> _object) {
+	ewol::widget::Composer::onObjectRemove(_object);
+	if (_object == m_searchEntry) {
 		m_searchEntry.reset();
 	}
-	if (_removeObject == m_replaceEntry) {
+	if (_object == m_replaceEntry) {
 		m_replaceEntry.reset();
 	}
-	if (_removeObject == m_viewerManager) {
+	if (_object == m_viewerManager) {
 		m_viewerManager.reset();
 	}
 }

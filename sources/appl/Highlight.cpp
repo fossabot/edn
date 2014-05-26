@@ -38,6 +38,7 @@ void appl::Highlight::parseRules(exml::Element* _child,
 appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _colorFile) :
   ewol::Resource(_xmlFilename),
   m_typeName("") {
+	addObjectType("appl::Highlight");
 	// keep color propertiy file :
 	m_paintingProperties = appl::GlyphPainting::keep(_colorFile);
 	

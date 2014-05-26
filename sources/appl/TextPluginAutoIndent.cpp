@@ -17,6 +17,7 @@
 
 appl::TextPluginAutoIndent::TextPluginAutoIndent() {
 	m_activateOnEventEntry = true;
+	addObjectType("appl::TextPluginAutoIndent");
 }
 
 bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,

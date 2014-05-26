@@ -72,12 +72,13 @@ void appl::BufferManager::setBufferSelected(ewol::object::Shared<appl::Buffer> _
 	sendMultiCast(appl::MsgSelectChange, "");
 }
 
-void appl::BufferManager::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
-	if (m_bufferSelected == _removeObject) {
+void appl::BufferManager::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+	ewol::Resource::onObjectRemove(_object);
+	if (m_bufferSelected == _object) {
 		setBufferSelected(NULL);
 	}
 	for (auto it(m_list.begin()); it!=m_list.end(); ++it) {
-		if (*it != _removeObject) {
+		if (*it != _object) {
 			continue;
 		}
 		m_list.erase(it);

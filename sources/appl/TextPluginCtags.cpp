@@ -25,6 +25,7 @@ appl::TextPluginCtags::TextPluginCtags() :
 	m_activateOnReceiveMessage = true;
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
+	addObjectType("appl::TextPluginCtags");
 }
 appl::TextPluginCtags::~TextPluginCtags() {
 	

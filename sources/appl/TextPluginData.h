@@ -20,6 +20,7 @@ namespace appl {
 		public:
 			TextViewerPluginData() {
 				// nothing to do ...
+				addObjectType("appl::TextViewerPluginData");
 			}
 			virtual ~TextViewerPluginData() {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
@@ -115,9 +116,10 @@ namespace appl {
 				return;
 			};
 		public:
-			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
+			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+				appl::TextViewerPlugin::onObjectRemove(_object);
 				for (auto it(m_specificData.begin()); it != m_specificData.end(); ++it) {
-					if (it->first == _removeObject) {
+					if (it->first == _object) {
 						m_specificData.erase(it);
 						it = m_specificData.begin();
 					}

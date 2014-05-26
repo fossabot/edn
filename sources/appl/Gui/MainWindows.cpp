@@ -133,18 +133,21 @@ MainWindows::MainWindows() {
 	m_bufferManager = appl::BufferManager::keep();
 	
 	mySizerVert = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeVert));
+	mySizerVert->setName("plop 1111111");
 	setSubWidget(mySizerVert);
 	
 		mySizerHori = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeHori));
+		mySizerHori->setName("plop 222222222");
 		mySizerVert->subWidgetAdd(mySizerHori);
 			myBufferView = ewol::object::makeShared(new BufferView());
+			myBufferView->setName("plop 3333333");
 			myBufferView->setExpand(bvec2(false,true));
 			myBufferView->setFill(bvec2(true,true));
 			mySizerHori->subWidgetAdd(myBufferView);
 			
 			mySizerVert2 = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeVert));
 			mySizerHori->subWidgetAdd(mySizerVert2);
-				
+				mySizerVert2->setName("plop 4444444");
 				// main buffer Area :
 				#if defined(__TARGET_OS__Android)
 					myTextView = ewol::object::makeShared(new appl::TextViewer("FreeMono;DejaVuSansMono;FreeSerif", 16));
@@ -166,6 +169,7 @@ MainWindows::MainWindows() {
 				mySizerVert2->subWidgetAdd(mySearch);
 			
 		mySizerHori = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeHori));
+		mySizerHori->setName("plop 555555");
 		mySizerVert->subWidgetAdd(mySizerHori);
 			
 			myMenu = ewol::object::makeShared(new ewol::widget::Menu());

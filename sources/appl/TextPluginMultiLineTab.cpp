@@ -16,6 +16,7 @@
 
 appl::TextPluginMultiLineTab::TextPluginMultiLineTab() {
 	m_activateOnEventEntry = true;
+	addObjectType("appl::TextPluginMultiLineTab");
 }
 
 bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,

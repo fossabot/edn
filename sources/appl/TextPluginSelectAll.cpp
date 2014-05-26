@@ -17,6 +17,7 @@
 
 appl::TextPluginSelectAll::TextPluginSelectAll() {
 	m_activateOnReceiveMessage = true;
+	addObjectType("appl::TextPluginSelectAll");
 }
 
 static const char* eventSelectAll = "plugin-select-all";

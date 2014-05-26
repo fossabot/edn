@@ -218,18 +218,21 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void BufferView::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
-	ewol::widget::List::onObjectRemove(_removeObject);
-	for (int32_t iii=0; iii<m_list.size(); iii++) {
-		if (m_list[iii] == NULL) {
-			continue;
+void BufferView::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+	ewol::widget::List::onObjectRemove(_object);
+	auto it(m_list.begin());
+	while (it != m_list.end()) {
+		if (    *it != nullptr
+		     && (*it)->m_buffer == _object) {
+			m_list.erase(it);
+			markToRedraw();
+			it = m_list.begin();
+		} else {
+			++it;
 		}
-		if (m_list[iii]->m_buffer != _removeObject) {
-			continue;
-		}
-		m_list.erase(m_list.begin()+iii);
-		markToRedraw();
-		return;
+	}
+	if (m_bufferManager == _object) {
+		m_bufferManager.reset();
 	}
 }
 

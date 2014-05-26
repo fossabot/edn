@@ -17,6 +17,7 @@
 
 appl::TextPluginCopy::TextPluginCopy() {
 	m_activateOnReceiveMessage = true;
+	addObjectType("appl::TextPluginCopy");
 }
 
 void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {

@@ -19,8 +19,8 @@
 #undef __class__
 #define __class__ "textPluginManager"
 
-static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getList() {
-	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
+static std::list<ewol::object::Owner<appl::TextViewerPlugin>>& getList() {
+	static std::list<ewol::object::Owner<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
 static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnEventEntry() {
@@ -107,31 +107,30 @@ void appl::textPluginManager::addPlugin(const ewol::object::Shared<appl::TextVie
 }
 
 void appl::textPluginManager::connect(appl::TextViewer& _widget) {
-	for (int32_t iii=0; iii<getList().size(); ++iii) {
-		if (getList()[iii] == NULL) {
+	for (auto &it : getList()) {
+		if (it == NULL) {
 			continue;
 		}
-		getList()[iii]->onPluginEnable(_widget);
+		it->onPluginEnable(_widget);
 	}
 }
 
 void appl::textPluginManager::disconnect(appl::TextViewer& _widget) {
-	for (int32_t iii=0; iii<getList().size(); ++iii) {
-		if (getList()[iii] == NULL) {
+	for (auto &it : getList()) {
+		if (it == NULL) {
 			continue;
 		}
-		getList()[iii]->onPluginDisable(_widget);
+		it->onPluginDisable(_widget);
 	}
 }
 
 bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
                                            const ewol::event::Entry& _event) {
-	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnEventEntry();
-	for (int32_t iii=0; iii<list.size(); ++iii) {
-		if (list[iii] == NULL) {
+	for (auto &it : getListOnEventEntry()) {
+		if (it == NULL) {
 			continue;
 		}
-		if (list[iii]->onEventEntry(_textDrawer, _event) == true ) {
+		if (it->onEventEntry(_textDrawer, _event) == true ) {
 			return true;
 		}
 	}
@@ -140,12 +139,11 @@ bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onEventInput(appl::TextViewer& _textDrawer,
                                            const ewol::event::Input& _event) {
-	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnEventInput();
-	for (int32_t iii=0; iii<list.size(); ++iii) {
-		if (list[iii] == NULL) {
+	for (auto &it : getListOnEventInput()) {
+		if (it == NULL) {
 			continue;
 		}
-		if (list[iii]->onEventInput(_textDrawer, _event) == true ) {
+		if (it->onEventInput(_textDrawer, _event) == true ) {
 			return true;
 		}
 	}
@@ -155,12 +153,11 @@ bool appl::textPluginManager::onEventInput(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onWrite(appl::TextViewer& _textDrawer,
                                       const appl::Buffer::Iterator& _pos,
                                       const std::string& _data) {
-	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnWrite();
-	for (int32_t iii=0; iii<list.size(); ++iii) {
-		if (list[iii] == NULL) {
+	for (auto &it : getListOnWrite()) {
+		if (it == NULL) {
 			continue;
 		}
-		if (list[iii]->onWrite(_textDrawer, _pos, _data) == true ) {
+		if (it->onWrite(_textDrawer, _pos, _data) == true ) {
 			return true;
 		}
 	}
@@ -171,12 +168,11 @@ bool appl::textPluginManager::onReplace(appl::TextViewer& _textDrawer,
                                         const appl::Buffer::Iterator& _pos,
                                         const std::string& _data,
                                         const appl::Buffer::Iterator& _posEnd) {
-	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnReplace();
-	for (int32_t iii=0; iii<list.size(); ++iii) {
-		if (list[iii] == NULL) {
+	for (auto &it : getListOnReplace()) {
+		if (it == NULL) {
 			continue;
 		}
-		if (list[iii]->onReplace(_textDrawer, _pos, _data, _posEnd) == true ) {
+		if (it->onReplace(_textDrawer, _pos, _data, _posEnd) == true ) {
 			return true;
 		}
 	}
@@ -186,12 +182,11 @@ bool appl::textPluginManager::onReplace(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
                                        const appl::Buffer::Iterator& _pos,
                                        const appl::Buffer::Iterator& _posEnd) {
-	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnRemove();
-	for (int32_t iii=0; iii<list.size(); ++iii) {
-		if (list[iii] == NULL) {
+	for (auto &it : getListOnRemove()) {
+		if (it == NULL) {
 			continue;
 		}
-		if (list[iii]->onRemove(_textDrawer, _pos, _posEnd) == true ) {
+		if (it->onRemove(_textDrawer, _pos, _posEnd) == true ) {
 			return true;
 		}
 	}
@@ -200,12 +195,11 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onReceiveMessage(appl::TextViewer& _textDrawer,
                                                const ewol::object::Message& _msg) {
-	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnReceiveMessage();
-	for (int32_t iii=0; iii<list.size(); ++iii) {
-		if (list[iii] == NULL) {
+	for (auto &it : getListOnReceiveMessage()) {
+		if (it == NULL) {
 			continue;
 		}
-		if (list[iii]->onReceiveMessage(_textDrawer, _msg) == true ) {
+		if (it->onReceiveMessage(_textDrawer, _msg) == true ) {
 			return true;
 		}
 	}
@@ -214,12 +208,11 @@ bool appl::textPluginManager::onReceiveMessage(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onCursorMove(appl::TextViewer& _textDrawer,
                                            const appl::Buffer::Iterator& _pos) {
-	std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& list = getListOnCursorMove();
-	for (int32_t iii=0; iii<list.size(); ++iii) {
-		if (list[iii] == NULL) {
+	for (auto &it : getListOnCursorMove()) {
+		if (it == NULL) {
 			continue;
 		}
-		if (list[iii]->onCursorMove(_textDrawer, _pos) == true ) {
+		if (it->onCursorMove(_textDrawer, _pos) == true ) {
 			return true;
 		}
 	}

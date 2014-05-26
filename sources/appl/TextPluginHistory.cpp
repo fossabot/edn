@@ -20,6 +20,7 @@ appl::TextPluginHistory::TextPluginHistory() {
 	m_activateOnWrite = true;
 	m_activateOnReplace = true;
 	m_activateOnRemove = true;
+	addObjectType("appl::TextPluginHistory");
 }
 
 void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
@@ -176,7 +177,8 @@ bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
 }
 
 
-void appl::TextPluginHistory::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
+void appl::TextPluginHistory::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+	appl::TextViewerPluginData<appl::PluginHistoryData>::onObjectRemove(_object);
 	// TODO : Dependence with buffer removing ...
 }
 
