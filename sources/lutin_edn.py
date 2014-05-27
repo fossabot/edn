@@ -12,6 +12,7 @@ def create(target):
 	# module name is 'edn' and type binary.
 	myModule = module.Module(__file__, 'edn', 'PACKAGE')
 	
+	myModule.add_extra_compile_flags()
 	# add the file to compile:
 	myModule.add_src_file([
 		'appl/ctags/readtags.cpp'])

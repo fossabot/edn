@@ -39,7 +39,7 @@ namespace globals
 	class ParameterGlobalsGui : public ewol::widget::Sizer {
 		public :
 			ParameterGlobalsGui();
-			~ParameterGlobalsGui();
+			virtual ~ParameterGlobalsGui();
 			// herited function
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
 	};

@@ -168,8 +168,8 @@ void appl::TextPluginCtags::onReceiveMessage(const ewol::object::Message& _msg) 
 		jumpFile(tmp, lineID - 1);
 	}
 }
-bool appl::TextPluginCtags::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                             const ewol::object::Message& _msg) {
+bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+                                                   const ewol::object::Message& _msg) {
 	if (isEnable() == false) {
 		return false;
 	}

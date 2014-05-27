@@ -28,7 +28,7 @@ const char* const l_eventWrapCb = "appl-wrap-CheckBox";
 const char* const l_eventForwardCb = "appl-forward-CheckBox";
 const char* const l_eventHideBt = "appl-hide-button";
 
-Search::Search() :
+appl::widget::Search::Search() :
   ewol::widget::Composer(ewol::widget::Composer::file, "DATA:GUI-Search.xml"),
   m_viewerManager(NULL),
   m_forward(true),
@@ -36,8 +36,8 @@ Search::Search() :
   m_wrap(true),
   m_searchEntry(NULL),
   m_replaceEntry(NULL) {
-	addObjectType("appl::Search");
-	// load buffer manager:
+	addObjectType("appl::widget::Search");
+	// load buffer manager:onObjectRemove
 	m_viewerManager = appl::ViewerManager::keep();
 	// link event
 	registerOnEventNameWidget(this, "SEARCH:close",         "pressed", l_eventHideBt);
@@ -63,11 +63,11 @@ Search::Search() :
 	hide();
 }
 
-Search::~Search() {
+appl::widget::Search::~Search() {
 	
 }
 
-void Search::find() {
+void appl::widget::Search::find() {
 	if (m_viewerManager == NULL) {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
@@ -103,7 +103,7 @@ void Search::find() {
 	}
 }
 
-void Search::replace() {
+void appl::widget::Search::replace() {
 	if (m_viewerManager == NULL) {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
@@ -121,7 +121,7 @@ void Search::replace() {
 }
 
 
-void Search::onReceiveMessage(const ewol::object::Message& _msg) {
+void appl::widget::Search::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::Composer::onReceiveMessage(_msg);
 	APPL_INFO("Search receive message : " << _msg);
 	if ( _msg.getMessage() == l_eventSearchEntry) {
@@ -162,7 +162,7 @@ void Search::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void Search::onObjectRemove(const ewol::object::Shared<ewol::Object> _object) {
+void appl::widget::Search::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
 	ewol::widget::Composer::onObjectRemove(_object);
 	if (_object == m_searchEntry) {
 		m_searchEntry.reset();

@@ -50,13 +50,13 @@ namespace appl {
 				return data;
 			}
 		protected: // Wrap all element with their internal data: (do not use theses function)
-			bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                      const ewol::object::Message& _msg) {
+			bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+			                            const ewol::object::Message& _msg) {
 				TYPE* data = getDataRef(_textDrawer);
 				if (data == NULL) {
 					return false;
 				}
-				return onReceiveMessage(_textDrawer, _msg, *data);
+				return onReceiveMessageViewer(_textDrawer, _msg, *data);
 			}
 			bool onWrite(appl::TextViewer& _textDrawer,
 			             const appl::Buffer::Iterator& _pos,
@@ -88,9 +88,9 @@ namespace appl {
 			}
 			
 		public:
-			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                              const ewol::object::Message& _msg,
-			                              TYPE& _data) {
+			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+			                                    const ewol::object::Message& _msg,
+			                                    TYPE& _data) {
 				return false;
 			}
 			virtual bool onWrite(appl::TextViewer& _textDrawer,

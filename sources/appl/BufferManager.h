@@ -20,7 +20,7 @@ namespace appl {
 		protected:
 			BufferManager();
 		public:
-			~BufferManager();
+			virtual ~BufferManager();
 		private:
 			std::list<ewol::object::Owner<appl::Buffer>> m_list; // list of all buffer curently open
 		public:

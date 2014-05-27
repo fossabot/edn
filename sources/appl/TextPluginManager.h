@@ -98,8 +98,8 @@ namespace appl {
 		 * @param[in] _msg Generic message.
 		 * @return true if the event might not propagate anymore
 		 */
-		bool onReceiveMessage(appl::TextViewer& _textDrawer,
-		                      const ewol::object::Message& _msg);
+		bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+		                            const ewol::object::Message& _msg);
 		/**
 		 * @brief Called when Cursor move of position.
 		 * @param[in] _widget Reference on the widget caller.

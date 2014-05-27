@@ -623,7 +623,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::WidgetScrolled::onReceiveMessage(_msg);
 	APPL_VERBOSE("receive msg: " << _msg);
 	// First call plugin
-	if (appl::textPluginManager::onReceiveMessage(*this, _msg) == true) {
+	if (appl::textPluginManager::onReceiveMessageViewer(*this, _msg) == true) {
 		markToRedraw();
 		return;
 	}

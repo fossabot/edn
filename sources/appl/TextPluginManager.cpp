@@ -43,7 +43,7 @@ static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnRemov
 	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnReceiveMessage() {
+static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListonReceiveMessageViewer() {
 	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
@@ -63,7 +63,7 @@ void appl::textPluginManager::unInit() {
 	getListOnWrite().clear();
 	getListOnReplace().clear();
 	getListOnRemove().clear();
-	getListOnReceiveMessage().clear();
+	getListonReceiveMessageViewer().clear();
 	getListOnCursorMove().clear();
 	getList().clear();
 }
@@ -99,7 +99,7 @@ void appl::textPluginManager::addPlugin(const ewol::object::Shared<appl::TextVie
 		getListOnRemove().push_back(_plugin);
 	}
 	if (_plugin->isAvaillableOnReceiveMessage() == true) {
-		getListOnReceiveMessage().push_back(_plugin);
+		getListonReceiveMessageViewer().push_back(_plugin);
 	}
 	if (_plugin->isAvaillableOnCursorMove() == true) {
 		getListOnCursorMove().push_back(_plugin);
@@ -193,13 +193,13 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
 	return false;
 }
 
-bool appl::textPluginManager::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                               const ewol::object::Message& _msg) {
-	for (auto &it : getListOnReceiveMessage()) {
+bool appl::textPluginManager::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+                                                     const ewol::object::Message& _msg) {
+	for (auto &it : getListonReceiveMessageViewer()) {
 		if (it == NULL) {
 			continue;
 		}
-		if (it->onReceiveMessage(_textDrawer, _msg) == true ) {
+		if (it->onReceiveMessageViewer(_textDrawer, _msg) == true ) {
 			return true;
 		}
 	}

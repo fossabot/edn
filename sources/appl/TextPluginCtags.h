@@ -36,12 +36,12 @@ namespace appl {
 			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public:
 			TextPluginCtags();
-			~TextPluginCtags();
+			virtual ~TextPluginCtags();
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
-			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                              const ewol::object::Message& _msg);
+			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+			                                    const ewol::object::Message& _msg);
 			// internal message :
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
 	};

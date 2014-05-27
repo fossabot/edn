@@ -68,7 +68,7 @@ namespace appl {
 					/**
 					 * @brief Basic destructor
 					 */
-					~Iterator() {
+					virtual ~Iterator() {
 						m_current = 0;
 						m_data = NULL;
 						m_value = u32char::Null;
@@ -294,7 +294,7 @@ namespace appl {
 			static const char* const eventChangeName;
 		public:
 			Buffer();
-			~Buffer();
+			virtual ~Buffer();
 		private:
 			bool m_hasFileName; //!< when new file, the buffer has no name ==> but it might be reference with a single name ...
 			std::string m_fileName; //!< name of the file (with his path)

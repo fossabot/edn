@@ -165,7 +165,7 @@ MainWindows::MainWindows() {
 				mySizerVert2->subWidgetAdd(myTextView);
 				*/
 				// search area : 
-				ewol::object::Shared<Search> mySearch = ewol::object::makeShared(new Search());
+				ewol::object::Shared<appl::widget::Search> mySearch = ewol::object::makeShared(new appl::widget::Search());
 				mySizerVert2->subWidgetAdd(mySearch);
 			
 		mySizerHori = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeHori));

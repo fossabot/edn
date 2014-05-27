@@ -16,24 +16,17 @@
 appl::HighlightPattern::HighlightPattern(const ewol::object::Shared<appl::GlyphPainting>& _glyphPainting) :
   m_glyphPainting(_glyphPainting),
   m_paternName(""),
-  m_regExpStart(NULL),
-  m_regExpStop(NULL),
+  m_regExpStart(nullptr),
+  m_regExpStop(nullptr),
   m_colorName(""),
   m_escapeChar(u32char::Null),
   m_multiline(false),
   m_level(0) {
-	m_regExpStart = new etk::RegExp<etk::Buffer>();
+	m_regExpStart = std::unique_ptr<etk::RegExp<etk::Buffer>>(new etk::RegExp<etk::Buffer>());
 }
 
 appl::HighlightPattern::~HighlightPattern() {
-	if (m_regExpStart != NULL) {
-		delete(m_regExpStart);
-		m_regExpStart = NULL;
-	}
-	if (m_regExpStop != NULL) {
-		delete(m_regExpStop);
-		m_regExpStop = NULL;
-	}
+	
 }
 
 void appl::HighlightPattern::setPaternStart(std::string& _regExp) {
@@ -44,12 +37,9 @@ void appl::HighlightPattern::setPaternStart(std::string& _regExp) {
 }
 
 void appl::HighlightPattern::setPaternStop(std::string& _regExp) {
-	if (m_regExpStop != NULL) {
-		delete(m_regExpStop);
-		m_regExpStop = NULL;
-	}
+	m_regExpStop.reset();
 	if (_regExp.size() != 0) {
-		m_regExpStop = new etk::RegExp<etk::Buffer>();
+		m_regExpStop = std::unique_ptr<etk::RegExp<etk::Buffer>>(new etk::RegExp<etk::Buffer>());
 		if (m_regExpStop != NULL) {
 			m_regExpStop->compile(_regExp);
 		} else {

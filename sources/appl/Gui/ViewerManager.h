@@ -21,7 +21,7 @@ namespace appl {
 		protected:
 			ViewerManager();
 		public:
-			~ViewerManager();
+			virtual ~ViewerManager();
 		private:
 			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 			ewol::object::Shared<appl::TextViewer> m_viewer;

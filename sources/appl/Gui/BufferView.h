@@ -25,7 +25,7 @@ namespace appl {
 			  m_buffer(_buffer) {
 				
 			};
-			~dataBufferStruct() { };
+			virtual ~dataBufferStruct() { };
 	};
 };
 
@@ -51,7 +51,7 @@ class BufferView : public ewol::widget::List {
 	public:
 		// Constructeur
 		BufferView();
-		~BufferView();
+		virtual ~BufferView();
 		// Derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
 		virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _object);

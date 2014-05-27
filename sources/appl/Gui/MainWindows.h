@@ -23,7 +23,7 @@ class MainWindows : public ewol::widget::Windows {
 	public:
 		// Constructeur
 		MainWindows();
-		~MainWindows();
+		virtual ~MainWindows();
 	private:
 		ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		/**

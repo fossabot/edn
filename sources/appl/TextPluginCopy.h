@@ -19,13 +19,13 @@ namespace appl {
 	class TextPluginCopy : public appl::TextViewerPlugin {
 		public:
 			TextPluginCopy();
-			~TextPluginCopy() {
+			virtual ~TextPluginCopy() {
 				// nothing to do ...
 			};
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
-			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer, const ewol::object::Message& _msg);
+			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer, const ewol::object::Message& _msg);
 	};
 };
 

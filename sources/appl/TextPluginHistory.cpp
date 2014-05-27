@@ -35,9 +35,9 @@ void appl::TextPluginHistory::onPluginDisable(appl::TextViewer& _textDrawer) {
 	// TODO : unknow function ...
 }
 
-bool appl::TextPluginHistory::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                               const ewol::object::Message& _msg,
-                                               appl::PluginHistoryData& _data) {
+bool appl::TextPluginHistory::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+                                                     const ewol::object::Message& _msg,
+                                                     appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
 	}

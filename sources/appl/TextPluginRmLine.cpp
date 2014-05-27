@@ -30,8 +30,8 @@ void appl::TextPluginRmLine::onPluginDisable(appl::TextViewer& _textDrawer) {
 	// TODO : unknow function ...
 }
 
-bool appl::TextPluginRmLine::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                              const ewol::object::Message& _msg) {
+bool appl::TextPluginRmLine::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+                                                    const ewol::object::Message& _msg) {
 	if (isEnable() == false) {
 		return false;
 	}

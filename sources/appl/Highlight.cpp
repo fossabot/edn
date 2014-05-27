@@ -25,14 +25,14 @@
 #define HL2_DEBUG APPL_VERBOSE
 
 void appl::Highlight::parseRules(exml::Element* _child,
-                           std::vector<HighlightPattern*>& _mListPatern,
+                           std::vector<std::unique_ptr<HighlightPattern>>& _mListPatern,
                            int32_t _level) {
 	// Create the patern ...
 	HighlightPattern *myPattern = new HighlightPattern(m_paintingProperties);
 	// parse under Element
 	myPattern->parseRules(_child, _level);
 	// add element in the list
-	_mListPatern.push_back(myPattern);
+	_mListPatern.push_back(std::unique_ptr<HighlightPattern>(myPattern));
 }
 
 appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _colorFile) :
@@ -101,15 +101,10 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 }
 
 appl::Highlight::~Highlight() {
-	// clean all Element
-	for (int32_t iii = 0; iii < m_listHighlightPass1.size(); ++iii) {
-		if (m_listHighlightPass1[iii] != NULL) {
-			delete(m_listHighlightPass1[iii]);
-			m_listHighlightPass1[iii] = NULL;
-		}
-	}
 	// clear the compleate list
 	m_listHighlightPass1.clear();
+	// clear the compleate list
+	m_listHighlightPass2.clear();
 	// clear the compleate list
 	m_listExtentions.clear();
 }
