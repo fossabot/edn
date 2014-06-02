@@ -759,12 +759,12 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 	} else {
 		elemStart = startId+1;
 	}
-	for (auto &it : m_HLDataPass1) {
+	for (auto it(m_HLDataPass1.begin()+elemStart); it != m_HLDataPass1.end(); ++it) {
 		//APPL_DEBUG("move element=" << i);
-		it.beginStart += _nbAdded - _nbDeleted;
-		it.beginStop  += _nbAdded - _nbDeleted;
-		it.endStart   += _nbAdded - _nbDeleted;
-		it.endStop    += _nbAdded - _nbDeleted;
+		it->beginStart += _nbAdded - _nbDeleted;
+		it->beginStop  += _nbAdded - _nbDeleted;
+		it->endStart   += _nbAdded - _nbDeleted;
+		it->endStop    += _nbAdded - _nbDeleted;
 	}
 	//Regenerate Element inside range
 	if (    startId == -1
