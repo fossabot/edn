@@ -20,12 +20,12 @@
 static void SortElementList(std::vector<appl::dataBufferStruct*>& _list) {
 	std::vector<appl::dataBufferStruct *> tmpList = _list;
 	_list.clear();
-	for(int32_t iii=0; iii<tmpList.size(); iii++) {
+	for(size_t iii=0; iii<tmpList.size(); iii++) {
 		if (NULL == tmpList[iii]) {
 			continue;
 		}
-		int32_t findPos = 0;
-		for(int32_t jjj=0; jjj<_list.size(); jjj++) {
+		size_t findPos = 0;
+		for(size_t jjj=0; jjj<_list.size(); jjj++) {
 			//EWOL_DEBUG("compare : \""<<*tmpList[iii] << "\" and \"" << *m_listDirectory[jjj] << "\"");
 			if (_list[jjj] == NULL) {
 				continue;
@@ -68,11 +68,9 @@ BufferView::~BufferView() {
 }
 
 void BufferView::removeAllElement() {
-	for(int32_t iii=0; iii<m_list.size(); iii++) {
-		if (NULL!=m_list[iii]) {
-			delete(m_list[iii]);
-			m_list[iii] = NULL;
-		}
+	for(auto &it : m_list) {
+		delete(it);
+		it = NULL;
 	}
 	m_list.clear();
 }
@@ -140,7 +138,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 					appl::dataBufferStruct* tmp = m_list[iii];
 					m_list[iii] = NULL;
 					m_list.erase(m_list.begin() + iii);
-					insertAlphabetic(tmp, (iii == m_selectedID));
+					insertAlphabetic(tmp, ((int64_t)iii == m_selectedID));
 					break;
 				}
 			}
@@ -164,7 +162,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 			tmpBuffer = m_bufferManager->getBufferSelected();
 		}
 		if (tmpBuffer != NULL) {
-			for (int32_t iii=0; iii<m_list.size(); iii++) {
+			for (size_t iii=0; iii<m_list.size(); iii++) {
 				if (m_list[iii] == NULL) {
 					continue;
 				}
@@ -182,8 +180,8 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 		// clean The list
 		removeAllElement();
 		// get all the buffer name and properties:
-		int32_t nbBufferOpen = 0; // BufferManager::size();
-		for (int32_t iii=0; iii<nbBufferOpen; iii++) {
+		size_t nbBufferOpen = 0; // BufferManager::size();
+		for (size_t iii=0; iii<nbBufferOpen; iii++) {
 			/*
 			if (BufferManager::exist(iii)) {
 				BufferText* tmpBuffer = BufferManager::get(iii);
@@ -209,9 +207,9 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 		markToRedraw();
 	}else if (_msg.getMessage() == ednMsgBufferState) {
 		// update list of modify section ...
-		for (int32_t iii=0; iii<m_list.size(); iii++) {
-			if (NULL!=m_list[iii]) {
-				//m_list[iii]->m_isModify = BufferManager::get(m_list[iii]->m_bufferID)->isModify();
+		for (auto &it : m_list) {
+			if (it != nullptr) {
+				//it->m_isModify = BufferManager::get(it->m_bufferID)->isModify();
 			}
 		}
 		markToRedraw();
@@ -256,8 +254,8 @@ uint32_t BufferView::getNuberOfRaw() {
 
 bool BufferView::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
 	if(    _raw >= 0
-	    && _raw<m_list.size()
-	    && NULL != m_list[_raw]) {
+	    && _raw<(int64_t)m_list.size()
+	    && m_list[_raw] != nullptr) {
 		_myTextToWrite = m_list[_raw]->m_bufferName.getNameFile();
 		
 		if (    m_list[_raw]->m_buffer != NULL
@@ -286,7 +284,7 @@ bool BufferView::onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent
 	if (1 == _IdInput && _typeEvent == ewol::key::statusSingle) {
 		APPL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
 		if(    _raw >= 0
-		    && _raw<m_list.size()
+		    && _raw<(int64_t)m_list.size()
 		    && NULL != m_list[_raw]) {
 			if (m_list[_raw]->m_buffer != NULL) {
 				sendMultiCast(appl::MsgSelectNewFile, m_list[_raw]->m_buffer->getFileName());

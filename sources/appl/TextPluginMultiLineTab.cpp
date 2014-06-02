@@ -48,22 +48,22 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	_textDrawer.copy(data, itStart, itStop);
 	// TODO : Change this ...
 	bool m_useTabs = true;
-	int32_t m_tabDist = 4;
+	size_t m_tabDist = 4;
 	
 	if (true == _event.getSpecialKey().getShift() ) {
 		// un-indent
 		data.insert(0, 1, u32char::Return);
-		for (int32_t iii=1; iii<data.size(); ++iii) {
-			if (data[iii-1] != u32char::Return) {
+		for (size_t iii=1; iii<data.size(); ++iii) {
+			if ((char32_t)data[iii-1] != u32char::Return) {
 				continue;
 			}
-			if(data[iii] == u32char::Tabulation) {
+			if((char32_t)data[iii] == u32char::Tabulation) {
 				data.erase(iii, 1);
-			} else if(data[iii] == u32char::Space) {
-				for (int32_t jjj=0; jjj<m_tabDist && jjj+iii<data.size() ; jjj++) {
-					if(data[iii] == u32char::Space) {
+			} else if((char32_t)data[iii] == u32char::Space) {
+				for (size_t jjj=0; jjj<m_tabDist && jjj+iii<data.size() ; jjj++) {
+					if((char32_t)data[iii] == u32char::Space) {
 						data.erase(iii, 1);
-					} else if(data[iii] == u32char::Tabulation) {
+					} else if((char32_t)data[iii] == u32char::Tabulation) {
 						data.erase(iii, 1);
 						break;
 					} else {
@@ -76,8 +76,8 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	} else {
 		// indent
 		data.insert(0, 1, u32char::Return);
-		for (int32_t iii=1; iii<data.size(); iii++) {
-			if (data[iii-1] != u32char::Return) {
+		for (size_t iii=1; iii<data.size(); iii++) {
+			if ((char32_t)data[iii-1] != u32char::Return) {
 				continue;
 			}
 			if (true == _event.getSpecialKey().getCtrl() ) {

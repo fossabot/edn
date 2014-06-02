@@ -299,7 +299,7 @@ bool appl::Buffer::search(const appl::Buffer::Iterator& _pos,
 		for (Iterator it = _pos;
 		     (bool)it == true;
 		     ++it) {
-			if (tolower(*it) == firstElement) {
+			if ((char32_t)tolower(*it) == firstElement) {
 				// find the first char ==> check next...
 				bool find = true;
 				Iterator tmp = it;
@@ -371,7 +371,7 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos,
 		     (bool)it == true;
 		     --it) {
 			//APPL_DEBUG("compare : " << *it << " ?= " << _search);
-			if (tolower(*it) == lastElement) {
+			if ((char32_t)tolower(*it) == lastElement) {
 				// find the last char ==> check previous...
 				bool find = true;
 				_result = it;
@@ -759,12 +759,12 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 	} else {
 		elemStart = startId+1;
 	}
-	for (int64_t iii = elemStart; iii < m_HLDataPass1.size(); ++iii) {
+	for (auto &it : m_HLDataPass1) {
 		//APPL_DEBUG("move element=" << i);
-		m_HLDataPass1[iii].beginStart += _nbAdded - _nbDeleted;
-		m_HLDataPass1[iii].beginStop  += _nbAdded - _nbDeleted;
-		m_HLDataPass1[iii].endStart   += _nbAdded - _nbDeleted;
-		m_HLDataPass1[iii].endStop    += _nbAdded - _nbDeleted;
+		it.beginStart += _nbAdded - _nbDeleted;
+		it.beginStop  += _nbAdded - _nbDeleted;
+		it.endStart   += _nbAdded - _nbDeleted;
+		it.endStop    += _nbAdded - _nbDeleted;
 	}
 	//Regenerate Element inside range
 	if (    startId == -1
@@ -827,7 +827,7 @@ void appl::Buffer::findMainHighLightPosition(int64_t _startPos,
 			                 ------------          -------------            ----------
 			      S=-1      ***************        E                                  
 	*/
-	for (int32_t iii = 0; iii < m_HLDataPass1.size(); ++iii) {
+	for (size_t iii = 0; iii < m_HLDataPass1.size(); ++iii) {
 		if (m_HLDataPass1[iii].endStop > _startPos) {
 			break;
 		}
@@ -848,7 +848,7 @@ void appl::Buffer::findMainHighLightPosition(int64_t _startPos,
 	} else {
 		elemStart = _startId+1;
 	}
-	for (int32_t iii = elemStart; iii < m_HLDataPass1.size(); ++iii) {
+	for (size_t iii = elemStart; iii < m_HLDataPass1.size(); ++iii) {
 		if (m_HLDataPass1[iii].beginStart > _endPos) {
 			_stopId = iii;
 			break;
@@ -872,7 +872,7 @@ void appl::Buffer::cleanHighLight() {
 
 appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int64_t _pos, int64_t &_starPos) {
 	int32_t start = etk_max(0, _starPos-1);
-	for (int32_t iii = start; iii < m_HLDataPass1.size(); ++iii) {
+	for (size_t iii = start; iii < m_HLDataPass1.size(); ++iii) {
 		_starPos = iii;
 		if (    m_HLDataPass1[iii].beginStart <= _pos
 		     && m_HLDataPass1[iii].endStop > _pos) {

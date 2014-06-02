@@ -34,11 +34,10 @@ appl::TagFileList::TagFileList() {
 
 
 appl::TagFileList::~TagFileList() {
-	for (int32_t iii=0; iii<m_list.size(); iii++) {
-		delete(m_list[iii]);
-		m_list[iii] = NULL;
+	for (auto &it : m_list) {
+		delete(it);
+		it = NULL;
 	}
-	
 }
 
 etk::Color<> appl::TagFileList::getBasicBG() {
@@ -59,7 +58,7 @@ uint32_t appl::TagFileList::getNuberOfRaw() {
 }
 
 bool appl::TagFileList::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
-	if (_raw >= 0 && _raw < m_list.size() && NULL != m_list[_raw]) {
+	if (_raw >= 0 && (size_t)_raw < m_list.size() && NULL != m_list[_raw]) {
 		if (0 == _colomn) {
 			_myTextToWrite = std::to_string(m_list[_raw]->fileLine);
 		} else {
@@ -86,7 +85,7 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum ewol::key::status _ty
 		EWOL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
 		if (_IdInput == 1) {
 			int32_t previousRaw = m_selectedLine;
-			if (_raw > m_list.size() ) {
+			if (_raw > (int64_t)m_list.size() ) {
 				m_selectedLine = -1;
 			} else {
 				m_selectedLine = _raw;
@@ -96,7 +95,7 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum ewol::key::status _ty
 				event = applEventCtagsListSelect;
 			}
 			if(    m_selectedLine  >= 0
-			    && m_selectedLine < m_list.size()
+			    && m_selectedLine < (int64_t)m_list.size()
 			    && NULL != m_list[m_selectedLine] ) {
 				generateEventId(event, std::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
 			} else {

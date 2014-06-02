@@ -19,8 +19,8 @@
 
 
 appl::TextPluginCtags::TextPluginCtags() :
-  m_tagFilename(""),
   m_tagFolderBase(""),
+  m_tagFilename(""),
   m_ctagFile(NULL) {
 	m_activateOnReceiveMessage = true;
 	// load buffer manager:

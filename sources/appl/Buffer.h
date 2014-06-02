@@ -248,7 +248,7 @@ namespace appl {
 					};
 					Iterator operator+ (const size_t _val) const {
 						Iterator tmpp(*this);
-						for (int64_t iii=0; iii<_val; ++iii) {
+						for (int64_t iii=0; iii<(int64_t)_val; ++iii) {
 							++tmpp;
 						}
 						return tmpp;
@@ -273,7 +273,7 @@ namespace appl {
 					};
 					Iterator operator- (const size_t _val) const {
 						Iterator tmpp(*this);
-						for (int64_t iii=0; iii<_val; ++iii) {
+						for (int64_t iii=0; iii<(int64_t)_val; ++iii) {
 							--tmpp;
 						}
 						return tmpp;

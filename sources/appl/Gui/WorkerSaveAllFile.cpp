@@ -28,7 +28,7 @@ appl::WorkerSaveAllFile::WorkerSaveAllFile() :
 		return;
 	}
 	// List all current open file :
-	for (size_t iii=0; iii<m_bufferManager->size(); ++iii) {
+	for (int32_t iii=0; iii<m_bufferManager->size(); ++iii) {
 		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
 		if (tmpBuffer == NULL) {
 			continue;

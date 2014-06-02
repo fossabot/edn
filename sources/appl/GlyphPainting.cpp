@@ -47,7 +47,7 @@ void appl::GlyphPainting::reload() {
 		APPL_ERROR("Can not get basic array : 'ednColor'");
 		return;
 	}
-	for (int32_t iii = 0; iii < baseArray->size(); ++iii) {
+	for (size_t iii = 0; iii < baseArray->size(); ++iii) {
 		ejson::Object* tmpObj = baseArray->getObject(iii);
 		if (tmpObj == NULL) {
 			APPL_DEBUG(" can not get object in 'ednColor' id=" << iii);
@@ -60,7 +60,7 @@ void appl::GlyphPainting::reload() {
 		bool bold = tmpObj->getBooleanValue("bold", false);
 		APPL_VERBOSE("find new color : '" << name << "' fg='" << foreground << "' bg='" << background << "' italic='" << italic << "' bold='" << bold << "'");
 		bool findElement = false;
-		for (int32_t jjj=0; jjj<m_list.size(); ++jjj) {
+		for (size_t jjj=0; jjj<m_list.size(); ++jjj) {
 			if (m_list[jjj].getName() != name) {
 				continue;
 			}
@@ -84,7 +84,7 @@ void appl::GlyphPainting::reload() {
 
 
 int32_t appl::GlyphPainting::request(const std::string& _name) {
-	for (int32_t iii=0; iii<m_list.size(); ++iii) {
+	for (size_t iii=0; iii<m_list.size(); ++iii) {
 		if (m_list[iii].getName() == _name) {
 			return iii;
 		}

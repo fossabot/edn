@@ -56,7 +56,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 	int32_t level1 = 0;
 	int32_t level2 = 0;
 	// parse all the elements :
-	for(int32_t iii = 0; iii < root->size(); ++iii) {
+	for(size_t iii = 0; iii < root->size(); ++iii) {
 		exml::Element* child = root->getElement(iii);
 		if (child == NULL) {
 			// trash here all that is not element ...
@@ -70,7 +70,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 			}
 		} else if (child->getValue() == "pass1") {
 			// get sub Nodes ...
-			for(int32_t jjj=0; jjj< child->size(); jjj++) {
+			for(size_t jjj=0; jjj< child->size(); jjj++) {
 				exml::Element* passChild = child->getElement(jjj);
 				if (passChild == NULL) {
 					continue;
@@ -83,7 +83,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 			}
 		} else if (child->getValue() == "pass2") {
 			// get sub Nodes ...
-			for(int32_t jjj=0; jjj< child->size(); jjj++) {
+			for(size_t jjj=0; jjj< child->size(); jjj++) {
 				exml::Element* passChild = child->getElement(jjj);
 				if (passChild == NULL) {
 					continue;
@@ -110,10 +110,10 @@ appl::Highlight::~Highlight() {
 }
 
 bool appl::Highlight::hasExtention(const std::string& _ext) {
-	for (int32_t iii=0; iii<m_listExtentions.size(); iii++) {
-		APPL_VERBOSE("        check : " << m_listExtentions[iii] << "=?=" << _ext);
-		if (    m_listExtentions[iii] == "*." + _ext
-		     || m_listExtentions[iii] == _ext) {
+	for (auto &it : m_listExtentions) {
+		APPL_VERBOSE("        check : " << it << "=?=" << _ext);
+		if (    it == "*." + _ext
+		     || it == _ext) {
 			return true;
 		}
 	}
@@ -131,8 +131,8 @@ bool appl::Highlight::fileNameCompatible(const std::string& _fileName) {
 	}
 	APPL_DEBUG(" try to find : in \"" << file << "\" extention:\"" << extention << "\" ");
 
-	for (int32_t iii=0; iii<m_listExtentions.size(); iii++) {
-		if (extention == m_listExtentions[iii] ) {
+	for (auto &it : m_listExtentions) {
+		if (extention == it ) {
 			return true;
 		}
 	}
@@ -142,17 +142,17 @@ bool appl::Highlight::fileNameCompatible(const std::string& _fileName) {
 
 void appl::Highlight::display() {
 	APPL_INFO("List of ALL Highlight : ");
-	for (int32_t iii=0; iii< m_listExtentions.size(); iii++) {
-		APPL_INFO("        Extention : " << iii << " : " << m_listExtentions[iii] );
+	for (auto &it : m_listExtentions) {
+		APPL_INFO("        Extention : " << it );
 	}
 	// display all elements
-	for (int32_t iii=0; iii< m_listHighlightPass1.size(); iii++) {
-		APPL_INFO("        " << iii << " Pass 1 : " << m_listHighlightPass1[iii]->getName() );
+	for (auto &it : m_listHighlightPass1) {
+		APPL_INFO("        Pass 1 : " << it->getName() );
 		//m_listHighlightPass1[iii]->display();
 	}
 	// display all elements
-	for (int32_t iii=0; iii< m_listHighlightPass2.size(); iii++) {
-		APPL_INFO("        " << iii << " Pass 2 : " << m_listHighlightPass2[iii]->getName() );
+	for (auto &it : m_listHighlightPass2) {
+		APPL_INFO("        pass 2 : " << it->getName() );
 		//m_listHighlightPass2[iii]->display();
 	}
 }
@@ -175,7 +175,7 @@ void appl::Highlight::parse(int64_t _start,
 	while (elementStart <= elementStop) {
 		HL_DEBUG("Parse element in the buffer pos=" << elementStart);
 		//try to fond the HL in ALL of we have
-		for (int64_t jjj=0; jjj<m_listHighlightPass1.size(); jjj++){
+		for (int64_t jjj=0; jjj<(int64_t)m_listHighlightPass1.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
 			HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ")" );
 			// Stop the search to the end (to get the end of the pattern)
@@ -184,13 +184,13 @@ void appl::Highlight::parse(int64_t _start,
 				HL_DEBUG("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
 				// remove element in the current List where the current Element have a end inside the next...
 				int64_t kkk=_addingPos;
-				while(kkk < _metaData.size() ) {
+				while(kkk < (int64_t)_metaData.size() ) {
 					if (_metaData[kkk].beginStart <= resultat.endStop) {
 						// remove element
 						HL_DEBUG("Erase element=" << kkk);
 						_metaData.erase(_metaData.begin()+kkk, _metaData.begin()+kkk+1);
 						// Increase the end of search
-						if (kkk < _metaData.size()) {
+						if (kkk < (int64_t)_metaData.size()) {
 							// just befor the end of the next element
 							elementStop = _metaData[kkk].beginStart-1;
 						} else {
@@ -236,7 +236,7 @@ void appl::Highlight::parse2(int64_t _start,
 	while (elementStart < elementStop) {
 		//HL2_DEBUG("Parse element in the buffer pos=" << elementStart << "," << _buffer.size() << ")" );
 		//try to fond the HL in ALL of we have
-		for (int64_t jjj=0; jjj<m_listHighlightPass2.size(); jjj++){
+		for (int64_t jjj=0; jjj<(int64_t)m_listHighlightPass2.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
 			HL2_DEBUG("Parse HL id=" << jjj << " position search: (" <<
 			          _start << "," << _buffer.size() << ")" );

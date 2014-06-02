@@ -88,7 +88,7 @@ void appl::BufferManager::onObjectRemove(const ewol::object::Shared<ewol::Object
 
 ewol::object::Shared<appl::Buffer> appl::BufferManager::get(int32_t _id) {
 	int32_t id = 0;
-	for (auto it : m_list) {
+	for (auto &it : m_list) {
 		if (id == _id) {
 			return it;
 		}
@@ -98,7 +98,7 @@ ewol::object::Shared<appl::Buffer> appl::BufferManager::get(int32_t _id) {
 }
 
 bool appl::BufferManager::exist(const std::string& _fileName) {
-	for (auto it : m_list) {
+	for (auto &it : m_list) {
 		if (it == nullptr) {
 			continue;
 		}
