@@ -29,7 +29,7 @@ appl::WorkerCloseAllFile::WorkerCloseAllFile() :
 	}
 	// List all current open file :
 	for (int64_t iii=m_bufferManager->size()-1; iii>=0; --iii) {
-		appl::Buffer* tmpBuffer = m_bufferManager->get(iii);
+		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
 		if (tmpBuffer == NULL) {
 			continue;
 		}
@@ -45,7 +45,7 @@ appl::WorkerCloseAllFile::WorkerCloseAllFile() :
 		return;
 	}
 	// create the worker :
-	m_worker = new appl::WorkerCloseFile(m_bufferNameList.front());
+	m_worker = ewol::object::makeShared(new appl::WorkerCloseFile(m_bufferNameList.front()));
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
 	if (m_bufferNameList.size() == 0) {
@@ -56,7 +56,7 @@ appl::WorkerCloseAllFile::WorkerCloseAllFile() :
 }
 
 appl::WorkerCloseAllFile::~WorkerCloseAllFile() {
-	appl::BufferManager::release(m_bufferManager);
+	
 }
 
 void appl::WorkerCloseAllFile::onReceiveMessage(const ewol::object::Message& _msg) {
@@ -70,7 +70,7 @@ void appl::WorkerCloseAllFile::onReceiveMessage(const ewol::object::Message& _ms
 			return;
 		}
 		// create the worker :
-		m_worker = new appl::WorkerCloseFile(m_bufferNameList.front());
+		m_worker = ewol::object::makeShared(new appl::WorkerCloseFile(m_bufferNameList.front()));
 		// remove first element :
 		m_bufferNameList.erase(m_bufferNameList.begin());
 		if (m_bufferNameList.size() == 0) {
@@ -81,7 +81,7 @@ void appl::WorkerCloseAllFile::onReceiveMessage(const ewol::object::Message& _ms
 	}
 }
 
-void appl::WorkerCloseAllFile::onObjectRemove(ewol::Object* _removeObject) {
+void appl::WorkerCloseAllFile::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 	if (_removeObject == m_worker) {
 		m_worker = NULL;
 		APPL_VERBOSE("AutoRemove After saving sub widget ...");

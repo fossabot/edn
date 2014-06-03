@@ -9,6 +9,7 @@
 #ifndef __BUFFER_MANAGER_H__
 #define __BUFFER_MANAGER_H__
 
+#include <list>
 #include <appl/Buffer.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/Widget.h>
@@ -18,9 +19,10 @@ namespace appl {
 	class BufferManager : public ewol::Resource {
 		protected:
 			BufferManager();
-			~BufferManager();
+		public:
+			virtual ~BufferManager();
 		private:
-			std::vector<appl::Buffer*> m_list; // list of all buffer curently open
+			std::list<ewol::object::Owner<appl::Buffer>> m_list; // list of all buffer curently open
 		public:
 			/**
 			 * @brief Get a specific buffer with his name (can create a new buffer).
@@ -28,7 +30,7 @@ namespace appl {
 			 * @param[in] _createIfNeeded Create the buffer if not existed.
 			 * @return a pointer on the buffer
 			 */
-			appl::Buffer* get(const std::string& _fileName, bool _createIfNeeded=false);
+			ewol::object::Shared<appl::Buffer> get(const std::string& _fileName, bool _createIfNeeded=false);
 			/**
 			 * @brief Load a specific file, event if it not existed:
 			 * @param[in] _fileName Name of the file to open or create.
@@ -52,32 +54,30 @@ namespace appl {
 			 * @param[in] _id Number of buffer
 			 * @return pointer on the buffer
 			 */
-			appl::Buffer* get(int32_t _id) {
-				return m_list[_id];
-			}
+			ewol::object::Shared<appl::Buffer> get(int32_t _id);
 			/**
 			 * @brief Create a new buffer empty.
 			 * @return Created buffer or NULL.
 			 */
-			appl::Buffer* createNewBuffer();
+			ewol::object::Shared<appl::Buffer> createNewBuffer();
 		private:
-			appl::Buffer* m_bufferSelected;
+			ewol::object::Shared<appl::Buffer> m_bufferSelected;
 		public:
 			/**
 			 * @brief Set the current buffer selected
 			 * @param[in] _bufferSelected Pointer on the buffer selected
 			 */
-			void setBufferSelected(appl::Buffer* _bufferSelected);
+			void setBufferSelected(ewol::object::Shared<appl::Buffer> _bufferSelected);
 			/**
 			 * @brief Get the current buffer selected
 			 * @return Pointer on the buffer selected
 			 */
-			appl::Buffer* getBufferSelected() {
+			ewol::object::Shared<appl::Buffer> getBufferSelected() {
 				return m_bufferSelected;
 			};
 		public: // herited function
 			void onReceiveMessage(const ewol::object::Message& _msg);
-			void onObjectRemove(ewol::Object * _removeObject);
+			void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 		public: // resource manager
 			/**
 			 * @brief keep the resource pointer.
@@ -85,12 +85,7 @@ namespace appl {
 			 * @param[in] _filename Name of the configuration file.
 			 * @return pointer on the resource or NULL if an error occured.
 			 */
-			static appl::BufferManager* keep();
-			/**
-			 * @brief release the keeped resources
-			 * @param[in,out] reference on the object pointer
-			 */
-			static void release(appl::BufferManager*& _object);
+			static ewol::object::Shared<appl::BufferManager> keep();
 	};
 };
 

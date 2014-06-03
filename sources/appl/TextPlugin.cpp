@@ -23,7 +23,7 @@ appl::TextViewerPlugin::TextViewerPlugin() :
   m_activateOnRemove(false),
   m_activateOnReceiveMessage(false),
   m_activateOnCursorMove(false) {
-	
+	addObjectType("appl::TextViewerPlugin");
 }
 
 appl::TextViewerPlugin::~TextViewerPlugin() {

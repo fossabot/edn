@@ -17,6 +17,7 @@
 
 appl::TextPluginSelectAll::TextPluginSelectAll() {
 	m_activateOnReceiveMessage = true;
+	addObjectType("appl::TextPluginSelectAll");
 }
 
 static const char* eventSelectAll = "plugin-select-all";
@@ -31,8 +32,8 @@ void appl::TextPluginSelectAll::onPluginDisable(appl::TextViewer& _textDrawer) {
 	// TODO : unknow function ...
 }
 
-bool appl::TextPluginSelectAll::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                                 const ewol::object::Message& _msg) {
+bool appl::TextPluginSelectAll::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+                                                       const ewol::object::Message& _msg) {
 	if (isEnable() == false) {
 		return false;
 	}

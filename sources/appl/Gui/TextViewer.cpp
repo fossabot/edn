@@ -29,7 +29,6 @@
 	APPL_DEBUG(comment << (float)((float)processTimeLocal / 1000.0) << "ms");
 
 appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
-  m_buffer(NULL),
   m_displayText(_fontName, _fontSize),
   m_insertMode(false) {
 	addObjectType("appl::TextViewer");
@@ -65,9 +64,6 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 
 appl::TextViewer::~TextViewer() {
 	appl::textPluginManager::disconnect(*this);
-	appl::GlyphPainting::release(m_paintingProperties);
-	appl::BufferManager::release(m_bufferManager);
-	appl::ViewerManager::release(m_viewerManager);
 }
 
 std::string appl::TextViewer::getBufferPath() {
@@ -428,7 +424,8 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 }
 
 bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
-	if (_event.getId() != 0) {
+	if (   _event.getId() != 0
+	    && _event.getStatus() == ewol::key::statusDown) {
 		keepFocus();
 	}
 	//tic();
@@ -627,7 +624,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::WidgetScrolled::onReceiveMessage(_msg);
 	APPL_VERBOSE("receive msg: " << _msg);
 	// First call plugin
-	if (appl::textPluginManager::onReceiveMessage(*this, _msg) == true) {
+	if (appl::textPluginManager::onReceiveMessageViewer(*this, _msg) == true) {
 		markToRedraw();
 		return;
 	}
@@ -702,7 +699,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void appl::TextViewer::onObjectRemove(ewol::Object* _removeObject) {
+void appl::TextViewer::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 	ewol::widget::WidgetScrolled::onObjectRemove(_removeObject);
 	if (m_buffer == _removeObject) {
 		m_buffer = NULL;

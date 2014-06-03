@@ -17,6 +17,7 @@
 
 appl::TextPluginCopy::TextPluginCopy() {
 	m_activateOnReceiveMessage = true;
+	addObjectType("appl::TextPluginCopy");
 }
 
 void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
@@ -33,8 +34,8 @@ void appl::TextPluginCopy::onPluginDisable(appl::TextViewer& _textDrawer) {
 	// TODO : unknow function ...
 }
 
-bool appl::TextPluginCopy::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                            const ewol::object::Message& _msg) {
+bool appl::TextPluginCopy::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+                                                  const ewol::object::Message& _msg) {
 	if (isEnable() == false) {
 		return false;
 	}

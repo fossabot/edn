@@ -25,23 +25,12 @@ appl::BufferManager::BufferManager() :
 }
 
 appl::BufferManager::~BufferManager() {
-	int32_t previousCount = m_list.size();
-	for (int32_t iii = m_list.size()-1; iii >= 0 ; --iii) {
-		if (m_list[iii] == NULL) {
-			continue;
-		}
-		delete(m_list[iii]);
-		if (previousCount == m_list.size()) {
-			APPL_ERROR("Error in removing buffer !! ");
-		}
-		previousCount = m_list.size();
-	}
 	m_list.clear();
 }
 
 
-appl::Buffer* appl::BufferManager::createNewBuffer() {
-	appl::Buffer* tmp = new appl::Buffer();
+ewol::object::Shared<appl::Buffer> appl::BufferManager::createNewBuffer() {
+	ewol::object::Shared<appl::Buffer> tmp = ewol::object::makeShared(new appl::Buffer());
 	if (tmp == NULL) {
 		APPL_ERROR("Can not allocate the Buffer (empty).");
 		return NULL;
@@ -51,14 +40,14 @@ appl::Buffer* appl::BufferManager::createNewBuffer() {
 	return tmp;
 }
 
-appl::Buffer* appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
+ewol::object::Shared<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
 	APPL_INFO("get(" << _fileName << "," << _createIfNeeded << ")");
-	for (int32_t iii = 0; iii < m_list.size(); ++iii) {
-		if (m_list[iii] == NULL) {
+	for (auto &it : m_list) {
+		if (it == NULL) {
 			continue;
 		}
-		if (m_list[iii]->getFileName() == _fileName) {
-			return m_list[iii];
+		if (it->getFileName() == _fileName) {
+			return it;
 		}
 	}
 	if (_createIfNeeded == true) {
@@ -67,7 +56,7 @@ appl::Buffer* appl::BufferManager::get(const std::string& _fileName, bool _creat
 			APPL_CRITICAL("plop");
 			return NULL;
 		}
-		appl::Buffer* tmp = new appl::Buffer();
+		ewol::object::Shared<appl::Buffer> tmp = ewol::object::makeShared(new appl::Buffer());
 		if (tmp == NULL) {
 			APPL_ERROR("Can not allocate the Buffer class : " << _fileName);
 			return NULL;
@@ -78,31 +67,42 @@ appl::Buffer* appl::BufferManager::get(const std::string& _fileName, bool _creat
 	}
 	return NULL;
 }
-void appl::BufferManager::setBufferSelected(appl::Buffer* _bufferSelected) {
+void appl::BufferManager::setBufferSelected(ewol::object::Shared<appl::Buffer> _bufferSelected) {
 	m_bufferSelected = _bufferSelected;
 	sendMultiCast(appl::MsgSelectChange, "");
 }
 
-void appl::BufferManager::onObjectRemove(ewol::Object * _removeObject) {
-	if (m_bufferSelected == _removeObject) {
+void appl::BufferManager::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+	ewol::Resource::onObjectRemove(_object);
+	if (m_bufferSelected == _object) {
 		setBufferSelected(NULL);
 	}
-	for (int32_t iii = 0; iii < m_list.size(); ++iii) {
-		if (m_list[iii] != _removeObject) {
+	for (auto it(m_list.begin()); it!=m_list.end(); ++it) {
+		if (*it != _object) {
 			continue;
 		}
-		m_list[iii] = NULL;
-		m_list.erase(m_list.begin()+iii);
-		return;
+		m_list.erase(it);
+		it = m_list.begin();
 	}
 }
 
+ewol::object::Shared<appl::Buffer> appl::BufferManager::get(int32_t _id) {
+	int32_t id = 0;
+	for (auto &it : m_list) {
+		if (id == _id) {
+			return it;
+		}
+		id++;
+	}
+	return m_list.back();
+}
+
 bool appl::BufferManager::exist(const std::string& _fileName) {
-	for (int32_t iii = 0; iii < m_list.size(); ++iii) {
-		if (m_list[iii] == NULL) {
+	for (auto &it : m_list) {
+		if (it == nullptr) {
 			continue;
 		}
-		if (m_list[iii]->getFileName() == _fileName) {
+		if (it->getFileName() == _fileName) {
 			return true;
 		}
 	}
@@ -123,15 +123,14 @@ void appl::BufferManager::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_DEBUG("receive message !!! " << _msg);
 }
 
-appl::BufferManager* appl::BufferManager::keep() {
-	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
-	appl::BufferManager* object = static_cast<appl::BufferManager*>(getManager().localKeep("???BufferManager???"));
+ewol::object::Shared<appl::BufferManager> appl::BufferManager::keep() {
+	ewol::object::Shared<appl::BufferManager> object = ewol::dynamic_pointer_cast<appl::BufferManager>(getManager().localKeep("???BufferManager???"));
 	if (NULL != object) {
 		return object;
 	}
 	// this element create a new one every time ....
 	EWOL_INFO("CREATE : appl::BufferManager: ???BufferManager???");
-	object = new appl::BufferManager();
+	object = ewol::object::makeShared(new appl::BufferManager());
 	if (NULL == object) {
 		EWOL_ERROR("allocation error of a resource : ???BufferManager???");
 		return NULL;
@@ -140,11 +139,3 @@ appl::BufferManager* appl::BufferManager::keep() {
 	return object;
 }
 
-void appl::BufferManager::release(appl::BufferManager*& _object) {
-	if (NULL == _object) {
-		return;
-	}
-	ewol::Resource* object2 = static_cast<ewol::Resource*>(_object);
-	getManager().release(object2);
-	_object = NULL;
-}

@@ -17,7 +17,7 @@ namespace appl {
 		public:
 			// Constructeur
 			GlyphDecoration(const std::string& _newColorName = "no_name");
-			~GlyphDecoration() {
+			virtual ~GlyphDecoration() {
 				// nothing to do ...
 			};
 		private:

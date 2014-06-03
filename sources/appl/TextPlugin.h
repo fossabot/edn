@@ -186,8 +186,8 @@ namespace appl {
 			 * @param[in] _msg Generic message.
 			 * @return true if the event might not propagate anymore
 			 */
-			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                              const ewol::object::Message& _msg) {
+			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+			                                    const ewol::object::Message& _msg) {
 				return false;
 			}
 		protected:

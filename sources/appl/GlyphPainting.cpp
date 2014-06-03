@@ -47,7 +47,7 @@ void appl::GlyphPainting::reload() {
 		APPL_ERROR("Can not get basic array : 'ednColor'");
 		return;
 	}
-	for (int32_t iii = 0; iii < baseArray->size(); ++iii) {
+	for (size_t iii = 0; iii < baseArray->size(); ++iii) {
 		ejson::Object* tmpObj = baseArray->getObject(iii);
 		if (tmpObj == NULL) {
 			APPL_DEBUG(" can not get object in 'ednColor' id=" << iii);
@@ -60,7 +60,7 @@ void appl::GlyphPainting::reload() {
 		bool bold = tmpObj->getBooleanValue("bold", false);
 		APPL_VERBOSE("find new color : '" << name << "' fg='" << foreground << "' bg='" << background << "' italic='" << italic << "' bold='" << bold << "'");
 		bool findElement = false;
-		for (int32_t jjj=0; jjj<m_list.size(); ++jjj) {
+		for (size_t jjj=0; jjj<m_list.size(); ++jjj) {
 			if (m_list[jjj].getName() != name) {
 				continue;
 			}
@@ -84,7 +84,7 @@ void appl::GlyphPainting::reload() {
 
 
 int32_t appl::GlyphPainting::request(const std::string& _name) {
-	for (int32_t iii=0; iii<m_list.size(); ++iii) {
+	for (size_t iii=0; iii<m_list.size(); ++iii) {
 		if (m_list[iii].getName() == _name) {
 			return iii;
 		}
@@ -95,15 +95,15 @@ int32_t appl::GlyphPainting::request(const std::string& _name) {
 	return m_list.size()-1;
 }
 
-appl::GlyphPainting* appl::GlyphPainting::keep(const std::string& _filename) {
+ewol::object::Shared<appl::GlyphPainting> appl::GlyphPainting::keep(const std::string& _filename) {
 	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
-	appl::GlyphPainting* object = static_cast<appl::GlyphPainting*>(getManager().localKeep(_filename));
+	ewol::object::Shared<appl::GlyphPainting> object = ewol::dynamic_pointer_cast<appl::GlyphPainting>(getManager().localKeep(_filename));
 	if (NULL != object) {
 		return object;
 	}
 	// this element create a new one every time ....
 	EWOL_INFO("CREATE : appl::GlyphPainting : file : \"" << _filename << "\"");
-	object = new appl::GlyphPainting(_filename);
+	object = ewol::object::makeShared(new appl::GlyphPainting(_filename));
 	if (NULL == object) {
 		EWOL_ERROR("allocation error of a resource : ??GlyphPainting??");
 		return NULL;
@@ -111,13 +111,3 @@ appl::GlyphPainting* appl::GlyphPainting::keep(const std::string& _filename) {
 	getManager().localAdd(object);
 	return object;
 }
-
-void appl::GlyphPainting::release(appl::GlyphPainting*& _object) {
-	if (NULL == _object) {
-		return;
-	}
-	ewol::Resource* object2 = static_cast<ewol::Resource*>(_object);
-	getManager().release(object2);
-	_object = NULL;
-}
-

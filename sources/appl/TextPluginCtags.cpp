@@ -19,15 +19,16 @@
 
 
 appl::TextPluginCtags::TextPluginCtags() :
-  m_tagFilename(""),
   m_tagFolderBase(""),
+  m_tagFilename(""),
   m_ctagFile(NULL) {
 	m_activateOnReceiveMessage = true;
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
+	addObjectType("appl::TextPluginCtags");
 }
 appl::TextPluginCtags::~TextPluginCtags() {
-	appl::BufferManager::release(m_bufferManager);
+	
 }
 
 const char* eventJumpDestination = "event-plugin-ctags-jump-destination";
@@ -78,7 +79,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 	
 	if (tagsFindNext (m_ctagFile, &entry) == TagSuccess) {
 		APPL_INFO("Multiple file destination ...");
-		appl::TagFileSelection* tmpWidget = new appl::TagFileSelection();
+		ewol::object::Shared<appl::TagFileSelection> tmpWidget = ewol::object::makeShared(new appl::TagFileSelection());
 		if (NULL == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
@@ -167,14 +168,14 @@ void appl::TextPluginCtags::onReceiveMessage(const ewol::object::Message& _msg) 
 		jumpFile(tmp, lineID - 1);
 	}
 }
-bool appl::TextPluginCtags::onReceiveMessage(appl::TextViewer& _textDrawer,
-                                             const ewol::object::Message& _msg) {
+bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+                                                   const ewol::object::Message& _msg) {
 	if (isEnable() == false) {
 		return false;
 	}
 	if (_msg.getMessage() == eventOpenCtagsFile) {
 		APPL_INFO("Request opening ctag file");
-		ewol::widget::FileChooser* tmpWidget = new ewol::widget::FileChooser();
+		ewol::object::Shared<ewol::widget::FileChooser> tmpWidget = ewol::object::makeShared(new ewol::widget::FileChooser());
 		if (NULL == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 			return true;

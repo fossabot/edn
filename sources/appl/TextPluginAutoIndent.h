@@ -19,7 +19,7 @@ namespace appl {
 	class TextPluginAutoIndent : public appl::TextViewerPlugin {
 		public:
 			TextPluginAutoIndent();
-			~TextPluginAutoIndent() {
+			virtual ~TextPluginAutoIndent() {
 				// nothing to do ...
 			};
 		public:

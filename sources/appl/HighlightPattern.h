@@ -29,11 +29,11 @@ enum resultFind {
 namespace appl {
 	class HighlightPattern {
 		private:
-			appl::GlyphPainting*& m_glyphPainting;
+			ewol::object::Shared<appl::GlyphPainting> m_glyphPainting;
 		public:
 			// Constructeur
-			HighlightPattern(appl::GlyphPainting*& _glyphPainting);
-			~HighlightPattern();
+			HighlightPattern(const ewol::object::Shared<appl::GlyphPainting>& _glyphPainting);
+			virtual ~HighlightPattern();
 		private:
 			std::string m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")
 		public:
@@ -44,11 +44,11 @@ namespace appl {
 				return m_paternName;
 			};
 		private:
-			etk::RegExp<etk::Buffer>* m_regExpStart; //!< Start of Regular expression
+			std::unique_ptr<etk::RegExp<etk::Buffer>> m_regExpStart; //!< Start of Regular expression
 		public:
 			void setPaternStart(std::string& _regExp);
 		private:
-			etk::RegExp<etk::Buffer>* m_regExpStop; //!< Stop of Regular Expression
+			std::unique_ptr<etk::RegExp<etk::Buffer>> m_regExpStop; //!< Stop of Regular Expression
 		public:
 			void setPaternStop(std::string& _regExp);
 		private:

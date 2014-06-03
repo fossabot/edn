@@ -43,9 +43,9 @@ namespace appl {
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
-			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                              const ewol::object::Message& _msg,
-			                              appl::PluginHistoryData& _data);
+			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+			                                    const ewol::object::Message& _msg,
+			                                    appl::PluginHistoryData& _data);
 			virtual bool onWrite(appl::TextViewer& _textDrawer,
 			                     const appl::Buffer::Iterator& _pos,
 			                     const std::string& _strData,
@@ -67,7 +67,7 @@ namespace appl {
 			void clearRedo(appl::PluginHistoryData& _data);
 			void clearUndo(appl::PluginHistoryData& _data);
 		public:
-			virtual void onObjectRemove(ewol::Object* _removeObject);
+			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _object);
 	};
 };
 

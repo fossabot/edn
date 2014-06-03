@@ -20,12 +20,12 @@
 static void SortElementList(std::vector<appl::dataBufferStruct*>& _list) {
 	std::vector<appl::dataBufferStruct *> tmpList = _list;
 	_list.clear();
-	for(int32_t iii=0; iii<tmpList.size(); iii++) {
+	for(size_t iii=0; iii<tmpList.size(); iii++) {
 		if (NULL == tmpList[iii]) {
 			continue;
 		}
-		int32_t findPos = 0;
-		for(int32_t jjj=0; jjj<_list.size(); jjj++) {
+		size_t findPos = 0;
+		for(size_t jjj=0; jjj<_list.size(); jjj++) {
 			//EWOL_DEBUG("compare : \""<<*tmpList[iii] << "\" and \"" << *m_listDirectory[jjj] << "\"");
 			if (_list[jjj] == NULL) {
 				continue;
@@ -68,16 +68,11 @@ BufferView::~BufferView() {
 }
 
 void BufferView::removeAllElement() {
-	for(int32_t iii=0; iii<m_list.size(); iii++) {
-		if (NULL!=m_list[iii]) {
-			delete(m_list[iii]);
-			m_list[iii] = NULL;
-		}
+	for(auto &it : m_list) {
+		delete(it);
+		it = NULL;
 	}
 	m_list.clear();
-	if (m_bufferManager != NULL) {
-		appl::BufferManager::release(m_bufferManager);
-	}
 }
 
 void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _selectNewPosition) {
@@ -110,7 +105,7 @@ void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _sel
 void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::List::onReceiveMessage(_msg);
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
-		appl::Buffer* buffer = m_bufferManager->get(_msg.getData());
+		ewol::object::Shared<appl::Buffer> buffer = m_bufferManager->get(_msg.getData());
 		if (buffer == NULL) {
 			APPL_ERROR("event on element nor exist : " << _msg.getData());
 			return;
@@ -143,7 +138,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 					appl::dataBufferStruct* tmp = m_list[iii];
 					m_list[iii] = NULL;
 					m_list.erase(m_list.begin() + iii);
-					insertAlphabetic(tmp, (iii == m_selectedID));
+					insertAlphabetic(tmp, ((int64_t)iii == m_selectedID));
 					break;
 				}
 			}
@@ -162,12 +157,12 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_DEBUG("message : " << _msg);
 	if (_msg.getMessage() == appl::MsgSelectChange) {
 		m_selectedID = -1;
-		appl::Buffer* tmpBuffer = NULL;
+		ewol::object::Shared<appl::Buffer> tmpBuffer;
 		if (m_bufferManager != NULL) {
 			tmpBuffer = m_bufferManager->getBufferSelected();
 		}
 		if (tmpBuffer != NULL) {
-			for (int32_t iii=0; iii<m_list.size(); iii++) {
+			for (size_t iii=0; iii<m_list.size(); iii++) {
 				if (m_list[iii] == NULL) {
 					continue;
 				}
@@ -185,8 +180,8 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 		// clean The list
 		removeAllElement();
 		// get all the buffer name and properties:
-		int32_t nbBufferOpen = 0; // BufferManager::size();
-		for (int32_t iii=0; iii<nbBufferOpen; iii++) {
+		size_t nbBufferOpen = 0; // BufferManager::size();
+		for (size_t iii=0; iii<nbBufferOpen; iii++) {
 			/*
 			if (BufferManager::exist(iii)) {
 				BufferText* tmpBuffer = BufferManager::get(iii);
@@ -212,27 +207,30 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 		markToRedraw();
 	}else if (_msg.getMessage() == ednMsgBufferState) {
 		// update list of modify section ...
-		for (int32_t iii=0; iii<m_list.size(); iii++) {
-			if (NULL!=m_list[iii]) {
-				//m_list[iii]->m_isModify = BufferManager::get(m_list[iii]->m_bufferID)->isModify();
+		for (auto &it : m_list) {
+			if (it != nullptr) {
+				//it->m_isModify = BufferManager::get(it->m_bufferID)->isModify();
 			}
 		}
 		markToRedraw();
 	}
 }
 
-void BufferView::onObjectRemove(ewol::Object* _removeObject) {
-	ewol::widget::List::onObjectRemove(_removeObject);
-	for (int32_t iii=0; iii<m_list.size(); iii++) {
-		if (m_list[iii] == NULL) {
-			continue;
+void BufferView::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+	ewol::widget::List::onObjectRemove(_object);
+	auto it(m_list.begin());
+	while (it != m_list.end()) {
+		if (    *it != nullptr
+		     && (*it)->m_buffer == _object) {
+			m_list.erase(it);
+			markToRedraw();
+			it = m_list.begin();
+		} else {
+			++it;
 		}
-		if (m_list[iii]->m_buffer != _removeObject) {
-			continue;
-		}
-		m_list.erase(m_list.begin()+iii);
-		markToRedraw();
-		return;
+	}
+	if (m_bufferManager == _object) {
+		m_bufferManager.reset();
 	}
 }
 
@@ -256,8 +254,8 @@ uint32_t BufferView::getNuberOfRaw() {
 
 bool BufferView::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
 	if(    _raw >= 0
-	    && _raw<m_list.size()
-	    && NULL != m_list[_raw]) {
+	    && _raw<(int64_t)m_list.size()
+	    && m_list[_raw] != nullptr) {
 		_myTextToWrite = m_list[_raw]->m_bufferName.getNameFile();
 		
 		if (    m_list[_raw]->m_buffer != NULL
@@ -286,7 +284,7 @@ bool BufferView::onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent
 	if (1 == _IdInput && _typeEvent == ewol::key::statusSingle) {
 		APPL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
 		if(    _raw >= 0
-		    && _raw<m_list.size()
+		    && _raw<(int64_t)m_list.size()
 		    && NULL != m_list[_raw]) {
 			if (m_list[_raw]->m_buffer != NULL) {
 				sendMultiCast(appl::MsgSelectNewFile, m_list[_raw]->m_buffer->getFileName());

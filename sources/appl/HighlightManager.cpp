@@ -15,14 +15,16 @@
 #undef __class__
 #define __class__ "highlightManager"
 
-static std::vector<appl::Highlight*>& s_list() {
-	static std::vector<appl::Highlight*> list;
+// TODO : Review this in a generic unique resource ...
+
+static std::vector<ewol::object::Shared<appl::Highlight>>& s_list() {
+	static std::vector<ewol::object::Shared<appl::Highlight>> list;
 	return list;
 }
 
 
 void appl::highlightManager::init() {
-	std::vector<appl::Highlight*>& hlList = s_list();
+	std::vector<ewol::object::Shared<appl::Highlight>>& hlList = s_list();
 	if (hlList.size() != 0) {
 		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
 		hlList.clear();
@@ -31,16 +33,16 @@ void appl::highlightManager::init() {
 	etk::FSNode myFile("DATA:languages/");
 	// get the subfolder list :
 	std::vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
-	for (int32_t iii = 0; iii < list.size(); ++iii) {
-		if (list[iii] == NULL) {
+	for (auto &it : list) {
+		if (it == NULL) {
 			continue;
 		}
-		if (list[iii]->getNodeType() != etk::FSN_FOLDER) {
+		if (it->getNodeType() != etk::FSN_FOLDER) {
 			continue;
 		}
-		std::string filename = list[iii]->getName() + "/highlight.xml";
+		std::string filename = it->getName() + "/highlight.xml";
 		APPL_DEBUG("Load xml name : " << filename);
-		appl::Highlight *myHightLine = appl::Highlight::keep(filename);
+		ewol::object::Shared<appl::Highlight> myHightLine = appl::Highlight::keep(filename);
 		if (myHightLine != NULL) {
 			hlList.push_back(myHightLine);
 		} else {
@@ -49,28 +51,21 @@ void appl::highlightManager::init() {
 	}
 	// display :
 	/*
-	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
-		if (hlList[iii] == NULL) {
+	for (auto &it : hlList) {
+		if (it == NULL) {
 			continue;
 		}
-		hlList[iii]->display();
+		it->display();
 	}
 	*/
 }
 
 void appl::highlightManager::unInit() {
-	std::vector<Highlight*>& hlList = s_list();
+	std::vector<ewol::object::Shared<Highlight>>& hlList = s_list();
 	if (hlList.size() == 0) {
 		APPL_DEBUG("HighlightManager  ==> no highlight");
 		hlList.clear();
 		return;
-	}
-	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
-		if (hlList[iii] == NULL) {
-			continue;
-		}
-		appl::Highlight::release(hlList[iii]);
-		hlList[iii] = NULL;
 	}
 	hlList.clear();
 }
@@ -80,16 +75,16 @@ std::string appl::highlightManager::getTypeExtention(const std::string& _extenti
 		return "";
 	}
 	APPL_DEBUG("Try to find type for extention : '" << _extention << "' in " << s_list().size() << " types");
-	std::vector<Highlight*>& hlList = s_list();
-	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
-		if (hlList[iii] == NULL) {
+	std::vector<ewol::object::Shared<Highlight>>& hlList = s_list();
+	for (auto &it : hlList) {
+		if (it == NULL) {
 			continue;
 		}
-		APPL_DEBUG("    check : " << hlList[iii]->getTypeName());
-		if (hlList[iii]->hasExtention(_extention) == true) {
+		APPL_DEBUG("    check : " << it->getTypeName());
+		if (it->hasExtention(_extention) == true) {
 			APPL_DEBUG("Find type for extention : " << _extention
-			             << " type : " << hlList[iii]->getTypeName());
-			return hlList[iii]->getTypeName();
+			             << " type : " << it->getTypeName());
+			return it->getTypeName();
 		}
 	}
 	return "";
@@ -99,13 +94,12 @@ std::string appl::highlightManager::getFileWithTypeType(const std::string& _type
 	if (_type.size() == 0) {
 		return "";
 	}
-	std::vector<Highlight*>& hlList = s_list();
-	for (int32_t iii = 0; iii < hlList.size(); ++iii) {
-		if (hlList[iii] == NULL) {
+	for (auto &it : s_list()) {
+		if (it == NULL) {
 			continue;
 		}
-		if (hlList[iii]->getTypeName() == _type) {
-			return hlList[iii]->getName();
+		if (it->getTypeName() == _type) {
+			return it->getName();
 		}
 	}
 	return "";

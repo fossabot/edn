@@ -20,21 +20,22 @@ namespace appl {
 	class ViewerManager : public ewol::Resource {
 		protected:
 			ViewerManager();
-			~ViewerManager();
+		public:
+			virtual ~ViewerManager();
 		private:
-			appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
-			appl::TextViewer* m_viewer;
+			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			ewol::object::Shared<appl::TextViewer> m_viewer;
 		public:
 			/**
 			 * @brief Set the current buffer selected
 			 * @param[in] _viewer Pointer on the viewer selected
 			 */
-			void setViewerSelected(appl::TextViewer* _viewer, appl::Buffer* _buffer);
+			void setViewerSelected(const ewol::object::Shared<appl::TextViewer>& _viewer, const ewol::object::Shared<appl::Buffer>& _buffer);
 			/**
 			 * @brief Get the current buffer selected
 			 * @return Pointer on the buffer selected
 			 */
-			appl::TextViewer* getViewerSelected() {
+			ewol::object::Shared<appl::TextViewer> getViewerSelected() {
 				return m_viewer;
 			};
 			/**
@@ -42,12 +43,10 @@ namespace appl {
 			 * @param[in] _viewer element selected.
 			 * @return true if the element is selected
 			 */
-			bool isLastSelected(appl::TextViewer* _viewer) {
-				return m_viewer == _viewer;
-			};
+			bool isLastSelected(const ewol::object::Shared<appl::TextViewer>& _viewer);
 		public: // herited function
 			void onReceiveMessage(const ewol::object::Message& _msg);
-			void onObjectRemove(ewol::Object* _removeObject);
+			void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 		public: // resource manager
 			/**
 			 * @brief keep the resource pointer.
@@ -55,12 +54,7 @@ namespace appl {
 			 * @param[in] _filename Name of the configuration file.
 			 * @return pointer on the resource or NULL if an error occured.
 			 */
-			static appl::ViewerManager* keep();
-			/**
-			 * @brief release the keeped resources
-			 * @param[in,out] reference on the object pointer
-			 */
-			static void release(appl::ViewerManager*& _object);
+			static ewol::object::Shared<appl::ViewerManager> keep();
 	};
 };
 

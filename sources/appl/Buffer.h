@@ -68,7 +68,7 @@ namespace appl {
 					/**
 					 * @brief Basic destructor
 					 */
-					~Iterator() {
+					virtual ~Iterator() {
 						m_current = 0;
 						m_data = NULL;
 						m_value = u32char::Null;
@@ -248,7 +248,7 @@ namespace appl {
 					};
 					Iterator operator+ (const size_t _val) const {
 						Iterator tmpp(*this);
-						for (int64_t iii=0; iii<_val; ++iii) {
+						for (int64_t iii=0; iii<(int64_t)_val; ++iii) {
 							++tmpp;
 						}
 						return tmpp;
@@ -273,7 +273,7 @@ namespace appl {
 					};
 					Iterator operator- (const size_t _val) const {
 						Iterator tmpp(*this);
-						for (int64_t iii=0; iii<_val; ++iii) {
+						for (int64_t iii=0; iii<(int64_t)_val; ++iii) {
 							--tmpp;
 						}
 						return tmpp;
@@ -294,7 +294,7 @@ namespace appl {
 			static const char* const eventChangeName;
 		public:
 			Buffer();
-			~Buffer();
+			virtual ~Buffer();
 		private:
 			bool m_hasFileName; //!< when new file, the buffer has no name ==> but it might be reference with a single name ...
 			std::string m_fileName; //!< name of the file (with his path)
@@ -588,7 +588,7 @@ namespace appl {
 		protected:
 			std::string m_highlightType; //!< Name of the highlight type
 			
-			appl::Highlight* m_highlight; //!< internal link with the Highlight system
+			ewol::object::Shared<appl::Highlight> m_highlight; //!< internal link with the Highlight system
 			std::vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
 		public:
 			/**

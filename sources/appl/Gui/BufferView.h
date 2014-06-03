@@ -15,28 +15,25 @@
 #include <ewol/widget/List.h>
 #include <ewol/widget/Windows.h>
 
-namespace appl
-{
-	class dataBufferStruct
-	{
+namespace appl {
+	class dataBufferStruct {
 		public:
 			etk::FSNode m_bufferName;
-			appl::Buffer* m_buffer;
-			dataBufferStruct(const std::string& _bufferName, appl::Buffer* _buffer) :
+			ewol::object::Shared<appl::Buffer> m_buffer;
+			dataBufferStruct(const std::string& _bufferName, const ewol::object::Shared<appl::Buffer>& _buffer) :
 			  m_bufferName(_bufferName),
 			  m_buffer(_buffer) {
 				
 			};
-			~dataBufferStruct() { };
+			virtual ~dataBufferStruct() { };
 	};
 };
 
-class BufferView : public ewol::widget::List
-{
+class BufferView : public ewol::widget::List {
 	private:
-		appl::BufferManager* m_bufferManager; //!< handle on the buffer manager
+		ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 	private:
-		appl::GlyphPainting* m_paintingProperties; //!< element painting property
+		ewol::object::Shared<appl::GlyphPainting> m_paintingProperties; //!< element painting property
 		int32_t m_colorBackground1;
 		int32_t m_colorBackground2;
 		int32_t m_colorBackgroundSelect;
@@ -54,10 +51,10 @@ class BufferView : public ewol::widget::List
 	public:
 		// Constructeur
 		BufferView();
-		~BufferView();
+		virtual ~BufferView();
 		// Derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
-		virtual void onObjectRemove(ewol::Object* _removeObject);
+		virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _object);
 	private:
 		bool m_openOrderMode; //!< true if the order is the opening order mode, otherwise, Alphabetic order
 	protected:

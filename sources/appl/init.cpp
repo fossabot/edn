@@ -37,7 +37,7 @@ int main(int _argc, const char *_argv[]) {
 	// only one things to do:
 	return ewol::run(_argc, _argv);
 }
-appl::BufferManager* bufferManager = NULL;
+ewol::object::Shared<appl::BufferManager> bufferManager = NULL;
 
 /**
  * @brief main application function initialisation
@@ -84,9 +84,9 @@ bool APP_Init(ewol::Context& _context, size_t _initId, size_t& _nbInitStep) {
 	cCurrentPath[FILENAME_MAX - 1] = '\0';
 	//APPL_INFO("The current working directory is " << cCurrentPath);
 	
-	MainWindows* basicWindows = new MainWindows();
+	ewol::object::Shared<MainWindows> basicWindows = ewol::object::makeShared(new MainWindows());
 	
-	if (NULL == basicWindows) {
+	if (basicWindows == nullptr) {
 		APPL_ERROR("Can not allocate the basic windows");
 		_context.stop();
 		return false;
@@ -126,24 +126,11 @@ bool APP_Init(ewol::Context& _context, size_t _initId, size_t& _nbInitStep) {
  */
 void APP_UnInit(ewol::Context& _context) {
 	APPL_INFO(" == > Un-Init " PROJECT_NAME " (START)");
-	ewol::widget::Windows* tmpWindows = _context.getWindows();
-	
-	_context.setWindows(NULL);
-	
-	if (NULL != tmpWindows) {
-		delete(tmpWindows);
-		tmpWindows = NULL;
-	}
 	appl::textPluginManager::unInit();
-	
 	APPL_INFO("Stop Hightlight");
 	appl::highlightManager::unInit();
 	//Kill all singleton
-	if (bufferManager != NULL) {
-		APPL_INFO("Stop BufferManager");
-		appl::BufferManager::release(bufferManager);
-		bufferManager = NULL;
-	}
+	bufferManager.reset();
 	APPL_INFO(" == > Un-Init " PROJECT_NAME " (END)");
 }
 

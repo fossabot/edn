@@ -20,6 +20,7 @@ namespace appl {
 		public:
 			TextViewerPluginData() {
 				// nothing to do ...
+				addObjectType("appl::TextViewerPluginData");
 			}
 			virtual ~TextViewerPluginData() {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
@@ -32,7 +33,7 @@ namespace appl {
 				m_specificData.clear();
 			}
 		private:
-			std::vector<std::pair<appl::Buffer* ,TYPE* >> m_specificData;
+			std::vector<std::pair<ewol::object::Shared<appl::Buffer> ,TYPE* >> m_specificData;
 		protected:
 			TYPE* getDataRef(appl::TextViewer& _textDrawer) {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
@@ -49,13 +50,13 @@ namespace appl {
 				return data;
 			}
 		protected: // Wrap all element with their internal data: (do not use theses function)
-			bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                      const ewol::object::Message& _msg) {
+			bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+			                            const ewol::object::Message& _msg) {
 				TYPE* data = getDataRef(_textDrawer);
 				if (data == NULL) {
 					return false;
 				}
-				return onReceiveMessage(_textDrawer, _msg, *data);
+				return onReceiveMessageViewer(_textDrawer, _msg, *data);
 			}
 			bool onWrite(appl::TextViewer& _textDrawer,
 			             const appl::Buffer::Iterator& _pos,
@@ -87,9 +88,9 @@ namespace appl {
 			}
 			
 		public:
-			virtual bool onReceiveMessage(appl::TextViewer& _textDrawer,
-			                              const ewol::object::Message& _msg,
-			                              TYPE& _data) {
+			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
+			                                    const ewol::object::Message& _msg,
+			                                    TYPE& _data) {
 				return false;
 			}
 			virtual bool onWrite(appl::TextViewer& _textDrawer,
@@ -115,8 +116,14 @@ namespace appl {
 				return;
 			};
 		public:
-			virtual void onObjectRemove(ewol::Object* _removeObject) {
-				// TODO : plop
+			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+				appl::TextViewerPlugin::onObjectRemove(_object);
+				for (auto it(m_specificData.begin()); it != m_specificData.end(); ++it) {
+					if (it->first == _object) {
+						m_specificData.erase(it);
+						it = m_specificData.begin();
+					}
+				}
 			};
 	};
 };

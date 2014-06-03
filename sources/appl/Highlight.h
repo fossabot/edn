@@ -25,6 +25,7 @@ namespace appl {
 	};
 };
 
+#include <memory>
 #include <etk/os/FSNode.h>
 #include <appl/HighlightPattern.h>
 #include <appl/GlyphPainting.h>
@@ -34,11 +35,12 @@ namespace appl {
 namespace appl {
 	class Highlight : public ewol::Resource {
 		private:
-			appl::GlyphPainting* m_paintingProperties;
+			ewol::object::Shared<appl::GlyphPainting> m_paintingProperties;
 		protected:
 			// Constructeur
 			Highlight(const std::string& _xmlFilename, const std::string& _colorFile);
-			~Highlight();
+		public:
+			virtual ~Highlight();
 		private:
 			std::string m_typeName; //!< descriptive string type like "C/C++"
 		public:
@@ -60,12 +62,12 @@ namespace appl {
 			            etk::Buffer &_buffer);
 		private:
 			void parseRules(exml::Element* _child,
-			                std::vector<HighlightPattern*> &_mListPatern,
+			                std::vector<std::unique_ptr<HighlightPattern>> &_mListPatern,
 			                int32_t _level);
 			std::string m_styleName; //!< curent style name (like "c++" or "c" or "script Bash")
 			std::vector<std::string> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
-			std::vector<HighlightPattern*> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
-			std::vector<HighlightPattern*> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
+			std::vector<std::unique_ptr<HighlightPattern>> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
+			std::vector<std::unique_ptr<HighlightPattern>> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
 		public:
 			/**
 			 * @brief keep the resource pointer.
@@ -73,12 +75,7 @@ namespace appl {
 			 * @param[in] _filename Name of the configuration file.
 			 * @return pointer on the resource or NULL if an error occured.
 			 */
-			static appl::Highlight* keep(const std::string& _filename);
-			/**
-			 * @brief release the keeped resources
-			 * @param[in,out] reference on the object pointer
-			 */
-			static void release(appl::Highlight*& _object);
+			static ewol::object::Shared<appl::Highlight> keep(const std::string& _filename);
 		public: // herited function :
 			virtual void updateContext() {
 				// no upfate to do ...
