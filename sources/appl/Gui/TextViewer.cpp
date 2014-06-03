@@ -424,7 +424,8 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 }
 
 bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
-	if (_event.getId() != 0) {
+	if (   _event.getId() != 0
+	    && _event.getStatus() == ewol::key::statusDown) {
 		keepFocus();
 	}
 	//tic();
