@@ -43,13 +43,13 @@ void appl::GlyphPainting::reload() {
 	APPL_DEBUG(tmppppp);
 	*/
 	ejson::Array* baseArray = doc.getArray("ednColor");
-	if (baseArray == NULL) {
+	if (baseArray == nullptr) {
 		APPL_ERROR("Can not get basic array : 'ednColor'");
 		return;
 	}
 	for (size_t iii = 0; iii < baseArray->size(); ++iii) {
 		ejson::Object* tmpObj = baseArray->getObject(iii);
-		if (tmpObj == NULL) {
+		if (tmpObj == nullptr) {
 			APPL_DEBUG(" can not get object in 'ednColor' id=" << iii);
 			continue;
 		}
@@ -98,15 +98,15 @@ int32_t appl::GlyphPainting::request(const std::string& _name) {
 ewol::object::Shared<appl::GlyphPainting> appl::GlyphPainting::keep(const std::string& _filename) {
 	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
 	ewol::object::Shared<appl::GlyphPainting> object = ewol::dynamic_pointer_cast<appl::GlyphPainting>(getManager().localKeep(_filename));
-	if (NULL != object) {
+	if (nullptr != object) {
 		return object;
 	}
 	// this element create a new one every time ....
 	EWOL_INFO("CREATE : appl::GlyphPainting : file : \"" << _filename << "\"");
 	object = ewol::object::makeShared(new appl::GlyphPainting(_filename));
-	if (NULL == object) {
+	if (nullptr == object) {
 		EWOL_ERROR("allocation error of a resource : ??GlyphPainting??");
-		return NULL;
+		return nullptr;
 	}
 	getManager().localAdd(object);
 	return object;

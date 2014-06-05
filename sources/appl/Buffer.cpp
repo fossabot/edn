@@ -27,7 +27,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 		m_current = 0;
 		return *this;
 	}
-	if (m_data != NULL) {
+	if (m_data != nullptr) {
 		if (m_current < m_data->m_data.size() ) {
 			int8_t nbChar = utf8::theoricLen(m_data->m_data[m_current]);
 			if (nbChar != 0) {
@@ -45,7 +45,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- () {
 	m_value = u32char::Null;
-	if (m_data != NULL) {
+	if (m_data != nullptr) {
 		if (m_current > 0) {
 			int32_t iii = -1;
 			while(    utf8::theoricFirst(m_data->m_data[m_current+iii]) == false
@@ -68,7 +68,7 @@ char32_t appl::Buffer::Iterator::operator* () {
 	if (m_value != u32char::Null) {
 		return m_value;
 	}
-	if (m_data == NULL) {
+	if (m_data == nullptr) {
 		APPL_ERROR("request an element that iterator not link");
 		return m_value;
 	}
@@ -127,7 +127,7 @@ appl::Buffer::Buffer() :
   m_cursorSelectPos(-1),
   m_cursorPreferredCol(-1),
   m_nbLines(1),
-  m_highlight(NULL) {
+  m_highlight(nullptr) {
 	addObjectType("appl::Buffer");
 	static int32_t bufferBaseId = 0;
 	m_fileName = "No Name " + std::to_string(bufferBaseId);
@@ -704,7 +704,7 @@ void appl::Buffer::setHighlightType(const std::string& _type) {
 
 void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64_t _nbAdded) {
 	// prevent ERROR...
-	if (NULL == m_highlight) {
+	if (nullptr == m_highlight) {
 		return;
 	}
 	// prevent No data Call
@@ -857,7 +857,7 @@ void appl::Buffer::findMainHighLightPosition(int64_t _startPos,
 }
 
 void appl::Buffer::generateHighLightAt(int64_t _pos, int64_t _endPos, int64_t _addingPos) {
-	if (NULL == m_highlight) {
+	if (nullptr == m_highlight) {
 		return;
 	}
 	//APPL_DEBUG("area : ("<<pos<<","<<endPos<<") insert at : " << addingPos);
@@ -879,17 +879,17 @@ appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int64_t _pos, int64
 			return &m_HLDataPass1[iii];
 		}
 		if(m_HLDataPass1[iii].beginStart > _pos) {
-			return NULL;
+			return nullptr;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 
 void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const appl::Buffer::Iterator& _HLStart, int64_t _nbLines) {
 	_MData.posHLPass1 = 0;
 	_MData.posHLPass2 = 0;
-	if (NULL == m_highlight) {
+	if (nullptr == m_highlight) {
 		return;
 	}
 	//int64_t timeStart = ewol::getTime();

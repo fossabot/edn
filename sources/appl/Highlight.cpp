@@ -48,7 +48,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 		return;
 	}
 	exml::Element* root = doc.getNamed("EdnLang");
-	if (NULL == root ) {
+	if (nullptr == root ) {
 		APPL_ERROR("(l ?) main node not find: \"EdnLang\" ...");
 		return;
 	}
@@ -58,7 +58,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 	// parse all the elements :
 	for(size_t iii = 0; iii < root->size(); ++iii) {
 		exml::Element* child = root->getElement(iii);
-		if (child == NULL) {
+		if (child == nullptr) {
 			// trash here all that is not element ...
 			continue;
 		}
@@ -72,7 +72,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 			// get sub Nodes ...
 			for(size_t jjj=0; jjj< child->size(); jjj++) {
 				exml::Element* passChild = child->getElement(jjj);
-				if (passChild == NULL) {
+				if (passChild == nullptr) {
 					continue;
 				}
 				if (passChild->getValue() != "rule") {
@@ -85,7 +85,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 			// get sub Nodes ...
 			for(size_t jjj=0; jjj< child->size(); jjj++) {
 				exml::Element* passChild = child->getElement(jjj);
-				if (passChild == NULL) {
+				if (passChild == nullptr) {
 					continue;
 				}
 				if (passChild->getValue() != "rule") {
@@ -259,15 +259,15 @@ void appl::Highlight::parse2(int64_t _start,
 ewol::object::Shared<appl::Highlight> appl::Highlight::keep(const std::string& _filename) {
 	//EWOL_INFO("KEEP : appl::Highlight : file : \"" << _filename << "\"");
 	ewol::object::Shared<appl::Highlight> object = ewol::dynamic_pointer_cast<appl::Highlight>(getManager().localKeep(_filename));
-	if (NULL != object) {
+	if (nullptr != object) {
 		return object;
 	}
 	EWOL_INFO("CREATE : appl::Highlight : file : \"" << _filename << "\"");
 	// this element create a new one every time ....
 	object = ewol::object::makeShared(new appl::Highlight(_filename, "THEME:COLOR:textViewer.json"));
-	if (NULL == object) {
+	if (nullptr == object) {
 		EWOL_ERROR("allocation error of a resource : ??Highlight??");
-		return NULL;
+		return nullptr;
 	}
 	getManager().localAdd(object);
 	return object;

@@ -24,10 +24,10 @@ namespace appl {
 			}
 			virtual ~TextViewerPluginData() {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
-					if (m_specificData[iii].second != NULL) {
+					if (m_specificData[iii].second != nullptr) {
 						remove(*m_specificData[iii].second);
 						delete(m_specificData[iii].second);
-						m_specificData[iii].second = NULL;
+						m_specificData[iii].second = nullptr;
 					}
 				}
 				m_specificData.clear();
@@ -42,8 +42,8 @@ namespace appl {
 					}
 				}
 				TYPE* data = new TYPE();
-				if (data == NULL) {
-					return NULL;
+				if (data == nullptr) {
+					return nullptr;
 				}
 				m_specificData.push_back(std::make_pair(_textDrawer.internalGetBuffer(), data));
 				// create a new one ...
@@ -53,7 +53,7 @@ namespace appl {
 			bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
 			                            const ewol::object::Message& _msg) {
 				TYPE* data = getDataRef(_textDrawer);
-				if (data == NULL) {
+				if (data == nullptr) {
 					return false;
 				}
 				return onReceiveMessageViewer(_textDrawer, _msg, *data);
@@ -62,7 +62,7 @@ namespace appl {
 			             const appl::Buffer::Iterator& _pos,
 			             const std::string& _data) {
 				TYPE* data = getDataRef(_textDrawer);
-				if (data == NULL) {
+				if (data == nullptr) {
 					return false;
 				}
 				return onWrite(_textDrawer, _pos, _data, *data);
@@ -72,7 +72,7 @@ namespace appl {
 			               const std::string& _data,
 			               const appl::Buffer::Iterator& _posEnd) {
 				TYPE* data = getDataRef(_textDrawer);
-				if (data == NULL) {
+				if (data == nullptr) {
 					return false;
 				}
 				return onReplace(_textDrawer, _pos, _data, _posEnd, *data);
@@ -81,7 +81,7 @@ namespace appl {
 			              const appl::Buffer::Iterator& _pos,
 			              const appl::Buffer::Iterator& _posEnd) {
 				TYPE* data = getDataRef(_textDrawer);
-				if (data == NULL) {
+				if (data == nullptr) {
 					return false;
 				}
 				return onRemove(_textDrawer, _pos, _posEnd, *data);

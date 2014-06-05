@@ -21,13 +21,13 @@ static void SortElementList(std::vector<appl::dataBufferStruct*>& _list) {
 	std::vector<appl::dataBufferStruct *> tmpList = _list;
 	_list.clear();
 	for(size_t iii=0; iii<tmpList.size(); iii++) {
-		if (NULL == tmpList[iii]) {
+		if (nullptr == tmpList[iii]) {
 			continue;
 		}
 		size_t findPos = 0;
 		for(size_t jjj=0; jjj<_list.size(); jjj++) {
 			//EWOL_DEBUG("compare : \""<<*tmpList[iii] << "\" and \"" << *m_listDirectory[jjj] << "\"");
-			if (_list[jjj] == NULL) {
+			if (_list[jjj] == nullptr) {
 				continue;
 			}
 			if (tmpList[iii]->m_bufferName.getNameFile() > _list[jjj]->m_bufferName.getNameFile()) {
@@ -70,30 +70,30 @@ BufferView::~BufferView() {
 void BufferView::removeAllElement() {
 	for(auto &it : m_list) {
 		delete(it);
-		it = NULL;
+		it = nullptr;
 	}
 	m_list.clear();
 }
 
 void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _selectNewPosition) {
-	if (_dataStruct == NULL) {
+	if (_dataStruct == nullptr) {
 		return;
 	}
 	// alphabetical order:
 	for (size_t iii = 0; iii < m_list.size(); ++iii) {
-		if (m_list[iii] == NULL) {
+		if (m_list[iii] == nullptr) {
 			continue;
 		}
 		if (std::tolower(m_list[iii]->m_bufferName.getNameFile()) > std::tolower(_dataStruct->m_bufferName.getNameFile())) {
 			m_list.insert(m_list.begin() + iii, _dataStruct);
-			_dataStruct = NULL;
+			_dataStruct = nullptr;
 			if (_selectNewPosition == true) {
 				m_selectedID = iii;
 			}
 			break;
 		}
 	}
-	if (_dataStruct != NULL) {
+	if (_dataStruct != nullptr) {
 		m_list.push_back(_dataStruct);
 		if (_selectNewPosition == true) {
 			m_selectedID = m_list.size()-1;
@@ -106,7 +106,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::List::onReceiveMessage(_msg);
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
 		ewol::object::Shared<appl::Buffer> buffer = m_bufferManager->get(_msg.getData());
-		if (buffer == NULL) {
+		if (buffer == nullptr) {
 			APPL_ERROR("event on element nor exist : " << _msg.getData());
 			return;
 		}
@@ -114,7 +114,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 		buffer->registerOnEvent(this, appl::Buffer::eventIsModify);
 		buffer->registerOnEvent(this, appl::Buffer::eventChangeName);
 		appl::dataBufferStruct* tmp = new appl::dataBufferStruct(_msg.getData(), buffer);
-		if (tmp == NULL) {
+		if (tmp == nullptr) {
 			APPL_ERROR("Allocation error of the tmp buffer list element");
 			return;
 		}
@@ -128,7 +128,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 	if (_msg.getMessage() == appl::Buffer::eventChangeName) {
 		for (size_t iii = 0; iii < m_list.size(); ++iii) {
-			if (m_list[iii] == NULL) {
+			if (m_list[iii] == nullptr) {
 				continue;
 			}
 			if (m_list[iii]->m_bufferName != m_list[iii]->m_buffer->getFileName()) {
@@ -136,7 +136,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 				if (m_openOrderMode == false) {
 					// re-order the fine in the correct position
 					appl::dataBufferStruct* tmp = m_list[iii];
-					m_list[iii] = NULL;
+					m_list[iii] = nullptr;
 					m_list.erase(m_list.begin() + iii);
 					insertAlphabetic(tmp, ((int64_t)iii == m_selectedID));
 					break;
@@ -158,12 +158,12 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	if (_msg.getMessage() == appl::MsgSelectChange) {
 		m_selectedID = -1;
 		ewol::object::Shared<appl::Buffer> tmpBuffer;
-		if (m_bufferManager != NULL) {
+		if (m_bufferManager != nullptr) {
 			tmpBuffer = m_bufferManager->getBufferSelected();
 		}
-		if (tmpBuffer != NULL) {
+		if (tmpBuffer != nullptr) {
 			for (size_t iii=0; iii<m_list.size(); iii++) {
-				if (m_list[iii] == NULL) {
+				if (m_list[iii] == nullptr) {
 					continue;
 				}
 				if (m_list[iii]->m_buffer != tmpBuffer) {
@@ -185,11 +185,11 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 			/*
 			if (BufferManager::exist(iii)) {
 				BufferText* tmpBuffer = BufferManager::get(iii);
-				if (NULL != tmpBuffer) {
+				if (nullptr != tmpBuffer) {
 					bool isModify  = tmpBuffer->isModify();
 					etk::FSNode name = tmpBuffer->getFileName();
 					appl::dataBufferStruct* tmpElement = new appl::dataBufferStruct(name, iii, isModify);
-					if (NULL != tmpElement) {
+					if (nullptr != tmpElement) {
 						m_list.push_back(tmpElement);
 					} else {
 						APPL_ERROR("Allocation error of the tmp buffer list element");
@@ -258,7 +258,7 @@ bool BufferView::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextT
 	    && m_list[_raw] != nullptr) {
 		_myTextToWrite = m_list[_raw]->m_bufferName.getNameFile();
 		
-		if (    m_list[_raw]->m_buffer != NULL
+		if (    m_list[_raw]->m_buffer != nullptr
 		     && m_list[_raw]->m_buffer->isModify() == false) {
 			_fg = (*m_paintingProperties)[m_colorTextNormal].getForeground();
 		} else {
@@ -285,8 +285,8 @@ bool BufferView::onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent
 		APPL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
 		if(    _raw >= 0
 		    && _raw<(int64_t)m_list.size()
-		    && NULL != m_list[_raw]) {
-			if (m_list[_raw]->m_buffer != NULL) {
+		    && nullptr != m_list[_raw]) {
+			if (m_list[_raw]->m_buffer != nullptr) {
 				sendMultiCast(appl::MsgSelectNewFile, m_list[_raw]->m_buffer->getFileName());
 				m_selectedID = _raw;
 				markToRedraw();

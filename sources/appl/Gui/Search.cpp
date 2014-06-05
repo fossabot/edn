@@ -30,12 +30,12 @@ const char* const l_eventHideBt = "appl-hide-button";
 
 appl::widget::Search::Search() :
   ewol::widget::Composer(ewol::widget::Composer::file, "DATA:GUI-Search.xml"),
-  m_viewerManager(NULL),
+  m_viewerManager(nullptr),
   m_forward(true),
   m_caseSensitive(false),
   m_wrap(true),
-  m_searchEntry(NULL),
-  m_replaceEntry(NULL) {
+  m_searchEntry(nullptr),
+  m_replaceEntry(nullptr) {
 	addObjectType("appl::widget::Search");
 	// load buffer manager:onObjectRemove
 	m_viewerManager = appl::ViewerManager::keep();
@@ -68,12 +68,12 @@ appl::widget::Search::~Search() {
 }
 
 void appl::widget::Search::find() {
-	if (m_viewerManager == NULL) {
+	if (m_viewerManager == nullptr) {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
 	}
 	ewol::object::Shared<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
-	if (viewer == NULL) {
+	if (viewer == nullptr) {
 		APPL_INFO("No viewer selected!!!");
 		return;
 	}
@@ -104,12 +104,12 @@ void appl::widget::Search::find() {
 }
 
 void appl::widget::Search::replace() {
-	if (m_viewerManager == NULL) {
+	if (m_viewerManager == nullptr) {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
 	}
 	ewol::object::Shared<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
-	if (viewer == NULL) {
+	if (viewer == nullptr) {
 		APPL_INFO("No viewer selected!!!");
 		return;
 	}
@@ -146,14 +146,14 @@ void appl::widget::Search::onReceiveMessage(const ewol::object::Message& _msg) {
 	} else if ( _msg.getMessage() == ednMsgGuiSearch) {
 		if (true == isHide()) {
 			show();
-			if (m_searchEntry!= NULL) {
+			if (m_searchEntry!= nullptr) {
 				m_searchEntry->keepFocus();
 			}
 		} else {
-			if(    (m_searchEntry!=NULL  && true == m_searchEntry->getFocus())
-			    || (m_replaceEntry!=NULL && true == m_replaceEntry->getFocus()) ) {
+			if(    (m_searchEntry!=nullptr  && true == m_searchEntry->getFocus())
+			    || (m_replaceEntry!=nullptr && true == m_replaceEntry->getFocus()) ) {
 				hide();
-			} else if (m_searchEntry!= NULL) {
+			} else if (m_searchEntry!= nullptr) {
 				m_searchEntry->keepFocus();
 			} else {
 				hide();

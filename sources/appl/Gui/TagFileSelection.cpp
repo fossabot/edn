@@ -47,7 +47,7 @@ appl::TagFileSelection::TagFileSelection() {
 	#endif
 	
 	mySizerVert = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeVert));
-	if (NULL == mySizerVert) {
+	if (nullptr == mySizerVert) {
 		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		mySizerVert->lockExpand(bvec2(true,true));
@@ -77,7 +77,7 @@ appl::TagFileSelection::TagFileSelection() {
 		compose->registerOnEventNameWidget(this, "PLUGIN-CTAGS-cancel", "pressed", applEventctagsCancel);
 			
 		m_listTag = ewol::object::makeShared(new appl::TagFileList());
-		if (NULL == m_listTag) {
+		if (nullptr == m_listTag) {
 			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
 			m_listTag->registerOnEvent(this, applEventCtagsListValidate);
@@ -89,7 +89,7 @@ appl::TagFileSelection::TagFileSelection() {
 		}
 		
 		myWidgetTitle = new ewol::widget::Label("Ctags Jump Selection ...");
-		if (NULL == myWidgetTitle) {
+		if (nullptr == myWidgetTitle) {
 			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
 			mySizerVert->subWidgetAdd(myWidgetTitle);
@@ -134,7 +134,7 @@ void appl::TagFileSelection::onReceiveMessage(const ewol::object::Message& _msg)
  * @param[in] jump line id
  */
 void appl::TagFileSelection::addCtagsNewItem(std::string _file, int32_t _line) {
-	if (NULL != m_listTag) {
+	if (nullptr != m_listTag) {
 		m_listTag->add(_file, _line);
 	}
 }
@@ -144,7 +144,7 @@ void appl::TagFileSelection::onObjectRemove(const ewol::object::Shared<ewol::Obj
 	ewol::widget::PopUp::onObjectRemove(_removeObject);
 	// second step find if in all the elements ...
 	if(_removeObject == m_listTag) {
-		m_listTag = NULL;
+		m_listTag = nullptr;
 	}
 }
 

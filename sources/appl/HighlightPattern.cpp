@@ -30,7 +30,7 @@ appl::HighlightPattern::~HighlightPattern() {
 }
 
 void appl::HighlightPattern::setPaternStart(std::string& _regExp) {
-	if (m_regExpStart == NULL) {
+	if (m_regExpStart == nullptr) {
 		return;
 	}
 	m_regExpStart->compile(_regExp);
@@ -40,7 +40,7 @@ void appl::HighlightPattern::setPaternStop(std::string& _regExp) {
 	m_regExpStop.reset();
 	if (_regExp.size() != 0) {
 		m_regExpStop = std::unique_ptr<etk::RegExp<etk::Buffer>>(new etk::RegExp<etk::Buffer>());
-		if (m_regExpStop != NULL) {
+		if (m_regExpStop != nullptr) {
 			m_regExpStop->compile(_regExp);
 		} else {
 			APPL_ERROR("Allocation error");
@@ -62,7 +62,7 @@ void appl::HighlightPattern::display() {
 	APPL_INFO("patern : \"" << m_paternName << "\" level=" << m_level );
 	APPL_INFO("  == > colorName \"" << m_colorName << "\"");
 	APPL_INFO("  == > regExpStart \"" << m_regExpStart->getRegExp() << "\"");
-	if (m_regExpStop != NULL) {
+	if (m_regExpStop != nullptr) {
 		APPL_INFO("  == > regExpStop \"" << m_regExpStop->getRegExp() << "\"");
 	}
 	if (m_multiline == true) {
@@ -93,7 +93,7 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 	setLevel(_level);
 	
 	exml::Element* xChild = _child->getNamed("color");
-	if (NULL != xChild) {
+	if (nullptr != xChild) {
 		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
@@ -102,7 +102,7 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 		}
 	}
 	xChild = _child->getNamed("start");
-	if (NULL != xChild) {
+	if (nullptr != xChild) {
 		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
@@ -111,7 +111,7 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 		}
 	}
 	xChild = _child->getNamed("end");
-	if (NULL != xChild) {
+	if (nullptr != xChild) {
 		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
@@ -120,7 +120,7 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 		}
 	}
 	xChild = _child->getNamed("EscapeChar");
-	if (NULL != xChild) {
+	if (nullptr != xChild) {
 		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
@@ -143,7 +143,7 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 	_resultat.patern = this;
 	
 	// when we have only one element:
-	if (m_regExpStop == NULL) {
+	if (m_regExpStop == nullptr) {
 		if (true == m_regExpStart->processOneElement(_buffer, _start, _stop)) {
 			_resultat.beginStart = m_regExpStart->start();
 			_resultat.beginStop  = m_regExpStart->stop();

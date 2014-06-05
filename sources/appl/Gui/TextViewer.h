@@ -95,7 +95,7 @@ namespace appl {
 			 * @brief Remove selected data ... (No plugin call)
 			 */
 			void removeDirect() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return;
 				}
 				m_buffer->removeSelection();
@@ -108,7 +108,7 @@ namespace appl {
 			 * @return true of no error occured.
 			 */
 			bool copy(std::string& _data) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				return m_buffer->copy(_data);
@@ -120,7 +120,7 @@ namespace appl {
 			 * @param[in] _posEnd End position to end replace the data.
 			 */
 			void copy(std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return;
 				}
 				m_buffer->copy(_data, _pos, _posEnd);
@@ -132,7 +132,7 @@ namespace appl {
 			 * @return true if the write is done corectly
 			 */
 			bool writeDirect(const std::string& _data, const appl::Buffer::Iterator& _pos) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				bool ret = m_buffer->write(_data, _pos);
@@ -147,7 +147,7 @@ namespace appl {
 			 * @return true if the write is done corectly
 			 */
 			bool replaceDirect(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				bool ret = m_buffer->replace(_data, _pos, _posEnd);
@@ -208,14 +208,14 @@ namespace appl {
 			 * @return true if a display buffer is present, false otherwise.
 			 */
 			virtual bool hasBuffer() {
-				return m_buffer != NULL;
+				return m_buffer != nullptr;
 			}
 			/**
 			 * @brief Get the status of selection.
 			 * @return true if we have a current selection, false otherwise.
 			 */
 			virtual bool hasTextSelected() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				return m_buffer->hasTextSelected();
@@ -224,7 +224,7 @@ namespace appl {
 			 * @brief Remove Selection of the buffer.
 			 */
 			virtual void unSelect() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return;
 				}
 				m_buffer->unSelect();
@@ -235,7 +235,7 @@ namespace appl {
 			 * @param[in] _stop Stop position of the selection (the curor is set at this position)
 			 */
 			virtual void select(const appl::Buffer::Iterator& _start, const appl::Buffer::Iterator& _stop) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return;
 				}
 				moveCursor(_stop);
@@ -255,7 +255,7 @@ namespace appl {
 			                  appl::Buffer::Iterator& _resultStart,
 			                  appl::Buffer::Iterator& _resultStop,
 			                  bool _caseSensitive = true) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				bool ret = m_buffer->search(_pos, _search, _resultStart, _caseSensitive);
@@ -278,7 +278,7 @@ namespace appl {
 			                   appl::Buffer::Iterator& _resultStart,
 			                   appl::Buffer::Iterator& _resultStop,
 			                   bool _caseSensitive = true) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				bool ret = m_buffer->searchBack(_pos, _search, _resultStart, _caseSensitive);
@@ -297,7 +297,7 @@ namespace appl {
 			bool getPosAround(const appl::Buffer::Iterator& _pos,
 			                  appl::Buffer::Iterator &_beginPos,
 			                  appl::Buffer::Iterator &_endPos) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				return m_buffer->getPosAround(_pos, _beginPos, _endPos);
@@ -308,7 +308,7 @@ namespace appl {
 			 * @return The Iterator
 			 */
 			appl::Buffer::Iterator position(int64_t _pos) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->position(_pos);
@@ -318,7 +318,7 @@ namespace appl {
 			 * @return The iterator on the cursor position
 			 */
 			appl::Buffer::Iterator cursor() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->cursor();
@@ -328,7 +328,7 @@ namespace appl {
 			 * @return The iterator on the begin position
 			 */
 			appl::Buffer::Iterator begin() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->begin();
@@ -338,7 +338,7 @@ namespace appl {
 			 * @return The iterator on the end position
 			 */
 			appl::Buffer::Iterator end() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->end();
@@ -348,7 +348,7 @@ namespace appl {
 			 * @return The Iterator
 			 */
 			appl::Buffer::Iterator selectStart() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->selectStart();
@@ -358,7 +358,7 @@ namespace appl {
 			 * @return The Iterator
 			 */
 			appl::Buffer::Iterator selectStop() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->selectStop();
@@ -369,7 +369,7 @@ namespace appl {
 			 * @return The position in the buffer of the start of the line.
 			 */
 			appl::Buffer::Iterator getStartLine(const appl::Buffer::Iterator& _pos) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->getStartLine(_pos);
@@ -380,7 +380,7 @@ namespace appl {
 			 * @return The position in the buffer of the end of the line.
 			 */
 			appl::Buffer::Iterator getEndLine(const appl::Buffer::Iterator& _pos) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->getEndLine(_pos);

@@ -16,13 +16,13 @@
 static const char* s_saveAsDone = "save-as-done";
 
 appl::WorkerSaveAllFile::WorkerSaveAllFile() :
-  m_worker(NULL),
-  m_bufferManager(NULL) {
+  m_worker(nullptr),
+  m_bufferManager(nullptr) {
 	addObjectType("appl::WorkerSaveAllFile");
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
 	
-	if (m_bufferManager == NULL) {
+	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		autoDestroy();
 		return;
@@ -30,7 +30,7 @@ appl::WorkerSaveAllFile::WorkerSaveAllFile() :
 	// List all current open file :
 	for (int32_t iii=0; iii<m_bufferManager->size(); ++iii) {
 		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
-		if (tmpBuffer == NULL) {
+		if (tmpBuffer == nullptr) {
 			continue;
 		}
 		if (tmpBuffer->isModify() == false) {
@@ -63,7 +63,7 @@ appl::WorkerSaveAllFile::~WorkerSaveAllFile() {
 }
 
 void appl::WorkerSaveAllFile::onReceiveMessage(const ewol::object::Message& _msg) {
-	if (m_bufferManager == NULL) {
+	if (m_bufferManager == nullptr) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
 	}
@@ -86,11 +86,11 @@ void appl::WorkerSaveAllFile::onReceiveMessage(const ewol::object::Message& _msg
 
 void appl::WorkerSaveAllFile::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
 	if (_removeObject == m_worker) {
-		m_worker = NULL;
+		m_worker = nullptr;
 		APPL_VERBOSE("AutoRemove After saving sub widget ...");
 		autoDestroy();
 	} else if (_removeObject == m_bufferManager) {
-		m_bufferManager = NULL;
+		m_bufferManager = nullptr;
 		autoDestroy();
 	}
 }

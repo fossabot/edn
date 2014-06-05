@@ -45,7 +45,7 @@ bool appl::TextPluginHistory::onReceiveMessageViewer(appl::TextViewer& _textDraw
 		if (_data.m_redo.size() == 0) {
 			return true;
 		}
-		if (_data.m_redo[_data.m_redo.size()-1] == NULL) {
+		if (_data.m_redo[_data.m_redo.size()-1] == nullptr) {
 			_data.m_redo.pop_back();
 			return true;
 		}
@@ -61,7 +61,7 @@ bool appl::TextPluginHistory::onReceiveMessageViewer(appl::TextViewer& _textDraw
 		if (_data.m_undo.size() == 0) {
 			return true;
 		}
-		if (_data.m_undo[_data.m_undo.size()-1] == NULL) {
+		if (_data.m_undo[_data.m_undo.size()-1] == nullptr) {
 			_data.m_undo.pop_back();
 			return true;
 		}
@@ -82,11 +82,11 @@ void appl::TextPluginHistory::clearRedo(appl::PluginHistoryData& _data) {
 		return;
 	}
 	for (size_t iii=0; iii<_data.m_redo.size(); ++iii) {
-		if (_data.m_redo[iii] == NULL) {
+		if (_data.m_redo[iii] == nullptr) {
 			continue;
 		}
 		delete(_data.m_redo[iii]);
-		_data.m_redo[iii] = NULL;
+		_data.m_redo[iii] = nullptr;
 	}
 	_data.m_redo.clear();
 }
@@ -96,11 +96,11 @@ void appl::TextPluginHistory::clearUndo(appl::PluginHistoryData& _data) {
 		return;
 	}
 	for (size_t iii=0; iii<_data.m_undo.size(); ++iii) {
-		if (_data.m_undo[iii] == NULL) {
+		if (_data.m_undo[iii] == nullptr) {
 			continue;
 		}
 		delete(_data.m_undo[iii]);
-		_data.m_undo[iii] = NULL;
+		_data.m_undo[iii] = nullptr;
 	}
 	_data.m_undo.clear();
 }
@@ -114,13 +114,13 @@ bool appl::TextPluginHistory::onWrite(appl::TextViewer& _textDrawer,
 		return false;
 	}
 	appl::History *tmpElement = new appl::History();
-	if (tmpElement != NULL) {
+	if (tmpElement != nullptr) {
 		tmpElement->m_addedText = _strData;
 		tmpElement->m_posAdded = (int64_t)_pos;
 		tmpElement->m_endPosRemoved = (int64_t)_pos;
 	}
 	_textDrawer.writeDirect(_strData, _pos);
-	if (tmpElement != NULL) {
+	if (tmpElement != nullptr) {
 		tmpElement->m_endPosAdded = (int64_t)_textDrawer.cursor();
 		clearRedo(_data);
 		_data.m_undo.push_back(tmpElement);
@@ -138,14 +138,14 @@ bool appl::TextPluginHistory::onReplace(appl::TextViewer& _textDrawer,
 		return false;
 	}
 	appl::History *tmpElement = new appl::History();
-	if (tmpElement != NULL) {
+	if (tmpElement != nullptr) {
 		tmpElement->m_posAdded = (int64_t)_pos;
 		tmpElement->m_addedText = _strData;
 		tmpElement->m_endPosRemoved = (int64_t)_posEnd;
 		_textDrawer.copy(tmpElement->m_removedText, _pos, _posEnd);
 	}
 	_textDrawer.replaceDirect(_strData, _pos, _posEnd);
-	if (tmpElement != NULL) {
+	if (tmpElement != nullptr) {
 		tmpElement->m_endPosAdded = (int64_t)_textDrawer.cursor();
 		clearRedo(_data);
 		_data.m_undo.push_back(tmpElement);
@@ -162,7 +162,7 @@ bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
 		return false;
 	}
 	appl::History *tmpElement = new appl::History();
-	if (tmpElement != NULL) {
+	if (tmpElement != nullptr) {
 		tmpElement->m_addedText = "";
 		tmpElement->m_posAdded = (int64_t)_pos;
 		tmpElement->m_endPosAdded = tmpElement->m_posAdded;

@@ -57,7 +57,7 @@ namespace appl {
 			ewol::object::Shared<appl::Buffer> get(int32_t _id);
 			/**
 			 * @brief Create a new buffer empty.
-			 * @return Created buffer or NULL.
+			 * @return Created buffer or nullptr.
 			 */
 			ewol::object::Shared<appl::Buffer> createNewBuffer();
 		private:
@@ -83,7 +83,7 @@ namespace appl {
 			 * @brief keep the resource pointer.
 			 * @note Never free this pointer by your own...
 			 * @param[in] _filename Name of the configuration file.
-			 * @return pointer on the resource or NULL if an error occured.
+			 * @return pointer on the resource or nullptr if an error occured.
 			 */
 			static ewol::object::Shared<appl::BufferManager> keep();
 	};

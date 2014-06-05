@@ -21,7 +21,7 @@
 appl::TextPluginCtags::TextPluginCtags() :
   m_tagFolderBase(""),
   m_tagFilename(""),
-  m_ctagFile(NULL) {
+  m_ctagFile(nullptr) {
 	m_activateOnReceiveMessage = true;
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
@@ -58,7 +58,7 @@ void appl::TextPluginCtags::onPluginDisable(appl::TextViewer& _textDrawer) {
 }
 
 void appl::TextPluginCtags::jumpTo(const std::string& _name) {
-	if (m_ctagFile == NULL) {
+	if (m_ctagFile == nullptr) {
 		APPL_WARNING("No ctags file open");
 		return;
 	}
@@ -80,7 +80,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 	if (tagsFindNext (m_ctagFile, &entry) == TagSuccess) {
 		APPL_INFO("Multiple file destination ...");
 		ewol::object::Shared<appl::TagFileSelection> tmpWidget = ewol::object::makeShared(new appl::TagFileSelection());
-		if (NULL == tmpWidget) {
+		if (nullptr == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
 			tmpWidget->addCtagsNewItem(myfile.getFileSystemName(), lineID);
@@ -102,7 +102,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 void appl::TextPluginCtags::jumpFile(const std::string& _filename, int64_t _lineId) {
 	// save the current file in the history
 	// TODO : registerHistory();
-	if (m_bufferManager != NULL) {
+	if (m_bufferManager != nullptr) {
 		m_bufferManager->open(_filename);
 	}
 	sendMultiCast(appl::MsgSelectChange, _filename);
@@ -112,9 +112,9 @@ void appl::TextPluginCtags::jumpFile(const std::string& _filename, int64_t _line
 void appl::TextPluginCtags::loadTagFile() {
 	tagFileInfo info;
 	// close previous tag file
-	if (NULL != m_ctagFile) {
+	if (nullptr != m_ctagFile) {
 		tagsClose(m_ctagFile);
-		m_ctagFile = NULL;
+		m_ctagFile = nullptr;
 	}
 	if (m_tagFilename == "") {
 		return;
@@ -122,7 +122,7 @@ void appl::TextPluginCtags::loadTagFile() {
 	// load (open) the tag file : 
 	APPL_INFO("try to open tag file : " << m_tagFilename);
 	m_ctagFile = tagsOpen(m_tagFilename.c_str(), &info);
-	if (NULL != m_ctagFile) {
+	if (nullptr != m_ctagFile) {
 		APPL_INFO("open exuberant Ctags file is OK ...");
 	} else {
 		APPL_INFO("Error to open ctags file ...");
@@ -139,7 +139,7 @@ void appl::TextPluginCtags::printTag(const tagEntry *_entry) {
 			<< "\" at line="<< (int32_t)_entry->address.lineNumber);
 		
 		APPL_INFO("Extention field : ");
-		if (_entry->kind != NULL  && _entry->kind [0] != '\0') {
+		if (_entry->kind != nullptr  && _entry->kind [0] != '\0') {
 			APPL_INFO("        kind : " << _entry->kind);
 		}
 		if (_entry->fileScope) {
@@ -176,7 +176,7 @@ bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer
 	if (_msg.getMessage() == eventOpenCtagsFile) {
 		APPL_INFO("Request opening ctag file");
 		ewol::object::Shared<ewol::widget::FileChooser> tmpWidget = ewol::object::makeShared(new ewol::widget::FileChooser());
-		if (NULL == tmpWidget) {
+		if (nullptr == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 			return true;
 		}

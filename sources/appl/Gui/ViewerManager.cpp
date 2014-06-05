@@ -19,7 +19,7 @@
 
 appl::ViewerManager::ViewerManager() :
   ewol::Resource("???ViewerManager???"),
-  m_viewer(NULL) {
+  m_viewer(nullptr) {
 	addObjectType("appl::ViewerManager");
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::keep();
@@ -38,7 +38,7 @@ void appl::ViewerManager::setViewerSelected(const ewol::object::Shared<appl::Tex
 		return;
 	}
 	m_viewer = _viewer;
-	if (m_bufferManager != NULL) {
+	if (m_bufferManager != nullptr) {
 		m_bufferManager->setBufferSelected(_buffer);
 	}
 }
@@ -58,15 +58,15 @@ void appl::ViewerManager::onObjectRemove(const ewol::object::Shared<ewol::Object
 ewol::object::Shared<appl::ViewerManager> appl::ViewerManager::keep() {
 	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
 	ewol::object::Shared<appl::ViewerManager> object = ewol::dynamic_pointer_cast<appl::ViewerManager>(getManager().localKeep("???ViewerManager???"));
-	if (NULL != object) {
+	if (nullptr != object) {
 		return object;
 	}
 	// this element create a new one every time ....
 	EWOL_INFO("CREATE : appl::ViewerManager: ???ViewerManager???");
 	object = ewol::object::makeShared(new appl::ViewerManager());
-	if (NULL == object) {
+	if (nullptr == object) {
 		EWOL_ERROR("allocation error of a resource : ???ViewerManager???");
-		return NULL;
+		return nullptr;
 	}
 	getManager().localAdd(object);
 	return object;
