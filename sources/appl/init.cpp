@@ -28,9 +28,10 @@
 #include <appl/ctags/readtags.h>
 #include <appl/globalMsg.h>
 
-ewol::object::Shared<appl::BufferManager> bufferManager;
 
 class MainApplication : public ewol::context::Application {
+	private:
+		ewol::object::Shared<appl::BufferManager> bufferManager;
 	public:
 		bool init(ewol::Context& _context, size_t _initId) {
 			APPL_INFO(" == > init APPL v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
