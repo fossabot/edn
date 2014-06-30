@@ -282,7 +282,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_VERBOSE("Receive Event from the main windows: " << _msg );
 	// open file Section ...
 	if (_msg.getMessage() == ednMsgGuiOpen) {
-		ewol::widget::FileChooser* tmpWidget = new ewol::widget::FileChooser();
+		ewol::object::Shared<ewol::widget::FileChooser> tmpWidget = ewol::object::makeShared(new ewol::widget::FileChooser());
 		if (tmpWidget == nullptr) {
 			APPL_ERROR("Can not open File chooser !!! ");
 			return;
@@ -514,5 +514,8 @@ void MainWindows::onObjectRemove(const ewol::object::Shared<ewol::Object>& _remo
 	ewol::widget::Windows::onObjectRemove(_removeObject);
 	if (m_widgetLabelFileName == _removeObject) {
 		m_widgetLabelFileName = nullptr;
+	}
+	if (m_bufferManager == _removeObject) {
+		m_bufferManager = nullptr;
 	}
 }
