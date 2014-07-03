@@ -8,6 +8,7 @@
 
 
 #include <etk/types.h>
+#include <etk/stdTools.h>
 #include <appl/Buffer.h>
 #include <appl/debug.h>
 #include <ewol/context/clipBoard.h>
@@ -871,7 +872,7 @@ void appl::Buffer::cleanHighLight() {
 
 
 appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int64_t _pos, int64_t &_starPos) {
-	int32_t start = etk_max(0, _starPos-1);
+	int32_t start = std::max((int64_t)0, _starPos-1);
 	for (size_t iii = start; iii < m_HLDataPass1.size(); ++iii) {
 		_starPos = iii;
 		if (    m_HLDataPass1[iii].beginStart <= _pos
@@ -909,7 +910,7 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 		endSearch = m_HLDataPass1.size();
 	}
 	int64_t kkk;
-	for (kkk = etk_max(startId, 0); kkk < endSearch; ++kkk) {
+	for (kkk = std::max(startId, (int64_t)0); kkk < endSearch; ++kkk) {
 		// empty section :
 		if (kkk == 0) {
 			if (HLStartPos < m_HLDataPass1[kkk].beginStart) {
@@ -961,7 +962,7 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 
 
 appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(appl::DisplayHLData& _MData, int64_t _pos) {
-	int64_t start = etk_max(0, _MData.posHLPass2-1);
+	int64_t start = std::max((int64_t)0, _MData.posHLPass2-1);
 	for (int64_t iii=start; iii<(int32_t)_MData.HLData.size(); iii++) {
 		_MData.posHLPass2 = iii;
 		if(		_MData.HLData[iii].beginStart <= _pos

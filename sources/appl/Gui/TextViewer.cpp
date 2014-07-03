@@ -138,7 +138,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 	vec3 tmpCursorPosition(0, 0, -1);
 	float tmpCursorLenght = -1.0;
 	// real display ...
-	m_displayText.setColor(etk::Color<>(0, 0, 0, 256));
+	m_displayText.setColor(etk::Color<>(0, 0, 0, 255));
 	float countNbLine = 1;
 	int32_t countColomn = 0;
 	// the siplay string :
@@ -220,12 +220,12 @@ void appl::TextViewer::onRegenerateDisplay() {
 		if (*it == u32char::Return) {
 			countNbLine += 1;
 			countColomn = 0;
-			maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
+			maxSizeX = std::max(m_displayText.getPos().x(), maxSizeX);
 			// Display the end line position only if we have the focus ...
 			if (DisplayCursorAndSelection == true) {
 				if (it >= selectPosStart && it < selectPosStop) {
 					ewol::compositing::Drawing& draw = m_displayText.getDrawing();
-					draw.setColor(etk::Color<>(0xFF0000FF));
+					draw.setColor(etk::Color<>(0xFF, 0x00, 0x00, 0xFF));
 					draw.setPos(m_displayText.getPos() + tmpLetterSize/4.0f);
 					draw.rectangle(m_displayText.getPos() + tmpLetterSize*3.0f/4.0f);
 				}
@@ -281,7 +281,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 		tmpCursorPosition = m_displayText.getPos();
 		tmpCursorLenght = 5;
 	}
-	maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
+	maxSizeX = std::max(m_displayText.getPos().x(), maxSizeX);
 	// Display cursor only if we have the focus ...
 	if (    tmpCursorPosition.z() != -1
 	     && getFocus() == true) {

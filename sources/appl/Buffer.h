@@ -381,14 +381,14 @@ namespace appl {
 			 * @return position of the start selection.
 			 */
 			int64_t getStartSelectionPos() {
-				return etk_min(m_cursorPos, m_cursorSelectPos);
+				return std::min(m_cursorPos, m_cursorSelectPos);
 			}
 			/**
 			 * @brief Get the Stop position of the selection.
 			 * @return position of the stop selection.
 			 */
 			int64_t getStopSelectionPos() {
-				return etk_max(m_cursorPos, m_cursorSelectPos);
+				return std::max(m_cursorPos, m_cursorSelectPos);
 			}
 		protected:
 			float m_cursorPreferredCol; //!< position of the cursor when up and down is done.
