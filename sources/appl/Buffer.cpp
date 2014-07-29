@@ -762,10 +762,8 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 	}
 	for (auto it(m_HLDataPass1.begin()+elemStart); it != m_HLDataPass1.end(); ++it) {
 		//APPL_DEBUG("move element=" << i);
-		it->beginStart += _nbAdded - _nbDeleted;
-		it->beginStop  += _nbAdded - _nbDeleted;
-		it->endStart   += _nbAdded - _nbDeleted;
-		it->endStop    += _nbAdded - _nbDeleted;
+		it->start += _nbAdded - _nbDeleted;
+		it->stop  += _nbAdded - _nbDeleted;
 	}
 	//Regenerate Element inside range
 	if (    startId == -1
@@ -774,13 +772,13 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 		generateHighLightAt(0, m_data.size());
 	} else if(-1 == startId) {
 		//APPL_DEBUG("*******  Regenerate START");
-		generateHighLightAt(0, m_HLDataPass1[0].beginStart, 0);
+		generateHighLightAt(0, m_HLDataPass1[0].start, 0);
 	} else if(-1 == stopId) {
 		//APPL_DEBUG("*******  Regenerate STOP");
-		generateHighLightAt(m_HLDataPass1[m_HLDataPass1.size() -1].endStop, m_data.size(), m_HLDataPass1.size());
+		generateHighLightAt(m_HLDataPass1[m_HLDataPass1.size() -1].stop, m_data.size(), m_HLDataPass1.size());
 	} else {
 		//APPL_DEBUG("*******  Regenerate RANGE");
-		generateHighLightAt(m_HLDataPass1[startId].endStop, m_HLDataPass1[startId+1].beginStart, startId+1);
+		generateHighLightAt(m_HLDataPass1[startId].stop, m_HLDataPass1[startId+1].start, startId+1);
 	}
 }
 
@@ -829,7 +827,7 @@ void appl::Buffer::findMainHighLightPosition(int64_t _startPos,
 			      S=-1      ***************        E                                  
 	*/
 	for (size_t iii = 0; iii < m_HLDataPass1.size(); ++iii) {
-		if (m_HLDataPass1[iii].endStop > _startPos) {
+		if (m_HLDataPass1[iii].stop > _startPos) {
 			break;
 		}
 		_startId = iii;
@@ -850,7 +848,7 @@ void appl::Buffer::findMainHighLightPosition(int64_t _startPos,
 		elemStart = _startId+1;
 	}
 	for (size_t iii = elemStart; iii < m_HLDataPass1.size(); ++iii) {
-		if (m_HLDataPass1[iii].beginStart > _endPos) {
+		if (m_HLDataPass1[iii].start > _endPos) {
 			_stopId = iii;
 			break;
 		}
@@ -875,11 +873,11 @@ appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int64_t _pos, int64
 	int32_t start = std::max((int64_t)0, _starPos-1);
 	for (size_t iii = start; iii < m_HLDataPass1.size(); ++iii) {
 		_starPos = iii;
-		if (    m_HLDataPass1[iii].beginStart <= _pos
-		     && m_HLDataPass1[iii].endStop > _pos) {
+		if (    m_HLDataPass1[iii].start <= _pos
+		     && m_HLDataPass1[iii].stop > _pos) {
 			return &m_HLDataPass1[iii];
 		}
-		if(m_HLDataPass1[iii].beginStart > _pos) {
+		if(m_HLDataPass1[iii].start > _pos) {
 			return nullptr;
 		}
 	}
@@ -913,21 +911,21 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 	for (kkk = std::max(startId, (int64_t)0); kkk < endSearch; ++kkk) {
 		// empty section :
 		if (kkk == 0) {
-			if (HLStartPos < m_HLDataPass1[kkk].beginStart) {
+			if (HLStartPos < m_HLDataPass1[kkk].start) {
 				APPL_VERBOSE("   == > (empty section 1 ) kkk=" << kkk <<
 				             " start=" << HLStartPos <<
-				             " stop=" << m_HLDataPass1[kkk].beginStart );
+				             " stop=" << m_HLDataPass1[kkk].start );
 				m_highlight->parse2(HLStartPos,
-									m_HLDataPass1[kkk].beginStart,
+									m_HLDataPass1[kkk].start,
 									_MData.HLData,
 									m_data);
 			} // else : nothing to do ...
 		} else {
 			APPL_VERBOSE("   == > (empty section 2 ) kkk=" << kkk <<
-			             " start=" << m_HLDataPass1[kkk-1].endStop <<
-			             " stop=" << m_HLDataPass1[kkk].beginStart );
-			m_highlight->parse2(m_HLDataPass1[kkk-1].endStop,
-								m_HLDataPass1[kkk].beginStart,
+			             " start=" << m_HLDataPass1[kkk-1].stop <<
+			             " stop=" << m_HLDataPass1[kkk].start );
+			m_highlight->parse2(m_HLDataPass1[kkk-1].stop,
+								m_HLDataPass1[kkk].start,
 								_MData.HLData,
 								m_data);
 		}
@@ -939,9 +937,9 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 		//if(		k < (int32_t)m_HLDataPass1.size()) {
 		if (m_HLDataPass1.size() != 0) {
 			APPL_VERBOSE("   == > (empty section 3 ) kkk=" << kkk <<
-			             " start=" << m_HLDataPass1[kkk-1].endStop <<
+			             " start=" << m_HLDataPass1[kkk-1].stop <<
 			             " stop=" << HLStop );
-			m_highlight->parse2(m_HLDataPass1[kkk-1].endStop,
+			m_highlight->parse2(m_HLDataPass1[kkk-1].stop,
 								HLStop,
 								_MData.HLData,
 								m_data);
@@ -965,12 +963,12 @@ appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(appl::DisplayHLData
 	int64_t start = std::max((int64_t)0, _MData.posHLPass2-1);
 	for (int64_t iii=start; iii<(int32_t)_MData.HLData.size(); iii++) {
 		_MData.posHLPass2 = iii;
-		if(		_MData.HLData[iii].beginStart <= _pos
-			&&	_MData.HLData[iii].endStop    > _pos)
+		if(		_MData.HLData[iii].start <= _pos
+			&&	_MData.HLData[iii].stop    > _pos)
 		{
 			return &_MData.HLData[iii];
 		}
-		if(_MData.HLData[iii].beginStart > _pos) {
+		if(_MData.HLData[iii].start > _pos) {
 			return getElementColorAtPosition(_pos, _MData.posHLPass1);
 		}
 	}

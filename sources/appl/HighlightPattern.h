@@ -44,13 +44,9 @@ namespace appl {
 				return m_paternName;
 			};
 		private:
-			std::unique_ptr<etk::RegExp<etk::Buffer>> m_regExpStart; //!< Start of Regular expression
+			std::unique_ptr<etk::RegExp<etk::Buffer>> m_regExp; //!< Start of Regular expression
 		public:
-			void setPaternStart(std::string& _regExp);
-		private:
-			std::unique_ptr<etk::RegExp<etk::Buffer>> m_regExpStop; //!< Stop of Regular Expression
-		public:
-			void setPaternStop(std::string& _regExp);
+			void setPatern(std::string& _regExp);
 		private:
 			std::string m_colorName; //!< Current color name
 			int32_t m_colorId; //!< Id of the the glyph painting
@@ -58,16 +54,6 @@ namespace appl {
 			void setColorGlyph(std::string& _colorName);
 			const appl::GlyphDecoration& getColorGlyph() {
 				return (*m_glyphPainting)[m_colorId];
-			};
-		private:
-			char32_t m_escapeChar; //!< Escape char to prevent exeit of patern ....
-		public:
-			void setEscapeChar(const char32_t& _EscapeChar);
-		private:
-			bool m_multiline; //!< The patern is multiline
-		public:
-			void setMultiline(bool _enable) {
-				m_multiline = _enable;
 			};
 		private:
 			int32_t m_level; //!< Level of the pattern  == > this is to overwrite next pattern when we create an higher ....

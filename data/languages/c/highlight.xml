@@ -9,130 +9,106 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline doxygen">
 			<color>commentDoxygen</color>
-			<start>/\*\*</start>
-			<end>\*/</end>
-			<rule name="macro">
-				<color>macro</color>
-				<start>\@[A-Z_]{4,500}\@</start>
-			</rule>
-			<rule name="keyword">
-				<color>keyword</color>
-				<start>@\w*[ \t]*(\[(in|out| |,)*\])?[ \t]*([a-zA-Z0-9\-_]*)</start>
-				<underColor idPThese="1"></underColor><!-- (\[(in|out| |,)*\]) -->
-				<underColor idPThese="3"></underColor><!-- (([a-zA-Z0-9\-_])*) -->
-			</rule>
+			<regex>/\*\*.*\*/</regex>
 		</rule>
 		<rule name="code Review">
 			<color>SYNTAX_ERROR</color>
-			<start>/\*[ \t]*TODO :</start>
-			<end>\*/</end>
+			<regex>/\*[ \t]*TODO :.*\*/</regex>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<start>/\*</start>
-			<end>\*/</end>
+			<regex>/\*.*\*/</regex>
 		</rule>
 		<rule name="my if 0">
 			<color>preprocesseur</color>
-			<start>#[ \t]*if 0</start>
-			<end>#endif|#else</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>#[ \t]*if 0.*#(endif|else)</regex>
 		</rule>
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<start>#</start>
-			<end>\n</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>#(\\|\\n|.)*$</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<start>//!</start>
-			<end>\n</end>
+			<regex>//!.*$</regex>
 		</rule>
 		<rule name="my todo comment">
 			<color>SYNTAX_ERROR</color>
-			<start>//[ \t]*TODO[ \t]*:</start>
-			<end>\n</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>//[ \t]*TODO[ \t]*:.*$</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<start>//</start>
-			<end>\n</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>//(\\|\\n|.)*$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<start>"</start>
-			<end>"</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>"(\\|"|.)*"</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<start>'</start>
-			<end>'</end>
-			<!--<EscapeChar>\</EscapeChar>-->
+			<regex>'(\\|'|.)*'</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
+		<!--
 		<rule name="my keyword">
 			<color>keyword</color>
-			<start>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof\@</start>
+			<regex>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof\@</regex>
 		</rule>
 		<rule name="my function keyword">
 			<color>systemFunction</color>
-			<start>\@new|delete|try|catch|memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf|calloc|malloc|realloc|(cyg|sup)_([a-z]|[A-Z]|[0-9]|_)+\@</start>
+			<regex>\@new|delete|try|catch|memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf|calloc|malloc|realloc|(cyg|sup)_([a-z]|[A-Z]|[0-9]|_)+\@</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<start>\@bool|BOOL|char(16_t|32_t)?|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128)\@</start>
+			<regex>\@bool|BOOL|char(16_t|32_t)?|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128)\@</regex>
 		</rule>
 		<rule name="std type">
 			<color>type</color>
-			<start>\@std::(vector|(u16|u32|w)?string|codecvt_utf(16|8_utf16|8)+|complex|iterator(_traits)?|tuple(_element|_size)?|pair)\@</start>
+			<regex>\@std::(vector|(u16|u32|w)?string|codecvt_utf(16|8_utf16|8)+|complex|iterator(_traits)?|tuple(_element|_size)?|pair)\@</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<start>\@inline|const|class|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum\@</start>
+			<regex>\@inline|const|class|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum\@</regex>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
-			<start>\@NULL|MAX|MIN|__LINE__|__DATA__|__FILE__|__func__|__TIME__|__STDC__\@</start>
+			<regex>\@NULL|MAX|MIN|__LINE__|__DATA__|__FILE__|__func__|__TIME__|__STDC__\@</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<start>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</start>
+			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<start>\@true|TRUE|false|FALSE\@</start>
+			<regex>\@true|TRUE|false|FALSE\@</regex>
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>
-			<start>\@[A-Z_][A-Z_0-9]{3,500}\@</start>
+			<regex>\@[A-Z_][A-Z_0-9]{3,500}\@</regex>
 		</rule>
 		<rule name="CPP member">
 			<color>memberClass</color>
-			<start>\@m_[A-Za-z_0-9]*\@</start>
+			<regex>\@m_[A-Za-z_0-9]*\@</regex>
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
-			<start>\@_[A-Za-z_0-9]*\@</start>
+			<regex>\@_[A-Za-z_0-9]*\@</regex>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>
-			<start>\@(\w|_)+[ \t]*\(</start>
+			<regex>\@(\w|_)+[ \t]*\(</regex>
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>
-			<start>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</start>
+			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</regex>
 		</rule>
-        <!-- With all elementes : 
+		-->
+		<!-- With all elementes : 
 		<rule name="BIG LETTER">
 			<color>macro</color>
-			<start>([A-Z]|_){4,500}</start>
-            <elemSubColor id="1">doxElem</elemSubColor>
+			<regex>([A-Z]|_){4,500}</regex>
+			<elemSubColor id="1">doxElem</elemSubColor>
 		</rule>
-        -->
+		-->
 	</pass2>
 </EdnLang>

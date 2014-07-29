@@ -181,18 +181,18 @@ void appl::Highlight::parse(int64_t _start,
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass1[jjj]->find(elementStart, _buffer.size(), resultat, _buffer);
 			if (HLP_FIND_ERROR != ret) {
-				HL_DEBUG("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
+				HL_DEBUG("Find Pattern in the Buffer : (" << resultat.start << "," << resultat.stop << ")" );
 				// remove element in the current List where the current Element have a end inside the next...
 				int64_t kkk=_addingPos;
 				while(kkk < (int64_t)_metaData.size() ) {
-					if (_metaData[kkk].beginStart <= resultat.endStop) {
+					if (_metaData[kkk].start <= resultat.stop) {
 						// remove element
 						HL_DEBUG("Erase element=" << kkk);
 						_metaData.erase(_metaData.begin()+kkk, _metaData.begin()+kkk+1);
 						// Increase the end of search
 						if (kkk < (int64_t)_metaData.size()) {
 							// just befor the end of the next element
-							elementStop = _metaData[kkk].beginStart-1;
+							elementStop = _metaData[kkk].start-1;
 						} else {
 							// end of the buffer
 							elementStop = _buffer.size();
@@ -204,9 +204,9 @@ void appl::Highlight::parse(int64_t _start,
 				}
 				// add curent element in the list ...
 				_metaData.insert(_metaData.begin()+_addingPos, resultat);
-				HL_DEBUG("INSERT at "<< _addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
+				HL_DEBUG("INSERT at "<< _addingPos << " S=" << resultat.start << " E=" << resultat.stop );
 				// update the current research starting element: (set position at the end of the current element
-				elementStart = resultat.endStop-1;
+				elementStart = resultat.stop-1;
 				// increment the position of insertion:
 				_addingPos++;
 				// We find a pattern  == > Stop search for the current element
@@ -243,10 +243,10 @@ void appl::Highlight::parse2(int64_t _start,
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass2[jjj]->find(elementStart, elementStop, resultat, _buffer);
 			if (HLP_FIND_ERROR != ret) {
-				HL2_DEBUG("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
+				HL2_DEBUG("Find Pattern in the Buffer : (" << resultat.start << "," << resultat.stop << ")" );
 				// add curent element in the list ...
 				_metaData.push_back(resultat);
-				elementStart = resultat.endStop-1;
+				elementStart = resultat.stop-1;
 				// Exit current cycle
 				break;
 			}

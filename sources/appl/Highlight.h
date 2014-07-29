@@ -16,10 +16,8 @@ namespace appl {
 	
 	class HighlightInfo {
 		public:
-			int32_t beginStart;
-			int32_t beginStop;
-			int32_t endStart;
-			int32_t endStop;
+			int32_t start;
+			int32_t stop;
 			bool notEnded;
 			appl::HighlightPattern* patern; // pointer on class :
 	};
