@@ -47,6 +47,7 @@ namespace appl {
 			std::unique_ptr<etk::RegExp<etk::Buffer>> m_regExp; //!< Start of Regular expression
 		public:
 			void setPatern(std::string& _regExp);
+			std::string getPaternString();
 		private:
 			std::string m_colorName; //!< Current color name
 			int32_t m_colorId; //!< Id of the the glyph painting

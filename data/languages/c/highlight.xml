@@ -25,7 +25,7 @@
 		</rule>
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<regex>#(\\|\\n|.)*$</regex>
+			<regex>#(\\[\\\n]|.)*$</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
@@ -37,19 +37,18 @@
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>//(\\|\\n|.)*$</regex>
+			<regex>//.*$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\|"|.)*"</regex>
+			<regex>"(\\[\\"]|.)*"</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>'(\\|'|.)*'</regex>
+			<regex>'(\\[\\'])|.)*'</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
-		<!--
 		<rule name="my keyword">
 			<color>keyword</color>
 			<regex>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof\@</regex>
@@ -102,7 +101,6 @@
 			<color>boolean</color>
 			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</regex>
 		</rule>
-		-->
 		<!-- With all elementes : 
 		<rule name="BIG LETTER">
 			<color>macro</color>

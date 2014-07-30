@@ -177,7 +177,7 @@ void appl::Highlight::parse(int64_t _start,
 		//try to fond the HL in ALL of we have
 		for (int64_t jjj=0; jjj<(int64_t)m_listHighlightPass1.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
-			HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ")" );
+			HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ") input start='" << _buffer[elementStart] << "' " << m_listHighlightPass1[jjj]->getPaternString());
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass1[jjj]->find(elementStart, _buffer.size(), resultat, _buffer);
 			if (HLP_FIND_ERROR != ret) {
@@ -234,15 +234,19 @@ void appl::Highlight::parse2(int64_t _start,
 	appl::HighlightInfo resultat;
 	
 	while (elementStart < elementStop) {
+		if (elementStart == 306) {
+			//etk::log::setLevel(etk::log::logLevelVerbose);
+		}
 		//HL2_DEBUG("Parse element in the buffer pos=" << elementStart << "," << _buffer.size() << ")" );
 		//try to fond the HL in ALL of we have
 		for (int64_t jjj=0; jjj<(int64_t)m_listHighlightPass2.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
 			HL2_DEBUG("Parse HL id=" << jjj << " position search: (" <<
-			          _start << "," << _buffer.size() << ")" );
+			          elementStart << "," << elementStop << ") in='"
+			          << _buffer[elementStart] << "' " << m_listHighlightPass2[jjj]->getPaternString());
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass2[jjj]->find(elementStart, elementStop, resultat, _buffer);
-			if (HLP_FIND_ERROR != ret) {
+			if (ret != HLP_FIND_ERROR) {
 				HL2_DEBUG("Find Pattern in the Buffer : (" << resultat.start << "," << resultat.stop << ")" );
 				// add curent element in the list ...
 				_metaData.push_back(resultat);

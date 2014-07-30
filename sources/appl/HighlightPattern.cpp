@@ -32,6 +32,9 @@ void appl::HighlightPattern::setPatern(std::string& _regExp) {
 	}
 	m_regExp->compile(_regExp);
 }
+std::string appl::HighlightPattern::getPaternString() {
+	return m_regExp->getRegExDecorated();
+}
 
 void appl::HighlightPattern::setColorGlyph(std::string& _colorName) {
 	m_colorName = _colorName;
