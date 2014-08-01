@@ -2,9 +2,12 @@
 <EdnLang version="0.1" lang="C/C++">
 	<ext>*.c</ext>
 	<ext>*.cpp</ext>
+	<ext>*.cxx</ext>
 	<ext>*.cc</ext>
 	<ext>*.h</ext>
 	<ext>*.hpp</ext>
+	<ext>*.hxx</ext>
+	<ext>*.m</ext>
 	<ext>*.mm</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline doxygen">
@@ -45,7 +48,7 @@
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>'(\\[\\'])|.)*'</regex>
+			<regex>'((\\[\\'])|.)*'</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->

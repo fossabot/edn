@@ -4,57 +4,50 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="comment ##">
 			<color>SYNTAX_ERROR</color>
-			<start>##</start>
-			<end>\n</end>
+			<regex>##.*$</regex>
 		</rule>
 		<rule name="comment #">
 			<color>comment</color>
-			<start>#</start>
-			<end>\n</end>
+			<regex>#.*$</regex>
 		</rule>
 		<rule name="notes ... ">
 			<color>preprocesseur</color>
-			<start>(NOTE|TODO) : </start>
-			<end>\n</end>
+			<regex>(NOTE|TODO) : .*$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<start>"</start>
-			<end>"</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>"(\\[\\"]|.)*$</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<start>\@'</start>
-			<end>'</end>
-			<!--<EscapeChar>\</EscapeChar>-->
+			<regex>\@'(\\[\\']|.)*$</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 
 		<rule name="pourcentage OK">
 			<color>TestResultOK</color>
-			<start>100%</start>
+			<regex>100%</regex>
 		</rule>
 		<rule name="pourcentage">
 			<color>number</color>
-			<start>[0-9]*%</start>
+			<regex>[0-9]*%</regex>
 		</rule>
 		<rule name="Résultat OK">
 			<color>TestResultOK</color>
-			<start>\[( )*(OK|Ok|ok)( )*\]</start>
+			<regex>\[( )*(OK|Ok|ok)( )*\]</regex>
 		</rule>
 		<rule name="resultat en erreur">
 			<color>TestResultERROR</color>
-			<start>\[(ERREUR|Erreur|erreur)\]</start>
+			<regex>\[(ERREUR|Erreur|erreur)\]</regex>
 		</rule>
 		<rule name="resultat vide">
 			<color>number</color>
-			<start>\[( )*\]</start>
+			<regex>\[( )*\]</regex>
 		</rule>
 		<rule name="notes ... ">
 			<color>macro</color>
-			<start>==&gt;</start>
+			<regex>==&gt;</regex>
 		</rule>
 	</pass2>
 </EdnLang>

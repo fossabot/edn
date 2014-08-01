@@ -5,30 +5,33 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="Comment">
 			<color>comment</color>
-			<start>&lt;!\-\-</start>
-			<end>\-\-&gt;</end>
+			<regex><![CDATA[<!\-\-.*\-\->]]></regex>
+			<!--<regex>&lt;!\-\-.*\-\-&gt;</regex>-->
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<start>"</start>
-			<end>"</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>"(\\[\\"]|.)*"</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<start>\@'</start>
-			<end>('|\n)</end>
-			<!--<EscapeChar>\</EscapeChar>-->
+			<regex>\@'.*('|\n)</regex>
 		</rule>
 	</pass1>
 	<pass2>
 		<rule name="special Balise">
 			<color>error</color>
-			<start>&lt;\?\w*|\?&gt;</start>
+			<regex>&lt;\?\w*|\?&gt;</regex>
 		</rule>
+		<!--
+		<rule name="normale Balise2">
+			<color>functionName</color>
+			<regex><![CDATA[(</[0-9a-zA-Z_]+|<[0-9a-zA-Z_]+)(/>|>)]]></regex>
+		</rule>
+		-->
 		<rule name="normale Balise">
 			<color>functionName</color>
-			<start>&lt;/[0-9a-zA-Z_]+|&lt;[0-9a-zA-Z_]+|/&gt;|&gt;</start>
+			<!--<regex>&lt;/[0-9a-zA-Z_]+|&lt;[0-9a-zA-Z_]+|/&gt;|&gt;</regex>-->
+			<regex><![CDATA[(</[0-9a-zA-Z_]+|<[0-9a-zA-Z_]+)\@]]></regex>
 		</rule>
 	</pass2>
 </EdnLang>
