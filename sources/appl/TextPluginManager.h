@@ -33,7 +33,7 @@ namespace appl {
 		 * @brief Add a plugin.
 		 * @param[in] _plugin Plugin pointer to add.
 		 */
-		void addPlugin(const ewol::object::Shared<appl::TextViewerPlugin>& _plugin);
+		void addPlugin(const std::shared_ptr<appl::TextViewerPlugin>& _plugin);
 		/**
 		 * @brief connect a new widget to the plugin.
 		 * @param[in] _widget Reference on the widget caller.

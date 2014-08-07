@@ -292,8 +292,11 @@ namespace appl {
 			static const char* const eventIsSave;
 			static const char* const eventSelectChange;
 			static const char* const eventChangeName;
-		public:
+		protected:
 			Buffer();
+			void init();
+		public:
+			DECLARE_FACTORY(Buffer);
 			virtual ~Buffer();
 		private:
 			bool m_hasFileName; //!< when new file, the buffer has no name ==> but it might be reference with a single name ...
@@ -588,7 +591,7 @@ namespace appl {
 		protected:
 			std::string m_highlightType; //!< Name of the highlight type
 			
-			ewol::object::Shared<appl::Highlight> m_highlight; //!< internal link with the Highlight system
+			std::shared_ptr<appl::Highlight> m_highlight; //!< internal link with the Highlight system
 			std::vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
 		public:
 			/**

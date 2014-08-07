@@ -12,15 +12,15 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline doxygen">
 			<color>commentDoxygen</color>
-			<regex>/\*\*.*\*/</regex>
+			<regex>/\*\*.*(\*/|\e)</regex>
 		</rule>
 		<rule name="code Review">
 			<color>SYNTAX_ERROR</color>
-			<regex>/\*[ \t]*TODO :.*\*/</regex>
+			<regex>/\*[ \t]*TODO :.*(\*/|\e)</regex>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>/\*.*\*/</regex>
+			<regex>/\*.*(\*/|\e)</regex>
 		</rule>
 		<rule name="my if 0">
 			<color>preprocesseur</color>
@@ -48,7 +48,11 @@
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>'((\\[\\'])|.)*'</regex>
+			<regex>'((\\[\\'])|.){1,2}'</regex>
+		</rule>
+		<rule name="simpleQuteTextError">
+			<color>SYNTAX_ERROR</color>
+			<regex>'</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->

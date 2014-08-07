@@ -18,17 +18,20 @@ namespace appl {
 	namespace widget {
 		class Search : public ewol::widget::Composer {
 			private:
-				ewol::object::Shared<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
+				std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
 				bool m_forward;
 				bool m_caseSensitive;
 				bool m_wrap;
-				ewol::object::Shared<ewol::widget::Entry> m_searchEntry;
-				ewol::object::Shared<ewol::widget::Entry> m_replaceEntry;
+				std::shared_ptr<ewol::widget::Entry> m_searchEntry;
+				std::shared_ptr<ewol::widget::Entry> m_replaceEntry;
 				std::u32string m_searchData;
 				std::u32string m_replaceData;
-			public:
+			protected:
 				// Constructeur
 				Search();
+				void init();
+			public:
+				DECLARE_FACTORY(Search);
 				virtual ~Search();
 			private:
 				/**
@@ -41,7 +44,7 @@ namespace appl {
 				void replace();
 			public: // derived function
 				virtual void onReceiveMessage(const ewol::object::Message& _msg);
-				virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _object);
+				virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _object);
 		};
 	};
 };

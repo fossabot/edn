@@ -15,13 +15,14 @@
 
 static const char* s_closeDone = "close-done";
 
-appl::WorkerCloseAllFile::WorkerCloseAllFile() :
-  m_worker(nullptr),
-  m_bufferManager(nullptr) {
+appl::WorkerCloseAllFile::WorkerCloseAllFile() {
 	addObjectType("appl::WorkerCloseAllFile");
 	// load buffer manager:
-	m_bufferManager = appl::BufferManager::keep();
-	
+	m_bufferManager = appl::BufferManager::create();
+}
+
+void appl::WorkerCloseAllFile::init() {
+	ewol::Object::init();
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		autoDestroy();
@@ -29,12 +30,13 @@ appl::WorkerCloseAllFile::WorkerCloseAllFile() :
 	}
 	// List all current open file :
 	for (int64_t iii=m_bufferManager->size()-1; iii>=0; --iii) {
-		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
+		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
 		if (tmpBuffer == nullptr) {
 			continue;
 		}
 		if (tmpBuffer->isModify() == false) {
-			tmpBuffer->removeObject();
+			APPL_TODO("destroy object");
+			tmpBuffer->destroy();
 			continue;
 		}
 		m_bufferNameList.push_back(tmpBuffer->getFileName());
@@ -45,14 +47,14 @@ appl::WorkerCloseAllFile::WorkerCloseAllFile() :
 		return;
 	}
 	// create the worker :
-	m_worker = ewol::object::makeShared(new appl::WorkerCloseFile(m_bufferNameList.front()));
+	m_worker = appl::WorkerCloseFile::create(m_bufferNameList.front());
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
 	if (m_bufferNameList.size() == 0) {
 		autoDestroy();
 		return;
 	}
-	m_worker->registerOnEvent(this, appl::WorkerCloseFile::eventCloseDone, s_closeDone);
+	m_worker->registerOnEvent(shared_from_this(), appl::WorkerCloseFile::eventCloseDone, s_closeDone);
 }
 
 appl::WorkerCloseAllFile::~WorkerCloseAllFile() {
@@ -70,18 +72,18 @@ void appl::WorkerCloseAllFile::onReceiveMessage(const ewol::object::Message& _ms
 			return;
 		}
 		// create the worker :
-		m_worker = ewol::object::makeShared(new appl::WorkerCloseFile(m_bufferNameList.front()));
+		m_worker = appl::WorkerCloseFile::create(m_bufferNameList.front());
 		// remove first element :
 		m_bufferNameList.erase(m_bufferNameList.begin());
 		if (m_bufferNameList.size() == 0) {
 			autoDestroy();
 			return;
 		}
-		m_worker->registerOnEvent(this, appl::WorkerCloseFile::eventCloseDone, s_closeDone);
+		m_worker->registerOnEvent(shared_from_this(), appl::WorkerCloseFile::eventCloseDone, s_closeDone);
 	}
 }
 
-void appl::WorkerCloseAllFile::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
+void appl::WorkerCloseAllFile::onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject) {
 	if (_removeObject == m_worker) {
 		m_worker = nullptr;
 		APPL_VERBOSE("AutoRemove After saving sub widget ...");

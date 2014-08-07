@@ -36,8 +36,11 @@ namespace appl {
 			std::vector<History*> m_redo; //!< History storing data
 	};
 	class TextPluginHistory : public appl::TextViewerPluginData<appl::PluginHistoryData> {
-		public:
+		protected:
 			TextPluginHistory();
+			void init();
+		public:
+			DECLARE_FACTORY(TextPluginHistory);
 			virtual ~TextPluginHistory() { };
 		private:
 		public:
@@ -67,7 +70,7 @@ namespace appl {
 			void clearRedo(appl::PluginHistoryData& _data);
 			void clearUndo(appl::PluginHistoryData& _data);
 		public:
-			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _object);
+			virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _object);
 	};
 };
 

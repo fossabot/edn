@@ -19,36 +19,36 @@
 #undef __class__
 #define __class__ "textPluginManager"
 
-static std::list<ewol::object::Owner<appl::TextViewerPlugin>>& getList() {
-	static std::list<ewol::object::Owner<appl::TextViewerPlugin>> s_list;
+static std::list<std::shared_ptr<appl::TextViewerPlugin>>& getList() {
+	static std::list<std::shared_ptr<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnEventEntry() {
-	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
+static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListOnEventEntry() {
+	static std::vector<std::shared_ptr<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnEventInput() {
-	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
+static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListOnEventInput() {
+	static std::vector<std::shared_ptr<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnWrite() {
-	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
+static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListOnWrite() {
+	static std::vector<std::shared_ptr<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnReplace() {
-	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
+static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListOnReplace() {
+	static std::vector<std::shared_ptr<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnRemove() {
-	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
+static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListOnRemove() {
+	static std::vector<std::shared_ptr<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListonReceiveMessageViewer() {
-	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
+static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListonReceiveMessageViewer() {
+	static std::vector<std::shared_ptr<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<ewol::object::Shared<appl::TextViewerPlugin>>& getListOnCursorMove() {
-	static std::vector<ewol::object::Shared<appl::TextViewerPlugin>> s_list;
+static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListOnCursorMove() {
+	static std::vector<std::shared_ptr<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
 
@@ -69,16 +69,16 @@ void appl::textPluginManager::unInit() {
 }
 
 void appl::textPluginManager::addDefaultPlugin() {
-	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginCopy()));
-	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginMultiLineTab()));
-	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginAutoIndent()));
-	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginHistory()));
-	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginRmLine()));
-	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginSelectAll()));
-	appl::textPluginManager::addPlugin(ewol::object::makeShared(new appl::TextPluginCtags()));
+	appl::textPluginManager::addPlugin(appl::TextPluginCopy::create());
+	appl::textPluginManager::addPlugin(appl::TextPluginMultiLineTab::create());
+	appl::textPluginManager::addPlugin(appl::TextPluginAutoIndent::create());
+	appl::textPluginManager::addPlugin(appl::TextPluginHistory::create());
+	appl::textPluginManager::addPlugin(appl::TextPluginRmLine::create());
+	appl::textPluginManager::addPlugin(appl::TextPluginSelectAll::create());
+	appl::textPluginManager::addPlugin(appl::TextPluginCtags::create());
 }
 
-void appl::textPluginManager::addPlugin(const ewol::object::Shared<appl::TextViewerPlugin>& _plugin) {
+void appl::textPluginManager::addPlugin(const std::shared_ptr<appl::TextViewerPlugin>& _plugin) {
 	if (_plugin == nullptr) {
 		return;
 	}

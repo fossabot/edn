@@ -17,11 +17,16 @@
 
 namespace appl {
 	template <typename TYPE> class TextViewerPluginData : public appl::TextViewerPlugin {
-		public:
+		protected:
 			TextViewerPluginData() {
 				// nothing to do ...
 				addObjectType("appl::TextViewerPluginData");
 			}
+			void init() {
+				appl::TextViewerPlugin::init();
+			}
+		public:
+			DECLARE_FACTORY(TextViewerPluginData);
 			virtual ~TextViewerPluginData() {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
 					if (m_specificData[iii].second != nullptr) {
@@ -33,7 +38,7 @@ namespace appl {
 				m_specificData.clear();
 			}
 		private:
-			std::vector<std::pair<ewol::object::Shared<appl::Buffer> ,TYPE* >> m_specificData;
+			std::vector<std::pair<std::shared_ptr<appl::Buffer> ,TYPE* >> m_specificData;
 		protected:
 			TYPE* getDataRef(appl::TextViewer& _textDrawer) {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
@@ -116,7 +121,7 @@ namespace appl {
 				return;
 			};
 		public:
-			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+			virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _object) {
 				appl::TextViewerPlugin::onObjectRemove(_object);
 				for (auto it(m_specificData.begin()); it != m_specificData.end(); ++it) {
 					if (it->first == _object) {

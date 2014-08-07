@@ -19,10 +19,13 @@ extern const char * const applEventctagsCancel;
 namespace appl {
 	class TagFileSelection : public ewol::widget::PopUp {
 		private:
-			ewol::object::Shared<appl::TagFileList> m_listTag;
+			std::shared_ptr<appl::TagFileList> m_listTag;
 			std::string m_eventNamed;
 		public:
 			TagFileSelection();
+			void init();
+		public:
+			DECLARE_FACTORY(TagFileSelection);
 			virtual ~TagFileSelection();
 			/**
 			 * @brief add a Ctags item on the curent list
@@ -32,7 +35,7 @@ namespace appl {
 			void addCtagsNewItem(std::string file, int32_t line);
 		public: // herited function
 			void onReceiveMessage(const ewol::object::Message& _msg);
-			void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
+			void onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject);
 	};
 };
 

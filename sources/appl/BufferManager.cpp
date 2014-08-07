@@ -18,10 +18,12 @@
 #undef __class__
 #define __class__ "BufferManager"
 
-appl::BufferManager::BufferManager() :
-  ewol::Resource("???BufferManager???"),
-  m_bufferSelected(nullptr) {
+appl::BufferManager::BufferManager() {
 	addObjectType("appl::BufferManager");
+}
+
+void appl::BufferManager::init(const std::string& _uniqueName) {
+	ewol::Resource::init(_uniqueName);
 }
 
 appl::BufferManager::~BufferManager() {
@@ -29,8 +31,8 @@ appl::BufferManager::~BufferManager() {
 }
 
 
-ewol::object::Shared<appl::Buffer> appl::BufferManager::createNewBuffer() {
-	ewol::object::Shared<appl::Buffer> tmp = ewol::object::makeShared(new appl::Buffer());
+std::shared_ptr<appl::Buffer> appl::BufferManager::createNewBuffer() {
+	std::shared_ptr<appl::Buffer> tmp = appl::Buffer::create();
 	if (tmp == nullptr) {
 		APPL_ERROR("Can not allocate the Buffer (empty).");
 		return nullptr;
@@ -40,7 +42,7 @@ ewol::object::Shared<appl::Buffer> appl::BufferManager::createNewBuffer() {
 	return tmp;
 }
 
-ewol::object::Shared<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
+std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
 	APPL_INFO("get(" << _fileName << "," << _createIfNeeded << ")");
 	for (auto &it : m_list) {
 		if (it == nullptr) {
@@ -56,7 +58,7 @@ ewol::object::Shared<appl::Buffer> appl::BufferManager::get(const std::string& _
 			APPL_CRITICAL("plop");
 			return nullptr;
 		}
-		ewol::object::Shared<appl::Buffer> tmp = ewol::object::makeShared(new appl::Buffer());
+		std::shared_ptr<appl::Buffer> tmp = appl::Buffer::create();
 		if (tmp == nullptr) {
 			APPL_ERROR("Can not allocate the Buffer class : " << _fileName);
 			return nullptr;
@@ -67,12 +69,12 @@ ewol::object::Shared<appl::Buffer> appl::BufferManager::get(const std::string& _
 	}
 	return nullptr;
 }
-void appl::BufferManager::setBufferSelected(ewol::object::Shared<appl::Buffer> _bufferSelected) {
+void appl::BufferManager::setBufferSelected(std::shared_ptr<appl::Buffer> _bufferSelected) {
 	m_bufferSelected = _bufferSelected;
 	sendMultiCast(appl::MsgSelectChange, "");
 }
 
-void appl::BufferManager::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+void appl::BufferManager::onObjectRemove(const std::shared_ptr<ewol::Object>& _object) {
 	ewol::Resource::onObjectRemove(_object);
 	if (m_bufferSelected == _object) {
 		setBufferSelected(nullptr);
@@ -86,7 +88,7 @@ void appl::BufferManager::onObjectRemove(const ewol::object::Shared<ewol::Object
 	}
 }
 
-ewol::object::Shared<appl::Buffer> appl::BufferManager::get(int32_t _id) {
+std::shared_ptr<appl::Buffer> appl::BufferManager::get(int32_t _id) {
 	int32_t id = 0;
 	for (auto &it : m_list) {
 		if (id == _id) {
@@ -121,21 +123,5 @@ void appl::BufferManager::open(const std::string& _fileName) {
 
 void appl::BufferManager::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_DEBUG("receive message !!! " << _msg);
-}
-
-ewol::object::Shared<appl::BufferManager> appl::BufferManager::keep() {
-	ewol::object::Shared<appl::BufferManager> object = ewol::dynamic_pointer_cast<appl::BufferManager>(getManager().localKeep("???BufferManager???"));
-	if (nullptr != object) {
-		return object;
-	}
-	// this element create a new one every time ....
-	EWOL_INFO("CREATE : appl::BufferManager: ???BufferManager???");
-	object = ewol::object::makeShared(new appl::BufferManager());
-	if (nullptr == object) {
-		EWOL_ERROR("allocation error of a resource : ???BufferManager???");
-		return nullptr;
-	}
-	getManager().localAdd(object);
-	return object;
 }
 

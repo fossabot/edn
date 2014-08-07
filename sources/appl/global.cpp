@@ -179,61 +179,65 @@ static const char * const l_changeTabulation  = "edn-event-change-tabulation";
 static const char * const l_changeEndOfLine   = "edn-event-change-endOfLine";
 static const char * const l_changeRounded     = "edn-event-change-rounded";
 
-globals::ParameterGlobalsGui::ParameterGlobalsGui() :
-  ewol::widget::Sizer(ewol::widget::Sizer::modeVert) {
-	ewol::widget::CheckBox* myCheckbox = nullptr;
-	ewol::widget::Spacer* mySpacer = nullptr;
+globals::ParameterGlobalsGui::ParameterGlobalsGui() {
+	addObjectType("globals::ParameterGlobalsGui");
+}
+
+void globals::ParameterGlobalsGui::init() {
+	ewol::widget::Sizer::init(ewol::widget::Sizer::modeVert);
+	std::shared_ptr<ewol::widget::CheckBox> myCheckbox;
+	std::shared_ptr<ewol::widget::Spacer> mySpacer;
 	
-	mySpacer = new ewol::widget::Spacer();
+	mySpacer = ewol::widget::Spacer::create();
 	if (nullptr == mySpacer) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		mySpacer->setExpand(bvec2(true,true));
 		subWidgetAdd(mySpacer);
 	}
-	myCheckbox = new ewol::widget::CheckBox("Automatic Indentation");
+	myCheckbox = ewol::widget::CheckBox::create("Automatic Indentation");
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetAutoIndent());
-		myCheckbox->registerOnEvent(this, "clicked", l_changeIndentation);
+		myCheckbox->registerOnEvent(shared_from_this(), "clicked", l_changeIndentation);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new ewol::widget::CheckBox("Display space char (' ')");
+	myCheckbox = ewol::widget::CheckBox::create("Display space char (' ')");
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplaySpaceChar());
-		myCheckbox->registerOnEvent(this, "clicked", l_changeSpace);
+		myCheckbox->registerOnEvent(shared_from_this(), "clicked", l_changeSpace);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new ewol::widget::CheckBox("Display tabulation char ('\\t')");
+	myCheckbox = ewol::widget::CheckBox::create("Display tabulation char ('\\t')");
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplayTabChar());
-		myCheckbox->registerOnEvent(this, "clicked", l_changeTabulation);
+		myCheckbox->registerOnEvent(shared_from_this(), "clicked", l_changeTabulation);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new ewol::widget::CheckBox("Display end of line ('\\n')");
+	myCheckbox = ewol::widget::CheckBox::create("Display end of line ('\\n')");
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplayEndOfLine());
-		myCheckbox->registerOnEvent(this, "clicked", l_changeEndOfLine);
+		myCheckbox->registerOnEvent(shared_from_this(), "clicked", l_changeEndOfLine);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = new ewol::widget::CheckBox("switch Rounded/default");
+	myCheckbox = ewol::widget::CheckBox::create("switch Rounded/default");
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplayEndOfLine());
-		myCheckbox->registerOnEvent(this, "clicked", l_changeRounded);
+		myCheckbox->registerOnEvent(shared_from_this(), "clicked", l_changeRounded);
 		subWidgetAdd(myCheckbox);
 	}
 }

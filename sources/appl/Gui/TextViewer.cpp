@@ -28,8 +28,7 @@
 	int64_t processTimeLocal = (endTime - startTime); \
 	APPL_DEBUG(comment << (float)((float)processTimeLocal / 1000.0) << "ms");
 
-appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
-  m_displayText(_fontName, _fontSize),
+appl::TextViewer::TextViewer() :
   m_insertMode(false) {
 	addObjectType("appl::TextViewer");
 	setCanHaveFocus(true);
@@ -43,11 +42,11 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	setSingleFinger(false);
 	
 	// load buffer manager:
-	m_bufferManager = appl::BufferManager::keep();
-	m_viewerManager = appl::ViewerManager::keep();
+	m_bufferManager = appl::BufferManager::create();
+	m_viewerManager = appl::ViewerManager::create();
 	
 	// load color properties
-	m_paintingProperties = appl::GlyphPainting::keep("THEME:COLOR:textViewer.json");
+	m_paintingProperties = appl::GlyphPainting::create("THEME:COLOR:textViewer.json");
 	// get all id properties ...
 	m_colorBackground = m_paintingProperties->request("CODE_basicBackgroung");
 	m_colorSpace = m_paintingProperties->request("CODE_space");
@@ -56,11 +55,16 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	m_colorLineNumber = m_paintingProperties->request("CODE_lineNumber");
 	m_colorSelection = m_paintingProperties->request("SelectedText");
 	m_colorNormal = m_paintingProperties->request("normal");
-	
+}
+
+void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
+	ewol::widget::WidgetScrolled::init();
+	m_displayText.setFont(_fontName, _fontSize);
 	appl::textPluginManager::connect(*this);
 	// last created has focus ...
 	setCurrentSelect();
 }
+
 
 appl::TextViewer::~TextViewer() {
 	appl::textPluginManager::disconnect(*this);
@@ -662,7 +666,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
 		// reset scroll:
 		if (m_buffer != nullptr) {
-			m_buffer->unRegisterOnEvent(this);
+			m_buffer->unRegisterOnEvent(shared_from_this());
 			bool needAdd = true;
 			for (size_t iii=0; iii<m_drawingRemenber.size(); ++iii) {
 				if (m_drawingRemenber[iii].first == m_buffer) {
@@ -682,8 +686,8 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 			m_buffer = m_bufferManager->get(_msg.getData());
 			m_bufferManager->setBufferSelected(m_buffer);
 			if (m_buffer != nullptr) {
-				m_buffer->registerOnEvent(this, appl::Buffer::eventIsModify);
-				m_buffer->registerOnEvent(this, appl::Buffer::eventSelectChange);
+				m_buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventIsModify);
+				m_buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventSelectChange);
 				for (auto element : m_drawingRemenber) {
 					if (element.first == m_buffer) {
 						m_originScrooled = element.second;
@@ -699,7 +703,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void appl::TextViewer::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
+void appl::TextViewer::onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject) {
 	ewol::widget::WidgetScrolled::onObjectRemove(_removeObject);
 	if (m_buffer == _removeObject) {
 		m_buffer = nullptr;
@@ -997,13 +1001,13 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 
 void appl::TextViewer::setCurrentSelect() {
 	if (m_viewerManager != nullptr) {
-		m_viewerManager->setViewerSelected(this, m_buffer);
+		m_viewerManager->setViewerSelected(std::dynamic_pointer_cast<appl::TextViewer>(shared_from_this()), m_buffer);
 	}
 }
 
 bool appl::TextViewer::isSelectedLast() {
 	if (m_viewerManager != nullptr) {
-		return m_viewerManager->isLastSelected(this);
+		return m_viewerManager->isLastSelected(std::dynamic_pointer_cast<appl::TextViewer>(shared_from_this()));
 	}
 	return false;
 }

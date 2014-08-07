@@ -19,8 +19,8 @@ namespace appl {
 	class dataBufferStruct {
 		public:
 			etk::FSNode m_bufferName;
-			ewol::object::Shared<appl::Buffer> m_buffer;
-			dataBufferStruct(const std::string& _bufferName, const ewol::object::Shared<appl::Buffer>& _buffer) :
+			std::shared_ptr<appl::Buffer> m_buffer;
+			dataBufferStruct(const std::string& _bufferName, const std::shared_ptr<appl::Buffer>& _buffer) :
 			  m_bufferName(_bufferName),
 			  m_buffer(_buffer) {
 				
@@ -31,9 +31,9 @@ namespace appl {
 
 class BufferView : public ewol::widget::List {
 	private:
-		ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+		std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 	private:
-		ewol::object::Shared<appl::GlyphPainting> m_paintingProperties; //!< element painting property
+		std::shared_ptr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
 		int32_t m_colorBackground1;
 		int32_t m_colorBackground2;
 		int32_t m_colorBackgroundSelect;
@@ -48,13 +48,16 @@ class BufferView : public ewol::widget::List {
 		 * @param[in] _dataStruct element to add.
 		 */
 		void insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _selectNewPosition = false);
-	public:
+	protected:
 		// Constructeur
 		BufferView();
+		void init();
+	public:
+		DECLARE_FACTORY(BufferView);
 		virtual ~BufferView();
 		// Derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
-		virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _object);
+		virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _object);
 	private:
 		bool m_openOrderMode; //!< true if the order is the opening order mode, otherwise, Alphabetic order
 	protected:

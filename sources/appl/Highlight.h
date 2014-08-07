@@ -33,11 +33,13 @@ namespace appl {
 namespace appl {
 	class Highlight : public ewol::Resource {
 		private:
-			ewol::object::Shared<appl::GlyphPainting> m_paintingProperties;
-		protected:
-			// Constructeur
-			Highlight(const std::string& _xmlFilename, const std::string& _colorFile);
+			std::shared_ptr<appl::GlyphPainting> m_paintingProperties;
 		public:
+			// Constructeur
+			Highlight();
+			void init(const std::string& _xmlFilename, const std::string& _colorFile = "THEME:COLOR:textViewer.json");
+		public:
+			DECLARE_RESOURCE_NAMED_FACTORY(Highlight);
 			virtual ~Highlight();
 		private:
 			std::string m_typeName; //!< descriptive string type like "C/C++"
@@ -66,14 +68,6 @@ namespace appl {
 			std::vector<std::string> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
 			std::vector<std::unique_ptr<HighlightPattern>> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
 			std::vector<std::unique_ptr<HighlightPattern>> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
-		public:
-			/**
-			 * @brief keep the resource pointer.
-			 * @note Never free this pointer by your own...
-			 * @param[in] _filename Name of the configuration file.
-			 * @return pointer on the resource or nullptr if an error occured.
-			 */
-			static ewol::object::Shared<appl::Highlight> keep(const std::string& _filename);
 		public: // herited function :
 			virtual void updateContext() {
 				// no upfate to do ...

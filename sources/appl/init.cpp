@@ -31,7 +31,7 @@
 
 class MainApplication : public ewol::context::Application {
 	private:
-		ewol::object::Shared<appl::BufferManager> bufferManager;
+		std::shared_ptr<appl::BufferManager> m_bufferManager;
 	public:
 		bool init(ewol::Context& _context, size_t _initId) {
 			APPL_INFO(" == > init APPL v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
@@ -57,7 +57,7 @@ class MainApplication : public ewol::context::Application {
 			
 			// init ALL Singleton :
 			//()CTagsManager::getInstance();
-			bufferManager = appl::BufferManager::keep();
+			m_bufferManager = appl::BufferManager::create();
 			
 			appl::highlightManager::init();
 			appl::textPluginManager::init();
@@ -74,7 +74,7 @@ class MainApplication : public ewol::context::Application {
 			cCurrentPath[FILENAME_MAX - 1] = '\0';
 			//APPL_INFO("The current working directory is " << cCurrentPath);
 			
-			ewol::object::Shared<MainWindows> basicWindows = ewol::object::makeShared(new MainWindows());
+			std::shared_ptr<MainWindows> basicWindows = MainWindows::create();
 			
 			if (basicWindows == nullptr) {
 				APPL_ERROR("Can not allocate the basic windows");
@@ -102,7 +102,7 @@ class MainApplication : public ewol::context::Application {
 					etk::FSNode file(tmpppp);
 					std::string name = file.getName();
 					APPL_INFO("need load file : \"" << name << "\"" );
-					bufferManager->open(name);
+					m_bufferManager->open(name);
 				}
 			}
 			
@@ -115,7 +115,7 @@ class MainApplication : public ewol::context::Application {
 			APPL_INFO("Stop Hightlight");
 			appl::highlightManager::unInit();
 			//Kill all singleton
-			bufferManager.reset();
+			m_bufferManager.reset();
 			APPL_INFO(" == > Un-Init " PROJECT_NAME " (END)");
 		}
 };

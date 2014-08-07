@@ -26,6 +26,10 @@ appl::TextViewerPlugin::TextViewerPlugin() :
 	addObjectType("appl::TextViewerPlugin");
 }
 
+void appl::TextViewerPlugin::init() {
+	ewol::Object::init();
+}
+
 appl::TextViewerPlugin::~TextViewerPlugin() {
 	if (m_isEnable == false) {
 		return;

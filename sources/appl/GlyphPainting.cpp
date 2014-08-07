@@ -18,9 +18,12 @@
 
 
 
-appl::GlyphPainting::GlyphPainting(const std::string& _filename) :
-  ewol::Resource(_filename) {
+appl::GlyphPainting::GlyphPainting() {
 	addObjectType("appl::GlyphPainting");
+}
+
+void appl::GlyphPainting::init(const std::string& _filename) {
+	ewol::Resource::init(_filename);
 	EWOL_DEBUG("SFP : load \"" << _filename << "\"");
 	reload();
 }
@@ -93,21 +96,4 @@ int32_t appl::GlyphPainting::request(const std::string& _name) {
 	appl::GlyphDecoration tmpDeco(_name);
 	m_list.push_back(tmpDeco);
 	return m_list.size()-1;
-}
-
-ewol::object::Shared<appl::GlyphPainting> appl::GlyphPainting::keep(const std::string& _filename) {
-	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
-	ewol::object::Shared<appl::GlyphPainting> object = ewol::dynamic_pointer_cast<appl::GlyphPainting>(getManager().localKeep(_filename));
-	if (nullptr != object) {
-		return object;
-	}
-	// this element create a new one every time ....
-	EWOL_INFO("CREATE : appl::GlyphPainting : file : \"" << _filename << "\"");
-	object = ewol::object::makeShared(new appl::GlyphPainting(_filename));
-	if (nullptr == object) {
-		EWOL_ERROR("allocation error of a resource : ??GlyphPainting??");
-		return nullptr;
-	}
-	getManager().localAdd(object);
-	return object;
 }

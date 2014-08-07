@@ -15,13 +15,14 @@
 
 static const char* s_saveAsDone = "save-as-done";
 
-appl::WorkerSaveAllFile::WorkerSaveAllFile() :
-  m_worker(nullptr),
-  m_bufferManager(nullptr) {
+appl::WorkerSaveAllFile::WorkerSaveAllFile() {
 	addObjectType("appl::WorkerSaveAllFile");
 	// load buffer manager:
-	m_bufferManager = appl::BufferManager::keep();
-	
+	m_bufferManager = appl::BufferManager::create();
+}
+
+void appl::WorkerSaveAllFile::init() {
+	ewol::Object::init();
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		autoDestroy();
@@ -29,7 +30,7 @@ appl::WorkerSaveAllFile::WorkerSaveAllFile() :
 	}
 	// List all current open file :
 	for (int32_t iii=0; iii<m_bufferManager->size(); ++iii) {
-		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
+		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
 		if (tmpBuffer == nullptr) {
 			continue;
 		}
@@ -48,14 +49,14 @@ appl::WorkerSaveAllFile::WorkerSaveAllFile() :
 		return;
 	}
 	// create the worker :
-	m_worker = ewol::object::makeShared(new appl::WorkerSaveFile(m_bufferNameList.front()));
+	m_worker = appl::WorkerSaveFile::create(m_bufferNameList.front());
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
 	if (m_bufferNameList.size() == 0) {
 		autoDestroy();
 		return;
 	}
-	m_worker->registerOnEvent(this, appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
+	m_worker->registerOnEvent(shared_from_this(), appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
 }
 
 appl::WorkerSaveAllFile::~WorkerSaveAllFile() {
@@ -73,18 +74,18 @@ void appl::WorkerSaveAllFile::onReceiveMessage(const ewol::object::Message& _msg
 			return;
 		}
 		// create the worker :
-		m_worker = new appl::WorkerSaveFile(m_bufferNameList.front());
+		m_worker = appl::WorkerSaveFile::create(m_bufferNameList.front());
 		// remove first element :
 		m_bufferNameList.erase(m_bufferNameList.begin());
 		if (m_bufferNameList.size() == 0) {
 			autoDestroy();
 			return;
 		}
-		m_worker->registerOnEvent(this, appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
+		m_worker->registerOnEvent(shared_from_this(), appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
 	}
 }
 
-void appl::WorkerSaveAllFile::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
+void appl::WorkerSaveAllFile::onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject) {
 	if (_removeObject == m_worker) {
 		m_worker = nullptr;
 		APPL_VERBOSE("AutoRemove After saving sub widget ...");

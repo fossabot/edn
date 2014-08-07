@@ -20,6 +20,10 @@ appl::TextPluginSelectAll::TextPluginSelectAll() {
 	addObjectType("appl::TextPluginSelectAll");
 }
 
+void appl::TextPluginSelectAll::init() {
+	appl::TextViewerPlugin::init();
+}
+
 static const char* eventSelectAll = "plugin-select-all";
 
 void appl::TextPluginSelectAll::onPluginEnable(appl::TextViewer& _textDrawer) {

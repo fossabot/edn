@@ -139,6 +139,10 @@ appl::Buffer::Buffer() :
 	addEventId(eventChangeName);
 }
 
+void appl::Buffer::init() {
+	ewol::Object::init();
+}
+
 appl::Buffer::~Buffer() {
 	
 }
@@ -699,7 +703,7 @@ void appl::Buffer::setHighlightType(const std::string& _type) {
 		return;
 	}
 	m_highlightType = _type;
-	m_highlight = appl::Highlight::keep(resourceName);
+	m_highlight = appl::Highlight::create(resourceName);
 	generateHighLightAt(0, m_data.size());
 }
 

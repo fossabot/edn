@@ -37,13 +37,16 @@ namespace appl {
 			int32_t m_selectedLine;
 			std::vector<appl::TagListElement*> m_list;
 		protected:
-			ewol::object::Shared<ewol::resource::ColorFile> m_colorProperty; //!< theme color property.
+			std::shared_ptr<ewol::resource::ColorFile> m_colorProperty; //!< theme color property.
 			int32_t m_colorIdText; //!< Color of the text.
 			int32_t m_colorIdBackground1; //!< Color of the Background.
 			int32_t m_colorIdBackground2; //!< Color of the Background 2.
 			int32_t m_colorIdBackgroundSelected; //!< Color of line selected.
-		public:
+		protected:
 			TagFileList();
+			void init();
+		public:
+			DECLARE_FACTORY(TagFileList);
 			virtual ~TagFileList();
 			// display API :
 			virtual etk::Color<> getBasicBG();

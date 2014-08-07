@@ -17,8 +17,11 @@
 
 namespace appl {
 	class TextPluginSelectAll : public appl::TextViewerPlugin {
-		public:
+		protected:
 			TextPluginSelectAll();
+			void init();
+		public:
+			DECLARE_FACTORY(TextPluginSelectAll);
 			virtual ~TextPluginSelectAll() {
 				// nothing to do ...
 			};

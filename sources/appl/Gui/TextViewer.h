@@ -24,7 +24,7 @@
 namespace appl {
 	class TextViewer : public ewol::widget::WidgetScrolled {
 		private:
-			ewol::object::Shared<appl::GlyphPainting> m_paintingProperties; //!< element painting property
+			std::shared_ptr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
 			int32_t m_colorBackground;
 			int32_t m_colorSpace;
 			int32_t m_colorTabulation;
@@ -33,25 +33,28 @@ namespace appl {
 			int32_t m_colorSelection;
 			int32_t m_colorNormal;
 		private:
-			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-			ewol::object::Shared<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
+			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
+		protected:
+			TextViewer();
+			void init(const std::string& _fontName="", int32_t _fontSize=-1);
 		public:
-			TextViewer(const std::string& _fontName="", int32_t _fontSize=-1);
+			DECLARE_FACTORY(TextViewer);
 			virtual ~TextViewer();
 		private:
-			ewol::object::Shared<appl::Buffer> m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
+			std::shared_ptr<appl::Buffer> m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
 		public:
 			/**
 			 * @brief Get the buffer property (only for the class : template <typename TYPE> class TextViewerPluginData)
 			 * @return pointer on buffer
 			 */
-			ewol::object::Shared<appl::Buffer> internalGetBuffer() {
+			std::shared_ptr<appl::Buffer> internalGetBuffer() {
 				return m_buffer;
 			}
 		private:
 			ewol::compositing::Text m_displayText; //!< Text display properties.
 			ewol::compositing::Drawing m_displayDrawing; //!< Other diaplay requested.
-			std::vector<std::pair<ewol::object::Shared<appl::Buffer>, vec2>> m_drawingRemenber;
+			std::vector<std::pair<std::shared_ptr<appl::Buffer>, vec2>> m_drawingRemenber;
 		public:
 			void setFontSize(int32_t _size);
 			void setFontName(const std::string& _fontName);
@@ -61,7 +64,7 @@ namespace appl {
 			virtual bool calculateMinSize();
 			virtual void onRegenerateDisplay();
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
-			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
+			virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject);
 			virtual bool onEventInput(const ewol::event::Input& _event);
 			virtual bool onEventEntry(const ewol::event::Entry& _event);
 			virtual void onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID);

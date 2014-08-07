@@ -24,9 +24,15 @@ appl::TextPluginCtags::TextPluginCtags() :
   m_ctagFile(nullptr) {
 	m_activateOnReceiveMessage = true;
 	// load buffer manager:
-	m_bufferManager = appl::BufferManager::keep();
+	m_bufferManager = appl::BufferManager::create();
 	addObjectType("appl::TextPluginCtags");
 }
+
+void appl::TextPluginCtags::init() {
+	appl::TextViewerPlugin::init();
+}
+
+
 appl::TextPluginCtags::~TextPluginCtags() {
 	
 }
@@ -79,7 +85,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 	
 	if (tagsFindNext (m_ctagFile, &entry) == TagSuccess) {
 		APPL_INFO("Multiple file destination ...");
-		ewol::object::Shared<appl::TagFileSelection> tmpWidget = ewol::object::makeShared(new appl::TagFileSelection());
+		std::shared_ptr<appl::TagFileSelection> tmpWidget = appl::TagFileSelection::create();
 		if (nullptr == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
@@ -92,7 +98,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 				tmpWidget->addCtagsNewItem(myfile.getFileSystemName(), lineID);
 			} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
 			ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-			tmpWidget->registerOnEvent(this, applEventctagsSelection, eventOpenCtagsSelectReturn);
+			tmpWidget->registerOnEvent(shared_from_this(), applEventctagsSelection, eventOpenCtagsSelectReturn);
 		}
 	} else {
 		jumpFile(myfile.getName(), lineID - 1);
@@ -175,7 +181,7 @@ bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer
 	}
 	if (_msg.getMessage() == eventOpenCtagsFile) {
 		APPL_INFO("Request opening ctag file");
-		ewol::object::Shared<ewol::widget::FileChooser> tmpWidget = ewol::object::makeShared(new ewol::widget::FileChooser());
+		std::shared_ptr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
 		if (nullptr == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 			return true;
@@ -189,7 +195,7 @@ bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer
 			tmpWidget->setFolder(path);
 		}
 		ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-		tmpWidget->registerOnEvent(this, "validate", eventOpenCtagsOpenFileReturn);
+		tmpWidget->registerOnEvent(shared_from_this(), "validate", eventOpenCtagsOpenFileReturn);
 		return true;
 	} else if (_msg.getMessage() == eventJumpDestination) {
 		if (_textDrawer.hasBuffer() == false) {

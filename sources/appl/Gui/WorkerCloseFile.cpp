@@ -21,16 +21,19 @@ static const char* s_saveValidate = "save-validate";
 static const char* s_closeValidate = "close-validate";
 static const char* s_saveAsDone = "save-as-done";
 
-appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
-  m_bufferName(_bufferName),
+appl::WorkerCloseFile::WorkerCloseFile() :
   m_buffer(nullptr),
   m_worker(nullptr),
   m_bufferManager(nullptr) {
 	addObjectType("appl::WorkerCloseFile");
 	addEventId(eventCloseDone);
 	// load buffer manager:
-	m_bufferManager = appl::BufferManager::keep();
-	
+	m_bufferManager = appl::BufferManager::create();
+}
+
+void appl::WorkerCloseFile::init(const std::string& _bufferName) {
+	ewol::Object::init();
+	m_bufferName = _bufferName;
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		autoDestroy();
@@ -38,7 +41,7 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 	}
 	if (m_bufferName == "") {
 		// need to find the curent file ...
-		ewol::object::Shared<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
+		std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 		if (tmpp == nullptr) {
 			APPL_ERROR("No selected buffer now ...");
 			autoDestroy();
@@ -59,35 +62,35 @@ appl::WorkerCloseFile::WorkerCloseFile(const std::string& _bufferName) :
 	}
 	if (m_buffer->isModify() == false) {
 		generateEventId(eventCloseDone);
-		m_buffer->removeObject();
+		m_buffer->destroy();
 		return;
 	}
 	
-	ewol::object::Shared<ewol::widget::StdPopUp> tmpPopUp = ewol::object::makeShared(new ewol::widget::StdPopUp());
+	std::shared_ptr<ewol::widget::StdPopUp> tmpPopUp = ewol::widget::StdPopUp::create();
 	if (tmpPopUp == nullptr) {
 		APPL_ERROR("Can not create a simple pop-up");
 		return;
 	}
 	tmpPopUp->setTitle("<bold>Close un-saved file:</bold>");
 	tmpPopUp->setComment("The file named : <i>\"" + m_buffer->getFileName() + "\"</i> is curently modify.   <br/>If you don't saves these modifications,<br/>they will be definitly lost...");
-	ewol::object::Shared<ewol::Widget> bt = nullptr;
+	std::shared_ptr<ewol::Widget> bt = nullptr;
 	if (m_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("Save", true);
 		if (bt != nullptr) {
-			bt->registerOnEvent(this, "pressed", s_saveValidate);
+			bt->registerOnEvent(shared_from_this(), "pressed", s_saveValidate);
 		}
 	}
 	bt = tmpPopUp->addButton("Save As", true);
 	if (bt != nullptr) {
-		bt->registerOnEvent(this, "pressed", s_saveAsValidate);
+		bt->registerOnEvent(shared_from_this(), "pressed", s_saveAsValidate);
 	}
 	bt = tmpPopUp->addButton("Close", true);
 	if (bt != nullptr) {
-		bt->registerOnEvent(this, "pressed", s_closeValidate);
+		bt->registerOnEvent(shared_from_this(), "pressed", s_closeValidate);
 	}
 	tmpPopUp->addButton("Cancel", true);
 	tmpPopUp->setRemoveOnExternClick(true);
-	ewol::object::Shared<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
+	std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
 	if (tmpWindows == nullptr) {
 		APPL_ERROR("Error to get the windows.");
 		autoDestroy();
@@ -107,9 +110,9 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 	}
 	APPL_DEBUG("have message : " << _msg);
 	if (_msg.getMessage() == s_saveAsValidate) {
-		m_worker = ewol::object::makeShared(new appl::WorkerSaveFile(m_bufferName));
+		m_worker = appl::WorkerSaveFile::create(m_bufferName);
 		if (m_worker != nullptr) {
-			m_worker->registerOnEvent(this, appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
+			m_worker->registerOnEvent(shared_from_this(), appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
 		}
 	} else if (_msg.getMessage() == s_saveValidate) {
 		if (m_buffer == nullptr) {
@@ -118,7 +121,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 			return;
 		}
 		if (m_buffer->storeFile() == false) {
-			ewol::object::Shared<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
+			std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
 			if (tmpWindows == nullptr) {
 				return;
 			}
@@ -134,11 +137,12 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 			return;
 		}
 		generateEventId(eventCloseDone);
-		m_buffer->removeObject();
+		m_buffer->destroy();
+		m_buffer.reset();
 	}
 }
 
-void appl::WorkerCloseFile::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
+void appl::WorkerCloseFile::onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject) {
 	if (_removeObject == m_worker) {
 		m_worker = nullptr;
 		APPL_VERBOSE("AutoRemove After closing sub widget ...");

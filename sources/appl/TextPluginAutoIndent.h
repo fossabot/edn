@@ -17,8 +17,11 @@
 
 namespace appl {
 	class TextPluginAutoIndent : public appl::TextViewerPlugin {
-		public:
+		protected:
 			TextPluginAutoIndent();
+			void init();
+		public:
+			DECLARE_FACTORY(TextPluginAutoIndent);
 			virtual ~TextPluginAutoIndent() {
 				// nothing to do ...
 			};

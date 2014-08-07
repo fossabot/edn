@@ -23,7 +23,7 @@ appl::TagFileList::TagFileList() {
 	addEventId(applEventCtagsListValidate);
 	setMouseLimit(1);
 	// Load color properties: (use file list to be generic ...)
-	m_colorProperty = ewol::resource::ColorFile::keep("THEME:COLOR:ListFileSystem.json");
+	m_colorProperty = ewol::resource::ColorFile::create("THEME:COLOR:ListFileSystem.json");
 	if (m_colorProperty != nullptr) {
 		m_colorIdText = m_colorProperty->request("text");
 		m_colorIdBackground1 = m_colorProperty->request("background1");
@@ -31,7 +31,9 @@ appl::TagFileList::TagFileList() {
 		m_colorIdBackgroundSelected = m_colorProperty->request("selected");
 	}
 }
-
+void appl::TagFileList::init() {
+	ewol::widget::List::init();
+}
 
 appl::TagFileList::~TagFileList() {
 	for (auto &it : m_list) {

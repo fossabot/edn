@@ -35,12 +35,15 @@ void appl::Highlight::parseRules(exml::Element* _child,
 	_mListPatern.push_back(std::unique_ptr<HighlightPattern>(myPattern));
 }
 
-appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _colorFile) :
-  ewol::Resource(_xmlFilename),
-  m_typeName("") {
+appl::Highlight::Highlight() {
 	addObjectType("appl::Highlight");
+}
+
+void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _colorFile) {
+	ewol::Resource::init(_xmlFilename);
+	
 	// keep color propertiy file :
-	m_paintingProperties = appl::GlyphPainting::keep(_colorFile);
+	m_paintingProperties = appl::GlyphPainting::create(_colorFile);
 	
 	exml::Document doc;
 	if (doc.load(_xmlFilename) == false) {
@@ -259,21 +262,3 @@ void appl::Highlight::parse2(int64_t _start,
 		elementStart++;
 	}
 }
-
-ewol::object::Shared<appl::Highlight> appl::Highlight::keep(const std::string& _filename) {
-	//EWOL_INFO("KEEP : appl::Highlight : file : \"" << _filename << "\"");
-	ewol::object::Shared<appl::Highlight> object = ewol::dynamic_pointer_cast<appl::Highlight>(getManager().localKeep(_filename));
-	if (nullptr != object) {
-		return object;
-	}
-	EWOL_INFO("CREATE : appl::Highlight : file : \"" << _filename << "\"");
-	// this element create a new one every time ....
-	object = ewol::object::makeShared(new appl::Highlight(_filename, "THEME:COLOR:textViewer.json"));
-	if (nullptr == object) {
-		EWOL_ERROR("allocation error of a resource : ??Highlight??");
-		return nullptr;
-	}
-	getManager().localAdd(object);
-	return object;
-}
-

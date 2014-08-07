@@ -33,9 +33,12 @@ namespace appl {
 			void printTag(const tagEntry *_entry);
 			void jumpTo(const std::string& _name);
 			void jumpFile(const std::string& _filename, int64_t _lineId);
-			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-		public:
+			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+		protected:
 			TextPluginCtags();
+			void init();
+		public:
+			DECLARE_FACTORY(TextPluginCtags);
 			virtual ~TextPluginCtags();
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);

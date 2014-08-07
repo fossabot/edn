@@ -17,8 +17,11 @@
 
 namespace appl {
 	class TextPluginRmLine : public appl::TextViewerPlugin {
-		public:
+		protected:
 			TextPluginRmLine();
+			void init();
+		public:
+			DECLARE_FACTORY(TextPluginRmLine);
 			virtual ~TextPluginRmLine() {
 				// nothing to do ...
 			};

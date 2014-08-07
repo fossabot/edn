@@ -29,34 +29,33 @@ const char* const l_eventForwardCb = "appl-forward-CheckBox";
 const char* const l_eventHideBt = "appl-hide-button";
 
 appl::widget::Search::Search() :
-  ewol::widget::Composer(ewol::widget::Composer::file, "DATA:GUI-Search.xml"),
-  m_viewerManager(nullptr),
   m_forward(true),
   m_caseSensitive(false),
-  m_wrap(true),
-  m_searchEntry(nullptr),
-  m_replaceEntry(nullptr) {
+  m_wrap(true) {
 	addObjectType("appl::widget::Search");
+}
+void appl::widget::Search::init() {
+	ewol::widget::Composer::init(ewol::widget::Composer::file, "DATA:GUI-Search.xml");
 	// load buffer manager:onObjectRemove
-	m_viewerManager = appl::ViewerManager::keep();
+	m_viewerManager = appl::ViewerManager::create();
 	// link event
-	registerOnEventNameWidget(this, "SEARCH:close",         "pressed", l_eventHideBt);
-	registerOnEventNameWidget(this, "SEARCH:search-entry",  "modify",  l_eventSearchEntry);
-	registerOnEventNameWidget(this, "SEARCH:search-entry",  "enter",   l_eventSearchEntryEnter);
-	registerOnEventNameWidget(this, "SEARCH:search",        "pressed", l_eventSearchBt);
-	registerOnEventNameWidget(this, "SEARCH:replace-entry", "modify",  l_eventReplaceEntry);
-	registerOnEventNameWidget(this, "SEARCH:replace-entry", "enter",   l_eventReplaceEntryEnter);
-	registerOnEventNameWidget(this, "SEARCH:replace",       "pressed", l_eventReplaceBt);
-	registerOnEventNameWidget(this, "SEARCH:case",          "value",   l_eventCaseCb);
-	registerOnEventNameWidget(this, "SEARCH:wrap",          "value",   l_eventWrapCb);
-	registerOnEventNameWidget(this, "SEARCH:up-down",       "value",   l_eventForwardCb);
+	registerOnEventNameWidget(shared_from_this(), "SEARCH:close",         "pressed", l_eventHideBt);
+	registerOnEventNameWidget(shared_from_this(), "SEARCH:search-entry",  "modify",  l_eventSearchEntry);
+	registerOnEventNameWidget(shared_from_this(), "SEARCH:search-entry",  "enter",   l_eventSearchEntryEnter);
+	registerOnEventNameWidget(shared_from_this(), "SEARCH:search",        "pressed", l_eventSearchBt);
+	registerOnEventNameWidget(shared_from_this(), "SEARCH:replace-entry", "modify",  l_eventReplaceEntry);
+	registerOnEventNameWidget(shared_from_this(), "SEARCH:replace-entry", "enter",   l_eventReplaceEntryEnter);
+	registerOnEventNameWidget(shared_from_this(), "SEARCH:replace",       "pressed", l_eventReplaceBt);
+	registerOnEventNameWidget(shared_from_this(), "SEARCH:case",          "value",   l_eventCaseCb);
+	registerOnEventNameWidget(shared_from_this(), "SEARCH:wrap",          "value",   l_eventWrapCb);
+	registerOnEventNameWidget(shared_from_this(), "SEARCH:up-down",       "value",   l_eventForwardCb);
 	// set default properties
 	setConfigNamed("SEARCH:case", "value", std::to_string(m_caseSensitive));
 	setConfigNamed("SEARCH:wrap", "value", std::to_string(m_wrap));
 	setConfigNamed("SEARCH:up-down", "value", std::to_string(m_forward));
 	// get widget
-	m_searchEntry = ewol::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:search-entry"));
-	m_replaceEntry = ewol::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:replace-entry"));
+	m_searchEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:search-entry"));
+	m_replaceEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:replace-entry"));
 	// Display and hide event:
 	registerMultiCast(ednMsgGuiSearch);
 	// basicly hiden ...
@@ -72,7 +71,7 @@ void appl::widget::Search::find() {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
 	}
-	ewol::object::Shared<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
+	std::shared_ptr<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
 	if (viewer == nullptr) {
 		APPL_INFO("No viewer selected!!!");
 		return;
@@ -108,7 +107,7 @@ void appl::widget::Search::replace() {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
 	}
-	ewol::object::Shared<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
+	std::shared_ptr<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
 	if (viewer == nullptr) {
 		APPL_INFO("No viewer selected!!!");
 		return;
@@ -162,7 +161,7 @@ void appl::widget::Search::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void appl::widget::Search::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+void appl::widget::Search::onObjectRemove(const std::shared_ptr<ewol::Object>& _object) {
 	ewol::widget::Composer::onObjectRemove(_object);
 	if (_object == m_searchEntry) {
 		m_searchEntry.reset();

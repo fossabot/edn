@@ -23,6 +23,11 @@ appl::TextPluginHistory::TextPluginHistory() {
 	addObjectType("appl::TextPluginHistory");
 }
 
+void appl::TextPluginHistory::init() {
+	appl::TextViewerPluginData<appl::PluginHistoryData>::init();
+}
+
+
 void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
 	_textDrawer.ext_registerMultiCast(ednMsgGuiRedo);
@@ -177,7 +182,7 @@ bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
 }
 
 
-void appl::TextPluginHistory::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+void appl::TextPluginHistory::onObjectRemove(const std::shared_ptr<ewol::Object>& _object) {
 	appl::TextViewerPluginData<appl::PluginHistoryData>::onObjectRemove(_object);
 	// TODO : Dependence with buffer removing ...
 }

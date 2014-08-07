@@ -43,24 +43,28 @@ BufferView::BufferView() :
   m_openOrderMode(false) {
 	addObjectType("appl::BufferView");
 	setCanHaveFocus(true);
-	registerMultiCast(ednMsgBufferListChange);
-	registerMultiCast(ednMsgBufferState);
-	registerMultiCast(ednMsgBufferId);
-	registerMultiCast(appl::MsgSelectNewFile);
-	registerMultiCast(appl::MsgSelectChange);
-	registerMultiCast(appl::MsgNameChange);
 	m_selectedID = -1;
 	m_selectedIdRequested = -1;
 	// load buffer manager:
-	m_bufferManager = appl::BufferManager::keep();
+	m_bufferManager = appl::BufferManager::create();
 	// load color properties
-	m_paintingProperties = appl::GlyphPainting::keep("THEME:COLOR:bufferList.json");
+	m_paintingProperties = appl::GlyphPainting::create("THEME:COLOR:bufferList.json");
 	// get all id properties ...
 	m_colorBackground1 = m_paintingProperties->request("backgroung1");
 	m_colorBackground2 = m_paintingProperties->request("backgroung2");
 	m_colorBackgroundSelect = m_paintingProperties->request("backgroungSelected");
 	m_colorTextNormal = m_paintingProperties->request("textNormal");
 	m_colorTextModify = m_paintingProperties->request("textModify");
+}
+
+void BufferView::init() {
+	ewol::widget::List::init();
+	registerMultiCast(ednMsgBufferListChange);
+	registerMultiCast(ednMsgBufferState);
+	registerMultiCast(ednMsgBufferId);
+	registerMultiCast(appl::MsgSelectNewFile);
+	registerMultiCast(appl::MsgSelectChange);
+	registerMultiCast(appl::MsgNameChange);
 }
 
 BufferView::~BufferView() {
@@ -105,14 +109,14 @@ void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _sel
 void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::List::onReceiveMessage(_msg);
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
-		ewol::object::Shared<appl::Buffer> buffer = m_bufferManager->get(_msg.getData());
+		std::shared_ptr<appl::Buffer> buffer = m_bufferManager->get(_msg.getData());
 		if (buffer == nullptr) {
 			APPL_ERROR("event on element nor exist : " << _msg.getData());
 			return;
 		}
-		buffer->registerOnEvent(this, appl::Buffer::eventIsSave);
-		buffer->registerOnEvent(this, appl::Buffer::eventIsModify);
-		buffer->registerOnEvent(this, appl::Buffer::eventChangeName);
+		buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventIsSave);
+		buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventIsModify);
+		buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventChangeName);
 		appl::dataBufferStruct* tmp = new appl::dataBufferStruct(_msg.getData(), buffer);
 		if (tmp == nullptr) {
 			APPL_ERROR("Allocation error of the tmp buffer list element");
@@ -157,7 +161,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_DEBUG("message : " << _msg);
 	if (_msg.getMessage() == appl::MsgSelectChange) {
 		m_selectedID = -1;
-		ewol::object::Shared<appl::Buffer> tmpBuffer;
+		std::shared_ptr<appl::Buffer> tmpBuffer;
 		if (m_bufferManager != nullptr) {
 			tmpBuffer = m_bufferManager->getBufferSelected();
 		}
@@ -216,7 +220,7 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void BufferView::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
+void BufferView::onObjectRemove(const std::shared_ptr<ewol::Object>& _object) {
 	ewol::widget::List::onObjectRemove(_object);
 	auto it(m_list.begin());
 	while (it != m_list.end()) {

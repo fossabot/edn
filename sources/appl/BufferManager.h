@@ -17,12 +17,14 @@
 
 namespace appl {
 	class BufferManager : public ewol::Resource {
-		protected:
-			BufferManager();
 		public:
+			BufferManager();
+			void init(const std::string& _uniqueName);
+		public:
+			DECLARE_RESOURCE_SINGLE_FACTORY(BufferManager, "???Buffer_Manager???");
 			virtual ~BufferManager();
 		private:
-			std::list<ewol::object::Owner<appl::Buffer>> m_list; // list of all buffer curently open
+			std::list<std::shared_ptr<appl::Buffer>> m_list; // list of all buffer curently open
 		public:
 			/**
 			 * @brief Get a specific buffer with his name (can create a new buffer).
@@ -30,7 +32,7 @@ namespace appl {
 			 * @param[in] _createIfNeeded Create the buffer if not existed.
 			 * @return a pointer on the buffer
 			 */
-			ewol::object::Shared<appl::Buffer> get(const std::string& _fileName, bool _createIfNeeded=false);
+			std::shared_ptr<appl::Buffer> get(const std::string& _fileName, bool _createIfNeeded=false);
 			/**
 			 * @brief Load a specific file, event if it not existed:
 			 * @param[in] _fileName Name of the file to open or create.
@@ -54,38 +56,30 @@ namespace appl {
 			 * @param[in] _id Number of buffer
 			 * @return pointer on the buffer
 			 */
-			ewol::object::Shared<appl::Buffer> get(int32_t _id);
+			std::shared_ptr<appl::Buffer> get(int32_t _id);
 			/**
 			 * @brief Create a new buffer empty.
 			 * @return Created buffer or nullptr.
 			 */
-			ewol::object::Shared<appl::Buffer> createNewBuffer();
+			std::shared_ptr<appl::Buffer> createNewBuffer();
 		private:
-			ewol::object::Shared<appl::Buffer> m_bufferSelected;
+			std::shared_ptr<appl::Buffer> m_bufferSelected;
 		public:
 			/**
 			 * @brief Set the current buffer selected
 			 * @param[in] _bufferSelected Pointer on the buffer selected
 			 */
-			void setBufferSelected(ewol::object::Shared<appl::Buffer> _bufferSelected);
+			void setBufferSelected(std::shared_ptr<appl::Buffer> _bufferSelected);
 			/**
 			 * @brief Get the current buffer selected
 			 * @return Pointer on the buffer selected
 			 */
-			ewol::object::Shared<appl::Buffer> getBufferSelected() {
+			std::shared_ptr<appl::Buffer> getBufferSelected() {
 				return m_bufferSelected;
 			};
 		public: // herited function
 			void onReceiveMessage(const ewol::object::Message& _msg);
-			void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
-		public: // resource manager
-			/**
-			 * @brief keep the resource pointer.
-			 * @note Never free this pointer by your own...
-			 * @param[in] _filename Name of the configuration file.
-			 * @return pointer on the resource or nullptr if an error occured.
-			 */
-			static ewol::object::Shared<appl::BufferManager> keep();
+			void onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject);
 	};
 };
 
