@@ -26,7 +26,7 @@ namespace appl {
 			virtual ~ViewerManager();
 		private:
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-			std::shared_ptr<appl::TextViewer> m_viewer;
+			std::weak_ptr<appl::TextViewer> m_viewer;
 		public:
 			/**
 			 * @brief Set the current buffer selected
@@ -38,7 +38,7 @@ namespace appl {
 			 * @return Pointer on the buffer selected
 			 */
 			std::shared_ptr<appl::TextViewer> getViewerSelected() {
-				return m_viewer;
+				return m_viewer.lock();
 			};
 			/**
 			 * @breif Check if the element is the last request selection
@@ -46,9 +46,6 @@ namespace appl {
 			 * @return true if the element is selected
 			 */
 			bool isLastSelected(const std::shared_ptr<appl::TextViewer>& _viewer);
-		public: // herited function
-			void onReceiveMessage(const ewol::object::Message& _msg);
-			void onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject);
 	};
 };
 

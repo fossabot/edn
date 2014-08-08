@@ -32,27 +32,15 @@ appl::ViewerManager::~ViewerManager() {
 }
 
 bool appl::ViewerManager::isLastSelected(const std::shared_ptr<appl::TextViewer>& _viewer) {
-	return m_viewer == _viewer;
+	return m_viewer.lock() == _viewer;
 }
 
 void appl::ViewerManager::setViewerSelected(const std::shared_ptr<appl::TextViewer>& _viewer, const std::shared_ptr<appl::Buffer>& _buffer) {
-	if (m_viewer == _viewer) {
+	if (m_viewer.lock() == _viewer) {
 		return;
 	}
 	m_viewer = _viewer;
 	if (m_bufferManager != nullptr) {
 		m_bufferManager->setBufferSelected(_buffer);
-	}
-}
-
-void appl::ViewerManager::onReceiveMessage(const ewol::object::Message& _msg) {
-	APPL_DEBUG("receive message !!! " << _msg);
-}
-
-void appl::ViewerManager::onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject) {
-	ewol::Resource:: onObjectRemove(_removeObject);
-	if (_removeObject == m_viewer) {
-		m_viewer.reset();
-		return;
 	}
 }
