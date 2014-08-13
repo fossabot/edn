@@ -88,7 +88,7 @@ void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _sel
 		if (m_list[iii] == nullptr) {
 			continue;
 		}
-		if (std::tolower(m_list[iii]->m_bufferName.getNameFile()) > std::tolower(_dataStruct->m_bufferName.getNameFile())) {
+		if (etk::tolower(m_list[iii]->m_bufferName.getNameFile()) > etk::tolower(_dataStruct->m_bufferName.getNameFile())) {
 			m_list.insert(m_list.begin() + iii, _dataStruct);
 			_dataStruct = nullptr;
 			if (_selectNewPosition == true) {

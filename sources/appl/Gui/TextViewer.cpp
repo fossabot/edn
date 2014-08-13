@@ -649,7 +649,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 		if (m_buffer == nullptr) {
 			return;
 		}
-		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), std::stoi(_msg.getData()));
+		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), etk::string_to_int32_t(_msg.getData()));
 		select(it, m_buffer->getEndLine(it));
 		markToRedraw();
 		return;
@@ -658,7 +658,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 		if (m_buffer == nullptr) {
 			return;
 		}
-		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), std::stoi(_msg.getData()));
+		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), etk::string_to_int32_t(_msg.getData()));
 		moveCursor(it);
 		markToRedraw();
 		return;

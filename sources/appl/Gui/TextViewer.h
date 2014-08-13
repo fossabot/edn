@@ -88,7 +88,7 @@ namespace appl {
 			bool replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
 			bool replace(const std::string& _data);
 			bool replace(const std::u32string& _data) {
-				return replace(std::to_string(_data));
+				return replace(etk::to_string(_data));
 			}
 			/**
 			 * @brief Remove selected data ...

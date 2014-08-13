@@ -131,7 +131,7 @@ appl::Buffer::Buffer() :
   m_highlight(nullptr) {
 	addObjectType("appl::Buffer");
 	static int32_t bufferBaseId = 0;
-	m_fileName = "No Name " + std::to_string(bufferBaseId);
+	m_fileName = "No Name " + etk::to_string(bufferBaseId);
 	bufferBaseId++;
 	addEventId(eventIsModify);
 	addEventId(eventIsSave);

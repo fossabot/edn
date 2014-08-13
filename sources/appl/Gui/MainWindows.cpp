@@ -40,11 +40,11 @@
 namespace appl {
 	std::string getVersion() {
 		#define FIRST_YEAR (2010)
-		std::string tmpOutput = std::to_string(date::getYear()-FIRST_YEAR);
+		std::string tmpOutput = etk::to_string(date::getYear()-FIRST_YEAR);
 		tmpOutput += ".";
-		tmpOutput += std::to_string(date::getMonth());
+		tmpOutput += etk::to_string(date::getMonth());
 		tmpOutput += ".";
-		tmpOutput += std::to_string(date::getDay());
+		tmpOutput += etk::to_string(date::getDay());
 		return tmpOutput;
 	}
 	
@@ -409,10 +409,10 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		m_bufferManager->open(_msg.getData());
 	} else if (_msg.getMessage() == ednMsgGuiSave) {
 		APPL_DEBUG("Request saving the file : " << _msg.getData());
-		if (std::tolower(_msg.getData()) == "current") {
+		if (etk::tolower(_msg.getData()) == "current") {
 			appl::WorkerSaveFile::create("", false);
 			return;
-		} else if (std::tolower(_msg.getData()) == "all") {
+		} else if (etk::tolower(_msg.getData()) == "all") {
 			appl::WorkerSaveAllFile::create();
 			return;
 		} else {

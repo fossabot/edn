@@ -112,7 +112,7 @@ void appl::TextPluginCtags::jumpFile(const std::string& _filename, int64_t _line
 		m_bufferManager->open(_filename);
 	}
 	sendMultiCast(appl::MsgSelectChange, _filename);
-	sendMultiCast(appl::MsgSelectGotoLineSelect, std::to_string(_lineId));
+	sendMultiCast(appl::MsgSelectGotoLineSelect, etk::to_string(_lineId));
 }
 
 void appl::TextPluginCtags::loadTagFile() {

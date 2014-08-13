@@ -50,9 +50,9 @@ void appl::widget::Search::init() {
 	registerOnEventNameWidget(shared_from_this(), "SEARCH:wrap",          "value",   l_eventWrapCb);
 	registerOnEventNameWidget(shared_from_this(), "SEARCH:up-down",       "value",   l_eventForwardCb);
 	// set default properties
-	setConfigNamed("SEARCH:case", "value", std::to_string(m_caseSensitive));
-	setConfigNamed("SEARCH:wrap", "value", std::to_string(m_wrap));
-	setConfigNamed("SEARCH:up-down", "value", std::to_string(m_forward));
+	setConfigNamed("SEARCH:case", "value", etk::to_string(m_caseSensitive));
+	setConfigNamed("SEARCH:wrap", "value", etk::to_string(m_wrap));
+	setConfigNamed("SEARCH:up-down", "value", etk::to_string(m_forward));
 	// get widget
 	m_searchEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:search-entry"));
 	m_replaceEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:replace-entry"));
@@ -124,22 +124,22 @@ void appl::widget::Search::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::Composer::onReceiveMessage(_msg);
 	APPL_INFO("Search receive message : " << _msg);
 	if ( _msg.getMessage() == l_eventSearchEntry) {
-		m_searchData = to_u32string(_msg.getData());
+		m_searchData = etk::to_u32string(_msg.getData());
 	} else if (    _msg.getMessage() == l_eventSearchEntryEnter
 	            || _msg.getMessage() == l_eventSearchBt) {
 		find();
 	} else if ( _msg.getMessage() == l_eventReplaceEntry) {
-		m_replaceData = to_u32string(_msg.getData());
+		m_replaceData = etk::to_u32string(_msg.getData());
 	} else if (    _msg.getMessage() == l_eventReplaceEntryEnter
 	            || _msg.getMessage() == l_eventReplaceBt) {
 		replace();
 		find();
 	} else if ( _msg.getMessage() == l_eventCaseCb) {
-		m_caseSensitive = std::stob(_msg.getData());
+		m_caseSensitive = etk::string_to_bool(_msg.getData());
 	} else if ( _msg.getMessage() == l_eventWrapCb) {
-		m_wrap = std::stob(_msg.getData());
+		m_wrap = etk::string_to_bool(_msg.getData());
 	} else if ( _msg.getMessage() == l_eventForwardCb) {
-		m_forward = std::stob(_msg.getData());
+		m_forward = etk::string_to_bool(_msg.getData());
 	} else if ( _msg.getMessage() == l_eventHideBt) {
 		hide();
 	} else if ( _msg.getMessage() == ednMsgGuiSearch) {
