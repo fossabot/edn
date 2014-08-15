@@ -35,7 +35,6 @@ namespace appl {
 			void addCtagsNewItem(std::string file, int32_t line);
 		public: // herited function
 			void onReceiveMessage(const ewol::object::Message& _msg);
-			void onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject);
 	};
 };
 

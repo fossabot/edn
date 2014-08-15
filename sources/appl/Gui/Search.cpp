@@ -36,7 +36,6 @@ appl::widget::Search::Search() :
 }
 void appl::widget::Search::init() {
 	ewol::widget::Composer::init(ewol::widget::Composer::file, "DATA:GUI-Search.xml");
-	// load buffer manager:onObjectRemove
 	m_viewerManager = appl::ViewerManager::create();
 	// link event
 	registerOnEventNameWidget(shared_from_this(), "SEARCH:close",         "pressed", l_eventHideBt);
@@ -158,19 +157,6 @@ void appl::widget::Search::onReceiveMessage(const ewol::object::Message& _msg) {
 				hide();
 			}
 		}
-	}
-}
-
-void appl::widget::Search::onObjectRemove(const std::shared_ptr<ewol::Object>& _object) {
-	ewol::widget::Composer::onObjectRemove(_object);
-	if (_object == m_searchEntry) {
-		m_searchEntry.reset();
-	}
-	if (_object == m_replaceEntry) {
-		m_replaceEntry.reset();
-	}
-	if (_object == m_viewerManager) {
-		m_viewerManager.reset();
 	}
 }
 

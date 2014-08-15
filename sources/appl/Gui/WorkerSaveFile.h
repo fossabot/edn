@@ -28,7 +28,6 @@ namespace appl {
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // derived function
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
-			virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject);
 	};
 };
 

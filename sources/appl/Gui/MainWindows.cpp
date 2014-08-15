@@ -517,13 +517,3 @@ void MainWindows::closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer
 	tmpPopUp->setRemoveOnExternClick(true);
 	popUpWidgetPush(tmpPopUp);
 }
-
-void MainWindows::onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject) {
-	ewol::widget::Windows::onObjectRemove(_removeObject);
-	if (m_widgetLabelFileName == _removeObject) {
-		m_widgetLabelFileName = nullptr;
-	}
-	if (m_bufferManager == _removeObject) {
-		m_bufferManager = nullptr;
-	}
-}

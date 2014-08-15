@@ -57,7 +57,6 @@ class BufferView : public ewol::widget::List {
 		virtual ~BufferView();
 		// Derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
-		virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _object);
 	private:
 		bool m_openOrderMode; //!< true if the order is the opening order mode, otherwise, Alphabetic order
 	protected:

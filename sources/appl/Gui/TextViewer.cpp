@@ -703,14 +703,6 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void appl::TextViewer::onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject) {
-	ewol::widget::WidgetScrolled::onObjectRemove(_removeObject);
-	if (m_buffer == _removeObject) {
-		m_buffer = nullptr;
-		markToRedraw();
-	}
-}
-
 void appl::TextViewer::onGetFocus() {
 	showKeyboard();
 	APPL_INFO("Focus - In");

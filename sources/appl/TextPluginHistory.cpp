@@ -182,10 +182,3 @@ bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
 }
 
 
-void appl::TextPluginHistory::onObjectRemove(const std::shared_ptr<ewol::Object>& _object) {
-	appl::TextViewerPluginData<appl::PluginHistoryData>::onObjectRemove(_object);
-	// TODO : Dependence with buffer removing ...
-}
-
-
-

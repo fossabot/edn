@@ -74,20 +74,6 @@ void appl::BufferManager::setBufferSelected(std::shared_ptr<appl::Buffer> _buffe
 	sendMultiCast(appl::MsgSelectChange, "");
 }
 
-void appl::BufferManager::onObjectRemove(const std::shared_ptr<ewol::Object>& _object) {
-	ewol::Resource::onObjectRemove(_object);
-	if (m_bufferSelected == _object) {
-		setBufferSelected(nullptr);
-	}
-	for (auto it(m_list.begin()); it!=m_list.end(); ++it) {
-		if (*it != _object) {
-			continue;
-		}
-		m_list.erase(it);
-		it = m_list.begin();
-	}
-}
-
 std::shared_ptr<appl::Buffer> appl::BufferManager::get(int32_t _id) {
 	int32_t id = 0;
 	for (auto &it : m_list) {

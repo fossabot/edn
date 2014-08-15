@@ -69,8 +69,6 @@ namespace appl {
 		private:
 			void clearRedo(appl::PluginHistoryData& _data);
 			void clearUndo(appl::PluginHistoryData& _data);
-		public:
-			virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _object);
 	};
 };
 

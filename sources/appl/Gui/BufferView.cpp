@@ -220,24 +220,6 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void BufferView::onObjectRemove(const std::shared_ptr<ewol::Object>& _object) {
-	ewol::widget::List::onObjectRemove(_object);
-	auto it(m_list.begin());
-	while (it != m_list.end()) {
-		if (    *it != nullptr
-		     && (*it)->m_buffer == _object) {
-			m_list.erase(it);
-			markToRedraw();
-			it = m_list.begin();
-		} else {
-			++it;
-		}
-	}
-	if (m_bufferManager == _object) {
-		m_bufferManager.reset();
-	}
-}
-
 
 etk::Color<> BufferView::getBasicBG() {
 	return (*m_paintingProperties)[m_colorBackground1].getForeground();

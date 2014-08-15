@@ -41,7 +41,6 @@ class MainWindows : public ewol::widget::Windows {
 		void closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer);
 	public: // Derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
-		virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject);
 };
 
 

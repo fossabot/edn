@@ -120,16 +120,6 @@ namespace appl {
 			virtual void remove(TYPE& _data) {
 				return;
 			};
-		public:
-			virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _object) {
-				appl::TextViewerPlugin::onObjectRemove(_object);
-				for (auto it(m_specificData.begin()); it != m_specificData.end(); ++it) {
-					if (it->first == _object) {
-						m_specificData.erase(it);
-						it = m_specificData.begin();
-					}
-				}
-			};
 	};
 };
 

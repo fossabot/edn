@@ -141,16 +141,3 @@ void appl::TagFileSelection::addCtagsNewItem(std::string _file, int32_t _line) {
 	}
 }
 
-void appl::TagFileSelection::onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject) {
-	// First step call parrent : 
-	ewol::widget::PopUp::onObjectRemove(_removeObject);
-	// second step find if in all the elements ...
-	if(_removeObject == m_listTag) {
-		m_listTag = nullptr;
-	}
-}
-
-
-
-
-

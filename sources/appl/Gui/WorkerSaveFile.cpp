@@ -118,14 +118,3 @@ void appl::WorkerSaveFile::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
-void appl::WorkerSaveFile::onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject) {
-	if (_removeObject == m_chooser) {
-		m_chooser = nullptr;
-		APPL_VERBOSE("AutoRemove After closing sub widget ...");
-		autoDestroy();
-	} else if (_removeObject == m_bufferManager) {
-		m_bufferManager = nullptr;
-		autoDestroy();
-	}
-}
-

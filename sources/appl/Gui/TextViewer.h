@@ -64,7 +64,6 @@ namespace appl {
 			virtual bool calculateMinSize();
 			virtual void onRegenerateDisplay();
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
-			virtual void onObjectRemove(const std::shared_ptr<ewol::Object>& _removeObject);
 			virtual bool onEventInput(const ewol::event::Input& _event);
 			virtual bool onEventEntry(const ewol::event::Entry& _event);
 			virtual void onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID);
