@@ -32,12 +32,6 @@ appl::TextViewer::TextViewer() :
   m_insertMode(false) {
 	addObjectType("appl::TextViewer");
 	setCanHaveFocus(true);
-	registerMultiCast(ednMsgBufferId);
-	registerMultiCast(ednMsgGuiFind);
-	registerMultiCast(ednMsgGuiReplace);
-	registerMultiCast(appl::MsgSelectGotoLine);
-	registerMultiCast(appl::MsgSelectNewFile);
-	registerMultiCast(appl::MsgSelectGotoLineSelect);
 	setLimitScrolling(0.2);
 	setSingleFinger(false);
 	
@@ -63,6 +57,13 @@ void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 	appl::textPluginManager::connect(*this);
 	// last created has focus ...
 	setCurrentSelect();
+	
+	registerMultiCast(ednMsgBufferId);
+	registerMultiCast(ednMsgGuiFind);
+	registerMultiCast(ednMsgGuiReplace);
+	registerMultiCast(appl::MsgSelectGotoLine);
+	registerMultiCast(appl::MsgSelectNewFile);
+	registerMultiCast(appl::MsgSelectGotoLineSelect);
 }
 
 

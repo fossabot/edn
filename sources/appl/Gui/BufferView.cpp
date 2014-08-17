@@ -107,6 +107,7 @@ void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _sel
 
 
 void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
+	APPL_VERBOSE("message : " << _msg);
 	ewol::widget::List::onReceiveMessage(_msg);
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
 		std::shared_ptr<appl::Buffer> buffer = m_bufferManager->get(_msg.getData());
@@ -158,7 +159,6 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 		markToRedraw();
 		return;
 	}
-	APPL_DEBUG("message : " << _msg);
 	if (_msg.getMessage() == appl::MsgSelectChange) {
 		m_selectedID = -1;
 		std::shared_ptr<appl::Buffer> tmpBuffer;
