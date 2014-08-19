@@ -49,9 +49,9 @@ void appl::widget::Search::init() {
 	registerOnEventNameWidget(shared_from_this(), "SEARCH:wrap",          "value",   l_eventWrapCb);
 	registerOnEventNameWidget(shared_from_this(), "SEARCH:up-down",       "value",   l_eventForwardCb);
 	// set default properties
-	setConfigNamed("SEARCH:case", "value", etk::to_string(m_caseSensitive));
-	setConfigNamed("SEARCH:wrap", "value", etk::to_string(m_wrap));
-	setConfigNamed("SEARCH:up-down", "value", etk::to_string(m_forward));
+	parameterSetOnWidgetNamed("SEARCH:case", "value", etk::to_string(m_caseSensitive));
+	parameterSetOnWidgetNamed("SEARCH:wrap", "value", etk::to_string(m_wrap));
+	parameterSetOnWidgetNamed("SEARCH:up-down", "value", etk::to_string(m_forward));
 	// get widget
 	m_searchEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:search-entry"));
 	m_replaceEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:replace-entry"));
