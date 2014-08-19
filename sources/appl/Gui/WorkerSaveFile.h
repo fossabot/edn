@@ -16,16 +16,18 @@ namespace appl {
 	class WorkerSaveFile : public ewol::Object {
 		public:
 			static const char* eventSaveDone;
+		protected:
+			WorkerSaveFile();
+			void init(const std::string& _bufferName, bool _forceSaveAs=true);
 		public:
-			WorkerSaveFile(const std::string& _bufferName, bool _forceSaveAs=true);
+			DECLARE_FACTORY(WorkerSaveFile);
 			virtual ~WorkerSaveFile();
 		private:
 			std::string m_bufferName;
-			ewol::object::Shared<ewol::widget::FileChooser> m_chooser; //! pop-up element that is open...
-			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			std::shared_ptr<ewol::widget::FileChooser> m_chooser; //! pop-up element that is open...
+			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // derived function
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
-			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 	};
 };
 

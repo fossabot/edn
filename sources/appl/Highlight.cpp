@@ -35,12 +35,15 @@ void appl::Highlight::parseRules(exml::Element* _child,
 	_mListPatern.push_back(std::unique_ptr<HighlightPattern>(myPattern));
 }
 
-appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _colorFile) :
-  ewol::Resource(_xmlFilename),
-  m_typeName("") {
+appl::Highlight::Highlight() {
 	addObjectType("appl::Highlight");
+}
+
+void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _colorFile) {
+	ewol::Resource::init(_xmlFilename);
+	
 	// keep color propertiy file :
-	m_paintingProperties = appl::GlyphPainting::keep(_colorFile);
+	m_paintingProperties = appl::GlyphPainting::create(_colorFile);
 	
 	exml::Document doc;
 	if (doc.load(_xmlFilename) == false) {
@@ -48,7 +51,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 		return;
 	}
 	exml::Element* root = doc.getNamed("EdnLang");
-	if (NULL == root ) {
+	if (nullptr == root ) {
 		APPL_ERROR("(l ?) main node not find: \"EdnLang\" ...");
 		return;
 	}
@@ -58,7 +61,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 	// parse all the elements :
 	for(size_t iii = 0; iii < root->size(); ++iii) {
 		exml::Element* child = root->getElement(iii);
-		if (child == NULL) {
+		if (child == nullptr) {
 			// trash here all that is not element ...
 			continue;
 		}
@@ -72,7 +75,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 			// get sub Nodes ...
 			for(size_t jjj=0; jjj< child->size(); jjj++) {
 				exml::Element* passChild = child->getElement(jjj);
-				if (passChild == NULL) {
+				if (passChild == nullptr) {
 					continue;
 				}
 				if (passChild->getValue() != "rule") {
@@ -85,7 +88,7 @@ appl::Highlight::Highlight(const std::string& _xmlFilename, const std::string& _
 			// get sub Nodes ...
 			for(size_t jjj=0; jjj< child->size(); jjj++) {
 				exml::Element* passChild = child->getElement(jjj);
-				if (passChild == NULL) {
+				if (passChild == nullptr) {
 					continue;
 				}
 				if (passChild->getValue() != "rule") {
@@ -177,22 +180,22 @@ void appl::Highlight::parse(int64_t _start,
 		//try to fond the HL in ALL of we have
 		for (int64_t jjj=0; jjj<(int64_t)m_listHighlightPass1.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
-			HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ")" );
+			HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ") input start='" << _buffer[elementStart] << "' " << m_listHighlightPass1[jjj]->getPaternString());
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass1[jjj]->find(elementStart, _buffer.size(), resultat, _buffer);
 			if (HLP_FIND_ERROR != ret) {
-				HL_DEBUG("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
+				HL_DEBUG("Find Pattern in the Buffer : (" << resultat.start << "," << resultat.stop << ")" );
 				// remove element in the current List where the current Element have a end inside the next...
 				int64_t kkk=_addingPos;
 				while(kkk < (int64_t)_metaData.size() ) {
-					if (_metaData[kkk].beginStart <= resultat.endStop) {
+					if (_metaData[kkk].start <= resultat.stop) {
 						// remove element
 						HL_DEBUG("Erase element=" << kkk);
 						_metaData.erase(_metaData.begin()+kkk, _metaData.begin()+kkk+1);
 						// Increase the end of search
 						if (kkk < (int64_t)_metaData.size()) {
 							// just befor the end of the next element
-							elementStop = _metaData[kkk].beginStart-1;
+							elementStop = _metaData[kkk].start-1;
 						} else {
 							// end of the buffer
 							elementStop = _buffer.size();
@@ -204,9 +207,9 @@ void appl::Highlight::parse(int64_t _start,
 				}
 				// add curent element in the list ...
 				_metaData.insert(_metaData.begin()+_addingPos, resultat);
-				HL_DEBUG("INSERT at "<< _addingPos << " S=" << resultat.beginStart << " E=" << resultat.endStop );
+				HL_DEBUG("INSERT at "<< _addingPos << " S=" << resultat.start << " E=" << resultat.stop );
 				// update the current research starting element: (set position at the end of the current element
-				elementStart = resultat.endStop-1;
+				elementStart = resultat.stop-1;
 				// increment the position of insertion:
 				_addingPos++;
 				// We find a pattern  == > Stop search for the current element
@@ -234,19 +237,23 @@ void appl::Highlight::parse2(int64_t _start,
 	appl::HighlightInfo resultat;
 	
 	while (elementStart < elementStop) {
+		if (elementStart == 306) {
+			//etk::log::setLevel(etk::log::logLevelVerbose);
+		}
 		//HL2_DEBUG("Parse element in the buffer pos=" << elementStart << "," << _buffer.size() << ")" );
 		//try to fond the HL in ALL of we have
 		for (int64_t jjj=0; jjj<(int64_t)m_listHighlightPass2.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
 			HL2_DEBUG("Parse HL id=" << jjj << " position search: (" <<
-			          _start << "," << _buffer.size() << ")" );
+			          elementStart << "," << elementStop << ") in='"
+			          << _buffer[elementStart] << "' " << m_listHighlightPass2[jjj]->getPaternString());
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass2[jjj]->find(elementStart, elementStop, resultat, _buffer);
-			if (HLP_FIND_ERROR != ret) {
-				HL2_DEBUG("Find Pattern in the Buffer : (" << resultat.beginStart << "," << resultat.endStop << ")" );
+			if (ret != HLP_FIND_ERROR) {
+				HL2_DEBUG("Find Pattern in the Buffer : (" << resultat.start << "," << resultat.stop << ")" );
 				// add curent element in the list ...
 				_metaData.push_back(resultat);
-				elementStart = resultat.endStop-1;
+				elementStart = resultat.stop-1;
 				// Exit current cycle
 				break;
 			}
@@ -255,21 +262,3 @@ void appl::Highlight::parse2(int64_t _start,
 		elementStart++;
 	}
 }
-
-ewol::object::Shared<appl::Highlight> appl::Highlight::keep(const std::string& _filename) {
-	//EWOL_INFO("KEEP : appl::Highlight : file : \"" << _filename << "\"");
-	ewol::object::Shared<appl::Highlight> object = ewol::dynamic_pointer_cast<appl::Highlight>(getManager().localKeep(_filename));
-	if (NULL != object) {
-		return object;
-	}
-	EWOL_INFO("CREATE : appl::Highlight : file : \"" << _filename << "\"");
-	// this element create a new one every time ....
-	object = ewol::object::makeShared(new appl::Highlight(_filename, "THEME:COLOR:textViewer.json"));
-	if (NULL == object) {
-		EWOL_ERROR("allocation error of a resource : ??Highlight??");
-		return NULL;
-	}
-	getManager().localAdd(object);
-	return object;
-}
-

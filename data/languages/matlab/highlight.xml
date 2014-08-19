@@ -5,58 +5,49 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<start>%%</start>
-			<end>\n</end>
+			<regex>%%(\\[\\\n]|.)*$</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<start>%</start>
-			<end>\n</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>%(\\[\\\n]|.)*$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<start> "</start>
-			<end>("|\n)</end>
-			<EscapeChar>\</EscapeChar>
+			<regex> ".*($|")</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<start> '</start>
-			<end>('|\n)</end>
-			<!--<EscapeChar>\</EscapeChar>-->
+			<regex> '.*($|')</regex>
 		</rule>
 		<rule name="global inclusion">
 			<color>preprocesseur</color>
-			<start>global( |\t)+</start>
-			<end>\n</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>global( |\t)+(\\[\\\n]|.)*$</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<start>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|otherwise|end\@</start>
+			<regex>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|otherwise|end\@</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<start>\@true|false\@</start>
+			<regex>\@true|false\@</regex>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>
-			<start>\@(\w|_)+[ \t]*\(</start>
+			<regex>\@(\w|_)+[ \t]*\(</regex>
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>
-			<start>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</start>
+			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<start>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</start>
+			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>
-			<start>\@[A-Z_][A-Z_0-9]{3,500}\@</start>
+			<regex>\@[A-Z_][A-Z_0-9]{3,500}\@</regex>
 		</rule>
 	</pass2>
 </EdnLang>

@@ -18,10 +18,12 @@
 #undef __class__
 #define __class__ "BufferManager"
 
-appl::BufferManager::BufferManager() :
-  ewol::Resource("???BufferManager???"),
-  m_bufferSelected(NULL) {
+appl::BufferManager::BufferManager() {
 	addObjectType("appl::BufferManager");
+}
+
+void appl::BufferManager::init(const std::string& _uniqueName) {
+	ewol::Resource::init(_uniqueName);
 }
 
 appl::BufferManager::~BufferManager() {
@@ -29,21 +31,21 @@ appl::BufferManager::~BufferManager() {
 }
 
 
-ewol::object::Shared<appl::Buffer> appl::BufferManager::createNewBuffer() {
-	ewol::object::Shared<appl::Buffer> tmp = ewol::object::makeShared(new appl::Buffer());
-	if (tmp == NULL) {
+std::shared_ptr<appl::Buffer> appl::BufferManager::createNewBuffer() {
+	std::shared_ptr<appl::Buffer> tmp = appl::Buffer::create();
+	if (tmp == nullptr) {
 		APPL_ERROR("Can not allocate the Buffer (empty).");
-		return NULL;
+		return nullptr;
 	}
 	m_list.push_back(tmp);
 	sendMultiCast(appl::MsgSelectNewFile, tmp->getFileName());
 	return tmp;
 }
 
-ewol::object::Shared<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
+std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
 	APPL_INFO("get(" << _fileName << "," << _createIfNeeded << ")");
 	for (auto &it : m_list) {
-		if (it == NULL) {
+		if (it == nullptr) {
 			continue;
 		}
 		if (it->getFileName() == _fileName) {
@@ -54,39 +56,25 @@ ewol::object::Shared<appl::Buffer> appl::BufferManager::get(const std::string& _
 		if (etk::FSNodeGetType(_fileName) == etk::FSN_FOLDER) {
 			APPL_WARNING("try open a folder : " << _fileName);
 			APPL_CRITICAL("plop");
-			return NULL;
+			return nullptr;
 		}
-		ewol::object::Shared<appl::Buffer> tmp = ewol::object::makeShared(new appl::Buffer());
-		if (tmp == NULL) {
+		std::shared_ptr<appl::Buffer> tmp = appl::Buffer::create();
+		if (tmp == nullptr) {
 			APPL_ERROR("Can not allocate the Buffer class : " << _fileName);
-			return NULL;
+			return nullptr;
 		}
 		tmp->loadFile(_fileName);
 		m_list.push_back(tmp);
 		return tmp;
 	}
-	return NULL;
+	return nullptr;
 }
-void appl::BufferManager::setBufferSelected(ewol::object::Shared<appl::Buffer> _bufferSelected) {
+void appl::BufferManager::setBufferSelected(std::shared_ptr<appl::Buffer> _bufferSelected) {
 	m_bufferSelected = _bufferSelected;
 	sendMultiCast(appl::MsgSelectChange, "");
 }
 
-void appl::BufferManager::onObjectRemove(const ewol::object::Shared<ewol::Object>& _object) {
-	ewol::Resource::onObjectRemove(_object);
-	if (m_bufferSelected == _object) {
-		setBufferSelected(NULL);
-	}
-	for (auto it(m_list.begin()); it!=m_list.end(); ++it) {
-		if (*it != _object) {
-			continue;
-		}
-		m_list.erase(it);
-		it = m_list.begin();
-	}
-}
-
-ewol::object::Shared<appl::Buffer> appl::BufferManager::get(int32_t _id) {
+std::shared_ptr<appl::Buffer> appl::BufferManager::get(int32_t _id) {
 	int32_t id = 0;
 	for (auto &it : m_list) {
 		if (id == _id) {
@@ -113,7 +101,7 @@ void appl::BufferManager::open(const std::string& _fileName) {
 	if (exist(_fileName) == true) {
 		return;
 	}
-	if (get(_fileName, true) == NULL) {
+	if (get(_fileName, true) == nullptr) {
 		return;
 	}
 	sendMultiCast(appl::MsgSelectNewFile, _fileName);
@@ -121,21 +109,5 @@ void appl::BufferManager::open(const std::string& _fileName) {
 
 void appl::BufferManager::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_DEBUG("receive message !!! " << _msg);
-}
-
-ewol::object::Shared<appl::BufferManager> appl::BufferManager::keep() {
-	ewol::object::Shared<appl::BufferManager> object = ewol::dynamic_pointer_cast<appl::BufferManager>(getManager().localKeep("???BufferManager???"));
-	if (NULL != object) {
-		return object;
-	}
-	// this element create a new one every time ....
-	EWOL_INFO("CREATE : appl::BufferManager: ???BufferManager???");
-	object = ewol::object::makeShared(new appl::BufferManager());
-	if (NULL == object) {
-		EWOL_ERROR("allocation error of a resource : ???BufferManager???");
-		return NULL;
-	}
-	getManager().localAdd(object);
-	return object;
 }
 

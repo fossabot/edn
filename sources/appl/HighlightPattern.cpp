@@ -13,43 +13,27 @@
 #undef __class__
 #define __class__ "HighlightPattern"
 
-appl::HighlightPattern::HighlightPattern(const ewol::object::Shared<appl::GlyphPainting>& _glyphPainting) :
+appl::HighlightPattern::HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting) :
   m_glyphPainting(_glyphPainting),
   m_paternName(""),
-  m_regExpStart(nullptr),
-  m_regExpStop(nullptr),
+  m_regExp(nullptr),
   m_colorName(""),
-  m_escapeChar(u32char::Null),
-  m_multiline(false),
   m_level(0) {
-	m_regExpStart = std::unique_ptr<etk::RegExp<etk::Buffer>>(new etk::RegExp<etk::Buffer>());
+	m_regExp = std::unique_ptr<etk::RegExp<etk::Buffer>>(new etk::RegExp<etk::Buffer>());
 }
 
 appl::HighlightPattern::~HighlightPattern() {
 	
 }
 
-void appl::HighlightPattern::setPaternStart(std::string& _regExp) {
-	if (m_regExpStart == NULL) {
+void appl::HighlightPattern::setPatern(std::string& _regExp) {
+	if (m_regExp == nullptr) {
 		return;
 	}
-	m_regExpStart->compile(_regExp);
+	m_regExp->compile(_regExp);
 }
-
-void appl::HighlightPattern::setPaternStop(std::string& _regExp) {
-	m_regExpStop.reset();
-	if (_regExp.size() != 0) {
-		m_regExpStop = std::unique_ptr<etk::RegExp<etk::Buffer>>(new etk::RegExp<etk::Buffer>());
-		if (m_regExpStop != NULL) {
-			m_regExpStop->compile(_regExp);
-		} else {
-			APPL_ERROR("Allocation error");
-		}
-	}
-}
-
-void appl::HighlightPattern::setEscapeChar(const char32_t& _EscapeChar) {
-	m_escapeChar = _EscapeChar;
+std::string appl::HighlightPattern::getPaternString() {
+	return m_regExp->getRegExDecorated();
 }
 
 void appl::HighlightPattern::setColorGlyph(std::string& _colorName) {
@@ -59,17 +43,9 @@ void appl::HighlightPattern::setColorGlyph(std::string& _colorName) {
 }
 
 void appl::HighlightPattern::display() {
-	APPL_INFO("patern : \"" << m_paternName << "\" level=" << m_level );
-	APPL_INFO("  == > colorName \"" << m_colorName << "\"");
-	APPL_INFO("  == > regExpStart \"" << m_regExpStart->getRegExp() << "\"");
-	if (m_regExpStop != NULL) {
-		APPL_INFO("  == > regExpStop \"" << m_regExpStop->getRegExp() << "\"");
-	}
-	if (m_multiline == true) {
-		APPL_INFO("  == > multiline pattern: YES");
-	} else {
-		APPL_INFO("  == > multiline pattern: NO");
-	}
+	APPL_INFO("patern : '" << m_paternName << "' level=" << m_level );
+	APPL_INFO("  == > colorName '" << m_colorName << "'");
+	APPL_INFO("  == > regExp '" << m_regExp->getRegExp() << "'");
 }
 
 void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
@@ -77,9 +53,7 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 	/*
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<start>#</start>
-			<end>$</end>
-			<multiline>yes</multiline>
+			<regex>#</regex>
 		</rule>
 	*/
 	//--------------------------------------------------------------------------------------------
@@ -93,7 +67,7 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 	setLevel(_level);
 	
 	exml::Element* xChild = _child->getNamed("color");
-	if (NULL != xChild) {
+	if (nullptr != xChild) {
 		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
@@ -101,30 +75,13 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 			setColorGlyph(myEdnData);
 		}
 	}
-	xChild = _child->getNamed("start");
-	if (NULL != xChild) {
+	xChild = _child->getNamed("regex");
+	if (nullptr != xChild) {
 		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			std::string myEdnData = myData;
-			setPaternStart(myEdnData);
-		}
-	}
-	xChild = _child->getNamed("end");
-	if (NULL != xChild) {
-		std::string myData = xChild->getText();
-		if (myData.size() != 0) {
-			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			std::string myEdnData = myData;
-			setPaternStop(myEdnData);
-		}
-	}
-	xChild = _child->getNamed("EscapeChar");
-	if (NULL != xChild) {
-		std::string myData = xChild->getText();
-		if (myData.size() != 0) {
-			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			setEscapeChar(myData[0]);
+			setPatern(myEdnData);
 		}
 	}
 }
@@ -135,41 +92,17 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
                                      appl::HighlightInfo& _resultat,
                                      etk::Buffer& _buffer) {
 	//APPL_DEBUG(" try to find the element");
-	_resultat.beginStart = -1;
-	_resultat.beginStop = -1;
-	_resultat.endStart = -1;
-	_resultat.endStop = -1;
+	_resultat.start = -1;
+	_resultat.stop = -1;
 	_resultat.notEnded = false;
 	_resultat.patern = this;
 	
 	// when we have only one element:
-	if (m_regExpStop == NULL) {
-		if (true == m_regExpStart->processOneElement(_buffer, _start, _stop)) {
-			_resultat.beginStart = m_regExpStart->start();
-			_resultat.beginStop  = m_regExpStart->stop();
-			_resultat.endStart = m_regExpStart->start();
-			_resultat.endStop  = m_regExpStart->stop();
-			return HLP_FIND_OK;
-		}
-		//APPL_DEBUG("NOT find hightlightpatern ...");
-		return HLP_FIND_ERROR;
-	}
-	// try while we find the first element
-	if (m_regExpStart->processOneElement(_buffer, _start, _stop, m_escapeChar) == false) {
-		return HLP_FIND_ERROR;
-	}
-	_resultat.beginStart = m_regExpStart->start();
-	_resultat.beginStop  = m_regExpStart->stop();
-	if (m_regExpStop->parse(_buffer, _resultat.beginStop, _stop, m_escapeChar) == true) {
-		_resultat.endStart = m_regExpStop->start();
-		_resultat.endStop  = m_regExpStop->stop();
+	if (true == m_regExp->processOneElement(_buffer, _start, _stop)) {
+		_resultat.start = m_regExp->start();
+		_resultat.stop  = m_regExp->stop();
 		return HLP_FIND_OK;
-	} else {
-		_resultat.endStart = _stop+1;
-		_resultat.endStop = _stop+1;
-		_resultat.notEnded = true;
-		return HLP_FIND_OK_NO_END;
 	}
-	//APPL_DEBUG("NOT find start hightlightpatern ...");
+	//APPL_DEBUG("NOT find hightlightpatern ...");
 	return HLP_FIND_ERROR;
 }

@@ -114,7 +114,7 @@ typedef struct {
 		/* address for locating tag in source file */
 	struct {
 			/* pattern for locating source line
-			 * (may be NULL if not present) */
+			 * (may be nullptr if not present) */
 		const char *pattern;
 
 			/* line number in source file of tag definition
@@ -122,7 +122,7 @@ typedef struct {
 		unsigned long lineNumber;
 	} address;
 
-		/* kind of tag (may by name, character, or NULL if not known) */
+		/* kind of tag (may by name, character, or nullptr if not known) */
 	const char *kind;
 
 		/* is tag of file-limited scope? */

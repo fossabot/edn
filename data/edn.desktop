@@ -1,14 +1,27 @@
 [Desktop Entry]
-Version=0.3.0
 Name=Edn : Editeur de N'ours
-Exec=edn
-Icon=Edn
+Exec=edn %U
+Icon=/usr/share/edn/icon.png
 Terminal=false
 Type=Application
-Categories=Development;Utility;TextEditor;
+Categories=Development;
 GenericName=Text editor
 GenericName[en]=Text editor
 GenericName[nl]=Tekst verwerker
-GenericName[fr]=éditeur de text
+GenericName[fr]=Éditeur de text
 Comment=Code editor for c, c++, php, bash, xml ...
 Comment[fr]=éditeur de text pour les language c, c++, php, bash, xml ...
+OnlyShowIn=GNOME;Unity;
+MimeType=text/html;text/xml;application/xhtml_xml;x-scheme-handler/http;x-scheme-handler/https;
+StartupNotify=true
+Actions=New;
+
+[Desktop Action New]
+Name=Open a New Window
+Name[fr]=Ouvrir une nouvelle fenêtre
+Name[nl]=Nieuw venster openen
+Name[en]=Open a New Window
+Exec=edn
+
+#desktop-file-validate edn.desktop
+#sudo cp xxx /usr/share/applications/

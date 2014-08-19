@@ -24,7 +24,7 @@
 namespace appl {
 	class TextViewer : public ewol::widget::WidgetScrolled {
 		private:
-			ewol::object::Shared<appl::GlyphPainting> m_paintingProperties; //!< element painting property
+			std::shared_ptr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
 			int32_t m_colorBackground;
 			int32_t m_colorSpace;
 			int32_t m_colorTabulation;
@@ -33,25 +33,28 @@ namespace appl {
 			int32_t m_colorSelection;
 			int32_t m_colorNormal;
 		private:
-			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-			ewol::object::Shared<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
+			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
+		protected:
+			TextViewer();
+			void init(const std::string& _fontName="", int32_t _fontSize=-1);
 		public:
-			TextViewer(const std::string& _fontName="", int32_t _fontSize=-1);
+			DECLARE_FACTORY(TextViewer);
 			virtual ~TextViewer();
 		private:
-			ewol::object::Shared<appl::Buffer> m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
+			std::shared_ptr<appl::Buffer> m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
 		public:
 			/**
 			 * @brief Get the buffer property (only for the class : template <typename TYPE> class TextViewerPluginData)
 			 * @return pointer on buffer
 			 */
-			ewol::object::Shared<appl::Buffer> internalGetBuffer() {
+			std::shared_ptr<appl::Buffer> internalGetBuffer() {
 				return m_buffer;
 			}
 		private:
 			ewol::compositing::Text m_displayText; //!< Text display properties.
 			ewol::compositing::Drawing m_displayDrawing; //!< Other diaplay requested.
-			std::vector<std::pair<ewol::object::Shared<appl::Buffer>, vec2>> m_drawingRemenber;
+			std::vector<std::pair<std::shared_ptr<appl::Buffer>, vec2>> m_drawingRemenber;
 		public:
 			void setFontSize(int32_t _size);
 			void setFontName(const std::string& _fontName);
@@ -61,7 +64,6 @@ namespace appl {
 			virtual bool calculateMinSize();
 			virtual void onRegenerateDisplay();
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
-			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 			virtual bool onEventInput(const ewol::event::Input& _event);
 			virtual bool onEventEntry(const ewol::event::Entry& _event);
 			virtual void onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID);
@@ -85,7 +87,7 @@ namespace appl {
 			bool replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
 			bool replace(const std::string& _data);
 			bool replace(const std::u32string& _data) {
-				return replace(std::to_string(_data));
+				return replace(etk::to_string(_data));
 			}
 			/**
 			 * @brief Remove selected data ...
@@ -95,7 +97,7 @@ namespace appl {
 			 * @brief Remove selected data ... (No plugin call)
 			 */
 			void removeDirect() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return;
 				}
 				m_buffer->removeSelection();
@@ -108,7 +110,7 @@ namespace appl {
 			 * @return true of no error occured.
 			 */
 			bool copy(std::string& _data) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				return m_buffer->copy(_data);
@@ -120,7 +122,7 @@ namespace appl {
 			 * @param[in] _posEnd End position to end replace the data.
 			 */
 			void copy(std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return;
 				}
 				m_buffer->copy(_data, _pos, _posEnd);
@@ -132,7 +134,7 @@ namespace appl {
 			 * @return true if the write is done corectly
 			 */
 			bool writeDirect(const std::string& _data, const appl::Buffer::Iterator& _pos) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				bool ret = m_buffer->write(_data, _pos);
@@ -147,7 +149,7 @@ namespace appl {
 			 * @return true if the write is done corectly
 			 */
 			bool replaceDirect(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				bool ret = m_buffer->replace(_data, _pos, _posEnd);
@@ -208,14 +210,14 @@ namespace appl {
 			 * @return true if a display buffer is present, false otherwise.
 			 */
 			virtual bool hasBuffer() {
-				return m_buffer != NULL;
+				return m_buffer != nullptr;
 			}
 			/**
 			 * @brief Get the status of selection.
 			 * @return true if we have a current selection, false otherwise.
 			 */
 			virtual bool hasTextSelected() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				return m_buffer->hasTextSelected();
@@ -224,7 +226,7 @@ namespace appl {
 			 * @brief Remove Selection of the buffer.
 			 */
 			virtual void unSelect() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return;
 				}
 				m_buffer->unSelect();
@@ -235,7 +237,7 @@ namespace appl {
 			 * @param[in] _stop Stop position of the selection (the curor is set at this position)
 			 */
 			virtual void select(const appl::Buffer::Iterator& _start, const appl::Buffer::Iterator& _stop) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return;
 				}
 				moveCursor(_stop);
@@ -255,7 +257,7 @@ namespace appl {
 			                  appl::Buffer::Iterator& _resultStart,
 			                  appl::Buffer::Iterator& _resultStop,
 			                  bool _caseSensitive = true) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				bool ret = m_buffer->search(_pos, _search, _resultStart, _caseSensitive);
@@ -278,7 +280,7 @@ namespace appl {
 			                   appl::Buffer::Iterator& _resultStart,
 			                   appl::Buffer::Iterator& _resultStop,
 			                   bool _caseSensitive = true) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				bool ret = m_buffer->searchBack(_pos, _search, _resultStart, _caseSensitive);
@@ -297,7 +299,7 @@ namespace appl {
 			bool getPosAround(const appl::Buffer::Iterator& _pos,
 			                  appl::Buffer::Iterator &_beginPos,
 			                  appl::Buffer::Iterator &_endPos) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return false;
 				}
 				return m_buffer->getPosAround(_pos, _beginPos, _endPos);
@@ -308,7 +310,7 @@ namespace appl {
 			 * @return The Iterator
 			 */
 			appl::Buffer::Iterator position(int64_t _pos) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->position(_pos);
@@ -318,7 +320,7 @@ namespace appl {
 			 * @return The iterator on the cursor position
 			 */
 			appl::Buffer::Iterator cursor() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->cursor();
@@ -328,7 +330,7 @@ namespace appl {
 			 * @return The iterator on the begin position
 			 */
 			appl::Buffer::Iterator begin() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->begin();
@@ -338,7 +340,7 @@ namespace appl {
 			 * @return The iterator on the end position
 			 */
 			appl::Buffer::Iterator end() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->end();
@@ -348,7 +350,7 @@ namespace appl {
 			 * @return The Iterator
 			 */
 			appl::Buffer::Iterator selectStart() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->selectStart();
@@ -358,7 +360,7 @@ namespace appl {
 			 * @return The Iterator
 			 */
 			appl::Buffer::Iterator selectStop() {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->selectStop();
@@ -369,7 +371,7 @@ namespace appl {
 			 * @return The position in the buffer of the start of the line.
 			 */
 			appl::Buffer::Iterator getStartLine(const appl::Buffer::Iterator& _pos) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->getStartLine(_pos);
@@ -380,7 +382,7 @@ namespace appl {
 			 * @return The position in the buffer of the end of the line.
 			 */
 			appl::Buffer::Iterator getEndLine(const appl::Buffer::Iterator& _pos) {
-				if (m_buffer==NULL) {
+				if (m_buffer==nullptr) {
 					return appl::Buffer::Iterator();
 				}
 				return m_buffer->getEndLine(_pos);

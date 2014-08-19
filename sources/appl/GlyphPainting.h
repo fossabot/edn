@@ -19,8 +19,10 @@ namespace appl {
 		private:
 			std::vector<appl::GlyphDecoration> m_list;
 		protected:
-			GlyphPainting(const std::string& _filename);
+			GlyphPainting();
+			void init(const std::string& _filename);
 		public:
+			DECLARE_RESOURCE_NAMED_FACTORY(GlyphPainting);
 			virtual ~GlyphPainting();
 		public:
 			/**
@@ -49,14 +51,6 @@ namespace appl {
 			const appl::GlyphDecoration& operator[] (int32_t _pos) const {
 				return m_list[_pos];
 			}
-		public:
-			/**
-			 * @brief keep the resource pointer.
-			 * @note Never free this pointer by your own...
-			 * @param[in] _filename Name of the configuration file.
-			 * @return pointer on the resource or NULL if an error occured.
-			 */
-			static ewol::object::Shared<appl::GlyphPainting> keep(const std::string& _filename);
 	};
 };
 

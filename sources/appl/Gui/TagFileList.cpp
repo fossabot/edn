@@ -23,20 +23,22 @@ appl::TagFileList::TagFileList() {
 	addEventId(applEventCtagsListValidate);
 	setMouseLimit(1);
 	// Load color properties: (use file list to be generic ...)
-	m_colorProperty = ewol::resource::ColorFile::keep("THEME:COLOR:ListFileSystem.json");
-	if (m_colorProperty != NULL) {
+	m_colorProperty = ewol::resource::ColorFile::create("THEME:COLOR:ListFileSystem.json");
+	if (m_colorProperty != nullptr) {
 		m_colorIdText = m_colorProperty->request("text");
 		m_colorIdBackground1 = m_colorProperty->request("background1");
 		m_colorIdBackground2 = m_colorProperty->request("background2");
 		m_colorIdBackgroundSelected = m_colorProperty->request("selected");
 	}
 }
-
+void appl::TagFileList::init() {
+	ewol::widget::List::init();
+}
 
 appl::TagFileList::~TagFileList() {
 	for (auto &it : m_list) {
 		delete(it);
-		it = NULL;
+		it = nullptr;
 	}
 }
 
@@ -58,9 +60,9 @@ uint32_t appl::TagFileList::getNuberOfRaw() {
 }
 
 bool appl::TagFileList::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
-	if (_raw >= 0 && (size_t)_raw < m_list.size() && NULL != m_list[_raw]) {
+	if (_raw >= 0 && (size_t)_raw < m_list.size() && nullptr != m_list[_raw]) {
 		if (0 == _colomn) {
-			_myTextToWrite = std::to_string(m_list[_raw]->fileLine);
+			_myTextToWrite = etk::to_string(m_list[_raw]->fileLine);
 		} else {
 			_myTextToWrite = m_list[_raw]->filename;
 		}
@@ -96,8 +98,8 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum ewol::key::status _ty
 			}
 			if(    m_selectedLine  >= 0
 			    && m_selectedLine < (int64_t)m_list.size()
-			    && NULL != m_list[m_selectedLine] ) {
-				generateEventId(event, std::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+			    && nullptr != m_list[m_selectedLine] ) {
+				generateEventId(event, etk::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
 			} else {
 				generateEventId(applEventCtagsListUnSelect);
 			}
@@ -117,7 +119,7 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum ewol::key::status _ty
  */
 void appl::TagFileList::add(std::string& _file, int32_t _line) {
 	appl::TagListElement *tmpFile = new appl::TagListElement(_file, _line);
-	if (NULL != tmpFile) {
+	if (nullptr != tmpFile) {
 		m_list.push_back(tmpFile);
 	}
 	markToRedraw();

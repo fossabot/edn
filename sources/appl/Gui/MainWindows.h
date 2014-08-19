@@ -19,26 +19,28 @@
 
 class MainWindows : public ewol::widget::Windows {
 	private:
-		ewol::object::Shared<ewol::widget::Label> m_widgetLabelFileName;
-	public:
+		std::shared_ptr<ewol::widget::Label> m_widgetLabelFileName;
+	protected:
 		// Constructeur
 		MainWindows();
+		void init();
+	public:
+		DECLARE_FACTORY(MainWindows);
 		virtual ~MainWindows();
 	private:
-		ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+		std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		/**
 		 * @brief Display a pop-up to the select the name of the file.
 		 * @param[in] _buffer Buffer that might be saved with a new name.
 		 */
-		void saveAsPopUp(const ewol::object::Shared<appl::Buffer>& _buffer);
+		void saveAsPopUp(const std::shared_ptr<appl::Buffer>& _buffer);
 		/**
 		 * @brief Display a pop-up to the user to confirm wat he want to do when he close a file not saved.
 		 * @param[in] _buffer Buffer that might be close.
 		 */
-		void closeNotSavedFile(const ewol::object::Shared<appl::Buffer>& _buffer);
+		void closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer);
 	public: // Derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
-		virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 };
 
 

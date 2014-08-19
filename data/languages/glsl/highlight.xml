@@ -7,76 +7,65 @@
 	<pass1>
 		<rule name="my comment multiline doxygen">
 			<color>commentDoxygen</color>
-			<start>/\*\*</start>
-			<end>\*/</end>
+			<regex>/\*\*.*\*/</regex>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<start>/\*</start>
-			<end>\*/</end>
+			<regex>/\*.*\*/</regex>
 		</rule>
 		<rule name="my if 0">
 			<color>preprocesseur</color>
-			<start>#[ \t]*if 0</start>
-			<end>#endif|#else</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>#[ \t]*if 0(\\[\\\n]|.)*#(endif|else)</regex>
 		</rule>
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<start>#</start>
-			<end>\n</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>#(\\[\\\n]|.)*$</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<start>//!</start>
-			<end>\n</end>
+			<regex>//!(\\[\\\n]|.)*$</regex>
 		</rule>
 		<rule name="my todo comment">
 			<color>SYNTAX_ERROR</color>
-			<start>//[ \t]*TODO[ \t]*:</start>
-			<end>\n</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>//[ \t]*TODO[ \t]*:(\\[\\\n]|.)*$</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<start>//</start>
-			<end>\n</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>//(\\[\\\n]|.)*$</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<start>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof\@</start>
+			<regex>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof\@</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<start>\@void|bool|float|int|(vec|mat|ivect|bvect)[2-4]\@</start>
+			<regex>\@void|bool|float|int|(vec|mat|ivect|bvect)[2-4]\@</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<start>\@varying|uniform|attribute|precision|mediump\@</start>
+			<regex>\@varying|uniform|attribute|precision|mediump\@</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<start>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</start>
+			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<start>\@true|false\@</start>
+			<regex>\@true|false\@</regex>
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>
-			<start>\@[A-Z_][A-Z_0-9]{3,500}\@</start>
+			<regex>\@[A-Z_][A-Z_0-9]{3,500}\@</regex>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>
-			<start>\@(\w|_)+[ \t]*\(</start>
+			<regex>\@(\w|_)+[ \t]*\(</regex>
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>
-			<start>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</start>
+			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</regex>
 		</rule>
 	</pass2>
 </EdnLang>

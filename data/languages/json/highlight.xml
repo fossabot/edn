@@ -4,31 +4,29 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<start>"</start>
-			<end>"</end>
-			<EscapeChar>\</EscapeChar>
+			<regex>"(\\[\\"]|.)*"</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<start>\{|\}|\[|\]</start>
+			<regex>\{|\}|\[|\]</regex>
 		</rule>
 		<rule name="separator">
 			<color>error</color>
-			<start>:|,</start>
+			<regex>:|,</regex>
 		</rule>
 		<rule name="names">
 			<color>functionName</color>
-			<start>([a-zA-Z0-9]|-|_)*</start>
+			<regex>([a-zA-Z0-9]|-|_)*</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<start>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</start>
+			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<start>\@true|false\@</start>
+			<regex>\@true|false\@</regex>
 		</rule>
 	</pass2>
 </EdnLang>

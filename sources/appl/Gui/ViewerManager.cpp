@@ -17,57 +17,30 @@
 #undef __class__
 #define __class__ "ViewerManager"
 
-appl::ViewerManager::ViewerManager() :
-  ewol::Resource("???ViewerManager???"),
-  m_viewer(NULL) {
+appl::ViewerManager::ViewerManager() {
 	addObjectType("appl::ViewerManager");
 	// load buffer manager:
-	m_bufferManager = appl::BufferManager::keep();
+	m_bufferManager = appl::BufferManager::create();
+}
+
+void appl::ViewerManager::init(const std::string& _uniqueName) {
+  ewol::Resource::init(_uniqueName);
 }
 
 appl::ViewerManager::~ViewerManager() {
 	
 }
 
-bool appl::ViewerManager::isLastSelected(const ewol::object::Shared<appl::TextViewer>& _viewer) {
-	return m_viewer == _viewer;
+bool appl::ViewerManager::isLastSelected(const std::shared_ptr<appl::TextViewer>& _viewer) {
+	return m_viewer.lock() == _viewer;
 }
 
-void appl::ViewerManager::setViewerSelected(const ewol::object::Shared<appl::TextViewer>& _viewer, const ewol::object::Shared<appl::Buffer>& _buffer) {
-	if (m_viewer == _viewer) {
+void appl::ViewerManager::setViewerSelected(const std::shared_ptr<appl::TextViewer>& _viewer, const std::shared_ptr<appl::Buffer>& _buffer) {
+	if (m_viewer.lock() == _viewer) {
 		return;
 	}
 	m_viewer = _viewer;
-	if (m_bufferManager != NULL) {
+	if (m_bufferManager != nullptr) {
 		m_bufferManager->setBufferSelected(_buffer);
 	}
-}
-
-void appl::ViewerManager::onReceiveMessage(const ewol::object::Message& _msg) {
-	APPL_DEBUG("receive message !!! " << _msg);
-}
-
-void appl::ViewerManager::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
-	ewol::Resource:: onObjectRemove(_removeObject);
-	if (_removeObject == m_viewer) {
-		m_viewer.reset();
-		return;
-	}
-}
-
-ewol::object::Shared<appl::ViewerManager> appl::ViewerManager::keep() {
-	//EWOL_INFO("KEEP : appl::GlyphPainting : file : \"" << _filename << "\"");
-	ewol::object::Shared<appl::ViewerManager> object = ewol::dynamic_pointer_cast<appl::ViewerManager>(getManager().localKeep("???ViewerManager???"));
-	if (NULL != object) {
-		return object;
-	}
-	// this element create a new one every time ....
-	EWOL_INFO("CREATE : appl::ViewerManager: ???ViewerManager???");
-	object = ewol::object::makeShared(new appl::ViewerManager());
-	if (NULL == object) {
-		EWOL_ERROR("allocation error of a resource : ???ViewerManager???");
-		return NULL;
-	}
-	getManager().localAdd(object);
-	return object;
 }

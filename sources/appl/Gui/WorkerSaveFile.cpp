@@ -17,24 +17,25 @@ const char* appl::WorkerSaveFile::eventSaveDone = "save-file-done";
 
 static const char* s_saveAsValidate = "save-as-validate";
 
-appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _forceSaveAs) :
-  m_bufferName(_bufferName),
-  m_chooser(NULL),
-  m_bufferManager(NULL) {
+appl::WorkerSaveFile::WorkerSaveFile() {
 	addObjectType("appl::WorkerSaveFile");
 	addEventId(eventSaveDone);
 	// load buffer manager:
-	m_bufferManager = appl::BufferManager::keep();
-	
-	if (m_bufferManager == NULL) {
+	m_bufferManager = appl::BufferManager::create();
+}
+
+void appl::WorkerSaveFile::init(const std::string& _bufferName, bool _forceSaveAs) {
+	ewol::Object::init();
+	m_bufferName = _bufferName;
+	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		autoDestroy();
 		return;
 	}
 	if (m_bufferName == "") {
 		// need to find the curent file ...
-		ewol::object::Shared<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
-		if (tmpp == NULL) {
+		std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
+		if (tmpp == nullptr) {
 			APPL_ERROR("No selected buffer now ...");
 			autoDestroy();
 			return;
@@ -46,8 +47,8 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 		autoDestroy();
 		return;
 	}
-	ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(m_bufferName);
-	if (tmpBuffer == NULL) {
+	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(m_bufferName);
+	if (tmpBuffer == nullptr) {
 		APPL_ERROR("Error to get the buffer : " << m_bufferName);
 		autoDestroy();
 		return;
@@ -60,8 +61,8 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 			return;
 		}
 	}
-	m_chooser = ewol::object::makeShared(new ewol::widget::FileChooser());
-	if (NULL == m_chooser) {
+	m_chooser = ewol::widget::FileChooser::create();
+	if (nullptr == m_chooser) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 		autoDestroy();
 		return;
@@ -71,14 +72,14 @@ appl::WorkerSaveFile::WorkerSaveFile(const std::string& _bufferName, bool _force
 	etk::FSNode tmpName(m_bufferName);
 	m_chooser->setFolder(tmpName.getNameFolder());
 	m_chooser->setFileName(tmpName.getNameFile());
-	ewol::object::Shared<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
-	if (tmpWindows == NULL) {
+	std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
+	if (tmpWindows == nullptr) {
 		APPL_ERROR("Error to get the windows.");
 		autoDestroy();
 		return;
 	}
 	tmpWindows->popUpWidgetPush(m_chooser);
-	m_chooser->registerOnEvent(this, ewol::widget::FileChooser::eventValidate, s_saveAsValidate);
+	m_chooser->registerOnEvent(shared_from_this(), ewol::widget::FileChooser::eventValidate, s_saveAsValidate);
 }
 
 appl::WorkerSaveFile::~WorkerSaveFile() {
@@ -86,7 +87,7 @@ appl::WorkerSaveFile::~WorkerSaveFile() {
 }
 
 void appl::WorkerSaveFile::onReceiveMessage(const ewol::object::Message& _msg) {
-	if (m_bufferManager == NULL) {
+	if (m_bufferManager == nullptr) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
 	}
@@ -99,32 +100,21 @@ void appl::WorkerSaveFile::onReceiveMessage(const ewol::object::Message& _msg) {
 			APPL_ERROR("Try to save an non-existant file :" << m_bufferName);
 			return;
 		}
-		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(m_bufferName);
-		if (tmpBuffer == NULL) {
+		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(m_bufferName);
+		if (tmpBuffer == nullptr) {
 			APPL_ERROR("Error to get the buffer : " << m_bufferName);
 			return;
 		}
 		tmpBuffer->setFileName(_msg.getData());
 		if (tmpBuffer->storeFile() == false) {
-			ewol::object::Shared<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
-			if (tmpWindows == NULL) {
+			std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
+			if (tmpWindows == nullptr) {
 				return;
 			}
 			tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
 		} else {
 			generateEventId(eventSaveDone);
 		}
-	}
-}
-
-void appl::WorkerSaveFile::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
-	if (_removeObject == m_chooser) {
-		m_chooser = NULL;
-		APPL_VERBOSE("AutoRemove After closing sub widget ...");
-		autoDestroy();
-	} else if (_removeObject == m_bufferManager) {
-		m_bufferManager = NULL;
-		autoDestroy();
 	}
 }
 

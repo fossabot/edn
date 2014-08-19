@@ -40,7 +40,7 @@ namespace appl {
 					 */
 					Iterator():
 					  m_current(0),
-					  m_data(NULL),
+					  m_data(nullptr),
 					  m_value(u32char::Null) {
 						// nothing to do ...
 					};
@@ -70,7 +70,7 @@ namespace appl {
 					 */
 					virtual ~Iterator() {
 						m_current = 0;
-						m_data = NULL;
+						m_data = nullptr;
 						m_value = u32char::Null;
 					};
 					/**
@@ -78,7 +78,7 @@ namespace appl {
 					 * @return true if the element is present in buffer
 					 */
 					operator bool () const {
-						if (m_data == NULL) {
+						if (m_data == nullptr) {
 							return false;
 						}
 						if (m_current >= m_data->m_data.size()) {
@@ -94,7 +94,7 @@ namespace appl {
 					 * @return true if the element is present in buffer
 					 */
 					operator int64_t () const {
-						if (m_data == NULL) {
+						if (m_data == nullptr) {
 							return 0;
 						}
 						if (m_current < 0) {
@@ -217,7 +217,7 @@ namespace appl {
 					 * @return The requested position.
 					 */
 					int64_t getPos() const {
-						if (m_data == NULL) {
+						if (m_data == nullptr) {
 							return 0;
 						}
 						if (m_current < 0) {
@@ -292,8 +292,11 @@ namespace appl {
 			static const char* const eventIsSave;
 			static const char* const eventSelectChange;
 			static const char* const eventChangeName;
-		public:
+		protected:
 			Buffer();
+			void init();
+		public:
+			DECLARE_FACTORY(Buffer);
 			virtual ~Buffer();
 		private:
 			bool m_hasFileName; //!< when new file, the buffer has no name ==> but it might be reference with a single name ...
@@ -381,14 +384,14 @@ namespace appl {
 			 * @return position of the start selection.
 			 */
 			int64_t getStartSelectionPos() {
-				return etk_min(m_cursorPos, m_cursorSelectPos);
+				return std::min(m_cursorPos, m_cursorSelectPos);
 			}
 			/**
 			 * @brief Get the Stop position of the selection.
 			 * @return position of the stop selection.
 			 */
 			int64_t getStopSelectionPos() {
-				return etk_max(m_cursorPos, m_cursorSelectPos);
+				return std::max(m_cursorPos, m_cursorSelectPos);
 			}
 		protected:
 			float m_cursorPreferredCol; //!< position of the cursor when up and down is done.
@@ -588,7 +591,7 @@ namespace appl {
 		protected:
 			std::string m_highlightType; //!< Name of the highlight type
 			
-			ewol::object::Shared<appl::Highlight> m_highlight; //!< internal link with the Highlight system
+			std::shared_ptr<appl::Highlight> m_highlight; //!< internal link with the Highlight system
 			std::vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
 		public:
 			/**

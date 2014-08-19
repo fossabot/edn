@@ -17,8 +17,11 @@
 
 namespace appl {
 	class TextPluginMultiLineTab : public appl::TextViewerPlugin {
-		public:
+		protected:
 			TextPluginMultiLineTab();
+			void init();
+		public:
+			DECLARE_FACTORY(TextPluginMultiLineTab);
 			virtual ~TextPluginMultiLineTab() {
 				// nothing to do ...
 			};

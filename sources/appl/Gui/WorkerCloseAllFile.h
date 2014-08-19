@@ -14,16 +14,18 @@
 
 namespace appl {
 	class WorkerCloseAllFile : public ewol::Object {
-		public:
+		protected:
 			WorkerCloseAllFile();
+			void init();
+		public:
+			DECLARE_FACTORY(WorkerCloseAllFile);
 			virtual ~WorkerCloseAllFile();
 		private:
 			std::vector<std::string> m_bufferNameList;
-			ewol::object::Shared<appl::WorkerCloseFile> m_worker; //! pop-up element that is open...
-			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			std::shared_ptr<appl::WorkerCloseFile> m_worker; //! pop-up element that is open...
+			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // derived function
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
-			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 	};
 };
 

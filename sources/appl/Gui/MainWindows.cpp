@@ -40,11 +40,11 @@
 namespace appl {
 	std::string getVersion() {
 		#define FIRST_YEAR (2010)
-		std::string tmpOutput = std::to_string(date::getYear()-FIRST_YEAR);
+		std::string tmpOutput = etk::to_string(date::getYear()-FIRST_YEAR);
 		tmpOutput += ".";
-		tmpOutput += std::to_string(date::getMonth());
+		tmpOutput += etk::to_string(date::getMonth());
 		tmpOutput += ".";
-		tmpOutput += std::to_string(date::getDay());
+		tmpOutput += etk::to_string(date::getDay());
 		return tmpOutput;
 	}
 	
@@ -59,12 +59,15 @@ namespace appl {
 
 class ParameterAboutGui : public ewol::widget::Sizer {
 	public :
-		ParameterAboutGui() :
-		  ewol::widget::Sizer(ewol::widget::Sizer::modeVert) {
-			ewol::object::Shared<ewol::widget::Spacer> mySpacer = NULL;
+		ParameterAboutGui() {
+			addObjectType("appl::ParameterAboutGui");
+		}
+		void init() {
+			ewol::widget::Sizer::init(ewol::widget::Sizer::modeVert);
+			std::shared_ptr<ewol::widget::Spacer> mySpacer;
 			
-			mySpacer = ewol::object::makeShared(new ewol::widget::Spacer());
-			if (NULL == mySpacer) {
+			mySpacer = ewol::widget::Spacer::create();
+			if (nullptr == mySpacer) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
 				mySpacer->setExpand(bvec2(true,true));
@@ -93,8 +96,8 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			tmpLabel += "    libPng, ogg-tremor, portaudio, libZip<br/>";
 			tmpLabel += "    tinyXml, freetype, agg2.4, etk<br/>";
 			tmpLabel += "</left>";
-			ewol::object::Shared<ewol::widget::Label> myLabel = ewol::object::makeShared(new ewol::widget::Label(tmpLabel));
-			if (NULL == myLabel) {
+			std::shared_ptr<ewol::widget::Label> myLabel = ewol::widget::Label::create(tmpLabel);
+			if (nullptr == myLabel) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
 				myLabel->setExpand(bvec2(true,false));
@@ -121,38 +124,42 @@ const char* l_smoothMax = "tmpEvent_maxChange";
 
 MainWindows::MainWindows() {
 	addObjectType("appl::MainWindows");
+}
+
+void MainWindows::init() {
+	ewol::widget::Windows::init();
 	APPL_DEBUG("CREATE WINDOWS ... ");
-	ewol::object::Shared<ewol::widget::Sizer> mySizerVert = NULL;
-	ewol::object::Shared<ewol::widget::Sizer> mySizerVert2 = NULL;
-	ewol::object::Shared<ewol::widget::Sizer> mySizerHori = NULL;
-	ewol::object::Shared<appl::TextViewer> myTextView = NULL;
-	ewol::object::Shared<BufferView> myBufferView = NULL;
-	ewol::object::Shared<ewol::widget::Menu> myMenu = NULL;
+	std::shared_ptr<ewol::widget::Sizer> mySizerVert = nullptr;
+	std::shared_ptr<ewol::widget::Sizer> mySizerVert2 = nullptr;
+	std::shared_ptr<ewol::widget::Sizer> mySizerHori = nullptr;
+	std::shared_ptr<appl::TextViewer> myTextView = nullptr;
+	std::shared_ptr<BufferView> myBufferView = nullptr;
+	std::shared_ptr<ewol::widget::Menu> myMenu = nullptr;
 	
 	// load buffer manager:
-	m_bufferManager = appl::BufferManager::keep();
+	m_bufferManager = appl::BufferManager::create();
 	
-	mySizerVert = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeVert));
+	mySizerVert = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);
 	mySizerVert->setName("plop 1111111");
 	setSubWidget(mySizerVert);
 	
-		mySizerHori = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeHori));
+		mySizerHori = ewol::widget::Sizer::create(ewol::widget::Sizer::modeHori);
 		mySizerHori->setName("plop 222222222");
 		mySizerVert->subWidgetAdd(mySizerHori);
-			myBufferView = ewol::object::makeShared(new BufferView());
+			myBufferView = BufferView::create();
 			myBufferView->setName("plop 3333333");
 			myBufferView->setExpand(bvec2(false,true));
 			myBufferView->setFill(bvec2(true,true));
 			mySizerHori->subWidgetAdd(myBufferView);
 			
-			mySizerVert2 = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeVert));
+			mySizerVert2 = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);
 			mySizerHori->subWidgetAdd(mySizerVert2);
 				mySizerVert2->setName("plop 4444444");
 				// main buffer Area :
 				#if defined(__TARGET_OS__Android)
-					myTextView = ewol::object::makeShared(new appl::TextViewer("FreeMono;DejaVuSansMono;FreeSerif", 16));
+					myTextView = appl::TextViewer::create("FreeMono;DejaVuSansMono;FreeSerif", 16);
 				#else
-					myTextView = ewol::object::makeShared(new appl::TextViewer("FreeMono;DejaVuSansMono;FreeSerif", 11));
+					myTextView = appl::TextViewer::create("FreeMono;DejaVuSansMono;FreeSerif", 11);
 				#endif
 				myTextView->setName("appl-text-viewer");
 				myTextView->setExpand(bvec2(true,true));
@@ -165,14 +172,14 @@ MainWindows::MainWindows() {
 				mySizerVert2->subWidgetAdd(myTextView);
 				*/
 				// search area : 
-				ewol::object::Shared<appl::widget::Search> mySearch = ewol::object::makeShared(new appl::widget::Search());
+				std::shared_ptr<appl::widget::Search> mySearch = appl::widget::Search::create();
 				mySizerVert2->subWidgetAdd(mySearch);
 			
-		mySizerHori = ewol::object::makeShared(new ewol::widget::Sizer(ewol::widget::Sizer::modeHori));
+		mySizerHori = ewol::widget::Sizer::create(ewol::widget::Sizer::modeHori);
 		mySizerHori->setName("plop 555555");
 		mySizerVert->subWidgetAdd(mySizerHori);
 			
-			myMenu = ewol::object::makeShared(new ewol::widget::Menu());
+			myMenu = ewol::widget::Menu::create();
 			mySizerHori->subWidgetAdd(myMenu);
 			int32_t idMenuFile = myMenu->addTitle("File");
 				myMenu->add(idMenuFile, "New",          "", ednMsgGuiNew);
@@ -221,7 +228,7 @@ MainWindows::MainWindows() {
 				myMenu->addSpacer();
 				myMenu->add(idMenugDisplay, "Reload openGl Shader", "", ednMsgGuiReloadShader);
 			
-			m_widgetLabelFileName = ewol::object::makeShared(new ewol::widget::Label("FileName"));
+			m_widgetLabelFileName = ewol::widget::Label::create("FileName");
 			m_widgetLabelFileName->setExpand(bvec2(true,false));
 			m_widgetLabelFileName->setFill(bvec2(true,false));;
 			mySizerHori->subWidgetAdd(m_widgetLabelFileName);
@@ -282,30 +289,30 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_VERBOSE("Receive Event from the main windows: " << _msg );
 	// open file Section ...
 	if (_msg.getMessage() == ednMsgGuiOpen) {
-		ewol::widget::FileChooser* tmpWidget = new ewol::widget::FileChooser();
-		if (tmpWidget == NULL) {
+		std::shared_ptr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
+		if (tmpWidget == nullptr) {
 			APPL_ERROR("Can not open File chooser !!! ");
 			return;
 		}
 		tmpWidget->setTitle("Open files ...");
 		tmpWidget->setValidateLabel("Open");
-		if (m_bufferManager == NULL) {
+		if (m_bufferManager == nullptr) {
 			APPL_ERROR("can not call unexistant buffer manager ... ");
 			return;
 		}
 		// Get a ref on the buffer selected (if null, no buffer was selected ...)
-		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->getBufferSelected();
-		if (tmpBuffer != NULL) {
+		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->getBufferSelected();
+		if (tmpBuffer != nullptr) {
 			etk::FSNode tmpFile = tmpBuffer->getFileName();
 			tmpWidget->setFolder(tmpFile.getNameFolder());
 		}
 		// apply widget pop-up ...
 		popUpWidgetPush(tmpWidget);
-		tmpWidget->registerOnEvent(this, "validate", ednEventPopUpFileSelected);
+		tmpWidget->registerOnEvent(shared_from_this(), "validate", ednEventPopUpFileSelected);
 	} else if (_msg.getMessage() == ednMsgProperties) {
 		// Request the parameter GUI
-		ewol::object::Shared<ewol::widget::Parameter> tmpWidget = ewol::object::makeShared(new ewol::widget::Parameter());
-		if (NULL == tmpWidget) {
+		std::shared_ptr<ewol::widget::Parameter> tmpWidget = ewol::widget::Parameter::create();
+		if (nullptr == tmpWidget) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
 			#ifdef SDGSDFGSDFGSDFGSDFGSTERGDHFGHFDS
@@ -342,13 +349,13 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 			tmpWidget->setTitle("Properties");
 			popUpWidgetPush(tmpWidget);
 			tmpWidget->menuAddGroup("Editor");
-			ewol::object::Shared<ewol::Widget> tmpSubWidget = ewol::object::makeShared(new globals::ParameterGlobalsGui());
+			std::shared_ptr<ewol::Widget> tmpSubWidget = globals::ParameterGlobalsGui::create();
 			tmpWidget->menuAdd("Editor",          "", tmpSubWidget);
-			tmpWidget->menuAdd("Font & Color", "", NULL);
-			tmpWidget->menuAdd("Highlight",       "", NULL);
+			tmpWidget->menuAdd("Font & Color", "", nullptr);
+			tmpWidget->menuAdd("Highlight",       "", nullptr);
 			tmpWidget->menuAddGroup("General");
-			tmpWidget->menuAdd("Display",       "", NULL);
-			tmpSubWidget = ewol::object::makeShared(new ParameterAboutGui());
+			tmpWidget->menuAdd("Display",       "", nullptr);
+			tmpSubWidget = ParameterAboutGui::create();
 			tmpWidget->menuAdd("About",           "", tmpSubWidget);
 		}
 	} else if (_msg.getMessage() == appl::MsgNameGuiChangeColor) {
@@ -366,7 +373,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		// TODO : ...
 	}
 	// Note : Fore all next message we need to acces to the buffer manager ==> just check one time ...
-	if (m_bufferManager == NULL) {
+	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
 	}
@@ -375,21 +382,21 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 	     || _msg.getMessage() == appl::Buffer::eventIsSave
 	     || _msg.getMessage() == appl::Buffer::eventChangeName) {
 		// select a new Buffer ==> change title:
-		ewol::object::Shared<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
-		if (tmpp == NULL) {
+		std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
+		if (tmpp == nullptr) {
 			setTitle("Edn");
-			if (m_widgetLabelFileName != NULL) {
+			if (m_widgetLabelFileName != nullptr) {
 				m_widgetLabelFileName->setLabel("");
 			}
 		} else {
 			if (_msg.getMessage() == appl::MsgSelectNewFile) {
-				tmpp->registerOnEvent(this, appl::Buffer::eventIsModify);
-				tmpp->registerOnEvent(this, appl::Buffer::eventIsSave);
-				tmpp->registerOnEvent(this, appl::Buffer::eventChangeName);
+				tmpp->registerOnEvent(shared_from_this(), appl::Buffer::eventIsModify);
+				tmpp->registerOnEvent(shared_from_this(), appl::Buffer::eventIsSave);
+				tmpp->registerOnEvent(shared_from_this(), appl::Buffer::eventChangeName);
 			}
 			std::string nameFileSystem = etk::FSNode(tmpp->getFileName()).getFileSystemName();
 			setTitle(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);
-			if (m_widgetLabelFileName != NULL) {
+			if (m_widgetLabelFileName != nullptr) {
 				m_widgetLabelFileName->setLabel(nameFileSystem + (tmpp->isModify()==true?" *":""));
 			}
 		}
@@ -402,31 +409,31 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		m_bufferManager->open(_msg.getData());
 	} else if (_msg.getMessage() == ednMsgGuiSave) {
 		APPL_DEBUG("Request saving the file : " << _msg.getData());
-		if (std::tolower(_msg.getData()) == "current") {
-			new appl::WorkerSaveFile("", false);
+		if (etk::tolower(_msg.getData()) == "current") {
+			appl::WorkerSaveFile::create("", false);
 			return;
-		} else if (std::tolower(_msg.getData()) == "all") {
-			new appl::WorkerSaveAllFile();
+		} else if (etk::tolower(_msg.getData()) == "all") {
+			appl::WorkerSaveAllFile::create();
 			return;
 		} else {
 			APPL_ERROR("UNKNOW request : " << _msg);
 		}
 	} else if (_msg.getMessage() == ednMsgGuiSaveAs) {
-		new appl::WorkerSaveFile("", true);
+		appl::WorkerSaveFile::create("", true);
 	} else if (_msg.getMessage() == ednMsgGuiClose) {
 		// Get a ref on the buffer selected (if null, no buffer was selected ...)
 		if (_msg.getData() == "current") {
-			new appl::WorkerCloseFile("");
+			appl::WorkerCloseFile::create("");
 		} else {
-			new appl::WorkerCloseAllFile();
+			appl::WorkerCloseAllFile::create();
 		}
 	} else if (_msg.getMessage() == mainWindowsRequestSaveFile) { // return after a choice of close...
 		if (m_bufferManager->exist(_msg.getData()) == false) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
 		}
-		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
-		if (tmpBuffer == NULL) {
+		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
+		if (tmpBuffer == nullptr) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
 		}
@@ -444,8 +451,8 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
 		}
-		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
-		if (tmpBuffer == NULL) {
+		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
+		if (tmpBuffer == nullptr) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
 		}
@@ -455,64 +462,58 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
 		}
-		ewol::object::Shared<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
-		if (tmpBuffer == NULL) {
+		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
+		if (tmpBuffer == nullptr) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
 		}
 		// note: just remove ==> no check : normal case ...
-		tmpBuffer->removeObject();
+		//tmpBuffer->removeObject();
+		EWOL_TODO("call remove buffer ...");
 	}
 	return;
 }
 
-void MainWindows::saveAsPopUp(const ewol::object::Shared<appl::Buffer>& _buffer) {
-	if (_buffer == NULL) {
-		APPL_ERROR("Call With NULL input...");
+void MainWindows::saveAsPopUp(const std::shared_ptr<appl::Buffer>& _buffer) {
+	if (_buffer == nullptr) {
+		APPL_ERROR("Call With nullptr input...");
 		return;
 	}
-	appl::WorkerSaveFile* tmpObject = new appl::WorkerSaveFile(_buffer->getFileName());
+	std::shared_ptr<appl::WorkerSaveFile> tmpObject = appl::WorkerSaveFile::create(_buffer->getFileName());
 }
 
-void MainWindows::closeNotSavedFile(const ewol::object::Shared<appl::Buffer>& _buffer) {
-	if (_buffer == NULL) {
-		APPL_ERROR("Call With NULL input...");
+void MainWindows::closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer) {
+	if (_buffer == nullptr) {
+		APPL_ERROR("Call With nullptr input...");
 		return;
 	}
-	ewol::object::Shared<ewol::widget::StdPopUp> tmpPopUp = ewol::object::makeShared(new ewol::widget::StdPopUp());
-	if (tmpPopUp == NULL) {
+	std::shared_ptr<ewol::widget::StdPopUp> tmpPopUp = ewol::widget::StdPopUp::create();
+	if (tmpPopUp == nullptr) {
 		APPL_ERROR("Can not create a simple pop-up");
 		return;
 	}
 	tmpPopUp->setTitle("<bold>Close un-saved file:</bold>");
 	tmpPopUp->setComment("The file named : <i>\"" + _buffer->getFileName() + "\"</i> is curently modify.   <br/>If you don't saves these modifications,<br/>they will be definitly lost...");
-	ewol::object::Shared<ewol::Widget> bt = NULL;
+	std::shared_ptr<ewol::Widget> bt = nullptr;
 	if (_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("Save", true);
-		if (bt != NULL) {
+		if (bt != nullptr) {
 			// TODO : The element is removed before beeing pressed
-			bt->registerOnEvent(this, "pressed", mainWindowsRequestSaveFile, _buffer->getFileName());
-			bt->registerOnEvent(this, "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+			bt->registerOnEvent(shared_from_this(), "pressed", mainWindowsRequestSaveFile, _buffer->getFileName());
+			bt->registerOnEvent(shared_from_this(), "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		}
 	}
 	bt = tmpPopUp->addButton("Save As", true);
-	if (bt != NULL) {
-		bt->registerOnEvent(this, "pressed", mainWindowsRequestSaveFileAs, _buffer->getFileName());
+	if (bt != nullptr) {
+		bt->registerOnEvent(shared_from_this(), "pressed", mainWindowsRequestSaveFileAs, _buffer->getFileName());
 		//bt->registerOnEvent(this, "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		// TODO : Request the close when saved ...
 	}
 	bt = tmpPopUp->addButton("Close", true);
-	if (bt != NULL) {
-		bt->registerOnEvent(this, "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+	if (bt != nullptr) {
+		bt->registerOnEvent(shared_from_this(), "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 	}
 	tmpPopUp->addButton("Cancel", true);
 	tmpPopUp->setRemoveOnExternClick(true);
 	popUpWidgetPush(tmpPopUp);
-}
-
-void MainWindows::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
-	ewol::widget::Windows::onObjectRemove(_removeObject);
-	if (m_widgetLabelFileName == _removeObject) {
-		m_widgetLabelFileName = NULL;
-	}
 }

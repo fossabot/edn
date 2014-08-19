@@ -28,26 +28,19 @@
 	int64_t processTimeLocal = (endTime - startTime); \
 	APPL_DEBUG(comment << (float)((float)processTimeLocal / 1000.0) << "ms");
 
-appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
-  m_displayText(_fontName, _fontSize),
+appl::TextViewer::TextViewer() :
   m_insertMode(false) {
 	addObjectType("appl::TextViewer");
 	setCanHaveFocus(true);
-	registerMultiCast(ednMsgBufferId);
-	registerMultiCast(ednMsgGuiFind);
-	registerMultiCast(ednMsgGuiReplace);
-	registerMultiCast(appl::MsgSelectGotoLine);
-	registerMultiCast(appl::MsgSelectNewFile);
-	registerMultiCast(appl::MsgSelectGotoLineSelect);
 	setLimitScrolling(0.2);
 	setSingleFinger(false);
 	
 	// load buffer manager:
-	m_bufferManager = appl::BufferManager::keep();
-	m_viewerManager = appl::ViewerManager::keep();
+	m_bufferManager = appl::BufferManager::create();
+	m_viewerManager = appl::ViewerManager::create();
 	
 	// load color properties
-	m_paintingProperties = appl::GlyphPainting::keep("THEME:COLOR:textViewer.json");
+	m_paintingProperties = appl::GlyphPainting::create("THEME:COLOR:textViewer.json");
 	// get all id properties ...
 	m_colorBackground = m_paintingProperties->request("CODE_basicBackgroung");
 	m_colorSpace = m_paintingProperties->request("CODE_space");
@@ -56,18 +49,30 @@ appl::TextViewer::TextViewer(const std::string& _fontName, int32_t _fontSize) :
 	m_colorLineNumber = m_paintingProperties->request("CODE_lineNumber");
 	m_colorSelection = m_paintingProperties->request("SelectedText");
 	m_colorNormal = m_paintingProperties->request("normal");
-	
+}
+
+void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
+	ewol::widget::WidgetScrolled::init();
+	m_displayText.setFont(_fontName, _fontSize);
 	appl::textPluginManager::connect(*this);
 	// last created has focus ...
 	setCurrentSelect();
+	
+	registerMultiCast(ednMsgBufferId);
+	registerMultiCast(ednMsgGuiFind);
+	registerMultiCast(ednMsgGuiReplace);
+	registerMultiCast(appl::MsgSelectGotoLine);
+	registerMultiCast(appl::MsgSelectNewFile);
+	registerMultiCast(appl::MsgSelectGotoLineSelect);
 }
+
 
 appl::TextViewer::~TextViewer() {
 	appl::textPluginManager::disconnect(*this);
 }
 
 std::string appl::TextViewer::getBufferPath() {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return "";
 	}
 	std::string filename = m_buffer->getFileName();
@@ -109,7 +114,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 	m_displayDrawing.setColor((*m_paintingProperties)[m_colorBackground].getForeground());
 	m_displayDrawing.rectangleWidth(m_size);
 	
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		m_maxSize.setX(256);
 		m_maxSize.setY(256);
 		m_displayText.setTextAlignement(10, m_size.x()-20, ewol::compositing::alignLeft);
@@ -138,7 +143,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 	vec3 tmpCursorPosition(0, 0, -1);
 	float tmpCursorLenght = -1.0;
 	// real display ...
-	m_displayText.setColor(etk::Color<>(0, 0, 0, 256));
+	m_displayText.setColor(etk::Color<>(0, 0, 0, 255));
 	float countNbLine = 1;
 	int32_t countColomn = 0;
 	// the siplay string :
@@ -204,7 +209,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 	appl::DisplayHLData displayLocalSyntax;
 	m_buffer->hightlightGenerateLines(displayLocalSyntax, startingIt, (m_size.y()/tmpLetterSize.y()) + 5);
 	float maxSizeX = 0;
-	appl::HighlightInfo * HLColor = NULL;
+	appl::HighlightInfo * HLColor = nullptr;
 	bool DisplayCursorAndSelection = isSelectedLast();
 	appl::Buffer::Iterator it;
 	for (it = startingIt;
@@ -220,12 +225,12 @@ void appl::TextViewer::onRegenerateDisplay() {
 		if (*it == u32char::Return) {
 			countNbLine += 1;
 			countColomn = 0;
-			maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
+			maxSizeX = std::max(m_displayText.getPos().x(), maxSizeX);
 			// Display the end line position only if we have the focus ...
 			if (DisplayCursorAndSelection == true) {
 				if (it >= selectPosStart && it < selectPosStop) {
 					ewol::compositing::Drawing& draw = m_displayText.getDrawing();
-					draw.setColor(etk::Color<>(0xFF0000FF));
+					draw.setColor(etk::Color<>(0xFF, 0x00, 0x00, 0xFF));
 					draw.setPos(m_displayText.getPos() + tmpLetterSize/4.0f);
 					draw.rectangle(m_displayText.getPos() + tmpLetterSize*3.0f/4.0f);
 				}
@@ -242,8 +247,8 @@ void appl::TextViewer::onRegenerateDisplay() {
 		}
 		HLColor = m_buffer->getElementColorAtPosition(displayLocalSyntax, (int64_t)it);
 		bool haveBackground = false;
-		if (    HLColor != NULL
-		     && HLColor->patern != NULL) {
+		if (    HLColor != nullptr
+		     && HLColor->patern != nullptr) {
 			m_displayText.setColor(HLColor->patern->getColorGlyph().getForeground());
 			m_displayText.setColorBg(HLColor->patern->getColorGlyph().getBackground());
 			haveBackground = HLColor->patern->getColorGlyph().haveBackground();
@@ -281,7 +286,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 		tmpCursorPosition = m_displayText.getPos();
 		tmpCursorLenght = 5;
 	}
-	maxSizeX = etk_max(m_displayText.getPos().x(), maxSizeX);
+	maxSizeX = std::max(m_displayText.getPos().x(), maxSizeX);
 	// Display cursor only if we have the focus ...
 	if (    tmpCursorPosition.z() != -1
 	     && getFocus() == true) {
@@ -313,7 +318,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 }
 
 bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return false;
 	}
 	// First call plugin
@@ -429,7 +434,7 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 		keepFocus();
 	}
 	//tic();
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return false;
 	}
 	// First call the scrolling widget :
@@ -613,7 +618,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 }
 
 void appl::TextViewer::onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID) {
-	if (m_buffer != NULL) {
+	if (m_buffer != nullptr) {
 		std::string data = ewol::context::clipBoard::get(_clipboardID);
 		write(data);
 	}
@@ -642,27 +647,27 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 		return;
 	}
 	if (_msg.getMessage() == appl::MsgSelectGotoLineSelect) {
-		if (m_buffer == NULL) {
+		if (m_buffer == nullptr) {
 			return;
 		}
-		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), std::stoi(_msg.getData()));
+		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), etk::string_to_int32_t(_msg.getData()));
 		select(it, m_buffer->getEndLine(it));
 		markToRedraw();
 		return;
 	}
 	if (_msg.getMessage() == appl::MsgSelectGotoLine) {
-		if (m_buffer == NULL) {
+		if (m_buffer == nullptr) {
 			return;
 		}
-		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), std::stoi(_msg.getData()));
+		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), etk::string_to_int32_t(_msg.getData()));
 		moveCursor(it);
 		markToRedraw();
 		return;
 	}
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
 		// reset scroll:
-		if (m_buffer != NULL) {
-			m_buffer->unRegisterOnEvent(this);
+		if (m_buffer != nullptr) {
+			m_buffer->unRegisterOnEvent(shared_from_this());
 			bool needAdd = true;
 			for (size_t iii=0; iii<m_drawingRemenber.size(); ++iii) {
 				if (m_drawingRemenber[iii].first == m_buffer) {
@@ -678,12 +683,12 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 			}
 		}
 		m_originScrooled = vec2(0,0);
-		if (m_bufferManager != NULL) {
+		if (m_bufferManager != nullptr) {
 			m_buffer = m_bufferManager->get(_msg.getData());
 			m_bufferManager->setBufferSelected(m_buffer);
-			if (m_buffer != NULL) {
-				m_buffer->registerOnEvent(this, appl::Buffer::eventIsModify);
-				m_buffer->registerOnEvent(this, appl::Buffer::eventSelectChange);
+			if (m_buffer != nullptr) {
+				m_buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventIsModify);
+				m_buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventSelectChange);
 				for (auto element : m_drawingRemenber) {
 					if (element.first == m_buffer) {
 						m_originScrooled = element.second;
@@ -696,14 +701,6 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 		}
 		markToRedraw();
 		return;
-	}
-}
-
-void appl::TextViewer::onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject) {
-	ewol::widget::WidgetScrolled::onObjectRemove(_removeObject);
-	if (m_buffer == _removeObject) {
-		m_buffer = NULL;
-		markToRedraw();
 	}
 }
 
@@ -731,7 +728,7 @@ void appl::TextViewer::setFontName(const std::string& _fontName) {
 
 // TODO : Update process time ==> a little expensive (2->4ms) in end of file
 void appl::TextViewer::updateScrolling() {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return;
 	}
 	vec2 realCursorPosition(0,0);
@@ -760,7 +757,7 @@ void appl::TextViewer::updateScrolling() {
 }
 
 bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return false;
 	}
 	markToRedraw();
@@ -774,7 +771,7 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 }
 
 bool appl::TextViewer::write(const std::string& _data) {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return false;
 	}
 	if (m_buffer->hasTextSelected() == true) {
@@ -784,7 +781,7 @@ bool appl::TextViewer::write(const std::string& _data) {
 }
 
 bool appl::TextViewer::write(const std::string& _data, const appl::Buffer::Iterator& _pos) {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return false;
 	}
 	markToRedraw();
@@ -800,7 +797,7 @@ bool appl::TextViewer::write(const std::string& _data, const appl::Buffer::Itera
 }
 
 bool appl::TextViewer::replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return false;
 	}
 	markToRedraw();
@@ -816,7 +813,7 @@ bool appl::TextViewer::replace(const std::string& _data, const appl::Buffer::Ite
 }
 
 bool appl::TextViewer::replace(const std::string& _data) {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return false;
 	}
 	if (m_buffer->hasTextSelected() == false) {
@@ -826,7 +823,7 @@ bool appl::TextViewer::replace(const std::string& _data) {
 }
 
 void appl::TextViewer::remove() {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return;
 	}
 	if (m_buffer->hasTextSelected() == false) {
@@ -844,7 +841,7 @@ void appl::TextViewer::remove() {
 
 
 void appl::TextViewer::moveCursorRight(appl::TextViewer::moveMode _mode) {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return;
 	}
 	markToRedraw();
@@ -867,7 +864,7 @@ void appl::TextViewer::moveCursorRight(appl::TextViewer::moveMode _mode) {
 }
 
 void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return;
 	}
 	markToRedraw();
@@ -890,7 +887,7 @@ void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
 }
 
 void appl::TextViewer::moveCursorUp(uint32_t _nbLine) {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return;
 	}
 	markToRedraw();
@@ -916,7 +913,7 @@ void appl::TextViewer::moveCursorUp(uint32_t _nbLine) {
 }
 
 void appl::TextViewer::moveCursorDown(uint32_t _nbLine) {
-	if (m_buffer == NULL) {
+	if (m_buffer == nullptr) {
 		return;
 	}
 	markToRedraw();
@@ -996,14 +993,14 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 }
 
 void appl::TextViewer::setCurrentSelect() {
-	if (m_viewerManager != NULL) {
-		m_viewerManager->setViewerSelected(this, m_buffer);
+	if (m_viewerManager != nullptr) {
+		m_viewerManager->setViewerSelected(std::dynamic_pointer_cast<appl::TextViewer>(shared_from_this()), m_buffer);
 	}
 }
 
 bool appl::TextViewer::isSelectedLast() {
-	if (m_viewerManager != NULL) {
-		return m_viewerManager->isLastSelected(this);
+	if (m_viewerManager != nullptr) {
+		return m_viewerManager->isLastSelected(std::dynamic_pointer_cast<appl::TextViewer>(shared_from_this()));
 	}
 	return false;
 }

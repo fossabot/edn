@@ -17,18 +17,20 @@ namespace appl {
 	class WorkerCloseFile : public ewol::Object {
 		public:
 			static const char* eventCloseDone;
-		public:
+		protected:
 			// note : if == "" ==> current ...
-			WorkerCloseFile(const std::string& _bufferName);
+			WorkerCloseFile();
+			void init(const std::string& _bufferName);
+		public:
+			DECLARE_FACTORY(WorkerCloseFile);
 			virtual ~WorkerCloseFile();
 		private:
 			std::string m_bufferName;
-			ewol::object::Shared<appl::Buffer> m_buffer; //!< reference on the buffer (when rename, we have no more reference on the buffer
-			ewol::object::Shared<appl::WorkerSaveFile> m_worker; //! sub-worker element...
-			ewol::object::Shared<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			std::shared_ptr<appl::Buffer> m_buffer; //!< reference on the buffer (when rename, we have no more reference on the buffer
+			std::shared_ptr<appl::WorkerSaveFile> m_worker; //! sub-worker element...
+			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // derived function
 			virtual void onReceiveMessage(const ewol::object::Message& _msg);
-			virtual void onObjectRemove(const ewol::object::Shared<ewol::Object>& _removeObject);
 	};
 };
 

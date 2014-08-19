@@ -17,8 +17,11 @@
 namespace appl {
 	class TextViewerPlugin : public ewol::Object {
 		friend class appl::TextViewer;
-		public:
+		protected:
 			TextViewerPlugin();
+			void init();
+		public:
+			DECLARE_FACTORY(TextViewerPlugin);
 			virtual ~TextViewerPlugin();
 		private:
 			bool m_isEnable; //!< The plugin is enable or not (for all viewer).

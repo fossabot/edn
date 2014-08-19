@@ -17,8 +17,11 @@
 
 namespace appl {
 	class TextPluginCopy : public appl::TextViewerPlugin {
-		public:
+		protected:
 			TextPluginCopy();
+			void init();
+		public:
+			DECLARE_FACTORY(TextPluginCopy);
 			virtual ~TextPluginCopy() {
 				// nothing to do ...
 			};
