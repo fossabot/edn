@@ -28,6 +28,10 @@
 	int64_t processTimeLocal = (endTime - startTime); \
 	APPL_DEBUG(comment << (float)((float)processTimeLocal / 1000.0) << "ms");
 
+static const char* const appl_Buffer_eventIsModify = "buffer-is-modify";
+static const char* const appl_Buffer_eventSelectChange = "buffer-select-change";
+
+
 appl::TextViewer::TextViewer() :
   m_insertMode(false) {
 	addObjectType("appl::TextViewer");
@@ -634,11 +638,11 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 		return;
 	}
 	// event needed even if selection of buffer is not done ...
-	if (_msg.getMessage() == appl::Buffer::eventIsModify) {
+	if (_msg.getMessage() == appl_Buffer_eventIsModify) {
 		markToRedraw();
 		return;
 	}
-	if (_msg.getMessage() == appl::Buffer::eventSelectChange) {
+	if (_msg.getMessage() == appl_Buffer_eventSelectChange) {
 		markToRedraw();
 		return;
 	}
@@ -687,8 +691,8 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 			m_buffer = m_bufferManager->get(_msg.getData());
 			m_bufferManager->setBufferSelected(m_buffer);
 			if (m_buffer != nullptr) {
-				m_buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventIsModify);
-				m_buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventSelectChange);
+				m_buffer->registerOnEvent(shared_from_this(), "is-modify", appl_Buffer_eventIsModify);
+				m_buffer->registerOnEvent(shared_from_this(), "select-change", appl_Buffer_eventSelectChange);
 				for (auto element : m_drawingRemenber) {
 					if (element.first == m_buffer) {
 						m_originScrooled = element.second;

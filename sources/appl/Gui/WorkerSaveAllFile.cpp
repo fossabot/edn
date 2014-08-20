@@ -56,7 +56,7 @@ void appl::WorkerSaveAllFile::init() {
 		autoDestroy();
 		return;
 	}
-	m_worker->registerOnEvent(shared_from_this(), appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
+	m_worker->registerOnEvent(shared_from_this(), "save-file-done", s_saveAsDone);
 }
 
 appl::WorkerSaveAllFile::~WorkerSaveAllFile() {
@@ -81,7 +81,7 @@ void appl::WorkerSaveAllFile::onReceiveMessage(const ewol::object::Message& _msg
 			autoDestroy();
 			return;
 		}
-		m_worker->registerOnEvent(shared_from_this(), appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
+		m_worker->registerOnEvent(shared_from_this(), "save-file-done", s_saveAsDone);
 	}
 }
 

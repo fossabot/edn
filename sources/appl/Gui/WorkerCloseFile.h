@@ -16,7 +16,7 @@
 namespace appl {
 	class WorkerCloseFile : public ewol::Object {
 		public:
-			static const char* eventCloseDone;
+			ewol::object::Signal<void> signalCloseDone;
 		protected:
 			// note : if == "" ==> current ...
 			WorkerCloseFile();

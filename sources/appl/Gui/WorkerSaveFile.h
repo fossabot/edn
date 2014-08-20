@@ -15,7 +15,7 @@
 namespace appl {
 	class WorkerSaveFile : public ewol::Object {
 		public:
-			static const char* eventSaveDone;
+			ewol::object::Signal<void> signalSaveDone;
 		protected:
 			WorkerSaveFile();
 			void init(const std::string& _bufferName, bool _forceSaveAs=true);

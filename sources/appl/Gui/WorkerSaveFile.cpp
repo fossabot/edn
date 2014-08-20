@@ -13,13 +13,11 @@
 #undef __class__
 #define __class__ "WorkerSaveFile"
 
-const char* appl::WorkerSaveFile::eventSaveDone = "save-file-done";
-
 static const char* s_saveAsValidate = "save-as-validate";
 
-appl::WorkerSaveFile::WorkerSaveFile() {
+appl::WorkerSaveFile::WorkerSaveFile() :
+  signalSaveDone(*this, "save-file-done") {
 	addObjectType("appl::WorkerSaveFile");
-	addEventId(eventSaveDone);
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
 }
@@ -56,7 +54,7 @@ void appl::WorkerSaveFile::init(const std::string& _bufferName, bool _forceSaveA
 	if (_forceSaveAs == false) {
 		if (tmpBuffer->hasFileName() == true) {
 			tmpBuffer->storeFile();
-			generateEventId(eventSaveDone);
+			signalSaveDone.emit(shared_from_this());
 			autoDestroy();
 			return;
 		}
@@ -79,7 +77,7 @@ void appl::WorkerSaveFile::init(const std::string& _bufferName, bool _forceSaveA
 		return;
 	}
 	tmpWindows->popUpWidgetPush(m_chooser);
-	m_chooser->registerOnEvent(shared_from_this(), ewol::widget::FileChooser::eventValidate, s_saveAsValidate);
+	m_chooser->registerOnEvent(shared_from_this(), "validate", s_saveAsValidate);
 }
 
 appl::WorkerSaveFile::~WorkerSaveFile() {
@@ -113,7 +111,7 @@ void appl::WorkerSaveFile::onReceiveMessage(const ewol::object::Message& _msg) {
 			}
 			tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
 		} else {
-			generateEventId(eventSaveDone);
+			signalSaveDone.emit(shared_from_this());
 		}
 	}
 }

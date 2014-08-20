@@ -13,11 +13,11 @@
 #include <ewol/widget/PopUp.h>
 #include <appl/Gui/TagFileList.h>
 
-extern const char * const applEventctagsSelection;
-extern const char * const applEventctagsCancel;
-
 namespace appl {
 	class TagFileSelection : public ewol::widget::PopUp {
+		public:
+			ewol::object::Signal<std::string> signalSelect;
+			ewol::object::Signal<void> signalCancel;
 		private:
 			std::shared_ptr<appl::TagFileList> m_listTag;
 			std::string m_eventNamed;

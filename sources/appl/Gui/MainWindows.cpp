@@ -279,9 +279,11 @@ MainWindows::~MainWindows() {
 }
 
 
-const char *const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
-const char *const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
-
+static const char* const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
+static const char* const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
+static const char* const ednEventIsSave = "edn-buffer-is-saved";
+static const char* const ednEventIsModify = "edn-buffer-is-modify";
+static const char* const ednEventChangeName = "edn-buffer-change-name";
 
 void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::Windows::onReceiveMessage(_msg);
@@ -378,9 +380,9 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		return;
 	}
 	if (    _msg.getMessage() == appl::MsgSelectNewFile
-	     || _msg.getMessage() == appl::Buffer::eventIsModify
-	     || _msg.getMessage() == appl::Buffer::eventIsSave
-	     || _msg.getMessage() == appl::Buffer::eventChangeName) {
+	     || _msg.getMessage() == ednEventIsModify
+	     || _msg.getMessage() == ednEventIsSave
+	     || _msg.getMessage() == ednEventChangeName) {
 		// select a new Buffer ==> change title:
 		std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 		if (tmpp == nullptr) {
@@ -390,9 +392,9 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 			}
 		} else {
 			if (_msg.getMessage() == appl::MsgSelectNewFile) {
-				tmpp->registerOnEvent(shared_from_this(), appl::Buffer::eventIsModify);
-				tmpp->registerOnEvent(shared_from_this(), appl::Buffer::eventIsSave);
-				tmpp->registerOnEvent(shared_from_this(), appl::Buffer::eventChangeName);
+				tmpp->registerOnEvent(shared_from_this(), "is-save", ednEventIsSave);
+				tmpp->registerOnEvent(shared_from_this(), "is-modify", ednEventIsModify);
+				tmpp->registerOnEvent(shared_from_this(), "change-name", ednEventChangeName);
 			}
 			std::string nameFileSystem = etk::FSNode(tmpp->getFileName()).getFileSystemName();
 			setTitle(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);

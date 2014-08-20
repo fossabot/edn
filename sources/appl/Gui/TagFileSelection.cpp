@@ -26,14 +26,18 @@
 #define __class__ "TagFileSelection"
 
 
-extern const char * const applEventctagsSelection = "appl-event-ctags-validate";
-extern const char * const applEventctagsCancel    = "appl-event-ctags-cancel";
+static const char * const applEventctagsSelection = "appl-event-ctags-validate";
+static const char * const applEventctagsCancel    = "appl-event-ctags-cancel";
+static const char * const applEventCtagsListValidate = "appl-event-ctags-list-validate";
+static const char * const applEventCtagsListSelect = "appl-event-ctags-list-selected";
+static const char * const applEventCtagsListUnSelect = "appl-event-ctags-list-un-selected";
 
 
-appl::TagFileSelection::TagFileSelection() {
+
+appl::TagFileSelection::TagFileSelection() :
+  signalSelect(*this, "select"),
+  signalCancel(*this, "cancel") {
 	addObjectType("appl::TagFileSelection");
-	addEventId(applEventctagsSelection);
-	addEventId(applEventctagsCancel);
 }
 
 void appl::TagFileSelection::init() {
@@ -81,9 +85,9 @@ void appl::TagFileSelection::init() {
 		if (nullptr == m_listTag) {
 			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
-			m_listTag->registerOnEvent(shared_from_this(), applEventCtagsListValidate);
-			m_listTag->registerOnEvent(shared_from_this(), applEventCtagsListSelect);
-			m_listTag->registerOnEvent(shared_from_this(), applEventCtagsListUnSelect);
+			m_listTag->registerOnEvent(shared_from_this(), "validate", applEventCtagsListValidate);
+			m_listTag->registerOnEvent(shared_from_this(), "select", applEventCtagsListSelect);
+			m_listTag->registerOnEvent(shared_from_this(), "unselect", applEventCtagsListUnSelect);
 			m_listTag->setExpand(bvec2(true,true));
 			m_listTag->setFill(bvec2(true,true));
 			mySizerVert->subWidgetAdd(m_listTag);
@@ -108,21 +112,20 @@ void appl::TagFileSelection::onReceiveMessage(const ewol::object::Message& _msg)
 	EWOL_INFO("ctags LIST ... : " << _msg );
 	if (_msg.getMessage() == applEventctagsSelection) {
 		if (m_eventNamed!="") {
-			generateEventId(applEventctagsSelection, m_eventNamed);
+			signalSelect.emit(shared_from_this(), m_eventNamed);
 			// == > Auto remove ...
 			autoDestroy();
 		}
 	} else if (_msg.getMessage() == applEventCtagsListSelect) {
 		m_eventNamed = _msg.getData();
-		
 	} else if (_msg.getMessage() == applEventCtagsListUnSelect) {
 		m_eventNamed = "";
 	} else if (_msg.getMessage() == applEventCtagsListValidate) {
-		generateEventId(applEventctagsSelection, _msg.getData());
+		signalSelect.emit(shared_from_this(), _msg.getData());
 		// == > Auto remove ...
 		autoDestroy();
 	} else if (_msg.getMessage() == applEventctagsCancel) {
-		generateEventId(applEventctagsCancel, "");
+		signalCancel.emit(shared_from_this());
 		// == > Auto remove ...
 		autoDestroy();
 	}

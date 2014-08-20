@@ -98,7 +98,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 				tmpWidget->addCtagsNewItem(myfile.getFileSystemName(), lineID);
 			} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
 			ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-			tmpWidget->registerOnEvent(shared_from_this(), applEventctagsSelection, eventOpenCtagsSelectReturn);
+			tmpWidget->registerOnEvent(shared_from_this(), "select", eventOpenCtagsSelectReturn);
 		}
 	} else {
 		jumpFile(myfile.getName(), lineID - 1);

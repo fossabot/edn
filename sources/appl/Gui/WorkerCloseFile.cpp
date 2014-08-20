@@ -14,19 +14,17 @@
 #undef __class__
 #define __class__ "WorkerCloseFile"
 
-const char* appl::WorkerCloseFile::eventCloseDone = "close-file-done";
-
 static const char* s_saveAsValidate = "save-as-validate";
 static const char* s_saveValidate = "save-validate";
 static const char* s_closeValidate = "close-validate";
 static const char* s_saveAsDone = "save-as-done";
 
 appl::WorkerCloseFile::WorkerCloseFile() :
+  signalCloseDone(*this, "close-file-done"),
   m_buffer(nullptr),
   m_worker(nullptr),
   m_bufferManager(nullptr) {
 	addObjectType("appl::WorkerCloseFile");
-	addEventId(eventCloseDone);
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
 }
@@ -61,7 +59,7 @@ void appl::WorkerCloseFile::init(const std::string& _bufferName) {
 		return;
 	}
 	if (m_buffer->isModify() == false) {
-		generateEventId(eventCloseDone);
+		signalCloseDone.emit(shared_from_this());
 		m_buffer->destroy();
 		return;
 	}
@@ -112,7 +110,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 	if (_msg.getMessage() == s_saveAsValidate) {
 		m_worker = appl::WorkerSaveFile::create(m_bufferName);
 		if (m_worker != nullptr) {
-			m_worker->registerOnEvent(shared_from_this(), appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
+			m_worker->registerOnEvent(shared_from_this(), "save-file-done", s_saveAsDone);
 		}
 	} else if (_msg.getMessage() == s_saveValidate) {
 		if (m_buffer == nullptr) {
@@ -127,7 +125,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 			}
 			tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + m_buffer->getFileName() + "</i>");
 		} else {
-			generateEventId(eventCloseDone);
+			signalCloseDone.emit(shared_from_this());
 		}
 	} else if (    _msg.getMessage() == s_closeValidate
 	            || _msg.getMessage() == s_saveAsDone) {
@@ -136,7 +134,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 			autoDestroy();
 			return;
 		}
-		generateEventId(eventCloseDone);
+		signalCloseDone.emit(shared_from_this());
 		m_buffer->destroy();
 		m_buffer.reset();
 	}

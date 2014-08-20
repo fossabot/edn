@@ -54,7 +54,7 @@ void appl::WorkerCloseAllFile::init() {
 		autoDestroy();
 		return;
 	}
-	m_worker->registerOnEvent(shared_from_this(), appl::WorkerCloseFile::eventCloseDone, s_closeDone);
+	m_worker->registerOnEvent(shared_from_this(), "close-file-done", s_closeDone);
 }
 
 appl::WorkerCloseAllFile::~WorkerCloseAllFile() {
@@ -79,7 +79,7 @@ void appl::WorkerCloseAllFile::onReceiveMessage(const ewol::object::Message& _ms
 			autoDestroy();
 			return;
 		}
-		m_worker->registerOnEvent(shared_from_this(), appl::WorkerCloseFile::eventCloseDone, s_closeDone);
+		m_worker->registerOnEvent(shared_from_this(), "close-file-done", s_closeDone);
 	}
 }
 
