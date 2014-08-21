@@ -40,9 +40,9 @@ void appl::TextPluginHistory::onPluginDisable(appl::TextViewer& _textDrawer) {
 	// TODO : unknow function ...
 }
 
-bool appl::TextPluginHistory::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-                                                     const ewol::object::Message& _msg,
-                                                     appl::PluginHistoryData& _data) {
+bool appl::TextPluginHistory::onDataReceiveMessageViewer(appl::TextViewer& _textDrawer,
+                                                         const ewol::object::Message& _msg,
+                                                         appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
 	}
@@ -111,10 +111,10 @@ void appl::TextPluginHistory::clearUndo(appl::PluginHistoryData& _data) {
 }
 
 
-bool appl::TextPluginHistory::onWrite(appl::TextViewer& _textDrawer,
-                                      const appl::Buffer::Iterator& _pos,
-                                      const std::string& _strData,
-                                      appl::PluginHistoryData& _data) {
+bool appl::TextPluginHistory::onDataWrite(appl::TextViewer& _textDrawer,
+                                          const appl::Buffer::Iterator& _pos,
+                                          const std::string& _strData,
+                                          appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
 	}
@@ -134,11 +134,11 @@ bool appl::TextPluginHistory::onWrite(appl::TextViewer& _textDrawer,
 	return true;
 }
 
-bool appl::TextPluginHistory::onReplace(appl::TextViewer& _textDrawer,
-                                        const appl::Buffer::Iterator& _pos,
-                                        const std::string& _strData,
-                                        const appl::Buffer::Iterator& _posEnd,
-                                        appl::PluginHistoryData& _data) {
+bool appl::TextPluginHistory::onDataReplace(appl::TextViewer& _textDrawer,
+                                            const appl::Buffer::Iterator& _pos,
+                                            const std::string& _strData,
+                                            const appl::Buffer::Iterator& _posEnd,
+                                            appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
 	}
@@ -159,10 +159,10 @@ bool appl::TextPluginHistory::onReplace(appl::TextViewer& _textDrawer,
 	return true;
 }
 
-bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
-                                       const appl::Buffer::Iterator& _pos,
-                                       const appl::Buffer::Iterator& _posEnd,
-                                       appl::PluginHistoryData& _data) {
+bool appl::TextPluginHistory::onDataRemove(appl::TextViewer& _textDrawer,
+                                           const appl::Buffer::Iterator& _pos,
+                                           const appl::Buffer::Iterator& _posEnd,
+                                           appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
 	}

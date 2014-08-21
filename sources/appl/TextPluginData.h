@@ -61,7 +61,7 @@ namespace appl {
 				if (data == nullptr) {
 					return false;
 				}
-				return onReceiveMessageViewer(_textDrawer, _msg, *data);
+				return onDataReceiveMessageViewer(_textDrawer, _msg, *data);
 			}
 			bool onWrite(appl::TextViewer& _textDrawer,
 			             const appl::Buffer::Iterator& _pos,
@@ -70,7 +70,7 @@ namespace appl {
 				if (data == nullptr) {
 					return false;
 				}
-				return onWrite(_textDrawer, _pos, _data, *data);
+				return onDataWrite(_textDrawer, _pos, _data, *data);
 			}
 			bool onReplace(appl::TextViewer& _textDrawer,
 			               const appl::Buffer::Iterator& _pos,
@@ -80,7 +80,7 @@ namespace appl {
 				if (data == nullptr) {
 					return false;
 				}
-				return onReplace(_textDrawer, _pos, _data, _posEnd, *data);
+				return onDataReplace(_textDrawer, _pos, _data, _posEnd, *data);
 			}
 			bool onRemove(appl::TextViewer& _textDrawer,
 			              const appl::Buffer::Iterator& _pos,
@@ -89,32 +89,32 @@ namespace appl {
 				if (data == nullptr) {
 					return false;
 				}
-				return onRemove(_textDrawer, _pos, _posEnd, *data);
+				return onDataRemove(_textDrawer, _pos, _posEnd, *data);
 			}
 			
 		public:
-			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-			                                    const ewol::object::Message& _msg,
-			                                    TYPE& _data) {
+			virtual bool onDataReceiveMessageViewer(appl::TextViewer& _textDrawer,
+			                                        const ewol::object::Message& _msg,
+			                                        TYPE& _data) {
 				return false;
 			}
-			virtual bool onWrite(appl::TextViewer& _textDrawer,
-			                     const appl::Buffer::Iterator& _pos,
-			                     const std::string& _strData,
-			                     TYPE& _data) {
+			virtual bool onDataWrite(appl::TextViewer& _textDrawer,
+			                         const appl::Buffer::Iterator& _pos,
+			                         const std::string& _strData,
+			                         TYPE& _data) {
 				return false;
 			}
-			virtual bool onReplace(appl::TextViewer& _textDrawer,
-			                       const appl::Buffer::Iterator& _pos,
-			                       const std::string& _strData,
-			                       const appl::Buffer::Iterator& _posEnd,
-			                       TYPE& _data) {
+			virtual bool onDataReplace(appl::TextViewer& _textDrawer,
+			                           const appl::Buffer::Iterator& _pos,
+			                           const std::string& _strData,
+			                           const appl::Buffer::Iterator& _posEnd,
+			                           TYPE& _data) {
 				return false;
 			}
-			virtual bool onRemove(appl::TextViewer& _textDrawer,
-			                      const appl::Buffer::Iterator& _pos,
-			                      const appl::Buffer::Iterator& _posEnd,
-			                      TYPE& _data) {
+			virtual bool onDataRemove(appl::TextViewer& _textDrawer,
+			                          const appl::Buffer::Iterator& _pos,
+			                          const appl::Buffer::Iterator& _posEnd,
+			                          TYPE& _data) {
 				return false;
 			}
 			virtual void remove(TYPE& _data) {

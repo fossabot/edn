@@ -42,13 +42,13 @@ namespace appl {
 			/**
 			 * @brief On plugin global enable.
 			 */
-			virtual void onPluginEnable() {
+			virtual void onPluginGlobalEnable() {
 				// nothing to do here ...
 			};
 			/**
 			 * @brief On plugin global disable.
 			 */
-			virtual void onPluginDisable() {
+			virtual void onPluginGlobalDisable() {
 				// nothing to do here ...
 			};
 			/**

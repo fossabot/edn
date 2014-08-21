@@ -35,7 +35,7 @@ appl::TextViewerPlugin::~TextViewerPlugin() {
 		return;
 	}
 	m_isEnable = false;
-	onPluginDisable();
+	onPluginGlobalDisable();
 }
 
 void appl::TextViewerPlugin::setEnableStatus(bool _status) {
@@ -44,9 +44,9 @@ void appl::TextViewerPlugin::setEnableStatus(bool _status) {
 	}
 	m_isEnable = _status;
 	if (m_isEnable == true) {
-		onPluginEnable();
+		onPluginGlobalEnable();
 	} else {
-		onPluginDisable();
+		onPluginGlobalDisable();
 	}
 }
 
