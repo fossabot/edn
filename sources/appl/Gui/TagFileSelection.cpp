@@ -112,7 +112,7 @@ void appl::TagFileSelection::onReceiveMessage(const ewol::object::Message& _msg)
 	EWOL_INFO("ctags LIST ... : " << _msg );
 	if (_msg.getMessage() == applEventctagsSelection) {
 		if (m_eventNamed!="") {
-			signalSelect.emit(shared_from_this(), m_eventNamed);
+			signalSelect.emit(m_eventNamed);
 			// == > Auto remove ...
 			autoDestroy();
 		}
@@ -121,11 +121,11 @@ void appl::TagFileSelection::onReceiveMessage(const ewol::object::Message& _msg)
 	} else if (_msg.getMessage() == applEventCtagsListUnSelect) {
 		m_eventNamed = "";
 	} else if (_msg.getMessage() == applEventCtagsListValidate) {
-		signalSelect.emit(shared_from_this(), _msg.getData());
+		signalSelect.emit(_msg.getData());
 		// == > Auto remove ...
 		autoDestroy();
 	} else if (_msg.getMessage() == applEventctagsCancel) {
-		signalCancel.emit(shared_from_this());
+		signalCancel.emit();
 		// == > Auto remove ...
 		autoDestroy();
 	}

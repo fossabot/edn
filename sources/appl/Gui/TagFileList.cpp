@@ -93,12 +93,12 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum ewol::key::status _ty
 			    && m_selectedLine < (int64_t)m_list.size()
 			    && nullptr != m_list[m_selectedLine] ) {
 				if (previousRaw != m_selectedLine) {
-					signalSelect.emit(shared_from_this(), etk::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+					signalSelect.emit(etk::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
 				} else {
-					signalValidate.emit(shared_from_this(), etk::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+					signalValidate.emit(etk::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
 				}
 			} else {
-				signalUnSelect.emit(shared_from_this());
+				signalUnSelect.emit();
 			}
 			// need to regenerate the display of the list : 
 			markToRedraw();

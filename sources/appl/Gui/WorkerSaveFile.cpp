@@ -54,7 +54,7 @@ void appl::WorkerSaveFile::init(const std::string& _bufferName, bool _forceSaveA
 	if (_forceSaveAs == false) {
 		if (tmpBuffer->hasFileName() == true) {
 			tmpBuffer->storeFile();
-			signalSaveDone.emit(shared_from_this());
+			signalSaveDone.emit();
 			autoDestroy();
 			return;
 		}
@@ -111,7 +111,7 @@ void appl::WorkerSaveFile::onReceiveMessage(const ewol::object::Message& _msg) {
 			}
 			tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
 		} else {
-			signalSaveDone.emit(shared_from_this());
+			signalSaveDone.emit();
 		}
 	}
 }

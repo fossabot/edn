@@ -59,7 +59,7 @@ void appl::WorkerCloseFile::init(const std::string& _bufferName) {
 		return;
 	}
 	if (m_buffer->isModify() == false) {
-		signalCloseDone.emit(shared_from_this());
+		signalCloseDone.emit();
 		m_buffer->destroy();
 		return;
 	}
@@ -125,7 +125,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 			}
 			tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + m_buffer->getFileName() + "</i>");
 		} else {
-			signalCloseDone.emit(shared_from_this());
+			signalCloseDone.emit();
 		}
 	} else if (    _msg.getMessage() == s_closeValidate
 	            || _msg.getMessage() == s_saveAsDone) {
@@ -134,7 +134,7 @@ void appl::WorkerCloseFile::onReceiveMessage(const ewol::object::Message& _msg) 
 			autoDestroy();
 			return;
 		}
-		signalCloseDone.emit(shared_from_this());
+		signalCloseDone.emit();
 		m_buffer->destroy();
 		m_buffer.reset();
 	}

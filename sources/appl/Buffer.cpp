@@ -170,7 +170,7 @@ void appl::Buffer::setFileName(const std::string& _name) {
 	}
 	m_fileName = name;
 	m_hasFileName = true;
-	signalChangeName.emit(shared_from_this());
+	signalChangeName.emit();
 	setModification(true);
 }
 
@@ -189,9 +189,9 @@ void appl::Buffer::setModification(bool _status) {
 	}
 	m_isModify = _status;
 	if (m_isModify == true) {
-		signalIsModify.emit(shared_from_this());
+		signalIsModify.emit();
 	} else {
-		signalIsSave.emit(shared_from_this());
+		signalIsSave.emit();
 	}
 }
 
@@ -414,13 +414,13 @@ void appl::Buffer::moveCursor(int64_t _pos) {
 		if (m_cursorPos == m_cursorSelectPos) {
 			m_cursorSelectPos = -1;
 		}
-		signalSelectChange.emit(shared_from_this());
+		signalSelectChange.emit();
 		return;
 	}
 	// move mode
 	m_cursorPos = _pos;
 	m_cursorSelectPos = -1;
-	signalSelectChange.emit(shared_from_this());
+	signalSelectChange.emit();
 }
 
 bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
@@ -513,12 +513,12 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 
 void appl::Buffer::setSelectionPos(const appl::Buffer::Iterator& _pos) {
 	m_cursorSelectPos = _pos;
-	signalSelectChange.emit(shared_from_this());
+	signalSelectChange.emit();
 }
 
 void appl::Buffer::unSelect() {
 	m_cursorSelectPos = -1;
-	signalSelectChange.emit(shared_from_this());
+	signalSelectChange.emit();
 }
 
 static const char *ControlCodeTable[32] = {
