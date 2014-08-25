@@ -13,8 +13,6 @@
 #undef __class__
 #define __class__ "WorkerCloseAllFile"
 
-static const char* s_closeDone = "close-done";
-
 appl::WorkerCloseAllFile::WorkerCloseAllFile() {
 	addObjectType("appl::WorkerCloseAllFile");
 	// load buffer manager:
@@ -54,32 +52,30 @@ void appl::WorkerCloseAllFile::init() {
 		autoDestroy();
 		return;
 	}
-	m_worker->registerOnEvent(shared_from_this(), "close-file-done", s_closeDone);
+	m_worker->signalCloseDone.bind(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
 }
 
 appl::WorkerCloseAllFile::~WorkerCloseAllFile() {
 	
 }
 
-void appl::WorkerCloseAllFile::onReceiveMessage(const ewol::object::Message& _msg) {
+void appl::WorkerCloseAllFile::onCallbackCloseDone() {
 	if (m_bufferManager == nullptr) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
 	}
-	if (_msg.getMessage() == s_closeDone) {
-		if (m_bufferNameList.size() == 0) {
-			autoDestroy();
-			return;
-		}
-		// create the worker :
-		m_worker = appl::WorkerCloseFile::create(m_bufferNameList.front());
-		// remove first element :
-		m_bufferNameList.erase(m_bufferNameList.begin());
-		if (m_bufferNameList.size() == 0) {
-			autoDestroy();
-			return;
-		}
-		m_worker->registerOnEvent(shared_from_this(), "close-file-done", s_closeDone);
+	if (m_bufferNameList.size() == 0) {
+		autoDestroy();
+		return;
 	}
+	// create the worker :
+	m_worker = appl::WorkerCloseFile::create(m_bufferNameList.front());
+	// remove first element :
+	m_bufferNameList.erase(m_bufferNameList.begin());
+	if (m_bufferNameList.size() == 0) {
+		autoDestroy();
+		return;
+	}
+	m_worker->signalCloseDone.bind(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
 }
 

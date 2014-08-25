@@ -41,6 +41,9 @@ class MainWindows : public ewol::widget::Windows {
 		void closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer);
 	public: // Derived function
 		virtual void onReceiveMessage(const ewol::object::Message& _msg);
+	private:
+		void onCallbackPopUpFileSelected(const std::string& _value);
+		void onCallbackTitleUpdate();
 };
 
 

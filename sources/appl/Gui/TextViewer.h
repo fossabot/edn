@@ -406,6 +406,9 @@ namespace appl {
 			                             bool _broadcast=false) {
 				shortCutAdd(_descriptiveString, _generateEventId, _data, _broadcast);
 			}
+		private: // callback fundtions
+			void onCallbackIsModify();
+			void onCallbackSelectChange();
 	};
 };
 

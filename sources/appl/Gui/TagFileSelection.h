@@ -33,8 +33,12 @@ namespace appl {
 			 * @param[in] jump line id
 			 */
 			void addCtagsNewItem(std::string file, int32_t line);
-		public: // herited function
-			void onReceiveMessage(const ewol::object::Message& _msg);
+		public: // callback function
+			void onCallbackCtagsSelection();
+			void onCallbackCtagsCancel();
+			void onCallbackCtagsListValidate(const std::string& _value);
+			void onCallbackCtagsListSelect(const std::string& _value);
+			void onCallbackCtagsListUnSelect();
 	};
 };
 

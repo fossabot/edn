@@ -12,6 +12,8 @@
 #include "appl/Gui/TextViewer.h"
 #include "appl/Gui/MainWindows.h"
 #include "appl/globalMsg.h"
+#include <ewol/widget/Button.h>
+#include <ewol/widget/Entry.h>
 
 
 #undef __class__
@@ -38,23 +40,23 @@ void appl::widget::Search::init() {
 	ewol::widget::Composer::init(ewol::widget::Composer::file, "DATA:GUI-Search.xml");
 	m_viewerManager = appl::ViewerManager::create();
 	// link event
-	registerOnEventNameWidget(shared_from_this(), "SEARCH:close",         "pressed", l_eventHideBt);
-	registerOnEventNameWidget(shared_from_this(), "SEARCH:search-entry",  "modify",  l_eventSearchEntry);
-	registerOnEventNameWidget(shared_from_this(), "SEARCH:search-entry",  "enter",   l_eventSearchEntryEnter);
-	registerOnEventNameWidget(shared_from_this(), "SEARCH:search",        "pressed", l_eventSearchBt);
-	registerOnEventNameWidget(shared_from_this(), "SEARCH:replace-entry", "modify",  l_eventReplaceEntry);
-	registerOnEventNameWidget(shared_from_this(), "SEARCH:replace-entry", "enter",   l_eventReplaceEntryEnter);
-	registerOnEventNameWidget(shared_from_this(), "SEARCH:replace",       "pressed", l_eventReplaceBt);
-	registerOnEventNameWidget(shared_from_this(), "SEARCH:case",          "value",   l_eventCaseCb);
-	registerOnEventNameWidget(shared_from_this(), "SEARCH:wrap",          "value",   l_eventWrapCb);
-	registerOnEventNameWidget(shared_from_this(), "SEARCH:up-down",       "value",   l_eventForwardCb);
+	subBind(ewol::widget::Button, "SEARCH:close",         signalPressed, shared_from_this(), &appl::widget::Search::OnCallbackHide);
+	subBind(ewol::widget::Entry,  "SEARCH:search-entry",  signalModify,  shared_from_this(), &appl::widget::Search::OnCallbackSearchValue);
+	subBind(ewol::widget::Entry,  "SEARCH:search-entry",  signalEnter,   shared_from_this(), &appl::widget::Search::OnCallbackSearchEntryValidate);
+	subBind(ewol::widget::Button, "SEARCH:search",        signalPressed, shared_from_this(), &appl::widget::Search::OnCallbackSearch);
+	subBind(ewol::widget::Entry,  "SEARCH:replace-entry", signalModify,  shared_from_this(), &appl::widget::Search::OnCallbackReplaceValue);
+	subBind(ewol::widget::Entry,  "SEARCH:replace-entry", signalEnter,   shared_from_this(), &appl::widget::Search::OnCallbackReplaceEntryValidate);
+	subBind(ewol::widget::Button, "SEARCH:replace",       signalPressed, shared_from_this(), &appl::widget::Search::OnCallbackReplace);
+	subBind(ewol::widget::Button, "SEARCH:case",          signalValue,   shared_from_this(), &appl::widget::Search::OnCallbackCase);
+	subBind(ewol::widget::Button, "SEARCH:wrap",          signalValue,   shared_from_this(), &appl::widget::Search::OnCallbackWrap);
+	subBind(ewol::widget::Button, "SEARCH:up-down",       signalValue,   shared_from_this(), &appl::widget::Search::OnCallbackForward);
 	// set default properties
 	parameterSetOnWidgetNamed("SEARCH:case", "value", etk::to_string(m_caseSensitive));
 	parameterSetOnWidgetNamed("SEARCH:wrap", "value", etk::to_string(m_wrap));
 	parameterSetOnWidgetNamed("SEARCH:up-down", "value", etk::to_string(m_forward));
 	// get widget
-	m_searchEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:search-entry"));
-	m_replaceEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getWidgetNamed("SEARCH:replace-entry"));
+	m_searchEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:search-entry"));
+	m_replaceEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:replace-entry"));
 	// Display and hide event:
 	registerMultiCast(ednMsgGuiSearch);
 	// basicly hiden ...
@@ -118,30 +120,45 @@ void appl::widget::Search::replace() {
 	viewer->replace(m_replaceData);
 }
 
+void appl::widget::Search::OnCallbackHide() {
+	hide();
+}
+void appl::widget::Search::OnCallbackSearchValue(const std::string& _value) {
+	m_searchData = etk::to_u32string(_value);
+}
+void appl::widget::Search::OnCallbackSearch() {
+	find();
+}
+void appl::widget::Search::OnCallbackSearchEntryValidate(const std::string& _value) {
+	m_searchData = etk::to_u32string(_value);
+	find();
+}
+void appl::widget::Search::OnCallbackReplaceValue(const std::string& _value) {
+	m_replaceData = etk::to_u32string(_value);
+}
+void appl::widget::Search::OnCallbackReplace() {
+	replace();
+	find();
+}
+void appl::widget::Search::OnCallbackReplaceEntryValidate(const std::string& _value) {
+	m_replaceData = etk::to_u32string(_value);
+	replace();
+	find();
+}
+void appl::widget::Search::OnCallbackCase(const bool& _value) {
+	m_caseSensitive = _value;
+}
+void appl::widget::Search::OnCallbackWrap(const bool& _value) {
+	m_wrap = _value;
+}
+void appl::widget::Search::OnCallbackForward(const bool& _value) {
+	m_forward = _value;
+}
 
 void appl::widget::Search::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::Composer::onReceiveMessage(_msg);
 	APPL_INFO("Search receive message : " << _msg);
-	if ( _msg.getMessage() == l_eventSearchEntry) {
-		m_searchData = etk::to_u32string(_msg.getData());
-	} else if (    _msg.getMessage() == l_eventSearchEntryEnter
-	            || _msg.getMessage() == l_eventSearchBt) {
-		find();
-	} else if ( _msg.getMessage() == l_eventReplaceEntry) {
-		m_replaceData = etk::to_u32string(_msg.getData());
-	} else if (    _msg.getMessage() == l_eventReplaceEntryEnter
-	            || _msg.getMessage() == l_eventReplaceBt) {
-		replace();
-		find();
-	} else if ( _msg.getMessage() == l_eventCaseCb) {
-		m_caseSensitive = etk::string_to_bool(_msg.getData());
-	} else if ( _msg.getMessage() == l_eventWrapCb) {
-		m_wrap = etk::string_to_bool(_msg.getData());
-	} else if ( _msg.getMessage() == l_eventForwardCb) {
-		m_forward = etk::string_to_bool(_msg.getData());
-	} else if ( _msg.getMessage() == l_eventHideBt) {
-		hide();
-	} else if ( _msg.getMessage() == ednMsgGuiSearch) {
+	if ( _msg.getMessage() == ednMsgGuiSearch) {
 		if (true == isHide()) {
 			show();
 			if (m_searchEntry!= nullptr) {

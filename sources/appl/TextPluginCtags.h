@@ -45,8 +45,9 @@ namespace appl {
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
 			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
 			                                    const ewol::object::Message& _msg);
-			// internal message :
-			virtual void onReceiveMessage(const ewol::object::Message& _msg);
+			// callback function:
+			void onCallbackOpenCtagsOpenFileReturn(const std::string& _value);
+			void onCallbackOpenCtagsSelectReturn(const std::string& _value);
 	};
 };
 

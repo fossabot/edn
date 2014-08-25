@@ -43,8 +43,11 @@ namespace globals
 		public:
 			DECLARE_FACTORY(ParameterGlobalsGui);
 			virtual ~ParameterGlobalsGui();
-			// herited function
-			virtual void onReceiveMessage(const ewol::object::Message& _msg);
+			void onCallbackEndOfLine(const bool& _value);
+			void onCallbackIndentation(const bool& _value);
+			void onCallbackSpace(const bool& _value);
+			void onCallbackTabulation(const bool& _value);
+			void onCallbackRounded(const bool& _value);
 	};
 
 }

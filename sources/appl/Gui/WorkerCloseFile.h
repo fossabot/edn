@@ -29,8 +29,10 @@ namespace appl {
 			std::shared_ptr<appl::Buffer> m_buffer; //!< reference on the buffer (when rename, we have no more reference on the buffer
 			std::shared_ptr<appl::WorkerSaveFile> m_worker; //! sub-worker element...
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-		public: // derived function
-			virtual void onReceiveMessage(const ewol::object::Message& _msg);
+		public: // callback Functions
+			void onCallbackSaveAsValidate();
+			void onCallbackSaveValidate();
+			void onCallbackClose();
 	};
 };
 

@@ -97,7 +97,7 @@ class MainApplication : public ewol::context::Application {
 					std::string name = file.getName();
 					APPL_INFO("Load ctag file : \"" << name << "\"" );
 					ctagDetected = false;
-					_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, name);
+					//_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, name);
 				} else {
 					etk::FSNode file(tmpppp);
 					std::string name = file.getName();

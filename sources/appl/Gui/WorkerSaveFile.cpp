@@ -13,7 +13,6 @@
 #undef __class__
 #define __class__ "WorkerSaveFile"
 
-static const char* s_saveAsValidate = "save-as-validate";
 
 appl::WorkerSaveFile::WorkerSaveFile() :
   signalSaveDone(*this, "save-file-done") {
@@ -77,42 +76,40 @@ void appl::WorkerSaveFile::init(const std::string& _bufferName, bool _forceSaveA
 		return;
 	}
 	tmpWindows->popUpWidgetPush(m_chooser);
-	m_chooser->registerOnEvent(shared_from_this(), "validate", s_saveAsValidate);
+	m_chooser->signalValidate.bind(shared_from_this(), &appl::WorkerSaveFile::onCallbackSaveAsValidate);
 }
 
 appl::WorkerSaveFile::~WorkerSaveFile() {
 	
 }
 
-void appl::WorkerSaveFile::onReceiveMessage(const ewol::object::Message& _msg) {
+void appl::WorkerSaveFile::onCallbackSaveAsValidate(const std::string& _value) {
 	if (m_bufferManager == nullptr) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
 	}
-	if (_msg.getMessage() == s_saveAsValidate) {
-		if (_msg.getData() == "") {
-			APPL_ERROR(" might be an error of the File chooser system...");
+	if (_value == "") {
+		APPL_ERROR(" might be an error of the File chooser system...");
+		return;
+	}
+	if (m_bufferManager->exist(m_bufferName) == false) {
+		APPL_ERROR("Try to save an non-existant file :" << m_bufferName);
+		return;
+	}
+	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(m_bufferName);
+	if (tmpBuffer == nullptr) {
+		APPL_ERROR("Error to get the buffer : " << m_bufferName);
+		return;
+	}
+	tmpBuffer->setFileName(_value);
+	if (tmpBuffer->storeFile() == false) {
+		std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
+		if (tmpWindows == nullptr) {
 			return;
 		}
-		if (m_bufferManager->exist(m_bufferName) == false) {
-			APPL_ERROR("Try to save an non-existant file :" << m_bufferName);
-			return;
-		}
-		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(m_bufferName);
-		if (tmpBuffer == nullptr) {
-			APPL_ERROR("Error to get the buffer : " << m_bufferName);
-			return;
-		}
-		tmpBuffer->setFileName(_msg.getData());
-		if (tmpBuffer->storeFile() == false) {
-			std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
-			if (tmpWindows == nullptr) {
-				return;
-			}
-			tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
-		} else {
-			signalSaveDone.emit();
-		}
+		tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
+	} else {
+		signalSaveDone.emit();
 	}
 }
 

@@ -279,7 +279,6 @@ MainWindows::~MainWindows() {
 }
 
 
-static const char* const ednEventPopUpFileSelected = "edn-mainWindows-openSelected";
 static const char* const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
 static const char* const ednEventIsSave = "edn-buffer-is-saved";
 static const char* const ednEventIsModify = "edn-buffer-is-modify";
@@ -310,7 +309,7 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		}
 		// apply widget pop-up ...
 		popUpWidgetPush(tmpWidget);
-		tmpWidget->registerOnEvent(shared_from_this(), "validate", ednEventPopUpFileSelected);
+		tmpWidget->signalValidate.bind(shared_from_this(), &MainWindows::onCallbackPopUpFileSelected);
 	} else if (_msg.getMessage() == ednMsgProperties) {
 		// Request the parameter GUI
 		std::shared_ptr<ewol::widget::Parameter> tmpWidget = ewol::widget::Parameter::create();
@@ -379,36 +378,16 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
 	}
-	if (    _msg.getMessage() == appl::MsgSelectNewFile
-	     || _msg.getMessage() == ednEventIsModify
-	     || _msg.getMessage() == ednEventIsSave
-	     || _msg.getMessage() == ednEventChangeName) {
-		// select a new Buffer ==> change title:
+	if (_msg.getMessage() == appl::MsgSelectNewFile) {
+		onCallbackTitleUpdate();
 		std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
-		if (tmpp == nullptr) {
-			setTitle("Edn");
-			if (m_widgetLabelFileName != nullptr) {
-				m_widgetLabelFileName->setLabel("");
-			}
-		} else {
-			if (_msg.getMessage() == appl::MsgSelectNewFile) {
-				tmpp->registerOnEvent(shared_from_this(), "is-save", ednEventIsSave);
-				tmpp->registerOnEvent(shared_from_this(), "is-modify", ednEventIsModify);
-				tmpp->registerOnEvent(shared_from_this(), "change-name", ednEventChangeName);
-			}
-			std::string nameFileSystem = etk::FSNode(tmpp->getFileName()).getFileSystemName();
-			setTitle(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);
-			if (m_widgetLabelFileName != nullptr) {
-				m_widgetLabelFileName->setLabel(nameFileSystem + (tmpp->isModify()==true?" *":""));
-			}
+		if (tmpp != nullptr) {
+			tmpp->signalIsSave.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
+			tmpp->signalIsModify.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
+			tmpp->signalChangeName.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
 		}
-		
-		
 	} else if (_msg.getMessage() == ednMsgGuiNew) {
 		m_bufferManager->createNewBuffer();
-	} else if (_msg.getMessage() == ednEventPopUpFileSelected) {
-		APPL_DEBUG("Request opening the file : " << _msg.getData());
-		m_bufferManager->open(_msg.getData());
 	} else if (_msg.getMessage() == ednMsgGuiSave) {
 		APPL_DEBUG("Request saving the file : " << _msg.getData());
 		if (etk::tolower(_msg.getData()) == "current") {
@@ -475,6 +454,31 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 	return;
 }
+void MainWindows::onCallbackPopUpFileSelected(const std::string& _value) {
+	APPL_DEBUG("Request opening the file : " << _value);
+	m_bufferManager->open(_value);
+}
+
+void MainWindows::onCallbackTitleUpdate() {
+	if (m_bufferManager == nullptr) {
+		APPL_ERROR("can not call unexistant buffer manager ... ");
+		return;
+	}
+	// select a new Buffer ==> change title:
+	std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
+	if (tmpp == nullptr) {
+		setTitle("Edn");
+		if (m_widgetLabelFileName != nullptr) {
+			m_widgetLabelFileName->setLabel("");
+		}
+	} else {
+		std::string nameFileSystem = etk::FSNode(tmpp->getFileName()).getFileSystemName();
+		setTitle(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);
+		if (m_widgetLabelFileName != nullptr) {
+			m_widgetLabelFileName->setLabel(nameFileSystem + (tmpp->isModify()==true?" *":""));
+		}
+	}
+}
 
 void MainWindows::saveAsPopUp(const std::shared_ptr<appl::Buffer>& _buffer) {
 	if (_buffer == nullptr) {
@@ -496,24 +500,24 @@ void MainWindows::closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer
 	}
 	tmpPopUp->setTitle("<bold>Close un-saved file:</bold>");
 	tmpPopUp->setComment("The file named : <i>\"" + _buffer->getFileName() + "\"</i> is curently modify.   <br/>If you don't saves these modifications,<br/>they will be definitly lost...");
-	std::shared_ptr<ewol::Widget> bt = nullptr;
+	std::shared_ptr<ewol::widget::Button> bt = nullptr;
 	if (_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("Save", true);
 		if (bt != nullptr) {
 			// TODO : The element is removed before beeing pressed
-			bt->registerOnEvent(shared_from_this(), "pressed", mainWindowsRequestSaveFile, _buffer->getFileName());
-			bt->registerOnEvent(shared_from_this(), "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+			// TODO : bt->signalPressed.bind(shared_from_this(), mainWindowsRequestSaveFile, _buffer->getFileName());
+			// TODO : bt->signalPressed.bind(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		}
 	}
 	bt = tmpPopUp->addButton("Save As", true);
 	if (bt != nullptr) {
-		bt->registerOnEvent(shared_from_this(), "pressed", mainWindowsRequestSaveFileAs, _buffer->getFileName());
-		//bt->registerOnEvent(this, "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		// TODO : bt->signalPressed.bind(shared_from_this(), mainWindowsRequestSaveFileAs, _buffer->getFileName());
+		//bt->signalPressed.bind(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		// TODO : Request the close when saved ...
 	}
 	bt = tmpPopUp->addButton("Close", true);
 	if (bt != nullptr) {
-		bt->registerOnEvent(shared_from_this(), "pressed", mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		// TODO : bt->signalPressed.bind(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 	}
 	tmpPopUp->addButton("Cancel", true);
 	tmpPopUp->setRemoveOnExternClick(true);

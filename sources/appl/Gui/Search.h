@@ -44,6 +44,17 @@ namespace appl {
 				void replace();
 			public: // derived function
 				virtual void onReceiveMessage(const ewol::object::Message& _msg);
+			private: // callback functions
+				void OnCallbackHide();
+				void OnCallbackSearchValue(const std::string& _value);
+				void OnCallbackSearch();
+				void OnCallbackSearchEntryValidate(const std::string& _value);
+				void OnCallbackReplaceValue(const std::string& _value);
+				void OnCallbackReplace();
+				void OnCallbackReplaceEntryValidate(const std::string& _value);
+				void OnCallbackCase(const bool& _value);
+				void OnCallbackWrap(const bool& _value);
+				void OnCallbackForward(const bool& _value);
 		};
 	};
 };

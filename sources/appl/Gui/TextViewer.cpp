@@ -637,15 +637,6 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 		markToRedraw();
 		return;
 	}
-	// event needed even if selection of buffer is not done ...
-	if (_msg.getMessage() == appl_Buffer_eventIsModify) {
-		markToRedraw();
-		return;
-	}
-	if (_msg.getMessage() == appl_Buffer_eventSelectChange) {
-		markToRedraw();
-		return;
-	}
 	// If not the last buffer selected, then no event parsing ...
 	if (isSelectedLast() == false) {
 		return;
@@ -671,7 +662,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 	if (_msg.getMessage() == appl::MsgSelectNewFile) {
 		// reset scroll:
 		if (m_buffer != nullptr) {
-			m_buffer->unRegisterOnEvent(shared_from_this());
+			m_buffer->unBindAll(shared_from_this());
 			bool needAdd = true;
 			for (size_t iii=0; iii<m_drawingRemenber.size(); ++iii) {
 				if (m_drawingRemenber[iii].first == m_buffer) {
@@ -691,8 +682,8 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 			m_buffer = m_bufferManager->get(_msg.getData());
 			m_bufferManager->setBufferSelected(m_buffer);
 			if (m_buffer != nullptr) {
-				m_buffer->registerOnEvent(shared_from_this(), "is-modify", appl_Buffer_eventIsModify);
-				m_buffer->registerOnEvent(shared_from_this(), "select-change", appl_Buffer_eventSelectChange);
+				m_buffer->signalIsModify.bind(shared_from_this(), &appl::TextViewer::onCallbackIsModify);
+				m_buffer->signalSelectChange.bind(shared_from_this(), &appl::TextViewer::onCallbackSelectChange);
 				for (auto element : m_drawingRemenber) {
 					if (element.first == m_buffer) {
 						m_originScrooled = element.second;
@@ -707,6 +698,14 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 		return;
 	}
 }
+
+void appl::TextViewer::onCallbackIsModify() {
+	markToRedraw();
+}
+void appl::TextViewer::onCallbackSelectChange() {
+	markToRedraw();
+}
+
 
 void appl::TextViewer::onGetFocus() {
 	showKeyboard();

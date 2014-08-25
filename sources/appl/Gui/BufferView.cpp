@@ -104,10 +104,6 @@ void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _sel
 		}
 	}
 }
-static const char* const ednEventIsSave = "edn-buffer-is-saved";
-static const char* const ednEventIsModify = "edn-buffer-is-modify";
-static const char* const ednEventChangeName = "edn-buffer-change-name";
-
 void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	APPL_VERBOSE("message : " << _msg);
 	ewol::widget::List::onReceiveMessage(_msg);
@@ -117,9 +113,9 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 			APPL_ERROR("event on element nor exist : " << _msg.getData());
 			return;
 		}
-		buffer->registerOnEvent(shared_from_this(), "is-save", ednEventIsSave);
-		buffer->registerOnEvent(shared_from_this(), "is-modify", ednEventIsModify);
-		buffer->registerOnEvent(shared_from_this(), "change-name", ednEventChangeName);
+		buffer->signalIsSave.bind(shared_from_this(), &BufferView::onCallbackIsSave);
+		buffer->signalIsModify.bind(shared_from_this(), &BufferView::onCallbackIsModify);
+		buffer->signalChangeName.bind(shared_from_this(), &BufferView::onCallbackChangeName);
 		appl::dataBufferStruct* tmp = new appl::dataBufferStruct(_msg.getData(), buffer);
 		if (tmp == nullptr) {
 			APPL_ERROR("Allocation error of the tmp buffer list element");
@@ -130,34 +126,6 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 		} else {
 			insertAlphabetic(tmp);
 		}
-		markToRedraw();
-		return;
-	}
-	if (_msg.getMessage() == ednEventChangeName) {
-		for (size_t iii = 0; iii < m_list.size(); ++iii) {
-			if (m_list[iii] == nullptr) {
-				continue;
-			}
-			if (m_list[iii]->m_bufferName != m_list[iii]->m_buffer->getFileName()) {
-				m_list[iii]->m_bufferName = m_list[iii]->m_buffer->getFileName();
-				if (m_openOrderMode == false) {
-					// re-order the fine in the correct position
-					appl::dataBufferStruct* tmp = m_list[iii];
-					m_list[iii] = nullptr;
-					m_list.erase(m_list.begin() + iii);
-					insertAlphabetic(tmp, ((int64_t)iii == m_selectedID));
-					break;
-				}
-			}
-		}
-		markToRedraw();
-		return;
-	}
-	if (_msg.getMessage() == ednEventIsSave) {
-		markToRedraw();
-		return;
-	}
-	if (_msg.getMessage() == ednEventIsModify) {
 		markToRedraw();
 		return;
 	}
@@ -222,6 +190,31 @@ void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
 	}
 }
 
+void BufferView::onCallbackChangeName() {
+	for (size_t iii = 0; iii < m_list.size(); ++iii) {
+		if (m_list[iii] == nullptr) {
+			continue;
+		}
+		if (m_list[iii]->m_bufferName != m_list[iii]->m_buffer->getFileName()) {
+			m_list[iii]->m_bufferName = m_list[iii]->m_buffer->getFileName();
+			if (m_openOrderMode == false) {
+				// re-order the fine in the correct position
+				appl::dataBufferStruct* tmp = m_list[iii];
+				m_list[iii] = nullptr;
+				m_list.erase(m_list.begin() + iii);
+				insertAlphabetic(tmp, ((int64_t)iii == m_selectedID));
+				break;
+			}
+		}
+	}
+	markToRedraw();
+}
+void BufferView::onCallbackIsSave() {
+	markToRedraw();
+}
+void BufferView::onCallbackIsModify() {
+	markToRedraw();
+}
 
 etk::Color<> BufferView::getBasicBG() {
 	return (*m_paintingProperties)[m_colorBackground1].getForeground();

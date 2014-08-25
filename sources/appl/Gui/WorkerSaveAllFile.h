@@ -24,8 +24,8 @@ namespace appl {
 			std::vector<std::string> m_bufferNameList;
 			std::shared_ptr<appl::WorkerSaveFile> m_worker; //! pop-up element that is open...
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-		public: // derived function
-			virtual void onReceiveMessage(const ewol::object::Message& _msg);
+		public: // callback function
+			void onCallbackSaveAsDone();
 	};
 };
 

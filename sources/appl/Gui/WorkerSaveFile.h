@@ -26,8 +26,8 @@ namespace appl {
 			std::string m_bufferName;
 			std::shared_ptr<ewol::widget::FileChooser> m_chooser; //! pop-up element that is open...
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-		public: // derived function
-			virtual void onReceiveMessage(const ewol::object::Message& _msg);
+		public: // callback function
+			void onCallbackSaveAsValidate(const std::string& _value);
 	};
 };
 
