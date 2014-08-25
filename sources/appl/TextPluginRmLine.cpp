@@ -26,8 +26,10 @@ void appl::TextPluginRmLine::init() {
 
 void appl::TextPluginRmLine::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
+	/*
 	_textDrawer.ext_registerMultiCast(ednMsgGuiRm);
 	_textDrawer.ext_shortCutAdd("ctrl+w", ednMsgGuiRm);
+	*/
 }
 
 void appl::TextPluginRmLine::onPluginDisable(appl::TextViewer& _textDrawer) {
@@ -39,6 +41,7 @@ bool appl::TextPluginRmLine::onReceiveMessageViewer(appl::TextViewer& _textDrawe
 	if (isEnable() == false) {
 		return false;
 	}
+	/*
 	if (_msg.getMessage() == ednMsgGuiRm) {
 		if (_textDrawer.hasBuffer() == false) {
 			return false;
@@ -54,5 +57,6 @@ bool appl::TextPluginRmLine::onReceiveMessageViewer(appl::TextViewer& _textDrawe
 		}
 		return true;
 	}
+	*/
 	return false;
 }

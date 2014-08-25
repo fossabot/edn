@@ -62,17 +62,60 @@ void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 	// last created has focus ...
 	setCurrentSelect();
 	
+	/*
 	registerMultiCast(ednMsgBufferId);
 	registerMultiCast(ednMsgGuiFind);
 	registerMultiCast(ednMsgGuiReplace);
 	registerMultiCast(appl::MsgSelectGotoLine);
-	registerMultiCast(appl::MsgSelectNewFile);
 	registerMultiCast(appl::MsgSelectGotoLineSelect);
+	*/
+	if (m_bufferManager != nullptr) {
+		m_bufferManager->signalSelectFile.bind(shared_from_this(), &appl::TextViewer::onCallbackselectNewFile);
+	}
 }
 
 
 appl::TextViewer::~TextViewer() {
 	appl::textPluginManager::disconnect(*this);
+}
+
+void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
+	// reset scroll:
+	if (m_buffer != nullptr) {
+		m_buffer->unBindAll(shared_from_this());
+		bool needAdd = true;
+		for (size_t iii=0; iii<m_drawingRemenber.size(); ++iii) {
+			if (m_drawingRemenber[iii].first == m_buffer) {
+				m_drawingRemenber[iii].second = m_originScrooled;
+				APPL_VERBOSE("store origin : " << m_originScrooled);
+				needAdd = false;
+				break;
+			}
+		}
+		if (needAdd == true) {
+			m_drawingRemenber.push_back(std::make_pair(m_buffer, m_originScrooled));
+			APPL_VERBOSE("Push origin : " << m_originScrooled);
+		}
+	}
+	m_originScrooled = vec2(0,0);
+	if (m_bufferManager != nullptr) {
+		m_buffer = m_bufferManager->get(_value);
+		m_bufferManager->setBufferSelected(m_buffer);
+		if (m_buffer != nullptr) {
+			m_buffer->signalIsModify.bind(shared_from_this(), &appl::TextViewer::onCallbackIsModify);
+			m_buffer->signalSelectChange.bind(shared_from_this(), &appl::TextViewer::onCallbackSelectChange);
+			for (auto element : m_drawingRemenber) {
+				if (element.first == m_buffer) {
+					m_originScrooled = element.second;
+					APPL_VERBOSE("retrive origin : " << m_originScrooled);
+					// TODO : Check if this element is not out of the display text ...
+					break;
+				}
+			}
+		}
+	}
+	markToRedraw();
+	return;
 }
 
 std::string appl::TextViewer::getBufferPath() {
@@ -465,9 +508,9 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 	}
 	if (    _event.getId() == 12
 	     && _event.getStatus() == ewol::key::statusSingle) {
-		APPL_DEBUG("kjhkjhkjh");
+		APPL_TODO("RAT5 SAVE button ==> TODO implement");
 		// Rat5 save event
-		sendMultiCast(ednMsgGuiSave, "current");
+		//sendMultiCast(ednMsgGuiSave, "current");
 		return true;
 	}
 	// just forward event  == > manage directly in the buffer
@@ -633,6 +676,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 	ewol::widget::WidgetScrolled::onReceiveMessage(_msg);
 	APPL_VERBOSE("receive msg: " << _msg);
 	// First call plugin
+	/*
 	if (appl::textPluginManager::onReceiveMessageViewer(*this, _msg) == true) {
 		markToRedraw();
 		return;
@@ -659,44 +703,7 @@ void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
 		markToRedraw();
 		return;
 	}
-	if (_msg.getMessage() == appl::MsgSelectNewFile) {
-		// reset scroll:
-		if (m_buffer != nullptr) {
-			m_buffer->unBindAll(shared_from_this());
-			bool needAdd = true;
-			for (size_t iii=0; iii<m_drawingRemenber.size(); ++iii) {
-				if (m_drawingRemenber[iii].first == m_buffer) {
-					m_drawingRemenber[iii].second = m_originScrooled;
-					APPL_VERBOSE("store origin : " << m_originScrooled);
-					needAdd = false;
-					break;
-				}
-			}
-			if (needAdd == true) {
-				m_drawingRemenber.push_back(std::make_pair(m_buffer, m_originScrooled));
-				APPL_VERBOSE("Push origin : " << m_originScrooled);
-			}
-		}
-		m_originScrooled = vec2(0,0);
-		if (m_bufferManager != nullptr) {
-			m_buffer = m_bufferManager->get(_msg.getData());
-			m_bufferManager->setBufferSelected(m_buffer);
-			if (m_buffer != nullptr) {
-				m_buffer->signalIsModify.bind(shared_from_this(), &appl::TextViewer::onCallbackIsModify);
-				m_buffer->signalSelectChange.bind(shared_from_this(), &appl::TextViewer::onCallbackSelectChange);
-				for (auto element : m_drawingRemenber) {
-					if (element.first == m_buffer) {
-						m_originScrooled = element.second;
-						APPL_VERBOSE("retrive origin : " << m_originScrooled);
-						// TODO : Check if this element is not out of the display text ...
-						break;
-					}
-				}
-			}
-		}
-		markToRedraw();
-		return;
-	}
+	*/
 }
 
 void appl::TextViewer::onCallbackIsModify() {

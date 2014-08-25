@@ -42,8 +42,9 @@ namespace appl {
 				 * @brief Replace the current selected text.
 				 */
 				void replace();
-			public: // derived function
-				virtual void onReceiveMessage(const ewol::object::Message& _msg);
+			public:
+				void selectSearch();
+				void selectReplace();
 			private: // callback functions
 				void OnCallbackHide();
 				void OnCallbackSearchValue(const std::string& _value);

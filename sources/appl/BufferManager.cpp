@@ -18,7 +18,10 @@
 #undef __class__
 #define __class__ "BufferManager"
 
-appl::BufferManager::BufferManager() {
+appl::BufferManager::BufferManager() :
+  signalNewBuffer(*this, "new-buffer"),
+  signalSelectFile(*this, "select-buffer"),
+  signalTextSelectionChange(*this, "text-selection-change") {
 	addObjectType("appl::BufferManager");
 }
 
@@ -38,12 +41,17 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::createNewBuffer() {
 		return nullptr;
 	}
 	m_list.push_back(tmp);
-	sendMultiCast(appl::MsgSelectNewFile, tmp->getFileName());
+	APPL_INFO("Create a new Buffer");
+	signalNewBuffer.emit(tmp->getFileName());
+	APPL_INFO("Create a new Buffer (done)");
+	APPL_INFO("select Buffer");
+	signalSelectFile.emit(tmp->getFileName());
+	APPL_INFO("select Buffer (done)");
 	return tmp;
 }
 
 std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
-	APPL_INFO("get(" << _fileName << "," << _createIfNeeded << ")");
+	APPL_INFO("get('" << _fileName << "'," << _createIfNeeded << ")");
 	for (auto &it : m_list) {
 		if (it == nullptr) {
 			continue;
@@ -65,13 +73,23 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileN
 		}
 		tmp->loadFile(_fileName);
 		m_list.push_back(tmp);
+		APPL_INFO("Creata a open Buffer");
+		signalNewBuffer.emit(tmp->getFileName());
+		APPL_INFO("Creata a open Buffer (done)");
 		return tmp;
 	}
 	return nullptr;
 }
+
 void appl::BufferManager::setBufferSelected(std::shared_ptr<appl::Buffer> _bufferSelected) {
 	m_bufferSelected = _bufferSelected;
-	sendMultiCast(appl::MsgSelectChange, "");
+	if (m_bufferSelected == nullptr) {
+		APPL_ERROR("select a NULL buffer ...");
+		return;
+	}
+	APPL_INFO("Set buffer selected");
+	//signalSelectFile.emit(m_bufferSelected->getName());
+	APPL_INFO("Set buffer selected (done)");
 }
 
 std::shared_ptr<appl::Buffer> appl::BufferManager::get(int32_t _id) {
@@ -99,15 +117,14 @@ bool appl::BufferManager::exist(const std::string& _fileName) {
 
 void appl::BufferManager::open(const std::string& _fileName) {
 	if (exist(_fileName) == true) {
+		// TODO : Create a pop-up ...
 		return;
 	}
 	if (get(_fileName, true) == nullptr) {
 		return;
 	}
-	sendMultiCast(appl::MsgSelectNewFile, _fileName);
-}
-
-void appl::BufferManager::onReceiveMessage(const ewol::object::Message& _msg) {
-	APPL_DEBUG("receive message !!! " << _msg);
+	APPL_INFO("Open buffer:" << _fileName);
+	signalSelectFile.emit(_fileName);
+	APPL_INFO("Open buffer (done)");
 }
 

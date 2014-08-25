@@ -41,6 +41,6 @@ void appl::ViewerManager::setViewerSelected(const std::shared_ptr<appl::TextView
 	}
 	m_viewer = _viewer;
 	if (m_bufferManager != nullptr) {
-		m_bufferManager->setBufferSelected(_buffer);
+		//m_bufferManager->setBufferSelected(_buffer);
 	}
 }

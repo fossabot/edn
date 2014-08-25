@@ -26,12 +26,14 @@ void appl::TextPluginCopy::init() {
 
 void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
+	/*
 	_textDrawer.ext_registerMultiCast(ednMsgGuiCopy);
 	_textDrawer.ext_registerMultiCast(ednMsgGuiPaste);
 	_textDrawer.ext_registerMultiCast(ednMsgGuiCut);
 	_textDrawer.ext_shortCutAdd("ctrl+x", ednMsgGuiCut,   "STD");
 	_textDrawer.ext_shortCutAdd("ctrl+c", ednMsgGuiCopy,  "STD");
 	_textDrawer.ext_shortCutAdd("ctrl+v", ednMsgGuiPaste, "STD");
+	*/
 }
 
 void appl::TextPluginCopy::onPluginDisable(appl::TextViewer& _textDrawer) {
@@ -43,6 +45,7 @@ bool appl::TextPluginCopy::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
 	if (isEnable() == false) {
 		return false;
 	}
+	/*
 	if (    _msg.getMessage() == ednMsgGuiCopy
 	     || _msg.getMessage() == ednMsgGuiCut) {
 		if (_textDrawer.hasBuffer() == true) {
@@ -62,5 +65,6 @@ bool appl::TextPluginCopy::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
 		}
 		return true;
 	}
+	*/
 	return false;
 }

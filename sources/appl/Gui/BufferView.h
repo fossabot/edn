@@ -55,8 +55,6 @@ class BufferView : public ewol::widget::List {
 	public:
 		DECLARE_FACTORY(BufferView);
 		virtual ~BufferView();
-		// Derived function
-		virtual void onReceiveMessage(const ewol::object::Message& _msg);
 	private:
 		bool m_openOrderMode; //!< true if the order is the opening order mode, otherwise, Alphabetic order
 	protected:
@@ -73,6 +71,8 @@ class BufferView : public ewol::widget::List {
 		void onCallbackChangeName();
 		void onCallbackIsSave();
 		void onCallbackIsModify();
+		void onCallbackNewBuffer(const std::string& _value);
+		void onCallbackselectNewFile(const std::string& _value);
 };
 
 

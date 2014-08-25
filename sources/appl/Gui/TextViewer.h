@@ -392,7 +392,7 @@ namespace appl {
 			 * @param[in] _messageId Event Id waiting for...
 			 */
 			void ext_registerMultiCast(const char* const _messageId) {
-				registerMultiCast(_messageId);
+				//registerMultiCast(_messageId);
 			}
 			/**
 			 * @brief add a specific shortcut with his description
@@ -404,11 +404,12 @@ namespace appl {
 			                             const char * _generateEventId,
 			                             std::string _data="",
 			                             bool _broadcast=false) {
-				shortCutAdd(_descriptiveString, _generateEventId, _data, _broadcast);
+				//shortCutAdd(_descriptiveString, _generateEventId, _data, _broadcast);
 			}
 		private: // callback fundtions
 			void onCallbackIsModify();
 			void onCallbackSelectChange();
+			void onCallbackselectNewFile(const std::string& _value);
 	};
 };
 

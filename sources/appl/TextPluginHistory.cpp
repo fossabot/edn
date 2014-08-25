@@ -30,10 +30,12 @@ void appl::TextPluginHistory::init() {
 
 void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
+	/*
 	_textDrawer.ext_registerMultiCast(ednMsgGuiRedo);
 	_textDrawer.ext_registerMultiCast(ednMsgGuiUndo);
 	_textDrawer.ext_shortCutAdd("ctrl+z", ednMsgGuiUndo);
 	_textDrawer.ext_shortCutAdd("ctrl+shift+z", ednMsgGuiRedo);
+	*/
 }
 
 void appl::TextPluginHistory::onPluginDisable(appl::TextViewer& _textDrawer) {
@@ -46,6 +48,7 @@ bool appl::TextPluginHistory::onDataReceiveMessageViewer(appl::TextViewer& _text
 	if (isEnable() == false) {
 		return false;
 	}
+	/*
 	if (_msg.getMessage() == ednMsgGuiRedo) {
 		if (_data.m_redo.size() == 0) {
 			return true;
@@ -79,6 +82,7 @@ bool appl::TextPluginHistory::onDataReceiveMessageViewer(appl::TextViewer& _text
 		
 		return true;
 	}
+	*/
 	return false;
 }
 

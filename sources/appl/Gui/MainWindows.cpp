@@ -172,8 +172,8 @@ void MainWindows::init() {
 				mySizerVert2->subWidgetAdd(myTextView);
 				*/
 				// search area : 
-				std::shared_ptr<appl::widget::Search> mySearch = appl::widget::Search::create();
-				mySizerVert2->subWidgetAdd(mySearch);
+				m_widgetSearch = appl::widget::Search::create();
+				mySizerVert2->subWidgetAdd(m_widgetSearch);
 			
 		mySizerHori = ewol::widget::Sizer::create(ewol::widget::Sizer::modeHori);
 		mySizerHori->setName("plop 555555");
@@ -182,95 +182,70 @@ void MainWindows::init() {
 			myMenu = ewol::widget::Menu::create();
 			mySizerHori->subWidgetAdd(myMenu);
 			int32_t idMenuFile = myMenu->addTitle("File");
-				myMenu->add(idMenuFile, "New",          "", ednMsgGuiNew);
+				myMenu->add(idMenuFile, "New",          "", "menu:new");
 				myMenu->addSpacer();
-				myMenu->add(idMenuFile, "Open",         "THEME:GUI:Load.edf", ednMsgGuiOpen);
-				myMenu->add(idMenuFile, "Close",        "THEME:GUI:Close.edf", ednMsgGuiClose, "current");
-				myMenu->add(idMenuFile, "Close (all)",  "", ednMsgGuiClose, "All");
-				myMenu->add(idMenuFile, "Save",         "THEME:GUI:Save.edf", ednMsgGuiSave, "current");
-				myMenu->add(idMenuFile, "Save As ...",  "", ednMsgGuiSaveAs);
+				myMenu->add(idMenuFile, "Open",         "THEME:GUI:Load.edf", "menu:open");
+				myMenu->add(idMenuFile, "Close",        "THEME:GUI:Close.edf", "menu:close");
+				myMenu->add(idMenuFile, "Close (all)",  "", "menu:close-all");
+				myMenu->add(idMenuFile, "Save",         "THEME:GUI:Save.edf", "menu:save");
+				myMenu->add(idMenuFile, "Save As ...",  "", "menu:save-as");
 				myMenu->addSpacer();
 				//myMenu->add(idMenuFile, "Exit", "", ednMsgGuiExit);
 				myMenu->addSpacer();
-				myMenu->add(idMenuFile, "Properties",   "THEME:GUI:Parameter.edf", ednMsgProperties);
+				myMenu->add(idMenuFile, "Properties",   "THEME:GUI:Parameter.edf", "menu:property");
 			int32_t idMenuEdit = myMenu->addTitle("Edit");
-				myMenu->add(idMenuEdit, "Undo",         "THEME:GUI:Undo.edf", ednMsgGuiUndo);
-				myMenu->add(idMenuEdit, "Redo",         "THEME:GUI:Redo.edf", ednMsgGuiRedo);
+				myMenu->add(idMenuEdit, "Undo",         "THEME:GUI:Undo.edf", "menu:undo");
+				myMenu->add(idMenuEdit, "Redo",         "THEME:GUI:Redo.edf", "menu:redo");
 				myMenu->addSpacer();
-				myMenu->add(idMenuEdit, "Copy",         "", ednMsgGuiCopy, "STD");
-				myMenu->add(idMenuEdit, "Cut",          "", ednMsgGuiCut, "STD");
-				myMenu->add(idMenuEdit, "Paste",        "", ednMsgGuiPaste, "STD");
-				myMenu->add(idMenuEdit, "Remove",       "", ednMsgGuiRm);
+				myMenu->add(idMenuEdit, "Copy",         "", "menu:copy");
+				myMenu->add(idMenuEdit, "Cut",          "", "menu:cut");
+				myMenu->add(idMenuEdit, "Paste",        "", "menu:past");
+				myMenu->add(idMenuEdit, "Remove",       "", "menu:remove");
 				myMenu->addSpacer();
-				myMenu->add(idMenuEdit, "Select All","", ednMsgGuiSelect, "ALL");
-				myMenu->add(idMenuEdit, "Un-Select","", ednMsgGuiSelect, "NONE");
-				myMenu->add(idMenuEdit, "Goto line ...","", ednMsgGuiGotoLine, "???");
+				myMenu->add(idMenuEdit, "Select All","", "menu:select-all");
+				myMenu->add(idMenuEdit, "Un-Select","", "menu:select-none");
+				myMenu->add(idMenuEdit, "Goto line ...","", "menu:goto-line");
 			int32_t idMenuSearch = myMenu->addTitle("Search");
-				myMenu->add(idMenuSearch, "Search",         "THEME:GUI:Search.edf", ednMsgGuiSearch);
-				myMenu->add(idMenuSearch, "Replace",        "THEME:GUI:Replace.edf", ednMsgGuiReplace);
+				myMenu->add(idMenuSearch, "Search",         "THEME:GUI:Search.edf", "menu:search");
+				myMenu->add(idMenuSearch, "Replace",        "THEME:GUI:Replace.edf", "menu:replace");
 				myMenu->addSpacer();
-				myMenu->add(idMenuSearch, "Find (previous)","", ednMsgGuiFind, "Previous");
-				myMenu->add(idMenuSearch, "Find (next)",    "", ednMsgGuiFind, "Next");
-				myMenu->add(idMenuSearch, "Find (all)",     "", ednMsgGuiFind, "All");
-				myMenu->add(idMenuSearch, "Un-Select",      "", ednMsgGuiFind, "None");
-			/* ==> must be in the pluggin list control ...
-			int32_t idMenuCTags = myMenu->addTitle("C-tags");
-				myMenu->add(idMenuCTags, "Load",      "", ednMsgGuiCtags, "Load");
-				myMenu->add(idMenuCTags, "ReLoad",    "", ednMsgGuiCtags, "ReLoad");
-				myMenu->add(idMenuCTags, "Jump",      "", ednMsgGuiCtags, "Jump");
-				myMenu->add(idMenuCTags, "Back",      "", ednMsgGuiCtags, "Back");
-			*/
+				myMenu->add(idMenuSearch, "Find (previous)","", "menu:find:previous");
+				myMenu->add(idMenuSearch, "Find (next)",    "", "menu:find:next");
+				myMenu->add(idMenuSearch, "Find (all)",     "", "menu:find:all");
+				myMenu->add(idMenuSearch, "Un-Select",      "", "menu:find:none");
 			int32_t idMenugDisplay = myMenu->addTitle("Display");
-				myMenu->add(idMenugDisplay, "Color Black",          "", appl::MsgNameGuiChangeColor, "color/black/");
-				myMenu->add(idMenugDisplay, "Color White",          "", appl::MsgNameGuiChangeColor, "color/white/");
-				myMenu->add(idMenugDisplay, "Shape square",         "", l_MsgNameGuiChangeShape, "shape/square/");
-				myMenu->add(idMenugDisplay, "Shape round",          "", l_MsgNameGuiChangeShape, "shape/round/");
+				myMenu->add(idMenugDisplay, "Color Black",          "", "menu:color:color/black/");
+				myMenu->add(idMenugDisplay, "Color White",          "", "menu:color:color/white/");
+				myMenu->add(idMenugDisplay, "Shape square",         "", "menu:shape:shape/square/");
+				myMenu->add(idMenugDisplay, "Shape round",          "", "menu:shape:shape/round/");
 				myMenu->addSpacer();
-				myMenu->add(idMenugDisplay, "Reload openGl Shader", "", ednMsgGuiReloadShader);
-			
+				myMenu->add(idMenugDisplay, "Reload openGl Shader", "", "menu:reloadShape");
+			myMenu->signalSelect.bind(shared_from_this(), &MainWindows::onCallbackMenuEvent);
 			m_widgetLabelFileName = ewol::widget::Label::create("FileName");
 			m_widgetLabelFileName->setExpand(bvec2(true,false));
 			m_widgetLabelFileName->setFill(bvec2(true,false));;
 			mySizerHori->subWidgetAdd(m_widgetLabelFileName);
 	
-	
 	// add generic shortcut ...
-	//                 (shift, control, alt,  meta,  char32_t unicodeValue, const char * generateEventId, std::string& data)
-	shortCutAdd("ctrl+o",       ednMsgGuiOpen, "", true);
-	shortCutAdd("ctrl+n",       ednMsgGuiNew,  "", true);
+	shortCutAdd("ctrl+o",       "menu:open");
+	shortCutAdd("ctrl+n",       "menu:new");
 	
-	shortCutAdd("ctrl+s",       ednMsgGuiSave, "current", true);
-	shortCutAdd("ctrl+shift+s", ednMsgGuiSave, "All", true);
+	shortCutAdd("ctrl+s",       "menu:save");
+	shortCutAdd("ctrl+shift+s", "menu:save-all");
 	
-	shortCutAdd("ctrl+q",       ednMsgGuiClose, "current", true);
-	shortCutAdd("ctrl+shift+q", ednMsgGuiClose, "All", true);
+	shortCutAdd("ctrl+q",       "menu:close");
+	shortCutAdd("ctrl+shift+q", "menu:close-all");
 	
-	shortCutAdd("ctrl+z",       ednMsgGuiUndo, "", true);
-	shortCutAdd("ctrl+shift+z", ednMsgGuiRedo, "", true);
+	shortCutAdd("ctrl+z",       "menu:undo");
+	shortCutAdd("ctrl+shift+z", "menu:redo");
 	
-	shortCutAdd("ctrl+l",       ednMsgGuiGotoLine, "???", true);
+	shortCutAdd("ctrl+l",       "menu:goto-line");
 	
-	shortCutAdd("ctrl+f",       ednMsgGuiSearch, "", true);
-	shortCutAdd("F12",          ednMsgGuiReloadShader, "", true);
-	
-	//shortCutAdd("ctrl+d",       ednMsgGuiCtags, "Jump", true);
-	
-	
-	
-	// Generic event ...
-	registerMultiCast(ednMsgGuiSave);
-	registerMultiCast(ednMsgGuiSaveAs);
-	registerMultiCast(ednMsgProperties);
-	registerMultiCast(ednMsgGuiNew);
-	registerMultiCast(ednMsgGuiOpen);
-	registerMultiCast(ednMsgGuiClose);
-	// to update the title ... 
-	registerMultiCast(ednMsgBufferState);
-	registerMultiCast(ednMsgBufferId);
-	registerMultiCast(ednMsgGuiReloadShader);
-	registerMultiCast(appl::MsgNameGuiChangeColor);
-	registerMultiCast(l_MsgNameGuiChangeShape);
-	registerMultiCast(appl::MsgSelectNewFile);
+	shortCutAdd("ctrl+f",       "menu:search");
+	shortCutAdd("F12",          "menu:reloade-shader");
+	// TODO : auto-bind on shortcut event ==> maybe do beter later ...
+	signalShortcut.bind(shared_from_this(), &MainWindows::onCallbackShortCut);
+	m_bufferManager->signalSelectFile.bind(shared_from_this(), &MainWindows::onCallbackShortCut);
 }
 
 
@@ -279,135 +254,96 @@ MainWindows::~MainWindows() {
 }
 
 
-static const char* const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
-static const char* const ednEventIsSave = "edn-buffer-is-saved";
-static const char* const ednEventIsModify = "edn-buffer-is-modify";
-static const char* const ednEventChangeName = "edn-buffer-change-name";
 
-void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
-	ewol::widget::Windows::onReceiveMessage(_msg);
-	
-	APPL_VERBOSE("Receive Event from the main windows: " << _msg );
-	// open file Section ...
-	if (_msg.getMessage() == ednMsgGuiOpen) {
-		std::shared_ptr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
-		if (tmpWidget == nullptr) {
-			APPL_ERROR("Can not open File chooser !!! ");
-			return;
+void MainWindows::onCallbackShortCut(const std::string& _value) {
+	APPL_WARNING("Event from ShortCut : " << _value);
+	onCallbackMenuEvent(_value);
+}
+
+void MainWindows::onCallbackMenuEvent(const std::string& _value) {
+	APPL_WARNING("Event from Menu : " << _value);
+	if (_value == "menu:new") {
+		if (m_bufferManager != nullptr) {
+			m_bufferManager->createNewBuffer();
 		}
-		tmpWidget->setTitle("Open files ...");
-		tmpWidget->setValidateLabel("Open");
-		if (m_bufferManager == nullptr) {
-			APPL_ERROR("can not call unexistant buffer manager ... ");
-			return;
-		}
-		// Get a ref on the buffer selected (if null, no buffer was selected ...)
-		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->getBufferSelected();
-		if (tmpBuffer != nullptr) {
-			etk::FSNode tmpFile = tmpBuffer->getFileName();
-			tmpWidget->setFolder(tmpFile.getNameFolder());
-		}
-		// apply widget pop-up ...
-		popUpWidgetPush(tmpWidget);
-		tmpWidget->signalValidate.bind(shared_from_this(), &MainWindows::onCallbackPopUpFileSelected);
-	} else if (_msg.getMessage() == ednMsgProperties) {
-		// Request the parameter GUI
-		std::shared_ptr<ewol::widget::Parameter> tmpWidget = ewol::widget::Parameter::create();
-		if (nullptr == tmpWidget) {
-			APPL_ERROR("Can not allocate widget  == > display might be in error");
-		} else {
-			#ifdef SDGSDFGSDFGSDFGSDFGSTERGDHFGHFDS
-			std::string menuDescription = "<title>Properties</title>\n";
-			menuDescription += "<group>\n";
-			menuDescription += "	<title>Editor</title>\n";
-			menuDescription += "	<menu>\n";
-			menuDescription += "		<title>Editor Interface</title>\n";
-			menuDescription += "		<short-title>Editor</short-title>\n";
-			menuDescription += "		<widget>appl-text-viewer</widget>\n";
-			menuDescription += "	</menu>\n";
-			menuDescription += "</group>\n";
-			menuDescription += "<group>\n";
-			menuDescription += "	<title>Gui</title>\n";
-			menuDescription += "	<menu>\n";
-			menuDescription += "		<title>Font selection</title>\n";
-			menuDescription += "		<short-title>Font</short-title>\n";
-			menuDescription += "		<widget></widget>\n";
-			menuDescription += "	</menu>\n";
-			menuDescription += "	<menu>\n";
-			menuDescription += "		<title>Color selection</title>\n";
-			menuDescription += "		<short-title>Color</short-title>\n";
-			menuDescription += "		<widget></widget>\n";
-			menuDescription += "	</menu>\n";
-			menuDescription += "	<menu>\n";
-			menuDescription += "		<title>Theme selection</title>\n";
-			menuDescription += "		<short-title>Theme</short-title>\n";
-			menuDescription += "		<widget></widget>\n";
-			menuDescription += "	</menu>\n";
-			menuDescription += "</group>\n";
-			
-			tmpWidget->setMenu(menuDescription);
-			#endif
-			tmpWidget->setTitle("Properties");
-			popUpWidgetPush(tmpWidget);
-			tmpWidget->menuAddGroup("Editor");
-			std::shared_ptr<ewol::Widget> tmpSubWidget = globals::ParameterGlobalsGui::create();
-			tmpWidget->menuAdd("Editor",          "", tmpSubWidget);
-			tmpWidget->menuAdd("Font & Color", "", nullptr);
-			tmpWidget->menuAdd("Highlight",       "", nullptr);
-			tmpWidget->menuAddGroup("General");
-			tmpWidget->menuAdd("Display",       "", nullptr);
-			tmpSubWidget = ParameterAboutGui::create();
-			tmpWidget->menuAdd("About",           "", tmpSubWidget);
-		}
-	} else if (_msg.getMessage() == appl::MsgNameGuiChangeColor) {
-		etk::theme::setName("COLOR", _msg.getData());
-		ewol::getContext().getResourcesManager().reLoadResources();
-		ewol::getContext().forceRedrawAll();
-	} else if (_msg.getMessage() == l_MsgNameGuiChangeShape) {
-		etk::theme::setName("GUI", _msg.getData());
-		ewol::getContext().getResourcesManager().reLoadResources();
-		ewol::getContext().forceRedrawAll();
-	} else if (_msg.getMessage() == ednMsgGuiReloadShader) {
-		ewol::getContext().getResourcesManager().reLoadResources();
-		ewol::getContext().forceRedrawAll();
-	} else if (_msg.getMessage() == ednMsgGuiExit) {
-		// TODO : ...
-	}
-	// Note : Fore all next message we need to acces to the buffer manager ==> just check one time ...
-	if (m_bufferManager == nullptr) {
-		APPL_ERROR("can not call unexistant buffer manager ... ");
-		return;
-	}
-	if (_msg.getMessage() == appl::MsgSelectNewFile) {
-		onCallbackTitleUpdate();
-		std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
-		if (tmpp != nullptr) {
-			tmpp->signalIsSave.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
-			tmpp->signalIsModify.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
-			tmpp->signalChangeName.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
-		}
-	} else if (_msg.getMessage() == ednMsgGuiNew) {
-		m_bufferManager->createNewBuffer();
-	} else if (_msg.getMessage() == ednMsgGuiSave) {
-		APPL_DEBUG("Request saving the file : " << _msg.getData());
-		if (etk::tolower(_msg.getData()) == "current") {
-			appl::WorkerSaveFile::create("", false);
-			return;
-		} else if (etk::tolower(_msg.getData()) == "all") {
-			appl::WorkerSaveAllFile::create();
-			return;
-		} else {
-			APPL_ERROR("UNKNOW request : " << _msg);
-		}
-	} else if (_msg.getMessage() == ednMsgGuiSaveAs) {
+	} else if (_value == "menu:open") {
+		displayOpen();
+	} else if (_value == "menu:close") {
+		appl::WorkerCloseFile::create("");
+	} else if (_value == "menu:close-all") {
+		appl::WorkerCloseAllFile::create();
+	} else if (_value == "menu:save") {
+		appl::WorkerSaveFile::create("", false);
+	} else if (_value == "menu:save-all") {
+		appl::WorkerSaveAllFile::create();
+	} else if (_value == "menu:save-as") {
 		appl::WorkerSaveFile::create("", true);
-	} else if (_msg.getMessage() == ednMsgGuiClose) {
-		// Get a ref on the buffer selected (if null, no buffer was selected ...)
-		if (_msg.getData() == "current") {
-			appl::WorkerCloseFile::create("");
-		} else {
-			appl::WorkerCloseAllFile::create();
+	} else if (_value == "menu:property") {
+		displayProperty();
+	} else if (_value == "menu:undo") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:redo") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:copy") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:cut") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:past") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:remove") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:select-all") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:select-none") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:goto-line") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:search") {
+		if (m_widgetSearch == nullptr) {
+			return;
 		}
+		if (m_widgetSearch->isHide()) {
+			m_widgetSearch->show();
+			m_widgetSearch->selectSearch();
+		} else {
+			m_widgetSearch->hide();
+		}
+	} else if (_value == "menu:replace") {
+		if (m_widgetSearch == nullptr) {
+			return;
+		}
+		if (m_widgetSearch->isHide()) {
+			m_widgetSearch->show();
+			m_widgetSearch->selectReplace();
+		} else {
+			m_widgetSearch->hide();
+		}
+	} else if (_value == "menu:find:previous") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:find:next") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:find:all") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (_value == "menu:find:none") {
+		APPL_TODO("Event from Menu : " << _value);
+	} else if (    _value == "menu:color:color/black/"
+	            || _value == "menu:color:color/white/") {
+		etk::theme::setName("COLOR", std::string(_value, 12));
+		ewol::getContext().getResourcesManager().reLoadResources();
+		ewol::getContext().forceRedrawAll();
+	} else if (    _value == "menu:shape:shape/square/"
+	            || _value == "menu:shape:shape/round/") {
+		etk::theme::setName("GUI", std::string(_value, 12));
+		ewol::getContext().getResourcesManager().reLoadResources();
+		ewol::getContext().forceRedrawAll();
+	} else if (_value == "menu:reloadShape") {
+		ewol::getContext().getResourcesManager().reLoadResources();
+		ewol::getContext().forceRedrawAll();
+	} else {
+		APPL_ERROR("Event from Menu UNKNOW : '" << _value << "'");
+	}
+}
+/* TODO :
 	} else if (_msg.getMessage() == mainWindowsRequestSaveFile) { // return after a choice of close...
 		if (m_bufferManager->exist(_msg.getData()) == false) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
@@ -452,8 +388,104 @@ void MainWindows::onReceiveMessage(const ewol::object::Message& _msg) {
 		//tmpBuffer->removeObject();
 		EWOL_TODO("call remove buffer ...");
 	}
-	return;
+*/
+
+void MainWindows::displayOpen() {
+	std::shared_ptr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
+	if (tmpWidget == nullptr) {
+		APPL_ERROR("Can not open File chooser !!! ");
+		return;
+	}
+	tmpWidget->setTitle("Open files ...");
+	tmpWidget->setValidateLabel("Open");
+	if (m_bufferManager == nullptr) {
+		APPL_ERROR("can not call unexistant buffer manager ... ");
+		return;
+	}
+	// Get a ref on the buffer selected (if null, no buffer was selected ...)
+	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->getBufferSelected();
+	if (tmpBuffer != nullptr) {
+		etk::FSNode tmpFile = tmpBuffer->getFileName();
+		tmpWidget->setFolder(tmpFile.getNameFolder());
+	}
+	// apply widget pop-up ...
+	popUpWidgetPush(tmpWidget);
+	tmpWidget->signalValidate.bind(shared_from_this(), &MainWindows::onCallbackPopUpFileSelected);
 }
+
+void MainWindows::displayProperty() {
+	// Request the parameter GUI
+	std::shared_ptr<ewol::widget::Parameter> tmpWidget = ewol::widget::Parameter::create();
+	if (nullptr == tmpWidget) {
+		APPL_ERROR("Can not allocate widget  == > display might be in error");
+	} else {
+		#ifdef SDGSDFGSDFGSDFGSDFGSTERGDHFGHFDS
+		std::string menuDescription = "<title>Properties</title>\n";
+		menuDescription += "<group>\n";
+		menuDescription += "	<title>Editor</title>\n";
+		menuDescription += "	<menu>\n";
+		menuDescription += "		<title>Editor Interface</title>\n";
+		menuDescription += "		<short-title>Editor</short-title>\n";
+		menuDescription += "		<widget>appl-text-viewer</widget>\n";
+		menuDescription += "	</menu>\n";
+		menuDescription += "</group>\n";
+		menuDescription += "<group>\n";
+		menuDescription += "	<title>Gui</title>\n";
+		menuDescription += "	<menu>\n";
+		menuDescription += "		<title>Font selection</title>\n";
+		menuDescription += "		<short-title>Font</short-title>\n";
+		menuDescription += "		<widget></widget>\n";
+		menuDescription += "	</menu>\n";
+		menuDescription += "	<menu>\n";
+		menuDescription += "		<title>Color selection</title>\n";
+		menuDescription += "		<short-title>Color</short-title>\n";
+		menuDescription += "		<widget></widget>\n";
+		menuDescription += "	</menu>\n";
+		menuDescription += "	<menu>\n";
+		menuDescription += "		<title>Theme selection</title>\n";
+		menuDescription += "		<short-title>Theme</short-title>\n";
+		menuDescription += "		<widget></widget>\n";
+		menuDescription += "	</menu>\n";
+		menuDescription += "</group>\n";
+		
+		tmpWidget->setMenu(menuDescription);
+		#endif
+		tmpWidget->setTitle("Properties");
+		popUpWidgetPush(tmpWidget);
+		tmpWidget->menuAddGroup("Editor");
+		std::shared_ptr<ewol::Widget> tmpSubWidget = globals::ParameterGlobalsGui::create();
+		tmpWidget->menuAdd("Editor",          "", tmpSubWidget);
+		tmpWidget->menuAdd("Font & Color", "", nullptr);
+		tmpWidget->menuAdd("Highlight",       "", nullptr);
+		tmpWidget->menuAddGroup("General");
+		tmpWidget->menuAdd("Display",       "", nullptr);
+		tmpSubWidget = ParameterAboutGui::create();
+		tmpWidget->menuAdd("About",           "", tmpSubWidget);
+	}
+}
+
+void MainWindows::onCallbackselectNewFile(const std::string& _value) {
+	if (m_bufferManager == nullptr) {
+		APPL_ERROR("can not call unexistant buffer manager ... ");
+		return;
+	}
+	// TODO : Remove all previous binding from the old buffer ...
+	onCallbackTitleUpdate();
+	std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
+	if (tmpp != nullptr) {
+		tmpp->signalIsSave.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
+		tmpp->signalIsModify.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
+		tmpp->signalChangeName.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
+	}
+}
+
+static const char* const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
+static const char* const ednEventIsSave = "edn-buffer-is-saved";
+static const char* const ednEventIsModify = "edn-buffer-is-modify";
+static const char* const ednEventChangeName = "edn-buffer-change-name";
+
+
+
 void MainWindows::onCallbackPopUpFileSelected(const std::string& _value) {
 	APPL_DEBUG("Request opening the file : " << _value);
 	m_bufferManager->open(_value);

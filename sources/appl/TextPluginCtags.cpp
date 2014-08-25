@@ -105,8 +105,8 @@ void appl::TextPluginCtags::jumpFile(const std::string& _filename, int64_t _line
 	if (m_bufferManager != nullptr) {
 		m_bufferManager->open(_filename);
 	}
-	sendMultiCast(appl::MsgSelectChange, _filename);
-	sendMultiCast(appl::MsgSelectGotoLineSelect, etk::to_string(_lineId));
+	//sendMultiCast(appl::MsgSelectGotoLineSelect, etk::to_string(_lineId));
+	APPL_TODO("request jup at line ...");
 }
 
 void appl::TextPluginCtags::loadTagFile() {

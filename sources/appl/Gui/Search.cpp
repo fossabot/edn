@@ -57,8 +57,6 @@ void appl::widget::Search::init() {
 	// get widget
 	m_searchEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:search-entry"));
 	m_replaceEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:replace-entry"));
-	// Display and hide event:
-	registerMultiCast(ednMsgGuiSearch);
 	// basicly hiden ...
 	hide();
 }
@@ -155,25 +153,15 @@ void appl::widget::Search::OnCallbackForward(const bool& _value) {
 	m_forward = _value;
 }
 
-void appl::widget::Search::onReceiveMessage(const ewol::object::Message& _msg) {
-	ewol::widget::Composer::onReceiveMessage(_msg);
-	APPL_INFO("Search receive message : " << _msg);
-	if ( _msg.getMessage() == ednMsgGuiSearch) {
-		if (true == isHide()) {
-			show();
-			if (m_searchEntry!= nullptr) {
-				m_searchEntry->keepFocus();
-			}
-		} else {
-			if(    (m_searchEntry!=nullptr  && true == m_searchEntry->getFocus())
-			    || (m_replaceEntry!=nullptr && true == m_replaceEntry->getFocus()) ) {
-				hide();
-			} else if (m_searchEntry!= nullptr) {
-				m_searchEntry->keepFocus();
-			} else {
-				hide();
-			}
-		}
+void appl::widget::Search::selectSearch() {
+	if (m_searchEntry!= nullptr) {
+		m_searchEntry->keepFocus();
+	}
+}
+
+void appl::widget::Search::selectReplace() {
+	if (m_replaceEntry!= nullptr) {
+		m_replaceEntry->keepFocus();
 	}
 }
 

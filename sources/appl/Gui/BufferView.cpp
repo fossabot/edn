@@ -59,12 +59,10 @@ BufferView::BufferView() :
 
 void BufferView::init() {
 	ewol::widget::List::init();
-	registerMultiCast(ednMsgBufferListChange);
-	registerMultiCast(ednMsgBufferState);
-	registerMultiCast(ednMsgBufferId);
-	registerMultiCast(appl::MsgSelectNewFile);
-	registerMultiCast(appl::MsgSelectChange);
-	registerMultiCast(appl::MsgNameChange);
+	if (m_bufferManager != nullptr) {
+		m_bufferManager->signalNewBuffer.bind(shared_from_this(), &BufferView::onCallbackNewBuffer);
+		m_bufferManager->signalSelectFile.bind(shared_from_this(), &BufferView::onCallbackselectNewFile);
+	}
 }
 
 BufferView::~BufferView() {
@@ -104,90 +102,47 @@ void BufferView::insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _sel
 		}
 	}
 }
-void BufferView::onReceiveMessage(const ewol::object::Message& _msg) {
-	APPL_VERBOSE("message : " << _msg);
-	ewol::widget::List::onReceiveMessage(_msg);
-	if (_msg.getMessage() == appl::MsgSelectNewFile) {
-		std::shared_ptr<appl::Buffer> buffer = m_bufferManager->get(_msg.getData());
-		if (buffer == nullptr) {
-			APPL_ERROR("event on element nor exist : " << _msg.getData());
-			return;
-		}
-		buffer->signalIsSave.bind(shared_from_this(), &BufferView::onCallbackIsSave);
-		buffer->signalIsModify.bind(shared_from_this(), &BufferView::onCallbackIsModify);
-		buffer->signalChangeName.bind(shared_from_this(), &BufferView::onCallbackChangeName);
-		appl::dataBufferStruct* tmp = new appl::dataBufferStruct(_msg.getData(), buffer);
-		if (tmp == nullptr) {
-			APPL_ERROR("Allocation error of the tmp buffer list element");
-			return;
-		}
-		if (m_openOrderMode == true) {
-			m_list.push_back(tmp);
-		} else {
-			insertAlphabetic(tmp);
-		}
-		markToRedraw();
+
+void BufferView::onCallbackNewBuffer(const std::string& _value) {
+	std::shared_ptr<appl::Buffer> buffer = m_bufferManager->get(_value);
+	if (buffer == nullptr) {
+		APPL_ERROR("event on element nor exist : " << _value);
 		return;
 	}
-	if (_msg.getMessage() == appl::MsgSelectChange) {
-		m_selectedID = -1;
-		std::shared_ptr<appl::Buffer> tmpBuffer;
-		if (m_bufferManager != nullptr) {
-			tmpBuffer = m_bufferManager->getBufferSelected();
-		}
-		if (tmpBuffer != nullptr) {
-			for (size_t iii=0; iii<m_list.size(); iii++) {
-				if (m_list[iii] == nullptr) {
-					continue;
-				}
-				if (m_list[iii]->m_buffer != tmpBuffer) {
-					continue;
-				}
-				m_selectedID = iii;
-				break;
-			}
-		}
-		markToRedraw();
+	buffer->signalIsSave.bind(shared_from_this(), &BufferView::onCallbackIsSave);
+	buffer->signalIsModify.bind(shared_from_this(), &BufferView::onCallbackIsModify);
+	buffer->signalChangeName.bind(shared_from_this(), &BufferView::onCallbackChangeName);
+	appl::dataBufferStruct* tmp = new appl::dataBufferStruct(_value, buffer);
+	if (tmp == nullptr) {
+		APPL_ERROR("Allocation error of the tmp buffer list element");
 		return;
 	}
-	if (_msg.getMessage() == ednMsgBufferListChange) {
-		// clean The list
-		removeAllElement();
-		// get all the buffer name and properties:
-		size_t nbBufferOpen = 0; // BufferManager::size();
-		for (size_t iii=0; iii<nbBufferOpen; iii++) {
-			/*
-			if (BufferManager::exist(iii)) {
-				BufferText* tmpBuffer = BufferManager::get(iii);
-				if (nullptr != tmpBuffer) {
-					bool isModify  = tmpBuffer->isModify();
-					etk::FSNode name = tmpBuffer->getFileName();
-					appl::dataBufferStruct* tmpElement = new appl::dataBufferStruct(name, iii, isModify);
-					if (nullptr != tmpElement) {
-						m_list.push_back(tmpElement);
-					} else {
-						APPL_ERROR("Allocation error of the tmp buffer list element");
-					}
-				}
-			}
-			*/
-		}
-		if (true == globals::OrderTheBufferList() ) {
-			SortElementList(m_list);
-		}
-		markToRedraw();
-	}else if (_msg.getMessage() == ednMsgBufferId) {
-		m_selectedIdRequested = 0; //BufferManager::getSelected();
-		markToRedraw();
-	}else if (_msg.getMessage() == ednMsgBufferState) {
-		// update list of modify section ...
-		for (auto &it : m_list) {
-			if (it != nullptr) {
-				//it->m_isModify = BufferManager::get(it->m_bufferID)->isModify();
-			}
-		}
-		markToRedraw();
+	if (m_openOrderMode == true) {
+		m_list.push_back(tmp);
+	} else {
+		insertAlphabetic(tmp);
 	}
+	markToRedraw();
+}
+void BufferView::onCallbackselectNewFile(const std::string& _value) {
+	m_selectedID = -1;
+	std::shared_ptr<appl::Buffer> tmpBuffer;
+	if (m_bufferManager != nullptr) {
+		tmpBuffer = m_bufferManager->getBufferSelected();
+	}
+	if (tmpBuffer != nullptr) {
+		for (size_t iii=0; iii<m_list.size(); iii++) {
+			if (m_list[iii] == nullptr) {
+				continue;
+			}
+			if (m_list[iii]->m_buffer != tmpBuffer) {
+				continue;
+			}
+			m_selectedID = iii;
+			break;
+		}
+	}
+	markToRedraw();
 }
 
 void BufferView::onCallbackChangeName() {
@@ -268,7 +223,9 @@ bool BufferView::onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent
 		    && _raw<(int64_t)m_list.size()
 		    && nullptr != m_list[_raw]) {
 			if (m_list[_raw]->m_buffer != nullptr) {
-				sendMultiCast(appl::MsgSelectNewFile, m_list[_raw]->m_buffer->getFileName());
+				if (m_bufferManager != nullptr) {
+					m_bufferManager->open(m_list[_raw]->m_buffer->getFileName());
+				}
 				m_selectedID = _raw;
 				markToRedraw();
 				return true;
