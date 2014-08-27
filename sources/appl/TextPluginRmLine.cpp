@@ -16,7 +16,7 @@
 
 
 appl::TextPluginRmLine::TextPluginRmLine() {
-	m_activateOnReceiveMessage = true;
+	m_activateOnReceiveShortCut = true;
 	addObjectType("appl::TextPluginRmLine");
 }
 
@@ -26,23 +26,19 @@ void appl::TextPluginRmLine::init() {
 
 void appl::TextPluginRmLine::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
-	/*
-	_textDrawer.ext_registerMultiCast(ednMsgGuiRm);
-	_textDrawer.ext_shortCutAdd("ctrl+w", ednMsgGuiRm);
-	*/
+	_textDrawer.ext_shortCutAdd("ctrl+w", "appl::TextPluginRmLine::Rm");
 }
 
 void appl::TextPluginRmLine::onPluginDisable(appl::TextViewer& _textDrawer) {
 	// TODO : unknow function ...
 }
 
-bool appl::TextPluginRmLine::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-                                                    const ewol::object::Message& _msg) {
+bool appl::TextPluginRmLine::onReceiveShortCut(appl::TextViewer& _textDrawer,
+                                               const std::string& _shortCutName) {
 	if (isEnable() == false) {
 		return false;
 	}
-	/*
-	if (_msg.getMessage() == ednMsgGuiRm) {
+	if (_shortCutName == "appl::TextPluginRmLine::Rm") {
 		if (_textDrawer.hasBuffer() == false) {
 			return false;
 		}
@@ -57,6 +53,5 @@ bool appl::TextPluginRmLine::onReceiveMessageViewer(appl::TextViewer& _textDrawe
 		}
 		return true;
 	}
-	*/
 	return false;
 }

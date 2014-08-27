@@ -63,7 +63,6 @@ namespace appl {
 		public:  // Derived function
 			virtual bool calculateMinSize();
 			virtual void onRegenerateDisplay();
-			virtual void onReceiveMessage(const ewol::object::Message& _msg);
 			virtual bool onEventInput(const ewol::event::Input& _event);
 			virtual bool onEventEntry(const ewol::event::Entry& _event);
 			virtual void onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID);
@@ -391,6 +390,7 @@ namespace appl {
 			 * @brief Register of the arrival of a Multicast message
 			 * @param[in] _messageId Event Id waiting for...
 			 */
+			// TODO : Remove
 			void ext_registerMultiCast(const char* const _messageId) {
 				//registerMultiCast(_messageId);
 			}
@@ -400,14 +400,13 @@ namespace appl {
 			 * @param[in] _generateEventId Event generic of the element
 			 * @param[in] _data Associate data wit the event
 			 */
-			virtual void ext_shortCutAdd(const char * _descriptiveString,
-			                             const char * _generateEventId,
-			                             std::string _data="",
-			                             bool _broadcast=false) {
-				//shortCutAdd(_descriptiveString, _generateEventId, _data, _broadcast);
+			virtual void ext_shortCutAdd(const std::string& _descriptiveString,
+			                             const std::string& _generateEventName) {
+				shortCutAdd(_descriptiveString, _generateEventName);
 			}
 		private: // callback fundtions
 			void onCallbackIsModify();
+			void onCallbackShortCut(const std::string& _value);
 			void onCallbackSelectChange();
 			void onCallbackselectNewFile(const std::string& _value);
 	};

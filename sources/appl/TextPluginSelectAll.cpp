@@ -16,7 +16,7 @@
 
 
 appl::TextPluginSelectAll::TextPluginSelectAll() {
-	m_activateOnReceiveMessage = true;
+	m_activateOnReceiveShortCut = true;
 	addObjectType("appl::TextPluginSelectAll");
 }
 
@@ -24,24 +24,21 @@ void appl::TextPluginSelectAll::init() {
 	appl::TextViewerPlugin::init();
 }
 
-static const char* eventSelectAll = "plugin-select-all";
-
 void appl::TextPluginSelectAll::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
-	_textDrawer.ext_registerMultiCast(eventSelectAll);
-	_textDrawer.ext_shortCutAdd("ctrl+a", eventSelectAll);
+	_textDrawer.ext_shortCutAdd("ctrl+a", "appl::TextPluginSelectAll::All");
 }
 
 void appl::TextPluginSelectAll::onPluginDisable(appl::TextViewer& _textDrawer) {
 	// TODO : unknow function ...
 }
 
-bool appl::TextPluginSelectAll::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-                                                       const ewol::object::Message& _msg) {
+bool appl::TextPluginSelectAll::onReceiveShortCut(appl::TextViewer& _textDrawer,
+                                                  const std::string& _shortCutName) {
 	if (isEnable() == false) {
 		return false;
 	}
-	if (_msg.getMessage() == eventSelectAll) {
+	if (_shortCutName == "appl::TextPluginSelectAll::All") {
 		if (_textDrawer.hasBuffer() == false) {
 			return false;
 		}

@@ -16,7 +16,7 @@
 
 
 appl::TextPluginCopy::TextPluginCopy() {
-	m_activateOnReceiveMessage = true;
+	m_activateOnReceiveShortCut = true;
 	addObjectType("appl::TextPluginCopy");
 }
 
@@ -26,28 +26,22 @@ void appl::TextPluginCopy::init() {
 
 void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
-	/*
-	_textDrawer.ext_registerMultiCast(ednMsgGuiCopy);
-	_textDrawer.ext_registerMultiCast(ednMsgGuiPaste);
-	_textDrawer.ext_registerMultiCast(ednMsgGuiCut);
-	_textDrawer.ext_shortCutAdd("ctrl+x", ednMsgGuiCut,   "STD");
-	_textDrawer.ext_shortCutAdd("ctrl+c", ednMsgGuiCopy,  "STD");
-	_textDrawer.ext_shortCutAdd("ctrl+v", ednMsgGuiPaste, "STD");
-	*/
+	_textDrawer.ext_shortCutAdd("ctrl+x", "appl::TextPluginCopy::cut");
+	_textDrawer.ext_shortCutAdd("ctrl+c", "appl::TextPluginCopy::copy");
+	_textDrawer.ext_shortCutAdd("ctrl+v", "appl::TextPluginCopy::Paste");
 }
 
 void appl::TextPluginCopy::onPluginDisable(appl::TextViewer& _textDrawer) {
 	// TODO : unknow function ...
 }
 
-bool appl::TextPluginCopy::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-                                                  const ewol::object::Message& _msg) {
+bool appl::TextPluginCopy::onReceiveShortCut(appl::TextViewer& _textDrawer,
+                                             const std::string& _shortCutName) {
 	if (isEnable() == false) {
 		return false;
 	}
-	/*
-	if (    _msg.getMessage() == ednMsgGuiCopy
-	     || _msg.getMessage() == ednMsgGuiCut) {
+	if (    _shortCutName == "appl::TextPluginCopy::copy"
+	     || _shortCutName == "appl::TextPluginCopy::cut") {
 		if (_textDrawer.hasBuffer() == true) {
 			std::string value;
 			_textDrawer.copy(value);
@@ -55,16 +49,15 @@ bool appl::TextPluginCopy::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
 				ewol::context::clipBoard::set(ewol::context::clipBoard::clipboardStd, value);
 			}
 		}
-		if (_msg.getMessage() == ednMsgGuiCut) {
+		if (_shortCutName == "appl::TextPluginCopy::cut") {
 			_textDrawer.remove();
 		}
 		return true;
-	} else if (_msg.getMessage() == ednMsgGuiPaste) {
+	} else if (_shortCutName == "appl::TextPluginCopy::Paste") {
 		if (_textDrawer.hasBuffer() == true) {
 			ewol::context::clipBoard::request(ewol::context::clipBoard::clipboardStd);
 		}
 		return true;
 	}
-	*/
 	return false;
 }

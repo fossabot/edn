@@ -43,8 +43,8 @@ namespace appl {
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
-			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-			                                    const ewol::object::Message& _msg);
+			virtual bool onReceiveShortCut(appl::TextViewer& _textDrawer,
+			                               const std::string& _shortCutName);
 			// callback function:
 			void onCallbackOpenCtagsOpenFileReturn(const std::string& _value);
 			void onCallbackOpenCtagsSelectReturn(const std::string& _value);

@@ -16,7 +16,7 @@
 #define __class__ "TextPluginHistory"
 
 appl::TextPluginHistory::TextPluginHistory() {
-	m_activateOnReceiveMessage = true;
+	m_activateOnReceiveShortCut = true;
 	m_activateOnWrite = true;
 	m_activateOnReplace = true;
 	m_activateOnRemove = true;
@@ -30,26 +30,21 @@ void appl::TextPluginHistory::init() {
 
 void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
-	/*
-	_textDrawer.ext_registerMultiCast(ednMsgGuiRedo);
-	_textDrawer.ext_registerMultiCast(ednMsgGuiUndo);
-	_textDrawer.ext_shortCutAdd("ctrl+z", ednMsgGuiUndo);
-	_textDrawer.ext_shortCutAdd("ctrl+shift+z", ednMsgGuiRedo);
-	*/
+	_textDrawer.ext_shortCutAdd("ctrl+z", "appl::TextPluginHistory::Undo");
+	_textDrawer.ext_shortCutAdd("ctrl+shift+z", "appl::TextPluginHistory::Redo");
 }
 
 void appl::TextPluginHistory::onPluginDisable(appl::TextViewer& _textDrawer) {
 	// TODO : unknow function ...
 }
 
-bool appl::TextPluginHistory::onDataReceiveMessageViewer(appl::TextViewer& _textDrawer,
-                                                         const ewol::object::Message& _msg,
-                                                         appl::PluginHistoryData& _data) {
+bool appl::TextPluginHistory::onDataReceiveShortCut(appl::TextViewer& _textDrawer,
+                                                    const std::string& _shortCutName,
+                                                    appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
 	}
-	/*
-	if (_msg.getMessage() == ednMsgGuiRedo) {
+	if (_shortCutName == "appl::TextPluginHistory::Redo") {
 		if (_data.m_redo.size() == 0) {
 			return true;
 		}
@@ -65,7 +60,7 @@ bool appl::TextPluginHistory::onDataReceiveMessageViewer(appl::TextViewer& _text
 		                          _textDrawer.position(tmpElement->m_endPosRemoved) );
 		
 		return true;
-	} else if (_msg.getMessage() == ednMsgGuiUndo) {
+	} else if (_shortCutName == "appl::TextPluginHistory::Undo") {
 		if (_data.m_undo.size() == 0) {
 			return true;
 		}
@@ -82,7 +77,6 @@ bool appl::TextPluginHistory::onDataReceiveMessageViewer(appl::TextViewer& _text
 		
 		return true;
 	}
-	*/
 	return false;
 }
 

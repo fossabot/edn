@@ -22,7 +22,7 @@ appl::TextPluginCtags::TextPluginCtags() :
   m_tagFolderBase(""),
   m_tagFilename(""),
   m_ctagFile(nullptr) {
-	m_activateOnReceiveMessage = true;
+	m_activateOnReceiveShortCut = true;
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
 	addObjectType("appl::TextPluginCtags");
@@ -37,20 +37,11 @@ appl::TextPluginCtags::~TextPluginCtags() {
 	
 }
 
-const char* eventJumpDestination = "event-plugin-ctags-jump-destination";
-const char* eventJumpBack = "event-plugin-ctags-jump-back";
-const char* eventOpenCtagsFile = "event-plugin-ctags-open";
-const char* eventOpenCtagsOpenFileReturn = "event-plugin-ctags-open-file-return";
-const char* eventOpenCtagsSelectReturn = "event-plugin-ctags-select-file-return";
-
 void appl::TextPluginCtags::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
-	_textDrawer.ext_registerMultiCast(eventJumpDestination);
-	_textDrawer.ext_registerMultiCast(eventJumpBack);
-	_textDrawer.ext_registerMultiCast(eventOpenCtagsFile);
-	_textDrawer.ext_shortCutAdd("ctrl+d", eventJumpDestination);
-	_textDrawer.ext_shortCutAdd("ctrl+shift+d", eventJumpBack);
-	_textDrawer.ext_shortCutAdd("ctrl+alt+d", eventOpenCtagsFile);
+	_textDrawer.ext_shortCutAdd("ctrl+d", "appl::TextPluginCtags::JumpDestination");
+	_textDrawer.ext_shortCutAdd("ctrl+shift+d", "appl::TextPluginCtags::JumpBack");
+	_textDrawer.ext_shortCutAdd("ctrl+alt+d", "appl::TextPluginCtags::OpenCtagsFile");
 }
 
 void appl::TextPluginCtags::onPluginDisable(appl::TextViewer& _textDrawer) {
@@ -169,12 +160,12 @@ void appl::TextPluginCtags::onCallbackOpenCtagsSelectReturn(const std::string& _
 	jumpFile(tmp, lineID - 1);
 }
 
-bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-                                                   const ewol::object::Message& _msg) {
+bool appl::TextPluginCtags::onReceiveShortCut(appl::TextViewer& _textDrawer,
+                                              const std::string& _shortCutName) {
 	if (isEnable() == false) {
 		return false;
 	}
-	if (_msg.getMessage() == eventOpenCtagsFile) {
+	if (_shortCutName == "appl::TextPluginCtags::OpenCtagsFile") {
 		APPL_INFO("Request opening ctag file");
 		std::shared_ptr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
 		if (nullptr == tmpWidget) {
@@ -192,7 +183,7 @@ bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer
 		ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
 		tmpWidget->signalValidate.bind(shared_from_this(), &appl::TextPluginCtags::onCallbackOpenCtagsOpenFileReturn);
 		return true;
-	} else if (_msg.getMessage() == eventJumpDestination) {
+	} else if (_shortCutName == "appl::TextPluginCtags::JumpDestination") {
 		if (_textDrawer.hasBuffer() == false) {
 			return false;
 		}
@@ -210,7 +201,7 @@ bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer
 		}
 		jumpTo(textToSearch);
 		return true;
-	} else if (_msg.getMessage() == eventJumpBack) {
+	} else if (_shortCutName == "appl::TextPluginCtags::JumpBack") {
 		if (_textDrawer.hasBuffer() == false) {
 			return false;
 		}

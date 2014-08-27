@@ -21,7 +21,7 @@ appl::TextViewerPlugin::TextViewerPlugin() :
   m_activateOnWrite(false),
   m_activateOnReplace(false),
   m_activateOnRemove(false),
-  m_activateOnReceiveMessage(false),
+  m_activateOnReceiveShortCut(false),
   m_activateOnCursorMove(false) {
 	addObjectType("appl::TextViewerPlugin");
 }

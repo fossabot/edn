@@ -46,9 +46,9 @@ namespace appl {
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
-			virtual bool onDataReceiveMessageViewer(appl::TextViewer& _textDrawer,
-			                                        const ewol::object::Message& _msg,
-			                                        appl::PluginHistoryData& _data);
+			virtual bool onDataReceiveShortCut(appl::TextViewer& _textDrawer,
+			                                   const std::string& _shortCutName,
+			                                   appl::PluginHistoryData& _data);
 			virtual bool onDataWrite(appl::TextViewer& _textDrawer,
 			                         const appl::Buffer::Iterator& _pos,
 			                         const std::string& _strData,

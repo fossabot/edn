@@ -236,9 +236,6 @@ void MainWindows::init() {
 	shortCutAdd("ctrl+q",       "menu:close");
 	shortCutAdd("ctrl+shift+q", "menu:close-all");
 	
-	shortCutAdd("ctrl+z",       "menu:undo");
-	shortCutAdd("ctrl+shift+z", "menu:redo");
-	
 	shortCutAdd("ctrl+l",       "menu:goto-line");
 	
 	shortCutAdd("ctrl+f",       "menu:search");
@@ -280,24 +277,6 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 		appl::WorkerSaveFile::create("", true);
 	} else if (_value == "menu:property") {
 		displayProperty();
-	} else if (_value == "menu:undo") {
-		APPL_TODO("Event from Menu : " << _value);
-	} else if (_value == "menu:redo") {
-		APPL_TODO("Event from Menu : " << _value);
-	} else if (_value == "menu:copy") {
-		APPL_TODO("Event from Menu : " << _value);
-	} else if (_value == "menu:cut") {
-		APPL_TODO("Event from Menu : " << _value);
-	} else if (_value == "menu:past") {
-		APPL_TODO("Event from Menu : " << _value);
-	} else if (_value == "menu:remove") {
-		APPL_TODO("Event from Menu : " << _value);
-	} else if (_value == "menu:select-all") {
-		APPL_TODO("Event from Menu : " << _value);
-	} else if (_value == "menu:select-none") {
-		APPL_TODO("Event from Menu : " << _value);
-	} else if (_value == "menu:goto-line") {
-		APPL_TODO("Event from Menu : " << _value);
 	} else if (_value == "menu:search") {
 		if (m_widgetSearch == nullptr) {
 			return;

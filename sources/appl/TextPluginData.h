@@ -55,13 +55,13 @@ namespace appl {
 				return data;
 			}
 		protected: // Wrap all element with their internal data: (do not use theses function)
-			bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-			                            const ewol::object::Message& _msg) {
+			bool onReceiveShortCut(appl::TextViewer& _textDrawer,
+			                       const std::string& _shortCutName) {
 				TYPE* data = getDataRef(_textDrawer);
 				if (data == nullptr) {
 					return false;
 				}
-				return onDataReceiveMessageViewer(_textDrawer, _msg, *data);
+				return onDataReceiveShortCut(_textDrawer, _shortCutName, *data);
 			}
 			bool onWrite(appl::TextViewer& _textDrawer,
 			             const appl::Buffer::Iterator& _pos,
@@ -93,9 +93,9 @@ namespace appl {
 			}
 			
 		public:
-			virtual bool onDataReceiveMessageViewer(appl::TextViewer& _textDrawer,
-			                                        const ewol::object::Message& _msg,
-			                                        TYPE& _data) {
+			virtual bool onDataReceiveShortCut(appl::TextViewer& _textDrawer,
+			                                   const std::string& _shortCutName,
+			                                   TYPE& _data) {
 				return false;
 			}
 			virtual bool onDataWrite(appl::TextViewer& _textDrawer,

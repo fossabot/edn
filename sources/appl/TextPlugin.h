@@ -174,23 +174,22 @@ namespace appl {
 				return false;
 			};
 		protected:
-			bool m_activateOnReceiveMessage; //!< onReceiveMessage is availlable for this plugin.
+			bool m_activateOnReceiveShortCut; //!< onReceiveShortCut is availlable for this plugin.
 		public:
 			/**
 			 * @brief Get the availlability of a callback
 			 * @return true if availlable
 			 */
-			bool isAvaillableOnReceiveMessage() {
-				return m_activateOnReceiveMessage;
+			bool isAvaillableOnReceiveShortCut() {
+				return m_activateOnReceiveShortCut;
 			}
 			/**
 			 * @brief Called when a message arrive.
 			 * @param[in] _widget Reference on the widget caller.
-			 * @param[in] _msg Generic message.
+			 * @param[in] _shortCutName Generic message requested.
 			 * @return true if the event might not propagate anymore
 			 */
-			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-			                                    const ewol::object::Message& _msg) {
+			virtual bool onReceiveShortCut(appl::TextViewer& _textDrawer, const std::string& _shortCutName) {
 				return false;
 			}
 		protected:

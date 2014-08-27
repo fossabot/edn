@@ -43,7 +43,7 @@ static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListOnRemove() {
 	static std::vector<std::shared_ptr<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
-static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListonReceiveMessageViewer() {
+static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListonReceiveShortCutViewer() {
 	static std::vector<std::shared_ptr<appl::TextViewerPlugin>> s_list;
 	return s_list;
 }
@@ -63,7 +63,7 @@ void appl::textPluginManager::unInit() {
 	getListOnWrite().clear();
 	getListOnReplace().clear();
 	getListOnRemove().clear();
-	getListonReceiveMessageViewer().clear();
+	getListonReceiveShortCutViewer().clear();
 	getListOnCursorMove().clear();
 	getList().clear();
 }
@@ -98,8 +98,8 @@ void appl::textPluginManager::addPlugin(const std::shared_ptr<appl::TextViewerPl
 	if (_plugin->isAvaillableOnRemove() == true) {
 		getListOnRemove().push_back(_plugin);
 	}
-	if (_plugin->isAvaillableOnReceiveMessage() == true) {
-		getListonReceiveMessageViewer().push_back(_plugin);
+	if (_plugin->isAvaillableOnReceiveShortCut() == true) {
+		getListonReceiveShortCutViewer().push_back(_plugin);
 	}
 	if (_plugin->isAvaillableOnCursorMove() == true) {
 		getListOnCursorMove().push_back(_plugin);
@@ -193,13 +193,13 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
 	return false;
 }
 
-bool appl::textPluginManager::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-                                                     const ewol::object::Message& _msg) {
-	for (auto &it : getListonReceiveMessageViewer()) {
+bool appl::textPluginManager::onReceiveShortCut(appl::TextViewer& _textDrawer,
+                                                const std::string& _shortCutName) {
+	for (auto &it : getListonReceiveShortCutViewer()) {
 		if (it == nullptr) {
 			continue;
 		}
-		if (it->onReceiveMessageViewer(_textDrawer, _msg) == true ) {
+		if (it->onReceiveShortCut(_textDrawer, _shortCutName) == true ) {
 			return true;
 		}
 	}

@@ -61,6 +61,7 @@ void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 	appl::textPluginManager::connect(*this);
 	// last created has focus ...
 	setCurrentSelect();
+	signalShortcut.bind(shared_from_this(), &appl::TextViewer::onCallbackShortCut);
 	
 	/*
 	registerMultiCast(ednMsgBufferId);
@@ -74,10 +75,16 @@ void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 	}
 }
 
-
 appl::TextViewer::~TextViewer() {
 	appl::textPluginManager::disconnect(*this);
 }
+
+void appl::TextViewer::onCallbackShortCut(const std::string& _value) {
+	if (appl::textPluginManager::onReceiveShortCut(*this, _value) == true) {
+		return;
+	}
+}
+
 
 void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
 	// reset scroll:
@@ -670,40 +677,6 @@ void appl::TextViewer::onEventClipboard(enum ewol::context::clipBoard::clipboard
 		write(data);
 	}
 	markToRedraw();
-}
-
-void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
-	ewol::widget::WidgetScrolled::onReceiveMessage(_msg);
-	APPL_VERBOSE("receive msg: " << _msg);
-	// First call plugin
-	/*
-	if (appl::textPluginManager::onReceiveMessageViewer(*this, _msg) == true) {
-		markToRedraw();
-		return;
-	}
-	// If not the last buffer selected, then no event parsing ...
-	if (isSelectedLast() == false) {
-		return;
-	}
-	if (_msg.getMessage() == appl::MsgSelectGotoLineSelect) {
-		if (m_buffer == nullptr) {
-			return;
-		}
-		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), etk::string_to_int32_t(_msg.getData()));
-		select(it, m_buffer->getEndLine(it));
-		markToRedraw();
-		return;
-	}
-	if (_msg.getMessage() == appl::MsgSelectGotoLine) {
-		if (m_buffer == nullptr) {
-			return;
-		}
-		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), etk::string_to_int32_t(_msg.getData()));
-		moveCursor(it);
-		markToRedraw();
-		return;
-	}
-	*/
 }
 
 void appl::TextViewer::onCallbackIsModify() {

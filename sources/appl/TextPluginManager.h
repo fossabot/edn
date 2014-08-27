@@ -95,11 +95,11 @@ namespace appl {
 		/**
 		 * @brief Called when a message arrive.
 		 * @param[in] _widget Reference on the widget caller.
-		 * @param[in] _msg Generic message.
+		 * @param[in] _shortCutName shortcut properties.
 		 * @return true if the event might not propagate anymore
 		 */
-		bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-		                            const ewol::object::Message& _msg);
+		bool onReceiveShortCut(appl::TextViewer& _textDrawer,
+		                       const std::string& _shortCutName);
 		/**
 		 * @brief Called when Cursor move of position.
 		 * @param[in] _widget Reference on the widget caller.
