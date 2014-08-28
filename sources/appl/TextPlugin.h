@@ -13,6 +13,7 @@
 #include <ewol/object/Object.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/compositing/Text.h>
+#include <ewol/widget/Menu.h>
 
 namespace appl {
 	class TextViewerPlugin : public ewol::Object {
@@ -23,6 +24,8 @@ namespace appl {
 		public:
 			DECLARE_FACTORY(TextViewerPlugin);
 			virtual ~TextViewerPlugin();
+		protected:
+			std::weak_ptr<ewol::widget::Menu> m_menuInterface;
 		private:
 			bool m_isEnable; //!< The plugin is enable or not (for all viewer).
 		public:

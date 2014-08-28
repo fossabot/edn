@@ -24,6 +24,10 @@ appl::TextViewerPlugin::TextViewerPlugin() :
   m_activateOnReceiveShortCut(false),
   m_activateOnCursorMove(false) {
 	addObjectType("appl::TextViewerPlugin");
+	m_menuInterface = std::dynamic_pointer_cast<ewol::widget::Menu>(getObjectNamed("appl-menu-interface"));
+	if (m_menuInterface.expired() == true) {
+		APPL_ERROR("Can not acces to the Menu interface");
+	}
 }
 
 void appl::TextViewerPlugin::init() {

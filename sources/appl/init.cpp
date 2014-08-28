@@ -61,7 +61,6 @@ class MainApplication : public ewol::context::Application {
 			
 			appl::highlightManager::init();
 			appl::textPluginManager::init();
-			appl::textPluginManager::addDefaultPlugin();
 			
 			// Request load of the user configuration ...
 			//ewol::userConfig::load();
@@ -83,6 +82,9 @@ class MainApplication : public ewol::context::Application {
 			}
 			// create the specific windows
 			_context.setWindows(basicWindows);
+			
+			// need to add default plugin, because they depend on the Menu widget wich might be named : "appl-menu-interface"
+			appl::textPluginManager::addDefaultPlugin();
 			
 			
 			// add files

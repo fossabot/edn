@@ -25,7 +25,20 @@ void appl::TextPluginCopy::init() {
 }
 
 void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
+	APPL_ERROR("plop");
 	// add event :
+	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	if (menu != nullptr) {
+		APPL_ERROR("plop 1");
+		int32_t idMenuEdit = menu->addTitle("Edit");
+		if (idMenuEdit != -1) {
+			APPL_ERROR("plop 2 ");
+			menu->add(idMenuEdit, "Copy",   "", "appl::TextPluginCopy::menu:copy");
+			menu->add(idMenuEdit, "Cut",    "", "appl::TextPluginCopy::menu:cut");
+			menu->add(idMenuEdit, "Paste",  "", "appl::TextPluginCopy::menu:past");
+			menu->add(idMenuEdit, "Remove", "", "appl::TextPluginCopy::menu:remove");
+		}
+	}
 	_textDrawer.ext_shortCutAdd("ctrl+x", "appl::TextPluginCopy::cut");
 	_textDrawer.ext_shortCutAdd("ctrl+c", "appl::TextPluginCopy::copy");
 	_textDrawer.ext_shortCutAdd("ctrl+v", "appl::TextPluginCopy::Paste");

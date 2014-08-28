@@ -180,6 +180,7 @@ void MainWindows::init() {
 		mySizerVert->subWidgetAdd(mySizerHori);
 			
 			myMenu = ewol::widget::Menu::create();
+			myMenu->setName("appl-menu-interface");
 			mySizerHori->subWidgetAdd(myMenu);
 			int32_t idMenuFile = myMenu->addTitle("File");
 				myMenu->add(idMenuFile, "New",          "", "menu:new");
@@ -196,11 +197,6 @@ void MainWindows::init() {
 			int32_t idMenuEdit = myMenu->addTitle("Edit");
 				myMenu->add(idMenuEdit, "Undo",         "THEME:GUI:Undo.edf", "menu:undo");
 				myMenu->add(idMenuEdit, "Redo",         "THEME:GUI:Redo.edf", "menu:redo");
-				myMenu->addSpacer();
-				myMenu->add(idMenuEdit, "Copy",         "", "menu:copy");
-				myMenu->add(idMenuEdit, "Cut",          "", "menu:cut");
-				myMenu->add(idMenuEdit, "Paste",        "", "menu:past");
-				myMenu->add(idMenuEdit, "Remove",       "", "menu:remove");
 				myMenu->addSpacer();
 				myMenu->add(idMenuEdit, "Select All","", "menu:select-all");
 				myMenu->add(idMenuEdit, "Un-Select","", "menu:select-none");

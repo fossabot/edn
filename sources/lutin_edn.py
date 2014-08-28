@@ -102,9 +102,12 @@ def create(target):
 	myModule.compile_flags_CC([
 		"-DAPPL_VERSION=\"\\\"" + versionID + "\\\"\""
 		])
+	tagFile = tools.get_current_path(__file__) + "/tagCode"
+	versionIDCode = tools.file_read_data(tagFile)
 	
 	# set the package properties :
 	myModule.pkg_set("VERSION", versionID)
+	myModule.pkg_set("VERSION_CODE", versionIDCode)
 	myModule.pkg_set("COMPAGNY_TYPE", "org")
 	myModule.pkg_set("COMPAGNY_NAME", "Edouard DUPIN")
 	myModule.pkg_set("MAINTAINER", ["Mr DUPIN Edouard <yui.heero@gmail.com>"])
