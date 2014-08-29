@@ -45,7 +45,9 @@ void appl::TextPluginCtags::onPluginEnable(appl::TextViewer& _textDrawer) {
 }
 
 void appl::TextPluginCtags::onPluginDisable(appl::TextViewer& _textDrawer) {
-	// TODO : unknow function ...
+	_textDrawer.ext_shortCutRm("appl::TextPluginCtags::JumpDestination");
+	_textDrawer.ext_shortCutRm("appl::TextPluginCtags::JumpBack");
+	_textDrawer.ext_shortCutRm("appl::TextPluginCtags::OpenCtagsFile");
 }
 
 void appl::TextPluginCtags::jumpTo(const std::string& _name) {

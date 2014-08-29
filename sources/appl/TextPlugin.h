@@ -21,6 +21,7 @@ namespace appl {
 		protected:
 			TextViewerPlugin();
 			void init();
+			void init(const std::string& _name);
 		public:
 			DECLARE_FACTORY(TextViewerPlugin);
 			virtual ~TextViewerPlugin();

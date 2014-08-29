@@ -17,6 +17,12 @@
 
 namespace appl {
 	class TextPluginCopy : public appl::TextViewerPlugin {
+		private:
+			int32_t m_menuIdTitle;
+			int32_t m_menuIdCopy;
+			int32_t m_menuIdCut;
+			int32_t m_menuIdPast;
+			int32_t m_menuIdRemove;
 		protected:
 			TextPluginCopy();
 			void init();

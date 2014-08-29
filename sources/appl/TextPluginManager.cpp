@@ -52,6 +52,11 @@ static std::vector<std::shared_ptr<appl::TextViewerPlugin>>& getListOnCursorMove
 	return s_list;
 }
 
+static std::weak_ptr<appl::TextViewer>& getViewerConnected() {
+	static std::weak_ptr<appl::TextViewer> s_widget;
+	return s_widget;
+}
+
 void appl::textPluginManager::init() {
 	
 }
@@ -82,6 +87,7 @@ void appl::textPluginManager::addPlugin(const std::shared_ptr<appl::TextViewerPl
 	if (_plugin == nullptr) {
 		return;
 	}
+	APPL_DEBUG("Add plugin : " << _plugin->getObjectType());
 	getList().push_back(_plugin);
 	if (_plugin->isAvaillableOnEventEntry() == true) {
 		getListOnEventEntry().push_back(_plugin);
@@ -104,9 +110,14 @@ void appl::textPluginManager::addPlugin(const std::shared_ptr<appl::TextViewerPl
 	if (_plugin->isAvaillableOnCursorMove() == true) {
 		getListOnCursorMove().push_back(_plugin);
 	}
+	std::shared_ptr<appl::TextViewer> viewer = getViewerConnected().lock();
+	if (viewer != nullptr) {
+		_plugin->onPluginEnable(*viewer);
+	}
 }
 
 void appl::textPluginManager::connect(appl::TextViewer& _widget) {
+	getViewerConnected() = std::dynamic_pointer_cast<appl::TextViewer>(_widget.shared_from_this());
 	for (auto &it : getList()) {
 		if (it == nullptr) {
 			continue;
@@ -116,6 +127,7 @@ void appl::textPluginManager::connect(appl::TextViewer& _widget) {
 }
 
 void appl::textPluginManager::disconnect(appl::TextViewer& _widget) {
+	getViewerConnected().reset();
 	for (auto &it : getList()) {
 		if (it == nullptr) {
 			continue;

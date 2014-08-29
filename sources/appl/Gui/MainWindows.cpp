@@ -191,15 +191,8 @@ void MainWindows::init() {
 				myMenu->add(idMenuFile, "Save",         "THEME:GUI:Save.edf", "menu:save");
 				myMenu->add(idMenuFile, "Save As ...",  "", "menu:save-as");
 				myMenu->addSpacer();
-				//myMenu->add(idMenuFile, "Exit", "", ednMsgGuiExit);
-				myMenu->addSpacer();
 				myMenu->add(idMenuFile, "Properties",   "THEME:GUI:Parameter.edf", "menu:property");
 			int32_t idMenuEdit = myMenu->addTitle("Edit");
-				myMenu->add(idMenuEdit, "Undo",         "THEME:GUI:Undo.edf", "menu:undo");
-				myMenu->add(idMenuEdit, "Redo",         "THEME:GUI:Redo.edf", "menu:redo");
-				myMenu->addSpacer();
-				myMenu->add(idMenuEdit, "Select All","", "menu:select-all");
-				myMenu->add(idMenuEdit, "Un-Select","", "menu:select-none");
 				myMenu->add(idMenuEdit, "Goto line ...","", "menu:goto-line");
 			int32_t idMenuSearch = myMenu->addTitle("Search");
 				myMenu->add(idMenuSearch, "Search",         "THEME:GUI:Search.edf", "menu:search");

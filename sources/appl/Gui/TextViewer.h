@@ -397,12 +397,18 @@ namespace appl {
 			/**
 			 * @brief add a specific shortcut with his description
 			 * @param[in] _descriptiveString Description string of the shortcut
-			 * @param[in] _generateEventId Event generic of the element
-			 * @param[in] _data Associate data wit the event
+			 * @param[in] _generateEventName Event generic of the element
 			 */
 			virtual void ext_shortCutAdd(const std::string& _descriptiveString,
 			                             const std::string& _generateEventName) {
 				shortCutAdd(_descriptiveString, _generateEventName);
+			}
+			/**
+			 * @brief Remove a specific shortcut with his event name
+			 * @param[in] _generateEventName Event of the element shortcut
+			 */
+			virtual void ext_shortCutRm(const std::string& _generateEventName) {
+				shortCutRemove(_generateEventName);
 			}
 		private: // callback fundtions
 			void onCallbackIsModify();

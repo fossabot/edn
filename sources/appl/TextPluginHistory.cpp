@@ -15,7 +15,10 @@
 #undef __class__
 #define __class__ "TextPluginHistory"
 
-appl::TextPluginHistory::TextPluginHistory() {
+appl::TextPluginHistory::TextPluginHistory() :
+  m_menuIdTitle(-1),
+  m_menuIdUndo(-1),
+  m_menuIdRedo(-1) {
 	m_activateOnReceiveShortCut = true;
 	m_activateOnWrite = true;
 	m_activateOnReplace = true;
@@ -29,13 +32,31 @@ void appl::TextPluginHistory::init() {
 
 
 void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
+	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	if (menu != nullptr) {
+		m_menuIdTitle = menu->addTitle("Edit");
+		if (m_menuIdTitle != -1) {
+			m_menuIdUndo = menu->add(m_menuIdTitle, "Undo", "THEME:GUI:Undo.edf", "appl::TextPluginHistory::menu:undo");
+			m_menuIdRedo = menu->add(m_menuIdTitle, "Redo", "THEME:GUI:Redo.edf", "appl::TextPluginHistory::menu:redo");
+		}
+	}
 	// add event :
 	_textDrawer.ext_shortCutAdd("ctrl+z", "appl::TextPluginHistory::Undo");
 	_textDrawer.ext_shortCutAdd("ctrl+shift+z", "appl::TextPluginHistory::Redo");
 }
 
 void appl::TextPluginHistory::onPluginDisable(appl::TextViewer& _textDrawer) {
-	// TODO : unknow function ...
+	_textDrawer.ext_shortCutRm("appl::TextPluginHistory::Undo");
+	_textDrawer.ext_shortCutRm("appl::TextPluginHistory::Redo");
+	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	if (menu != nullptr) {
+		menu->remove(m_menuIdRedo);
+		menu->remove(m_menuIdUndo);
+		menu->remove(m_menuIdTitle);
+	}
+	m_menuIdTitle = -1;
+	m_menuIdUndo = -1;
+	m_menuIdRedo = -1;
 }
 
 bool appl::TextPluginHistory::onDataReceiveShortCut(appl::TextViewer& _textDrawer,

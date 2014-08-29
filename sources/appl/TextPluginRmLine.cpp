@@ -30,7 +30,7 @@ void appl::TextPluginRmLine::onPluginEnable(appl::TextViewer& _textDrawer) {
 }
 
 void appl::TextPluginRmLine::onPluginDisable(appl::TextViewer& _textDrawer) {
-	// TODO : unknow function ...
+	_textDrawer.ext_shortCutRm("appl::TextPluginRmLine::Rm");
 }
 
 bool appl::TextPluginRmLine::onReceiveShortCut(appl::TextViewer& _textDrawer,

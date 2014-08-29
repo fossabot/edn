@@ -36,6 +36,10 @@ namespace appl {
 			std::vector<History*> m_redo; //!< History storing data
 	};
 	class TextPluginHistory : public appl::TextViewerPluginData<appl::PluginHistoryData> {
+		private:
+			int32_t m_menuIdTitle;
+			int32_t m_menuIdUndo;
+			int32_t m_menuIdRedo;
 		protected:
 			TextPluginHistory();
 			void init();

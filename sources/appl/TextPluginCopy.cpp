@@ -15,7 +15,12 @@
 #define __class__ "TextPluginCopy"
 
 
-appl::TextPluginCopy::TextPluginCopy() {
+appl::TextPluginCopy::TextPluginCopy() :
+  m_menuIdTitle(-1),
+  m_menuIdCopy(-1),
+  m_menuIdCut(-1),
+  m_menuIdPast(-1),
+  m_menuIdRemove(-1) {
 	m_activateOnReceiveShortCut = true;
 	addObjectType("appl::TextPluginCopy");
 }
@@ -25,18 +30,15 @@ void appl::TextPluginCopy::init() {
 }
 
 void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
-	APPL_ERROR("plop");
 	// add event :
 	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
 	if (menu != nullptr) {
-		APPL_ERROR("plop 1");
-		int32_t idMenuEdit = menu->addTitle("Edit");
-		if (idMenuEdit != -1) {
-			APPL_ERROR("plop 2 ");
-			menu->add(idMenuEdit, "Copy",   "", "appl::TextPluginCopy::menu:copy");
-			menu->add(idMenuEdit, "Cut",    "", "appl::TextPluginCopy::menu:cut");
-			menu->add(idMenuEdit, "Paste",  "", "appl::TextPluginCopy::menu:past");
-			menu->add(idMenuEdit, "Remove", "", "appl::TextPluginCopy::menu:remove");
+		m_menuIdTitle = menu->addTitle("Edit");
+		if (m_menuIdTitle != -1) {
+			m_menuIdCopy = menu->add(m_menuIdTitle, "Copy",   "", "appl::TextPluginCopy::menu:copy");
+			m_menuIdCut = menu->add(m_menuIdTitle, "Cut",    "", "appl::TextPluginCopy::menu:cut");
+			m_menuIdPast = menu->add(m_menuIdTitle, "Paste",  "", "appl::TextPluginCopy::menu:past");
+			m_menuIdRemove = menu->add(m_menuIdTitle, "Remove", "", "appl::TextPluginCopy::menu:remove");
 		}
 	}
 	_textDrawer.ext_shortCutAdd("ctrl+x", "appl::TextPluginCopy::cut");
@@ -45,7 +47,22 @@ void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
 }
 
 void appl::TextPluginCopy::onPluginDisable(appl::TextViewer& _textDrawer) {
-	// TODO : unknow function ...
+	_textDrawer.ext_shortCutRm("appl::TextPluginCopy::cut");
+	_textDrawer.ext_shortCutRm("appl::TextPluginCopy::copy");
+	_textDrawer.ext_shortCutRm("appl::TextPluginCopy::Paste");
+	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	if (menu != nullptr) {
+		menu->remove(m_menuIdRemove);
+		menu->remove(m_menuIdPast);
+		menu->remove(m_menuIdCut);
+		menu->remove(m_menuIdCopy);
+		menu->remove(m_menuIdTitle);
+	}
+	m_menuIdTitle = -1;
+	m_menuIdCopy = -1;
+	m_menuIdCut = -1;
+	m_menuIdPast = -1;
+	m_menuIdRemove = -1;
 }
 
 bool appl::TextPluginCopy::onReceiveShortCut(appl::TextViewer& _textDrawer,
