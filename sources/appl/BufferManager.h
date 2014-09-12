@@ -81,6 +81,8 @@ namespace appl {
 			std::shared_ptr<appl::Buffer> getBufferSelected() {
 				return m_bufferSelected;
 			};
+		private:
+			void requestDestroyFromChild(const std::shared_ptr<Object>& _child);
 	};
 };
 

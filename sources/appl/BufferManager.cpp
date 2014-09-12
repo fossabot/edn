@@ -71,6 +71,7 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileN
 			APPL_ERROR("Can not allocate the Buffer class : " << _fileName);
 			return nullptr;
 		}
+		tmp->setParent(shared_from_this());
 		tmp->loadFile(_fileName);
 		m_list.push_back(tmp);
 		APPL_INFO("Creata a open Buffer");
@@ -128,3 +129,19 @@ void appl::BufferManager::open(const std::string& _fileName) {
 	signalSelectFile.emit(_fileName);
 }
 
+
+void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>& _child) {
+	APPL_WARNING("Buffer request a close...");
+	auto it = m_list.begin();
+	while(it != m_list.end()) {
+		if (*it == nullptr) {
+			it = m_list.erase(it);
+			continue;
+		}
+		if (*it == _child) {
+			it = m_list.erase(it);
+			return;
+		}
+		++it;
+	}
+}
