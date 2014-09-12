@@ -124,23 +124,22 @@ void BufferView::onCallbackNewBuffer(const std::string& _value) {
 	}
 	markToRedraw();
 }
+
+// TODO : Review this callback with the real shared_ptr on the buffer ...
 void BufferView::onCallbackselectNewFile(const std::string& _value) {
 	m_selectedID = -1;
-	std::shared_ptr<appl::Buffer> tmpBuffer;
-	if (m_bufferManager != nullptr) {
-		tmpBuffer = m_bufferManager->getBufferSelected();
-	}
-	if (tmpBuffer != nullptr) {
-		for (size_t iii=0; iii<m_list.size(); iii++) {
-			if (m_list[iii] == nullptr) {
-				continue;
-			}
-			if (m_list[iii]->m_buffer != tmpBuffer) {
-				continue;
-			}
-			m_selectedID = iii;
-			break;
+	for (size_t iii=0; iii<m_list.size(); iii++) {
+		if (m_list[iii] == nullptr) {
+			continue;
 		}
+		if (m_list[iii]->m_buffer == nullptr) {
+			continue;
+		}
+		if (m_list[iii]->m_buffer->getFileName() != _value) {
+			continue;
+		}
+		m_selectedID = iii;
+		break;
 	}
 	markToRedraw();
 }
@@ -164,6 +163,7 @@ void BufferView::onCallbackChangeName() {
 	}
 	markToRedraw();
 }
+
 void BufferView::onCallbackIsSave() {
 	markToRedraw();
 }
@@ -215,8 +215,7 @@ bool BufferView::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextT
 	return true;
 }
 
-bool BufferView::onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent,  int32_t _colomn, int32_t _raw, float _x, float _y)
-{
+bool BufferView::onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent,  int32_t _colomn, int32_t _raw, float _x, float _y) {
 	if (1 == _IdInput && _typeEvent == ewol::key::statusSingle) {
 		APPL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
 		if(    _raw >= 0
@@ -224,10 +223,9 @@ bool BufferView::onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent
 		    && nullptr != m_list[_raw]) {
 			if (m_list[_raw]->m_buffer != nullptr) {
 				if (m_bufferManager != nullptr) {
+					APPL_INFO("Select file :" << m_list[_raw]->m_buffer->getFileName() << " in list");
 					m_bufferManager->open(m_list[_raw]->m_buffer->getFileName());
 				}
-				m_selectedID = _raw;
-				markToRedraw();
 				return true;
 			}
 		}

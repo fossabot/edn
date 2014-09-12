@@ -117,14 +117,14 @@ bool appl::BufferManager::exist(const std::string& _fileName) {
 
 void appl::BufferManager::open(const std::string& _fileName) {
 	if (exist(_fileName) == true) {
-		// TODO : Create a pop-up ...
+		APPL_WARNING(" the element '" << _fileName << "' already exist ... just reselect it ...");
+		signalSelectFile.emit(_fileName);
 		return;
 	}
 	if (get(_fileName, true) == nullptr) {
+		APPL_ERROR("Error get '" << _fileName << "' ... ");
 		return;
 	}
-	APPL_INFO("Open buffer:" << _fileName);
 	signalSelectFile.emit(_fileName);
-	APPL_INFO("Open buffer (done)");
 }
 

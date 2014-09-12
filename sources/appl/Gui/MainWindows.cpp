@@ -433,6 +433,7 @@ void MainWindows::displayProperty() {
 }
 
 void MainWindows::onCallbackselectNewFile(const std::string& _value) {
+	APPL_INFO("onCallbackselectNewFile(" << _value << ")");
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
@@ -447,19 +448,14 @@ void MainWindows::onCallbackselectNewFile(const std::string& _value) {
 	}
 }
 
-static const char* const ednEventPopUpFileSaveAs   = "edn-mainWindows-saveAsSelected";
-static const char* const ednEventIsSave = "edn-buffer-is-saved";
-static const char* const ednEventIsModify = "edn-buffer-is-modify";
-static const char* const ednEventChangeName = "edn-buffer-change-name";
-
-
-
 void MainWindows::onCallbackPopUpFileSelected(const std::string& _value) {
+	APPL_INFO("onCallbackPopUpFileSelected(" << _value << ")");
 	APPL_DEBUG("Request opening the file : " << _value);
 	m_bufferManager->open(_value);
 }
 
 void MainWindows::onCallbackTitleUpdate() {
+	APPL_INFO("onCallbackTitleUpdate()");
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
