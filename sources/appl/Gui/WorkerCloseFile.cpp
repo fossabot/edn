@@ -16,6 +16,7 @@
 
 appl::WorkerCloseFile::WorkerCloseFile() :
   signalCloseDone(*this, "close-file-done"),
+  signalAbort(*this, "close-file-abort"),
   m_buffer(nullptr),
   m_worker(nullptr),
   m_bufferManager(nullptr) {
@@ -25,11 +26,11 @@ appl::WorkerCloseFile::WorkerCloseFile() :
 }
 
 void appl::WorkerCloseFile::init(const std::string& _bufferName) {
-	ewol::Object::init();
+	ewol::object::Worker::init();
 	m_bufferName = _bufferName;
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
-		autoDestroy();
+		destroy();
 		return;
 	}
 	if (m_bufferName == "") {
@@ -44,13 +45,13 @@ void appl::WorkerCloseFile::init(const std::string& _bufferName) {
 	}
 	if (m_bufferManager->exist(m_bufferName) == false) {
 		APPL_ERROR("Try to close an non-existant file :" << m_bufferName);
-		autoDestroy();
+		destroy();
 		return;
 	}
 	m_buffer = m_bufferManager->get(m_bufferName);
 	if (m_buffer == nullptr) {
 		APPL_ERROR("Error to get the buffer : " << m_bufferName);
-		autoDestroy();
+		destroy();
 		return;
 	}
 	if (m_buffer->isModify() == false) {
@@ -81,21 +82,29 @@ void appl::WorkerCloseFile::init(const std::string& _bufferName) {
 	if (bt != nullptr) {
 		bt->signalPressed.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackClose);
 	}
-	tmpPopUp->addButton("Cancel", true);
+	bt = tmpPopUp->addButton("Cancel", true);
+	if (bt != nullptr) {
+		bt->signalPressed.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackCancel);
+	}
 	tmpPopUp->setRemoveOnExternClick(true);
 	std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
 	if (tmpWindows == nullptr) {
 		APPL_ERROR("Error to get the windows.");
-		autoDestroy();
+		destroy();
 		return;
 	}
 	tmpWindows->popUpWidgetPush(tmpPopUp);
 }
 
 appl::WorkerCloseFile::~WorkerCloseFile() {
-	
+	APPL_ERROR("Remove Worker");
 }
 
+void appl::WorkerCloseFile::onCallbackCancel() {
+	APPL_VERBOSE("Cancel signal ...");
+	signalAbort.emit();
+	destroy();
+}
 
 void appl::WorkerCloseFile::onCallbackSaveAsValidate() {
 	if (m_bufferManager == nullptr) {
@@ -105,17 +114,21 @@ void appl::WorkerCloseFile::onCallbackSaveAsValidate() {
 	m_worker = appl::WorkerSaveFile::create(m_bufferName);
 	if (m_worker != nullptr) {
 		m_worker->signalSaveDone.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackClose);
+		m_worker->signalAbort.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackCancel);
 	}
 }
 
 void appl::WorkerCloseFile::onCallbackSaveValidate() {
 	if (m_bufferManager == nullptr) {
 		// nothing to do in this case ==> can do nothing ...
+		signalAbort.emit();
+		destroy();
 		return;
 	}
 	if (m_buffer == nullptr) {
 		APPL_ERROR("Error to get the buffer : oldName=" << m_bufferName);
-		autoDestroy();
+		signalAbort.emit();
+		destroy();
 		return;
 	}
 	if (m_buffer->storeFile() == false) {
@@ -124,23 +137,29 @@ void appl::WorkerCloseFile::onCallbackSaveValidate() {
 			return;
 		}
 		tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + m_buffer->getFileName() + "</i>");
+		signalAbort.emit();
 	} else {
 		signalCloseDone.emit();
 	}
+	destroy();
 }
 
 void appl::WorkerCloseFile::onCallbackClose() {
 	if (m_bufferManager == nullptr) {
 		// nothing to do in this case ==> can do nothing ...
+		signalAbort.emit();
+		destroy();
 		return;
 	}
 	if (m_buffer == nullptr) {
 		APPL_ERROR("Error to get the buffer : " << m_bufferName);
-		autoDestroy();
+		signalAbort.emit();
+		destroy();
 		return;
 	}
-	signalCloseDone.emit();
 	m_buffer->destroy();
 	m_buffer.reset();
+	signalCloseDone.emit();
+	destroy();
 }
 

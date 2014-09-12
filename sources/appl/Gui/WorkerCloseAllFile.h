@@ -9,11 +9,12 @@
 #ifndef __WORKER_CLOSE_ALL_FILE_H__
 #define __WORKER_CLOSE_ALL_FILE_H__
 
+#include <ewol/object/Worker.h>
 #include <appl/BufferManager.h>
 #include <appl/Gui/WorkerCloseFile.h>
 
 namespace appl {
-	class WorkerCloseAllFile : public ewol::Object {
+	class WorkerCloseAllFile : public ewol::object::Worker {
 		protected:
 			WorkerCloseAllFile();
 			void init();

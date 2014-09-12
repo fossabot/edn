@@ -20,10 +20,10 @@ appl::WorkerCloseAllFile::WorkerCloseAllFile() {
 }
 
 void appl::WorkerCloseAllFile::init() {
-	ewol::Object::init();
+	ewol::object::Worker::init();
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
-		autoDestroy();
+		destroy();
 		return;
 	}
 	// List all current open file :
@@ -41,7 +41,7 @@ void appl::WorkerCloseAllFile::init() {
 	}
 	// checkif an element has something to do in the queue
 	if (m_bufferNameList.size() == 0) {
-		autoDestroy();
+		destroy();
 		return;
 	}
 	// create the worker :
@@ -49,14 +49,14 @@ void appl::WorkerCloseAllFile::init() {
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
 	if (m_bufferNameList.size() == 0) {
-		autoDestroy();
+		destroy();
 		return;
 	}
 	m_worker->signalCloseDone.bind(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
 }
 
 appl::WorkerCloseAllFile::~WorkerCloseAllFile() {
-	
+	APPL_ERROR("Remove Worker");
 }
 
 void appl::WorkerCloseAllFile::onCallbackCloseDone() {
@@ -65,7 +65,7 @@ void appl::WorkerCloseAllFile::onCallbackCloseDone() {
 		return;
 	}
 	if (m_bufferNameList.size() == 0) {
-		autoDestroy();
+		destroy();
 		return;
 	}
 	// create the worker :
@@ -73,7 +73,7 @@ void appl::WorkerCloseAllFile::onCallbackCloseDone() {
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
 	if (m_bufferNameList.size() == 0) {
-		autoDestroy();
+		destroy();
 		return;
 	}
 	m_worker->signalCloseDone.bind(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);

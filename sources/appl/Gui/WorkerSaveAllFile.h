@@ -9,11 +9,12 @@
 #ifndef __WORKER_SAVE_ALL_FILE_H__
 #define __WORKER_SAVE_ALL_FILE_H__
 
+#include <ewol/object/Worker.h>
 #include <appl/BufferManager.h>
 #include <appl/Gui/WorkerSaveFile.h>
 
 namespace appl {
-	class WorkerSaveAllFile : public ewol::Object {
+	class WorkerSaveAllFile : public ewol::object::Worker {
 		protected:
 			WorkerSaveAllFile();
 			void init();

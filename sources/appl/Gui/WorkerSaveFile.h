@@ -10,12 +10,14 @@
 #define __WORKER_SAVE_FILE_H__
 
 #include <ewol/widget/meta/FileChooser.h>
+#include <ewol/object/Worker.h>
 #include <appl/BufferManager.h>
 
 namespace appl {
-	class WorkerSaveFile : public ewol::Object {
+	class WorkerSaveFile : public ewol::object::Worker {
 		public:
 			ewol::object::Signal<void> signalSaveDone;
+			ewol::object::Signal<void> signalAbort;
 		protected:
 			WorkerSaveFile();
 			void init(const std::string& _bufferName, bool _forceSaveAs=true);
@@ -28,6 +30,7 @@ namespace appl {
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // callback function
 			void onCallbackSaveAsValidate(const std::string& _value);
+			void onCallbackCancel();
 	};
 };
 

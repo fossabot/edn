@@ -9,14 +9,16 @@
 #ifndef __WORKER_CLOSE_FILE_H__
 #define __WORKER_CLOSE_FILE_H__
 
+#include <ewol/object/Worker.h>
 #include <ewol/widget/meta/FileChooser.h>
 #include <appl/BufferManager.h>
 #include <appl/Gui/WorkerSaveFile.h>
 
 namespace appl {
-	class WorkerCloseFile : public ewol::Object {
+	class WorkerCloseFile : public ewol::object::Worker {
 		public:
 			ewol::object::Signal<void> signalCloseDone;
+			ewol::object::Signal<void> signalAbort;
 		protected:
 			// note : if == "" ==> current ...
 			WorkerCloseFile();
@@ -33,6 +35,7 @@ namespace appl {
 			void onCallbackSaveAsValidate();
 			void onCallbackSaveValidate();
 			void onCallbackClose();
+			void onCallbackCancel();
 	};
 };
 
