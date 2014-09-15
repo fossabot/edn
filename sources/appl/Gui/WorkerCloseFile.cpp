@@ -144,6 +144,8 @@ void appl::WorkerCloseFile::onCallbackSaveValidate() {
 		tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + m_buffer->getFileName() + "</i>");
 		signalAbort.emit();
 	} else {
+		m_buffer->destroy();
+		m_buffer.reset();
 		signalCloseDone.emit();
 	}
 	destroy();
