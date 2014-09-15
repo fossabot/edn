@@ -138,7 +138,7 @@ void appl::Buffer::init() {
 }
 
 appl::Buffer::~Buffer() {
-	
+	APPL_ERROR("REAL remove buffer : '" << m_name << "'");
 }
 
 bool appl::Buffer::loadFile(const std::string& _name) {
@@ -987,3 +987,41 @@ uint32_t appl::Buffer::getCursorLinesId() {
 	}
 	return line;
 }
+
+namespace etk {
+	template<> std::string to_string<std::shared_ptr<appl::Buffer>>(const std::shared_ptr<appl::Buffer>& _obj) {
+		if (_obj != nullptr) {
+			return _obj->getFileName();
+		}
+		return "";
+	}
+	template<> std::u32string to_u32string<std::shared_ptr<appl::Buffer>>(const std::shared_ptr<appl::Buffer>& _obj) {
+		return etk::to_u32string(etk::to_string(_obj));
+	}
+	
+	template<> bool from_string<std::shared_ptr<appl::Buffer>>(std::shared_ptr<appl::Buffer>& _variableRet, const std::string& _value) {
+		if (_variableRet != nullptr) {
+			_variableRet->loadFile(_value);
+			return true;
+		}
+		return false;
+	}
+	template<> bool from_string<std::shared_ptr<appl::Buffer>>(std::shared_ptr<appl::Buffer>& _variableRet, const std::u32string& _value) {
+		return from_string(_variableRet, etk::to_string(_value));
+	}
+	template<> std::string to_string<appl::Buffer>(const appl::Buffer& _obj) {
+		return _obj.getFileName();
+	}
+	template<> std::u32string to_u32string<appl::Buffer>(const appl::Buffer& _obj) {
+		return etk::to_u32string(etk::to_string(_obj));
+	}
+	
+	template<> bool from_string<appl::Buffer>(appl::Buffer& _variableRet, const std::string& _value) {
+		_variableRet.loadFile(_value);
+		return true;
+	}
+	template<> bool from_string<appl::Buffer>(appl::Buffer& _variableRet, const std::u32string& _value) {
+		return from_string(_variableRet, etk::to_string(_value));
+	}
+};
+

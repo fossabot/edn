@@ -306,14 +306,14 @@ namespace appl {
 			/**
 			 * @brief get the curent filename of the Buffer
 			 */
-			const std::string& getFileName() {
+			const std::string& getFileName() const {
 				return m_fileName;
 			}
 			/**
 			 * @brief Check if the buffer has a real filename.
 			 * @return the status of the existance of a name.
 			 */
-			bool hasFileName() {
+			bool hasFileName() const {
 				return m_hasFileName;
 			}
 			/**

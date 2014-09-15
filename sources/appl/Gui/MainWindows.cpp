@@ -255,7 +255,8 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 	} else if (_value == "menu:open") {
 		displayOpen();
 	} else if (_value == "menu:close") {
-		appl::WorkerCloseFile::create("");
+		std::shared_ptr<appl::WorkerCloseFile> worker = appl::WorkerCloseFile::create();
+		worker->startAction("");
 	} else if (_value == "menu:close-all") {
 		appl::WorkerCloseAllFile::create();
 	} else if (_value == "menu:save") {

@@ -42,12 +42,12 @@ class BufferView : public ewol::widget::List {
 	private:
 		int32_t m_selectedIdRequested;
 		int32_t m_selectedID;
-		std::vector<appl::dataBufferStruct*> m_list;
+		std::vector<appl::dataBufferStruct> m_list;
 		/**
 		 * @brief Insert the element in the alphabetic order.
 		 * @param[in] _dataStruct element to add.
 		 */
-		void insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _selectNewPosition = false);
+		void insertAlphabetic(const appl::dataBufferStruct& _dataStruct, bool _selectNewPosition = false);
 	protected:
 		// Constructeur
 		BufferView();
@@ -73,6 +73,7 @@ class BufferView : public ewol::widget::List {
 		void onCallbackIsModify();
 		void onCallbackNewBuffer(const std::string& _value);
 		void onCallbackselectNewFile(const std::string& _value);
+		void onCallbackBufferRemoved(const std::shared_ptr<appl::Buffer>& _buffer);
 };
 
 

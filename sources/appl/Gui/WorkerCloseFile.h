@@ -22,10 +22,15 @@ namespace appl {
 		protected:
 			// note : if == "" ==> current ...
 			WorkerCloseFile();
-			void init(const std::string& _bufferName);
+			void init();
 		public:
 			DECLARE_FACTORY(WorkerCloseFile);
 			virtual ~WorkerCloseFile();
+		public:
+			/**
+			 * @brief Action to do 
+			 */
+			void startAction(const std::string& _bufferName);
 		private:
 			std::string m_bufferName;
 			std::shared_ptr<appl::Buffer> m_buffer; //!< reference on the buffer (when rename, we have no more reference on the buffer

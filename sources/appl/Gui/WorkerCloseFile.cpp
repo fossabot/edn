@@ -25,8 +25,11 @@ appl::WorkerCloseFile::WorkerCloseFile() :
 	m_bufferManager = appl::BufferManager::create();
 }
 
-void appl::WorkerCloseFile::init(const std::string& _bufferName) {
+void appl::WorkerCloseFile::init() {
 	ewol::object::Worker::init();
+}
+
+void appl::WorkerCloseFile::startAction(const std::string& _bufferName) {
 	m_bufferName = _bufferName;
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
@@ -38,7 +41,7 @@ void appl::WorkerCloseFile::init(const std::string& _bufferName) {
 		std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 		if (tmpp == nullptr) {
 			APPL_ERROR("No selected buffer now ...");
-			autoDestroy();
+			destroy();
 			return;
 		}
 		m_bufferName = tmpp->getFileName();
@@ -57,12 +60,14 @@ void appl::WorkerCloseFile::init(const std::string& _bufferName) {
 	if (m_buffer->isModify() == false) {
 		signalCloseDone.emit();
 		m_buffer->destroy();
+		destroy();
 		return;
 	}
 	
 	std::shared_ptr<ewol::widget::StdPopUp> tmpPopUp = ewol::widget::StdPopUp::create();
 	if (tmpPopUp == nullptr) {
 		APPL_ERROR("Can not create a simple pop-up");
+		destroy();
 		return;
 	}
 	tmpPopUp->setTitle("<bold>Close un-saved file:</bold>");

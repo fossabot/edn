@@ -41,12 +41,19 @@ namespace appl {
 				m_specificData.clear();
 			}
 		private:
-			std::vector<std::pair<std::shared_ptr<appl::Buffer> ,TYPE* >> m_specificData;
+			std::vector<std::pair<std::weak_ptr<appl::Buffer> ,TYPE* >> m_specificData;
 		protected:
 			TYPE* getDataRef(appl::TextViewer& _textDrawer) {
-				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
-					if (m_specificData[iii].first == _textDrawer.internalGetBuffer()) {
-						return m_specificData[iii].second;
+				auto it = m_specificData.begin();
+				while(it != m_specificData.end()) {
+					std::shared_ptr<appl::Buffer> buf = it->first.lock();
+					if (buf == nullptr) {
+						delete(it->second);
+						it->second = nullptr;
+						it = m_specificData.erase(it);
+					}
+					if (buf == _textDrawer.internalGetBuffer()) {
+						return it->second;
 					}
 				}
 				TYPE* data = new TYPE();

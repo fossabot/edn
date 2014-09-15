@@ -91,16 +91,23 @@ void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
 	if (m_buffer != nullptr) {
 		m_buffer->unBindAll(shared_from_this());
 		bool needAdd = true;
-		for (size_t iii=0; iii<m_drawingRemenber.size(); ++iii) {
-			if (m_drawingRemenber[iii].first == m_buffer) {
-				m_drawingRemenber[iii].second = m_originScrooled;
+		auto it = m_drawingRemenber.begin();
+		while (it != m_drawingRemenber.end()) {
+			std::shared_ptr<appl::Buffer> tmpBuff = it->first.lock();
+			if (tmpBuff == nullptr) {
+				it = m_drawingRemenber.erase(it);
+				continue;
+			}
+			if (tmpBuff == m_buffer) {
+				it->second = m_originScrooled;
 				APPL_VERBOSE("store origin : " << m_originScrooled);
 				needAdd = false;
 				break;
 			}
+			++it;
 		}
 		if (needAdd == true) {
-			m_drawingRemenber.push_back(std::make_pair(m_buffer, m_originScrooled));
+			m_drawingRemenber.push_back(std::make_pair(std::weak_ptr<appl::Buffer>(m_buffer), m_originScrooled));
 			APPL_VERBOSE("Push origin : " << m_originScrooled);
 		}
 	}
@@ -112,7 +119,7 @@ void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
 			m_buffer->signalIsModify.bind(shared_from_this(), &appl::TextViewer::onCallbackIsModify);
 			m_buffer->signalSelectChange.bind(shared_from_this(), &appl::TextViewer::onCallbackSelectChange);
 			for (auto element : m_drawingRemenber) {
-				if (element.first == m_buffer) {
+				if (element.first.lock() == m_buffer) {
 					m_originScrooled = element.second;
 					APPL_VERBOSE("retrive origin : " << m_originScrooled);
 					// TODO : Check if this element is not out of the display text ...

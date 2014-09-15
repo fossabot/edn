@@ -21,6 +21,7 @@ namespace appl {
 			ewol::object::Signal<std::string> signalNewBuffer;
 			ewol::object::Signal<std::string> signalSelectFile;
 			ewol::object::Signal<void> signalTextSelectionChange;
+			ewol::object::Signal<std::shared_ptr<appl::Buffer>> signalRemoveBuffer;
 		protected:
 			BufferManager();
 			void init(const std::string& _uniqueName);

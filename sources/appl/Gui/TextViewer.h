@@ -54,7 +54,7 @@ namespace appl {
 		private:
 			ewol::compositing::Text m_displayText; //!< Text display properties.
 			ewol::compositing::Drawing m_displayDrawing; //!< Other diaplay requested.
-			std::vector<std::pair<std::shared_ptr<appl::Buffer>, vec2>> m_drawingRemenber;
+			std::vector<std::pair<std::weak_ptr<appl::Buffer>, vec2>> m_drawingRemenber;
 		public:
 			void setFontSize(int32_t _size);
 			void setFontName(const std::string& _fontName);
