@@ -55,6 +55,7 @@ namespace appl {
 					if (buf == _textDrawer.internalGetBuffer()) {
 						return it->second;
 					}
+					++it;
 				}
 				TYPE* data = new TYPE();
 				if (data == nullptr) {
