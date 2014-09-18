@@ -149,7 +149,10 @@ bool appl::TextPluginHistory::onDataWrite(appl::TextViewer& _textDrawer,
 		clearRedo(_data);
 		_data.m_undo.push_back(tmpElement);
 	}
-	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.cursor());
+	std::shared_ptr<appl::textPluginManager> mng = m_pluginManager.lock();
+	if (mng!=nullptr) {
+		mng->onCursorMove(_textDrawer, _textDrawer.cursor());
+	}
 	return true;
 }
 
@@ -174,7 +177,10 @@ bool appl::TextPluginHistory::onDataReplace(appl::TextViewer& _textDrawer,
 		clearRedo(_data);
 		_data.m_undo.push_back(tmpElement);
 	}
-	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.cursor());
+	std::shared_ptr<appl::textPluginManager> mng = m_pluginManager.lock();
+	if (mng!=nullptr) {
+		mng->onCursorMove(_textDrawer, _textDrawer.cursor());
+	}
 	return true;
 }
 
@@ -196,7 +202,10 @@ bool appl::TextPluginHistory::onDataRemove(appl::TextViewer& _textDrawer,
 		_data.m_undo.push_back(tmpElement);
 	}
 	_textDrawer.removeDirect();
-	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.cursor());
+	std::shared_ptr<appl::textPluginManager> mng = m_pluginManager.lock();
+	if (mng!=nullptr) {
+		mng->onCursorMove(_textDrawer, _textDrawer.cursor());
+	}
 	return true;
 }
 

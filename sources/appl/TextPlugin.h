@@ -16,8 +16,11 @@
 #include <ewol/widget/Menu.h>
 
 namespace appl {
+	class textPluginManager;
 	class TextViewerPlugin : public ewol::Object {
 		friend class appl::TextViewer;
+		protected:
+			std::weak_ptr<appl::textPluginManager> m_pluginManager;
 		protected:
 			TextViewerPlugin();
 			void init();

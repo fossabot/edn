@@ -41,6 +41,7 @@ appl::TextViewer::TextViewer() :
 	
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
+	m_pluginManager = appl::textPluginManager::create();
 	m_viewerManager = appl::ViewerManager::create();
 	
 	// load color properties
@@ -58,7 +59,7 @@ appl::TextViewer::TextViewer() :
 void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 	ewol::widget::WidgetScrolled::init();
 	m_displayText.setFont(_fontName, _fontSize);
-	appl::textPluginManager::connect(*this);
+	m_pluginManager->connect(*this);
 	// last created has focus ...
 	setCurrentSelect();
 	signalShortcut.bind(shared_from_this(), &appl::TextViewer::onCallbackShortCut);
@@ -76,11 +77,11 @@ void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 }
 
 appl::TextViewer::~TextViewer() {
-	appl::textPluginManager::disconnect(*this);
+	m_pluginManager->disconnect(*this);
 }
 
 void appl::TextViewer::onCallbackShortCut(const std::string& _value) {
-	if (appl::textPluginManager::onReceiveShortCut(*this, _value) == true) {
+	if (m_pluginManager->onReceiveShortCut(*this, _value) == true) {
 		return;
 	}
 }
@@ -383,7 +384,7 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 		return false;
 	}
 	// First call plugin
-	if (appl::textPluginManager::onEventEntry(*this, _event) == true) {
+	if (m_pluginManager->onEventEntry(*this, _event) == true) {
 		markToRedraw();
 		return true;
 	}
@@ -505,7 +506,7 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 	}
 	APPL_VERBOSE("event : " << _event);
 	// Second call plugin
-	if (appl::textPluginManager::onEventInput(*this, _event) == true) {
+	if (m_pluginManager->onEventInput(*this, _event) == true) {
 		markToRedraw();
 		return true;
 	}
@@ -751,7 +752,7 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 		return false;
 	}
 	markToRedraw();
-	if (appl::textPluginManager::onCursorMove(*this, _pos) == true) {
+	if (m_pluginManager->onCursorMove(*this, _pos) == true) {
 		updateScrolling();
 		return true;
 	}
@@ -775,13 +776,13 @@ bool appl::TextViewer::write(const std::string& _data, const appl::Buffer::Itera
 		return false;
 	}
 	markToRedraw();
-	if (appl::textPluginManager::onWrite(*this, _pos, _data) == true) {
+	if (m_pluginManager->onWrite(*this, _pos, _data) == true) {
 		// no call of the move cursor, because pluging might call theses function to copy and cut data...
 		updateScrolling();
 		return true;
 	}
 	bool ret = m_buffer->write(_data, _pos);
-	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+	m_pluginManager->onCursorMove(*this, m_buffer->cursor());
 	updateScrolling();
 	return ret;
 }
@@ -791,13 +792,13 @@ bool appl::TextViewer::replace(const std::string& _data, const appl::Buffer::Ite
 		return false;
 	}
 	markToRedraw();
-	if (appl::textPluginManager::onReplace(*this, _pos, _data, _posEnd) == true) {
+	if (m_pluginManager->onReplace(*this, _pos, _data, _posEnd) == true) {
 		// no call of the move cursor, because pluging might call theses function to copy and cut data...
 		updateScrolling();
 		return true;
 	}
 	bool ret = m_buffer->replace(_data, _pos, _posEnd);
-	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+	m_pluginManager->onCursorMove(*this, m_buffer->cursor());
 	updateScrolling();
 	return ret;
 }
@@ -821,11 +822,11 @@ void appl::TextViewer::remove() {
 		return;
 	}
 	markToRedraw();
-	if (appl::textPluginManager::onRemove(*this, m_buffer->selectStart(), m_buffer->selectStop()) == true) {
+	if (m_pluginManager->onRemove(*this, m_buffer->selectStart(), m_buffer->selectStop()) == true) {
 		return;
 	}
 	m_buffer->removeSelection();
-	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+	m_pluginManager->onCursorMove(*this, m_buffer->cursor());
 }
 
 

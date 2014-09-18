@@ -22,6 +22,7 @@
 #include <utility>
 
 namespace appl {
+	class textPluginManager;
 	class TextViewer : public ewol::widget::WidgetScrolled {
 		private:
 			std::shared_ptr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
@@ -34,6 +35,7 @@ namespace appl {
 			int32_t m_colorNormal;
 		private:
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			std::shared_ptr<appl::textPluginManager> m_pluginManager; //!< Plugin manager interface
 			std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
 		protected:
 			TextViewer();

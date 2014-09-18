@@ -55,6 +55,7 @@ void appl::TextPluginSelectAll::onPluginDisable(appl::TextViewer& _textDrawer) {
 	m_menuIdSelectNone = -1;
 }
 
+
 bool appl::TextPluginSelectAll::onReceiveShortCut(appl::TextViewer& _textDrawer,
                                                   const std::string& _shortCutName) {
 	if (isEnable() == false) {

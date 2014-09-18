@@ -8,6 +8,7 @@
 
 
 #include <appl/TextPlugin.h>
+#include <appl/TextPluginManager.h>
 #include <appl/debug.h>
 
 #undef __class__
@@ -28,6 +29,8 @@ appl::TextViewerPlugin::TextViewerPlugin() :
 	if (m_menuInterface.expired() == true) {
 		APPL_ERROR("Can not acces to the Menu interface");
 	}
+	// get a reference on the plugin manager...
+	m_pluginManager = appl::textPluginManager::create();
 }
 
 void appl::TextViewerPlugin::init() {
