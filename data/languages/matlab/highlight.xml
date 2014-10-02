@@ -33,10 +33,12 @@
 			<color>boolean</color>
 			<regex>\@true|false\@</regex>
 		</rule>
+		<!--
 		<rule name="Function name">
 			<color>functionName</color>
 			<regex>\@(\w|_)+[ \t]*\(</regex>
 		</rule>
+		-->
 		<rule name="condition">
 			<color>boolean</color>
 			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</regex>

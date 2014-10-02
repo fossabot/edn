@@ -25,12 +25,13 @@
 #define HL2_DEBUG APPL_VERBOSE
 
 void appl::Highlight::parseRules(exml::Element* _child,
-                           std::vector<std::unique_ptr<HighlightPattern>>& _mListPatern,
-                           int32_t _level) {
+                                 std::vector<std::unique_ptr<HighlightPattern>>& _mListPatern,
+                                 int32_t _level,
+                                 bool forceMaximize) {
 	// Create the patern ...
 	HighlightPattern *myPattern = new HighlightPattern(m_paintingProperties);
 	// parse under Element
-	myPattern->parseRules(_child, _level);
+	myPattern->parseRules(_child, _level, forceMaximize);
 	// add element in the list
 	_mListPatern.push_back(std::unique_ptr<HighlightPattern>(myPattern));
 }
@@ -95,7 +96,7 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->getValue() << "\" must be [rule]" );
 					continue;
 				}
-				parseRules(passChild, m_listHighlightPass2, level2++);
+				parseRules(passChild, m_listHighlightPass2, level2++, true);
 			}
 		} else {
 			APPL_ERROR("(l "<< child->getPos() << ") node not suported : \""<< child->getValue() << "\" must be [ext,pass1,pass2]" );

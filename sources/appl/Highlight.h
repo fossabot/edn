@@ -63,7 +63,8 @@ namespace appl {
 		private:
 			void parseRules(exml::Element* _child,
 			                std::vector<std::unique_ptr<HighlightPattern>> &_mListPatern,
-			                int32_t _level);
+			                int32_t _level,
+			                bool forceMaximize=false);
 			std::string m_styleName; //!< curent style name (like "c++" or "c" or "script Bash")
 			std::vector<std::string> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
 			std::vector<std::unique_ptr<HighlightPattern>> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)

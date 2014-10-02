@@ -26,11 +26,12 @@ appl::HighlightPattern::~HighlightPattern() {
 	
 }
 
-void appl::HighlightPattern::setPatern(std::string& _regExp) {
+void appl::HighlightPattern::setPatern(std::string& _regExp, bool forceMaximize) {
 	if (m_regExp == nullptr) {
 		return;
 	}
 	m_regExp->compile(_regExp);
+	m_regExp->setMaximize(forceMaximize);
 }
 std::string appl::HighlightPattern::getPaternString() {
 	return m_regExp->getRegExDecorated();
@@ -48,12 +49,13 @@ void appl::HighlightPattern::display() {
 	APPL_INFO("  == > regExp '" << m_regExp->getRegExp() << "'");
 }
 
-void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
+void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level, bool forceMaximize) {
 	//--------------------------------------------------------------------------------------------
 	/*
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
 			<regex>#</regex>
+			<max>false</max>
 		</rule>
 	*/
 	//--------------------------------------------------------------------------------------------
@@ -75,13 +77,17 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 			setColorGlyph(myEdnData);
 		}
 	}
+	xChild = _child->getNamed("max");
+	if (nullptr != xChild) {
+		forceMaximize = etk::string_to_bool(xChild->getText());
+	}
 	xChild = _child->getNamed("regex");
 	if (nullptr != xChild) {
 		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			std::string myEdnData = myData;
-			setPatern(myEdnData);
+			setPatern(myEdnData, forceMaximize);
 		}
 	}
 }
