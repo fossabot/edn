@@ -17,101 +17,33 @@
 #undef __class__
 #define __class__ "Buffer"
 
-appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
-	m_value = u32char::Null;
-	if (m_current < 0) {
-		m_current = 0;
-		return *this;
-	}
-	if (m_data != nullptr) {
-		if (m_current < m_data->m_data.size() ) {
-			int8_t nbChar = utf8::theoricLen(m_data->m_data[m_current]);
-			if (nbChar != 0) {
-				m_current+=nbChar;
-			} else {
-				m_current++;
-			}
-		}
-		if (m_current >= m_data->m_data.size()) {
-			m_current = m_data->m_data.size();
-		}
-	}
-	return *this;
-}
-
-appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- () {
-	m_value = u32char::Null;
-	if (m_data != nullptr) {
-		if (m_current > 0) {
-			int32_t iii = -1;
-			while(    utf8::theoricFirst(m_data->m_data[m_current+iii]) == false
-			       && iii >= -6
-			       && m_current-iii>0) {
-				--iii;
-			};
-			m_current += iii;
-		} else {
-			m_current = -1;
-		}
-		return *this;
-	} else {
-		m_current = -1;
-	}
-	return *this;
-}
-
-char32_t appl::Buffer::Iterator::operator* () {
-	if (m_value != u32char::Null) {
-		return m_value;
-	}
-	if (m_data == nullptr) {
-		APPL_ERROR("request an element that iterator not link");
-		return m_value;
-	}
-	if (    m_current < 0
-	     || m_current >= m_data->m_data.size()) {
-		APPL_ERROR("request an element out of bounding !!! 0 <= " << m_current << " < " << m_data->m_data.size());
-		return m_value;
-	}
-	char tmpVal[5];
-	memset(tmpVal, 0, sizeof(tmpVal));
-	tmpVal[0] = m_data->m_data[m_current];
-	int8_t nbChar = utf8::theoricLen(tmpVal[0]);
-	for (int32_t iii=1; iii<nbChar && m_current+iii<m_data->m_data.size(); ++iii) {
-		tmpVal[iii] = m_data->m_data[m_current+iii];
-	}
-	// transform ...
-	m_value = utf8::convertChar32(tmpVal);
-	return m_value;
-}
-
 
 appl::Buffer::Iterator appl::Buffer::position(int64_t _pos) {
-	return appl::Buffer::Iterator(this, _pos);
+	return m_data.begin() + _pos;
 }
 
 appl::Buffer::Iterator appl::Buffer::begin() {
-	return position(0);
+	return m_data.begin();
 }
 
 appl::Buffer::Iterator appl::Buffer::end() {
 	// TODO : chek the validity of the char ...
-	return position( m_data.size() );
+	return m_data.end();
 }
 
 appl::Buffer::Iterator appl::Buffer::cursor() {
 	if (m_cursorPos<= 0) {
-		return begin();
+		return m_data.begin();
 	}
-	return position( m_cursorPos );
+	return m_data.begin() + m_cursorPos;
 }
 
 appl::Buffer::Iterator appl::Buffer::selectStart() {
-	return position( getStartSelectionPos() );
+	return m_data.begin() + getStartSelectionPos();
 }
 
 appl::Buffer::Iterator appl::Buffer::selectStop() {
-	return position( getStopSelectionPos() );
+	return m_data.begin() + getStopSelectionPos();
 }
 
 appl::Buffer::Buffer() :
@@ -152,7 +84,9 @@ bool appl::Buffer::loadFile(const std::string& _name) {
 	m_cursorPos = 0;
 	setHighlightType("");
 	m_nbLines = 0;
-	if (m_data.dumpFrom(m_fileName) == true ) {
+	etk::FSNode filee(m_fileName);
+	if (filee.exist() == true) {
+		m_data = file.fileReadAllU32String();
 		countNumberofLine();
 		tryFindHighlightType();
 		m_isModify = false;
@@ -175,12 +109,11 @@ void appl::Buffer::setFileName(const std::string& _name) {
 }
 
 bool appl::Buffer::storeFile() {
-	if (m_data.dumpIn(m_fileName) == true) {
-		APPL_INFO("saving file : " << m_fileName);
-		setModification(false);
-		return true;
-	}
-	return false;
+	etk::FSNode filee(m_fileName);
+	filee.fileWriteAll(m_data);
+	APPL_INFO("saving file : " << m_fileName);
+	setModification(false);
+	return true;
 }
 
 void appl::Buffer::setModification(bool _status) {
@@ -198,10 +131,8 @@ void appl::Buffer::setModification(bool _status) {
 // TODO : Naming error
 void appl::Buffer::countNumberofLine() {
 	m_nbLines = 1;
-	for (Iterator it = begin();
-	     (bool)it == true;
-	     ++it) {
-		if (*it == u32char::Return) {
+	for (auto &it : m_data) {
+		if (it == u32char::Return) {
 			++m_nbLines;
 		}
 	}
@@ -230,21 +161,21 @@ appl::Buffer::Iterator appl::Buffer::getEndLine(const appl::Buffer::Iterator& _p
 bool appl::Buffer::search(const appl::Buffer::Iterator& _pos, const char32_t& _search, appl::Buffer::Iterator& _result) {
 	// move in the string
 	for (Iterator it = _pos;
-	     (bool)it == true;
+	     it != m_data.end();
 	     ++it) {
 		if (*it == _search) {
 			_result = it;
 			return true;
 		}
 	}
-	_result = end();
+	_result = m_data.end();
 	return false;
 }
 
 bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos, const char32_t& _search, appl::Buffer::Iterator& _result) {
 	// move in the string
 	for (Iterator it = _pos - 1;
-	     (bool)it == true;
+	     it != m_data.begin();
 	     --it) {
 		//APPL_DEBUG("compare : " << *it << " ?= " << _search);
 		if (*it == _search) {
@@ -267,7 +198,7 @@ bool appl::Buffer::search(const appl::Buffer::Iterator& _pos,
 	if (_caseSensitive == true) {
 		// move in the string
 		for (Iterator it = _pos;
-		     (bool)it == true;
+		     it == m_data.end();
 		     ++it) {
 			if (*it == _search[0]) {
 				// find the first char ==> check next...
@@ -279,7 +210,7 @@ bool appl::Buffer::search(const appl::Buffer::Iterator& _pos,
 						break;
 					}
 					++tmp;
-					if ((bool)tmp == false) {
+					if (tmp == m_data.end()) {
 						if (iii != _search.size()-1) {
 							find = false;
 						}
@@ -296,7 +227,7 @@ bool appl::Buffer::search(const appl::Buffer::Iterator& _pos,
 		char32_t firstElement = tolower(_search[0]);
 		// move in the string
 		for (Iterator it = _pos;
-		     (bool)it == true;
+		     it == m_data.end();
 		     ++it) {
 			if ((char32_t)tolower(*it) == firstElement) {
 				// find the first char ==> check next...
@@ -308,7 +239,7 @@ bool appl::Buffer::search(const appl::Buffer::Iterator& _pos,
 						break;
 					}
 					++tmp;
-					if ((bool)tmp == false) {
+					if (tmp != m_data.end()) {
 						if (iii != _search.size()-1) {
 							find = false;
 						}
@@ -337,7 +268,7 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos,
 	if (_caseSensitive == true) {
 		// move in the string
 		for (Iterator it = _pos - 1;
-		     (bool)it == true;
+		     it != m_data.begin();
 		     --it) {
 			//APPL_DEBUG("compare : " << *it << " ?= " << _search);
 			if (*it == lastElement) {
@@ -350,7 +281,7 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos,
 						break;
 					}
 					--_result;
-					if ((bool)_result == false) {
+					if (_result == m_data.begin()) {
 						if (iii != 0) {
 							find = false;
 						}
@@ -367,7 +298,7 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos,
 		lastElement = tolower(lastElement);
 		// move in the string
 		for (Iterator it = _pos - 1;
-		     (bool)it == true;
+		     it != m_data.begin();
 		     --it) {
 			//APPL_DEBUG("compare : " << *it << " ?= " << _search);
 			if ((char32_t)tolower(*it) == lastElement) {
@@ -380,7 +311,7 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos,
 						break;
 					}
 					--_result;
-					if ((bool)_result == false) {
+					if (_result == m_data.begin()) {
 						if (iii != 0) {
 							find = false;
 						}
