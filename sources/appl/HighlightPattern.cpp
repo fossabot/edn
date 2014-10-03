@@ -16,25 +16,29 @@
 appl::HighlightPattern::HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting) :
   m_glyphPainting(_glyphPainting),
   m_paternName(""),
-  m_regExp(nullptr),
+  m_regExp(),
   m_colorName(""),
   m_level(0) {
-	m_regExp = std::unique_ptr<etk::RegExp<etk::Buffer>>(new etk::RegExp<etk::Buffer>());
+	
 }
 
 appl::HighlightPattern::~HighlightPattern() {
 	
 }
 
-void appl::HighlightPattern::setPatern(std::string& _regExp, bool forceMaximize) {
-	if (m_regExp == nullptr) {
-		return;
-	}
-	m_regExp->compile(_regExp);
-	m_regExp->setMaximize(forceMaximize);
+void appl::HighlightPattern::setPatern(const std::string& _regExp, bool forceMaximize) {
+	m_regexValue = _regExp;
+	const std::u32string data = utf8::convertUnicode(_regExp);
+	const std::u32string data2 = U"kjhkjhk";
+	const std::string data3 = "kjhkjhk";
+	//std::basic_regex<char32_t, std::u32string> regexp(data2);
+	std::basic_regex<char32_t> regexp((const char32_t*)data2.c_str());
+	//m_regExp.assign((const std::u32string)data);
+	//m_regExp.assign(_regExp);
+	//m_regExp.setMaximize(forceMaximize);
 }
 std::string appl::HighlightPattern::getPaternString() {
-	return m_regExp->getRegExDecorated();
+	return m_regexValue;
 }
 
 void appl::HighlightPattern::setColorGlyph(std::string& _colorName) {
@@ -46,7 +50,8 @@ void appl::HighlightPattern::setColorGlyph(std::string& _colorName) {
 void appl::HighlightPattern::display() {
 	APPL_INFO("patern : '" << m_paternName << "' level=" << m_level );
 	APPL_INFO("  == > colorName '" << m_colorName << "'");
-	APPL_INFO("  == > regExp '" << m_regExp->getRegExp() << "'");
+	//APPL_INFO("  == > regExp '" << m_regExp.getRegExp() << "'");
+	APPL_INFO("  == > regExp '" << m_regexValue << "'");
 }
 
 void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level, bool forceMaximize) {
@@ -92,23 +97,47 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level, b
 	}
 }
 
+typedef std::match_results<std::u32string::const_iterator> s32match;
 
 enum resultFind appl::HighlightPattern::find(int32_t _start,
                                      int32_t _stop,
                                      appl::HighlightInfo& _resultat,
-                                     etk::Buffer& _buffer) {
+                                     const std::u32string& _buffer) {
 	//APPL_DEBUG(" try to find the element");
 	_resultat.start = -1;
 	_resultat.stop = -1;
 	_resultat.notEnded = false;
 	_resultat.patern = this;
-	
+	/*
 	// when we have only one element:
-	if (true == m_regExp->processOneElement(_buffer, _start, _stop)) {
+	if (true == m_regExp.processOneElement(_buffer, _start, _stop)) {
 		_resultat.start = m_regExp->start();
 		_resultat.stop  = m_regExp->stop();
 		return HLP_FIND_OK;
 	}
 	//APPL_DEBUG("NOT find hightlightpatern ...");
+	return HLP_FIND_ERROR;
+	*/
+	
+	s32match resultMatch;
+	std::regex_search(_buffer, resultMatch, m_regExp);
+	if (resultMatch.size() > 0) {
+		_resultat.start = std::distance(_buffer.begin(), resultMatch[0].first);;
+		_resultat.stop = std::distance(_buffer.begin(), resultMatch[0].second);
+		/*
+		if (false){
+			TK_DEBUG("in line : '" << etk::to_string(_buffer) << "'");
+			TK_DEBUG("    Find " << resultMatch.size() << " elements");
+			for (size_t iii=0; iii<resultMatch.size(); ++iii) {
+				int32_t posStart = std::distance(_buffer.begin(), resultMatch[iii].first);
+				int32_t posStop = std::distance(_buffer.begin(), resultMatch[iii].second);
+				TK_DEBUG("          [" << iii << "] " << *resultMatch[iii].first);
+				TK_DEBUG("          [" << iii << "] " << *resultMatch[iii].second);
+				TK_DEBUG("          [" << iii << "] " << etk::to_string(std::u32string(_buffer, posStart, posStop-posStart)));
+			}
+		}
+		*/
+		return HLP_FIND_OK;
+	}
 	return HLP_FIND_ERROR;
 }

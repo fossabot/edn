@@ -14,9 +14,9 @@
 class HighlightPattern;
 
 
-#include <etk/RegExp.h>
 #include <appl/GlyphPainting.h>
 #include <vector>
+#include <regex>
 #include <exml/exml.h>
 #include <etk/Buffer.h>
 
@@ -44,9 +44,10 @@ namespace appl {
 				return m_paternName;
 			};
 		private:
-			std::unique_ptr<etk::RegExp<etk::Buffer>> m_regExp; //!< Start of Regular expression
+			std::string m_regexValue;
+			std::basic_regex<char32_t> m_regExp; //!< Start of Regular expression
 		public:
-			void setPatern(std::string& _regExp, bool forceMaximize=false);
+			void setPatern(const std::string& _regExp, bool forceMaximize=false);
 			std::string getPaternString();
 		private:
 			std::string m_colorName; //!< Current color name
@@ -82,7 +83,7 @@ namespace appl {
 			enum resultFind find(int32_t _start,
 			                     int32_t _stop,
 			                     appl::HighlightInfo& _resultat,
-			                     etk::Buffer& _buffer);
+			                     const std::u32string& _buffer);
 			
 			void parseRules(exml::Element* _child, int32_t _level, bool forceMaximize=false);
 	};

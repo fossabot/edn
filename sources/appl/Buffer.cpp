@@ -357,15 +357,15 @@ void appl::Buffer::moveCursor(int64_t _pos) {
 bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
                                 appl::Buffer::Iterator &_beginPos,
                                 appl::Buffer::Iterator &_endPos) {
-	char32_t currentValue = *position(_startPos);
+	char32_t currentValue = *_startPos;
 	_beginPos = begin();
 	_endPos = end();
 	if (    currentValue == u32char::Tabulation
 	     || currentValue == u32char::Space) {
 		APPL_DEBUG("select spacer");
 		// Search back
-		for (Iterator it = --position(_startPos);
-		     (bool)it == true;
+		for (Iterator it = --Iterator(_startPos);
+		     it != m_data.begin();
 		     --it) {
 			currentValue = *it;
 			if (    currentValue != u32char::Tabulation
@@ -375,8 +375,8 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 			}
 		}
 		// Search forward
-		for (Iterator it = position(_startPos);
-		     (bool)it == true;
+		for (Iterator it = _startPos;
+		     it != m_data.end();
 		     ++it) {
 			currentValue = *it;
 			if (    currentValue != u32char::Tabulation
@@ -390,8 +390,8 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 	           || currentValue == '_') {
 		APPL_DEBUG("select normal Char");
 		// Search back
-		for (Iterator it = --position(_startPos);
-		     (bool)it == true;
+		for (Iterator it = --Iterator(_startPos);
+		     it == m_data.begin();
 		     --it) {
 			currentValue = *it;
 			if (    currentValue != '_'
@@ -401,8 +401,8 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 			}
 		}
 		// Search forward
-		for (Iterator it = position(_startPos);
-		     (bool)it == true;
+		for (Iterator it = _startPos;
+		     it != m_data.end();
 		     ++it) {
 			currentValue = *it;
 			if (    currentValue != '_'
@@ -416,8 +416,8 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 		APPL_DEBUG("select same char");
 		char32_t comparechar = currentValue;
 		// Search back
-		for (Iterator it = --position(_startPos);
-		     (bool)it == true;
+		for (Iterator it = --Iterator(_startPos);
+		     it == m_data.begin();
 		     --it) {
 			currentValue = *it;
 			if (comparechar != currentValue) {
@@ -426,8 +426,8 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 			}
 		}
 		// Search forward
-		for (Iterator it = position(_startPos);
-		     (bool)it == true;
+		for (Iterator it = --Iterator(_startPos);
+		     it != m_data.end();
 		     ++it) {
 			currentValue = *it;
 			if (comparechar != currentValue) {
@@ -437,13 +437,13 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 		}
 		return true;
 	}
-	_beginPos = begin();
-	_endPos = begin();
+	_beginPos = m_data.begin();
+	_endPos = m_data.begin();
 	return false;
 }
 
 void appl::Buffer::setSelectionPos(const appl::Buffer::Iterator& _pos) {
-	m_cursorSelectPos = _pos;
+	m_cursorSelectPos = std::distance(m_data.begin(), _pos);
 	signalSelectChange.emit();
 }
 
@@ -499,8 +499,8 @@ appl::Buffer::Iterator appl::Buffer::countForwardNLines(const appl::Buffer::Iter
 	char32_t value;
 	int32_t lineCount = 0;
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
-	for (Iterator it = position(_startPos);
-	     (bool)it == true;
+	for (Iterator it = Iterator(_startPos);
+	     it != m_data.end();
 	     ++it) {
 		value = *it;
 		if (value == u32char::Return) {
@@ -519,8 +519,8 @@ appl::Buffer::Iterator appl::Buffer::countBackwardNLines(const appl::Buffer::Ite
 	//APPL_INFO("startPos=" << startPos << " nLines=" << nLines);
 	char32_t value;
 	int32_t lineCount = 0;
-	for (Iterator it = --position(_startPos);
-	     (bool)it == true;
+	for (Iterator it = --Iterator(_startPos);
+	     it != m_data.begin();
 	     --it) {
 		value = *it;
 		if (value == u32char::Return) {
@@ -544,7 +544,7 @@ bool appl::Buffer::copy(std::string& _data) {
 		int32_t endPos = getStopSelectionPos();
 		for (Iterator it = position(startPos);
 		     it != position(endPos) &&
-		     (bool)it == true;
+		     it != m_data.end();
 		     ++it) {
 			_data += *it;
 		}
@@ -557,39 +557,33 @@ void appl::Buffer::copy(std::string& _data, const appl::Buffer::Iterator& _pos, 
 	_data.clear();
 	for (Iterator it = _pos;
 	     it != _posEnd &&
-	     (bool)it == true;
+	     it != m_data.end();
 	     ++it) {
 		_data += *it;
 	}
 }
 
 bool appl::Buffer::write(const std::string& _data, const appl::Buffer::Iterator& _pos) {
-	int64_t position = (int64_t)_pos;
-	if (position < 0){
-		position = 0;
-	}
-	APPL_VERBOSE("write at pos: " << (int64_t)_pos << " ==> " << position << " data : " << _data);
-	m_data.insert(position, (int8_t*)(_data.c_str()), _data.size());
+	std::u32string data2 = utf8::convertUnicode(_data);
+	APPL_VERBOSE("write at pos: " << std::distance(m_data.begin(), _pos) << " data : " << data2);
+	m_data.insert(_pos, data2.begin(), data2.end());
 	if (m_cursorPos < 0) {
 		m_cursorPos = 0;
 	}
-	regenerateHighLightAt(position, 0, _data.size());
+	regenerateHighLightAt(std::distance(m_data.begin(), _pos), 0, data2.size());
 	m_selectMode = false;
-	moveCursor(position+_data.size());
+	moveCursor(std::distance(m_data.begin(),_pos+data2.size()));
 	countNumberofLine(); // TODO : use more intelligent counter
 	setModification(true);
 	return true;
 }
 
 bool appl::Buffer::replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
-	int64_t position = (int64_t)_pos;
-	if (position < 0){
-		position = 0;
-	}
-	m_data.replace(position, (int64_t)_posEnd-(int64_t)_pos, (int8_t*)(_data.c_str()), _data.size());
-	regenerateHighLightAt(position, (int64_t)_posEnd-(int64_t)_pos, _data.size());
+	std::u32string data2 = utf8::convertUnicode(_data);
+	m_data.replace(_pos, _posEnd, data2.c_str(), data2.size());
+	regenerateHighLightAt(std::distance(m_data.begin(),_pos), std::distance(m_data.begin(),_posEnd)-std::distance(m_data.begin(),_pos), data2.size());
 	m_selectMode = false;
-	moveCursor(position+_data.size());
+	moveCursor(std::distance(m_data.begin(),_pos+data2.size()));
 	countNumberofLine(); // TODO : use more intelligent counter
 	setModification(true);
 	return true;
@@ -601,7 +595,7 @@ void appl::Buffer::removeSelection() {
 	}
 	int64_t startPos = getStartSelectionPos();
 	int64_t endPos = getStopSelectionPos();
-	m_data.remove(startPos, endPos-startPos);
+	m_data.erase(startPos, endPos-startPos);
 	regenerateHighLightAt(startPos, endPos-startPos, 0);
 	m_selectMode = false;
 	moveCursor(startPos);
@@ -823,13 +817,13 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 	//int64_t timeStart = ewol::getTime();
 	
 	appl::Buffer::Iterator HLStartLine = getStartLine(_HLStart);
-	int64_t HLStartPos = (int64_t)HLStartLine;
+	int64_t HLStartPos = std::distance(m_data.begin(),HLStartLine);
 	_MData.HLData.clear();
-	int64_t HLStop = (int64_t)countForwardNLines(HLStartLine, _nbLines);
+	int64_t HLStop = std::distance(m_data.begin(),countForwardNLines(HLStartLine, _nbLines));
 	int64_t startId = 0;
 	int64_t stopId = 0;
 	// find element previous
-	findMainHighLightPosition(_HLStart, HLStop, startId, stopId, true);
+	findMainHighLightPosition(std::distance(m_data.begin(),_HLStart), HLStop, startId, stopId, true);
 
 	//APPL_DEBUG("List of section between : "<< startId << " & " << stopId);
 	int64_t endSearch = stopId+1;
@@ -910,7 +904,7 @@ uint32_t appl::Buffer::getCursorLinesId() {
 	}
 	uint32_t line = 0;
 	for (Iterator it = begin();
-	    (bool)it == true && it <= cursor();
+	     it != m_data.end() && it <= cursor();
 	     ++it) {
 		if (*it == u32char::Return) {
 			++line;

@@ -168,7 +168,7 @@ void appl::Highlight::parse(int64_t _start,
                             int64_t _stop,
                             std::vector<appl::HighlightInfo> & _metaData,
                             int64_t _addingPos,
-                            etk::Buffer & _buffer) {
+                            std::u32string& _buffer) {
 	if (0 > _addingPos) {
 		_addingPos = 0;
 	}
@@ -230,7 +230,7 @@ void appl::Highlight::parse(int64_t _start,
 void appl::Highlight::parse2(int64_t _start,
                              int64_t _stop,
                              std::vector<appl::HighlightInfo> &_metaData,
-                             etk::Buffer &_buffer) {
+                             std::u32string&_buffer) {
 	HL2_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() <<
 	          "  == > position search: (" << _start << "," << _stop << ")" );
 	int64_t elementStart = _start;
