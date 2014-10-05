@@ -16,6 +16,8 @@
 appl::HighlightPattern::HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting) :
   m_glyphPainting(_glyphPainting),
   m_paternName(""),
+  m_hasParsingError(true),
+  m_regexValue(""),
   m_regExp(),
   m_colorName(""),
   m_level(0) {
@@ -28,13 +30,13 @@ appl::HighlightPattern::~HighlightPattern() {
 
 void appl::HighlightPattern::setPatern(const std::string& _regExp, bool forceMaximize) {
 	m_regexValue = _regExp;
-	const std::u32string data = utf8::convertUnicode(_regExp);
-	const std::u32string data2 = U"kjhkjhk";
-	const std::string data3 = "kjhkjhk";
-	//std::basic_regex<char32_t, std::u32string> regexp(data2);
-	std::basic_regex<char32_t> regexp((const char32_t*)data2.c_str());
-	//m_regExp.assign((const std::u32string)data);
-	//m_regExp.assign(_regExp);
+	try {
+		m_regExp.assign(_regExp);
+		m_hasParsingError = false;
+	} catch (std::regex_error e) {
+		m_hasParsingError = true;
+		APPL_ERROR("can not parse regExp : '" << e.what() << "' for : " << _regExp);
+	}
 	//m_regExp.setMaximize(forceMaximize);
 }
 std::string appl::HighlightPattern::getPaternString() {
@@ -97,17 +99,20 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level, b
 	}
 }
 
-typedef std::match_results<std::u32string::const_iterator> s32match;
 
 enum resultFind appl::HighlightPattern::find(int32_t _start,
-                                     int32_t _stop,
-                                     appl::HighlightInfo& _resultat,
-                                     const std::u32string& _buffer) {
+                                             int32_t _stop,
+                                             appl::HighlightInfo& _resultat,
+                                             const std::string& _buffer) {
 	//APPL_DEBUG(" try to find the element");
 	_resultat.start = -1;
 	_resultat.stop = -1;
 	_resultat.notEnded = false;
 	_resultat.patern = this;
+	if (m_hasParsingError == true) {
+		return HLP_FIND_ERROR;
+	}
+	
 	/*
 	// when we have only one element:
 	if (true == m_regExp.processOneElement(_buffer, _start, _stop)) {
@@ -119,11 +124,13 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 	return HLP_FIND_ERROR;
 	*/
 	
-	s32match resultMatch;
-	std::regex_search(_buffer, resultMatch, m_regExp);
+	std::smatch resultMatch;
+	//APPL_DEBUG("find data at : start=" << _start << " stop=" << _stop << " regex='" << m_regexValue << "'");
+	std::regex_search(_buffer.begin() + _start, _buffer.begin() + _stop, resultMatch, m_regExp);
 	if (resultMatch.size() > 0) {
 		_resultat.start = std::distance(_buffer.begin(), resultMatch[0].first);;
 		_resultat.stop = std::distance(_buffer.begin(), resultMatch[0].second);
+		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop << " data='" <<std::string(_buffer, _resultat.start, _resultat.stop-_resultat.start) << "'" );
 		/*
 		if (false){
 			TK_DEBUG("in line : '" << etk::to_string(_buffer) << "'");

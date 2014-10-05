@@ -168,7 +168,7 @@ void appl::Highlight::parse(int64_t _start,
                             int64_t _stop,
                             std::vector<appl::HighlightInfo> & _metaData,
                             int64_t _addingPos,
-                            std::u32string& _buffer) {
+                            std::string& _buffer) {
 	if (0 > _addingPos) {
 		_addingPos = 0;
 	}
@@ -178,6 +178,8 @@ void appl::Highlight::parse(int64_t _start,
 	appl::HighlightInfo resultat;
 	while (elementStart <= elementStop) {
 		HL_DEBUG("Parse element in the buffer pos=" << elementStart);
+		appl::HighlightInfo resultatLast;
+		int64_t findAnOtherId = -1;
 		//try to fond the HL in ALL of we have
 		for (int64_t jjj=0; jjj<(int64_t)m_listHighlightPass1.size(); jjj++){
 			enum resultFind ret = HLP_FIND_OK;
@@ -185,37 +187,52 @@ void appl::Highlight::parse(int64_t _start,
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass1[jjj]->find(elementStart, _buffer.size(), resultat, _buffer);
 			if (HLP_FIND_ERROR != ret) {
-				HL_DEBUG("Find Pattern in the Buffer : (" << resultat.start << "," << resultat.stop << ")" );
-				// remove element in the current List where the current Element have a end inside the next...
-				int64_t kkk=_addingPos;
-				while(kkk < (int64_t)_metaData.size() ) {
-					if (_metaData[kkk].start <= resultat.stop) {
-						// remove element
-						HL_DEBUG("Erase element=" << kkk);
-						_metaData.erase(_metaData.begin()+kkk, _metaData.begin()+kkk+1);
-						// Increase the end of search
-						if (kkk < (int64_t)_metaData.size()) {
-							// just befor the end of the next element
-							elementStop = _metaData[kkk].start-1;
-						} else {
-							// end of the buffer
-							elementStop = _buffer.size();
-						}
-					} else {
-						// Not find  == > exit the cycle : 
-						break;
+				if (elementStart == resultat.start) {
+					APPL_DEBUG("Find Pattern in the Buffer : (" << resultat.start << "," << resultat.stop << ") startPos=" << elementStart );
+					findAnOtherId = jjj;
+					resultatLast = resultat;
+					break;
+				} else {
+					// stack last find to prevent a unneded seach:
+					if (    findAnOtherId == -1
+					     || resultat.start < resultatLast.start) {
+						findAnOtherId = jjj;
+						resultatLast = resultat;
 					}
 				}
-				// add curent element in the list ...
-				_metaData.insert(_metaData.begin()+_addingPos, resultat);
-				HL_DEBUG("INSERT at "<< _addingPos << " S=" << resultat.start << " E=" << resultat.stop );
-				// update the current research starting element: (set position at the end of the current element
-				elementStart = resultat.stop-1;
-				// increment the position of insertion:
-				_addingPos++;
-				// We find a pattern  == > Stop search for the current element
-				break;
 			}
+		}
+		if (findAnOtherId != -1) {
+			// remove element in the current List where the current Element have a end inside the next...
+			int64_t kkk=_addingPos;
+			while(kkk < (int64_t)_metaData.size() ) {
+				if (_metaData[kkk].start <= resultatLast.stop) {
+					// remove element
+					HL_DEBUG("Erase element=" << kkk);
+					_metaData.erase(_metaData.begin()+kkk, _metaData.begin()+kkk+1);
+					// Increase the end of search
+					if (kkk < (int64_t)_metaData.size()) {
+						// just befor the end of the next element
+						elementStop = _metaData[kkk].start-1;
+					} else {
+						// end of the buffer
+						elementStop = _buffer.size();
+					}
+				} else {
+					// Not find  == > exit the cycle : 
+					break;
+				}
+			}
+			// add curent element in the list ...
+			_metaData.insert(_metaData.begin()+_addingPos, resultatLast);
+			HL_DEBUG("INSERT at "<< _addingPos << " S=" << resultatLast.start << " E=" << resultatLast.stop );
+			// update the current research starting element: (set position at the end of the current element
+			elementStart = resultatLast.stop-1;
+			// increment the position of insertion:
+			_addingPos++;
+			// We find a pattern  == > Stop search for the current element
+		} else {
+			break;
 		}
 		// Go to the next element (and search again ...).
 		elementStart++;
@@ -230,7 +247,7 @@ void appl::Highlight::parse(int64_t _start,
 void appl::Highlight::parse2(int64_t _start,
                              int64_t _stop,
                              std::vector<appl::HighlightInfo> &_metaData,
-                             std::u32string&_buffer) {
+                             std::string&_buffer) {
 	HL2_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() <<
 	          "  == > position search: (" << _start << "," << _stop << ")" );
 	int64_t elementStart = _start;

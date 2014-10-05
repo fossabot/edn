@@ -55,11 +55,11 @@ namespace appl {
 			           int64_t _stop,
 			           std::vector<appl::HighlightInfo> &_metaData,
 			           int64_t _addingPos,
-			           std::u32string &_buffer);
+			           std::string &_buffer);
 			void parse2(int64_t _start,
 			            int64_t _stop,
 			            std::vector<appl::HighlightInfo> &_metaData,
-			            std::u32string &_buffer);
+			            std::string &_buffer);
 		private:
 			void parseRules(exml::Element* _child,
 			                std::vector<std::unique_ptr<HighlightPattern>> &_mListPatern,

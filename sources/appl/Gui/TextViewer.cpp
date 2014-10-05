@@ -222,7 +222,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 	int64_t startLineId = 0;
 	if (m_size.y() < m_displayText.getPos().y()) {
 		for (startingIt = m_buffer->begin();
-		     startingIt != m_buffer->end();
+		     (bool)startingIt == true;
 		     ++startingIt) {
 			if (*startingIt == u32char::Return) {
 				++startLineId;
@@ -275,7 +275,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 	bool DisplayCursorAndSelection = isSelectedLast();
 	appl::Buffer::Iterator it;
 	for (it = startingIt;
-	     it != m_buffer->end();
+	     (bool)it == true;
 	     ++it) {
 		if (it == m_buffer->cursor()) {
 			// need to display the cursor :
@@ -307,7 +307,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 			}
 			continue;
 		}
-		HLColor = m_buffer->getElementColorAtPosition(displayLocalSyntax, std::distance(m_buffer->begin(),it));
+		HLColor = m_buffer->getElementColorAtPosition(displayLocalSyntax, (int64_t)it);
 		bool haveBackground = false;
 		if (    HLColor != nullptr
 		     && HLColor->patern != nullptr) {
@@ -639,7 +639,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 	m_displayText.forceLineReturn();
 	positionCurentDisplay = m_displayText.getPos();
 	for (appl::Buffer::Iterator it = m_buffer->begin();
-	     it != m_buffer->end();
+	     (bool)it == true;
 	     ++it) {
 		currentValue = *it;
 		if (currentValue == u32char::Return) {
@@ -756,7 +756,7 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 		updateScrolling();
 		return true;
 	}
-	m_buffer->moveCursor(std::distance(m_buffer->begin(),_pos));
+	m_buffer->moveCursor((int64_t)_pos);
 	updateScrolling();
 	return true;
 }
@@ -937,7 +937,7 @@ appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator
 	m_displayText.clear();
 	m_displayText.forceLineReturn();
 	for (appl::Buffer::Iterator it = _startLinePos;
-	     it != m_buffer->end();
+	     (bool)it == true;
 	     ++it) {
 		currentValue = *it;
 		m_buffer->expand(countColomn, currentValue, stringToDisplay);
@@ -965,7 +965,7 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 	m_displayText.clear();
 	
 	for (appl::Buffer::Iterator it = _startLinePos;
-	     it != m_buffer->end() && it <= _stopPos;
+	     (bool)it == true && it <= _stopPos;
 	     ++it) {
 		currentValue = *it;
 		//APPL_DEBUG("parse : " << currentValue);

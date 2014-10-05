@@ -29,7 +29,265 @@ namespace appl {
 	};
 	class Buffer : public ewol::Object {
 		public:
-			using Iterator = std::u32string::iterator;
+			class Iterator {
+				// Private data :
+				private:
+					int64_t m_current; //!< curent Id in the Buffer
+					appl::Buffer* m_data; //!< Pointer on the curent Buffer
+					char32_t m_value; //!< store vlue to prevent multiple calcule of getting the data
+				public:
+					/**
+					 * @brief Basic itarator constructor with no link.
+					 */
+					Iterator():
+					  m_current(0),
+					  m_data(nullptr),
+					  m_value(u32char::Null) {
+						// nothing to do ...
+					};
+					/**
+					 * @brief Recopy constructor.
+					 * @param[in] _obj The Iterator that might be copy
+					 */
+					Iterator(const Iterator & _obj):
+					  m_current(_obj.m_current),
+					  m_data(_obj.m_data),
+					  m_value(u32char::Null) {
+						// nothing to do ...
+					};
+					/**
+					 * @brief Asignation operator.
+					 * @param[in] _otherIterator The Iterator that might be copy
+					 * @return reference on the curent Iterator
+					 */
+					Iterator& operator=(const Iterator & _obj) {
+						m_current = _obj.m_current;
+						m_data = _obj.m_data;
+						m_value = u32char::Null;
+						return *this;
+					};
+					/**
+					 * @brief Basic destructor
+					 */
+					virtual ~Iterator() {
+						m_current = 0;
+						m_data = nullptr;
+						m_value = u32char::Null;
+					};
+					/**
+					 * @brief basic boolean cast
+					 * @return true if the element is present in buffer
+					 */
+					operator bool () const {
+						if (m_data == nullptr) {
+							return false;
+						}
+						if (m_current >= (int64_t)m_data->m_data.size()) {
+							return false;
+						}
+						if (m_current < 0) {
+							return false;
+						}
+						return true;
+					};
+					/**
+					 * @brief basic boolean cast
+					 * @return true if the element is present in buffer
+					 */
+					operator int64_t () const {
+						if (m_data == nullptr) {
+							return 0;
+						}
+						if (m_current < 0) {
+							return 0;
+						}
+						if (m_current > (int64_t)m_data->m_data.size()) {
+							return (int64_t)m_data->m_data.size();
+						}
+						return m_current;
+					};
+					/**
+					 * @brief Incremental operator
+					 * @return Reference on the current iterator incremented
+					 */
+					Iterator& operator++ ();
+					/**
+					 * @brief Decremental operator
+					 * @return Reference on the current iterator decremented
+					 */
+					Iterator& operator-- ();
+					/**
+					 * @brief Incremental operator
+					 * @return Reference on a new iterator and increment the other one
+					 */
+					Iterator operator++ (int32_t) {
+						Iterator it(*this);
+						++(*this);
+						return it;
+					};
+					/**
+					 * @brief Decremental operator
+					 * @return Reference on a new iterator and decrement the other one
+					 */
+					Iterator operator-- (int32_t) {
+						Iterator it(*this);
+						--(*this);
+						return it;
+					};
+					/**
+					 * @brief egality iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator== (const Iterator& _obj) const {
+						if (    m_current == _obj.m_current
+						     && m_data == _obj.m_data) {
+							return true;
+						}
+						return false;
+					};
+					/**
+					 * @brief egality iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator!= (const Iterator& _obj) const {
+						if (    m_current != _obj.m_current
+						     || m_data != _obj.m_data) {
+							return true;
+						}
+						return false;
+					};
+					/**
+					 * @brief <= iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator<= (const Iterator& _obj) const {
+						if (m_data != _obj.m_data) {
+							return false;
+						}
+						if (m_current <= _obj.m_current) {
+							return true;
+						}
+						return false;
+					};
+					/**
+					 * @brief >= iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator>= (const Iterator& _obj) const {
+						if (m_data != _obj.m_data) {
+							return false;
+						}
+						if (m_current >= _obj.m_current) {
+							return true;
+						}
+						return false;
+					};
+					/**
+					 * @brief < iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator< (const Iterator& _obj) const {
+						if (m_data != _obj.m_data) {
+							return false;
+						}
+						if (m_current < _obj.m_current) {
+							return true;
+						}
+						return false;
+					};
+					/**
+					 * @brief > iterator
+					 * @return true if the iterator is identical pos
+					 */
+					bool operator> (const Iterator& _obj) const {
+						if (m_data != _obj.m_data) {
+							return false;
+						}
+						if (m_current > _obj.m_current) {
+							return true;
+						}
+						return false;
+					};
+					/**
+					 * @brief Get the value on the current element
+					 * @return The request element value
+					 */
+					char32_t operator* ();
+					/**
+					 * @brief Get the position in the buffer
+					 * @return The requested position.
+					 */
+					int64_t getPos() const {
+						if (m_data == nullptr) {
+							return 0;
+						}
+						if (m_current < 0) {
+							return 0;
+						}
+						if (m_current >= (int64_t)m_data->m_data.size()) {
+							return m_data->m_data.size()-1;
+						}
+						return m_current;
+					};
+					/**
+					 * @brief move the element position
+					 * @return a new iterator.
+					 */
+					Iterator operator+ (const int64_t _val) const {
+						Iterator tmpp(*this);
+						for (int64_t iii=0; iii<_val; ++iii) {
+							++tmpp;
+						}
+						return tmpp;
+					};
+					Iterator operator+ (const int32_t _val) const {
+						Iterator tmpp(*this);
+						for (int64_t iii=0; iii<_val; ++iii) {
+							++tmpp;
+						}
+						return tmpp;
+					};
+					Iterator operator+ (const size_t _val) const {
+						Iterator tmpp(*this);
+						for (int64_t iii=0; iii<(int64_t)_val; ++iii) {
+							++tmpp;
+						}
+						return tmpp;
+					};
+					/**
+					 * @brief move the element position
+					 * @return a new iterator.
+					 */
+					Iterator operator- (const int64_t _val) const {
+						Iterator tmpp(*this);
+						for (int64_t iii=0; iii<_val; ++iii) {
+							--tmpp;
+						}
+						return tmpp;
+					};
+					Iterator operator- (const int32_t _val) const {
+						Iterator tmpp(*this);
+						for (int64_t iii=0; iii<_val; ++iii) {
+							--tmpp;
+						}
+						return tmpp;
+					};
+					Iterator operator- (const size_t _val) const {
+						Iterator tmpp(*this);
+						for (int64_t iii=0; iii<(int64_t)_val; ++iii) {
+							--tmpp;
+						}
+						return tmpp;
+					};
+				private:
+					Iterator(Buffer* _obj, int64_t _pos) :
+					  m_current(_pos),
+					  m_data(_obj),
+					  m_value(u32char::Null) {
+						// nothing to do ...
+					};
+					friend class Buffer;
+			};
 		public:
 			ewol::object::Signal<void> signalIsModify;
 			ewol::object::Signal<void> signalIsSave;
@@ -90,9 +348,9 @@ namespace appl {
 			 */
 			void setModification(bool _status);
 		protected:
-			std::u32string m_data; //!< copy of the file buffer
+			std::string m_data; //!< copy of the file buffer
 		public:
-			std::u32string& getData() {
+			std::string& getData() {
 				return m_data;
 			};
 		protected:

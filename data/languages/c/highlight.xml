@@ -12,39 +12,39 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline doxygen">
 			<color>commentDoxygen</color>
-			<regex>/\*\*.*(\*/|\e)</regex>
+			<regex>/\*\*(.|\r|\n)*?\*/</regex>
 		</rule>
 		<rule name="code Review">
 			<color>SYNTAX_ERROR</color>
-			<regex>/\*[ \t]*TODO :.*(\*/|\e)</regex>
+			<regex>/\*[ \t]*TODO :(.|\r|\n)*?\*/</regex>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>/\*.*(\*/|\e)</regex>
+			<regex>/\*(.|\r|\n)*?\*/</regex>
 		</rule>
 		<rule name="my if 0">
 			<color>preprocesseur</color>
-			<regex>#[ \t]*if 0.*#(endif|else)</regex>
+			<regex>#[ \t]*if 0(.|\r|\n)*?#(endif|else)</regex>
 		</rule>
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<regex>#(\\[\\\n]|.)*$</regex>
+			<regex>#(\\[\\\n]|.)*</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<regex>//!.*$</regex>
+			<regex>//!.*</regex>
 		</rule>
 		<rule name="my todo comment">
 			<color>SYNTAX_ERROR</color>
-			<regex>//[ \t]*TODO[ \t]*:.*$</regex>
+			<regex>//[ \t]*TODO[ \t]*:.*</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>//.*$</regex>
+			<regex>//.*</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*"</regex><!-- " -->
+			<regex>"(\\[\\"]|.)*"</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
@@ -106,17 +106,15 @@
 			<color>functionName</color>
 			<regex>\@(\w|_)+[ \t]*\(</regex>
 		</rule>
-		-->
 		<rule name="condition">
 			<color>boolean</color>
 			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</regex>
 		</rule>
-		<!-- With all elementes : 
+		-->
 		<rule name="BIG LETTER">
 			<color>macro</color>
 			<regex>([A-Z]|_){4,500}</regex>
 			<elemSubColor id="1">doxElem</elemSubColor>
 		</rule>
-		-->
 	</pass2>
 </EdnLang>

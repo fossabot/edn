@@ -44,8 +44,9 @@ namespace appl {
 				return m_paternName;
 			};
 		private:
+			bool m_hasParsingError;
 			std::string m_regexValue;
-			std::basic_regex<char32_t> m_regExp; //!< Start of Regular expression
+			std::regex m_regExp; //!< Start of Regular expression
 		public:
 			void setPatern(const std::string& _regExp, bool forceMaximize=false);
 			std::string getPaternString();
@@ -83,7 +84,7 @@ namespace appl {
 			enum resultFind find(int32_t _start,
 			                     int32_t _stop,
 			                     appl::HighlightInfo& _resultat,
-			                     const std::u32string& _buffer);
+			                     const std::string& _buffer);
 			
 			void parseRules(exml::Element* _child, int32_t _level, bool forceMaximize=false);
 	};
