@@ -6,41 +6,41 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline doxygen">
 			<color>commentDoxygen</color>
-			<regex>/\*\*.*\*/</regex>
+			<regex>/\*\*.*?\*/</regex>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>/\*.*\*/</regex>
+			<regex>/\*.*?\*/</regex>
 		</rule>
 		<rule name="my if 0">
 			<color>preprocesseur</color>
-			<regex>#[ \t]*if 0.*#(regexif|else)</regex>
+			<regex>#[ \t]*if 0.*?#(regexif|else)</regex>
 		</rule>
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<regex>#.*$</regex>
+			<regex>#.*?$</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<regex>//!.*$</regex>
+			<regex>//!.*?$</regex>
 		</rule>
 		<rule name="my todo comment">
 			<color>SYNTAX_ERROR</color>
-			<regex>//[ \t]*TODO[ \t]*:.*$</regex>
+			<regex>//[ \t]*TODO[ \t]*:.*?$</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>(//|@).*$</regex>
+			<regex>//.*?$</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>\@smull|ldrsh|smlal|stmdb|mul|mla|umull|ldr|add|str|mov|subs|bgt|ldmia|stmia|ldmfd|cmp|sub|strd|stmfd|bne|bhi|ldrd|mvn\@</regex>
+			<regex>\b(smull|ldrsh|smlal|stmdb|mul|mla|umull|ldr|add|str|mov|subs|bgt|ldmia|stmia|ldmfd|cmp|sub|strd|stmfd|bne|bhi|ldrd|mvn)\b</regex>
 		</rule>
 		<rule name="register list">
 			<color>type</color>
-			<regex>\@r(10|11|12|[0-9]?)|sp|lp|lr|pc\@</regex>
+			<regex>\b(r(10|11|12|[0-9]?)|sp|lp|lr|pc)\b</regex>
 		</rule>
 	</pass2>
 </EdnLang>

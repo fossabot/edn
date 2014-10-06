@@ -6,25 +6,25 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<regex>#(\\[\\\n]|.)*$</regex>
+			<regex>#(\\[\\\n]|.)*?$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*"</regex>
+			<regex>"(\\[\\"]|.)*?"</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>'(\\[\\']|.)*'</regex>
+			<regex>'(\\[\\']|.)*?'</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="confition">
 			<color>type</color>
-			<regex>\@if|ifeq|ifneq|else|endif|define|endef\@</regex>
+			<regex>\b(if|ifeq|ifneq|else|endif|define|endef)\b</regex>
 		</rule>
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>\$\([a-zA-Z_][a-zA-Z0-9_]*\)</regex>
+			<regex>\b\([a-zA-Z_][a-zA-Z0-9_]*\)</regex>
 		</rule>
 		<rule name="function call">
 			<color>functionName</color>

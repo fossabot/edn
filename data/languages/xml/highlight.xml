@@ -5,16 +5,16 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="Comment">
 			<color>comment</color>
-			<regex><![CDATA[<!\-\-.*\-\->]]></regex>
+			<regex><![CDATA[<!\-\-.*?\-\->]]></regex>
 			<!--<regex>&lt;!\-\-.*\-\-&gt;</regex>-->
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*"</regex>
+			<regex>"(\\[\\"]|.)*?"</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>\@'.*('|\n)</regex>
+			<regex>\b'.*?('|\n)</regex>
 		</rule>
 	</pass1>
 	<pass2>
@@ -31,7 +31,7 @@
 		<rule name="normale Balise">
 			<color>functionName</color>
 			<!--<regex>&lt;/[0-9a-zA-Z_]+|&lt;[0-9a-zA-Z_]+|/&gt;|&gt;</regex>-->
-			<regex><![CDATA[(</[0-9a-zA-Z_]+|<[0-9a-zA-Z_]+)\@]]></regex>
+			<regex><![CDATA[(</[0-9a-zA-Z_]+|<[0-9a-zA-Z_]+)\b]]></regex>
 		</rule>
 	</pass2>
 </EdnLang>
