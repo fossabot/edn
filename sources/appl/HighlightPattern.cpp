@@ -31,7 +31,8 @@ appl::HighlightPattern::~HighlightPattern() {
 void appl::HighlightPattern::setPatern(const std::string& _regExp, bool forceMaximize) {
 	m_regexValue = _regExp;
 	try {
-		m_regExp.assign(_regExp);
+		m_regExp.assign(_regExp, std::regex_constants::optimize | std::regex_constants::ECMAScript);
+		//m_regExp.assign(_regExp, std::regex_constants::optimize | std::regex_constants::extended);
 		m_hasParsingError = false;
 	} catch (std::regex_error e) {
 		m_hasParsingError = true;
@@ -126,11 +127,22 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 	
 	std::smatch resultMatch;
 	//APPL_DEBUG("find data at : start=" << _start << " stop=" << _stop << " regex='" << m_regexValue << "'");
-	std::regex_search(_buffer.begin() + _start, _buffer.begin() + _stop, resultMatch, m_regExp);
+	std::regex_search(_buffer.begin() + _start, _buffer.begin() + _stop, resultMatch, m_regExp, std::regex_constants::match_continuous);
 	if (resultMatch.size() > 0) {
 		_resultat.start = std::distance(_buffer.begin(), resultMatch[0].first);;
 		_resultat.stop = std::distance(_buffer.begin(), resultMatch[0].second);
 		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop << " data='" <<std::string(_buffer, _resultat.start, _resultat.stop-_resultat.start) << "'" );
+		/*
+		if (true){
+			//TK_DEBUG("in line : '" << etk::to_string(_buffer) << "'");
+			TK_DEBUG("    Find " << resultMatch.size() << " elements");
+			for (size_t iii=0; iii<resultMatch.size(); ++iii) {
+				int32_t posStart = std::distance(_buffer.begin(), resultMatch[iii].first);
+				int32_t posStop = std::distance(_buffer.begin(), resultMatch[iii].second);
+				TK_DEBUG("          [" << iii << "] " << posStart << " to " << posStop);
+			}
+		}
+		*/
 		/*
 		if (false){
 			TK_DEBUG("in line : '" << etk::to_string(_buffer) << "'");
@@ -140,7 +152,7 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 				int32_t posStop = std::distance(_buffer.begin(), resultMatch[iii].second);
 				TK_DEBUG("          [" << iii << "] " << *resultMatch[iii].first);
 				TK_DEBUG("          [" << iii << "] " << *resultMatch[iii].second);
-				TK_DEBUG("          [" << iii << "] " << etk::to_string(std::u32string(_buffer, posStart, posStop-posStart)));
+				TK_DEBUG("          [" << iii << "] " << std::string(_buffer, posStart, posStop-posStart));
 			}
 		}
 		*/
