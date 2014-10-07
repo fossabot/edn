@@ -15,23 +15,23 @@
 		</rule>
 		<rule name="my if 0">
 			<color>preprocesseur</color>
-			<regex>#[ \t]*if 0(\\[\\\n]|.)*#(endif|else)</regex>
+			<regex>#[ \t]*if 0(.|\\[\\\n])*#(endif|else)</regex>
 		</rule>
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<regex>#(\\[\\\n]|.)*$</regex>
+			<regex>#(.|\\[\\\n])*$</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<regex>//!(\\[\\\n]|.)*$</regex>
+			<regex>//!(.|\\[\\\n])*$</regex>
 		</rule>
 		<rule name="my todo comment">
 			<color>SYNTAX_ERROR</color>
-			<regex>//[ \t]*TODO[ \t]*:(\\[\\\n]|.)*$</regex>
+			<regex>//[ \t]*TODO[ \t]*:(.|\\[\\\n])*$</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>//(\\[\\\n]|.)*$</regex>
+			<regex>//(.|\\[\\\n])*$</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->

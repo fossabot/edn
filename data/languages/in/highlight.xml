@@ -4,15 +4,15 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<regex>#(\\[\\\n]|.)*?$</regex>
+			<regex>#(.|\\[\\\n])*?$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*?$</regex>
+			<regex>"(.|\\[\\"])*?$</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>'(\\[\\']|.)*?$</regex>
+			<regex>'(.|\\[\\'])*?$</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->

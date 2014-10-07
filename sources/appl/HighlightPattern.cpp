@@ -30,13 +30,14 @@ appl::HighlightPattern::~HighlightPattern() {
 
 void appl::HighlightPattern::setPatern(const std::string& _regExp, bool forceMaximize) {
 	m_regexValue = _regExp;
+	APPL_DEBUG("parse regex='" << _regExp << "'");
 	try {
 		m_regExp.assign(_regExp, std::regex_constants::optimize | std::regex_constants::ECMAScript);
 		//m_regExp.assign(_regExp, std::regex_constants::optimize | std::regex_constants::extended);
 		m_hasParsingError = false;
 	} catch (std::regex_error e) {
 		m_hasParsingError = true;
-		APPL_ERROR("can not parse regExp : '" << e.what() << "' for : " << _regExp);
+		APPL_ERROR("can not parse regex : '" << e.what() << "' for : " << _regExp);
 	}
 	//m_regExp.setMaximize(forceMaximize);
 }
@@ -54,7 +55,7 @@ void appl::HighlightPattern::display() {
 	APPL_INFO("patern : '" << m_paternName << "' level=" << m_level );
 	APPL_INFO("  == > colorName '" << m_colorName << "'");
 	//APPL_INFO("  == > regExp '" << m_regExp.getRegExp() << "'");
-	APPL_INFO("  == > regExp '" << m_regexValue << "'");
+	APPL_INFO("  == > regex '" << m_regexValue << "'");
 }
 
 void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level, bool forceMaximize) {
@@ -126,8 +127,27 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 	*/
 	
 	std::smatch resultMatch;
+	std::regex_constants::match_flag_type flags = std::regex_constants::match_continuous;
+	
 	//APPL_DEBUG("find data at : start=" << _start << " stop=" << _stop << " regex='" << m_regexValue << "'");
-	std::regex_search(_buffer.begin() + _start, _buffer.begin() + _stop, resultMatch, m_regExp, std::regex_constants::match_continuous);
+	if ((int64_t)_stop <= (int64_t)_buffer.size()) {
+		char val = _buffer[_stop];
+		if (    val != '\n'
+		     && val != '\r') {
+			//after last char ==> not end of line ($ would not work))
+			flags |= std::regex_constants::match_not_eol;
+		}
+		if (!(    ('a' <= val && val <= 'z')
+		       || ('A' <= val && val <= 'Z')
+		       || ('0' <= val && val <= '9')
+		       || val == '_')) {
+			flags |= std::regex_constants::match_not_eow;
+		}
+	}
+	if (_start>0) {
+		flags |= std::regex_constants::match_prev_avail;
+	}
+	std::regex_search(_buffer.begin() + _start, _buffer.begin() + _stop, resultMatch, m_regExp, flags);
 	if (resultMatch.size() > 0) {
 		_resultat.start = std::distance(_buffer.begin(), resultMatch[0].first);;
 		_resultat.stop = std::distance(_buffer.begin(), resultMatch[0].second);

@@ -1,6 +1,6 @@
-<?declaration attr="plop"/>
+<?declaration attr="plop"?>
 <node>
-	<node2 attribute="data string">
+	<node2 attribute="da\"ta string">
 		<emptyNode/>
 		<!-- comment -->
 		direct data

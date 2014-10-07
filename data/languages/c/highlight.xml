@@ -28,7 +28,7 @@
 		</rule>
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<regex>#(\\[\\\n]|.)*</regex>
+			<regex>#(.|\\[\\\n])*</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
@@ -44,11 +44,11 @@
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*"</regex>
+			<regex>"(.|\\[\\"])*"</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>'((\\[\\'])|.){1,2}'</regex>
+			<regex>'\\?.'</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
@@ -70,7 +70,7 @@
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<regex>\b(inline|const|class|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum)\b</regex>
+			<regex>\b(inline|const|class|namespace|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum)\b</regex>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
@@ -90,11 +90,11 @@
 		</rule>
 		<rule name="CPP member">
 			<color>memberClass</color>
-			<regex>\b(m_[A-Za-z_0-9]*)\b</regex>
+			<regex>\bm_\w+\b</regex>
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
-			<regex>\b(_[A-Za-z_0-9]*)\b</regex>
+			<regex>\b_\w+\b</regex>
 			<max>false</max>
 		</rule>
 		<rule name="Function name">

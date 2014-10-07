@@ -5,11 +5,11 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<regex>%%(\\[\\\n]|.)*?$</regex>
+			<regex>%%(.|\\[\\\n])*?$</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>%(\\[\\\n]|.)*?$</regex>
+			<regex>%(.|\\[\\\n])*?$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
@@ -21,7 +21,7 @@
 		</rule>
 		<rule name="global inclusion">
 			<color>preprocesseur</color>
-			<regex>global( |\t)+(\\[\\\n]|.)*?$</regex>
+			<regex>global( |\t)+(.|\\[\\\n])*?$</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->

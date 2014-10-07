@@ -9,15 +9,15 @@
 		</rule>
 		<rule name="my todo comment">
 			<color>SYNTAX_ERROR</color>
-			<regex>#[ \t]TODO[ \t]*:(\\[\\\n]|.)*?$</regex>
+			<regex>#[ \t]TODO[ \t]*:(.|\\[\\\n])*?$</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>#(\\[\\\n]|.)*?$</regex>
+			<regex>#(.|\\[\\\n])*?$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*?$</regex>
+			<regex>"(.|\\[\\"])*?$</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->

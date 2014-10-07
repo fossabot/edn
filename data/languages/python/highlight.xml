@@ -12,15 +12,15 @@
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<regex>##(\\[\\\n]|.)*?$</regex>
+			<regex>##(.|\\[\\\n])*?$</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>#(\\[\\\n]|.)*?$</regex>
+			<regex>#(.|\\[\\\n])*?$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*?"</regex>
+			<regex>"(.|\\[\\"])*?"</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
