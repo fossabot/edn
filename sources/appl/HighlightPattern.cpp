@@ -115,19 +115,8 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 		return HLP_FIND_ERROR;
 	}
 	
-	/*
-	// when we have only one element:
-	if (true == m_regExp.processOneElement(_buffer, _start, _stop)) {
-		_resultat.start = m_regExp->start();
-		_resultat.stop  = m_regExp->stop();
-		return HLP_FIND_OK;
-	}
-	//APPL_DEBUG("NOT find hightlightpatern ...");
-	return HLP_FIND_ERROR;
-	*/
-	
 	std::smatch resultMatch;
-	std::regex_constants::match_flag_type flags = std::regex_constants::match_continuous;
+	std::regex_constants::match_flag_type flags = std::regex_constants::match_continuous; // check only the match at the first character.
 	
 	//APPL_DEBUG("find data at : start=" << _start << " stop=" << _stop << " regex='" << m_regexValue << "'");
 	if ((int64_t)_stop <= (int64_t)_buffer.size()) {
@@ -147,9 +136,9 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 	if (_start>0) {
 		flags |= std::regex_constants::match_prev_avail;
 	}
-	std::regex_search(_buffer.begin() + _start, _buffer.begin() + _stop, resultMatch, m_regExp, flags);
+	std::regex_search(_buffer.begin() + _start, _buffer.end(), resultMatch, m_regExp, flags);
 	if (resultMatch.size() > 0) {
-		_resultat.start = std::distance(_buffer.begin(), resultMatch[0].first);;
+		_resultat.start = std::distance(_buffer.begin(), resultMatch[0].first);
 		_resultat.stop = std::distance(_buffer.begin(), resultMatch[0].second);
 		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop << " data='" <<std::string(_buffer, _resultat.start, _resultat.stop-_resultat.start) << "'" );
 		/*
@@ -160,19 +149,6 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 				int32_t posStart = std::distance(_buffer.begin(), resultMatch[iii].first);
 				int32_t posStop = std::distance(_buffer.begin(), resultMatch[iii].second);
 				TK_DEBUG("          [" << iii << "] " << posStart << " to " << posStop);
-			}
-		}
-		*/
-		/*
-		if (false){
-			TK_DEBUG("in line : '" << etk::to_string(_buffer) << "'");
-			TK_DEBUG("    Find " << resultMatch.size() << " elements");
-			for (size_t iii=0; iii<resultMatch.size(); ++iii) {
-				int32_t posStart = std::distance(_buffer.begin(), resultMatch[iii].first);
-				int32_t posStop = std::distance(_buffer.begin(), resultMatch[iii].second);
-				TK_DEBUG("          [" << iii << "] " << *resultMatch[iii].first);
-				TK_DEBUG("          [" << iii << "] " << *resultMatch[iii].second);
-				TK_DEBUG("          [" << iii << "] " << std::string(_buffer, posStart, posStop-posStart));
 			}
 		}
 		*/

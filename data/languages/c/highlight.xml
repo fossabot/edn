@@ -10,43 +10,51 @@
 	<ext>*.m</ext>
 	<ext>*.mm</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
-		<rule name="my comment multiline doxygen">
+		<rule name="doxygen multiline">
 			<color>commentDoxygen</color>
-			<regex>/\*\*(.|\r|\n)*?\*/</regex>
+			<regex>/\*(\*|!)(.|\r|\n)*?\*/</regex>
 		</rule>
-		<rule name="code Review">
+		<rule name="comment multiline TODO">
 			<color>SYNTAX_ERROR</color>
-			<regex>/\*[ \t]*TODO :(.|\r|\n)*?\*/</regex>
+			<regex>/\*[ \t]*TODO :(.|\r|\n)*?(\*/|\0)</regex>
 		</rule>
-		<rule name="my comment multiline">
+		<rule name="comment multiline">
 			<color>comment</color>
-			<regex>/\*(.|\r|\n)*?\*/</regex>
+			<regex>/\*(.|\r|\n)*?(\*/|\0)</regex>
 		</rule>
-		<rule name="my if 0">
+		<rule name="comment miltiline ERROR">
+			<color>SYNTAX_ERROR</color>
+			<regex>/\*(.|\r|\n)*</regex>
+		</rule>
+		<rule name="#if 0">
 			<color>preprocesseur</color>
-			<regex>#[ \t]*if 0(.|\r|\n)*?#(endif|else)</regex>
+			<regex>#[ \t]*if 0(.|\r|\n)*?(#endif|else)</regex>
 		</rule>
-		<rule name="my preprocesseur">
+		<rule name="#if 0 ERROR">
+			<color>SYNTAX_ERROR</color>
+			<regex>#[ \t]*if 0(.|\r|\n)*</regex>
+		</rule>
+		<rule name="#preproc">
 			<color>preprocesseur</color>
 			<regex>#(.|\\[\\\n])*</regex>
 		</rule>
-		<rule name="my comment doxygen">
+		<rule name="inline doxygen">
 			<color>commentDoxygen</color>
 			<regex>//!.*</regex>
 		</rule>
-		<rule name="my todo comment">
+		<rule name="inline comment TODO">
 			<color>SYNTAX_ERROR</color>
 			<regex>//[ \t]*TODO[ \t]*:.*</regex>
 		</rule>
-		<rule name="my comment">
+		<rule name="inline comment">
 			<color>comment</color>
 			<regex>//.*</regex>
 		</rule>
-		<rule name="doubleQuteText">
+		<rule name="double quote text">
 			<color>doubleQuoteText</color>
-			<regex>"(.|\\[\\"])*"</regex>
+			<regex>"(.|\\[\\"])*?"</regex> <!-- " -->
 		</rule>
-		<rule name="simpleQuteText">
+		<rule name="simple quote text">
 			<color>doubleQuoteText</color>
 			<regex>'\\?.'</regex>
 		</rule>

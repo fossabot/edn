@@ -723,7 +723,7 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 		return;
 	}
 	// normal case
-	//APPL_INFO("(pos="<<pos<<", nbDeleted="<<nbDeleted<<", nbAdded=" << nbAdded << "\");");
+	APPL_VERBOSE("(_pos="<<_pos<<", _nbDeleted="<<_nbDeleted<<", _nbAdded=" << _nbAdded << "\");");
 	int64_t posEnd = _pos + _nbDeleted;
 	// search position of the old element to reparse IT...
 	int64_t startId;
@@ -736,32 +736,45 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 	}
 	// find element previous
 	findMainHighLightPosition(_pos, posEnd, startId, stopId, true);
-
+	
+	APPL_VERBOSE(" list old parse:");
+	for (auto &elem : m_HLDataPass1) {
+		APPL_VERBOSE("    " << elem.start << "=>" << elem.stop);
+	}
+	// Remove previous element to prevent many errors like parsing of // for example
+	startId--;
+	APPL_VERBOSE("Find startId=" << startId << " stopId=" << stopId << " list size=" << m_HLDataPass1.size());
+	
 	// remove deprecated element
-	if (    startId == -1
-	     && stopId == -1) {
+	if (    startId <= -1
+	     && stopId <= -1) {
 		m_HLDataPass1.clear();
-	} else if (startId == -1) {
+		APPL_VERBOSE("1 * clear");
+	} else if (startId <= -1) {
 		if (stopId == 0){
 			m_HLDataPass1.erase(m_HLDataPass1.begin());
-			//APPL_DEBUG("1 * Erase 0");
+			APPL_VERBOSE("1 * Erase 0");
 		} else {
 			m_HLDataPass1.erase(m_HLDataPass1.begin(), m_HLDataPass1.begin()+stopId);
-			//APPL_DEBUG("2 * Erase 0->" << stopId);
+			APPL_VERBOSE("2 * Erase 0->" << stopId);
 		}
-	} else if (stopId == -1) {
-		//APPL_DEBUG("3 * Erase " << startId+1 << "-> end");
+	} else if (stopId <= -1) {
+		APPL_VERBOSE("3 * Erase " << startId+1 << "-> end");
 		m_HLDataPass1.erase(m_HLDataPass1.begin()+startId+1, m_HLDataPass1.end());
 		stopId = -1;
 	} else {
 		int32_t currentSize = m_HLDataPass1.size();
-		//APPL_DEBUG("4 * Erase " << startId+1 << "->" << stopId << " in " << currentSize << " elements" );
-		m_HLDataPass1.erase(m_HLDataPass1.begin()+startId+1, m_HLDataPass1.begin()+stopId);
+		APPL_VERBOSE("4 * Erase " << startId+1 << "->" << stopId << " in " << currentSize << " elements" );
+		m_HLDataPass1.erase(m_HLDataPass1.begin()+startId+1, m_HLDataPass1.begin()+stopId+1);
 		if (stopId == currentSize-1) {
 			stopId = -1;
 		}
 	}
-	//APPL_DEBUG("new size=" << (int32_t)m_HLDataPass1.size()-1);
+	APPL_VERBOSE(" list afterRemove:");
+	for (auto &elem : m_HLDataPass1) {
+		APPL_VERBOSE("    " << elem.start << "=>" << elem.stop);
+	}
+	
 	// update position after the range position : 
 	int64_t elemStart;
 	if (startId == -1) {
@@ -775,18 +788,18 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 		it->stop  += _nbAdded - _nbDeleted;
 	}
 	//Regenerate Element inside range
-	if (    startId == -1
-	     && stopId == -1) {
-		//APPL_DEBUG("*******  Regenerate ALL");
+	if (    startId <= -1
+	     && stopId <= -1) {
+		APPL_VERBOSE("*******  Regenerate ALL");
 		generateHighLightAt(0, m_data.size());
-	} else if(-1 == startId) {
-		//APPL_DEBUG("*******  Regenerate START");
+	} else if(startId <= -1) {
+		APPL_VERBOSE("*******  Regenerate START");
 		generateHighLightAt(0, m_HLDataPass1[0].start, 0);
-	} else if(-1 == stopId) {
-		//APPL_DEBUG("*******  Regenerate STOP");
+	} else if(stopId <= -1) {
+		APPL_VERBOSE("*******  Regenerate STOP");
 		generateHighLightAt(m_HLDataPass1[m_HLDataPass1.size() -1].stop, m_data.size(), m_HLDataPass1.size());
 	} else {
-		//APPL_DEBUG("*******  Regenerate RANGE");
+		APPL_VERBOSE("*******  Regenerate RANGE");
 		generateHighLightAt(m_HLDataPass1[startId].stop, m_HLDataPass1[startId+1].start, startId+1);
 	}
 }
