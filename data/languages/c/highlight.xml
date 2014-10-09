@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="C/C++">
-	<ext>*.c</ext>
-	<ext>*.cpp</ext>
-	<ext>*.cxx</ext>
-	<ext>*.cc</ext>
-	<ext>*.h</ext>
-	<ext>*.hpp</ext>
-	<ext>*.hxx</ext>
-	<ext>*.m</ext>
-	<ext>*.mm</ext>
+	<ext>.*\.(c|cpp|cxx|cc|h|hpp|hxx|m|mm)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="doxygen multiline">
 			<color>commentDoxygen</color>
@@ -28,7 +20,7 @@
 		</rule>
 		<rule name="#if 0">
 			<color>preprocesseur</color>
-			<regex>#[ \t]*if 0(.|\r|\n)*?(#endif|else)</regex>
+			<regex>#[ \t]*if 0(.|\r|\n)*?#(endif|else)</regex>
 		</rule>
 		<rule name="#if 0 ERROR">
 			<color>SYNTAX_ERROR</color>

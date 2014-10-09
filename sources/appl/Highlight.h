@@ -48,7 +48,7 @@ namespace appl {
 				return m_typeName;
 			}
 		public:
-			bool hasExtention(const std::string& _ext);
+			bool isCompatible(const std::string& _name);
 			bool fileNameCompatible(const std::string& _fileName);
 			void display();
 			void parse(int64_t _start,

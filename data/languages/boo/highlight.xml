@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="Boulou log">
-	<ext>*.boo</ext>
+	<ext>.*\.boo</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="comment ##">
 			<color>SYNTAX_ERROR</color>
@@ -24,7 +24,6 @@
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
-
 		<rule name="pourcentage OK">
 			<color>TestResultOK</color>
 			<regex>100%</regex>

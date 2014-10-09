@@ -114,13 +114,28 @@ appl::Highlight::~Highlight() {
 	m_listExtentions.clear();
 }
 
-bool appl::Highlight::hasExtention(const std::string& _ext) {
+bool appl::Highlight::isCompatible(const std::string& _name) {
 	for (auto &it : m_listExtentions) {
-		APPL_VERBOSE("        check : " << it << "=?=" << _ext);
-		if (    it == "*." + _ext
-		     || it == _ext) {
-			return true;
+		APPL_VERBOSE("        check : " << it << "=?=" << _name);
+		std::regex expression;
+		try {
+			expression.assign(it, std::regex_constants::optimize | std::regex_constants::ECMAScript);
+		} catch (std::regex_error e) {
+			APPL_ERROR("can not parse regex : '" << e.what() << "' for : " << it);
+			continue;
 		}
+		std::smatch resultMatch;
+		std::regex_search(_name.begin(), _name.end(), resultMatch, expression, std::regex_constants::match_continuous);
+		if (resultMatch.size() <= 0) {
+			continue;
+		}
+		if (resultMatch[0].first != _name.begin()) {
+			continue;
+		}
+		if (resultMatch[0].second != _name.end()) {
+			continue;
+		}
+		return true;
 	}
 	return false;
 }

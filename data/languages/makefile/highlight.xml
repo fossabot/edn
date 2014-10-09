@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="Makefiles">
 	<ext>Makefile</ext>
-	<ext>*.mk</ext>
-	<ext>*.global</ext>
+	<ext>.*\.(mk|global)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
@@ -32,7 +31,7 @@
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>
-			<regex>:=|?=|!=|=</regex>
+			<regex>:=|\?=|!=|=</regex>
 		</rule>
 	</pass2>
 </EdnLang>

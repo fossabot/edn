@@ -691,7 +691,7 @@ void appl::Buffer::removeSelection() {
 
 void appl::Buffer::tryFindHighlightType() {
 	etk::FSNode file(m_fileName);
-	std::string type = appl::highlightManager::getTypeExtention(file.fileGetExtention());
+	std::string type = appl::highlightManager::getTypeFile(file.getNameFile());
 	if (type.size() == 0) {
 		return;
 	}

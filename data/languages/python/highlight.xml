@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="Python">
-	<ext>*.py</ext>
+	<ext>.*\.py</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>""".*?"""</regex>
+			<regex>"""(.|\r|\n)*?"""</regex>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>'''.*?'''</regex>
+			<regex>'''(.|\r|\n)*?'''</regex>
+		</rule>
+		<rule name="comment multiline Error">
+			<color>SYNTAX_ERROR</color>
+			<regex>("""|''')(.|\n|\r)*</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<regex>##(.|\\[\\\n])*?$</regex>
+			<regex>##.*</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>#(.|\\[\\\n])*?$</regex>
+			<regex>#.*</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
@@ -64,11 +68,9 @@
 			<color>boolean</color>
 			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}</regex>
 		</rule>
-		<!-- With all elementes : -->
-		<rule name="BIG LETTER">
-			<color>macro</color>
-			<regex>([A-Z]|_){4,500}</regex>
-			<elemSubColor id="1">doxElem</elemSubColor>
+		<rule name="simpleQuteTextError">
+			<color>SYNTAX_ERROR</color>
+			<regex>'|"</regex>
 		</rule>
 	</pass2>
 </EdnLang>
