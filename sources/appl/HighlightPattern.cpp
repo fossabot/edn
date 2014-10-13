@@ -13,8 +13,19 @@
 #undef __class__
 #define __class__ "HighlightPattern"
 
-appl::HighlightPattern::HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting) :
+appl::HighlightPattern::HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting, exml::Element* _child, int32_t _level) :
   m_glyphPainting(_glyphPainting),
+  m_paternName(""),
+  m_hasParsingError(true),
+  m_regexValue(""),
+  m_regExp(),
+  m_colorName(""),
+  m_level(0) {
+	parseRules(_child, _level);
+}
+
+appl::HighlightPattern::HighlightPattern() :
+  m_glyphPainting(),
   m_paternName(""),
   m_hasParsingError(true),
   m_regexValue(""),
@@ -28,7 +39,7 @@ appl::HighlightPattern::~HighlightPattern() {
 	
 }
 
-void appl::HighlightPattern::setPatern(const std::string& _regExp, bool forceMaximize) {
+void appl::HighlightPattern::setPatern(const std::string& _regExp) {
 	m_regexValue = _regExp;
 	APPL_DEBUG("parse regex='" << _regExp << "'");
 	try {
@@ -39,13 +50,12 @@ void appl::HighlightPattern::setPatern(const std::string& _regExp, bool forceMax
 		m_hasParsingError = true;
 		APPL_ERROR("can not parse regex : '" << e.what() << "' for : " << _regExp);
 	}
-	//m_regExp.setMaximize(forceMaximize);
 }
 std::string appl::HighlightPattern::getPaternString() {
 	return m_regexValue;
 }
 
-void appl::HighlightPattern::setColorGlyph(std::string& _colorName) {
+void appl::HighlightPattern::setColorGlyph(const std::string& _colorName) {
 	m_colorName = _colorName;
 	m_colorId = m_glyphPainting->request(m_colorName);
 	APPL_VERBOSE("Resuest color name '" << m_colorName << "' => id=" << m_colorId);
@@ -58,17 +68,17 @@ void appl::HighlightPattern::display() {
 	APPL_INFO("  == > regex '" << m_regexValue << "'");
 }
 
-void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level, bool forceMaximize) {
+void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level) {
 	//--------------------------------------------------------------------------------------------
 	/*
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
 			<regex>#</regex>
-			<max>false</max>
+			<sub>namexxx</sub>
 		</rule>
 	*/
 	//--------------------------------------------------------------------------------------------
-	// process attribute	
+	// process attribute
 	std::string highLightName = _child->getAttribute("name");
 	std::string myEdnDataTmp = "???";
 	if (highLightName.size()!=0) {
@@ -82,21 +92,23 @@ void appl::HighlightPattern::parseRules(exml::Element* _child, int32_t _level, b
 		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			std::string myEdnData = myData;
-			setColorGlyph(myEdnData);
+			setColorGlyph(myData);
 		}
-	}
-	xChild = _child->getNamed("max");
-	if (nullptr != xChild) {
-		forceMaximize = etk::string_to_bool(xChild->getText());
 	}
 	xChild = _child->getNamed("regex");
 	if (nullptr != xChild) {
 		std::string myData = xChild->getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
-			std::string myEdnData = myData;
-			setPatern(myEdnData, forceMaximize);
+			setPatern(myData);
+		}
+	}
+	xChild = _child->getNamed("sub");
+	if (nullptr != xChild) {
+		std::string myData = xChild->getText();
+		if (myData.size() != 0) {
+			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
+			setSubPatternName(myData);
 		}
 	}
 }
@@ -136,7 +148,7 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 	if (_start>0) {
 		flags |= std::regex_constants::match_prev_avail;
 	}
-	std::regex_search(_buffer.begin() + _start, _buffer.end(), resultMatch, m_regExp, flags);
+	std::regex_search(_buffer.begin() + _start, _buffer.begin() + _stop, resultMatch, m_regExp, flags);
 	if (resultMatch.size() > 0) {
 		_resultat.start = std::distance(_buffer.begin(), resultMatch[0].first);
 		_resultat.stop = std::distance(_buffer.begin(), resultMatch[0].second);

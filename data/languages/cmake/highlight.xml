@@ -17,7 +17,7 @@
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(.|\\[\\"])*?"</regex>
+			<regex>&quot;(.|\\[\\&quot;])*?&quot;</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->

@@ -938,22 +938,24 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 				             " start=" << HLStartPos <<
 				             " stop=" << m_HLDataPass1[kkk].start );
 				m_highlight->parse2(HLStartPos,
-									m_HLDataPass1[kkk].start,
-									_MData.HLData,
-									m_data);
+				                    m_HLDataPass1[kkk].start,
+				                    _MData.HLData,
+				                    m_data);
 			} // else : nothing to do ...
 		} else {
 			APPL_VERBOSE("   == > (empty section 2 ) kkk=" << kkk <<
 			             " start=" << m_HLDataPass1[kkk-1].stop <<
 			             " stop=" << m_HLDataPass1[kkk].start );
 			m_highlight->parse2(m_HLDataPass1[kkk-1].stop,
-								m_HLDataPass1[kkk].start,
-								_MData.HLData,
-								m_data);
+			                    m_HLDataPass1[kkk].start,
+			                    _MData.HLData,
+			                    m_data);
 		}
 		// under section :
-		//APPL_DEBUG("   == > (under section   ) k="<<k<<" start="<<m_HLDataPass1[k].beginStart<<" stop="<<m_HLDataPass1[k].endStop << " subSectionOfID=" << 99999999);
-		// TODO : ...
+		APPL_VERBOSE("   == > (under section   ) kkk="<<kkk<<" start="<<m_HLDataPass1[kkk].start<<" stop="<<m_HLDataPass1[kkk].stop << " subSectionOfID=" << 99999999);
+		m_highlight->parseSubElement(m_HLDataPass1[kkk],
+		                             _MData.HLData,
+		                             m_data);
 	}
 	if (endSearch == (int32_t)m_HLDataPass1.size() ){
 		//if(		k < (int32_t)m_HLDataPass1.size()) {
@@ -962,16 +964,16 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 			             " start=" << m_HLDataPass1[kkk-1].stop <<
 			             " stop=" << HLStop );
 			m_highlight->parse2(m_HLDataPass1[kkk-1].stop,
-								HLStop,
-								_MData.HLData,
-								m_data);
+			                    HLStop,
+			                    _MData.HLData,
+			                    m_data);
 		} else {
 			APPL_VERBOSE("   == > (empty section 4 ) kkk=" << kkk <<
 			             " start=0 stop=" << HLStop );
 			m_highlight->parse2(0,
-								HLStop,
-								_MData.HLData,
-								m_data);
+			                    HLStop,
+			                    _MData.HLData,
+			                    m_data);
 		}
 	}
 	/*

@@ -5,14 +5,12 @@
 		<rule name="doxygen multiline">
 			<color>commentDoxygen</color>
 			<regex>/\*(\*|!)(.|\r|\n)*?\*/</regex>
-		</rule>
-		<rule name="comment multiline TODO">
-			<color>SYNTAX_ERROR</color>
-			<regex>/\*[ \t]*TODO :(.|\r|\n)*?(\*/|\0)</regex>
+			<sub>doxyparse</sub>
 		</rule>
 		<rule name="comment multiline">
 			<color>comment</color>
 			<regex>/\*(.|\r|\n)*?(\*/|\0)</regex>
+			<sub>TODO</sub>
 		</rule>
 		<rule name="comment miltiline ERROR">
 			<color>SYNTAX_ERROR</color>
@@ -33,14 +31,12 @@
 		<rule name="inline doxygen">
 			<color>commentDoxygen</color>
 			<regex>//!.*</regex>
-		</rule>
-		<rule name="inline comment TODO">
-			<color>SYNTAX_ERROR</color>
-			<regex>//[ \t]*TODO[ \t]*:.*</regex>
+			<sub>doxyparse</sub>
 		</rule>
 		<rule name="inline comment">
 			<color>comment</color>
 			<regex>//.*</regex>
+			<sub>TODO</sub>
 		</rule>
 		<rule name="double quote text">
 			<color>doubleQuoteText</color>
@@ -66,7 +62,7 @@
 		</rule>
 		<rule name="std type">
 			<color>type</color>
-			<regex>\b(std::(vector|(u16|u32|w)?string|codecvt_utf(16|8_utf16|8)+|complex|iterator(_traits)?|tuple(_element|_size)?|pair))\b</regex>
+			<regex>\bstd::[\w:]*\b</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
@@ -95,7 +91,6 @@
 		<rule name="function input">
 			<color>inputFunction</color>
 			<regex>\b_\w+\b</regex>
-			<max>false</max>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>
@@ -108,11 +103,30 @@
 		<rule name="BIG LETTER">
 			<color>macro</color>
 			<regex>([A-Z]|_){4,500}</regex>
-			<elemSubColor id="1">doxElem</elemSubColor>
 		</rule>
 		<rule name="simpleQuteTextError">
 			<color>SYNTAX_ERROR</color>
-			<regex>'|"</regex>
+			<regex>&apos;|&quot;</regex>
 		</rule>
 	</pass2>
+	<pass name="doxyparse">
+		<rule name="key">
+			<color>doxygen-key</color>
+			<regex>(@|\\)[\t ]*\w+</regex>
+		</rule>
+		<rule name="in-out">
+			<color>doxygen-in-out</color>
+			<regex>\[(in|in,out|out)\]</regex>
+		</rule>
+		<rule name="function input">
+			<color>inputFunction</color>
+			<regex>\b_\w+\b</regex>
+		</rule>
+	</pass>
+	<pass name="TODO">
+		<rule name="function input">
+			<color>SYNTAX_ERROR</color>
+			<regex>TODO[ \t]*:.*</regex>
+		</rule>
+	</pass>
 </EdnLang>

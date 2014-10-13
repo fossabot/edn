@@ -25,18 +25,6 @@
 //#define HL2_DEBUG APPL_INFO
 #define HL2_DEBUG APPL_VERBOSE
 
-void appl::Highlight::parseRules(exml::Element* _child,
-                                 std::vector<std::unique_ptr<HighlightPattern>>& _mListPatern,
-                                 int32_t _level,
-                                 bool forceMaximize) {
-	// Create the patern ...
-	HighlightPattern *myPattern = new HighlightPattern(m_paintingProperties);
-	// parse under Element
-	myPattern->parseRules(_child, _level, forceMaximize);
-	// add element in the list
-	_mListPatern.push_back(std::unique_ptr<HighlightPattern>(myPattern));
-}
-
 appl::Highlight::Highlight() {
 	addObjectType("appl::Highlight");
 }
@@ -84,7 +72,8 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->getValue() << "\" must be [rule]" );
 					continue;
 				}
-				parseRules(passChild, m_listHighlightPass1, level1++);
+				// Create the patern in list
+				m_listHighlightPass1.push_back(HighlightPattern(m_paintingProperties, passChild, level1++));
 			}
 		} else if (child->getValue() == "pass2") {
 			// get sub Nodes ...
@@ -97,7 +86,30 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->getValue() << "\" must be [rule]" );
 					continue;
 				}
-				parseRules(passChild, m_listHighlightPass2, level2++, true);
+				// Create the patern in list
+				m_listHighlightPass2.push_back(HighlightPattern(m_paintingProperties, passChild, level2++));
+			}
+		} else if (child->getValue() == "pass") {
+			std::string attributeName = child->getAttribute("name");
+			if (attributeName == "") {
+				APPL_ERROR("Can not parse an element pass with no attribute name ... ligne=" << child->getPos());
+				continue;
+			}
+			m_listHighlightNamed.insert(std::pair<std::string, std::vector<HighlightPattern>>(attributeName, std::vector<HighlightPattern>()));
+			auto it = m_listHighlightNamed.find(attributeName);
+			int32_t level3=0;
+			// get sub Nodes ...
+			for(size_t jjj=0; jjj< child->size(); jjj++) {
+				exml::Element* passChild = child->getElement(jjj);
+				if (passChild == nullptr) {
+					continue;
+				}
+				if (passChild->getValue() != "rule") {
+					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->getValue() << "\" must be [rule]" );
+					continue;
+				}
+				// add element in the list
+				it->second.push_back(HighlightPattern(m_paintingProperties, passChild, level3++));
 			}
 		} else {
 			APPL_ERROR("(l "<< child->getPos() << ") node not suported : \""<< child->getValue() << "\" must be [ext,pass1,pass2]" );
@@ -167,13 +179,20 @@ void appl::Highlight::display() {
 	}
 	// display all elements
 	for (auto &it : m_listHighlightPass1) {
-		APPL_INFO("        Pass 1 : " << it->getName() );
-		//m_listHighlightPass1[iii]->display();
+		APPL_INFO("        Pass 1 : " << it.getName() );
+		//it.display();
 	}
-	// display all elements
 	for (auto &it : m_listHighlightPass2) {
-		APPL_INFO("        pass 2 : " << it->getName() );
-		//m_listHighlightPass2[iii]->display();
+		APPL_INFO("        pass 2 : " << it.getName() );
+		//it.display();
+	}
+	for (auto &it : m_listHighlightNamed) {
+		APPL_INFO("        pass * : " << it.first << " : ");
+		for (auto &it2 : it.second) {
+			APPL_INFO("              " << it2.getName() );
+			//it.display();
+		}
+		//it.display();
 	}
 }
 
@@ -201,17 +220,17 @@ void appl::Highlight::parse(int64_t _start,
 			enum resultFind ret = HLP_FIND_OK;
 			/*
 			if (_buffer[elementStart] == '\n') {
-				HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ") input start='\\n' " << m_listHighlightPass1[jjj]->getPaternString());
+				HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ") input start='\\n' " << m_listHighlightPass1[jjj].getPaternString());
 			} else {
-				HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ") input start='" << _buffer[elementStart] << "' " << m_listHighlightPass1[jjj]->getPaternString());
+				HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ") input start='" << _buffer[elementStart] << "' " << m_listHighlightPass1[jjj].getPaternString());
 			}
 			*/
 			// Stop the search to the end (to get the end of the pattern)
-			ret = m_listHighlightPass1[jjj]->find(elementStart, _buffer.size(), resultat, _buffer);
+			ret = m_listHighlightPass1[jjj].find(elementStart, _buffer.size(), resultat, _buffer);
 			if (HLP_FIND_ERROR != ret) {
 				int64_t currentTimeEnd = ewol::getTime();
 				int64_t deltaTime = currentTimeEnd - currentTime;
-				HL_DEBUG("Find Pattern in the Buffer : time=" << (float)deltaTime/1000.0f << " ms (" << resultat.start << "," << resultat.stop << ") startPos=" << elementStart << " for=" << m_listHighlightPass1[jjj]->getPaternString());
+				HL_DEBUG("Find Pattern in the Buffer : time=" << (float)deltaTime/1000.0f << " ms (" << resultat.start << "," << resultat.stop << ") startPos=" << elementStart << " for=" << m_listHighlightPass1[jjj].getPaternString());
 				// remove element in the current List where the current Element have a end inside the next...
 				int64_t kkk=_addingPos;
 				while(kkk < (int64_t)_metaData.size() ) {
@@ -256,7 +275,10 @@ void appl::Highlight::parse(int64_t _start,
 
 /**
  * @brief second pass of the hightlight
- *
+ * @param[in] _start Start searching data
+ * @param[in] _stop End searching data
+ * @param[out] _metaData Output list of all find patern
+ * @param[in] _buffer buffer where we need to search data
  */
 void appl::Highlight::parse2(int64_t _start,
                              int64_t _stop,
@@ -278,9 +300,52 @@ void appl::Highlight::parse2(int64_t _start,
 			enum resultFind ret;
 			HL2_DEBUG("Parse HL id=" << jjj << " position search: (" <<
 			         elementStart << "," << elementStop << ") in='"
-			         << _buffer[elementStart] << "' " << m_listHighlightPass2[jjj]->getPaternString());
+			         << _buffer[elementStart] << "' " << m_listHighlightPass2[jjj].getPaternString());
 			// Stop the search to the end (to get the end of the pattern)
-			ret = m_listHighlightPass2[jjj]->find(elementStart, elementStop, resultat, _buffer);
+			ret = m_listHighlightPass2[jjj].find(elementStart, elementStop, resultat, _buffer);
+			if (ret != HLP_FIND_ERROR) {
+				_metaData.push_back(resultat);
+				elementStart = resultat.stop-1;
+				break;
+			}
+		}
+		// Go to the next element (and search again ...).
+		elementStart++;
+	}
+}
+
+/**
+ * @brief second pass of the hightlight pattern (have found something before)
+ * @param[in] _upper upper pattern to find the data
+ * @param[out] _metaData Output list of all find patern
+ * @param[in] _buffer buffer where we need to search data
+ */
+void appl::Highlight::parseSubElement(const appl::HighlightInfo& _upper,
+                                      std::vector<appl::HighlightInfo> &_metaData,
+                                      std::string &_buffer) {
+	if (_upper.patern->getSubPatternName().size() == 0) {
+		return;
+	}
+	HL2_DEBUG("Parse element 0 => " << m_listHighlightNamed.size() <<
+	          "  == > position search: (" << _upper.start << "," << _upper.stop << ")" );
+	int64_t elementStart = _upper.start;
+	int64_t elementStop = _upper.stop;
+	appl::HighlightInfo resultat;
+	// Find element in the list:
+	auto itHL = m_listHighlightNamed.find(_upper.patern->getSubPatternName());
+	if (itHL == m_listHighlightNamed.end()) {
+		APPL_ERROR("Patern does not exist : " << _upper.patern->getSubPatternName() << " note : Removing it ...");
+		_upper.patern->setSubPatternName("");
+		return;
+	}
+	
+	while (elementStart < elementStop) {
+		//try to fond the HL in ALL of we have
+		for (auto &it : itHL->second){
+			enum resultFind ret;
+			HL2_DEBUG("Parse HL position search: (" << elementStart << "," << elementStop << ") in='" << _buffer[elementStart] << "' " << it.getPaternString());
+			// Stop the search to the end (to get the end of the pattern)
+			ret = it.find(elementStart, elementStop, resultat, _buffer);
 			if (ret != HLP_FIND_ERROR) {
 				_metaData.push_back(resultat);
 				elementStart = resultat.stop-1;

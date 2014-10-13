@@ -4,7 +4,7 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>"""(.|\r|\n)*?"""</regex>
+			<regex>&quot;&quot;&quot;(.|\r|\n)*?&quot;&quot;&quot;</regex>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
@@ -12,7 +12,7 @@
 		</rule>
 		<rule name="comment multiline Error">
 			<color>SYNTAX_ERROR</color>
-			<regex>("""|''')(.|\n|\r)*</regex>
+			<regex>(&quot;&quot;&quot;|''')(.|\n|\r)*</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
@@ -24,11 +24,11 @@
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(.|\\[\\"])*?"</regex>
+			<regex>&quot;(.|\\[\\&quot;])*?&quot;</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>'((\\[\\'])|.)*?'</regex>
+			<regex>&apos;((\\[\\&apos;])|.)*?&apos;</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
@@ -70,7 +70,7 @@
 		</rule>
 		<rule name="simpleQuteTextError">
 			<color>SYNTAX_ERROR</color>
-			<regex>'|"</regex>
+			<regex>&apos;|&quot;</regex>
 		</rule>
 	</pass2>
 </EdnLang>

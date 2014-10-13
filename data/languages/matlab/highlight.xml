@@ -12,11 +12,11 @@
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex> ".*?($|")</regex>
+			<regex> &quot;.*?($|&quot;)</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex> '.*?($|')</regex>
+			<regex> &apos;.*?($|&apos;)</regex>
 		</rule>
 		<rule name="global inclusion">
 			<color>preprocesseur</color>
