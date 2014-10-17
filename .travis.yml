@@ -19,21 +19,19 @@ before_script:
   - cd ewol; git submodule init; cd ..
   - cd ewol; git submodule update; cd ..
 
+#install Gcc to have lisstdc++ 4.8 & gcc 4.8
 install:
-  - if [ "$CXX" == "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
-  - if [ "$CXX" == "g++" ]; then sudo apt-get update -qq; fi
-  - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-  - if [ "$CXX" == "g++" ]; then sudo rm /usr/bin/gcc /usr/bin/g++; fi
-  - if [ "$CXX" == "g++" ]; then sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc; fi
-  - if [ "$CXX" == "g++" ]; then sudo ln -s /usr/bin/g++-4.8 /usr/bin/g++; fi
-  - if [ "$CXX" == "clang++" ]; then wget http://llvm.org/releases/3.4.1/clang+llvm-3.4.1-x86_64-unknown-ubuntu12.04.tar.xz; fi
-  - if [ "$CXX" == "clang++" ]; then tar xJf clang+llvm-3.4.1-x86_64-unknown-ubuntu12.04.tar.xz; fi
-  - if [ "$CXX" == "clang++" ]; then export PATH=$PWD/clang+llvm-3.4.1-x86_64-unknown-ubuntu12.04/bin:$PATH; fi
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq g++-4.8
+  - sudo rm /usr/bin/gcc /usr/bin/g++
+  - sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
+  - sudo ln -s /usr/bin/g++-4.8 /usr/bin/g++
 
 # build sequence with Lutin :
 script: 
-  - if [ "$CXX" == "clang++" ]; then ./ewol/build/lutin.py -C -cclang -mdebug -p edn; fi
-  - if [ "$CXX" == "g++" ]; then ./ewol/build/lutin.py -C -cgcc -mdebug -p edn; fi
+  - if [ "$CXX" == "clang++" ]; then ./ewol/build/lutin.py -C -P -cclang -mdebug -p edn; fi
+  - if [ "$CXX" == "g++" ]; then ./ewol/build/lutin.py -C -P -cgcc -mdebug -p edn; fi
 
 #send e-mail on compilation result:
 notifications:
