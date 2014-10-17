@@ -1,0 +1,12 @@
+<?declaration attr="plop"?>
+<node>
+	<node2 attribute="da\"ta string">
+		<emptyNode/>
+		<!-- comment -->
+		direct data
+		<!-- multiline comment
+		<inCommentNode/>
+		-->
+		<![CDATA[ raw data ]]>
+	</node2>
+<node>

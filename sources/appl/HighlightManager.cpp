@@ -70,19 +70,19 @@ void appl::highlightManager::unInit() {
 	hlList.clear();
 }
 
-std::string appl::highlightManager::getTypeExtention(const std::string& _extention) {
-	if (_extention.size() == 0) {
+std::string appl::highlightManager::getTypeFile(const std::string& _fileName) {
+	if (_fileName.size() == 0) {
 		return "";
 	}
-	APPL_DEBUG("Try to find type for extention : '" << _extention << "' in " << s_list().size() << " types");
+	APPL_DEBUG("Try to find type for extention : '" << _fileName << "' in " << s_list().size() << " types");
 	std::vector<std::shared_ptr<Highlight>>& hlList = s_list();
 	for (auto &it : hlList) {
 		if (it == nullptr) {
 			continue;
 		}
 		APPL_DEBUG("    check : " << it->getTypeName());
-		if (it->hasExtention(_extention) == true) {
-			APPL_DEBUG("Find type for extention : " << _extention
+		if (it->isCompatible(_fileName) == true) {
+			APPL_DEBUG("Find type for extention : " << _fileName
 			             << " type : " << it->getTypeName());
 			return it->getTypeName();
 		}

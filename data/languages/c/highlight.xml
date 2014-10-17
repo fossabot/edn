@@ -1,122 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="C/C++">
-	<ext>*.c</ext>
-	<ext>*.cpp</ext>
-	<ext>*.cxx</ext>
-	<ext>*.cc</ext>
-	<ext>*.h</ext>
-	<ext>*.hpp</ext>
-	<ext>*.hxx</ext>
-	<ext>*.m</ext>
-	<ext>*.mm</ext>
+	<ext>.*\.(c|cpp|cxx|cc|h|hpp|hxx|m|mm)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
-		<rule name="my comment multiline doxygen">
+		<rule name="doxygen multiline">
 			<color>commentDoxygen</color>
-			<regex>/\*\*.*(\*/|\e)</regex>
+			<regex>/\*(\*|!)(.|\r|\n)*?\*/</regex>
+			<sub>doxyparse</sub>
 		</rule>
-		<rule name="code Review">
-			<color>SYNTAX_ERROR</color>
-			<regex>/\*[ \t]*TODO :.*(\*/|\e)</regex>
-		</rule>
-		<rule name="my comment multiline">
+		<rule name="comment multiline">
 			<color>comment</color>
-			<regex>/\*.*(\*/|\e)</regex>
+			<regex>/\*(.|\r|\n)*?(\*/|\0)</regex>
+			<sub>TODO</sub>
 		</rule>
-		<rule name="my if 0">
+		<rule name="comment miltiline ERROR">
+			<color>SYNTAX_ERROR</color>
+			<regex>/\*(.|\r|\n)*</regex>
+		</rule>
+		<rule name="#if 0">
 			<color>preprocesseur</color>
-			<regex>#[ \t]*if 0.*#(endif|else)</regex>
+			<regex>#[ \t]*if 0(.|\r|\n)*?#(endif|else)</regex>
 		</rule>
-		<rule name="my preprocesseur">
+		<rule name="#if 0 ERROR">
+			<color>SYNTAX_ERROR</color>
+			<regex>#[ \t]*if 0(.|\r|\n)*</regex>
+		</rule>
+		<rule name="#preproc">
 			<color>preprocesseur</color>
-			<regex>#(\\[\\\n]|.)*$</regex>
+			<regex>#(.|\\[\\\n])*</regex>
 		</rule>
-		<rule name="my comment doxygen">
+		<rule name="inline doxygen">
 			<color>commentDoxygen</color>
-			<regex>//!.*$</regex>
+			<regex>//!.*</regex>
+			<sub>doxyparse</sub>
 		</rule>
-		<rule name="my todo comment">
-			<color>SYNTAX_ERROR</color>
-			<regex>//[ \t]*TODO[ \t]*:.*$</regex>
-		</rule>
-		<rule name="my comment">
+		<rule name="inline comment">
 			<color>comment</color>
-			<regex>//.*$</regex>
+			<regex>//.*</regex>
+			<sub>TODO</sub>
 		</rule>
-		<rule name="doubleQuteText">
+		<rule name="double quote text">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*"</regex><!-- " -->
+			<regex>"(.|\\[\\"])*?"</regex> <!-- " -->
 		</rule>
-		<rule name="simpleQuteText">
+		<rule name="simple quote text">
 			<color>doubleQuoteText</color>
-			<regex>'((\\[\\'])|.){1,2}'</regex>
-		</rule>
-		<rule name="simpleQuteTextError">
-			<color>SYNTAX_ERROR</color>
-			<regex>'</regex>
+			<regex>'\\?.'</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof\@</regex>
+			<regex>\b(return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof)\b</regex>
 		</rule>
 		<rule name="my function keyword">
 			<color>systemFunction</color>
-			<regex>\@new|delete|try|catch|memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf|calloc|malloc|realloc|(cyg|sup)_([a-z]|[A-Z]|[0-9]|_)+\@</regex>
+			<regex>\b(new|delete|try|catch|memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf|calloc|malloc|realloc|(cyg|sup)_([a-z]|[A-Z]|[0-9]|_)+)\b</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<regex>\@bool|BOOL|char(16_t|32_t)?|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128)\@</regex>
+			<regex>\b(bool|BOOL|char(16_t|32_t)?|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128))\b</regex>
 		</rule>
 		<rule name="std type">
 			<color>type</color>
-			<regex>\@std::(vector|(u16|u32|w)?string|codecvt_utf(16|8_utf16|8)+|complex|iterator(_traits)?|tuple(_element|_size)?|pair)\@</regex>
+			<regex>\bstd::[\w:]*\b</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<regex>\@inline|const|class|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum\@</regex>
+			<regex>\b(inline|const|class|namespace|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum)\b</regex>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
-			<regex>\@NULL|MAX|MIN|__LINE__|__DATA__|__FILE__|__func__|__TIME__|__STDC__\@</regex>
+			<regex>\b(NULL|MAX|MIN|__LINE__|__DATA__|__FILE__|__func__|__TIME__|__STDC__)\b</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
+			<regex>\b(((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?)\b</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<regex>\@true|TRUE|false|FALSE\@</regex>
+			<regex>\b(true|TRUE|false|FALSE)\b</regex>
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>
-			<regex>\@[A-Z_][A-Z_0-9]{3,500}\@</regex>
+			<regex>\b([A-Z_][A-Z_0-9]{3,500})\b</regex>
 		</rule>
 		<rule name="CPP member">
 			<color>memberClass</color>
-			<regex>\@m_[A-Za-z_0-9]*\@</regex>
+			<regex>\bm_\w+\b</regex>
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
-			<regex>\@_[A-Za-z_0-9]*\@</regex>
-			<max>false</max>
+			<regex>\b_\w+\b</regex>
 		</rule>
-		<!--
 		<rule name="Function name">
 			<color>functionName</color>
-			<regex>\@(\w|_)+[ \t]*\(</regex>
+			<regex>\b((\w|_)+[ \t]*\()</regex>
 		</rule>
-		-->
 		<rule name="condition">
 			<color>boolean</color>
-			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</regex>
+			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}</regex>
 		</rule>
-		<!-- With all elementes : 
 		<rule name="BIG LETTER">
 			<color>macro</color>
 			<regex>([A-Z]|_){4,500}</regex>
-			<elemSubColor id="1">doxElem</elemSubColor>
 		</rule>
-		-->
+		<rule name="simpleQuteTextError">
+			<color>SYNTAX_ERROR</color>
+			<regex>&apos;|&quot;</regex>
+		</rule>
 	</pass2>
+	<pass name="doxyparse">
+		<rule name="key">
+			<color>doxygen-key</color>
+			<regex>(@|\\)[\t ]*\w+</regex>
+		</rule>
+		<rule name="in-out">
+			<color>doxygen-in-out</color>
+			<regex>\[(in|in,out|out)\]</regex>
+		</rule>
+		<rule name="function input">
+			<color>inputFunction</color>
+			<regex>\b_\w+\b</regex>
+		</rule>
+	</pass>
+	<pass name="TODO">
+		<rule name="function input">
+			<color>SYNTAX_ERROR</color>
+			<regex>TODO[ \t]*:.*</regex>
+		</rule>
+	</pass>
 </EdnLang>

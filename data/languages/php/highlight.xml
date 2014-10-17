@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="Php: pretty home page">
-	<ext>*.php</ext>
-	<ext>*.php3</ext>
-	<ext>*.php4</ext>
-	<ext>*.phtml</ext>
+	<ext>.*\.(php|php3|php4|phtml)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>/\*.*\*/</regex>
+			<regex>/\*.*?\*/</regex>
 		</rule>
 		<rule name="my todo comment">
 			<color>SYNTAX_ERROR</color>
-			<regex>//[ \t]*TODO[ \t]*:(\\[\\\n]|.)*$</regex>
+			<regex>//[ \t]*TODO[ \t]*:(.|\\[\\\n])*?$</regex>
 		</rule>
 		<rule name="my comment inline">
 			<color>comment</color>
-			<regex>#(\\[\\\n]|.)*$</regex>
+			<regex>#(.|\\[\\\n])*?$</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>//(\\[\\\n]|.)*$</regex>
+			<regex>//(.|\\[\\\n])*?$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*"</regex>
+			<regex>&quot;(.|\\[\\&quot;])*?&quot;</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>'(\\[\\']|.)*'</regex>
+			<regex>&apos;(.|\\[\\&apos;])*?&apos;</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
@@ -37,33 +34,31 @@
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<regex>\@array|bool|boolean|double|float|int|integer|numeric|object|resource|string|unset\@</regex>
+			<regex>\b(array|bool|boolean|double|float|int|integer|numeric|object|resource|string|unset)\b</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<regex>\@abstract|and|as|break|case|catch|class|clone|const|continue|declare|default|die|do|echo|else|elseif|empty|enddeclare|endfor|endforeach|endif|endswitch|endwhile|eval|exit|extends|final|for|foreach|function|global|goto|if|implements|include|include_once|instanceof|interface|isset|list|namespace|new|or|print|private|protected|public|require|require_once|return|static|switch|throw|trait|try|unset|use|var|while|xor\@</regex>
+			<regex>\b(abstract|and|as|break|case|catch|class|clone|const|continue|declare|default|die|do|echo|else|elseif|empty|enddeclare|endfor|endforeach|endif|endswitch|endwhile|eval|exit|extends|final|for|foreach|function|global|goto|if|implements|include|include_once|instanceof|interface|isset|list|namespace|new|or|print|private|protected|public|require|require_once|return|static|switch|throw|trait|try|unset|use|var|while|xor)\b</regex>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
-			<regex>\@doubleval|floatval|gettype|intval|print_r|serialize|settype|strval|unserialize|var_dump|var_export\@</regex>
+			<regex>\b(doubleval|floatval|gettype|intval|print_r|serialize|settype|strval|unserialize|var_dump|var_export)\b</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
+			<regex>\b(((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?)\b</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<regex>\@true|TRUE|false|FALSE\@</regex>
+			<regex>\b(true|TRUE|false|FALSE)\b</regex>
 		</rule>
-		<!--
 		<rule name="Function name">
 			<color>functionName</color>
-			<regex>\@(\w|_)+[ \t]*\(</regex>
+			<regex>\b\w+[ \t]*\(</regex>
 		</rule>
-		-->
 		<rule name="condition">
 			<color>boolean</color>
-			<regex>==|&lt;=|&gt;=|!=|&lt;|&gt;|&amp;&amp;|\{|\}|</regex>
+			<regex>==|&lt;=|&gt;=|!=|&lt;|&gt;|&amp;&amp;|\{|\}</regex>
 		</rule>
 	</pass2>
 </EdnLang>

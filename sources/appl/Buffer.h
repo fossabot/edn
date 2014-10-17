@@ -82,7 +82,7 @@ namespace appl {
 						if (m_data == nullptr) {
 							return false;
 						}
-						if (m_current >= m_data->m_data.size()) {
+						if (m_current >= (int64_t)m_data->m_data.size()) {
 							return false;
 						}
 						if (m_current < 0) {
@@ -101,8 +101,8 @@ namespace appl {
 						if (m_current < 0) {
 							return 0;
 						}
-						if (m_current > m_data->m_data.size()) {
-							return m_data->m_data.size();
+						if (m_current > (int64_t)m_data->m_data.size()) {
+							return (int64_t)m_data->m_data.size();
 						}
 						return m_current;
 					};
@@ -224,7 +224,7 @@ namespace appl {
 						if (m_current < 0) {
 							return 0;
 						}
-						if (m_current >= m_data->m_data.size()) {
+						if (m_current >= (int64_t)m_data->m_data.size()) {
 							return m_data->m_data.size()-1;
 						}
 						return m_current;
@@ -348,9 +348,9 @@ namespace appl {
 			 */
 			void setModification(bool _status);
 		protected:
-			etk::Buffer m_data; //!< copy of the file buffer
+			std::string m_data; //!< copy of the file buffer
 		public:
-			etk::Buffer& getData() {
+			std::string& getData() {
 				return m_data;
 			};
 		protected:

@@ -14,9 +14,9 @@
 class HighlightPattern;
 
 
-#include <etk/RegExp.h>
 #include <appl/GlyphPainting.h>
 #include <vector>
+#include <regex>
 #include <exml/exml.h>
 #include <etk/Buffer.h>
 
@@ -32,27 +32,39 @@ namespace appl {
 			std::shared_ptr<appl::GlyphPainting> m_glyphPainting;
 		public:
 			// Constructeur
-			HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting);
+			HighlightPattern();
+			HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting, exml::Element* _child, int32_t _level);
 			virtual ~HighlightPattern();
 		private:
 			std::string m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")
 		public:
-			void setName(std::string& _name) {
+			void setName(const std::string& _name) {
 				m_paternName = _name;
 			};
-			std::string getName() {
+			const std::string& getName() {
 				return m_paternName;
 			};
 		private:
-			std::unique_ptr<etk::RegExp<etk::Buffer>> m_regExp; //!< Start of Regular expression
+			std::string m_paternSubName; //!< Sub patern name if needed
 		public:
-			void setPatern(std::string& _regExp, bool forceMaximize=false);
+			void setSubPatternName(const std::string& _name) {
+				m_paternSubName = _name;
+			};
+			const std::string& getSubPatternName() {
+				return m_paternSubName;
+			};
+		private:
+			bool m_hasParsingError;
+			std::string m_regexValue;
+			std::regex m_regExp; //!< Start of Regular expression
+		public:
+			void setPatern(const std::string& _regExp);
 			std::string getPaternString();
 		private:
 			std::string m_colorName; //!< Current color name
 			int32_t m_colorId; //!< Id of the the glyph painting
 		public:
-			void setColorGlyph(std::string& _colorName);
+			void setColorGlyph(const std::string& _colorName);
 			const appl::GlyphDecoration& getColorGlyph() {
 				return (*m_glyphPainting)[m_colorId];
 			};
@@ -82,9 +94,9 @@ namespace appl {
 			enum resultFind find(int32_t _start,
 			                     int32_t _stop,
 			                     appl::HighlightInfo& _resultat,
-			                     etk::Buffer& _buffer);
+			                     const std::string& _buffer);
 			
-			void parseRules(exml::Element* _child, int32_t _level, bool forceMaximize=false);
+			void parseRules(exml::Element* _child, int32_t _level);
 	};
 };
 

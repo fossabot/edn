@@ -1,38 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.2" lang="XML">
-	<ext>*.xml</ext>
-	<ext>*.svg</ext>
+	<ext>.*\.(xml|svg)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="Comment">
 			<color>comment</color>
-			<regex><![CDATA[<!\-\-.*\-\->]]></regex>
-			<!--<regex>&lt;!\-\-.*\-\-&gt;</regex>-->
+			<!--<regex><![CDATA[<!\-\-(.|\r|\n)*?\-\->]]></regex>-->
+			-<regex>&lt;!\-\-(.|\r|\n)*?\-\-&gt;</regex>
 		</rule>
-		<rule name="doubleQuteText">
-			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*"</regex>
+		<rule name="CDATA">
+			<color>macro</color>
+			<!--<regex><![CDATA[<!\[CDATA\[(.|\r|\n)*?\]\]>]]></regex>-->
+			<regex>&lt;!\[CDATA\[(.|\r|\n)*?\]\]&gt;</regex>
 		</rule>
-		<rule name="simpleQuteText">
-			<color>doubleQuoteText</color>
-			<regex>\@'.*('|\n)</regex>
+		<rule name="stop balise">
+			<color>functionName</color>
+			<!--<regex><![CDATA[</[ \t]*\w+?[ \t]*>]]></regex>-->
+			<regex>&lt;/[ \t]*\w+?[ \t]*&gt;</regex>
+		</rule>
+		<rule name="stop balise">
+			<color>SYNTAX_ERROR</color>
+			<!--<regex><![CDATA[</(.|\n|\r)*?>]]></regex>-->
+			<regex>&lt;/(.|\n|\r)*?&gt;</regex>
+		</rule>
+		<rule name="start balise">
+			<color>normal</color>
+			<!--<regex><![CDATA[<(.|\n|\r)*?>]]></regex>-->
+			<regex>&lt;(.|\n|\r)*?&gt;</regex>
+			<sub>parseInsideBalise</sub>
 		</rule>
 	</pass1>
 	<pass2>
-		<rule name="special Balise">
+		<rule name="start balise">
+			<color>commonDefine</color>
+			<!--<regex><![CDATA[&(gt|lt|amp|apos|quot);]]></regex>-->
+			<regex>&amp;(gt|lt|amp|apos|quot);</regex>
+		</rule>
+		<rule name="start balise">
 			<color>error</color>
-			<regex>&lt;\?\w*|\?&gt;</regex>
-		</rule>
-		<!--
-		<rule name="normale Balise2">
-			<color>functionName</color>
-			<regex><![CDATA[(</[0-9a-zA-Z_]+|<[0-9a-zA-Z_]+)(/>|>)]]></regex>
-		</rule>
-		-->
-		<rule name="normale Balise">
-			<color>functionName</color>
-			<!--<regex>&lt;/[0-9a-zA-Z_]+|&lt;[0-9a-zA-Z_]+|/&gt;|&gt;</regex>-->
-			<regex><![CDATA[(</[0-9a-zA-Z_]+|<[0-9a-zA-Z_]+)\@]]></regex>
+			<regex>&gt;|&lt;|&amp;|&apos;|&quot;</regex>
 		</rule>
 	</pass2>
+	<pass name="parseInsideBalise">
+		<rule name="special Balise">
+			<color>error</color>
+			<!--<regex><![CDATA[<\?\w*|\?>]]></regex>-->
+			<regex>&lt;\?\w*|\?&gt;</regex>
+		</rule>
+		<rule name="open balise">
+			<color>functionName</color>
+			<!--<regex><![CDATA[<[ \t]*[0-9a-zA-Z_]+]]></regex>-->
+			<regex>&lt;[ \t]*[0-9a-zA-Z_]+</regex>
+		</rule>
+		<rule name="close balise">
+			<color>functionName</color>
+			<!--<regex><![CDATA[/?>]]></regex>-->
+			<regex>/?&gt;</regex>
+		</rule>
+		<rule name="doubleQuteText">
+			<color>doubleQuoteText</color>
+			<regex>&quot;(.|\r|\n|\\\\|\\&quot;)*?&quot;</regex>
+		</rule>
+		<rule name="simpleQuteText">
+			<color>doubleQuoteText</color>
+			<regex>\b&apos;(.|\r|\n)*?(&apos;|\n)</regex>
+		</rule>
+		<rule name="condition">
+			<color>boolean</color>
+			<regex>=</regex>
+		</rule>
+		<rule name="condition">
+			<color>keyword</color>
+			<regex>\w+</regex>
+		</rule>
+	</pass>
 </EdnLang>
 

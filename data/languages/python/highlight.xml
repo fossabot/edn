@@ -1,76 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="Python">
-	<ext>*.py</ext>
+	<ext>.*\.py</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>""".*"""</regex>
+			<regex>&quot;&quot;&quot;(.|\r|\n)*?&quot;&quot;&quot;</regex>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>'''.*'''</regex>
+			<regex>'''(.|\r|\n)*?'''</regex>
+		</rule>
+		<rule name="comment multiline Error">
+			<color>SYNTAX_ERROR</color>
+			<regex>(&quot;&quot;&quot;|''')(.|\n|\r)*</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<regex>##(\\[\\\n]|.)*$</regex>
+			<regex>##.*</regex>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>#(\\[\\\n]|.)*$</regex>
+			<regex>#.*</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*"</regex>
+			<regex>&quot;(.|\\[\\&quot;])*?&quot;</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>'((\\[\\'])|.)*'</regex>
+			<regex>&apos;((\\[\\&apos;])|.)*?&apos;</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>\@if|else|elif|break|pass|continue|while|do|for|in|return\@</regex>
+			<regex>\b(if|else|elif|break|pass|continue|while|do|for|in|return)\b</regex>
 		</rule>
 		<rule name="my function keyword">
 			<color>systemFunction</color>
-			<regex>\@print|len|range|del|__init__|self|os\.|sys\.|path\.\@</regex>
+			<regex>\b(print|len|range|del|__init__|self|os\.|sys\.|path\.)\b</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<regex>\@bool|BOOL|char|double|float\@</regex>
+			<regex>\b(bool|BOOL|char|double|float)\b</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<regex>\@def|class|import|from|as|try|except\@</regex>
+			<regex>\b(def|class|import|from|as|try|except)\b</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
+			<regex>\b(((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?)\b</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<regex>\@True|False\@</regex>
+			<regex>\b(True|False)\b</regex>
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>
-			<regex>\@[A-Z_][A-Z_0-9]{3,500}\@</regex>
+			<regex>\b([A-Z_][A-Z_0-9]{3,500})\b</regex>
 		</rule>
-		<!--
 		<rule name="Function name">
 			<color>functionName</color>
-			<regex>\@(\w|_)+[ \t]*\(</regex>
+			<regex>\b(\w|_)+[ \t]*\(</regex>
 		</rule>
-		-->
 		<rule name="condition">
 			<color>boolean</color>
-			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</regex>
+			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}</regex>
 		</rule>
-		<!-- With all elementes : -->
-		<rule name="BIG LETTER">
-			<color>macro</color>
-			<regex>([A-Z]|_){4,500}</regex>
-			<elemSubColor id="1">doxElem</elemSubColor>
+		<rule name="simpleQuteTextError">
+			<color>SYNTAX_ERROR</color>
+			<regex>&apos;|&quot;</regex>
 		</rule>
 	</pass2>
 </EdnLang>

@@ -27,10 +27,10 @@ namespace appl {
 		void unInit();
 		/**
 		 * @brief Un-Init the Highlight manager
-		 * @param[in] extention of the file
+		 * @param[in] _fileName name of the file
 		 * @return type of highlight
 		 */
-		std::string getTypeExtention(const std::string& _extention);
+		std::string getTypeFile(const std::string& _fileName);
 		/**
 		 * @brief Get filename with type.
 		 * @param[in] _type Type name of the highlight.

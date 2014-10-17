@@ -9,6 +9,7 @@
 		{ name:"SelectedText", foreground:"#292929", background:"#009ce7"},
 		{ name:"error", foreground:"#FF0000"},
 		{ name:"doubleQuoteText", foreground:"#008e00"},
+		
 		{ name:"type", foreground:"#376d0a", bold:true},
 		{ name:"memberClass", foreground:"#7c5406", bold:true},
 		{ name:"inputFunction", foreground:"#B80000", bold:true, italic:true},
@@ -26,6 +27,9 @@
 		{ name:"functionName", foreground:"#09857e", bold:true},
 		{ name:"TestResultOK", foreground:"#000000", background:"#009c00", bold:true},
 		{ name:"TestResultERROR", foreground:"#000000", background:"#c20000", bold:true}
+
+		{ name:"doxygen-key", foreground:"#dc3700", bold:true, italic:false},
+		{ name:"doxygen-in-out", foreground:"#dc7000", bold:true, italic:false},
 	]
 }
 

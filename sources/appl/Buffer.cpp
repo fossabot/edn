@@ -24,7 +24,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 		return *this;
 	}
 	if (m_data != nullptr) {
-		if (m_current < m_data->m_data.size() ) {
+		if (m_current < (int64_t)m_data->m_data.size() ) {
 			int8_t nbChar = utf8::theoricLen(m_data->m_data[m_current]);
 			if (nbChar != 0) {
 				m_current+=nbChar;
@@ -32,7 +32,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 				m_current++;
 			}
 		}
-		if (m_current >= m_data->m_data.size()) {
+		if (m_current >= (int64_t)m_data->m_data.size()) {
 			m_current = m_data->m_data.size();
 		}
 	}
@@ -69,7 +69,7 @@ char32_t appl::Buffer::Iterator::operator* () {
 		return m_value;
 	}
 	if (    m_current < 0
-	     || m_current >= m_data->m_data.size()) {
+	     || m_current >= (int64_t)m_data->m_data.size()) {
 		APPL_ERROR("request an element out of bounding !!! 0 <= " << m_current << " < " << m_data->m_data.size());
 		return m_value;
 	}
@@ -77,7 +77,7 @@ char32_t appl::Buffer::Iterator::operator* () {
 	memset(tmpVal, 0, sizeof(tmpVal));
 	tmpVal[0] = m_data->m_data[m_current];
 	int8_t nbChar = utf8::theoricLen(tmpVal[0]);
-	for (int32_t iii=1; iii<nbChar && m_current+iii<m_data->m_data.size(); ++iii) {
+	for (int32_t iii=1; iii<nbChar && m_current+iii<(int64_t)m_data->m_data.size(); ++iii) {
 		tmpVal[iii] = m_data->m_data[m_current+iii];
 	}
 	// transform ...
@@ -152,13 +152,20 @@ bool appl::Buffer::loadFile(const std::string& _name) {
 	m_cursorPos = 0;
 	setHighlightType("");
 	m_nbLines = 0;
-	if (m_data.dumpFrom(m_fileName) == true ) {
-		countNumberofLine();
-		tryFindHighlightType();
-		m_isModify = false;
-		return true;
+	if (file.exist() == false) {
+		APPL_ERROR("File : '" << m_fileName << "' does not exist...");
+		return false;
 	}
-	return false;
+	if (file.fileOpenRead() == false) {
+		APPL_ERROR("File : '" << m_fileName << "' Fail to open in read mode");
+		return false;
+	}
+	m_data = file.fileReadAllString();
+	file.fileClose();
+	countNumberofLine();
+	tryFindHighlightType();
+	m_isModify = false;
+	return true;
 }
 
 void appl::Buffer::setFileName(const std::string& _name) {
@@ -175,12 +182,16 @@ void appl::Buffer::setFileName(const std::string& _name) {
 }
 
 bool appl::Buffer::storeFile() {
-	if (m_data.dumpIn(m_fileName) == true) {
-		APPL_INFO("saving file : " << m_fileName);
-		setModification(false);
-		return true;
+	etk::FSNode file(m_fileName);
+	if (file.fileOpenWrite() == false) {
+		APPL_ERROR("File : '" << m_fileName << "' Fail to open in write mode");
+		return false;
 	}
-	return false;
+	file.fileWriteAll(m_data);
+	file.fileClose();
+	APPL_INFO("saving file : " << m_fileName);
+	setModification(false);
+	return true;
 }
 
 void appl::Buffer::setModification(bool _status) {
@@ -638,7 +649,7 @@ bool appl::Buffer::write(const std::string& _data, const appl::Buffer::Iterator&
 		position = 0;
 	}
 	APPL_VERBOSE("write at pos: " << (int64_t)_pos << " ==> " << position << " data : " << _data);
-	m_data.insert(position, (int8_t*)(_data.c_str()), _data.size());
+	m_data.insert((size_t)position, _data);
 	if (m_cursorPos < 0) {
 		m_cursorPos = 0;
 	}
@@ -655,7 +666,7 @@ bool appl::Buffer::replace(const std::string& _data, const appl::Buffer::Iterato
 	if (position < 0){
 		position = 0;
 	}
-	m_data.replace(position, (int64_t)_posEnd-(int64_t)_pos, (int8_t*)(_data.c_str()), _data.size());
+	m_data.replace(m_data.begin() + position, m_data.begin() + (int64_t)_posEnd, _data.begin(), _data.end());
 	regenerateHighLightAt(position, (int64_t)_posEnd-(int64_t)_pos, _data.size());
 	m_selectMode = false;
 	moveCursor(position+_data.size());
@@ -670,7 +681,7 @@ void appl::Buffer::removeSelection() {
 	}
 	int64_t startPos = getStartSelectionPos();
 	int64_t endPos = getStopSelectionPos();
-	m_data.remove(startPos, endPos-startPos);
+	m_data.erase(startPos, endPos-startPos);
 	regenerateHighLightAt(startPos, endPos-startPos, 0);
 	m_selectMode = false;
 	moveCursor(startPos);
@@ -680,7 +691,7 @@ void appl::Buffer::removeSelection() {
 
 void appl::Buffer::tryFindHighlightType() {
 	etk::FSNode file(m_fileName);
-	std::string type = appl::highlightManager::getTypeExtention(file.fileGetExtention());
+	std::string type = appl::highlightManager::getTypeFile(file.getNameFile());
 	if (type.size() == 0) {
 		return;
 	}
@@ -712,7 +723,7 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 		return;
 	}
 	// normal case
-	//APPL_INFO("(pos="<<pos<<", nbDeleted="<<nbDeleted<<", nbAdded=" << nbAdded << "\");");
+	APPL_VERBOSE("(_pos="<<_pos<<", _nbDeleted="<<_nbDeleted<<", _nbAdded=" << _nbAdded << "\");");
 	int64_t posEnd = _pos + _nbDeleted;
 	// search position of the old element to reparse IT...
 	int64_t startId;
@@ -725,32 +736,45 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 	}
 	// find element previous
 	findMainHighLightPosition(_pos, posEnd, startId, stopId, true);
-
+	
+	APPL_VERBOSE(" list old parse:");
+	for (auto &elem : m_HLDataPass1) {
+		APPL_VERBOSE("    " << elem.start << "=>" << elem.stop);
+	}
+	// Remove previous element to prevent many errors like parsing of // for example
+	startId--;
+	APPL_VERBOSE("Find startId=" << startId << " stopId=" << stopId << " list size=" << m_HLDataPass1.size());
+	
 	// remove deprecated element
-	if (    startId == -1
-	     && stopId == -1) {
+	if (    startId <= -1
+	     && stopId <= -1) {
 		m_HLDataPass1.clear();
-	} else if (startId == -1) {
+		APPL_VERBOSE("1 * clear");
+	} else if (startId <= -1) {
 		if (stopId == 0){
 			m_HLDataPass1.erase(m_HLDataPass1.begin());
-			//APPL_DEBUG("1 * Erase 0");
+			APPL_VERBOSE("1 * Erase 0");
 		} else {
 			m_HLDataPass1.erase(m_HLDataPass1.begin(), m_HLDataPass1.begin()+stopId);
-			//APPL_DEBUG("2 * Erase 0->" << stopId);
+			APPL_VERBOSE("2 * Erase 0->" << stopId);
 		}
-	} else if (stopId == -1) {
-		//APPL_DEBUG("3 * Erase " << startId+1 << "-> end");
+	} else if (stopId <= -1) {
+		APPL_VERBOSE("3 * Erase " << startId+1 << "-> end");
 		m_HLDataPass1.erase(m_HLDataPass1.begin()+startId+1, m_HLDataPass1.end());
 		stopId = -1;
 	} else {
 		int32_t currentSize = m_HLDataPass1.size();
-		//APPL_DEBUG("4 * Erase " << startId+1 << "->" << stopId << " in " << currentSize << " elements" );
-		m_HLDataPass1.erase(m_HLDataPass1.begin()+startId+1, m_HLDataPass1.begin()+stopId);
+		APPL_VERBOSE("4 * Erase " << startId+1 << "->" << stopId << " in " << currentSize << " elements" );
+		m_HLDataPass1.erase(m_HLDataPass1.begin()+startId+1, m_HLDataPass1.begin()+stopId+1);
 		if (stopId == currentSize-1) {
 			stopId = -1;
 		}
 	}
-	//APPL_DEBUG("new size=" << (int32_t)m_HLDataPass1.size()-1);
+	APPL_VERBOSE(" list afterRemove:");
+	for (auto &elem : m_HLDataPass1) {
+		APPL_VERBOSE("    " << elem.start << "=>" << elem.stop);
+	}
+	
 	// update position after the range position : 
 	int64_t elemStart;
 	if (startId == -1) {
@@ -764,18 +788,18 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 		it->stop  += _nbAdded - _nbDeleted;
 	}
 	//Regenerate Element inside range
-	if (    startId == -1
-	     && stopId == -1) {
-		//APPL_DEBUG("*******  Regenerate ALL");
+	if (    startId <= -1
+	     && stopId <= -1) {
+		APPL_VERBOSE("*******  Regenerate ALL");
 		generateHighLightAt(0, m_data.size());
-	} else if(-1 == startId) {
-		//APPL_DEBUG("*******  Regenerate START");
+	} else if(startId <= -1) {
+		APPL_VERBOSE("*******  Regenerate START");
 		generateHighLightAt(0, m_HLDataPass1[0].start, 0);
-	} else if(-1 == stopId) {
-		//APPL_DEBUG("*******  Regenerate STOP");
+	} else if(stopId <= -1) {
+		APPL_VERBOSE("*******  Regenerate STOP");
 		generateHighLightAt(m_HLDataPass1[m_HLDataPass1.size() -1].stop, m_data.size(), m_HLDataPass1.size());
 	} else {
-		//APPL_DEBUG("*******  Regenerate RANGE");
+		APPL_VERBOSE("*******  Regenerate RANGE");
 		generateHighLightAt(m_HLDataPass1[startId].stop, m_HLDataPass1[startId+1].start, startId+1);
 	}
 }
@@ -914,22 +938,24 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 				             " start=" << HLStartPos <<
 				             " stop=" << m_HLDataPass1[kkk].start );
 				m_highlight->parse2(HLStartPos,
-									m_HLDataPass1[kkk].start,
-									_MData.HLData,
-									m_data);
+				                    m_HLDataPass1[kkk].start,
+				                    _MData.HLData,
+				                    m_data);
 			} // else : nothing to do ...
 		} else {
 			APPL_VERBOSE("   == > (empty section 2 ) kkk=" << kkk <<
 			             " start=" << m_HLDataPass1[kkk-1].stop <<
 			             " stop=" << m_HLDataPass1[kkk].start );
 			m_highlight->parse2(m_HLDataPass1[kkk-1].stop,
-								m_HLDataPass1[kkk].start,
-								_MData.HLData,
-								m_data);
+			                    m_HLDataPass1[kkk].start,
+			                    _MData.HLData,
+			                    m_data);
 		}
 		// under section :
-		//APPL_DEBUG("   == > (under section   ) k="<<k<<" start="<<m_HLDataPass1[k].beginStart<<" stop="<<m_HLDataPass1[k].endStop << " subSectionOfID=" << 99999999);
-		// TODO : ...
+		APPL_VERBOSE("   == > (under section   ) kkk="<<kkk<<" start="<<m_HLDataPass1[kkk].start<<" stop="<<m_HLDataPass1[kkk].stop << " subSectionOfID=" << 99999999);
+		m_highlight->parseSubElement(m_HLDataPass1[kkk],
+		                             _MData.HLData,
+		                             m_data);
 	}
 	if (endSearch == (int32_t)m_HLDataPass1.size() ){
 		//if(		k < (int32_t)m_HLDataPass1.size()) {
@@ -938,16 +964,16 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 			             " start=" << m_HLDataPass1[kkk-1].stop <<
 			             " stop=" << HLStop );
 			m_highlight->parse2(m_HLDataPass1[kkk-1].stop,
-								HLStop,
-								_MData.HLData,
-								m_data);
+			                    HLStop,
+			                    _MData.HLData,
+			                    m_data);
 		} else {
 			APPL_VERBOSE("   == > (empty section 4 ) kkk=" << kkk <<
 			             " start=0 stop=" << HLStop );
 			m_highlight->parse2(0,
-								HLStop,
-								_MData.HLData,
-								m_data);
+			                    HLStop,
+			                    _MData.HLData,
+			                    m_data);
 		}
 	}
 	/*

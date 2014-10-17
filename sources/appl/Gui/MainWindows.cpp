@@ -390,31 +390,13 @@ void MainWindows::displayProperty() {
 	} else {
 		#ifdef SDGSDFGSDFGSDFGSDFGSTERGDHFGHFDS
 		std::string menuDescription = "<title>Properties</title>\n";
-		menuDescription += "<group>\n";
-		menuDescription += "	<title>Editor</title>\n";
-		menuDescription += "	<menu>\n";
-		menuDescription += "		<title>Editor Interface</title>\n";
-		menuDescription += "		<short-title>Editor</short-title>\n";
-		menuDescription += "		<widget>appl-text-viewer</widget>\n";
-		menuDescription += "	</menu>\n";
+		menuDescription += "<group title='Editor'>\n";
+		menuDescription += "	<menu title='Editor Interface' short-title='Editor' widget='appl-text-viewer'>\n";
 		menuDescription += "</group>\n";
-		menuDescription += "<group>\n";
-		menuDescription += "	<title>Gui</title>\n";
-		menuDescription += "	<menu>\n";
-		menuDescription += "		<title>Font selection</title>\n";
-		menuDescription += "		<short-title>Font</short-title>\n";
-		menuDescription += "		<widget></widget>\n";
-		menuDescription += "	</menu>\n";
-		menuDescription += "	<menu>\n";
-		menuDescription += "		<title>Color selection</title>\n";
-		menuDescription += "		<short-title>Color</short-title>\n";
-		menuDescription += "		<widget></widget>\n";
-		menuDescription += "	</menu>\n";
-		menuDescription += "	<menu>\n";
-		menuDescription += "		<title>Theme selection</title>\n";
-		menuDescription += "		<short-title>Theme</short-title>\n";
-		menuDescription += "		<widget></widget>\n";
-		menuDescription += "	</menu>\n";
+		menuDescription += "<group title='Gui'>\n";
+		menuDescription += "	<menu title='Font selection' short-title='Font' widget=''>\n";
+		menuDescription += "	<menu title='Color selection' short-title='Color' widget=''>\n";
+		menuDescription += "	<menu title='Theme selection' short-title='Theme' widget=''>\n";
 		menuDescription += "</group>\n";
 		
 		tmpWidget->setMenu(menuDescription);
