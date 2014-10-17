@@ -32,8 +32,8 @@ install:
 
 # build sequence with Lutin :
 script: 
-  - if [ "$CXX" == "clang++" ]; then ./ewol/build/lutin.py -cclang -mdebug -p edn; fi
-  - if [ "$CXX" == "g++" ]; then ./ewol/build/lutin.py -cgcc -mdebug -p edn; fi
+  - if [ "$CXX" == "clang++" ]; then ./ewol/build/lutin.py -C -cclang -mdebug -p edn; fi
+  - if [ "$CXX" == "g++" ]; then ./ewol/build/lutin.py -C -cgcc -mdebug -p edn; fi
 
 #send e-mail on compilation result:
 notifications:
