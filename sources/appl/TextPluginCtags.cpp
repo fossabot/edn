@@ -22,7 +22,7 @@ appl::TextPluginCtags::TextPluginCtags() :
   m_tagFolderBase(""),
   m_tagFilename(""),
   m_ctagFile(nullptr) {
-	m_activateOnReceiveMessage = true;
+	m_activateOnReceiveShortCut = true;
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
 	addObjectType("appl::TextPluginCtags");
@@ -37,30 +37,17 @@ appl::TextPluginCtags::~TextPluginCtags() {
 	
 }
 
-const char* eventJumpDestination = "event-plugin-ctags-jump-destination";
-const char* eventJumpBack = "event-plugin-ctags-jump-back";
-const char* eventOpenCtagsFile = "event-plugin-ctags-open";
-const char* eventOpenCtagsOpenFileReturn = "event-plugin-ctags-open-file-return";
-const char* eventOpenCtagsSelectReturn = "event-plugin-ctags-select-file-return";
-
 void appl::TextPluginCtags::onPluginEnable(appl::TextViewer& _textDrawer) {
-	// Add local event of this object (no dependency with the viewer ...
-	/*
-	registerMultiCast(ednMsgGuiCtags);
-	registerMultiCast(ednMsgBufferId);
-	registerMultiCast(ednMsgCtagsLoadFile);
-	*/
 	// add event :
-	_textDrawer.ext_registerMultiCast(eventJumpDestination);
-	_textDrawer.ext_registerMultiCast(eventJumpBack);
-	_textDrawer.ext_registerMultiCast(eventOpenCtagsFile);
-	_textDrawer.ext_shortCutAdd("ctrl+d", eventJumpDestination);
-	_textDrawer.ext_shortCutAdd("ctrl+shift+d", eventJumpBack);
-	_textDrawer.ext_shortCutAdd("ctrl+alt+d", eventOpenCtagsFile);
+	_textDrawer.ext_shortCutAdd("ctrl+d", "appl::TextPluginCtags::JumpDestination");
+	_textDrawer.ext_shortCutAdd("ctrl+shift+d", "appl::TextPluginCtags::JumpBack");
+	_textDrawer.ext_shortCutAdd("ctrl+alt+d", "appl::TextPluginCtags::OpenCtagsFile");
 }
 
 void appl::TextPluginCtags::onPluginDisable(appl::TextViewer& _textDrawer) {
-	// TODO : unknow function ...
+	_textDrawer.ext_shortCutRm("appl::TextPluginCtags::JumpDestination");
+	_textDrawer.ext_shortCutRm("appl::TextPluginCtags::JumpBack");
+	_textDrawer.ext_shortCutRm("appl::TextPluginCtags::OpenCtagsFile");
 }
 
 void appl::TextPluginCtags::jumpTo(const std::string& _name) {
@@ -98,7 +85,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 				tmpWidget->addCtagsNewItem(myfile.getFileSystemName(), lineID);
 			} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
 			ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-			tmpWidget->registerOnEvent(shared_from_this(), applEventctagsSelection, eventOpenCtagsSelectReturn);
+			tmpWidget->signalSelect.bind(shared_from_this(), &appl::TextPluginCtags::onCallbackOpenCtagsSelectReturn);
 		}
 	} else {
 		jumpFile(myfile.getName(), lineID - 1);
@@ -111,8 +98,8 @@ void appl::TextPluginCtags::jumpFile(const std::string& _filename, int64_t _line
 	if (m_bufferManager != nullptr) {
 		m_bufferManager->open(_filename);
 	}
-	sendMultiCast(appl::MsgSelectChange, _filename);
-	sendMultiCast(appl::MsgSelectGotoLineSelect, etk::to_string(_lineId));
+	//sendMultiCast(appl::MsgSelectGotoLineSelect, etk::to_string(_lineId));
+	APPL_TODO("request jup at line ...");
 }
 
 void appl::TextPluginCtags::loadTagFile() {
@@ -157,29 +144,30 @@ void appl::TextPluginCtags::printTag(const tagEntry *_entry) {
 	#endif
 }
 
-void appl::TextPluginCtags::onReceiveMessage(const ewol::object::Message& _msg) {
-	if (_msg.getMessage() == eventOpenCtagsOpenFileReturn) {
-		// open the new one :
-		etk::FSNode tmpFilename = _msg.getData();
-		m_tagFilename = tmpFilename.getNameFile();
-		m_tagFolderBase = tmpFilename.getNameFolder();
-		APPL_INFO("Receive load Ctags file : " << m_tagFolderBase << "/" << m_tagFilename << " ");
-		loadTagFile();
-	} else if (_msg.getMessage() == eventOpenCtagsSelectReturn) {
-		// parse the input data
-		char tmp[4096];
-		int32_t lineID;
-		// TODO : Review this ...
-		sscanf(_msg.getData().c_str(), "%d:%s", &lineID, tmp);
-		jumpFile(tmp, lineID - 1);
-	}
+void appl::TextPluginCtags::onCallbackOpenCtagsOpenFileReturn(const std::string& _value) {
+	// open the new one :
+	etk::FSNode tmpFilename = _value;
+	m_tagFilename = tmpFilename.getNameFile();
+	m_tagFolderBase = tmpFilename.getNameFolder();
+	APPL_INFO("Receive load Ctags file : " << m_tagFolderBase << "/" << m_tagFilename << " ");
+	loadTagFile();
 }
-bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-                                                   const ewol::object::Message& _msg) {
+
+void appl::TextPluginCtags::onCallbackOpenCtagsSelectReturn(const std::string& _value) {
+	// parse the input data
+	char tmp[4096];
+	int32_t lineID;
+	// TODO : Review this ...
+	sscanf(_value.c_str(), "%d:%s", &lineID, tmp);
+	jumpFile(tmp, lineID - 1);
+}
+
+bool appl::TextPluginCtags::onReceiveShortCut(appl::TextViewer& _textDrawer,
+                                              const std::string& _shortCutName) {
 	if (isEnable() == false) {
 		return false;
 	}
-	if (_msg.getMessage() == eventOpenCtagsFile) {
+	if (_shortCutName == "appl::TextPluginCtags::OpenCtagsFile") {
 		APPL_INFO("Request opening ctag file");
 		std::shared_ptr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
 		if (nullptr == tmpWidget) {
@@ -195,9 +183,9 @@ bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer
 			tmpWidget->setFolder(path);
 		}
 		ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-		tmpWidget->registerOnEvent(shared_from_this(), "validate", eventOpenCtagsOpenFileReturn);
+		tmpWidget->signalValidate.bind(shared_from_this(), &appl::TextPluginCtags::onCallbackOpenCtagsOpenFileReturn);
 		return true;
-	} else if (_msg.getMessage() == eventJumpDestination) {
+	} else if (_shortCutName == "appl::TextPluginCtags::JumpDestination") {
 		if (_textDrawer.hasBuffer() == false) {
 			return false;
 		}
@@ -215,7 +203,7 @@ bool appl::TextPluginCtags::onReceiveMessageViewer(appl::TextViewer& _textDrawer
 		}
 		jumpTo(textToSearch);
 		return true;
-	} else if (_msg.getMessage() == eventJumpBack) {
+	} else if (_shortCutName == "appl::TextPluginCtags::JumpBack") {
 		if (_textDrawer.hasBuffer() == false) {
 			return false;
 		}

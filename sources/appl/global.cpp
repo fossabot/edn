@@ -31,64 +31,6 @@ class myParamGlobal : public ewol::Object {
 			m_static = true; // Note : set the object static notification( Must be set or assert at the end of process)
 			setName("edn_global_param");
 		}
-		/*
-		bool onSetConfig(const ewol::object::Config& _conf) {
-			// Not set the EObject node parameter (name  == > not change ...)
-			if (_conf.getConfig() == configEOL) {
-				m_displayEOL = etk::string_to_bool(_conf.getData());
-				return true;
-			}
-			if (_conf.getConfig() == configAutoIndent) {
-				m_AutoIndent = etk::string_to_bool(_conf.getData());
-				return true;
-			}
-			if (_conf.getConfig() == configShowTabChar) {
-				m_displayTabChar = etk::string_to_bool(_conf.getData());
-				return true;
-			}
-			if (_conf.getConfig() == configShowSpaceChar) {
-				m_displaySpaceChar = etk::string_to_bool(_conf.getData());
-				return true;
-			}
-			return false;
-		}
-		bool onGetConfig(const char* _config, std::string& _result) const {
-			// Not set the EObject node parameter (name  == > not change ...)
-			if (_config == configEOL) {
-				if (true == m_displayEOL) {
-					_result = "true";
-				} else {
-					_result = "false";
-				}
-				return true;
-			}
-			if (_config == configAutoIndent) {
-				if (true == m_AutoIndent) {
-					_result = "true";
-				} else {
-					_result = "false";
-				}
-				return true;
-			}
-			if (_config == configShowTabChar) {
-				if (true == m_displayTabChar) {
-					_result = "true";
-				} else {
-					_result = "false";
-				}
-				return true;
-			}
-			if (_config == configShowSpaceChar) {
-				if (true == m_displaySpaceChar) {
-					_result = "true";
-				} else {
-					_result = "false";
-				}
-				return true;
-			}
-			return false;
-		}
-		*/
 };
 
 
@@ -161,11 +103,6 @@ int32_t globals::getNbLineBorder() {
 
 #include <ewol/widget/CheckBox.h>
 #include <ewol/widget/Spacer.h>
-static const char * const l_changeIndentation = "edn-event-change-indentation";
-static const char * const l_changeSpace       = "edn-event-change-spaces";
-static const char * const l_changeTabulation  = "edn-event-change-tabulation";
-static const char * const l_changeEndOfLine   = "edn-event-change-endOfLine";
-static const char * const l_changeRounded     = "edn-event-change-rounded";
 
 globals::ParameterGlobalsGui::ParameterGlobalsGui() {
 	addObjectType("globals::ParameterGlobalsGui");
@@ -189,7 +126,7 @@ void globals::ParameterGlobalsGui::init() {
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetAutoIndent());
-		myCheckbox->registerOnEvent(shared_from_this(), "clicked", l_changeIndentation);
+		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackIndentation);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = ewol::widget::CheckBox::create("Display space char (' ')");
@@ -198,7 +135,7 @@ void globals::ParameterGlobalsGui::init() {
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplaySpaceChar());
-		myCheckbox->registerOnEvent(shared_from_this(), "clicked", l_changeSpace);
+		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackSpace);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = ewol::widget::CheckBox::create("Display tabulation char ('\\t')");
@@ -207,7 +144,7 @@ void globals::ParameterGlobalsGui::init() {
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplayTabChar());
-		myCheckbox->registerOnEvent(shared_from_this(), "clicked", l_changeTabulation);
+		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackTabulation);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = ewol::widget::CheckBox::create("Display end of line ('\\n')");
@@ -216,7 +153,7 @@ void globals::ParameterGlobalsGui::init() {
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplayEndOfLine());
-		myCheckbox->registerOnEvent(shared_from_this(), "clicked", l_changeEndOfLine);
+		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackEndOfLine);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = ewol::widget::CheckBox::create("switch Rounded/default");
@@ -225,7 +162,7 @@ void globals::ParameterGlobalsGui::init() {
 	} else {
 		myCheckbox->setExpand(bvec2(true,false));
 		myCheckbox->setValue(isSetDisplayEndOfLine());
-		myCheckbox->registerOnEvent(shared_from_this(), "clicked", l_changeRounded);
+		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackRounded);
 		subWidgetAdd(myCheckbox);
 	}
 }
@@ -235,43 +172,28 @@ globals::ParameterGlobalsGui::~ParameterGlobalsGui() {
 }
 
 
-void globals::ParameterGlobalsGui::onReceiveMessage(const ewol::object::Message& _msg) {
-	ewol::widget::Sizer::onReceiveMessage(_msg);
-	
-	if (_msg.getMessage() == l_changeEndOfLine) {
-		if (_msg.getData() == "true") {
-			setDisplayEndOfLine(true);
-		} else {
-			setDisplayEndOfLine(false);
-		}
-	} else if (_msg.getMessage() == l_changeIndentation) {
-		if (_msg.getData() == "true") {
-			setAutoIndent(true);
-		} else {
-			setAutoIndent(false);
-		}
-	} else if (_msg.getMessage() == l_changeSpace) {
-		if (_msg.getData() == "true") {
-			setDisplaySpaceChar(true);
-		} else {
-			setDisplaySpaceChar(false);
-		}
-	} else if (_msg.getMessage() == l_changeTabulation) {
-		if (_msg.getData() == "true") {
-			setDisplayTabChar(true);
-		} else {
-			setDisplayTabChar(false);
-		}
-	} else if (_msg.getMessage() == l_changeRounded) {
-		if (_msg.getData() == "true") {
-			etk::theme::setName("GUI", "rounded");;
-		} else {
-			etk::theme::setName("GUI", "default");;
-		}
-		// Reload shaders and graphic system ...
-		ewol::getContext().getResourcesManager().reLoadResources();
-		ewol::getContext().forceRedrawAll();
+void globals::ParameterGlobalsGui::onCallbackEndOfLine(const bool& _value) {
+	setDisplayEndOfLine(_value);
+}
+
+void globals::ParameterGlobalsGui::onCallbackIndentation(const bool& _value) {
+	setAutoIndent(_value);
+}
+
+void globals::ParameterGlobalsGui::onCallbackSpace(const bool& _value) {
+	setDisplaySpaceChar(_value);
+}
+void globals::ParameterGlobalsGui::onCallbackTabulation(const bool& _value) {
+	setDisplayTabChar(_value);
+}
+void globals::ParameterGlobalsGui::onCallbackRounded(const bool& _value) {
+	if (_value == true) {
+		etk::theme::setName("GUI", "rounded");;
+	} else {
+		etk::theme::setName("GUI", "default");;
 	}
-	
+	// Reload shaders and graphic system ...
+	ewol::getContext().getResourcesManager().reLoadResources();
+	ewol::getContext().forceRedrawAll();
 }
 

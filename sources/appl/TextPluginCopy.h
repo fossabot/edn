@@ -17,6 +17,12 @@
 
 namespace appl {
 	class TextPluginCopy : public appl::TextViewerPlugin {
+		private:
+			int32_t m_menuIdTitle;
+			int32_t m_menuIdCopy;
+			int32_t m_menuIdCut;
+			int32_t m_menuIdPast;
+			int32_t m_menuIdRemove;
 		protected:
 			TextPluginCopy();
 			void init();
@@ -28,7 +34,7 @@ namespace appl {
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
-			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer, const ewol::object::Message& _msg);
+			virtual bool onReceiveShortCut(appl::TextViewer& _textDrawer, const std::string& _shortCutName);
 	};
 };
 

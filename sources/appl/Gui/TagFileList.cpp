@@ -12,15 +12,12 @@
 #undef __class__
 #define __class__ "TagFileList"
 
-extern const char * const applEventCtagsListSelect     = "appl-event-ctags-list-select";
-extern const char * const applEventCtagsListUnSelect   = "appl-event-ctags-list-un-select";
-extern const char * const applEventCtagsListValidate   = "appl-event-ctags-list-validate";
-
-appl::TagFileList::TagFileList() {
+appl::TagFileList::TagFileList() :
+  signalSelect(*this, "select"),
+  signalValidate(*this, "validate"),
+  signalUnSelect(*this, "unselect") {
 	addObjectType("appl::TagFileList");
 	m_selectedLine = -1;
-	addEventId(applEventCtagsListSelect);
-	addEventId(applEventCtagsListValidate);
 	setMouseLimit(1);
 	// Load color properties: (use file list to be generic ...)
 	m_colorProperty = ewol::resource::ColorFile::create("THEME:COLOR:ListFileSystem.json");
@@ -92,16 +89,16 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum ewol::key::status _ty
 			} else {
 				m_selectedLine = _raw;
 			}
-			const char * event = applEventCtagsListValidate;
-			if (previousRaw != m_selectedLine) {
-				event = applEventCtagsListSelect;
-			}
 			if(    m_selectedLine  >= 0
 			    && m_selectedLine < (int64_t)m_list.size()
 			    && nullptr != m_list[m_selectedLine] ) {
-				generateEventId(event, etk::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+				if (previousRaw != m_selectedLine) {
+					signalSelect.emit(etk::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+				} else {
+					signalValidate.emit(etk::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+				}
 			} else {
-				generateEventId(applEventCtagsListUnSelect);
+				signalUnSelect.emit();
 			}
 			// need to regenerate the display of the list : 
 			markToRedraw();

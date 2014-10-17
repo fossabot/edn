@@ -28,6 +28,10 @@
 	int64_t processTimeLocal = (endTime - startTime); \
 	APPL_DEBUG(comment << (float)((float)processTimeLocal / 1000.0) << "ms");
 
+static const char* const appl_Buffer_eventIsModify = "buffer-is-modify";
+static const char* const appl_Buffer_eventSelectChange = "buffer-select-change";
+
+
 appl::TextViewer::TextViewer() :
   m_insertMode(false) {
 	addObjectType("appl::TextViewer");
@@ -37,6 +41,7 @@ appl::TextViewer::TextViewer() :
 	
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
+	m_pluginManager = appl::textPluginManager::create();
 	m_viewerManager = appl::ViewerManager::create();
 	
 	// load color properties
@@ -54,21 +59,78 @@ appl::TextViewer::TextViewer() :
 void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 	ewol::widget::WidgetScrolled::init();
 	m_displayText.setFont(_fontName, _fontSize);
-	appl::textPluginManager::connect(*this);
+	m_pluginManager->connect(*this);
 	// last created has focus ...
 	setCurrentSelect();
+	signalShortcut.bind(shared_from_this(), &appl::TextViewer::onCallbackShortCut);
 	
+	/*
 	registerMultiCast(ednMsgBufferId);
 	registerMultiCast(ednMsgGuiFind);
 	registerMultiCast(ednMsgGuiReplace);
 	registerMultiCast(appl::MsgSelectGotoLine);
-	registerMultiCast(appl::MsgSelectNewFile);
 	registerMultiCast(appl::MsgSelectGotoLineSelect);
+	*/
+	if (m_bufferManager != nullptr) {
+		m_bufferManager->signalSelectFile.bind(shared_from_this(), &appl::TextViewer::onCallbackselectNewFile);
+	}
+}
+
+appl::TextViewer::~TextViewer() {
+	m_pluginManager->disconnect(*this);
+}
+
+void appl::TextViewer::onCallbackShortCut(const std::string& _value) {
+	if (m_pluginManager->onReceiveShortCut(*this, _value) == true) {
+		return;
+	}
 }
 
 
-appl::TextViewer::~TextViewer() {
-	appl::textPluginManager::disconnect(*this);
+void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
+	// reset scroll:
+	if (m_buffer != nullptr) {
+		m_buffer->unBindAll(shared_from_this());
+		bool needAdd = true;
+		auto it = m_drawingRemenber.begin();
+		while (it != m_drawingRemenber.end()) {
+			std::shared_ptr<appl::Buffer> tmpBuff = it->first.lock();
+			if (tmpBuff == nullptr) {
+				it = m_drawingRemenber.erase(it);
+				continue;
+			}
+			if (tmpBuff == m_buffer) {
+				it->second = m_originScrooled;
+				APPL_VERBOSE("store origin : " << m_originScrooled);
+				needAdd = false;
+				break;
+			}
+			++it;
+		}
+		if (needAdd == true) {
+			m_drawingRemenber.push_back(std::make_pair(std::weak_ptr<appl::Buffer>(m_buffer), m_originScrooled));
+			APPL_VERBOSE("Push origin : " << m_originScrooled);
+		}
+	}
+	m_originScrooled = vec2(0,0);
+	if (m_bufferManager != nullptr) {
+		m_buffer = m_bufferManager->get(_value);
+		m_bufferManager->setBufferSelected(m_buffer);
+		if (m_buffer != nullptr) {
+			m_buffer->signalIsModify.bind(shared_from_this(), &appl::TextViewer::onCallbackIsModify);
+			m_buffer->signalSelectChange.bind(shared_from_this(), &appl::TextViewer::onCallbackSelectChange);
+			for (auto element : m_drawingRemenber) {
+				if (element.first.lock() == m_buffer) {
+					m_originScrooled = element.second;
+					APPL_VERBOSE("retrive origin : " << m_originScrooled);
+					// TODO : Check if this element is not out of the display text ...
+					break;
+				}
+			}
+		}
+	}
+	markToRedraw();
+	return;
 }
 
 std::string appl::TextViewer::getBufferPath() {
@@ -322,7 +384,7 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 		return false;
 	}
 	// First call plugin
-	if (appl::textPluginManager::onEventEntry(*this, _event) == true) {
+	if (m_pluginManager->onEventEntry(*this, _event) == true) {
 		markToRedraw();
 		return true;
 	}
@@ -444,7 +506,7 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 	}
 	APPL_VERBOSE("event : " << _event);
 	// Second call plugin
-	if (appl::textPluginManager::onEventInput(*this, _event) == true) {
+	if (m_pluginManager->onEventInput(*this, _event) == true) {
 		markToRedraw();
 		return true;
 	}
@@ -461,9 +523,9 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 	}
 	if (    _event.getId() == 12
 	     && _event.getStatus() == ewol::key::statusSingle) {
-		APPL_DEBUG("kjhkjhkjh");
+		APPL_TODO("RAT5 SAVE button ==> TODO implement");
 		// Rat5 save event
-		sendMultiCast(ednMsgGuiSave, "current");
+		//sendMultiCast(ednMsgGuiSave, "current");
 		return true;
 	}
 	// just forward event  == > manage directly in the buffer
@@ -625,84 +687,13 @@ void appl::TextViewer::onEventClipboard(enum ewol::context::clipBoard::clipboard
 	markToRedraw();
 }
 
-void appl::TextViewer::onReceiveMessage(const ewol::object::Message& _msg) {
-	ewol::widget::WidgetScrolled::onReceiveMessage(_msg);
-	APPL_VERBOSE("receive msg: " << _msg);
-	// First call plugin
-	if (appl::textPluginManager::onReceiveMessageViewer(*this, _msg) == true) {
-		markToRedraw();
-		return;
-	}
-	// event needed even if selection of buffer is not done ...
-	if (_msg.getMessage() == appl::Buffer::eventIsModify) {
-		markToRedraw();
-		return;
-	}
-	if (_msg.getMessage() == appl::Buffer::eventSelectChange) {
-		markToRedraw();
-		return;
-	}
-	// If not the last buffer selected, then no event parsing ...
-	if (isSelectedLast() == false) {
-		return;
-	}
-	if (_msg.getMessage() == appl::MsgSelectGotoLineSelect) {
-		if (m_buffer == nullptr) {
-			return;
-		}
-		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), etk::string_to_int32_t(_msg.getData()));
-		select(it, m_buffer->getEndLine(it));
-		markToRedraw();
-		return;
-	}
-	if (_msg.getMessage() == appl::MsgSelectGotoLine) {
-		if (m_buffer == nullptr) {
-			return;
-		}
-		appl::Buffer::Iterator it = m_buffer->countForwardNLines(m_buffer->begin(), etk::string_to_int32_t(_msg.getData()));
-		moveCursor(it);
-		markToRedraw();
-		return;
-	}
-	if (_msg.getMessage() == appl::MsgSelectNewFile) {
-		// reset scroll:
-		if (m_buffer != nullptr) {
-			m_buffer->unRegisterOnEvent(shared_from_this());
-			bool needAdd = true;
-			for (size_t iii=0; iii<m_drawingRemenber.size(); ++iii) {
-				if (m_drawingRemenber[iii].first == m_buffer) {
-					m_drawingRemenber[iii].second = m_originScrooled;
-					APPL_VERBOSE("store origin : " << m_originScrooled);
-					needAdd = false;
-					break;
-				}
-			}
-			if (needAdd == true) {
-				m_drawingRemenber.push_back(std::make_pair(m_buffer, m_originScrooled));
-				APPL_VERBOSE("Push origin : " << m_originScrooled);
-			}
-		}
-		m_originScrooled = vec2(0,0);
-		if (m_bufferManager != nullptr) {
-			m_buffer = m_bufferManager->get(_msg.getData());
-			m_bufferManager->setBufferSelected(m_buffer);
-			if (m_buffer != nullptr) {
-				m_buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventIsModify);
-				m_buffer->registerOnEvent(shared_from_this(), appl::Buffer::eventSelectChange);
-				for (auto element : m_drawingRemenber) {
-					if (element.first == m_buffer) {
-						m_originScrooled = element.second;
-						APPL_VERBOSE("retrive origin : " << m_originScrooled);
-						// TODO : Check if this element is not out of the display text ...
-						break;
-					}
-				}
-			}
-		}
-		markToRedraw();
-		return;
-	}
+void appl::TextViewer::onCallbackIsModify() {
+	markToRedraw();
 }
+void appl::TextViewer::onCallbackSelectChange() {
+	markToRedraw();
+}
+
 
 void appl::TextViewer::onGetFocus() {
 	showKeyboard();
@@ -761,7 +752,7 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 		return false;
 	}
 	markToRedraw();
-	if (appl::textPluginManager::onCursorMove(*this, _pos) == true) {
+	if (m_pluginManager->onCursorMove(*this, _pos) == true) {
 		updateScrolling();
 		return true;
 	}
@@ -785,13 +776,13 @@ bool appl::TextViewer::write(const std::string& _data, const appl::Buffer::Itera
 		return false;
 	}
 	markToRedraw();
-	if (appl::textPluginManager::onWrite(*this, _pos, _data) == true) {
+	if (m_pluginManager->onWrite(*this, _pos, _data) == true) {
 		// no call of the move cursor, because pluging might call theses function to copy and cut data...
 		updateScrolling();
 		return true;
 	}
 	bool ret = m_buffer->write(_data, _pos);
-	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+	m_pluginManager->onCursorMove(*this, m_buffer->cursor());
 	updateScrolling();
 	return ret;
 }
@@ -801,13 +792,13 @@ bool appl::TextViewer::replace(const std::string& _data, const appl::Buffer::Ite
 		return false;
 	}
 	markToRedraw();
-	if (appl::textPluginManager::onReplace(*this, _pos, _data, _posEnd) == true) {
+	if (m_pluginManager->onReplace(*this, _pos, _data, _posEnd) == true) {
 		// no call of the move cursor, because pluging might call theses function to copy and cut data...
 		updateScrolling();
 		return true;
 	}
 	bool ret = m_buffer->replace(_data, _pos, _posEnd);
-	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+	m_pluginManager->onCursorMove(*this, m_buffer->cursor());
 	updateScrolling();
 	return ret;
 }
@@ -831,11 +822,11 @@ void appl::TextViewer::remove() {
 		return;
 	}
 	markToRedraw();
-	if (appl::textPluginManager::onRemove(*this, m_buffer->selectStart(), m_buffer->selectStop()) == true) {
+	if (m_pluginManager->onRemove(*this, m_buffer->selectStart(), m_buffer->selectStop()) == true) {
 		return;
 	}
 	m_buffer->removeSelection();
-	appl::textPluginManager::onCursorMove(*this, m_buffer->cursor());
+	m_pluginManager->onCursorMove(*this, m_buffer->cursor());
 }
 
 

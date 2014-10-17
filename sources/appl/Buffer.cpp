@@ -17,11 +17,6 @@
 #undef __class__
 #define __class__ "Buffer"
 
-const char* const appl::Buffer::eventIsModify = "edn-is-modify";
-const char* const appl::Buffer::eventIsSave = "edn-is-save";
-const char* const appl::Buffer::eventSelectChange = "edn-select-change";
-const char* const appl::Buffer::eventChangeName = "edn-buffer-name-change";
-
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 	m_value = u32char::Null;
 	if (m_current < 0) {
@@ -119,8 +114,11 @@ appl::Buffer::Iterator appl::Buffer::selectStop() {
 	return position( getStopSelectionPos() );
 }
 
-
 appl::Buffer::Buffer() :
+  signalIsModify(*this, "is-modify"),
+  signalIsSave(*this, "is-save"),
+  signalSelectChange(*this, "select-change"),
+  signalChangeName(*this, "change-name"),
   m_hasFileName(false),
   m_fileName(""),
   m_isModify(false),
@@ -133,10 +131,6 @@ appl::Buffer::Buffer() :
 	static int32_t bufferBaseId = 0;
 	m_fileName = "No Name " + etk::to_string(bufferBaseId);
 	bufferBaseId++;
-	addEventId(eventIsModify);
-	addEventId(eventIsSave);
-	addEventId(eventSelectChange);
-	addEventId(eventChangeName);
 }
 
 void appl::Buffer::init() {
@@ -144,7 +138,7 @@ void appl::Buffer::init() {
 }
 
 appl::Buffer::~Buffer() {
-	
+	APPL_ERROR("REAL remove buffer : '" << m_name << "'");
 }
 
 bool appl::Buffer::loadFile(const std::string& _name) {
@@ -176,7 +170,7 @@ void appl::Buffer::setFileName(const std::string& _name) {
 	}
 	m_fileName = name;
 	m_hasFileName = true;
-	generateEventId(eventChangeName);
+	signalChangeName.emit();
 	setModification(true);
 }
 
@@ -195,9 +189,9 @@ void appl::Buffer::setModification(bool _status) {
 	}
 	m_isModify = _status;
 	if (m_isModify == true) {
-		generateEventId(eventIsModify);
+		signalIsModify.emit();
 	} else {
-		generateEventId(eventIsSave);
+		signalIsSave.emit();
 	}
 }
 
@@ -420,13 +414,13 @@ void appl::Buffer::moveCursor(int64_t _pos) {
 		if (m_cursorPos == m_cursorSelectPos) {
 			m_cursorSelectPos = -1;
 		}
-		generateEventId(eventSelectChange);
+		signalSelectChange.emit();
 		return;
 	}
 	// move mode
 	m_cursorPos = _pos;
 	m_cursorSelectPos = -1;
-	generateEventId(eventSelectChange);
+	signalSelectChange.emit();
 }
 
 bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
@@ -519,12 +513,12 @@ bool appl::Buffer::getPosAround(const appl::Buffer::Iterator& _startPos,
 
 void appl::Buffer::setSelectionPos(const appl::Buffer::Iterator& _pos) {
 	m_cursorSelectPos = _pos;
-	generateEventId(eventSelectChange);
+	signalSelectChange.emit();
 }
 
 void appl::Buffer::unSelect() {
 	m_cursorSelectPos = -1;
-	generateEventId(eventSelectChange);
+	signalSelectChange.emit();
 }
 
 static const char *ControlCodeTable[32] = {
@@ -993,3 +987,41 @@ uint32_t appl::Buffer::getCursorLinesId() {
 	}
 	return line;
 }
+
+namespace etk {
+	template<> std::string to_string<std::shared_ptr<appl::Buffer>>(const std::shared_ptr<appl::Buffer>& _obj) {
+		if (_obj != nullptr) {
+			return _obj->getFileName();
+		}
+		return "";
+	}
+	template<> std::u32string to_u32string<std::shared_ptr<appl::Buffer>>(const std::shared_ptr<appl::Buffer>& _obj) {
+		return etk::to_u32string(etk::to_string(_obj));
+	}
+	
+	template<> bool from_string<std::shared_ptr<appl::Buffer>>(std::shared_ptr<appl::Buffer>& _variableRet, const std::string& _value) {
+		if (_variableRet != nullptr) {
+			_variableRet->loadFile(_value);
+			return true;
+		}
+		return false;
+	}
+	template<> bool from_string<std::shared_ptr<appl::Buffer>>(std::shared_ptr<appl::Buffer>& _variableRet, const std::u32string& _value) {
+		return from_string(_variableRet, etk::to_string(_value));
+	}
+	template<> std::string to_string<appl::Buffer>(const appl::Buffer& _obj) {
+		return _obj.getFileName();
+	}
+	template<> std::u32string to_u32string<appl::Buffer>(const appl::Buffer& _obj) {
+		return etk::to_u32string(etk::to_string(_obj));
+	}
+	
+	template<> bool from_string<appl::Buffer>(appl::Buffer& _variableRet, const std::string& _value) {
+		_variableRet.loadFile(_value);
+		return true;
+	}
+	template<> bool from_string<appl::Buffer>(appl::Buffer& _variableRet, const std::u32string& _value) {
+		return from_string(_variableRet, etk::to_string(_value));
+	}
+};
+

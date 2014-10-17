@@ -18,7 +18,11 @@
 #undef __class__
 #define __class__ "BufferManager"
 
-appl::BufferManager::BufferManager() {
+appl::BufferManager::BufferManager() :
+  signalNewBuffer(*this, "new-buffer"),
+  signalSelectFile(*this, "select-buffer"),
+  signalTextSelectionChange(*this, "text-selection-change"),
+  signalRemoveBuffer(*this, "remove-buffer") {
 	addObjectType("appl::BufferManager");
 }
 
@@ -37,13 +41,19 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::createNewBuffer() {
 		APPL_ERROR("Can not allocate the Buffer (empty).");
 		return nullptr;
 	}
+	tmp->setParent(shared_from_this());
 	m_list.push_back(tmp);
-	sendMultiCast(appl::MsgSelectNewFile, tmp->getFileName());
+	APPL_INFO("Create a new Buffer");
+	signalNewBuffer.emit(tmp->getFileName());
+	APPL_INFO("Create a new Buffer (done)");
+	APPL_INFO("select Buffer");
+	signalSelectFile.emit(tmp->getFileName());
+	APPL_INFO("select Buffer (done)");
 	return tmp;
 }
 
 std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
-	APPL_INFO("get(" << _fileName << "," << _createIfNeeded << ")");
+	APPL_INFO("get('" << _fileName << "'," << _createIfNeeded << ")");
 	for (auto &it : m_list) {
 		if (it == nullptr) {
 			continue;
@@ -63,15 +73,26 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileN
 			APPL_ERROR("Can not allocate the Buffer class : " << _fileName);
 			return nullptr;
 		}
+		tmp->setParent(shared_from_this());
 		tmp->loadFile(_fileName);
 		m_list.push_back(tmp);
+		APPL_INFO("Creata a open Buffer");
+		signalNewBuffer.emit(tmp->getFileName());
+		APPL_INFO("Creata a open Buffer (done)");
 		return tmp;
 	}
 	return nullptr;
 }
+
 void appl::BufferManager::setBufferSelected(std::shared_ptr<appl::Buffer> _bufferSelected) {
 	m_bufferSelected = _bufferSelected;
-	sendMultiCast(appl::MsgSelectChange, "");
+	if (m_bufferSelected == nullptr) {
+		APPL_ERROR("select a NULL buffer ...");
+		return;
+	}
+	APPL_INFO("Set buffer selected");
+	//signalSelectFile.emit(m_bufferSelected->getName());
+	APPL_INFO("Set buffer selected (done)");
 }
 
 std::shared_ptr<appl::Buffer> appl::BufferManager::get(int32_t _id) {
@@ -99,15 +120,42 @@ bool appl::BufferManager::exist(const std::string& _fileName) {
 
 void appl::BufferManager::open(const std::string& _fileName) {
 	if (exist(_fileName) == true) {
+		APPL_WARNING(" the element '" << _fileName << "' already exist ... just reselect it ...");
+		signalSelectFile.emit(_fileName);
 		return;
 	}
 	if (get(_fileName, true) == nullptr) {
+		APPL_ERROR("Error get '" << _fileName << "' ... ");
 		return;
 	}
-	sendMultiCast(appl::MsgSelectNewFile, _fileName);
+	signalSelectFile.emit(_fileName);
 }
 
-void appl::BufferManager::onReceiveMessage(const ewol::object::Message& _msg) {
-	APPL_DEBUG("receive message !!! " << _msg);
-}
 
+void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>& _child) {
+	APPL_WARNING("Buffer request a close...");
+	bool find = false;
+	int32_t newValue = -1;
+	auto it = m_list.begin();
+	while(it != m_list.end()) {
+		if (*it == nullptr) {
+			it = m_list.erase(it);
+			continue;
+		}
+		if (*it == _child) {
+			it = m_list.erase(it);
+			find = true;
+			break;
+		}
+		newValue++;
+		++it;
+	}
+	if (find == true) {
+		signalRemoveBuffer.emit(std::dynamic_pointer_cast<appl::Buffer>(_child));
+	}
+	if (m_bufferSelected == _child) {
+		APPL_ERROR("is selected");
+		signalSelectFile.emit("");
+		m_bufferSelected = nullptr;
+	}
+}

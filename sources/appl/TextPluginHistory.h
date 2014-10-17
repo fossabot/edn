@@ -36,6 +36,10 @@ namespace appl {
 			std::vector<History*> m_redo; //!< History storing data
 	};
 	class TextPluginHistory : public appl::TextViewerPluginData<appl::PluginHistoryData> {
+		private:
+			int32_t m_menuIdTitle;
+			int32_t m_menuIdUndo;
+			int32_t m_menuIdRedo;
 		protected:
 			TextPluginHistory();
 			void init();
@@ -46,22 +50,22 @@ namespace appl {
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
-			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-			                                    const ewol::object::Message& _msg,
-			                                    appl::PluginHistoryData& _data);
-			virtual bool onWrite(appl::TextViewer& _textDrawer,
-			                     const appl::Buffer::Iterator& _pos,
-			                     const std::string& _strData,
-			                     appl::PluginHistoryData& _data);
-			virtual bool onReplace(appl::TextViewer& _textDrawer,
-			                       const appl::Buffer::Iterator& _pos,
-			                       const std::string& _strData,
-			                       const appl::Buffer::Iterator& _posEnd,
-			                       appl::PluginHistoryData& _data);
-			virtual bool onRemove(appl::TextViewer& _textDrawer,
-			                      const appl::Buffer::Iterator& _pos,
-			                      const appl::Buffer::Iterator& _posEnd,
-			                      appl::PluginHistoryData& _data);
+			virtual bool onDataReceiveShortCut(appl::TextViewer& _textDrawer,
+			                                   const std::string& _shortCutName,
+			                                   appl::PluginHistoryData& _data);
+			virtual bool onDataWrite(appl::TextViewer& _textDrawer,
+			                         const appl::Buffer::Iterator& _pos,
+			                         const std::string& _strData,
+			                         appl::PluginHistoryData& _data);
+			virtual bool onDataReplace(appl::TextViewer& _textDrawer,
+			                           const appl::Buffer::Iterator& _pos,
+			                           const std::string& _strData,
+			                           const appl::Buffer::Iterator& _posEnd,
+			                           appl::PluginHistoryData& _data);
+			virtual bool onDataRemove(appl::TextViewer& _textDrawer,
+			                          const appl::Buffer::Iterator& _pos,
+			                          const appl::Buffer::Iterator& _posEnd,
+			                          appl::PluginHistoryData& _data);
 			virtual void remove(appl::PluginHistoryData& _data) {
 				clearRedo(_data);
 				clearUndo(_data);

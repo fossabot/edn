@@ -22,6 +22,7 @@
 #include <utility>
 
 namespace appl {
+	class textPluginManager;
 	class TextViewer : public ewol::widget::WidgetScrolled {
 		private:
 			std::shared_ptr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
@@ -34,6 +35,7 @@ namespace appl {
 			int32_t m_colorNormal;
 		private:
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			std::shared_ptr<appl::textPluginManager> m_pluginManager; //!< Plugin manager interface
 			std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
 		protected:
 			TextViewer();
@@ -54,7 +56,7 @@ namespace appl {
 		private:
 			ewol::compositing::Text m_displayText; //!< Text display properties.
 			ewol::compositing::Drawing m_displayDrawing; //!< Other diaplay requested.
-			std::vector<std::pair<std::shared_ptr<appl::Buffer>, vec2>> m_drawingRemenber;
+			std::vector<std::pair<std::weak_ptr<appl::Buffer>, vec2>> m_drawingRemenber;
 		public:
 			void setFontSize(int32_t _size);
 			void setFontName(const std::string& _fontName);
@@ -63,7 +65,6 @@ namespace appl {
 		public:  // Derived function
 			virtual bool calculateMinSize();
 			virtual void onRegenerateDisplay();
-			virtual void onReceiveMessage(const ewol::object::Message& _msg);
 			virtual bool onEventInput(const ewol::event::Input& _event);
 			virtual bool onEventEntry(const ewol::event::Entry& _event);
 			virtual void onEventClipboard(enum ewol::context::clipBoard::clipboardListe _clipboardID);
@@ -391,21 +392,31 @@ namespace appl {
 			 * @brief Register of the arrival of a Multicast message
 			 * @param[in] _messageId Event Id waiting for...
 			 */
+			// TODO : Remove
 			void ext_registerMultiCast(const char* const _messageId) {
-				registerMultiCast(_messageId);
+				//registerMultiCast(_messageId);
 			}
 			/**
 			 * @brief add a specific shortcut with his description
 			 * @param[in] _descriptiveString Description string of the shortcut
-			 * @param[in] _generateEventId Event generic of the element
-			 * @param[in] _data Associate data wit the event
+			 * @param[in] _generateEventName Event generic of the element
 			 */
-			virtual void ext_shortCutAdd(const char * _descriptiveString,
-			                             const char * _generateEventId,
-			                             std::string _data="",
-			                             bool _broadcast=false) {
-				shortCutAdd(_descriptiveString, _generateEventId, _data, _broadcast);
+			virtual void ext_shortCutAdd(const std::string& _descriptiveString,
+			                             const std::string& _generateEventName) {
+				shortCutAdd(_descriptiveString, _generateEventName);
 			}
+			/**
+			 * @brief Remove a specific shortcut with his event name
+			 * @param[in] _generateEventName Event of the element shortcut
+			 */
+			virtual void ext_shortCutRm(const std::string& _generateEventName) {
+				shortCutRemove(_generateEventName);
+			}
+		private: // callback fundtions
+			void onCallbackIsModify();
+			void onCallbackShortCut(const std::string& _value);
+			void onCallbackSelectChange();
+			void onCallbackselectNewFile(const std::string& _value);
 	};
 };
 

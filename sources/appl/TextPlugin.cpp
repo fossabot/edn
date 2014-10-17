@@ -8,6 +8,7 @@
 
 
 #include <appl/TextPlugin.h>
+#include <appl/TextPluginManager.h>
 #include <appl/debug.h>
 
 #undef __class__
@@ -21,13 +22,23 @@ appl::TextViewerPlugin::TextViewerPlugin() :
   m_activateOnWrite(false),
   m_activateOnReplace(false),
   m_activateOnRemove(false),
-  m_activateOnReceiveMessage(false),
+  m_activateOnReceiveShortCut(false),
   m_activateOnCursorMove(false) {
 	addObjectType("appl::TextViewerPlugin");
+	m_menuInterface = std::dynamic_pointer_cast<ewol::widget::Menu>(getObjectNamed("appl-menu-interface"));
+	if (m_menuInterface.expired() == true) {
+		APPL_ERROR("Can not acces to the Menu interface");
+	}
+	// get a reference on the plugin manager...
+	m_pluginManager = appl::textPluginManager::create();
 }
 
 void appl::TextViewerPlugin::init() {
 	ewol::Object::init();
+}
+
+void appl::TextViewerPlugin::init(const std::string& _name) {
+	ewol::Object::init(_name);
 }
 
 appl::TextViewerPlugin::~TextViewerPlugin() {
@@ -35,7 +46,7 @@ appl::TextViewerPlugin::~TextViewerPlugin() {
 		return;
 	}
 	m_isEnable = false;
-	onPluginDisable();
+	onPluginGlobalDisable();
 }
 
 void appl::TextViewerPlugin::setEnableStatus(bool _status) {
@@ -44,9 +55,9 @@ void appl::TextViewerPlugin::setEnableStatus(bool _status) {
 	}
 	m_isEnable = _status;
 	if (m_isEnable == true) {
-		onPluginEnable();
+		onPluginGlobalEnable();
 	} else {
-		onPluginDisable();
+		onPluginGlobalDisable();
 	}
 }
 

@@ -42,12 +42,12 @@ class BufferView : public ewol::widget::List {
 	private:
 		int32_t m_selectedIdRequested;
 		int32_t m_selectedID;
-		std::vector<appl::dataBufferStruct*> m_list;
+		std::vector<appl::dataBufferStruct> m_list;
 		/**
 		 * @brief Insert the element in the alphabetic order.
 		 * @param[in] _dataStruct element to add.
 		 */
-		void insertAlphabetic(appl::dataBufferStruct* _dataStruct, bool _selectNewPosition = false);
+		void insertAlphabetic(const appl::dataBufferStruct& _dataStruct, bool _selectNewPosition = false);
 	protected:
 		// Constructeur
 		BufferView();
@@ -55,8 +55,6 @@ class BufferView : public ewol::widget::List {
 	public:
 		DECLARE_FACTORY(BufferView);
 		virtual ~BufferView();
-		// Derived function
-		virtual void onReceiveMessage(const ewol::object::Message& _msg);
 	private:
 		bool m_openOrderMode; //!< true if the order is the opening order mode, otherwise, Alphabetic order
 	protected:
@@ -69,6 +67,13 @@ class BufferView : public ewol::widget::List {
 		virtual uint32_t getNuberOfRaw();
 		virtual bool getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
 		virtual bool onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
+	private: //callback function:
+		void onCallbackChangeName();
+		void onCallbackIsSave();
+		void onCallbackIsModify();
+		void onCallbackNewBuffer(const std::string& _value);
+		void onCallbackselectNewFile(const std::string& _value);
+		void onCallbackBufferRemoved(const std::shared_ptr<appl::Buffer>& _buffer);
 };
 
 

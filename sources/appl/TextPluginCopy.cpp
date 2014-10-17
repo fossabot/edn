@@ -15,8 +15,13 @@
 #define __class__ "TextPluginCopy"
 
 
-appl::TextPluginCopy::TextPluginCopy() {
-	m_activateOnReceiveMessage = true;
+appl::TextPluginCopy::TextPluginCopy() :
+  m_menuIdTitle(-1),
+  m_menuIdCopy(-1),
+  m_menuIdCut(-1),
+  m_menuIdPast(-1),
+  m_menuIdRemove(-1) {
+	m_activateOnReceiveShortCut = true;
 	addObjectType("appl::TextPluginCopy");
 }
 
@@ -26,25 +31,47 @@ void appl::TextPluginCopy::init() {
 
 void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
-	_textDrawer.ext_registerMultiCast(ednMsgGuiCopy);
-	_textDrawer.ext_registerMultiCast(ednMsgGuiPaste);
-	_textDrawer.ext_registerMultiCast(ednMsgGuiCut);
-	_textDrawer.ext_shortCutAdd("ctrl+x", ednMsgGuiCut,   "STD");
-	_textDrawer.ext_shortCutAdd("ctrl+c", ednMsgGuiCopy,  "STD");
-	_textDrawer.ext_shortCutAdd("ctrl+v", ednMsgGuiPaste, "STD");
+	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	if (menu != nullptr) {
+		m_menuIdTitle = menu->addTitle("Edit");
+		if (m_menuIdTitle != -1) {
+			m_menuIdCopy = menu->add(m_menuIdTitle, "Copy",   "", "appl::TextPluginCopy::menu:copy");
+			m_menuIdCut = menu->add(m_menuIdTitle, "Cut",    "", "appl::TextPluginCopy::menu:cut");
+			m_menuIdPast = menu->add(m_menuIdTitle, "Paste",  "", "appl::TextPluginCopy::menu:past");
+			m_menuIdRemove = menu->add(m_menuIdTitle, "Remove", "", "appl::TextPluginCopy::menu:remove");
+		}
+	}
+	_textDrawer.ext_shortCutAdd("ctrl+x", "appl::TextPluginCopy::cut");
+	_textDrawer.ext_shortCutAdd("ctrl+c", "appl::TextPluginCopy::copy");
+	_textDrawer.ext_shortCutAdd("ctrl+v", "appl::TextPluginCopy::Paste");
 }
 
 void appl::TextPluginCopy::onPluginDisable(appl::TextViewer& _textDrawer) {
-	// TODO : unknow function ...
+	_textDrawer.ext_shortCutRm("appl::TextPluginCopy::cut");
+	_textDrawer.ext_shortCutRm("appl::TextPluginCopy::copy");
+	_textDrawer.ext_shortCutRm("appl::TextPluginCopy::Paste");
+	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	if (menu != nullptr) {
+		menu->remove(m_menuIdRemove);
+		menu->remove(m_menuIdPast);
+		menu->remove(m_menuIdCut);
+		menu->remove(m_menuIdCopy);
+		menu->remove(m_menuIdTitle);
+	}
+	m_menuIdTitle = -1;
+	m_menuIdCopy = -1;
+	m_menuIdCut = -1;
+	m_menuIdPast = -1;
+	m_menuIdRemove = -1;
 }
 
-bool appl::TextPluginCopy::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-                                                  const ewol::object::Message& _msg) {
+bool appl::TextPluginCopy::onReceiveShortCut(appl::TextViewer& _textDrawer,
+                                             const std::string& _shortCutName) {
 	if (isEnable() == false) {
 		return false;
 	}
-	if (    _msg.getMessage() == ednMsgGuiCopy
-	     || _msg.getMessage() == ednMsgGuiCut) {
+	if (    _shortCutName == "appl::TextPluginCopy::copy"
+	     || _shortCutName == "appl::TextPluginCopy::cut") {
 		if (_textDrawer.hasBuffer() == true) {
 			std::string value;
 			_textDrawer.copy(value);
@@ -52,11 +79,11 @@ bool appl::TextPluginCopy::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
 				ewol::context::clipBoard::set(ewol::context::clipBoard::clipboardStd, value);
 			}
 		}
-		if (_msg.getMessage() == ednMsgGuiCut) {
+		if (_shortCutName == "appl::TextPluginCopy::cut") {
 			_textDrawer.remove();
 		}
 		return true;
-	} else if (_msg.getMessage() == ednMsgGuiPaste) {
+	} else if (_shortCutName == "appl::TextPluginCopy::Paste") {
 		if (_textDrawer.hasBuffer() == true) {
 			ewol::context::clipBoard::request(ewol::context::clipBoard::clipboardStd);
 		}

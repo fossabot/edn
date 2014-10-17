@@ -15,8 +15,11 @@
 #undef __class__
 #define __class__ "TextPluginHistory"
 
-appl::TextPluginHistory::TextPluginHistory() {
-	m_activateOnReceiveMessage = true;
+appl::TextPluginHistory::TextPluginHistory() :
+  m_menuIdTitle(-1),
+  m_menuIdUndo(-1),
+  m_menuIdRedo(-1) {
+	m_activateOnReceiveShortCut = true;
 	m_activateOnWrite = true;
 	m_activateOnReplace = true;
 	m_activateOnRemove = true;
@@ -29,24 +32,40 @@ void appl::TextPluginHistory::init() {
 
 
 void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
+	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	if (menu != nullptr) {
+		m_menuIdTitle = menu->addTitle("Edit");
+		if (m_menuIdTitle != -1) {
+			m_menuIdUndo = menu->add(m_menuIdTitle, "Undo", "THEME:GUI:Undo.edf", "appl::TextPluginHistory::menu:undo");
+			m_menuIdRedo = menu->add(m_menuIdTitle, "Redo", "THEME:GUI:Redo.edf", "appl::TextPluginHistory::menu:redo");
+		}
+	}
 	// add event :
-	_textDrawer.ext_registerMultiCast(ednMsgGuiRedo);
-	_textDrawer.ext_registerMultiCast(ednMsgGuiUndo);
-	_textDrawer.ext_shortCutAdd("ctrl+z", ednMsgGuiUndo);
-	_textDrawer.ext_shortCutAdd("ctrl+shift+z", ednMsgGuiRedo);
+	_textDrawer.ext_shortCutAdd("ctrl+z", "appl::TextPluginHistory::Undo");
+	_textDrawer.ext_shortCutAdd("ctrl+shift+z", "appl::TextPluginHistory::Redo");
 }
 
 void appl::TextPluginHistory::onPluginDisable(appl::TextViewer& _textDrawer) {
-	// TODO : unknow function ...
+	_textDrawer.ext_shortCutRm("appl::TextPluginHistory::Undo");
+	_textDrawer.ext_shortCutRm("appl::TextPluginHistory::Redo");
+	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	if (menu != nullptr) {
+		menu->remove(m_menuIdRedo);
+		menu->remove(m_menuIdUndo);
+		menu->remove(m_menuIdTitle);
+	}
+	m_menuIdTitle = -1;
+	m_menuIdUndo = -1;
+	m_menuIdRedo = -1;
 }
 
-bool appl::TextPluginHistory::onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-                                                     const ewol::object::Message& _msg,
-                                                     appl::PluginHistoryData& _data) {
+bool appl::TextPluginHistory::onDataReceiveShortCut(appl::TextViewer& _textDrawer,
+                                                    const std::string& _shortCutName,
+                                                    appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
 	}
-	if (_msg.getMessage() == ednMsgGuiRedo) {
+	if (_shortCutName == "appl::TextPluginHistory::Redo") {
 		if (_data.m_redo.size() == 0) {
 			return true;
 		}
@@ -62,7 +81,7 @@ bool appl::TextPluginHistory::onReceiveMessageViewer(appl::TextViewer& _textDraw
 		                          _textDrawer.position(tmpElement->m_endPosRemoved) );
 		
 		return true;
-	} else if (_msg.getMessage() == ednMsgGuiUndo) {
+	} else if (_shortCutName == "appl::TextPluginHistory::Undo") {
 		if (_data.m_undo.size() == 0) {
 			return true;
 		}
@@ -111,10 +130,10 @@ void appl::TextPluginHistory::clearUndo(appl::PluginHistoryData& _data) {
 }
 
 
-bool appl::TextPluginHistory::onWrite(appl::TextViewer& _textDrawer,
-                                      const appl::Buffer::Iterator& _pos,
-                                      const std::string& _strData,
-                                      appl::PluginHistoryData& _data) {
+bool appl::TextPluginHistory::onDataWrite(appl::TextViewer& _textDrawer,
+                                          const appl::Buffer::Iterator& _pos,
+                                          const std::string& _strData,
+                                          appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
 	}
@@ -130,15 +149,18 @@ bool appl::TextPluginHistory::onWrite(appl::TextViewer& _textDrawer,
 		clearRedo(_data);
 		_data.m_undo.push_back(tmpElement);
 	}
-	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.cursor());
+	std::shared_ptr<appl::textPluginManager> mng = m_pluginManager.lock();
+	if (mng!=nullptr) {
+		mng->onCursorMove(_textDrawer, _textDrawer.cursor());
+	}
 	return true;
 }
 
-bool appl::TextPluginHistory::onReplace(appl::TextViewer& _textDrawer,
-                                        const appl::Buffer::Iterator& _pos,
-                                        const std::string& _strData,
-                                        const appl::Buffer::Iterator& _posEnd,
-                                        appl::PluginHistoryData& _data) {
+bool appl::TextPluginHistory::onDataReplace(appl::TextViewer& _textDrawer,
+                                            const appl::Buffer::Iterator& _pos,
+                                            const std::string& _strData,
+                                            const appl::Buffer::Iterator& _posEnd,
+                                            appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
 	}
@@ -155,14 +177,17 @@ bool appl::TextPluginHistory::onReplace(appl::TextViewer& _textDrawer,
 		clearRedo(_data);
 		_data.m_undo.push_back(tmpElement);
 	}
-	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.cursor());
+	std::shared_ptr<appl::textPluginManager> mng = m_pluginManager.lock();
+	if (mng!=nullptr) {
+		mng->onCursorMove(_textDrawer, _textDrawer.cursor());
+	}
 	return true;
 }
 
-bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
-                                       const appl::Buffer::Iterator& _pos,
-                                       const appl::Buffer::Iterator& _posEnd,
-                                       appl::PluginHistoryData& _data) {
+bool appl::TextPluginHistory::onDataRemove(appl::TextViewer& _textDrawer,
+                                           const appl::Buffer::Iterator& _pos,
+                                           const appl::Buffer::Iterator& _posEnd,
+                                           appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
 	}
@@ -177,7 +202,10 @@ bool appl::TextPluginHistory::onRemove(appl::TextViewer& _textDrawer,
 		_data.m_undo.push_back(tmpElement);
 	}
 	_textDrawer.removeDirect();
-	appl::textPluginManager::onCursorMove(_textDrawer, _textDrawer.cursor());
+	std::shared_ptr<appl::textPluginManager> mng = m_pluginManager.lock();
+	if (mng!=nullptr) {
+		mng->onCursorMove(_textDrawer, _textDrawer.cursor());
+	}
 	return true;
 }
 

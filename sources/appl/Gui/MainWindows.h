@@ -16,10 +16,12 @@
 #include <appl/BufferManager.h>
 #include <ewol/widget/Label.h>
 #include <appl/BufferManager.h>
+#include <appl/Gui/Search.h>
 
 class MainWindows : public ewol::widget::Windows {
 	private:
 		std::shared_ptr<ewol::widget::Label> m_widgetLabelFileName;
+		std::shared_ptr<appl::widget::Search> m_widgetSearch;
 	protected:
 		// Constructeur
 		MainWindows();
@@ -39,8 +41,14 @@ class MainWindows : public ewol::widget::Windows {
 		 * @param[in] _buffer Buffer that might be close.
 		 */
 		void closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer);
-	public: // Derived function
-		virtual void onReceiveMessage(const ewol::object::Message& _msg);
+		void displayOpen();
+		void displayProperty();
+	private:
+		void onCallbackPopUpFileSelected(const std::string& _value);
+		void onCallbackTitleUpdate();
+		void onCallbackMenuEvent(const std::string& _value);
+		void onCallbackShortCut(const std::string& _value);
+		void onCallbackselectNewFile(const std::string& _value);
 };
 
 

@@ -32,6 +32,7 @@
 class MainApplication : public ewol::context::Application {
 	private:
 		std::shared_ptr<appl::BufferManager> m_bufferManager;
+		std::shared_ptr<appl::textPluginManager> m_pluginManager;
 	public:
 		bool init(ewol::Context& _context, size_t _initId) {
 			APPL_INFO(" == > init APPL v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
@@ -58,10 +59,9 @@ class MainApplication : public ewol::context::Application {
 			// init ALL Singleton :
 			//()CTagsManager::getInstance();
 			m_bufferManager = appl::BufferManager::create();
+			m_pluginManager = appl::textPluginManager::create();
 			
 			appl::highlightManager::init();
-			appl::textPluginManager::init();
-			appl::textPluginManager::addDefaultPlugin();
 			
 			// Request load of the user configuration ...
 			//ewol::userConfig::load();
@@ -84,6 +84,8 @@ class MainApplication : public ewol::context::Application {
 			// create the specific windows
 			_context.setWindows(basicWindows);
 			
+			// need to add default plugin, because they depend on the Menu widget wich might be named : "appl-menu-interface"
+			m_pluginManager->addDefaultPlugin();
 			
 			// add files
 			APPL_INFO("show list of files : ");
@@ -97,7 +99,7 @@ class MainApplication : public ewol::context::Application {
 					std::string name = file.getName();
 					APPL_INFO("Load ctag file : \"" << name << "\"" );
 					ctagDetected = false;
-					_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, name);
+					//_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, name);
 				} else {
 					etk::FSNode file(tmpppp);
 					std::string name = file.getName();
@@ -111,10 +113,10 @@ class MainApplication : public ewol::context::Application {
 		}
 		void unInit(ewol::Context& _context) {
 			APPL_INFO(" == > Un-Init " PROJECT_NAME " (START)");
-			appl::textPluginManager::unInit();
 			APPL_INFO("Stop Hightlight");
 			appl::highlightManager::unInit();
 			//Kill all singleton
+			m_pluginManager.reset();
 			m_bufferManager.reset();
 			APPL_INFO(" == > Un-Init " PROJECT_NAME " (END)");
 		}

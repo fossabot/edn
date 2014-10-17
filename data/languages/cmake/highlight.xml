@@ -41,10 +41,11 @@
 			<color>macro</color>
 			<regex>\@[A-Z_][A-Z_0-9]{3,500}\@</regex>
 		</rule>
+		<!--
 		<rule name="Function name">
 			<color>functionName</color>
 			<regex>\@(\w|_)+[ \t]*\(</regex>
 		</rule>
-		
+		-->
 	</pass2>
 </EdnLang>

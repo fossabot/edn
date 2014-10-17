@@ -13,16 +13,23 @@
 #include <ewol/object/Object.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/compositing/Text.h>
+#include <ewol/widget/Menu.h>
 
 namespace appl {
+	class textPluginManager;
 	class TextViewerPlugin : public ewol::Object {
 		friend class appl::TextViewer;
 		protected:
+			std::weak_ptr<appl::textPluginManager> m_pluginManager;
+		protected:
 			TextViewerPlugin();
 			void init();
+			void init(const std::string& _name);
 		public:
 			DECLARE_FACTORY(TextViewerPlugin);
 			virtual ~TextViewerPlugin();
+		protected:
+			std::weak_ptr<ewol::widget::Menu> m_menuInterface;
 		private:
 			bool m_isEnable; //!< The plugin is enable or not (for all viewer).
 		public:
@@ -42,13 +49,13 @@ namespace appl {
 			/**
 			 * @brief On plugin global enable.
 			 */
-			virtual void onPluginEnable() {
+			virtual void onPluginGlobalEnable() {
 				// nothing to do here ...
 			};
 			/**
 			 * @brief On plugin global disable.
 			 */
-			virtual void onPluginDisable() {
+			virtual void onPluginGlobalDisable() {
 				// nothing to do here ...
 			};
 			/**
@@ -174,23 +181,22 @@ namespace appl {
 				return false;
 			};
 		protected:
-			bool m_activateOnReceiveMessage; //!< onReceiveMessage is availlable for this plugin.
+			bool m_activateOnReceiveShortCut; //!< onReceiveShortCut is availlable for this plugin.
 		public:
 			/**
 			 * @brief Get the availlability of a callback
 			 * @return true if availlable
 			 */
-			bool isAvaillableOnReceiveMessage() {
-				return m_activateOnReceiveMessage;
+			bool isAvaillableOnReceiveShortCut() {
+				return m_activateOnReceiveShortCut;
 			}
 			/**
 			 * @brief Called when a message arrive.
 			 * @param[in] _widget Reference on the widget caller.
-			 * @param[in] _msg Generic message.
+			 * @param[in] _shortCutName Generic message requested.
 			 * @return true if the event might not propagate anymore
 			 */
-			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-			                                    const ewol::object::Message& _msg) {
+			virtual bool onReceiveShortCut(appl::TextViewer& _textDrawer, const std::string& _shortCutName) {
 				return false;
 			}
 		protected:

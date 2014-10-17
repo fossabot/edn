@@ -9,11 +9,12 @@
 #ifndef __WORKER_CLOSE_ALL_FILE_H__
 #define __WORKER_CLOSE_ALL_FILE_H__
 
+#include <ewol/object/Worker.h>
 #include <appl/BufferManager.h>
 #include <appl/Gui/WorkerCloseFile.h>
 
 namespace appl {
-	class WorkerCloseAllFile : public ewol::Object {
+	class WorkerCloseAllFile : public ewol::object::Worker {
 		protected:
 			WorkerCloseAllFile();
 			void init();
@@ -24,8 +25,8 @@ namespace appl {
 			std::vector<std::string> m_bufferNameList;
 			std::shared_ptr<appl::WorkerCloseFile> m_worker; //! pop-up element that is open...
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-		public: // derived function
-			virtual void onReceiveMessage(const ewol::object::Message& _msg);
+		public: // callback function
+			void onCallbackCloseDone();
 	};
 };
 

@@ -18,6 +18,11 @@
 namespace appl {
 	class BufferManager : public ewol::Resource {
 		public:
+			ewol::object::Signal<std::string> signalNewBuffer;
+			ewol::object::Signal<std::string> signalSelectFile;
+			ewol::object::Signal<void> signalTextSelectionChange;
+			ewol::object::Signal<std::shared_ptr<appl::Buffer>> signalRemoveBuffer;
+		protected:
 			BufferManager();
 			void init(const std::string& _uniqueName);
 		public:
@@ -77,8 +82,8 @@ namespace appl {
 			std::shared_ptr<appl::Buffer> getBufferSelected() {
 				return m_bufferSelected;
 			};
-		public: // herited function
-			void onReceiveMessage(const ewol::object::Message& _msg);
+		private:
+			void requestDestroyFromChild(const std::shared_ptr<Object>& _child);
 	};
 };
 

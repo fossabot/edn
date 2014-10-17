@@ -26,14 +26,18 @@
 #define __class__ "TagFileSelection"
 
 
-extern const char * const applEventctagsSelection = "appl-event-ctags-validate";
-extern const char * const applEventctagsCancel    = "appl-event-ctags-cancel";
+static const char * const applEventctagsSelection = "appl-event-ctags-validate";
+static const char * const applEventctagsCancel    = "appl-event-ctags-cancel";
+static const char * const applEventCtagsListValidate = "appl-event-ctags-list-validate";
+static const char * const applEventCtagsListSelect = "appl-event-ctags-list-selected";
+static const char * const applEventCtagsListUnSelect = "appl-event-ctags-list-un-selected";
 
 
-appl::TagFileSelection::TagFileSelection() {
+
+appl::TagFileSelection::TagFileSelection() :
+  signalSelect(*this, "select"),
+  signalCancel(*this, "cancel") {
 	addObjectType("appl::TagFileSelection");
-	addEventId(applEventctagsSelection);
-	addEventId(applEventctagsCancel);
 }
 
 void appl::TagFileSelection::init() {
@@ -74,16 +78,16 @@ void appl::TagFileSelection::init() {
 		compose->setExpand(bvec2(true,false));
 		compose->setFill(bvec2(true,true));
 		mySizerVert->subWidgetAdd(compose);
-		compose->registerOnEventNameWidget(shared_from_this(), "PLUGIN-CTAGS-jump", "pressed", applEventctagsSelection);
-		compose->registerOnEventNameWidget(shared_from_this(), "PLUGIN-CTAGS-cancel", "pressed", applEventctagsCancel);
+		externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-jump", signalPressed, shared_from_this(), &appl::TagFileSelection::onCallbackCtagsSelection);
+		externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-cancel", signalPressed, shared_from_this(), &appl::TagFileSelection::onCallbackCtagsCancel);
 			
 		m_listTag = appl::TagFileList::create();
 		if (nullptr == m_listTag) {
 			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
-			m_listTag->registerOnEvent(shared_from_this(), applEventCtagsListValidate);
-			m_listTag->registerOnEvent(shared_from_this(), applEventCtagsListSelect);
-			m_listTag->registerOnEvent(shared_from_this(), applEventCtagsListUnSelect);
+			m_listTag->signalValidate.bind(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListValidate);
+			m_listTag->signalSelect.bind(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListSelect);
+			m_listTag->signalUnSelect.bind(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListUnSelect);
 			m_listTag->setExpand(bvec2(true,true));
 			m_listTag->setFill(bvec2(true,true));
 			mySizerVert->subWidgetAdd(m_listTag);
@@ -104,30 +108,34 @@ appl::TagFileSelection::~TagFileSelection() {
 	
 }
 
-void appl::TagFileSelection::onReceiveMessage(const ewol::object::Message& _msg) {
-	EWOL_INFO("ctags LIST ... : " << _msg );
-	if (_msg.getMessage() == applEventctagsSelection) {
-		if (m_eventNamed!="") {
-			generateEventId(applEventctagsSelection, m_eventNamed);
-			// == > Auto remove ...
-			autoDestroy();
-		}
-	} else if (_msg.getMessage() == applEventCtagsListSelect) {
-		m_eventNamed = _msg.getData();
-		
-	} else if (_msg.getMessage() == applEventCtagsListUnSelect) {
-		m_eventNamed = "";
-	} else if (_msg.getMessage() == applEventCtagsListValidate) {
-		generateEventId(applEventctagsSelection, _msg.getData());
-		// == > Auto remove ...
-		autoDestroy();
-	} else if (_msg.getMessage() == applEventctagsCancel) {
-		generateEventId(applEventctagsCancel, "");
+void appl::TagFileSelection::onCallbackCtagsSelection() {
+	if (m_eventNamed!="") {
+		signalSelect.emit(m_eventNamed);
 		// == > Auto remove ...
 		autoDestroy();
 	}
-	return;
-};
+}
+
+void appl::TagFileSelection::onCallbackCtagsCancel() {
+	signalCancel.emit();
+	// == > Auto remove ...
+	autoDestroy();
+}
+
+void appl::TagFileSelection::onCallbackCtagsListValidate(const std::string& _value) {
+	signalSelect.emit(_value);
+	// == > Auto remove ...
+	autoDestroy();
+}
+
+void appl::TagFileSelection::onCallbackCtagsListSelect(const std::string& _value) {
+	m_eventNamed = _value;
+}
+
+void appl::TagFileSelection::onCallbackCtagsListUnSelect() {
+	m_eventNamed = "";
+}
+
 
 
 /**

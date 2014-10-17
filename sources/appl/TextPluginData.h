@@ -25,6 +25,9 @@ namespace appl {
 			void init() {
 				appl::TextViewerPlugin::init();
 			}
+			void init(const std::string& _name) {
+				appl::TextViewerPlugin::init(_name);
+			}
 		public:
 			DECLARE_FACTORY(TextViewerPluginData);
 			virtual ~TextViewerPluginData() {
@@ -38,13 +41,21 @@ namespace appl {
 				m_specificData.clear();
 			}
 		private:
-			std::vector<std::pair<std::shared_ptr<appl::Buffer> ,TYPE* >> m_specificData;
+			std::vector<std::pair<std::weak_ptr<appl::Buffer> ,TYPE* >> m_specificData;
 		protected:
 			TYPE* getDataRef(appl::TextViewer& _textDrawer) {
-				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
-					if (m_specificData[iii].first == _textDrawer.internalGetBuffer()) {
-						return m_specificData[iii].second;
+				auto it = m_specificData.begin();
+				while(it != m_specificData.end()) {
+					std::shared_ptr<appl::Buffer> buf = it->first.lock();
+					if (buf == nullptr) {
+						delete(it->second);
+						it->second = nullptr;
+						it = m_specificData.erase(it);
 					}
+					if (buf == _textDrawer.internalGetBuffer()) {
+						return it->second;
+					}
+					++it;
 				}
 				TYPE* data = new TYPE();
 				if (data == nullptr) {
@@ -55,13 +66,13 @@ namespace appl {
 				return data;
 			}
 		protected: // Wrap all element with their internal data: (do not use theses function)
-			bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-			                            const ewol::object::Message& _msg) {
+			bool onReceiveShortCut(appl::TextViewer& _textDrawer,
+			                       const std::string& _shortCutName) {
 				TYPE* data = getDataRef(_textDrawer);
 				if (data == nullptr) {
 					return false;
 				}
-				return onReceiveMessageViewer(_textDrawer, _msg, *data);
+				return onDataReceiveShortCut(_textDrawer, _shortCutName, *data);
 			}
 			bool onWrite(appl::TextViewer& _textDrawer,
 			             const appl::Buffer::Iterator& _pos,
@@ -70,7 +81,7 @@ namespace appl {
 				if (data == nullptr) {
 					return false;
 				}
-				return onWrite(_textDrawer, _pos, _data, *data);
+				return onDataWrite(_textDrawer, _pos, _data, *data);
 			}
 			bool onReplace(appl::TextViewer& _textDrawer,
 			               const appl::Buffer::Iterator& _pos,
@@ -80,7 +91,7 @@ namespace appl {
 				if (data == nullptr) {
 					return false;
 				}
-				return onReplace(_textDrawer, _pos, _data, _posEnd, *data);
+				return onDataReplace(_textDrawer, _pos, _data, _posEnd, *data);
 			}
 			bool onRemove(appl::TextViewer& _textDrawer,
 			              const appl::Buffer::Iterator& _pos,
@@ -89,32 +100,32 @@ namespace appl {
 				if (data == nullptr) {
 					return false;
 				}
-				return onRemove(_textDrawer, _pos, _posEnd, *data);
+				return onDataRemove(_textDrawer, _pos, _posEnd, *data);
 			}
 			
 		public:
-			virtual bool onReceiveMessageViewer(appl::TextViewer& _textDrawer,
-			                                    const ewol::object::Message& _msg,
-			                                    TYPE& _data) {
+			virtual bool onDataReceiveShortCut(appl::TextViewer& _textDrawer,
+			                                   const std::string& _shortCutName,
+			                                   TYPE& _data) {
 				return false;
 			}
-			virtual bool onWrite(appl::TextViewer& _textDrawer,
-			                     const appl::Buffer::Iterator& _pos,
-			                     const std::string& _strData,
-			                     TYPE& _data) {
+			virtual bool onDataWrite(appl::TextViewer& _textDrawer,
+			                         const appl::Buffer::Iterator& _pos,
+			                         const std::string& _strData,
+			                         TYPE& _data) {
 				return false;
 			}
-			virtual bool onReplace(appl::TextViewer& _textDrawer,
-			                       const appl::Buffer::Iterator& _pos,
-			                       const std::string& _strData,
-			                       const appl::Buffer::Iterator& _posEnd,
-			                       TYPE& _data) {
+			virtual bool onDataReplace(appl::TextViewer& _textDrawer,
+			                           const appl::Buffer::Iterator& _pos,
+			                           const std::string& _strData,
+			                           const appl::Buffer::Iterator& _posEnd,
+			                           TYPE& _data) {
 				return false;
 			}
-			virtual bool onRemove(appl::TextViewer& _textDrawer,
-			                      const appl::Buffer::Iterator& _pos,
-			                      const appl::Buffer::Iterator& _posEnd,
-			                      TYPE& _data) {
+			virtual bool onDataRemove(appl::TextViewer& _textDrawer,
+			                          const appl::Buffer::Iterator& _pos,
+			                          const appl::Buffer::Iterator& _posEnd,
+			                          TYPE& _data) {
 				return false;
 			}
 			virtual void remove(TYPE& _data) {

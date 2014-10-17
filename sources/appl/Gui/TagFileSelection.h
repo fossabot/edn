@@ -13,11 +13,11 @@
 #include <ewol/widget/PopUp.h>
 #include <appl/Gui/TagFileList.h>
 
-extern const char * const applEventctagsSelection;
-extern const char * const applEventctagsCancel;
-
 namespace appl {
 	class TagFileSelection : public ewol::widget::PopUp {
+		public:
+			ewol::object::Signal<std::string> signalSelect;
+			ewol::object::Signal<void> signalCancel;
 		private:
 			std::shared_ptr<appl::TagFileList> m_listTag;
 			std::string m_eventNamed;
@@ -33,8 +33,12 @@ namespace appl {
 			 * @param[in] jump line id
 			 */
 			void addCtagsNewItem(std::string file, int32_t line);
-		public: // herited function
-			void onReceiveMessage(const ewol::object::Message& _msg);
+		public: // callback function
+			void onCallbackCtagsSelection();
+			void onCallbackCtagsCancel();
+			void onCallbackCtagsListValidate(const std::string& _value);
+			void onCallbackCtagsListSelect(const std::string& _value);
+			void onCallbackCtagsListUnSelect();
 	};
 };
 

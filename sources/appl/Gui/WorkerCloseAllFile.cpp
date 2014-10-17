@@ -13,8 +13,6 @@
 #undef __class__
 #define __class__ "WorkerCloseAllFile"
 
-static const char* s_closeDone = "close-done";
-
 appl::WorkerCloseAllFile::WorkerCloseAllFile() {
 	addObjectType("appl::WorkerCloseAllFile");
 	// load buffer manager:
@@ -22,10 +20,10 @@ appl::WorkerCloseAllFile::WorkerCloseAllFile() {
 }
 
 void appl::WorkerCloseAllFile::init() {
-	ewol::Object::init();
+	ewol::object::Worker::init();
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
-		autoDestroy();
+		destroy();
 		return;
 	}
 	// List all current open file :
@@ -43,43 +41,43 @@ void appl::WorkerCloseAllFile::init() {
 	}
 	// checkif an element has something to do in the queue
 	if (m_bufferNameList.size() == 0) {
-		autoDestroy();
+		destroy();
 		return;
 	}
 	// create the worker :
-	m_worker = appl::WorkerCloseFile::create(m_bufferNameList.front());
+	m_worker = appl::WorkerCloseFile::create();
+	m_worker->signalCloseDone.bind(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
+	m_worker->startAction(m_bufferNameList.front());
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
 	if (m_bufferNameList.size() == 0) {
-		autoDestroy();
+		destroy();
 		return;
 	}
-	m_worker->registerOnEvent(shared_from_this(), appl::WorkerCloseFile::eventCloseDone, s_closeDone);
 }
 
 appl::WorkerCloseAllFile::~WorkerCloseAllFile() {
-	
+	APPL_ERROR("Remove Worker");
 }
 
-void appl::WorkerCloseAllFile::onReceiveMessage(const ewol::object::Message& _msg) {
+void appl::WorkerCloseAllFile::onCallbackCloseDone() {
 	if (m_bufferManager == nullptr) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
 	}
-	if (_msg.getMessage() == s_closeDone) {
-		if (m_bufferNameList.size() == 0) {
-			autoDestroy();
-			return;
-		}
-		// create the worker :
-		m_worker = appl::WorkerCloseFile::create(m_bufferNameList.front());
-		// remove first element :
-		m_bufferNameList.erase(m_bufferNameList.begin());
-		if (m_bufferNameList.size() == 0) {
-			autoDestroy();
-			return;
-		}
-		m_worker->registerOnEvent(shared_from_this(), appl::WorkerCloseFile::eventCloseDone, s_closeDone);
+	if (m_bufferNameList.size() == 0) {
+		destroy();
+		return;
+	}
+	// create the worker :
+	m_worker = appl::WorkerCloseFile::create();
+	m_worker->signalCloseDone.bind(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
+	m_worker->startAction(m_bufferNameList.front());
+	// remove first element :
+	m_bufferNameList.erase(m_bufferNameList.begin());
+	if (m_bufferNameList.size() == 0) {
+		destroy();
+		return;
 	}
 }
 

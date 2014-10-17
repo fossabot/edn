@@ -44,7 +44,7 @@
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>"(\\[\\"]|.)*"</regex>
+			<regex>"(\\[\\"]|.)*"</regex><!-- " -->
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
@@ -99,11 +99,14 @@
 		<rule name="function input">
 			<color>inputFunction</color>
 			<regex>\@_[A-Za-z_0-9]*\@</regex>
+			<max>false</max>
 		</rule>
+		<!--
 		<rule name="Function name">
 			<color>functionName</color>
 			<regex>\@(\w|_)+[ \t]*\(</regex>
 		</rule>
+		-->
 		<rule name="condition">
 			<color>boolean</color>
 			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}|</regex>

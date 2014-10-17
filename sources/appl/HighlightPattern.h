@@ -46,7 +46,7 @@ namespace appl {
 		private:
 			std::unique_ptr<etk::RegExp<etk::Buffer>> m_regExp; //!< Start of Regular expression
 		public:
-			void setPatern(std::string& _regExp);
+			void setPatern(std::string& _regExp, bool forceMaximize=false);
 			std::string getPaternString();
 		private:
 			std::string m_colorName; //!< Current color name
@@ -84,7 +84,7 @@ namespace appl {
 			                     appl::HighlightInfo& _resultat,
 			                     etk::Buffer& _buffer);
 			
-			void parseRules(exml::Element* _child, int32_t _level);
+			void parseRules(exml::Element* _child, int32_t _level, bool forceMaximize=false);
 	};
 };
 

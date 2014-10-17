@@ -13,8 +13,6 @@
 #undef __class__
 #define __class__ "WorkerSaveAllFile"
 
-static const char* s_saveAsDone = "save-as-done";
-
 appl::WorkerSaveAllFile::WorkerSaveAllFile() {
 	addObjectType("appl::WorkerSaveAllFile");
 	// load buffer manager:
@@ -22,10 +20,10 @@ appl::WorkerSaveAllFile::WorkerSaveAllFile() {
 }
 
 void appl::WorkerSaveAllFile::init() {
-	ewol::Object::init();
+	ewol::object::Worker::init();
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
-		autoDestroy();
+		destroy();
 		return;
 	}
 	// List all current open file :
@@ -45,7 +43,7 @@ void appl::WorkerSaveAllFile::init() {
 	}
 	// checkif an element has something to do in the queue
 	if (m_bufferNameList.size() == 0) {
-		autoDestroy();
+		destroy();
 		return;
 	}
 	// create the worker :
@@ -53,35 +51,33 @@ void appl::WorkerSaveAllFile::init() {
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
 	if (m_bufferNameList.size() == 0) {
-		autoDestroy();
+		destroy();
 		return;
 	}
-	m_worker->registerOnEvent(shared_from_this(), appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
+	m_worker->signalSaveDone.bind(shared_from_this(), &appl::WorkerSaveAllFile::onCallbackSaveAsDone);
 }
 
 appl::WorkerSaveAllFile::~WorkerSaveAllFile() {
-	
+	APPL_ERROR("Remove Worker");
 }
 
-void appl::WorkerSaveAllFile::onReceiveMessage(const ewol::object::Message& _msg) {
+void appl::WorkerSaveAllFile::onCallbackSaveAsDone() {
 	if (m_bufferManager == nullptr) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
 	}
-	if (_msg.getMessage() == s_saveAsDone) {
-		if (m_bufferNameList.size() == 0) {
-			autoDestroy();
-			return;
-		}
-		// create the worker :
-		m_worker = appl::WorkerSaveFile::create(m_bufferNameList.front());
-		// remove first element :
-		m_bufferNameList.erase(m_bufferNameList.begin());
-		if (m_bufferNameList.size() == 0) {
-			autoDestroy();
-			return;
-		}
-		m_worker->registerOnEvent(shared_from_this(), appl::WorkerSaveFile::eventSaveDone, s_saveAsDone);
+	if (m_bufferNameList.size() == 0) {
+		destroy();
+		return;
 	}
+	// create the worker :
+	m_worker = appl::WorkerSaveFile::create(m_bufferNameList.front());
+	// remove first element :
+	m_bufferNameList.erase(m_bufferNameList.begin());
+	if (m_bufferNameList.size() == 0) {
+		destroy();
+		return;
+	}
+	m_worker->signalSaveDone.bind(shared_from_this(), &appl::WorkerSaveAllFile::onCallbackSaveAsDone);
 }
 
