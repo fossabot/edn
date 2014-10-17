@@ -15,7 +15,7 @@ branches:
 # previous actions:
 before_script: 
   - git clone https://github.com/HeeroYui/ewol.git
-  - cd ewol; git checkout origin/dev -b dev; cd ..
+  - cd ewol; git checkout; cd ..
   - cd ewol; git submodule init; cd ..
   - cd ewol; git submodule update; cd ..
 
