@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EdnLang version="0.1" lang="C">
-	<ext>.*\.(c|m)</ext>
-	<!--might be : <ext>.*\.(c|h|m)</ext>-->
+<EdnLang version="0.1" lang="C++">
+	<ext>.*\.(cpp|cxx|cc|h|hpp|hxx|mm)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="doxygen multiline">
 			<color>commentDoxygen</color>
@@ -55,19 +54,23 @@
 		</rule>
 		<rule name="my function keyword">
 			<color>systemFunction</color>
-			<regex>\b(memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf|calloc|malloc|realloc)\b</regex>
+			<regex>\b(new|delete|try|catch|memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf)\b</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
 			<regex>\b(bool|char(16_t|32_t)?|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128))\b</regex>
 		</rule>
+		<rule name="std type">
+			<color>type</color>
+			<regex>\bstd::[\w:]*\b</regex>
+		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<regex>\b(inline|const|const|extern|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum)\b</regex>
+			<regex>\b(inline|const|class|namespace|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum)\b</regex>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
-			<regex>\b(NULL|MAX|MIN|__(LINE|DATA|FILE|func|TIME|STDC)__)\b</regex>
+			<regex>\b(nullptr|__(LINE|DATA|FILE|func|TIME|STDC)__)\b</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
@@ -75,11 +78,15 @@
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<regex>\b(TRUE|FALSE)\b</regex>
+			<regex>\b(true|false)\b</regex>
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>
 			<regex>\b([A-Z_][A-Z_0-9]{3,500})\b</regex>
+		</rule>
+		<rule name="CPP member">
+			<color>memberClass</color>
+			<regex>\bm_\w+\b</regex>
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
@@ -96,6 +103,10 @@
 		<rule name="simpleQuteTextError">
 			<color>SYNTAX_ERROR</color>
 			<regex>&apos;|&quot;</regex>
+		</rule>
+		<rule name="old school elements">
+			<color>SYNTAX_ERROR</color>
+			<regex>&apos;|&quot;|NULL|MAX|MIN|TRUE|FALSE|calloc|malloc|realloc|free|BOOL</regex>
 		</rule>
 	</pass2>
 	<pass name="doxyparse">

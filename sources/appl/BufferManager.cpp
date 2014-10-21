@@ -88,10 +88,12 @@ void appl::BufferManager::setBufferSelected(std::shared_ptr<appl::Buffer> _buffe
 	m_bufferSelected = _bufferSelected;
 	if (m_bufferSelected == nullptr) {
 		APPL_ERROR("select a NULL buffer ...");
+		//parameterSetOnWidgetNamed("appl-widget-display-name", "value", "---");
 		return;
 	}
 	APPL_INFO("Set buffer selected");
 	//signalSelectFile.emit(m_bufferSelected->getName());
+	//parameterSetOnWidgetNamed("appl-widget-display-name", "value", m_bufferSelected->getName());
 	APPL_INFO("Set buffer selected (done)");
 }
 
@@ -122,6 +124,7 @@ void appl::BufferManager::open(const std::string& _fileName) {
 	if (exist(_fileName) == true) {
 		APPL_WARNING(" the element '" << _fileName << "' already exist ... just reselect it ...");
 		signalSelectFile.emit(_fileName);
+		parameterSetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(_fileName));
 		return;
 	}
 	if (get(_fileName, true) == nullptr) {
@@ -129,6 +132,7 @@ void appl::BufferManager::open(const std::string& _fileName) {
 		return;
 	}
 	signalSelectFile.emit(_fileName);
+	parameterSetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(_fileName));
 }
 
 
@@ -156,6 +160,7 @@ void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>&
 	if (m_bufferSelected == _child) {
 		APPL_ERROR("is selected");
 		signalSelectFile.emit("");
+		parameterSetOnWidgetNamed("appl-widget-display-name", "value", "");
 		m_bufferSelected = nullptr;
 	}
 }

@@ -74,6 +74,7 @@ def create(target):
 	myModule.copy_folder('../data/languages/asm/*.xml','languages/asm/')
 	myModule.copy_folder('../data/languages/bash/*.xml','languages/bash/')
 	myModule.copy_folder('../data/languages/boo/*.xml','languages/boo/')
+	myModule.copy_folder('../data/languages/cpp/*.xml','languages/cpp/')
 	myModule.copy_folder('../data/languages/c/*.xml','languages/c/')
 	myModule.copy_folder('../data/languages/cmake/*.xml','languages/cmake/')
 	myModule.copy_folder('../data/languages/glsl/*.xml','languages/glsl/')

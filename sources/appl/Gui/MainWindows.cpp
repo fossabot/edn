@@ -211,6 +211,7 @@ void MainWindows::init() {
 				myMenu->add(idMenugDisplay, "Reload openGl Shader", "", "menu:reloadShape");
 			myMenu->signalSelect.bind(shared_from_this(), &MainWindows::onCallbackMenuEvent);
 			m_widgetLabelFileName = ewol::widget::Label::create("FileName");
+			m_widgetLabelFileName->setName("appl-widget-display-name");
 			m_widgetLabelFileName->setExpand(bvec2(true,false));
 			m_widgetLabelFileName->setFill(bvec2(true,false));;
 			mySizerHori->subWidgetAdd(m_widgetLabelFileName);
