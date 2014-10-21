@@ -48,6 +48,10 @@
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
+		<rule name="old school elements">
+			<color>SYNTAX_ERROR</color>
+			<regex>&apos;|&quot;|NULL|MAX|MIN|TRUE|FALSE|calloc|malloc|realloc|free|BOOL</regex>
+		</rule>
 		<rule name="my keyword">
 			<color>keyword</color>
 			<regex>\b(return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof)\b</regex>
@@ -103,10 +107,6 @@
 		<rule name="simpleQuteTextError">
 			<color>SYNTAX_ERROR</color>
 			<regex>&apos;|&quot;</regex>
-		</rule>
-		<rule name="old school elements">
-			<color>SYNTAX_ERROR</color>
-			<regex>&apos;|&quot;|NULL|MAX|MIN|TRUE|FALSE|calloc|malloc|realloc|free|BOOL</regex>
 		</rule>
 	</pass2>
 	<pass name="doxyparse">
