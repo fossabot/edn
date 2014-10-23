@@ -102,9 +102,11 @@ class MainApplication : public ewol::context::Application {
 					//_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, name);
 				} else {
 					etk::FSNode file(tmpppp);
-					std::string name = file.getName();
-					APPL_INFO("need load file : \"" << name << "\"" );
-					m_bufferManager->open(name);
+					if (file.getNodeType() == etk::FSN_FILE) {
+						std::string name = file.getName();
+						APPL_INFO("need load file : \"" << name << "\"" );
+						m_bufferManager->open(name);
+					}
 				}
 			}
 			

@@ -84,6 +84,14 @@ namespace appl {
 			};
 		private:
 			void requestDestroyFromChild(const std::shared_ptr<Object>& _child);
+		public:
+			// generic iterators:
+			std::list<std::shared_ptr<appl::Buffer>>::const_iterator begin() const {
+				return m_list.begin();
+			}
+			std::list<std::shared_ptr<appl::Buffer>>::const_iterator end() const {
+				return m_list.end();
+			}
 	};
 };
 

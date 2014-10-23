@@ -714,7 +714,7 @@ void appl::Buffer::setHighlightType(const std::string& _type) {
 
 void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64_t _nbAdded) {
 	// prevent ERROR...
-	if (nullptr == m_highlight) {
+	if (m_highlight == nullptr) {
 		return;
 	}
 	// prevent No data Call
@@ -777,7 +777,7 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 	
 	// update position after the range position : 
 	int64_t elemStart;
-	if (startId == -1) {
+	if (startId <= -1) {
 		elemStart = 0;
 	} else {
 		elemStart = startId+1;

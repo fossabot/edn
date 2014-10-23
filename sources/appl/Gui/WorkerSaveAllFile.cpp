@@ -27,18 +27,17 @@ void appl::WorkerSaveAllFile::init() {
 		return;
 	}
 	// List all current open file :
-	for (int32_t iii=0; iii<m_bufferManager->size(); ++iii) {
-		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
-		if (tmpBuffer == nullptr) {
+	for (auto &it : *m_bufferManager) {
+		if (it == nullptr) {
 			continue;
 		}
-		if (tmpBuffer->isModify() == false) {
+		if (it->isModify() == false) {
 			continue;
 		}
-		if (tmpBuffer->hasFileName() == false) {
-			m_bufferNameList.push_back(tmpBuffer->getFileName());
+		if (it->hasFileName() == false) {
+			m_bufferNameList.push_back(it->getFileName());
 		} else {
-			tmpBuffer->storeFile();
+			it->storeFile();
 		}
 	}
 	// checkif an element has something to do in the queue
