@@ -50,6 +50,7 @@ BufferView::BufferView() :
 	m_colorBackgroundSelect = m_paintingProperties->request("backgroungSelected");
 	m_colorTextNormal = m_paintingProperties->request("textNormal");
 	m_colorTextModify = m_paintingProperties->request("textModify");
+	hide();
 }
 
 void BufferView::init() {
@@ -101,6 +102,11 @@ void BufferView::onCallbackNewBuffer(const std::string& _value) {
 	} else {
 		insertAlphabetic(tmp);
 	}
+	if (m_list.size() <= 1) {
+		hide();
+	} else {
+		show();
+	}
 	markToRedraw();
 }
 
@@ -146,6 +152,11 @@ void BufferView::onCallbackBufferRemoved(const std::shared_ptr<appl::Buffer>& _b
 		} else {
 			++it;
 		}
+	}
+	if (m_list.size() <= 1) {
+		hide();
+	} else {
+		show();
 	}
 	markToRedraw();
 }
