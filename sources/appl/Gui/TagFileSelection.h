@@ -16,8 +16,8 @@
 namespace appl {
 	class TagFileSelection : public ewol::widget::PopUp {
 		public:
-			ewol::object::Signal<std::string> signalSelect;
-			ewol::object::Signal<void> signalCancel;
+			ewol::Signal<std::string> signalSelect;
+			ewol::Signal<void> signalCancel;
 		private:
 			std::shared_ptr<appl::TagFileList> m_listTag;
 			std::string m_eventNamed;

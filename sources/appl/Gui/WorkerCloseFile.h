@@ -17,8 +17,8 @@
 namespace appl {
 	class WorkerCloseFile : public ewol::object::Worker {
 		public:
-			ewol::object::Signal<void> signalCloseDone;
-			ewol::object::Signal<void> signalAbort;
+			ewol::Signal<void> signalCloseDone;
+			ewol::Signal<void> signalAbort;
 		protected:
 			// note : if == "" ==> current ...
 			WorkerCloseFile();

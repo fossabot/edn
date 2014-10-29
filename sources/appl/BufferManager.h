@@ -18,10 +18,10 @@
 namespace appl {
 	class BufferManager : public ewol::Resource {
 		public:
-			ewol::object::Signal<std::string> signalNewBuffer;
-			ewol::object::Signal<std::string> signalSelectFile;
-			ewol::object::Signal<void> signalTextSelectionChange;
-			ewol::object::Signal<std::shared_ptr<appl::Buffer>> signalRemoveBuffer;
+			ewol::Signal<std::string> signalNewBuffer;
+			ewol::Signal<std::string> signalSelectFile;
+			ewol::Signal<void> signalTextSelectionChange;
+			ewol::Signal<std::shared_ptr<appl::Buffer>> signalRemoveBuffer;
 		protected:
 			BufferManager();
 			void init(const std::string& _uniqueName);
