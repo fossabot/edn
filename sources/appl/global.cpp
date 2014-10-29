@@ -18,10 +18,10 @@
 
 class myParamGlobal : public ewol::Object {
 	public:
-		ewol::object::Param<bool> m_displayEOL;
-		ewol::object::Param<bool> m_AutoIndent;
-		ewol::object::Param<bool> m_displayTabChar;
-		ewol::object::Param<bool> m_displaySpaceChar;
+		ewol::parameter::Value<bool> m_displayEOL;
+		ewol::parameter::Value<bool> m_AutoIndent;
+		ewol::parameter::Value<bool> m_displayTabChar;
+		ewol::parameter::Value<bool> m_displaySpaceChar;
 	public : 
 		myParamGlobal() :
 		  m_displayEOL(*this, "eol", false, "Display end of line character"),
