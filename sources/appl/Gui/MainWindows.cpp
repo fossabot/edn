@@ -129,12 +129,13 @@ MainWindows::MainWindows() {
 void MainWindows::init() {
 	ewol::widget::Windows::init();
 	APPL_DEBUG("CREATE WINDOWS ... ");
-	std::shared_ptr<ewol::widget::Sizer> mySizerVert = nullptr;
-	std::shared_ptr<ewol::widget::Sizer> mySizerVert2 = nullptr;
-	std::shared_ptr<ewol::widget::Sizer> mySizerHori = nullptr;
-	std::shared_ptr<appl::TextViewer> myTextView = nullptr;
-	std::shared_ptr<BufferView> myBufferView = nullptr;
-	std::shared_ptr<ewol::widget::Menu> myMenu = nullptr;
+	std::shared_ptr<ewol::widget::Sizer> mySizerVert;
+	std::shared_ptr<ewol::widget::Sizer> mySizerVert2;
+	std::shared_ptr<ewol::widget::Sizer> mySizerHori;
+	std::shared_ptr<appl::TextViewer> myTextView;
+	std::shared_ptr<appl::TextViewer> myTextView2;
+	std::shared_ptr<BufferView> myBufferView;
+	std::shared_ptr<ewol::widget::Menu> myMenu;
 	
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
@@ -154,23 +155,26 @@ void MainWindows::init() {
 			
 			mySizerVert2 = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);
 			mySizerHori->subWidgetAdd(mySizerVert2);
-				mySizerVert2->setName("plop 4444444");
+				mySizerVert2->setName("appl-view-code-sizer");
 				// main buffer Area :
 				#if defined(__TARGET_OS__Android)
-					myTextView = appl::TextViewer::create("FreeMono;DejaVuSansMono;FreeSerif", 16);
+					int32_t sizeText = 16;
 				#else
-					myTextView = appl::TextViewer::create("FreeMono;DejaVuSansMono;FreeSerif", 11);
+					int32_t sizeText = 11;
 				#endif
-				myTextView->setName("appl-text-viewer");
+				myTextView2 = appl::TextViewer::create("FreeMono;DejaVuSansMono;FreeSerif", sizeText);
+				myTextView2->setName("appl-text-viewer2");
+				myTextView2->setExpand(bvec2(true,true));
+				myTextView2->setFill(bvec2(true,true));
+				myTextView2->hide();
+				mySizerVert2->subWidgetAdd(myTextView2);
+				
+				myTextView = appl::TextViewer::create("FreeMono;DejaVuSansMono;FreeSerif", sizeText);
+				myTextView->setName("appl-text-viewer1");
 				myTextView->setExpand(bvec2(true,true));
 				myTextView->setFill(bvec2(true,true));
 				mySizerVert2->subWidgetAdd(myTextView);
-				/*
-				myTextView = new appl::TextViewer("FreeMono;DejaVuSansMono;FreeSerif", 11);
-				myTextView->setExpand(bvec2(true,true));
-				myTextView->setFill(bvec2(true,true));
-				mySizerVert2->subWidgetAdd(myTextView);
-				*/
+				
 				// search area : 
 				m_widgetSearch = appl::widget::Search::create();
 				mySizerVert2->subWidgetAdd(m_widgetSearch);
@@ -209,6 +213,11 @@ void MainWindows::init() {
 				myMenu->add(idMenugDisplay, "Shape round",          "", "menu:shape:shape/round/");
 				myMenu->addSpacer();
 				myMenu->add(idMenugDisplay, "Reload openGl Shader", "", "menu:reloadShape");
+				myMenu->addSpacer();
+				myMenu->add(idMenugDisplay, "Split", "", "menu:split:enable");
+				myMenu->add(idMenugDisplay, "Unsplit", "", "menu:split:disable");
+				myMenu->add(idMenugDisplay, "Vertical", "", "menu:split:vert");
+				myMenu->add(idMenugDisplay, "Horizontal", "", "menu:split:hori");
 			myMenu->signalSelect.bind(shared_from_this(), &MainWindows::onCallbackMenuEvent);
 			m_widgetLabelFileName = ewol::widget::Label::create("FileName");
 			m_widgetLabelFileName->setName("appl-widget-display-name");
@@ -309,6 +318,14 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 	} else if (_value == "menu:reloadShape") {
 		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();
+	} else if (_value == "menu:split:enable") {
+		parameterSetOnWidgetNamed("appl-text-viewer2", "hide", "false");
+	} else if (_value == "menu:split:disable") {
+		parameterSetOnWidgetNamed("appl-text-viewer2", "hide", "true");
+	} else if (_value == "menu:split:vert") {
+		parameterSetOnWidgetNamed("appl-view-code-sizer", "mode", "vert");
+	} else if (_value == "menu:split:hori") {
+		parameterSetOnWidgetNamed("appl-view-code-sizer", "mode", "hori");
 	} else {
 		APPL_ERROR("Event from Menu UNKNOW : '" << _value << "'");
 	}

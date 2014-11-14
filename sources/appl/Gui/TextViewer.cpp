@@ -88,6 +88,10 @@ void appl::TextViewer::onCallbackShortCut(const std::string& _value) {
 
 
 void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
+	if (isSelectedLast() == false) {
+		return;
+	}
+	
 	// reset scroll:
 	if (m_buffer != nullptr) {
 		m_buffer->signalUnBindAll(shared_from_this());

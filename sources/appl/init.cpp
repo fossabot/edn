@@ -132,6 +132,11 @@ class MainApplication : public ewol::context::Application {
  * @return std IO
  */
 int main(int _argc, const char *_argv[]) {
+	/*
+	APPL_ERROR(" base signature = " << typeid(&MainApplication::init).name());
+	APPL_ERROR(" base signature = " << typeid(std::string).name());
+	APPL_CRITICAL(" END ");
+	*/
 	// second possibility
 	return ewol::run(new MainApplication(), _argc, _argv);
 }
