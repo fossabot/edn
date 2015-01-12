@@ -45,13 +45,13 @@ void appl::GlyphPainting::reload() {
 	doc.generate(tmppppp);
 	APPL_DEBUG(tmppppp);
 	*/
-	ejson::Array* baseArray = doc.getArray("ednColor");
+	std::shared_ptr<ejson::Array> baseArray = doc.getArray("ednColor");
 	if (baseArray == nullptr) {
 		APPL_ERROR("Can not get basic array : 'ednColor'");
 		return;
 	}
 	for (size_t iii = 0; iii < baseArray->size(); ++iii) {
-		ejson::Object* tmpObj = baseArray->getObject(iii);
+		std::shared_ptr<ejson::Object> tmpObj = baseArray->getObject(iii);
 		if (tmpObj == nullptr) {
 			APPL_DEBUG(" can not get object in 'ednColor' id=" << iii);
 			continue;
