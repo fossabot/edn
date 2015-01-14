@@ -40,8 +40,8 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 		APPL_ERROR(" can not load file XML : " << _xmlFilename);
 		return;
 	}
-	exml::Element* root = doc.getNamed("EdnLang");
-	if (nullptr == root ) {
+	std::shared_ptr<exml::Element> root = doc.getNamed("EdnLang");
+	if (root ==nullptr) {
 		APPL_ERROR("(l ?) main node not find: \"EdnLang\" ...");
 		return;
 	}
@@ -50,7 +50,7 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 	int32_t level2 = 0;
 	// parse all the elements :
 	for(size_t iii = 0; iii < root->size(); ++iii) {
-		exml::Element* child = root->getElement(iii);
+		std::shared_ptr<exml::Element> child = root->getElement(iii);
 		if (child == nullptr) {
 			// trash here all that is not element ...
 			continue;
@@ -64,7 +64,7 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 		} else if (child->getValue() == "pass1") {
 			// get sub Nodes ...
 			for(size_t jjj=0; jjj< child->size(); jjj++) {
-				exml::Element* passChild = child->getElement(jjj);
+				std::shared_ptr<exml::Element> passChild = child->getElement(jjj);
 				if (passChild == nullptr) {
 					continue;
 				}
@@ -78,7 +78,7 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 		} else if (child->getValue() == "pass2") {
 			// get sub Nodes ...
 			for(size_t jjj=0; jjj< child->size(); jjj++) {
-				exml::Element* passChild = child->getElement(jjj);
+				std::shared_ptr<exml::Element> passChild = child->getElement(jjj);
 				if (passChild == nullptr) {
 					continue;
 				}
@@ -100,7 +100,7 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 			int32_t level3=0;
 			// get sub Nodes ...
 			for(size_t jjj=0; jjj< child->size(); jjj++) {
-				exml::Element* passChild = child->getElement(jjj);
+				std::shared_ptr<exml::Element> passChild = child->getElement(jjj);
 				if (passChild == nullptr) {
 					continue;
 				}

@@ -33,7 +33,7 @@ namespace appl {
 		public:
 			// Constructeur
 			HighlightPattern();
-			HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting, exml::Element* _child, int32_t _level);
+			HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting, const std::shared_ptr<const exml::Element>& _child, int32_t _level);
 			virtual ~HighlightPattern();
 		private:
 			std::string m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")
@@ -96,7 +96,7 @@ namespace appl {
 			                     appl::HighlightInfo& _resultat,
 			                     const std::string& _buffer);
 			
-			void parseRules(exml::Element* _child, int32_t _level);
+			void parseRules(const std::shared_ptr<const exml::Element>& _child, int32_t _level);
 	};
 };
 
