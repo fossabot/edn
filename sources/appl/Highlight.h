@@ -27,7 +27,6 @@ namespace appl {
 #include <etk/os/FSNode.h>
 #include <appl/HighlightPattern.h>
 #include <appl/GlyphPainting.h>
-#include <etk/Buffer.h>
 #include <exml/exml.h>
 
 namespace appl {

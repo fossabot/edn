@@ -18,7 +18,6 @@ class HighlightPattern;
 #include <vector>
 #include <regex>
 #include <exml/exml.h>
-#include <etk/Buffer.h>
 
 enum resultFind {
 	HLP_FIND_ERROR,

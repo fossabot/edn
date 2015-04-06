@@ -40,7 +40,7 @@
 		</rule>
 		<rule name="double quote text">
 			<color>doubleQuoteText</color>
-			<regex>&quot;(.|\\[\\&quot;])*?&quot;</regex> <!-- " -->
+			<regex>(U|u|u8)?&quot;(.|\\[\\&quot;])*?&quot;</regex> <!-- " -->
 		</rule>
 		<rule name="simple quote text">
 			<color>doubleQuoteText</color>
@@ -66,11 +66,11 @@
 		</rule>
 		<rule name="std type">
 			<color>type</color>
-			<regex>\bstd::[\w:]*\b</regex>
+			<regex>\b(std(11)?|boost)::[\w:]*\b</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<regex>\b(inline|const|class|namespace|virtual|private|public|protected|friend|const|extern|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum)\b</regex>
+			<regex>\b(inline|const|class|namespace|virtual|private|public|protected|friend|const|extern|mutable|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum)\b</regex>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
@@ -78,7 +78,7 @@
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<regex>\b(((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?)\b</regex>
+			<regex>\b(((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(LL|L|l|UL|ul|u|U|F|f)?)\b</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>

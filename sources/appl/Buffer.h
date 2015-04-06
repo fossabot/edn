@@ -12,7 +12,6 @@
 #include <etk/types.h>
 #include <etk/os/FSNode.h>
 #include <ewol/ewol.h>
-#include <etk/Buffer.h>
 #include <ewol/object/Object.h>
 #include <ewol/widget/Widget.h>
 #include <ewol/compositing/Text.h>
