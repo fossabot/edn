@@ -1,10 +1,34 @@
 # language type:
-language: cpp
+language:
+  - cpp
+  - android
+
+android:
+  components:
+    - platform-tools
+    - tools
+    - build-tools-22.0.1
+    - android-14
+    - extra
 
 # compilator system:
 compiler:
-- clang
-- gcc
+  - clang
+  - gcc
+
+env:
+  matrix:
+    - CONF=debug BOARD=Linux
+    #- CONF=debug BOARD=Windows
+    #- CONF=debug BOARD=Android
+    - CONF=release BOARD=Linux
+    #- CONF=release BOARD=Windows
+    #- CONF=release BOARD=Android
+  exclude:
+    - compiler: clang
+      env: BOARD=Windows
+    - compiler: clang
+      env: BOARD=Android
 
 # build branch requested
 branches:
@@ -14,6 +38,8 @@ branches:
 
 # previous actions:
 before_script: 
+  - git clone https://github.com/HeeroYui/lutin.git
+  - git clone https://github.com/HeeroYui/monk.git
   - git clone https://github.com/HeeroYui/ewol.git
   - cd ewol; git checkout origin/dev -b dev; cd ..
   - cd ewol; git submodule init; cd ..
@@ -22,17 +48,29 @@ before_script:
 
 #install Gcc to have lisstdc++ 4.8 & gcc 4.8
 install:
+  - echo "BUILDER = $BUILDER"
+  - echo "BOARD = $BOARD"
+  - echo "CONF = $CONF"
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -qq
-  - sudo apt-get install -qq libstdc++-4.9-dev
-  - sudo apt-get install -qq g++-4.8
-  - sudo rm /usr/bin/gcc /usr/bin/g++
-  - sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
-  - sudo ln -s /usr/bin/g++-4.8 /usr/bin/g++
+  
+  - if [ "$BOARD" == "Linux" ]; then sudo apt-get install -qq libstdc++-4.9-dev; fi
+  - if [ "$BOARD" == "Linux" ]; then sudo apt-get install -qq g++-4.8; fi
+  - if [ "$BOARD" == "Linux" ]; then sudo rm /usr/bin/gcc /usr/bin/g++; fi
+  - if [ "$BOARD" == "Linux" ]; then sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc; fi
+  - if [ "$BOARD" == "Linux" ]; then sudo ln -s /usr/bin/g++-4.8 /usr/bin/g++; fi
+  
+  - if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq mingw32; fi
+  #- if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq mingw-w64-i686-dev; fi
+  #- if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq mingw-w64-x86-64-dev; fi
+  - if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq mingw-w64-dev; fi
+  #- if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq g++-mingw-w64-i686; fi
+  #- if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq g++-mingw-w64-x86-64; fi
+  
 
 # build sequence with Lutin :
 script: 
-  - ./ewol/build/lutin.py -C -P -c$BUILDER -mdebug -p edn
+  - ./lutin/lutin.py -C -P -t $BOARD -c $BUILDER -m $CONF -p edn
 
 #send e-mail on compilation result:
 notifications:
