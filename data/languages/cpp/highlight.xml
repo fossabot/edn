@@ -58,7 +58,7 @@
 		</rule>
 		<rule name="my function keyword">
 			<color>systemFunction</color>
-			<regex>\b(new|delete|try|catch|memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf)\b</regex>
+			<regex>\b(new|delete|try|catch|memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf|(reinterpret|static|dynamic|const)_cast)\b</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>

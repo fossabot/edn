@@ -60,9 +60,7 @@ class MainApplication : public ewol::context::Application {
 			//()CTagsManager::getInstance();
 			m_bufferManager = appl::BufferManager::create();
 			m_pluginManager = appl::textPluginManager::create();
-			
 			appl::highlightManager::init();
-			
 			// Request load of the user configuration ...
 			//ewol::userConfig::load();
 			

@@ -1,9 +1,7 @@
 #!/usr/bin/python
-import lutinModule as module
-import lutinTools as tools
-import lutinDebug as debug
+import lutin.module as module
+import lutin.tools as tools
 import datetime
-
 
 def get_desc():
 	return "EDN application N'ours editor (Editeur De N'ours)"
@@ -64,7 +62,7 @@ def create(target):
 	
 	myModule.add_module_depend('ewol')
 	
-	myModule.compile_flags_CC([
+	myModule.compile_flags('c++', [
 		"-DPROJECT_NAME=\"\\\""+myModule.name+"\\\"\""
 		])
 	
@@ -100,7 +98,7 @@ def create(target):
 	
 	tagFile = tools.get_current_path(__file__) + "/tag"
 	versionID = tools.file_read_data(tagFile)
-	myModule.compile_flags_CC([
+	myModule.compile_flags('c', [
 		"-DAPPL_VERSION=\"\\\"" + versionID + "\\\"\""
 		])
 	tagFile = tools.get_current_path(__file__) + "/tagCode"
