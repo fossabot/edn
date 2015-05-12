@@ -36,7 +36,15 @@ class MainApplication : public ewol::context::Application {
 	public:
 		bool init(ewol::Context& _context, size_t _initId) {
 			APPL_INFO(" == > init APPL v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
-			
+			for( int32_t iii=0 ; iii<_context.getCmd().size(); iii++) {
+				std::string tmpppp = _context.getCmd().get(iii);
+				if (    tmpppp == "-h"
+				     || tmpppp == "--help") {
+					APPL_INFO("  -t c-flags-file-name" );
+					APPL_INFO("  -h/--help display this help" );
+					exit(0);
+				} 
+			}
 			etk::theme::setName("COLOR", "color/black/");
 			
 			// TODO : remove this : Move if in the windows properties
@@ -98,6 +106,9 @@ class MainApplication : public ewol::context::Application {
 					APPL_INFO("Load ctag file : \"" << name << "\"" );
 					ctagDetected = false;
 					//_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, name);
+				} else if (    tmpppp == "-h"
+				            || tmpppp == "--help") {
+					// nothing to do ...
 				} else {
 					etk::FSNode file(tmpppp);
 					if (file.getNodeType() == etk::FSN_FILE) {
@@ -105,7 +116,7 @@ class MainApplication : public ewol::context::Application {
 						APPL_INFO("need load file : \"" << name << "\"" );
 						m_bufferManager->open(name);
 					}
-				}
+				} 
 			}
 			
 			APPL_INFO(" == > init " PROJECT_NAME " (END)");
