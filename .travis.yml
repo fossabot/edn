@@ -37,22 +37,32 @@ branches:
     - dev
 
 # previous actions:
-before_script: 
-  - git clone https://github.com/HeeroYui/lutin.git
-  - git clone https://github.com/HeeroYui/monk.git
-  - git clone https://github.com/HeeroYui/ewol.git
-  - cd ewol; git checkout origin/dev -b dev; cd ..
-  - cd ewol; git submodule init; cd ..
-  - cd ewol; git submodule update; cd ..
+before_script:
+  - cd ..
+  - mkdir bin
+  - curl https://storage.googleapis.com/git-repo-downloads/repo > bin/repo
+  - chmod a+x bin/repo
+  - git config --global user.email "travis@travis.com"
+  - git config --global user.name "Travis"
+  - git config --global color.ui "auto"
+  - git config --global core.editor "vi"
+  - mkdir framework
+  - cd framework
+  - ../bin/repo init -u https://github.com/HeeroYui/manifest.git
+  - ../bin/repo sync -j8
+  - cd ..
+  - pwd
+  - ls -l
   - if [ "$CXX" == "clang++" ]; then BUILDER=clang; else BUILDER=gcc; fi
 
-#install Gcc to have lisstdc++ 4.8 & gcc 4.8
+#install Gcc to have lisstdc++ 4.9 & gcc 4.9
 install:
   - echo "BUILDER = $BUILDER"
   - echo "BOARD = $BOARD"
   - echo "CONF = $CONF"
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -qq
+  - sudo pip install lutin
   
   - if [ "$BOARD" == "Linux" ]; then sudo apt-get install -qq libstdc++-4.9-dev; fi
   - if [ "$BOARD" == "Linux" ]; then sudo apt-get install -qq g++-4.8; fi
