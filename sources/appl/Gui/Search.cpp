@@ -154,14 +154,28 @@ void appl::widget::Search::OnCallbackForward(const bool& _value) {
 }
 
 void appl::widget::Search::selectSearch() {
-	if (m_searchEntry!= nullptr) {
+	if (m_searchEntry != nullptr) {
 		m_searchEntry->keepFocus();
 	}
 }
 
+bool appl::widget::Search::isSelectSearch() {
+	if (m_searchEntry != nullptr) {
+		return m_searchEntry->getFocus();
+	}
+	return false;
+}
+
 void appl::widget::Search::selectReplace() {
-	if (m_replaceEntry!= nullptr) {
+	if (m_replaceEntry != nullptr) {
 		m_replaceEntry->keepFocus();
 	}
+}
+
+bool appl::widget::Search::isSelectReplace() {
+	if (m_replaceEntry != nullptr) {
+		return m_replaceEntry->getFocus();
+	}
+	return false;
 }
 

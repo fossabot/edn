@@ -139,6 +139,7 @@ void MainWindows::init() {
 	
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
+	m_viewerManager = appl::ViewerManager::create();
 	
 	mySizerVert = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);
 	mySizerVert->setName("plop 1111111");
@@ -285,7 +286,17 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 			m_widgetSearch->show();
 			m_widgetSearch->selectSearch();
 		} else {
-			m_widgetSearch->hide();
+			if (m_widgetSearch->isSelectSearch()) {
+				m_widgetSearch->hide();
+				if (m_viewerManager != nullptr) {
+					std::shared_ptr<appl::TextViewer> tmp = m_viewerManager->getViewerSelected();
+					if (tmp != nullptr) {
+						tmp->keepFocus();
+					}
+				}
+			} else {
+				m_widgetSearch->selectSearch();
+			}
 		}
 	} else if (_value == "menu:replace") {
 		if (m_widgetSearch == nullptr) {
@@ -295,7 +306,17 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 			m_widgetSearch->show();
 			m_widgetSearch->selectReplace();
 		} else {
-			m_widgetSearch->hide();
+			if (m_widgetSearch->isSelectReplace()) {
+				m_widgetSearch->hide();
+				if (m_viewerManager != nullptr) {
+					std::shared_ptr<appl::TextViewer> tmp = m_viewerManager->getViewerSelected();
+					if (tmp != nullptr) {
+						tmp->keepFocus();
+					}
+				}
+			} else {
+				m_widgetSearch->selectReplace();
+			}
 		}
 	} else if (_value == "menu:find:previous") {
 		APPL_TODO("Event from Menu : " << _value);

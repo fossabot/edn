@@ -17,7 +17,7 @@
 #include <ewol/widget/Label.h>
 #include <appl/BufferManager.h>
 #include <appl/Gui/Search.h>
-
+#include <appl/Gui/ViewerManager.h>
 class MainWindows : public ewol::widget::Windows {
 	private:
 		std::shared_ptr<ewol::widget::Label> m_widgetLabelFileName;
@@ -31,6 +31,7 @@ class MainWindows : public ewol::widget::Windows {
 		virtual ~MainWindows();
 	private:
 		std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+		std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
 		/**
 		 * @brief Display a pop-up to the select the name of the file.
 		 * @param[in] _buffer Buffer that might be saved with a new name.

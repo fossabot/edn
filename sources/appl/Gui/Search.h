@@ -44,7 +44,9 @@ namespace appl {
 				void replace();
 			public:
 				void selectSearch();
+				bool isSelectSearch();
 				void selectReplace();
+				bool isSelectReplace();
 			private: // callback functions
 				void OnCallbackHide();
 				void OnCallbackSearchValue(const std::string& _value);
