@@ -80,7 +80,7 @@ install:
 
 # build sequence with Lutin :
 script: 
-  - ./lutin/lutin.py -C -P -t $BOARD -c $BUILDER -m $CONF -p edn
+  - lutin -C -P -t $BOARD -c $BUILDER -m $CONF -p edn
 
 #send e-mail on compilation result:
 notifications:
