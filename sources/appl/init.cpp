@@ -45,7 +45,8 @@ class MainApplication : public ewol::context::Application {
 					exit(0);
 				} 
 			}
-			etk::theme::setName("COLOR", "color/black/");
+			//etk::theme::setName("COLOR", "color/black/");
+			etk::theme::setName("COLOR", "color/white/");
 			
 			// TODO : remove this : Move if in the windows properties
 			_context.setSize(vec2(800, 600));

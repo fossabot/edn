@@ -123,6 +123,5 @@ def create(target):
 	myModule.pkg_add("RIGHT", "WRITE_EXTERNAL_STORAGE")
 	myModule.pkg_add("RIGHT", "SET_ORIENTATION")
 	
-	# add the currrent module at the 
 	return myModule
 
