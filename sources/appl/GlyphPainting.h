@@ -11,11 +11,11 @@
 
 #include <etk/types.h>
 #include <ewol/debug.h>
-#include <ewol/resource/Resource.h>
+#include <gale/resource/Resource.h>
 #include <appl/GlyphDecoration.h>
 
 namespace appl {
-	class GlyphPainting : public ewol::Resource {
+	class GlyphPainting : public gale::Resource {
 		private:
 			std::vector<appl::GlyphDecoration> m_list;
 		protected:

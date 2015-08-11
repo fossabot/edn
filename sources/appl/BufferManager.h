@@ -13,10 +13,10 @@
 #include <appl/Buffer.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/Widget.h>
-#include <ewol/resource/Resource.h>
+#include <gale/resource/Resource.h>
 
 namespace appl {
-	class BufferManager : public ewol::Resource {
+	class BufferManager : public ewol::Object {
 		public:
 			ewol::Signal<std::string> signalNewBuffer;
 			ewol::Signal<std::string> signalSelectFile;
@@ -26,7 +26,7 @@ namespace appl {
 			BufferManager();
 			void init(const std::string& _uniqueName);
 		public:
-			DECLARE_RESOURCE_SINGLE_FACTORY(BufferManager, "???Buffer_Manager???");
+			DECLARE_SINGLE_FACTORY(BufferManager, "???Buffer_Manager???");
 			virtual ~BufferManager();
 		private:
 			std::list<std::shared_ptr<appl::Buffer>> m_list; // list of all buffer curently open
@@ -83,7 +83,7 @@ namespace appl {
 				return m_bufferSelected;
 			};
 		private:
-			void requestDestroyFromChild(const std::shared_ptr<Object>& _child);
+			// TODO : void requestDestroyFromChild(const std::shared_ptr<Object>& _child);
 		public:
 			// generic iterators:
 			std::list<std::shared_ptr<appl::Buffer>>::const_iterator begin() const {

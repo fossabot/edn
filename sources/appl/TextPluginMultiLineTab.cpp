@@ -8,7 +8,6 @@
 
 
 #include <appl/TextPluginMultiLineTab.h>
-#include <ewol/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
 #undef __class__
@@ -28,11 +27,11 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	if (isEnable() == false) {
 		return false;
 	}
-	if (_event.getType() != ewol::key::keyboardChar) {
+	if (_event.getType() != gale::key::keyboard_char) {
 		return false;
 	}
 	//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
-	if (_event.getStatus() != ewol::key::statusDown) {
+	if (_event.getStatus() != gale::key::status_down) {
 		return false;
 	}
 	char32_t localValue = _event.getChar();

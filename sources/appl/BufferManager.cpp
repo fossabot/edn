@@ -13,7 +13,8 @@
 #include <appl/BufferManager.h>
 #include <ewol/object/Object.h>
 #include <ewol/object/Manager.h>
-#include <ewol/resource/Manager.h>
+#include <ewol/signal/Signal.h>
+#include <gale/resource/Manager.h>
 
 #undef __class__
 #define __class__ "BufferManager"
@@ -27,7 +28,7 @@ appl::BufferManager::BufferManager() :
 }
 
 void appl::BufferManager::init(const std::string& _uniqueName) {
-	ewol::Resource::init(_uniqueName);
+	ewol::Object::init(_uniqueName);
 }
 
 appl::BufferManager::~BufferManager() {
@@ -41,7 +42,7 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::createNewBuffer() {
 		APPL_ERROR("Can not allocate the Buffer (empty).");
 		return nullptr;
 	}
-	tmp->setParent(shared_from_this());
+	tmp->setParent(ewol::Object::shared_from_this());
 	m_list.push_back(tmp);
 	APPL_INFO("Create a new Buffer");
 	signalNewBuffer.emit(tmp->getFileName());
@@ -73,7 +74,7 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileN
 			APPL_ERROR("Can not allocate the Buffer class : " << _fileName);
 			return nullptr;
 		}
-		tmp->setParent(shared_from_this());
+		tmp->setParent(ewol::Object::shared_from_this());
 		tmp->loadFile(_fileName);
 		m_list.push_back(tmp);
 		APPL_INFO("Creata a open Buffer");
@@ -135,6 +136,7 @@ void appl::BufferManager::open(const std::string& _fileName) {
 	parameterSetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(_fileName));
 }
 
+/* TODO : ...
 
 void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>& _child) {
 	APPL_WARNING("Buffer request a close...");
@@ -164,3 +166,4 @@ void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>&
 		m_bufferSelected = nullptr;
 	}
 }
+*/

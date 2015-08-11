@@ -10,7 +10,7 @@
 #include <appl/globalMsg.h>
 #include <ewol/object/Object.h>
 #include <ewol/context/Context.h>
-#include <ewol/resource/Manager.h>
+#include <gale/resource/Manager.h>
 #include <etk/os/FSNode.h>
 
 #undef __class__

@@ -17,7 +17,7 @@
 #include <etk/tool.h>
 #include <unistd.h>
 //#include <ewol/config.h>
-#include <ewol/context/commandLine.h>
+#include <gale/context/commandLine.h>
 //#include <ewol/UserConfig.h>
 #include <ewol/context/Context.h>
 #include <appl/TextPluginManager.h>

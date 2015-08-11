@@ -23,7 +23,7 @@ appl::textPluginManager::textPluginManager() {
 	
 }
 void appl::textPluginManager::init(const std::string& _name) {
-	ewol::Resource::init(_name);
+	gale::Resource::init(_name);
 }
 
 void appl::textPluginManager::addDefaultPlugin() {

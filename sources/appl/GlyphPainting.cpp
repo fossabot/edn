@@ -11,7 +11,7 @@
 #include <appl/GlyphPainting.h>
 #include <ejson/ejson.h>
 #include <etk/os/FSNode.h>
-#include <ewol/resource/Manager.h>
+#include <gale/resource/Manager.h>
 
 #undef __class__
 #define __class__ "GlyphPainting"
@@ -19,12 +19,12 @@
 
 
 appl::GlyphPainting::GlyphPainting() {
-	addObjectType("appl::GlyphPainting");
+	addResourceType("appl::GlyphPainting");
 }
 
 void appl::GlyphPainting::init(const std::string& _filename) {
-	ewol::Resource::init(_filename);
-	EWOL_DEBUG("SFP : load \"" << _filename << "\"");
+	gale::Resource::init(_filename);
+	APPL_DEBUG("SFP : load \"" << _filename << "\"");
 	reload();
 }
 

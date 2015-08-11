@@ -8,7 +8,7 @@
 
 
 #include <appl/TextPluginAutoIndent.h>
-#include <ewol/context/clipBoard.h>
+#include <gale/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
 #undef __class__
@@ -31,10 +31,10 @@ bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
 	}
 	//APPL_DEBUG("KB EVENT : " << _event);
 	// just forward event  == > manage directly in the buffer
-	if (_event.getType() != ewol::key::keyboardChar) {
+	if (_event.getType() != gale::key::keyboard_char) {
 		return false;
 	}
-	if (_event.getStatus() != ewol::key::statusDown) {
+	if (_event.getStatus() != gale::key::status_down) {
 		return false;
 	}
 	if (_event.getChar() != u32char::Return) {

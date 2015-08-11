@@ -30,7 +30,7 @@ namespace appl {
 #include <exml/exml.h>
 
 namespace appl {
-	class Highlight : public ewol::Resource {
+	class Highlight : public gale::Resource {
 		private:
 			std::shared_ptr<appl::GlyphPainting> m_paintingProperties;
 		public:

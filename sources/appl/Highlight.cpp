@@ -11,7 +11,7 @@
 #include <appl/Highlight.h>
 #include <exml/exml.h>
 #include <ewol/ewol.h>
-#include <ewol/resource/Manager.h>
+#include <gale/resource/Manager.h>
 
 
 #undef __class__
@@ -26,11 +26,11 @@
 #define HL2_DEBUG APPL_VERBOSE
 
 appl::Highlight::Highlight() {
-	addObjectType("appl::Highlight");
+	addResourceType("appl::Highlight");
 }
 
 void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _colorFile) {
-	ewol::Resource::init(_xmlFilename);
+	gale::Resource::init(_xmlFilename);
 	
 	// keep color propertiy file :
 	m_paintingProperties = appl::GlyphPainting::create(_colorFile);

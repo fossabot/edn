@@ -12,7 +12,7 @@
 #include <appl/Gui/TextViewer.h>
 #include <ewol/object/Object.h>
 #include <ewol/object/Manager.h>
-#include <ewol/resource/Manager.h>
+#include <gale/resource/Manager.h>
 
 #undef __class__
 #define __class__ "ViewerManager"
@@ -24,7 +24,7 @@ appl::ViewerManager::ViewerManager() {
 }
 
 void appl::ViewerManager::init(const std::string& _uniqueName) {
-  ewol::Resource::init(_uniqueName);
+	ewol::Object::init(_uniqueName);
 }
 
 appl::ViewerManager::~ViewerManager() {

@@ -11,7 +11,7 @@
 #include <etk/stdTools.h>
 #include <appl/Buffer.h>
 #include <appl/debug.h>
-#include <ewol/context/clipBoard.h>
+#include <gale/context/clipBoard.h>
 #include <appl/HighlightManager.h>
 
 #undef __class__

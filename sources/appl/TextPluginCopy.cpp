@@ -8,7 +8,7 @@
 
 
 #include <appl/TextPluginCopy.h>
-#include <ewol/context/clipBoard.h>
+#include <gale/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
 #undef __class__
@@ -76,7 +76,7 @@ bool appl::TextPluginCopy::onReceiveShortCut(appl::TextViewer& _textDrawer,
 			std::string value;
 			_textDrawer.copy(value);
 			if (value.size() != 0) {
-				ewol::context::clipBoard::set(ewol::context::clipBoard::clipboardStd, value);
+				gale::context::clipBoard::set(gale::context::clipBoard::clipboardStd, value);
 			}
 		}
 		if (_shortCutName == "appl::TextPluginCopy::cut") {
@@ -85,7 +85,7 @@ bool appl::TextPluginCopy::onReceiveShortCut(appl::TextViewer& _textDrawer,
 		return true;
 	} else if (_shortCutName == "appl::TextPluginCopy::Paste") {
 		if (_textDrawer.hasBuffer() == true) {
-			ewol::context::clipBoard::request(ewol::context::clipBoard::clipboardStd);
+			gale::context::clipBoard::request(gale::context::clipBoard::clipboardStd);
 		}
 		return true;
 	}

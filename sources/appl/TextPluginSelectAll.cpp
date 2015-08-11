@@ -8,7 +8,6 @@
 
 
 #include <appl/TextPluginSelectAll.h>
-#include <ewol/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
 #undef __class__

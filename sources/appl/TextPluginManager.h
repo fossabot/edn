@@ -16,7 +16,7 @@
 #include <appl/TextPlugin.h>
 
 namespace appl {
-	class textPluginManager : public ewol::Resource {
+	class textPluginManager : public gale::Resource {
 		private:
 			std::weak_ptr<appl::TextViewer> m_currentViewer;
 			std::list<std::shared_ptr<appl::TextViewerPlugin>> m_list;

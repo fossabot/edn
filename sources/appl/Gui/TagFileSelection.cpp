@@ -44,11 +44,11 @@ void appl::TagFileSelection::init() {
 	ewol::widget::PopUp::init();
 	std::shared_ptr<ewol::widget::Sizer> mySizerVert;
 	#if defined(__TARGET_OS__Android)
-		setMinSize(ewol::Dimension(vec2(90,90),ewol::Dimension::Pourcent));
+		setMinSize(gale::Dimension(vec2(90,90), gale::Dimension::Pourcent));
 	#elif defined(__TARGET_OS__Windows)
-		setMinSize(ewol::Dimension(vec2(80,80),ewol::Dimension::Pourcent));
+		setMinSize(gale::Dimension(vec2(80,80), gale::Dimension::Pourcent));
 	#else
-		setMinSize(ewol::Dimension(vec2(80,80),ewol::Dimension::Pourcent));
+		setMinSize(gale::Dimension(vec2(80,80), gale::Dimension::Pourcent));
 	#endif
 	
 	mySizerVert = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);

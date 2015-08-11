@@ -8,7 +8,7 @@
 
 
 #include <appl/TextPluginCtags.h>
-#include <ewol/context/clipBoard.h>
+#include <gale/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 #include <ewol/widget/meta/FileChooser.h>
 #include <ewol/context/Context.h>

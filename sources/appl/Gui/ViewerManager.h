@@ -12,17 +12,17 @@
 #include <appl/Buffer.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/Widget.h>
-#include <ewol/resource/Resource.h>
+#include <gale/resource/Resource.h>
 #include <appl/BufferManager.h>
 
 namespace appl {
 	class TextViewer;
-	class ViewerManager : public ewol::Resource {
+	class ViewerManager : public ewol::Object {
 		protected:
 			ViewerManager();
 			void init(const std::string& _uniqueName);
 		public:
-			DECLARE_RESOURCE_SINGLE_FACTORY(ViewerManager, "???ViewerManager???");
+			DECLARE_SINGLE_FACTORY(ViewerManager, "???ViewerManager???");
 			virtual ~ViewerManager();
 		private:
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager

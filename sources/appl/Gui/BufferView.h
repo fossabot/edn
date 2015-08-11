@@ -66,7 +66,7 @@ class BufferView : public ewol::widget::List {
 		virtual bool getTitle(int32_t _colomn, std::string& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
 		virtual uint32_t getNuberOfRaw();
 		virtual bool getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
-		virtual bool onItemEvent(int32_t _IdInput, enum ewol::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
+		virtual bool onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
 	private: //callback function:
 		void onCallbackChangeName();
 		void onCallbackIsSave();
