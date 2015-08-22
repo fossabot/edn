@@ -1,36 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EdnLang version="0.1" lang="Php: pretty home page">
+<EdnLang version="0.1" lang="PHP">
 	<ext>.*\.(php|php3|php4|phtml)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
-		<rule name="my comment multiline">
-			<color>comment</color>
-			<regex>/\*.*?\*/</regex>
+		<rule name="doxygen multiline">
+			<color>commentDoxygen</color>
+			<regex>/\*(\*|!)(.|\r|\n)*?\*/</regex>
+			<sub>doxyparse</sub>
 		</rule>
-		<rule name="my todo comment">
+		<rule name="comment multiline">
+			<color>comment</color>
+			<regex>/\*(.|\r|\n)*?(\*/|\0)</regex>
+			<sub>TODO</sub>
+		</rule>
+		<rule name="comment multiline ERROR">
 			<color>SYNTAX_ERROR</color>
-			<regex>//[ \t]*TODO[ \t]*:(.|\\[\\\n])*?$</regex>
+			<regex>/\*(.|\r|\n)*</regex>
 		</rule>
-		<rule name="my comment inline">
+		<rule name="#if 0">
+			<color>preprocesseur</color>
+			<regex>#[ \t]*if 0(.|\r|\n)*?#(endif|else)</regex>
+		</rule>
+		<rule name="#if 0 ERROR">
+			<color>SYNTAX_ERROR</color>
+			<regex>#[ \t]*if 0(.|\r|\n)*</regex>
+		</rule>
+		<rule name="#preproc">
+			<color>preprocesseur</color>
+			<regex>#(.|\\[\\\n])*</regex>
+		</rule>
+		<rule name="inline doxygen">
+			<color>commentDoxygen</color>
+			<regex>//!.*</regex>
+			<sub>doxyparse</sub>
+		</rule>
+		<rule name="inline comment">
 			<color>comment</color>
-			<regex>#(.|\\[\\\n])*?$</regex>
+			<regex>//.*</regex>
+			<sub>TODO</sub>
 		</rule>
-		<rule name="my comment">
-			<color>comment</color>
-			<regex>//(.|\\[\\\n])*?$</regex>
-		</rule>
-		<rule name="doubleQuteText">
+		<rule name="double quote text">
 			<color>doubleQuoteText</color>
-			<regex>&quot;(.|\\[\\&quot;])*?&quot;</regex>
+			<regex>&quot;(.|\\[\\&quot;])*?&quot;</regex> <!-- " -->
 		</rule>
-		<rule name="simpleQuteText">
+		<rule name="simple quote text">
 			<color>doubleQuoteText</color>
-			<regex>&apos;(.|\\[\\&apos;])*?&apos;</regex>
+			<regex>&apos;(.|\\[\\&apos;])*?&apos;</regex> <!-- ' -->
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>[\$]+[a-zA-Z_][a-zA-Z0-9_]*</regex>
+			<regex>\$[a-zA-Z_][a-zA-Z0-9_]*\b</regex>
+		</rule>
+		<rule name="">
+			<color>keyword</color>
+			<regex>(&lt;\?php|php\?&gt;)</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
@@ -50,15 +74,47 @@
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<regex>\b(true|TRUE|false|FALSE)\b</regex>
+			<regex>\b(true|false|TRUE|FALSE)\b</regex>
+		</rule>
+		<rule name="BIG LETTER">
+			<color>macro</color>
+			<regex>\b([A-Z_][A-Z_0-9]{3,500})\b</regex>
+		</rule>
+		<rule name="function input">
+			<color>inputFunction</color>
+			<regex>\b_\w+\b</regex>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>
-			<regex>\b\w+[ \t]*\(</regex>
+			<regex>\b((\w|_)+[ \t]*\()</regex>
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>
-			<regex>==|&lt;=|&gt;=|!=|&lt;|&gt;|&amp;&amp;|\{|\}</regex>
+			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}</regex>
+		</rule>
+		<rule name="simpleQuteTextError">
+			<color>SYNTAX_ERROR</color>
+			<regex>&apos;|&quot;</regex>
 		</rule>
 	</pass2>
+	<pass name="doxyparse">
+		<rule name="key">
+			<color>doxygen-key</color>
+			<regex>(@|\\)[\t ]*\w+</regex>
+		</rule>
+		<rule name="in-out">
+			<color>doxygen-in-out</color>
+			<regex>\[(in|in,out|out)\]</regex>
+		</rule>
+		<rule name="function input">
+			<color>inputFunction</color>
+			<regex>\b_\w+\b</regex>
+		</rule>
+	</pass>
+	<pass name="TODO">
+		<rule name="function input">
+			<color>SYNTAX_ERROR</color>
+			<regex>TODO[ \t]*:.*</regex>
+		</rule>
+	</pass>
 </EdnLang>
