@@ -51,6 +51,8 @@ class MainApplication : public ewol::context::Application {
 			// TODO : remove this : Move if in the windows properties
 			_context.setSize(vec2(800, 600));
 			
+			_context.setTitle("edn");
+			
 			// select internal data for font ...
 			_context.getFontDefault().setUseExternal(true);
 			#ifdef __TARGET_OS__Android

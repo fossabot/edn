@@ -1,20 +1,33 @@
-# language type:
 language:
   - cpp
-  - android
 
-android:
-  components:
-    - platform-tools
-    - tools
-    - build-tools-22.0.1
-    - android-14
-    - extra
+sudo: false
 
-# compilator system:
 compiler:
   - clang
   - gcc
+
+os:
+  - linux
+  - osx
+
+branches:
+  only:
+    - master
+    - dev
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.9
+
+install:
+  - echo "BUILDER = $BUILDER"
+  - echo "BOARD = $BOARD"
+  - echo "CONF = $CONF"
+  - pip install --user lutin
 
 env:
   matrix:
@@ -30,13 +43,6 @@ env:
     - compiler: clang
       env: BOARD=Android
 
-# build branch requested
-branches:
-  only:
-    - master
-    - dev
-
-# previous actions:
 before_script:
   - cd ..
   - mkdir bin
@@ -54,35 +60,11 @@ before_script:
   - pwd
   - ls -l
   - if [ "$CXX" == "clang++" ]; then BUILDER=clang; else BUILDER=gcc; fi
+  - if [ "$CXX" == "g++" ]; then COMPILATOR_OPTION="--compilator-version=4.9"; else COMPILATOR_OPTION=""; fi
 
-#install Gcc to have lisstdc++ 4.9 & gcc 4.9
-install:
-  - echo "BUILDER = $BUILDER"
-  - echo "BOARD = $BOARD"
-  - echo "CONF = $CONF"
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-get update -qq
-  - sudo pip install lutin
-  
-  - if [ "$BOARD" == "Linux" ]; then sudo apt-get install -qq libstdc++-4.9-dev; fi
-  - if [ "$BOARD" == "Linux" ]; then sudo apt-get install -qq g++-4.8; fi
-  - if [ "$BOARD" == "Linux" ]; then sudo rm /usr/bin/gcc /usr/bin/g++; fi
-  - if [ "$BOARD" == "Linux" ]; then sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc; fi
-  - if [ "$BOARD" == "Linux" ]; then sudo ln -s /usr/bin/g++-4.8 /usr/bin/g++; fi
-  
-  - if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq mingw32; fi
-  #- if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq mingw-w64-i686-dev; fi
-  #- if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq mingw-w64-x86-64-dev; fi
-  - if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq mingw-w64-dev; fi
-  #- if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq g++-mingw-w64-i686; fi
-  #- if [ "$BOARD" == "Windows" ]; then sudo apt-get install -qq g++-mingw-w64-x86-64; fi
-  
-
-# build sequence with Lutin :
 script: 
-  - lutin -C -P -t $BOARD -c $BUILDER -m $CONF -p edn
+  - lutin -C -P -t $BOARD -c $BUILDER $COMPILATOR_OPTION -m $CONF -p edn
 
-#send e-mail on compilation result:
 notifications:
   email:
     - yui.heero@gmail.com
