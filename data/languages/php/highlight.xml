@@ -16,11 +16,6 @@
 			<color>SYNTAX_ERROR</color>
 			<regex>/\*(.|\r|\n)*</regex>
 		</rule>
-		<rule name="my comment inline">
-			<color>comment</color>
-			<regex>#(.|\\[\\\n])*?$</regex>
-			<sub>TODO</sub>
-		</rule>
 		<rule name="inline doxygen">
 			<color>commentDoxygen</color>
 			<regex>//!.*</regex>
@@ -28,7 +23,7 @@
 		</rule>
 		<rule name="inline comment">
 			<color>comment</color>
-			<regex>//.*</regex>
+			<regex>(//|#).*</regex>
 			<sub>TODO</sub>
 		</rule>
 		<rule name="doubleQuteText">
