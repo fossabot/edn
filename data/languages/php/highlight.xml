@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EdnLang version="0.1" lang="Php: pretty home page">
+<EdnLang version="0.1" lang="PHP">
 	<ext>.*\.(php|php3|php4|phtml)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="doxygen multiline">
@@ -11,6 +11,10 @@
 			<color>comment</color>
 			<regex>/\*(.|\r|\n)*?(\*/|\0)</regex>
 			<sub>TODO</sub>
+		</rule>
+		<rule name="comment multiline ERROR">
+			<color>SYNTAX_ERROR</color>
+			<regex>/\*(.|\r|\n)*</regex>
 		</rule>
 		<rule name="my comment inline">
 			<color>comment</color>
@@ -43,11 +47,11 @@
 		</rule>
 		<rule name="my keyword">
 			<color>inputFunction</color>
-			<regex>[\$]_[a-zA-Z_][a-zA-Z0-9_]*</regex>
+			<regex>\$_[a-zA-Z_][a-zA-Z0-9_]*\b</regex>
 		</rule>
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>[\$][a-zA-Z_][a-zA-Z0-9_]*</regex>
+			<regex>\$[a-zA-Z_][a-zA-Z0-9_]*\b</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
@@ -80,6 +84,10 @@
 		<rule name="condition">
 			<color>boolean</color>
 			<regex>==|&lt;=|&gt;=|!=|&lt;|&gt;|&amp;&amp;|\{|\}</regex>
+		</rule>
+		<rule name="simpleQuteTextError">
+			<color>SYNTAX_ERROR</color>
+			<regex>&apos;|&quot;</regex>
 		</rule>
 	</pass2>
 	<pass name="doxyparse">
