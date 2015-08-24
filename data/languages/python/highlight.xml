@@ -32,6 +32,26 @@
 			<color>doubleQuoteText</color>
 			<regex>&apos;((\\[\\&apos;])|.)*?&apos;</regex>
 		</rule>
+		<rule name="internalParameter">
+			<color>normal</color>
+			<regex>self\.\w*</regex>
+			<sub>parameter_internal</sub>
+		</rule>
+		<rule name="Function name private">
+			<color>functionNamePrivate</color>
+			<regex>\b_(\w|_)+[ \t]*\(</regex>
+			<sub>checkCamelCaseError</sub>
+		</rule>
+		<rule name="Function name">
+			<color>functionName</color>
+			<regex>\b(\w|_)+[ \t]*\(</regex>
+			<sub>checkCamelCaseError</sub>
+		</rule>
+		<rule name="function input">
+			<color>inputFunction</color>
+			<regex>\b_(\w|_)+\b</regex>
+			<sub>checkCamelCaseError</sub>
+		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
@@ -62,10 +82,6 @@
 			<color>macro</color>
 			<regex>\b([A-Z_][A-Z_0-9]{3,500})\b</regex>
 		</rule>
-		<rule name="Function name">
-			<color>functionName</color>
-			<regex>\b(\w|_)+[ \t]*\(</regex>
-		</rule>
 		<rule name="condition">
 			<color>boolean</color>
 			<regex>==|&lt;=|&gt;=|!=|&lt;{1,2}|&gt;{1,2}|&amp;&amp;|\{|\}</regex>
@@ -76,6 +92,10 @@
 		</rule>
 	</pass2>
 	<pass name="doxyparse">
+		<rule name="knownkey">
+			<color>doxygen-key-known</color>
+			<regex>(@|\\)[\t ]*(addindex|addtogroup|anchor|arg|attention|author|authors|a|brief|bug|b|callgraph|category|cite|class|code|cond|copybrief|copydetails|copydoc|copyright|date|def|defgroup|deprecated|details|diafile|dir|docbookonly|dontinclude|dot|dotfile|else|elseif|em|endcode|endcond|enddocbookonly|enddot|endhtmlonly|endif|endinternal|endlatexonly|endlink|endmanonly|endmsc|endparblock|endrtfonly|endsecreflist|endverbatim|enduml|endxmlonly|enum|example|exception|extends|e|file|fn|headerfile|hidecallergraph|hidecallgraph|hideinitializer|htmlinclude|htmlonly|idlexcept|ifnot|if|image|implements|includelineno|include|ingroup|internal|invariant|interface|latexinclude|latexonly|line|link|licence|li|mainpage|manonly|memberof|msc|mscfile|name|namespace|nosubgrouping|note|n|overload|package|page|paragraph|param|parblock|par|post|pre|private|privatesection|property|protected|protectedsection|protocol|public|publicsection|pure|p|refitem|ref|related|relates|relatedalso|relatesalso|remark|remarks|result|return|returns|retval|rtfonly|sa|secreflist|section|see|short|showinitializer|since|skip|skipline|snippet|startuml|struct|subpage|subsection|subsubsection|tableofcontents|test|throw|throws|todo|tparam|typedef|union|until|var|verbatim|verbinclude|version|vhdlflow|warning|weakgroup|xmlonly|xrefitem)</regex>
+		</rule>
 		<rule name="key">
 			<color>doxygen-key</color>
 			<regex>(@|\\)[\t ]*\w+</regex>
@@ -93,6 +113,34 @@
 		<rule name="function input">
 			<color>SYNTAX_ERROR</color>
 			<regex>TODO[ \t]*:.*</regex>
+		</rule>
+	</pass>
+	<pass name="parameter_internal">
+		<rule name="self">
+			<color>systemFunction</color>
+			<regex>self</regex>
+		</rule>
+		<rule name="function input">
+			<color>memberClassPrivate</color>
+			<regex>_[a-z0-9_]+</regex>
+		</rule>
+		<rule name="function input">
+			<color>memberClass</color>
+			<regex>[a-z0-9_]+</regex>
+		</rule>
+		<rule name="function input">
+			<color>SYNTAX_ERROR</color>
+			<regex>_\w+</regex>
+		</rule>
+		<rule name="function input">
+			<color>SYNTAX_ERROR</color>
+			<regex>\w+</regex>
+		</rule>
+	</pass>
+	<pass name="checkCamelCaseError">
+		<rule name="Function name ERROR (camel case ...)">
+			<color>SYNTAX_ERROR</color>
+			<regex>[A-Z]</regex>
 		</rule>
 	</pass>
 </EdnLang>

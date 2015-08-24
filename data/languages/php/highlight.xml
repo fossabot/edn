@@ -2,21 +2,30 @@
 <EdnLang version="0.1" lang="Php: pretty home page">
 	<ext>.*\.(php|php3|php4|phtml)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
-		<rule name="my comment multiline">
-			<color>comment</color>
-			<regex>/\*.*?\*/</regex>
+		<rule name="doxygen multiline">
+			<color>commentDoxygen</color>
+			<regex>/\*(\*|!)(.|\r|\n)*?\*/</regex>
+			<sub>doxyparse</sub>
 		</rule>
-		<rule name="my todo comment">
-			<color>SYNTAX_ERROR</color>
-			<regex>//[ \t]*TODO[ \t]*:(.|\\[\\\n])*?$</regex>
+		<rule name="comment multiline">
+			<color>comment</color>
+			<regex>/\*(.|\r|\n)*?(\*/|\0)</regex>
+			<sub>TODO</sub>
 		</rule>
 		<rule name="my comment inline">
 			<color>comment</color>
 			<regex>#(.|\\[\\\n])*?$</regex>
+			<sub>TODO</sub>
 		</rule>
-		<rule name="my comment">
+		<rule name="inline doxygen">
+			<color>commentDoxygen</color>
+			<regex>//!.*</regex>
+			<sub>doxyparse</sub>
+		</rule>
+		<rule name="inline comment">
 			<color>comment</color>
-			<regex>//(.|\\[\\\n])*?$</regex>
+			<regex>//.*</regex>
+			<sub>TODO</sub>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
@@ -28,9 +37,17 @@
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
+		<rule name="start-stop-php">
+			<color>macro</color>
+			<regex>(&lt;\?\w+|\?&gt;)</regex>
+		</rule>
+		<rule name="my keyword">
+			<color>inputFunction</color>
+			<regex>[\$]_[a-zA-Z_][a-zA-Z0-9_]*</regex>
+		</rule>
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>[\$]+[a-zA-Z_][a-zA-Z0-9_]*</regex>
+			<regex>[\$][a-zA-Z_][a-zA-Z0-9_]*</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
@@ -50,7 +67,11 @@
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<regex>\b(true|TRUE|false|FALSE)\b</regex>
+			<regex>\b(TRUE|FALSE)\b</regex>
+		</rule>
+		<rule name="BIG LETTER">
+			<color>macro</color>
+			<regex>\b([A-Z_][A-Z_0-9]{3,500})\b</regex>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>
@@ -61,4 +82,28 @@
 			<regex>==|&lt;=|&gt;=|!=|&lt;|&gt;|&amp;&amp;|\{|\}</regex>
 		</rule>
 	</pass2>
+	<pass name="doxyparse">
+		<rule name="knownkey">
+			<color>doxygen-key-known</color>
+			<regex>(@|\\)[\t ]*(addindex|addtogroup|anchor|arg|attention|author|authors|a|brief|bug|b|callgraph|category|cite|class|code|cond|copybrief|copydetails|copydoc|copyright|date|def|defgroup|deprecated|details|diafile|dir|docbookonly|dontinclude|dot|dotfile|else|elseif|em|endcode|endcond|enddocbookonly|enddot|endhtmlonly|endif|endinternal|endlatexonly|endlink|endmanonly|endmsc|endparblock|endrtfonly|endsecreflist|endverbatim|enduml|endxmlonly|enum|example|exception|extends|e|file|fn|headerfile|hidecallergraph|hidecallgraph|hideinitializer|htmlinclude|htmlonly|idlexcept|ifnot|if|image|implements|includelineno|include|ingroup|internal|invariant|interface|latexinclude|latexonly|line|link|licence|li|mainpage|manonly|memberof|msc|mscfile|name|namespace|nosubgrouping|note|n|overload|package|page|paragraph|param|parblock|par|post|pre|private|privatesection|property|protected|protectedsection|protocol|public|publicsection|pure|p|refitem|ref|related|relates|relatedalso|relatesalso|remark|remarks|result|return|returns|retval|rtfonly|sa|secreflist|section|see|short|showinitializer|since|skip|skipline|snippet|startuml|struct|subpage|subsection|subsubsection|tableofcontents|test|throw|throws|todo|tparam|typedef|union|until|var|verbatim|verbinclude|version|vhdlflow|warning|weakgroup|xmlonly|xrefitem)</regex>
+		</rule>
+		<rule name="key">
+			<color>doxygen-key</color>
+			<regex>(@|\\)[\t ]*\w+</regex>
+		</rule>
+		<rule name="in-out">
+			<color>doxygen-in-out</color>
+			<regex>\[(in|in,out|out)\]</regex>
+		</rule>
+		<rule name="function input">
+			<color>inputFunction</color>
+			<regex>\b_\w+\b</regex>
+		</rule>
+	</pass>
+	<pass name="TODO">
+		<rule name="function input">
+			<color>SYNTAX_ERROR</color>
+			<regex>TODO[ \t]*:.*</regex>
+		</rule>
+	</pass>
 </EdnLang>

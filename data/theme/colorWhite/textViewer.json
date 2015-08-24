@@ -12,6 +12,7 @@
 		
 		{ name:"type", foreground:"#376d0a", bold:true},
 		{ name:"memberClass", foreground:"#7c5406", bold:true},
+		{ name:"memberClassPrivate", foreground:"#7c2400", bold:true},
 		{ name:"inputFunction", foreground:"#B80000", bold:true, italic:true},
 		{ name:"storageKeyword", foreground:"#466cb4"},
 		{ name:"number", foreground:"#007b00"},
@@ -25,9 +26,11 @@
 		{ name:"macro", foreground:"#571793", bold:true},
 		{ name:"SYNTAX_ERROR", foreground:"#000000", background:"#c20000", bold:true},
 		{ name:"functionName", foreground:"#09857e", bold:true},
+		{ name:"functionNamePrivate", foreground:"#09854e", bold:true},
 		{ name:"TestResultOK", foreground:"#000000", background:"#009c00", bold:true},
 		{ name:"TestResultERROR", foreground:"#000000", background:"#c20000", bold:true}
 
+		{ name:"doxygen-key-known", foreground:"#Fc4700", bold:true, italic:false},
 		{ name:"doxygen-key", foreground:"#dc3700", bold:true, italic:false},
 		{ name:"doxygen-in-out", foreground:"#dc7000", bold:true, italic:false},
 	]
