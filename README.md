@@ -5,6 +5,9 @@ Edn
 
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.
 
+
+[![Build Status](https://travis-ci.org/HeeroYui/edn.svg?branch=dev)](https://travis-ci.org/HeeroYui/edn)
+
 Instructions
 ============
 
