@@ -69,7 +69,7 @@ def create(target):
 	#myModule.copy_file('../data/icon.png','icon.png')
 	
 	myModule.copy_folder('../data/icon.*','')
-	myModule.copy_folder('../data/languages/gcov/*.xml','languages/asm/')
+	myModule.copy_folder('../data/languages/gcov/*.xml','languages/gcov/')
 	myModule.copy_folder('../data/languages/asm/*.xml','languages/asm/')
 	myModule.copy_folder('../data/languages/bash/*.xml','languages/bash/')
 	myModule.copy_folder('../data/languages/boo/*.xml','languages/boo/')

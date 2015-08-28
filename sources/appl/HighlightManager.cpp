@@ -44,6 +44,13 @@ void appl::highlightManager::init() {
 		APPL_DEBUG("Load xml name : " << filename);
 		std::shared_ptr<appl::Highlight> myHightLine = appl::Highlight::create(filename);
 		if (myHightLine != nullptr) {
+			// Check if the language name already exist
+			for (auto &it2 : hlList) {
+				if (    it2 != nullptr
+				     && it2->getTypeName() == myHightLine->getTypeName() ) {
+					APPL_WARNING("LANGUAGE : replace pattern name: '" << myHightLine->getTypeName() << "' with file '" << filename << "' replace: " << it2->getName());
+				}
+			}
 			hlList.push_back(myHightLine);
 		} else {
 			APPL_ERROR("Can not allocate HighLight");
