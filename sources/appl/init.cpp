@@ -34,8 +34,8 @@ class MainApplication : public ewol::context::Application {
 		std::shared_ptr<appl::BufferManager> m_bufferManager;
 		std::shared_ptr<appl::textPluginManager> m_pluginManager;
 	public:
-		bool init(ewol::Context& _context, size_t _initId) {
-			APPL_INFO(" == > init APPL v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ")");
+		virtual void onCreate(ewol::Context& _context) {
+			APPL_INFO(" == > CREATE ... " << PROJECT_NAME << "  v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ") (BEGIN)");
 			for( int32_t iii=0 ; iii<_context.getCmd().size(); iii++) {
 				std::string tmpppp = _context.getCmd().get(iii);
 				if (    tmpppp == "-h"
@@ -63,7 +63,11 @@ class MainApplication : public ewol::context::Application {
 			
 			// set the application icon ...
 			_context.setIcon("DATA:icon.png");
-			
+			APPL_INFO("==> CREATE ... " PROJECT_NAME " (END)");
+		}
+		
+		void onStart(ewol::Context& _context) {
+			APPL_INFO("==> START ... " PROJECT_NAME " (BEGIN)");
 			// init internal global value
 			globals::init();
 			
@@ -78,7 +82,7 @@ class MainApplication : public ewol::context::Application {
 			char cCurrentPath[FILENAME_MAX];
 			// get the curent program folder
 			if (!getcwd(cCurrentPath, FILENAME_MAX)) {
-				return false;
+				return;
 			}
 			cCurrentPath[FILENAME_MAX - 1] = '\0';
 			//APPL_INFO("The current working directory is " << cCurrentPath);
@@ -88,7 +92,7 @@ class MainApplication : public ewol::context::Application {
 			if (basicWindows == nullptr) {
 				APPL_ERROR("Can not allocate the basic windows");
 				_context.stop();
-				return false;
+				return;
 			}
 			// create the specific windows
 			_context.setWindows(basicWindows);
@@ -122,17 +126,16 @@ class MainApplication : public ewol::context::Application {
 				} 
 			}
 			
-			APPL_INFO(" == > init " PROJECT_NAME " (END)");
-			return true;
+			APPL_INFO("==> START ... " PROJECT_NAME " (END)");
+			return;
 		}
-		void unInit(ewol::Context& _context) {
-			APPL_INFO(" == > Un-Init " PROJECT_NAME " (START)");
-			APPL_INFO("Stop Hightlight");
+		void onStop(ewol::Context& _context) {
+			APPL_INFO("==> STOP ... " PROJECT_NAME " (START)");
 			appl::highlightManager::unInit();
 			//Kill all singleton
 			m_pluginManager.reset();
 			m_bufferManager.reset();
-			APPL_INFO(" == > Un-Init " PROJECT_NAME " (END)");
+			APPL_INFO("==> STOP ... " PROJECT_NAME " (END)");
 		}
 };
 

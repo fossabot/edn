@@ -73,8 +73,9 @@ namespace appl {
 			std::vector<HighlightPattern> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
 			std::map<std::string, std::vector<HighlightPattern>> m_listHighlightNamed; //!< list of all sub partern to parse...
 		public: // herited function :
-			virtual void updateContext() {
+			virtual bool updateContext() {
 				// no upfate to do ...
+				return true;
 			};
 	};
 };
