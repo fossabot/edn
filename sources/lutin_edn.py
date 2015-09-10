@@ -60,7 +60,7 @@ def create(target):
 		'appl/Highlight.cpp',
 		'appl/HighlightManager.cpp'])
 	
-	myModule.add_module_depend('ewol')
+	myModule.add_module_depend(['ewol', 'date'])
 	
 	myModule.compile_flags('c++', [
 		"-DPROJECT_NAME=\"\\\""+myModule.name+"\\\"\""
@@ -68,34 +68,34 @@ def create(target):
 	
 	#myModule.copy_file('../data/icon.png','icon.png')
 	
-	myModule.copy_folder('../data/icon.*','')
-	myModule.copy_folder('../data/languages/gcov/*.xml','languages/gcov/')
-	myModule.copy_folder('../data/languages/asm/*.xml','languages/asm/')
-	myModule.copy_folder('../data/languages/bash/*.xml','languages/bash/')
-	myModule.copy_folder('../data/languages/boo/*.xml','languages/boo/')
-	myModule.copy_folder('../data/languages/cpp/*.xml','languages/cpp/')
-	myModule.copy_folder('../data/languages/c/*.xml','languages/c/')
-	myModule.copy_folder('../data/languages/cmake/*.xml','languages/cmake/')
-	myModule.copy_folder('../data/languages/glsl/*.xml','languages/glsl/')
-	myModule.copy_folder('../data/languages/in/*.xml','languages/in/')
-	myModule.copy_folder('../data/languages/java/*.xml','languages/java/')
-	myModule.copy_folder('../data/languages/json/*.xml','languages/json/')
-	myModule.copy_folder('../data/languages/lua/*.xml','languages/lua/')
-	myModule.copy_folder('../data/languages/makefile/*.xml','languages/makefile/')
-	myModule.copy_folder('../data/languages/matlab/*.xml','languages/matlab/')
-	myModule.copy_folder('../data/languages/php/*.xml','languages/php/')
-	myModule.copy_folder('../data/languages/xml/*.xml','languages/xml/')
-	myModule.copy_folder('../data/languages/python/*.xml','languages/python/')
-	myModule.copy_folder('../data/theme/default/*.svg','theme/shape/square/')
-	myModule.copy_folder('../data/theme/default/*.edf','theme/shape/square/')
-	myModule.copy_folder('../data/theme/colorWhite/*.json','theme/color/white/')
-	myModule.copy_folder('../data/theme/colorBlack/*.json','theme/color/black/')
-	myModule.copy_folder('../data/GUI-Search.xml','')
+	myModule.copy_path('../data/icon.*','')
+	myModule.copy_path('../data/languages/gcov/*.xml','languages/gcov/')
+	myModule.copy_path('../data/languages/asm/*.xml','languages/asm/')
+	myModule.copy_path('../data/languages/bash/*.xml','languages/bash/')
+	myModule.copy_path('../data/languages/boo/*.xml','languages/boo/')
+	myModule.copy_path('../data/languages/cpp/*.xml','languages/cpp/')
+	myModule.copy_path('../data/languages/c/*.xml','languages/c/')
+	myModule.copy_path('../data/languages/cmake/*.xml','languages/cmake/')
+	myModule.copy_path('../data/languages/glsl/*.xml','languages/glsl/')
+	myModule.copy_path('../data/languages/in/*.xml','languages/in/')
+	myModule.copy_path('../data/languages/java/*.xml','languages/java/')
+	myModule.copy_path('../data/languages/json/*.xml','languages/json/')
+	myModule.copy_path('../data/languages/lua/*.xml','languages/lua/')
+	myModule.copy_path('../data/languages/makefile/*.xml','languages/makefile/')
+	myModule.copy_path('../data/languages/matlab/*.xml','languages/matlab/')
+	myModule.copy_path('../data/languages/php/*.xml','languages/php/')
+	myModule.copy_path('../data/languages/xml/*.xml','languages/xml/')
+	myModule.copy_path('../data/languages/python/*.xml','languages/python/')
+	myModule.copy_path('../data/theme/default/*.svg','theme/shape/square/')
+	myModule.copy_path('../data/theme/default/*.edf','theme/shape/square/')
+	myModule.copy_path('../data/theme/colorWhite/*.json','theme/color/white/')
+	myModule.copy_path('../data/theme/colorBlack/*.json','theme/color/black/')
+	myModule.copy_path('../data/GUI-Search.xml','')
 	
 	myModule.add_path(tools.get_current_path(__file__))
 	
 	myModule.copy_file("../data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")
-	myModule.copy_folder("../data/Font/freefont/FreeMon*.ttf","fonts/")
+	myModule.copy_path("../data/Font/freefont/FreeMon*.ttf","fonts/")
 	
 	tagFile = tools.get_current_path(__file__) + "/tag"
 	versionID = tools.file_read_data(tagFile)
