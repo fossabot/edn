@@ -8,7 +8,7 @@ def get_desc():
 
 def create(target):
 	# module name is 'edn' and type binary.
-	myModule = module.Module(__file__, 'edn', 'PACKAGE')
+	myModule = module.Module(__file__, 'edn', 'BINARY')
 	
 	myModule.add_extra_compile_flags()
 	# add the file to compile:
