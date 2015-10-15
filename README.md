@@ -11,38 +11,61 @@ This software is distributed in the hope that it will be useful, but WITHOUT ANY
 Instructions
 ============
 
-download the software :
+need google repo:
+-----------------
 
-	mkdir yourDevFolder
-	cd yourDevFolder
-	git clone git://github.com/HeeroYui/ewol.git
-	cd ewol
-	git submodule init
-	git submodule update
-	cd ..
-	git clone git://github.com/HeeroYui/edn.git
-	cd edn
+see: http://source.android.com/source/downloading.html#installing-repo
 
+	mkdir ~/.bin
+	PATH=~/.bin:$PATH
+	curl https://storage.googleapis.com/git-repo-downloads/repo > ~/.bin/repo
+	chmod a+x ~/.bin/repo
+
+download Build system:
+----------------------
+
+	sudo pip install lutin
+	sudo pip install pillow
+
+
+download the Framework:
+----------------------
+
+	mkdir -p WORKING_DIRECTORY/framework
+	cd WORKING_DIRECTORY/framework
+	repo init -u git://github.com/atria-soft/manifest.git
+	repo sync -j8
+	cd ../..
+
+download the software:
+----------------------
+
+	mkdir -p WORKING_DIRECTORY/application
+	cd WORKING_DIRECTORY/application
+	git clone https://github.com/HeeroYui/edn.git
+	cd ../..
+
+Compile software:
+-----------------
+
+	cd WORKING_DIRECTORY
+	lutin -C -P edn
 
 (debug) Compile software & Run debug version:
 
-	../ewol/build/lutin.py --color --mode=debug
-	or
-	../ewol/build/lutin.py --color --compilator=clang --mode=debug
-	./out/Linux/debug/staging/edn//usr/bin/edn -l6 yourFile.txt
-	Note : -l6 corespond at the LOG level to display.
+	lutin -C -P -m debug edn
+	# or
+	lutin -C -P -c clang -m debug edn
 
 
 (release) Compile software & install & run:
 
 	# generate binary, tree, package and install it ...
-	../ewol/build/lutin.py -c edn-install
-	edn exemple.txt
+	lutin -C -P edn?install
 
 
 (Android) Compile software & install
 
-	cd yourDevFolder
 	mkdir andoid
 	cd android
 	download here in "sdk" and "ndk" the coresponding SDK and NDK of Android:
@@ -51,18 +74,14 @@ download the software :
 		==> you need to download sub package of the NDK (refer to the NDK doccumentation) but only supported android version >4.0
 	cd ..
 	# Generate package and install on Android device (in debug mode a generic key is set)
-	../ewol/build/lutin.py --color --target=Android --mode=debug edn-install
+	lutin -C -P -t Android -m debug edn?install
 	# to show the log :
-	../ewol/build/lutin.py --target=Android edn-log
+	lutin -C -P -t Android edn?log
 
 
 (Windows) Compile software & install
 
-	cd yourDevFolder
-	../ewol/build/lutin.py --color --target=Windows --mode=debug edn
-	
-	#we have many problem for windows compilation now...
-	
+	lutin -C -P -t Windows -m debug edn
 
 
 (MAC) All needed and some useful packages
@@ -71,8 +90,7 @@ download the software :
 	- Xcode ==> for all developement packages
 		- in Xcode : XCode->Setting->Download and install component: "Command Line Tools"
 	
-	cd yourDevFolder
-	../ewol/build/lutin.py --color --mode=debug edn
+	lutin -C -P -m debug edn
 
 
 (IOs) All needed and some useful packages
@@ -83,22 +101,14 @@ download the software :
 	
 	for porting on IOs you need a developper account
 	
-	cd yourDevFolder
 	# compile and install on simulator (no developper account needed)
-	../ewol/build/lutin.py --color --target=IOs --mode=debug --simulation edn-intall
+	lutin -C -P -t IOs -m debug --simulation edn?install
 	# launch IOs simulator in xcode, and your application will appear on the second page (32 bit mode only)
 	
 	# compile and install on board
-	../ewol/build/lutin.py --color --target=IOs --mode=debug edn-intall
+	lutin -C -P -t IOs -m debug edn?install
 	# compile and install on board and debug mode :
-	../ewol/build/lutin.py --color --target=IOs --mode=debug edn-log
-
-
-On linux you can generate 3 board in one time
-=============================================
-
-	cd yourDevFolder/edn
-	../ewol/build/lutin.py --color --target=Linux --mode=debug edn --target=Windows --mode=debug edn --target=Android --mode=debug edn
+	lutin -C -P -t IOs -m debug --simulation edn?log
 
 Dependency packages
 ===================
