@@ -89,12 +89,13 @@ void appl::BufferManager::setBufferSelected(std::shared_ptr<appl::Buffer> _buffe
 	m_bufferSelected = _bufferSelected;
 	if (m_bufferSelected == nullptr) {
 		APPL_ERROR("select a NULL buffer ...");
-		//parameterSetOnWidgetNamed("appl-widget-display-name", "value", "---");
+		parameterSetOnWidgetNamed("appl-widget-display-name", "value", "---");
 		return;
 	}
 	APPL_INFO("Set buffer selected");
 	//signalSelectFile.emit(m_bufferSelected->getName());
 	//parameterSetOnWidgetNamed("appl-widget-display-name", "value", m_bufferSelected->getName());
+	parameterSetOnWidgetNamed("appl-widget-display-name", "value", m_bufferSelected->getName());
 	APPL_INFO("Set buffer selected (done)");
 }
 
@@ -136,8 +137,6 @@ void appl::BufferManager::open(const std::string& _fileName) {
 	parameterSetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(_fileName));
 }
 
-/* TODO : ...
-
 void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>& _child) {
 	APPL_WARNING("Buffer request a close...");
 	bool find = false;
@@ -160,10 +159,25 @@ void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>&
 		signalRemoveBuffer.emit(std::dynamic_pointer_cast<appl::Buffer>(_child));
 	}
 	if (m_bufferSelected == _child) {
-		APPL_ERROR("is selected");
+		if (    it != m_list.end()
+		     && *it != nullptr) {
+			APPL_INFO("Remove buffer select new one");
+			signalSelectFile.emit((*it)->getFileName());
+			//parameterSetOnWidgetNamed("appl-widget-display-name", "value", (*it)->getFileName());
+			APPL_INFO("Remove buffer select new one (done)");
+			return;
+		}
+		if (    m_list.size() != 0
+		     && m_list.back() != nullptr) {
+			APPL_INFO("Remove buffer select new one (last)");
+			signalSelectFile.emit(m_list.back()->getFileName());
+			//parameterSetOnWidgetNamed("appl-widget-display-name", "value", m_list.back()->getFileName());
+			APPL_INFO("Remove buffer select new one (done)");
+			return;
+		}
 		signalSelectFile.emit("");
-		parameterSetOnWidgetNamed("appl-widget-display-name", "value", "");
+		//parameterSetOnWidgetNamed("appl-widget-display-name", "value", "");
 		m_bufferSelected = nullptr;
 	}
 }
-*/
+

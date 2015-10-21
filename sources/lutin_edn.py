@@ -125,16 +125,13 @@ def create(target, module_name):
 	my_module.copy_file("../data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")
 	my_module.copy_path("../data/Font/freefont/FreeMon*.ttf","fonts/")
 	
-	tagFile = os.path.join(tools.get_current_path(__file__), "tag")
-	versionID = tools.file_read_data(tagFile)
 	my_module.compile_flags('c', [
-		"-DAPPL_VERSION=\"\\\"" + versionID + "\\\"\""
+		"-DAPPL_VERSION=\"\\\"" + tools.version_to_string(get_version()) + "\\\"\""
 		])
 	tagFile = os.path.join(tools.get_current_path(__file__), "tagCode")
 	versionIDCode = tools.file_read_data(tagFile)
 	
 	# set the package properties:
-	my_module.pkg_set("VERSION", versionID)
 	my_module.pkg_set("VERSION_CODE", versionIDCode)
 	if target.name=="MacOs":
 		my_module.pkg_set("ICON", tools.get_current_path(__file__) + "/../data/icon.icns")

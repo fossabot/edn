@@ -83,7 +83,7 @@ namespace appl {
 				return m_bufferSelected;
 			};
 		private:
-			// TODO : void requestDestroyFromChild(const std::shared_ptr<Object>& _child);
+			void requestDestroyFromChild(const std::shared_ptr<Object>& _child);
 		public:
 			// generic iterators:
 			std::list<std::shared_ptr<appl::Buffer>>::const_iterator begin() const {
