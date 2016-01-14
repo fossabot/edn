@@ -97,11 +97,14 @@ def create(target, module_name):
 		"-DPROJECT_NAME=\"\\\""+my_module.name+"\\\"\""
 		])
 	my_module.copy_path('../data/icon.*','')
+	"""
 	my_module.copy_path('../data/languages/gcov/*.xml','languages/gcov/')
 	my_module.copy_path('../data/languages/asm/*.xml','languages/asm/')
 	my_module.copy_path('../data/languages/bash/*.xml','languages/bash/')
 	my_module.copy_path('../data/languages/boo/*.xml','languages/boo/')
+	"""
 	my_module.copy_path('../data/languages/cpp/*.xml','languages/cpp/')
+	"""
 	my_module.copy_path('../data/languages/c/*.xml','languages/c/')
 	my_module.copy_path('../data/languages/cmake/*.xml','languages/cmake/')
 	my_module.copy_path('../data/languages/glsl/*.xml','languages/glsl/')
@@ -114,6 +117,7 @@ def create(target, module_name):
 	my_module.copy_path('../data/languages/php/*.xml','languages/php/')
 	my_module.copy_path('../data/languages/xml/*.xml','languages/xml/')
 	my_module.copy_path('../data/languages/python/*.xml','languages/python/')
+	"""
 	my_module.copy_path('../data/theme/default/*.svg','theme/shape/square/')
 	my_module.copy_path('../data/theme/default/*.edf','theme/shape/square/')
 	my_module.copy_path('../data/theme/colorWhite/*.json','theme/color/white/')

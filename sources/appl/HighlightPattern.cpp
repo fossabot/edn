@@ -114,22 +114,20 @@ void appl::HighlightPattern::parseRules(const std::shared_ptr<const exml::Elemen
 }
 
 
-enum resultFind appl::HighlightPattern::find(int32_t _start,
-                                             int32_t _stop,
-                                             appl::HighlightInfo& _resultat,
-                                             const std::string& _buffer) {
+bool appl::HighlightPattern::find(int32_t _start,
+                                  int32_t _stop,
+                                  appl::HighlightInfo& _resultat,
+                                  const std::string& _buffer) {
 	//APPL_DEBUG(" try to find the element");
 	_resultat.start = -1;
 	_resultat.stop = -1;
 	_resultat.notEnded = false;
 	_resultat.patern = this;
 	if (m_hasParsingError == true) {
-		return HLP_FIND_ERROR;
+		return false;
 	}
-	
 	std::smatch resultMatch;
 	std::regex_constants::match_flag_type flags = std::regex_constants::match_continuous; // check only the match at the first character.
-	
 	//APPL_DEBUG("find data at : start=" << _start << " stop=" << _stop << " regex='" << m_regexValue << "'");
 	if ((int64_t)_stop <= (int64_t)_buffer.size()) {
 		char val = _buffer[_stop];
@@ -138,12 +136,14 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 			//after last char ==> not end of line ($ would not work))
 			flags |= std::regex_constants::match_not_eol;
 		}
+		/*
 		if (!(    ('a' <= val && val <= 'z')
 		       || ('A' <= val && val <= 'Z')
 		       || ('0' <= val && val <= '9')
 		       || val == '_')) {
 			flags |= std::regex_constants::match_not_eow;
 		}
+		*/
 	}
 	if (_start>0) {
 		flags |= std::regex_constants::match_prev_avail;
@@ -156,15 +156,15 @@ enum resultFind appl::HighlightPattern::find(int32_t _start,
 		/*
 		if (true){
 			//TK_DEBUG("in line : '" << etk::to_string(_buffer) << "'");
-			TK_DEBUG("    Find " << resultMatch.size() << " elements");
+			APPL_DEBUG("    Find " << resultMatch.size() << " elements");
 			for (size_t iii=0; iii<resultMatch.size(); ++iii) {
 				int32_t posStart = std::distance(_buffer.begin(), resultMatch[iii].first);
 				int32_t posStop = std::distance(_buffer.begin(), resultMatch[iii].second);
-				TK_DEBUG("          [" << iii << "] " << posStart << " to " << posStop);
+				APPL_DEBUG("          [" << iii << "] " << posStart << " to " << posStop);
 			}
 		}
 		*/
-		return HLP_FIND_OK;
+		return true;
 	}
-	return HLP_FIND_ERROR;
+	return false;
 }

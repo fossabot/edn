@@ -217,7 +217,7 @@ void appl::Highlight::parse(int64_t _start,
 		int64_t currentTime = ewol::getTime();
 		//try to fond the HL in ALL of we have
 		for (int64_t jjj=0; jjj<(int64_t)m_listHighlightPass1.size(); jjj++){
-			enum resultFind ret = HLP_FIND_OK;
+			bool ret = true;
 			/*
 			if (_buffer[elementStart] == '\n') {
 				HL_DEBUG("Parse HL id=" << jjj << " position search: (" << elementStart << "," << _stop << ") input start='\\n' " << m_listHighlightPass1[jjj].getPaternString());
@@ -227,7 +227,7 @@ void appl::Highlight::parse(int64_t _start,
 			*/
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass1[jjj].find(elementStart, _buffer.size(), resultat, _buffer);
-			if (HLP_FIND_ERROR != ret) {
+			if (ret == true) {
 				int64_t currentTimeEnd = ewol::getTime();
 				int64_t deltaTime = currentTimeEnd - currentTime;
 				HL_DEBUG("Find Pattern in the Buffer : time=" << (float)deltaTime/1000.0f << " ms (" << resultat.start << "," << resultat.stop << ") startPos=" << elementStart << " for=" << m_listHighlightPass1[jjj].getPaternString());
@@ -282,8 +282,8 @@ void appl::Highlight::parse(int64_t _start,
  */
 void appl::Highlight::parse2(int64_t _start,
                              int64_t _stop,
-                             std::vector<appl::HighlightInfo> &_metaData,
-                             std::string&_buffer) {
+                             std::vector<appl::HighlightInfo>& _metaData,
+                             std::string& _buffer) {
 	HL2_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() <<
 	          "  == > position search: (" << _start << "," << _stop << ")" );
 	int64_t elementStart = _start;
@@ -296,15 +296,16 @@ void appl::Highlight::parse2(int64_t _start,
 		}
 		//HL2_DEBUG("Parse element in the buffer pos=" << elementStart << "," << _buffer.size() << ")" );
 		//try to fond the HL in ALL of we have
-		for (int64_t jjj=0; jjj<(int64_t)m_listHighlightPass2.size(); jjj++){
-			enum resultFind ret;
+		for (int64_t jjj=0; jjj<int64_t(m_listHighlightPass2.size()); jjj++){
 			HL2_DEBUG("Parse HL id=" << jjj << " position search: (" <<
 			         elementStart << "," << elementStop << ") in='"
-			         << _buffer[elementStart] << "' " << m_listHighlightPass2[jjj].getPaternString());
+			         << /*_buffer[elementStart]*/ std::string(_buffer.begin()+elementStart,_buffer.begin()+elementStop) << "' " << m_listHighlightPass2[jjj].getPaternString());
 			// Stop the search to the end (to get the end of the pattern)
-			ret = m_listHighlightPass2[jjj].find(elementStart, elementStop, resultat, _buffer);
-			if (ret != HLP_FIND_ERROR) {
+			bool ret = m_listHighlightPass2[jjj].find(elementStart, elementStop, resultat, _buffer);
+			if (ret == true) {
+				// find an element:
 				_metaData.push_back(resultat);
+				HL2_DEBUG("data='" << std::string(_buffer.begin()+elementStart,_buffer.begin()+resultat.stop) << "'");
 				elementStart = resultat.stop-1;
 				break;
 			}
@@ -342,11 +343,10 @@ void appl::Highlight::parseSubElement(const appl::HighlightInfo& _upper,
 	while (elementStart < elementStop) {
 		//try to fond the HL in ALL of we have
 		for (auto &it : itHL->second){
-			enum resultFind ret;
 			HL2_DEBUG("Parse HL position search: (" << elementStart << "," << elementStop << ") in='" << _buffer[elementStart] << "' " << it.getPaternString());
 			// Stop the search to the end (to get the end of the pattern)
-			ret = it.find(elementStart, elementStop, resultat, _buffer);
-			if (ret != HLP_FIND_ERROR) {
+			bool ret = it.find(elementStart, elementStop, resultat, _buffer);
+			if (ret == true) {
 				_metaData.push_back(resultat);
 				elementStart = resultat.stop-1;
 				break;

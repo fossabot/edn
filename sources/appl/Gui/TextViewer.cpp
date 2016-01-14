@@ -508,13 +508,11 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 		markToRedraw();
 		return true;
 	}
-	APPL_VERBOSE("event : " << _event);
 	// Second call plugin
 	if (m_pluginManager->onEventInput(*this, _event) == true) {
 		markToRedraw();
 		return true;
 	}
-	APPL_VERBOSE("event2 : " << _event);
 	vec2 relativePos = relativePosition(_event.getPos());
 	// offset for the lineNumber:
 	relativePos -= vec2(m_lastOffsetDisplay, 0);

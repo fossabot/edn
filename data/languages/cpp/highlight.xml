@@ -66,7 +66,7 @@
 		</rule>
 		<rule name="std type">
 			<color>type</color>
-			<regex>\b(std(11)?|boost)::[\w:]*\b</regex>
+			<regex>\b(std(11)?|boost)::[\w:]*</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>

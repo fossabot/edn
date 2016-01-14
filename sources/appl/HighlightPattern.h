@@ -13,17 +13,10 @@
 
 class HighlightPattern;
 
-
 #include <appl/GlyphPainting.h>
 #include <vector>
 #include <regex>
 #include <exml/exml.h>
-
-enum resultFind {
-	HLP_FIND_ERROR,
-	HLP_FIND_OK,
-	HLP_FIND_OK_NO_END,
-};
 
 namespace appl {
 	class HighlightPattern {
@@ -86,14 +79,13 @@ namespace appl {
 			 * @param[in] _stop End of the possibility whe search can continue
 			 * @param[out] _resultat Position where find data
 			 * @param[in] _buffer : Where to search data
-			 * @return HLP_FIND_OK We find a compleate pattern
-			 * @return HLP_FIND_OK_NO_END Xe find a partial pattern (missing end)
-			 * @return HLP_FIND_ERROR Not find the pattern
+			 * @return true We find a compleate pattern
+			 * @return false Not find the pattern
 			 */
-			enum resultFind find(int32_t _start,
-			                     int32_t _stop,
-			                     appl::HighlightInfo& _resultat,
-			                     const std::string& _buffer);
+			bool find(int32_t _start,
+			          int32_t _stop,
+			          appl::HighlightInfo& _resultat,
+			          const std::string& _buffer);
 			
 			void parseRules(const std::shared_ptr<const exml::Element>& _child, int32_t _level);
 	};
