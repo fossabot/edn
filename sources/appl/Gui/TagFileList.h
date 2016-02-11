@@ -29,9 +29,9 @@ namespace appl {
 	};
 	class TagFileList : public ewol::widget::List {
 		public:
-			ewol::Signal<std::string> signalSelect;
-			ewol::Signal<std::string> signalValidate;
-			ewol::Signal<void> signalUnSelect;
+			esignal::Signal<std::string> signalSelect;
+			esignal::Signal<std::string> signalValidate;
+			esignal::Signal<void> signalUnSelect;
 		private:
 			int32_t m_selectedLine;
 			std::vector<appl::TagListElement*> m_list;

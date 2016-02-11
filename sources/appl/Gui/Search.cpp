@@ -51,9 +51,9 @@ void appl::widget::Search::init() {
 	subBind(ewol::widget::Button, "SEARCH:wrap",          signalValue,   shared_from_this(), &appl::widget::Search::OnCallbackWrap);
 	subBind(ewol::widget::Button, "SEARCH:up-down",       signalValue,   shared_from_this(), &appl::widget::Search::OnCallbackForward);
 	// set default properties
-	parameterSetOnWidgetNamed("SEARCH:case", "value", etk::to_string(m_caseSensitive));
-	parameterSetOnWidgetNamed("SEARCH:wrap", "value", etk::to_string(m_wrap));
-	parameterSetOnWidgetNamed("SEARCH:up-down", "value", etk::to_string(m_forward));
+	propertySetOnWidgetNamed("SEARCH:case", "value", etk::to_string(m_caseSensitive));
+	propertySetOnWidgetNamed("SEARCH:wrap", "value", etk::to_string(m_wrap));
+	propertySetOnWidgetNamed("SEARCH:up-down", "value", etk::to_string(m_forward));
 	// get widget
 	m_searchEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:search-entry"));
 	m_replaceEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:replace-entry"));

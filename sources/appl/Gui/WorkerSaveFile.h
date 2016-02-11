@@ -16,8 +16,8 @@
 namespace appl {
 	class WorkerSaveFile : public ewol::object::Worker {
 		public:
-			ewol::Signal<void> signalSaveDone;
-			ewol::Signal<void> signalAbort;
+			esignal::Signal<void> signalSaveDone;
+			esignal::Signal<void> signalAbort;
 		protected:
 			WorkerSaveFile();
 			void init(const std::string& _bufferName, bool _forceSaveAs=true);

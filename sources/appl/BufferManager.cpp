@@ -13,7 +13,7 @@
 #include <appl/BufferManager.h>
 #include <ewol/object/Object.h>
 #include <ewol/object/Manager.h>
-#include <ewol/signal/Signal.h>
+#include <esignal/Signal.h>
 #include <gale/resource/Manager.h>
 
 #undef __class__
@@ -89,12 +89,12 @@ void appl::BufferManager::setBufferSelected(std::shared_ptr<appl::Buffer> _buffe
 	m_bufferSelected = _bufferSelected;
 	if (m_bufferSelected == nullptr) {
 		APPL_ERROR("select a NULL buffer ...");
-		parameterSetOnWidgetNamed("appl-widget-display-name", "value", "---");
+		propertySetOnWidgetNamed("appl-widget-display-name", "value", "---");
 		return;
 	}
 	APPL_INFO("Set buffer selected");
 	//signalSelectFile.emit(m_bufferSelected->getName());
-	//parameterSetOnWidgetNamed("appl-widget-display-name", "value", m_bufferSelected->getName());
+	//propertySetOnWidgetNamed("appl-widget-display-name", "value", m_bufferSelected->getName());
 	APPL_INFO("Set buffer selected (done)");
 }
 
@@ -125,7 +125,7 @@ void appl::BufferManager::open(const std::string& _fileName) {
 	if (exist(_fileName) == true) {
 		APPL_WARNING(" the element '" << _fileName << "' already exist ... just reselect it ...");
 		signalSelectFile.emit(_fileName);
-		parameterSetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(_fileName));
+		propertySetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(_fileName));
 		return;
 	}
 	if (get(_fileName, true) == nullptr) {
@@ -133,7 +133,7 @@ void appl::BufferManager::open(const std::string& _fileName) {
 		return;
 	}
 	signalSelectFile.emit(_fileName);
-	parameterSetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(_fileName));
+	propertySetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(_fileName));
 }
 
 void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>& _child) {
@@ -162,7 +162,7 @@ void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>&
 		     && *it != nullptr) {
 			APPL_VERBOSE("Remove buffer select new one");
 			signalSelectFile.emit((*it)->getFileName());
-			parameterSetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName((*it)->getFileName()));
+			propertySetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName((*it)->getFileName()));
 			APPL_VERBOSE("Remove buffer select new one (done)");
 			return;
 		}
@@ -170,12 +170,12 @@ void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>&
 		     && m_list.back() != nullptr) {
 			APPL_VERBOSE("Remove buffer select new one (last)");
 			signalSelectFile.emit(m_list.back()->getFileName());
-			parameterSetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(m_list.back()->getFileName()));
+			propertySetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(m_list.back()->getFileName()));
 			APPL_VERBOSE("Remove buffer select new one (done)");
 			return;
 		}
 		signalSelectFile.emit("");
-		parameterSetOnWidgetNamed("appl-widget-display-name", "value", "---");
+		propertySetOnWidgetNamed("appl-widget-display-name", "value", "---");
 		m_bufferSelected = nullptr;
 	}
 }

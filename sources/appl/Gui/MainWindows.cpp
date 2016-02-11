@@ -340,13 +340,13 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();
 	} else if (_value == "menu:split:enable") {
-		parameterSetOnWidgetNamed("appl-text-viewer2", "hide", "false");
+		propertySetOnWidgetNamed("appl-text-viewer2", "hide", "false");
 	} else if (_value == "menu:split:disable") {
-		parameterSetOnWidgetNamed("appl-text-viewer2", "hide", "true");
+		propertySetOnWidgetNamed("appl-text-viewer2", "hide", "true");
 	} else if (_value == "menu:split:vert") {
-		parameterSetOnWidgetNamed("appl-view-code-sizer", "mode", "vert");
+		propertySetOnWidgetNamed("appl-view-code-sizer", "mode", "vert");
 	} else if (_value == "menu:split:hori") {
-		parameterSetOnWidgetNamed("appl-view-code-sizer", "mode", "hori");
+		propertySetOnWidgetNamed("appl-view-code-sizer", "mode", "hori");
 	} else {
 		APPL_ERROR("Event from Menu UNKNOW : '" << _value << "'");
 	}
