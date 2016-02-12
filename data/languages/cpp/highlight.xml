@@ -90,7 +90,7 @@
 		</rule>
 		<rule name="CPP member">
 			<color>memberClass</color>
-			<regex>\bm_\w+\b</regex>
+			<regex>\b((m|s|p|s|g)_|property|signal)\w+\b</regex>
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
