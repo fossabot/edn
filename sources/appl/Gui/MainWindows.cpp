@@ -70,7 +70,7 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			if (nullptr == mySpacer) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
-				mySpacer->setExpand(bvec2(true,true));
+				mySpacer->propertyExpand.set(bvec2(true,true));
 				subWidgetAdd(mySpacer);
 			}
 			std::string tmpLabel = "<left>";
@@ -100,7 +100,7 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			if (nullptr == myLabel) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
-				myLabel->setExpand(bvec2(true,false));
+				myLabel->propertyExpand.set(bvec2(true,false));
 				subWidgetAdd(myLabel);
 			}
 		};
@@ -142,21 +142,21 @@ void MainWindows::init() {
 	m_viewerManager = appl::ViewerManager::create();
 	
 	mySizerVert = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);
-	mySizerVert->setName("plop 1111111");
+	mySizerVert->propertyName.set("plop 1111111");
 	setSubWidget(mySizerVert);
 	
 		mySizerHori = ewol::widget::Sizer::create(ewol::widget::Sizer::modeHori);
-		mySizerHori->setName("plop 222222222");
+		mySizerHori->propertyName.set("plop 222222222");
 		mySizerVert->subWidgetAdd(mySizerHori);
 			myBufferView = BufferView::create();
-			myBufferView->setName("plop 3333333");
-			myBufferView->setExpand(bvec2(false,true));
-			myBufferView->setFill(bvec2(true,true));
+			myBufferView->propertyName.set("plop 3333333");
+			myBufferView->propertyExpand.set(bvec2(false,true));
+			myBufferView->propertyFill.set(bvec2(true,true));
 			mySizerHori->subWidgetAdd(myBufferView);
 			
 			mySizerVert2 = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);
 			mySizerHori->subWidgetAdd(mySizerVert2);
-				mySizerVert2->setName("appl-view-code-sizer");
+				mySizerVert2->propertyName.set("appl-view-code-sizer");
 				// main buffer Area :
 				#if defined(__TARGET_OS__Android)
 					int32_t sizeText = 16;
@@ -164,16 +164,16 @@ void MainWindows::init() {
 					int32_t sizeText = 11;
 				#endif
 				myTextView2 = appl::TextViewer::create("FreeMono;DejaVuSansMono;FreeSerif", sizeText);
-				myTextView2->setName("appl-text-viewer2");
-				myTextView2->setExpand(bvec2(true,true));
-				myTextView2->setFill(bvec2(true,true));
-				myTextView2->hide();
+				myTextView2->propertyName.set("appl-text-viewer2");
+				myTextView2->propertyExpand.set(bvec2(true,true));
+				myTextView2->propertyFill.set(bvec2(true,true));
+				myTextView2->propertyHide.set(true);
 				mySizerVert2->subWidgetAdd(myTextView2);
 				
 				myTextView = appl::TextViewer::create("FreeMono;DejaVuSansMono;FreeSerif", sizeText);
-				myTextView->setName("appl-text-viewer1");
-				myTextView->setExpand(bvec2(true,true));
-				myTextView->setFill(bvec2(true,true));
+				myTextView->propertyName.set("appl-text-viewer1");
+				myTextView->propertyExpand.set(bvec2(true,true));
+				myTextView->propertyFill.set(bvec2(true,true));
 				mySizerVert2->subWidgetAdd(myTextView);
 				
 				// search area : 
@@ -181,11 +181,11 @@ void MainWindows::init() {
 				mySizerVert2->subWidgetAdd(m_widgetSearch);
 			
 		mySizerHori = ewol::widget::Sizer::create(ewol::widget::Sizer::modeHori);
-		mySizerHori->setName("plop 555555");
+		mySizerHori->propertyName.set("plop 555555");
 		mySizerVert->subWidgetAdd(mySizerHori);
 			
 			myMenu = ewol::widget::Menu::create();
-			myMenu->setName("appl-menu-interface");
+			myMenu->propertyName.set("appl-menu-interface");
 			mySizerHori->subWidgetAdd(myMenu);
 			int32_t idMenuFile = myMenu->addTitle("File");
 				myMenu->add(idMenuFile, "New",          "", "menu:new");
@@ -221,9 +221,9 @@ void MainWindows::init() {
 				myMenu->add(idMenugDisplay, "Horizontal", "", "menu:split:hori");
 			myMenu->signalSelect.bind(shared_from_this(), &MainWindows::onCallbackMenuEvent);
 			m_widgetLabelFileName = ewol::widget::Label::create("FileName");
-			m_widgetLabelFileName->setName("appl-widget-display-name");
-			m_widgetLabelFileName->setExpand(bvec2(true,false));
-			m_widgetLabelFileName->setFill(bvec2(true,false));;
+			m_widgetLabelFileName->propertyName.set("appl-widget-display-name");
+			m_widgetLabelFileName->propertyExpand.set(bvec2(true,false));
+			m_widgetLabelFileName->propertyFill.set(bvec2(true,false));;
 			mySizerHori->subWidgetAdd(m_widgetLabelFileName);
 	
 	// add generic shortcut ...
@@ -282,12 +282,12 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 		if (m_widgetSearch == nullptr) {
 			return;
 		}
-		if (m_widgetSearch->isHide()) {
-			m_widgetSearch->show();
+		if (m_widgetSearch->propertyHide == true) {
+			m_widgetSearch->propertyHide.set(false);
 			m_widgetSearch->selectSearch();
 		} else {
 			if (m_widgetSearch->isSelectSearch()) {
-				m_widgetSearch->hide();
+				m_widgetSearch->propertyHide.set(true);
 				if (m_viewerManager != nullptr) {
 					std::shared_ptr<appl::TextViewer> tmp = m_viewerManager->getViewerSelected();
 					if (tmp != nullptr) {
@@ -302,12 +302,12 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 		if (m_widgetSearch == nullptr) {
 			return;
 		}
-		if (m_widgetSearch->isHide()) {
-			m_widgetSearch->show();
+		if (m_widgetSearch->propertyHide == true) {
+			m_widgetSearch->propertyHide.set(false);
 			m_widgetSearch->selectReplace();
 		} else {
 			if (m_widgetSearch->isSelectReplace()) {
-				m_widgetSearch->hide();
+				m_widgetSearch->propertyHide.set(true);
 				if (m_viewerManager != nullptr) {
 					std::shared_ptr<appl::TextViewer> tmp = m_viewerManager->getViewerSelected();
 					if (tmp != nullptr) {
@@ -404,8 +404,8 @@ void MainWindows::displayOpen() {
 		APPL_ERROR("Can not open File chooser !!! ");
 		return;
 	}
-	tmpWidget->setTitle("Open files ...");
-	tmpWidget->setValidateLabel("Open");
+	tmpWidget->propertyLabelTitle.set("TRANSLATE:Open files ...");
+	tmpWidget->propertyLabelValidate.set("TRANSLATE:Open");
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
@@ -414,7 +414,7 @@ void MainWindows::displayOpen() {
 	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->getBufferSelected();
 	if (tmpBuffer != nullptr) {
 		etk::FSNode tmpFile = tmpBuffer->getFileName();
-		tmpWidget->setFolder(tmpFile.getNameFolder());
+		tmpWidget->propertyPath.set(tmpFile.getNameFolder());
 	}
 	// apply widget pop-up ...
 	popUpWidgetPush(tmpWidget);
@@ -440,7 +440,7 @@ void MainWindows::displayProperty() {
 		
 		tmpWidget->setMenu(menuDescription);
 		#endif
-		tmpWidget->setTitle("Properties");
+		tmpWidget->propertyLabelTitle.set("TRANSLATE:Properties");
 		popUpWidgetPush(tmpWidget);
 		tmpWidget->menuAddGroup("Editor");
 		std::shared_ptr<ewol::Widget> tmpSubWidget = globals::ParameterGlobalsGui::create();
@@ -487,13 +487,13 @@ void MainWindows::onCallbackTitleUpdate() {
 	if (tmpp == nullptr) {
 		setTitle("Edn");
 		if (m_widgetLabelFileName != nullptr) {
-			m_widgetLabelFileName->setLabel("");
+			m_widgetLabelFileName->propertyValue.set("");
 		}
 	} else {
 		std::string nameFileSystem = etk::FSNode(tmpp->getFileName()).getFileSystemName();
 		setTitle(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);
 		if (m_widgetLabelFileName != nullptr) {
-			m_widgetLabelFileName->setLabel(nameFileSystem + (tmpp->isModify()==true?" *":""));
+			m_widgetLabelFileName->propertyValue.set(nameFileSystem + (tmpp->isModify()==true?" *":""));
 		}
 	}
 }
@@ -538,6 +538,6 @@ void MainWindows::closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer
 		// TODO : bt->signalPressed.bind(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 	}
 	tmpPopUp->addButton("Cancel", true);
-	tmpPopUp->setRemoveOnExternClick(true);
+	tmpPopUp->propertyCloseOutEvent.set(true);
 	popUpWidgetPush(tmpPopUp);
 }

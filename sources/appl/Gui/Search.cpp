@@ -58,7 +58,7 @@ void appl::widget::Search::init() {
 	m_searchEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:search-entry"));
 	m_replaceEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:replace-entry"));
 	// basicly hiden ...
-	hide();
+	propertyHide.set(true);
 }
 
 appl::widget::Search::~Search() {
@@ -119,7 +119,7 @@ void appl::widget::Search::replace() {
 }
 
 void appl::widget::Search::OnCallbackHide() {
-	hide();
+	propertyHide.set(true);
 }
 void appl::widget::Search::OnCallbackSearchValue(const std::string& _value) {
 	m_searchData = etk::to_u32string(_value);

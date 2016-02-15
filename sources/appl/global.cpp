@@ -29,7 +29,7 @@ class myParamGlobal : public ewol::Object {
 		  m_displayTabChar(*this, "display-tab", true, "Display the Tab char"),
 		  m_displaySpaceChar(*this, "display-space", true, "Display the space char") {
 			m_static = true; // Note : set the object static notification( Must be set or assert at the end of process)
-			setName("edn_global_param");
+			propertyName.set("edn_global_param");
 		}
 };
 
@@ -117,15 +117,15 @@ void globals::ParameterGlobalsGui::init() {
 	if (nullptr == mySpacer) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		mySpacer->setExpand(bvec2(true,true));
+		mySpacer->propertyExpand.set(bvec2(true,true));
 		subWidgetAdd(mySpacer);
 	}
 	myCheckbox = ewol::widget::CheckBox::create("Automatic Indentation");
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		myCheckbox->setExpand(bvec2(true,false));
-		myCheckbox->setValue(isSetAutoIndent());
+		myCheckbox->propertyExpand.set(bvec2(true,false));
+		myCheckbox->propertyValue.set(isSetAutoIndent());
 		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackIndentation);
 		subWidgetAdd(myCheckbox);
 	}
@@ -133,8 +133,8 @@ void globals::ParameterGlobalsGui::init() {
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		myCheckbox->setExpand(bvec2(true,false));
-		myCheckbox->setValue(isSetDisplaySpaceChar());
+		myCheckbox->propertyExpand.set(bvec2(true,false));
+		myCheckbox->propertyValue.set(isSetDisplaySpaceChar());
 		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackSpace);
 		subWidgetAdd(myCheckbox);
 	}
@@ -142,8 +142,8 @@ void globals::ParameterGlobalsGui::init() {
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		myCheckbox->setExpand(bvec2(true,false));
-		myCheckbox->setValue(isSetDisplayTabChar());
+		myCheckbox->propertyExpand.set(bvec2(true,false));
+		myCheckbox->propertyValue.set(isSetDisplayTabChar());
 		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackTabulation);
 		subWidgetAdd(myCheckbox);
 	}
@@ -151,8 +151,8 @@ void globals::ParameterGlobalsGui::init() {
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		myCheckbox->setExpand(bvec2(true,false));
-		myCheckbox->setValue(isSetDisplayEndOfLine());
+		myCheckbox->propertyExpand.set(bvec2(true,false));
+		myCheckbox->propertyValue.set(isSetDisplayEndOfLine());
 		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackEndOfLine);
 		subWidgetAdd(myCheckbox);
 	}
@@ -160,8 +160,8 @@ void globals::ParameterGlobalsGui::init() {
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		myCheckbox->setExpand(bvec2(true,false));
-		myCheckbox->setValue(isSetDisplayEndOfLine());
+		myCheckbox->propertyExpand.set(bvec2(true,false));
+		myCheckbox->propertyValue.set(isSetDisplayEndOfLine());
 		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackRounded);
 		subWidgetAdd(myCheckbox);
 	}

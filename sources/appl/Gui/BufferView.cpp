@@ -37,7 +37,6 @@ static void SortElementList(std::vector<appl::dataBufferStruct>& _list) {
 BufferView::BufferView() :
   m_openOrderMode(false) {
 	addObjectType("appl::BufferView");
-	setCanHaveFocus(true);
 	m_selectedID = -1;
 	m_selectedIdRequested = -1;
 	// load buffer manager:
@@ -50,11 +49,12 @@ BufferView::BufferView() :
 	m_colorBackgroundSelect = m_paintingProperties->request("backgroungSelected");
 	m_colorTextNormal = m_paintingProperties->request("textNormal");
 	m_colorTextModify = m_paintingProperties->request("textModify");
-	hide();
 }
 
 void BufferView::init() {
 	ewol::widget::List::init();
+	propertyHide.set(true);
+	propertyCanFocus.set(true);
 	if (m_bufferManager != nullptr) {
 		m_bufferManager->signalNewBuffer.bind(shared_from_this(), &BufferView::onCallbackNewBuffer);
 		m_bufferManager->signalSelectFile.bind(shared_from_this(), &BufferView::onCallbackselectNewFile);
@@ -103,9 +103,9 @@ void BufferView::onCallbackNewBuffer(const std::string& _value) {
 		insertAlphabetic(tmp);
 	}
 	if (m_list.size() <= 1) {
-		hide();
+		propertyHide.set(true);
 	} else {
-		show();
+		propertyHide.set(false);
 	}
 	markToRedraw();
 }
@@ -154,9 +154,9 @@ void BufferView::onCallbackBufferRemoved(const std::shared_ptr<appl::Buffer>& _b
 		}
 	}
 	if (m_list.size() <= 1) {
-		hide();
+		propertyHide.set(true);
 	} else {
-		show();
+		propertyHide.set(false);
 	}
 	markToRedraw();
 }

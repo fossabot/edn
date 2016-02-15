@@ -138,7 +138,7 @@ void appl::Buffer::init() {
 }
 
 appl::Buffer::~Buffer() {
-	APPL_ERROR("REAL remove buffer : '" << m_name << "'");
+	APPL_ERROR("REAL remove buffer : '" << propertyName << "'");
 }
 
 bool appl::Buffer::loadFile(const std::string& _name) {

@@ -91,7 +91,7 @@ void appl::WorkerCloseFile::startAction(const std::string& _bufferName) {
 	if (bt != nullptr) {
 		bt->signalPressed.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackCancel);
 	}
-	tmpPopUp->setRemoveOnExternClick(true);
+	tmpPopUp->propertyCloseOutEvent.set(true);
 	std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
 	if (tmpWindows == nullptr) {
 		APPL_ERROR("Error to get the windows.");

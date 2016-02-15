@@ -65,11 +65,11 @@ void appl::WorkerSaveFile::init(const std::string& _bufferName, bool _forceSaveA
 		destroy();
 		return;
 	}
-	m_chooser->setTitle("Save files As...");
-	m_chooser->setValidateLabel("Save");
+	m_chooser->propertyLabelTitle.set("Save files As...");
+	m_chooser->propertyLabelValidate.set("Save");
 	etk::FSNode tmpName(m_bufferName);
-	m_chooser->setFolder(tmpName.getNameFolder());
-	m_chooser->setFileName(tmpName.getNameFile());
+	m_chooser->propertyPath.set(tmpName.getNameFolder());
+	m_chooser->propertyFile.set(tmpName.getNameFile());
 	std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
 	if (tmpWindows == nullptr) {
 		APPL_ERROR("Error to get the windows.");

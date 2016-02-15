@@ -44,19 +44,19 @@ void appl::TagFileSelection::init() {
 	ewol::widget::PopUp::init();
 	std::shared_ptr<ewol::widget::Sizer> mySizerVert;
 	#if defined(__TARGET_OS__Android)
-		setMinSize(gale::Dimension(vec2(90,90), gale::Dimension::Pourcent));
+		propertyMinSize.set(gale::Dimension(vec2(90,90), gale::Dimension::Pourcent));
 	#elif defined(__TARGET_OS__Windows)
-		setMinSize(gale::Dimension(vec2(80,80), gale::Dimension::Pourcent));
+		propertyMinSize.set(gale::Dimension(vec2(80,80), gale::Dimension::Pourcent));
 	#else
-		setMinSize(gale::Dimension(vec2(80,80), gale::Dimension::Pourcent));
+		propertyMinSize.set(gale::Dimension(vec2(80,80), gale::Dimension::Pourcent));
 	#endif
 	
 	mySizerVert = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);
 	if (nullptr == mySizerVert) {
 		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		mySizerVert->lockExpand(bvec2(true,true));
-		mySizerVert->setExpand(bvec2(true,true));
+		mySizerVert->propertyLockExpand.set(bvec2(true,true));
+		mySizerVert->propertyExpand.set(bvec2(true,true));
 		// set it in the pop-up-system : 
 		setSubWidget(mySizerVert);
 		std::shared_ptr<ewol::widget::Composer> compose = ewol::widget::Composer::create(ewol::widget::Composer::String,
@@ -75,27 +75,27 @@ void appl::TagFileSelection::init() {
 		   "		</sizer>\n"
 		   "	</button>\n"
 		   "</sizer>\n");
-		compose->setExpand(bvec2(true,false));
-		compose->setFill(bvec2(true,true));
+		compose->propertyExpand.set(bvec2(true,false));
+		compose->propertyFill.set(bvec2(true,true));
 		mySizerVert->subWidgetAdd(compose);
 		externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-jump", signalPressed, shared_from_this(), &appl::TagFileSelection::onCallbackCtagsSelection);
 		externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-cancel", signalPressed, shared_from_this(), &appl::TagFileSelection::onCallbackCtagsCancel);
-			
+		
 		m_listTag = appl::TagFileList::create();
-		if (nullptr == m_listTag) {
+		if (m_listTag == nullptr) {
 			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
 			m_listTag->signalValidate.bind(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListValidate);
 			m_listTag->signalSelect.bind(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListSelect);
 			m_listTag->signalUnSelect.bind(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListUnSelect);
-			m_listTag->setExpand(bvec2(true,true));
-			m_listTag->setFill(bvec2(true,true));
+			m_listTag->propertyExpand.set(bvec2(true,true));
+			m_listTag->propertyFill.set(bvec2(true,true));
 			mySizerVert->subWidgetAdd(m_listTag);
 		}
 		
 		std::shared_ptr<ewol::widget::Label> myWidgetTitle;
 		myWidgetTitle = ewol::widget::Label::create("Ctags Jump Selection ...");
-		if (nullptr == myWidgetTitle) {
+		if (myWidgetTitle == nullptr) {
 			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
 			mySizerVert->subWidgetAdd(myWidgetTitle);
@@ -109,7 +109,7 @@ appl::TagFileSelection::~TagFileSelection() {
 }
 
 void appl::TagFileSelection::onCallbackCtagsSelection() {
-	if (m_eventNamed!="") {
+	if (m_eventNamed != "") {
 		signalSelect.emit(m_eventNamed);
 		// == > Auto remove ...
 		autoDestroy();
@@ -144,7 +144,7 @@ void appl::TagFileSelection::onCallbackCtagsListUnSelect() {
  * @param[in] jump line id
  */
 void appl::TagFileSelection::addCtagsNewItem(std::string _file, int32_t _line) {
-	if (nullptr != m_listTag) {
+	if (m_listTag != nullptr) {
 		m_listTag->add(_file, _line);
 	}
 }

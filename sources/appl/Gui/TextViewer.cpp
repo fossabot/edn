@@ -35,7 +35,6 @@ static const char* const appl_Buffer_eventSelectChange = "buffer-select-change";
 appl::TextViewer::TextViewer() :
   m_insertMode(false) {
 	addObjectType("appl::TextViewer");
-	setCanHaveFocus(true);
 	setLimitScrolling(0.2);
 	setSingleFinger(false);
 	
@@ -58,6 +57,7 @@ appl::TextViewer::TextViewer() :
 
 void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 	ewol::widget::WidgetScrolled::init();
+	propertyCanFocus.set(true);
 	m_displayText.setFont(_fontName, _fontSize);
 	m_pluginManager->connect(*this);
 	// last created has focus ...
