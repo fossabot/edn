@@ -76,20 +76,20 @@ void appl::WorkerCloseFile::startAction(const std::string& _bufferName) {
 	if (m_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("Save", true);
 		if (bt != nullptr) {
-			bt->signalPressed.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackSaveValidate);
+			bt->signalPressed.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackSaveValidate);
 		}
 	}
 	bt = tmpPopUp->addButton("Save As", true);
 	if (bt != nullptr) {
-		bt->signalPressed.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackSaveAsValidate);
+		bt->signalPressed.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackSaveAsValidate);
 	}
 	bt = tmpPopUp->addButton("Close", true);
 	if (bt != nullptr) {
-		bt->signalPressed.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackClose);
+		bt->signalPressed.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackClose);
 	}
 	bt = tmpPopUp->addButton("Cancel", true);
 	if (bt != nullptr) {
-		bt->signalPressed.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackCancel);
+		bt->signalPressed.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackCancel);
 	}
 	tmpPopUp->propertyCloseOutEvent.set(true);
 	std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
@@ -118,8 +118,8 @@ void appl::WorkerCloseFile::onCallbackSaveAsValidate() {
 	}
 	m_worker = appl::WorkerSaveFile::create(m_bufferName);
 	if (m_worker != nullptr) {
-		m_worker->signalSaveDone.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackClose);
-		m_worker->signalAbort.bind(shared_from_this(), &appl::WorkerCloseFile::onCallbackCancel);
+		m_worker->signalSaveDone.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackClose);
+		m_worker->signalAbort.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackCancel);
 	}
 }
 

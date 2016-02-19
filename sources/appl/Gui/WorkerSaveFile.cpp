@@ -77,8 +77,8 @@ void appl::WorkerSaveFile::init(const std::string& _bufferName, bool _forceSaveA
 		return;
 	}
 	tmpWindows->popUpWidgetPush(m_chooser);
-	m_chooser->signalValidate.bind(shared_from_this(), &appl::WorkerSaveFile::onCallbackSaveAsValidate);
-	m_chooser->signalCancel.bind(shared_from_this(), &appl::WorkerSaveFile::onCallbackCancel);
+	m_chooser->signalValidate.connect(shared_from_this(), &appl::WorkerSaveFile::onCallbackSaveAsValidate);
+	m_chooser->signalCancel.connect(shared_from_this(), &appl::WorkerSaveFile::onCallbackCancel);
 }
 
 appl::WorkerSaveFile::~WorkerSaveFile() {

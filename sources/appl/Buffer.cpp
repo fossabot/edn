@@ -1053,6 +1053,6 @@ namespace etk {
 
 #include <esignal/details/Signal.hxx>
 // declare for signal event
-template class esignal::Signal<std::shared_ptr<appl::Buffer>>;
+template class esignal::ISignal<std::shared_ptr<appl::Buffer>>;
 
 

@@ -219,7 +219,7 @@ void MainWindows::init() {
 				myMenu->add(idMenugDisplay, "Unsplit", "", "menu:split:disable");
 				myMenu->add(idMenugDisplay, "Vertical", "", "menu:split:vert");
 				myMenu->add(idMenugDisplay, "Horizontal", "", "menu:split:hori");
-			myMenu->signalSelect.bind(shared_from_this(), &MainWindows::onCallbackMenuEvent);
+			myMenu->signalSelect.connect(shared_from_this(), &MainWindows::onCallbackMenuEvent);
 			m_widgetLabelFileName = ewol::widget::Label::create("FileName");
 			m_widgetLabelFileName->propertyName.set("appl-widget-display-name");
 			m_widgetLabelFileName->propertyExpand.set(bvec2(true,false));
@@ -240,9 +240,9 @@ void MainWindows::init() {
 	
 	shortCutAdd("ctrl+f",       "menu:search");
 	shortCutAdd("F12",          "menu:reloade-shader");
-	// TODO : auto-bind on shortcut event ==> maybe do beter later ...
-	signalShortcut.bind(shared_from_this(), &MainWindows::onCallbackShortCut);
-	m_bufferManager->signalSelectFile.bind(shared_from_this(), &MainWindows::onCallbackShortCut);
+	// TODO : auto-connect on shortcut event ==> maybe do beter later ...
+	signalShortcut.connect(shared_from_this(), &MainWindows::onCallbackShortCut);
+	m_bufferManager->signalSelectFile.connect(shared_from_this(), &MainWindows::onCallbackShortCut);
 }
 
 
@@ -418,7 +418,7 @@ void MainWindows::displayOpen() {
 	}
 	// apply widget pop-up ...
 	popUpWidgetPush(tmpWidget);
-	tmpWidget->signalValidate.bind(shared_from_this(), &MainWindows::onCallbackPopUpFileSelected);
+	tmpWidget->signalValidate.connect(shared_from_this(), &MainWindows::onCallbackPopUpFileSelected);
 }
 
 void MainWindows::displayProperty() {
@@ -460,13 +460,13 @@ void MainWindows::onCallbackselectNewFile(const std::string& _value) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
 	}
-	// TODO : Remove all previous binding from the old buffer ...
+	// TODO : Remove all previous connecting from the old buffer ...
 	onCallbackTitleUpdate();
 	std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 	if (tmpp != nullptr) {
-		tmpp->signalIsSave.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
-		tmpp->signalIsModify.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
-		tmpp->signalChangeName.bind(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
+		tmpp->signalIsSave.connect(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
+		tmpp->signalIsModify.connect(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
+		tmpp->signalChangeName.connect(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
 	}
 }
 
@@ -523,19 +523,19 @@ void MainWindows::closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer
 		bt = tmpPopUp->addButton("Save", true);
 		if (bt != nullptr) {
 			// TODO : The element is removed before beeing pressed
-			// TODO : bt->signalPressed.bind(shared_from_this(), mainWindowsRequestSaveFile, _buffer->getFileName());
-			// TODO : bt->signalPressed.bind(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+			// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestSaveFile, _buffer->getFileName());
+			// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		}
 	}
 	bt = tmpPopUp->addButton("Save As", true);
 	if (bt != nullptr) {
-		// TODO : bt->signalPressed.bind(shared_from_this(), mainWindowsRequestSaveFileAs, _buffer->getFileName());
-		//bt->signalPressed.bind(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestSaveFileAs, _buffer->getFileName());
+		//bt->signalPressed.connect(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		// TODO : Request the close when saved ...
 	}
 	bt = tmpPopUp->addButton("Close", true);
 	if (bt != nullptr) {
-		// TODO : bt->signalPressed.bind(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 	}
 	tmpPopUp->addButton("Cancel", true);
 	tmpPopUp->propertyCloseOutEvent.set(true);

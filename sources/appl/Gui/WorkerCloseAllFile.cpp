@@ -46,7 +46,7 @@ void appl::WorkerCloseAllFile::init() {
 	}
 	// create the worker :
 	m_worker = appl::WorkerCloseFile::create();
-	m_worker->signalCloseDone.bind(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
+	m_worker->signalCloseDone.connect(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
 	m_worker->startAction(m_bufferNameList.front());
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
@@ -71,7 +71,7 @@ void appl::WorkerCloseAllFile::onCallbackCloseDone() {
 	}
 	// create the worker :
 	m_worker = appl::WorkerCloseFile::create();
-	m_worker->signalCloseDone.bind(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
+	m_worker->signalCloseDone.connect(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
 	m_worker->startAction(m_bufferNameList.front());
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());

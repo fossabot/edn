@@ -56,9 +56,9 @@ void BufferView::init() {
 	propertyHide.set(true);
 	propertyCanFocus.set(true);
 	if (m_bufferManager != nullptr) {
-		m_bufferManager->signalNewBuffer.bind(shared_from_this(), &BufferView::onCallbackNewBuffer);
-		m_bufferManager->signalSelectFile.bind(shared_from_this(), &BufferView::onCallbackselectNewFile);
-		m_bufferManager->signalRemoveBuffer.bind(shared_from_this(), &BufferView::onCallbackBufferRemoved);
+		m_bufferManager->signalNewBuffer.connect(shared_from_this(), &BufferView::onCallbackNewBuffer);
+		m_bufferManager->signalSelectFile.connect(shared_from_this(), &BufferView::onCallbackselectNewFile);
+		m_bufferManager->signalRemoveBuffer.connect(shared_from_this(), &BufferView::onCallbackBufferRemoved);
 	}
 }
 
@@ -93,9 +93,9 @@ void BufferView::onCallbackNewBuffer(const std::string& _value) {
 		APPL_ERROR("event on element nor exist : " << _value);
 		return;
 	}
-	buffer->signalIsSave.bind(shared_from_this(), &BufferView::onCallbackIsSave);
-	buffer->signalIsModify.bind(shared_from_this(), &BufferView::onCallbackIsModify);
-	buffer->signalChangeName.bind(shared_from_this(), &BufferView::onCallbackChangeName);
+	buffer->signalIsSave.connect(shared_from_this(), &BufferView::onCallbackIsSave);
+	buffer->signalIsModify.connect(shared_from_this(), &BufferView::onCallbackIsModify);
+	buffer->signalChangeName.connect(shared_from_this(), &BufferView::onCallbackChangeName);
 	appl::dataBufferStruct tmp(_value, buffer);
 	if (m_openOrderMode == true) {
 		m_list.push_back(tmp);

@@ -85,9 +85,9 @@ void appl::TagFileSelection::init() {
 		if (m_listTag == nullptr) {
 			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
-			m_listTag->signalValidate.bind(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListValidate);
-			m_listTag->signalSelect.bind(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListSelect);
-			m_listTag->signalUnSelect.bind(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListUnSelect);
+			m_listTag->signalValidate.connect(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListValidate);
+			m_listTag->signalSelect.connect(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListSelect);
+			m_listTag->signalUnSelect.connect(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListUnSelect);
 			m_listTag->propertyExpand.set(bvec2(true,true));
 			m_listTag->propertyFill.set(bvec2(true,true));
 			mySizerVert->subWidgetAdd(m_listTag);

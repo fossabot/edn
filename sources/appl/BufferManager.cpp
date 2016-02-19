@@ -13,7 +13,7 @@
 #include <appl/BufferManager.h>
 #include <ewol/object/Object.h>
 #include <ewol/object/Manager.h>
-#include <esignal/Signal.h>
+#include <esignal/ISignal.h>
 #include <gale/resource/Manager.h>
 
 #undef __class__

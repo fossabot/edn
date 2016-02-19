@@ -62,7 +62,7 @@ void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 	m_pluginManager->connect(*this);
 	// last created has focus ...
 	setCurrentSelect();
-	signalShortcut.bind(shared_from_this(), &appl::TextViewer::onCallbackShortCut);
+	signalShortcut.connect(shared_from_this(), &appl::TextViewer::onCallbackShortCut);
 	
 	/*
 	registerMultiCast(ednMsgBufferId);
@@ -72,7 +72,7 @@ void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 	registerMultiCast(appl::MsgSelectGotoLineSelect);
 	*/
 	if (m_bufferManager != nullptr) {
-		m_bufferManager->signalSelectFile.bind(shared_from_this(), &appl::TextViewer::onCallbackselectNewFile);
+		m_bufferManager->signalSelectFile.connect(shared_from_this(), &appl::TextViewer::onCallbackselectNewFile);
 	}
 }
 
@@ -121,8 +121,8 @@ void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
 		m_buffer = m_bufferManager->get(_value);
 		m_bufferManager->setBufferSelected(m_buffer);
 		if (m_buffer != nullptr) {
-			m_buffer->signalIsModify.bind(shared_from_this(), &appl::TextViewer::onCallbackIsModify);
-			m_buffer->signalSelectChange.bind(shared_from_this(), &appl::TextViewer::onCallbackSelectChange);
+			m_buffer->signalIsModify.connect(shared_from_this(), &appl::TextViewer::onCallbackIsModify);
+			m_buffer->signalSelectChange.connect(shared_from_this(), &appl::TextViewer::onCallbackSelectChange);
 			for (auto element : m_drawingRemenber) {
 				if (element.first.lock() == m_buffer) {
 					m_originScrooled = element.second;

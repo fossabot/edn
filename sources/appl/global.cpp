@@ -126,7 +126,7 @@ void globals::ParameterGlobalsGui::init() {
 	} else {
 		myCheckbox->propertyExpand.set(bvec2(true,false));
 		myCheckbox->propertyValue.set(isSetAutoIndent());
-		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackIndentation);
+		myCheckbox->signalValue.connect(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackIndentation);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = ewol::widget::CheckBox::create("Display space char (' ')");
@@ -135,7 +135,7 @@ void globals::ParameterGlobalsGui::init() {
 	} else {
 		myCheckbox->propertyExpand.set(bvec2(true,false));
 		myCheckbox->propertyValue.set(isSetDisplaySpaceChar());
-		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackSpace);
+		myCheckbox->signalValue.connect(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackSpace);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = ewol::widget::CheckBox::create("Display tabulation char ('\\t')");
@@ -144,7 +144,7 @@ void globals::ParameterGlobalsGui::init() {
 	} else {
 		myCheckbox->propertyExpand.set(bvec2(true,false));
 		myCheckbox->propertyValue.set(isSetDisplayTabChar());
-		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackTabulation);
+		myCheckbox->signalValue.connect(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackTabulation);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = ewol::widget::CheckBox::create("Display end of line ('\\n')");
@@ -153,7 +153,7 @@ void globals::ParameterGlobalsGui::init() {
 	} else {
 		myCheckbox->propertyExpand.set(bvec2(true,false));
 		myCheckbox->propertyValue.set(isSetDisplayEndOfLine());
-		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackEndOfLine);
+		myCheckbox->signalValue.connect(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackEndOfLine);
 		subWidgetAdd(myCheckbox);
 	}
 	myCheckbox = ewol::widget::CheckBox::create("switch Rounded/default");
@@ -162,7 +162,7 @@ void globals::ParameterGlobalsGui::init() {
 	} else {
 		myCheckbox->propertyExpand.set(bvec2(true,false));
 		myCheckbox->propertyValue.set(isSetDisplayEndOfLine());
-		myCheckbox->signalValue.bind(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackRounded);
+		myCheckbox->signalValue.connect(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackRounded);
 		subWidgetAdd(myCheckbox);
 	}
 }

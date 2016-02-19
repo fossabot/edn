@@ -53,7 +53,7 @@ void appl::WorkerSaveAllFile::init() {
 		destroy();
 		return;
 	}
-	m_worker->signalSaveDone.bind(shared_from_this(), &appl::WorkerSaveAllFile::onCallbackSaveAsDone);
+	m_worker->signalSaveDone.connect(shared_from_this(), &appl::WorkerSaveAllFile::onCallbackSaveAsDone);
 }
 
 appl::WorkerSaveAllFile::~WorkerSaveAllFile() {
@@ -77,6 +77,6 @@ void appl::WorkerSaveAllFile::onCallbackSaveAsDone() {
 		destroy();
 		return;
 	}
-	m_worker->signalSaveDone.bind(shared_from_this(), &appl::WorkerSaveAllFile::onCallbackSaveAsDone);
+	m_worker->signalSaveDone.connect(shared_from_this(), &appl::WorkerSaveAllFile::onCallbackSaveAsDone);
 }
 

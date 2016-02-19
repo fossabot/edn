@@ -85,7 +85,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 				tmpWidget->addCtagsNewItem(myfile.getFileSystemName(), lineID);
 			} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
 			ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-			tmpWidget->signalSelect.bind(shared_from_this(), &appl::TextPluginCtags::onCallbackOpenCtagsSelectReturn);
+			tmpWidget->signalSelect.connect(shared_from_this(), &appl::TextPluginCtags::onCallbackOpenCtagsSelectReturn);
 		}
 	} else {
 		jumpFile(myfile.getName(), lineID - 1);
@@ -183,7 +183,7 @@ bool appl::TextPluginCtags::onReceiveShortCut(appl::TextViewer& _textDrawer,
 			tmpWidget->propertyPath.set(path);
 		}
 		ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-		tmpWidget->signalValidate.bind(shared_from_this(), &appl::TextPluginCtags::onCallbackOpenCtagsOpenFileReturn);
+		tmpWidget->signalValidate.connect(shared_from_this(), &appl::TextPluginCtags::onCallbackOpenCtagsOpenFileReturn);
 		return true;
 	} else if (_shortCutName == "appl::TextPluginCtags::JumpDestination") {
 		if (_textDrawer.hasBuffer() == false) {
