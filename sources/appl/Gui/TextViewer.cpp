@@ -94,7 +94,7 @@ void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
 	
 	// reset scroll:
 	if (m_buffer != nullptr) {
-		m_buffer->signalUnBindAll(shared_from_this());
+		m_buffer->signalDisconnect(shared_from_this());
 		bool needAdd = true;
 		auto it = m_drawingRemenber.begin();
 		while (it != m_drawingRemenber.end()) {

@@ -38,7 +38,7 @@
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<regex>\b(void|bool|float|int|(vec|mat|ivect|bvect)[2-4])\b</regex>
+			<regex>\b(void|bool|float|int|(vec|mat|ivec|bvec)[2-4])\b</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>

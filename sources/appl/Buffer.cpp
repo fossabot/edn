@@ -1051,8 +1051,9 @@ namespace etk {
 	}
 };
 
-#include <esignal/details/Signal.hxx>
+#include <esignal/details/ISignal.hxx>
 // declare for signal event
+template class esignal::Signal<std::shared_ptr<appl::Buffer>>;
 template class esignal::ISignal<std::shared_ptr<appl::Buffer>>;
 
 

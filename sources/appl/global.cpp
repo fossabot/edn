@@ -54,7 +54,7 @@ bool globals::isSetDisplayEndOfLine() {
 }
 
 void globals::setDisplayEndOfLine(bool newVal) {
-	l_obj().m_displayEOL = newVal;
+	l_obj().m_displayEOL.set(newVal);
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
@@ -64,7 +64,7 @@ bool globals::isSetDisplaySpaceChar() {
 }
 
 void globals::setDisplaySpaceChar(bool _newVal) {
-	l_obj().m_displaySpaceChar = _newVal;
+	l_obj().m_displaySpaceChar.set(_newVal);
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 // -----------------------------------------------------------
@@ -73,7 +73,7 @@ bool globals::isSetDisplayTabChar() {
 }
 
 void globals::setDisplayTabChar(bool _newVal) {
-	l_obj().m_displayTabChar = _newVal;
+	l_obj().m_displayTabChar.set(_newVal);
 	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
 }
 
@@ -83,7 +83,7 @@ bool globals::isSetAutoIndent() {
 }
 
 void globals::setAutoIndent(bool _newVal) {
-	l_obj().m_AutoIndent = _newVal;
+	l_obj().m_AutoIndent.set(_newVal);
 }
 
 // -----------------------------------------------------------

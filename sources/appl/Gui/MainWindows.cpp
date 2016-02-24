@@ -282,7 +282,7 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 		if (m_widgetSearch == nullptr) {
 			return;
 		}
-		if (m_widgetSearch->propertyHide == true) {
+		if (m_widgetSearch->propertyHide.get() == true) {
 			m_widgetSearch->propertyHide.set(false);
 			m_widgetSearch->selectSearch();
 		} else {
@@ -302,7 +302,7 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 		if (m_widgetSearch == nullptr) {
 			return;
 		}
-		if (m_widgetSearch->propertyHide == true) {
+		if (m_widgetSearch->propertyHide.get() == true) {
 			m_widgetSearch->propertyHide.set(false);
 			m_widgetSearch->selectReplace();
 		} else {
