@@ -13,9 +13,9 @@
 #define __class__ "TagFileList"
 
 appl::TagFileList::TagFileList() :
-  signalSelect(*this, "select"),
-  signalValidate(*this, "validate"),
-  signalUnSelect(*this, "unselect") {
+  signalSelect(this, "select", ""),
+  signalValidate(this, "validate", ""),
+  signalUnSelect(this, "unselect", "") {
 	addObjectType("appl::TagFileList");
 	m_selectedLine = -1;
 	setMouseLimit(1);

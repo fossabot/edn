@@ -15,8 +15,8 @@
 #define __class__ "WorkerCloseFile"
 
 appl::WorkerCloseFile::WorkerCloseFile() :
-  signalCloseDone(*this, "close-file-done"),
-  signalAbort(*this, "close-file-abort"),
+  signalCloseDone(this, "close-file-done", ""),
+  signalAbort(this, "close-file-abort", ""),
   m_buffer(nullptr),
   m_worker(nullptr),
   m_bufferManager(nullptr) {

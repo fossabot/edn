@@ -24,10 +24,10 @@ class myParamGlobal : public ewol::Object {
 		eproperty::Value<bool> m_displaySpaceChar;
 	public : 
 		myParamGlobal() :
-		  m_displayEOL(*this, "eol", false, "Display end of line character"),
-		  m_AutoIndent(*this, "auto-indent", true, "Auto indent when create new line"),
-		  m_displayTabChar(*this, "display-tab", true, "Display the Tab char"),
-		  m_displaySpaceChar(*this, "display-space", true, "Display the space char") {
+		  m_displayEOL(this, "eol", false, "Display end of line character"),
+		  m_AutoIndent(this, "auto-indent", true, "Auto indent when create new line"),
+		  m_displayTabChar(this, "display-tab", true, "Display the Tab char"),
+		  m_displaySpaceChar(this, "display-space", true, "Display the space char") {
 			m_static = true; // Note : set the object static notification( Must be set or assert at the end of process)
 			propertyName.set("edn_global_param");
 		}

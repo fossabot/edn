@@ -25,18 +25,9 @@
 #undef __class__
 #define __class__ "TagFileSelection"
 
-
-static const char * const applEventctagsSelection = "appl-event-ctags-validate";
-static const char * const applEventctagsCancel    = "appl-event-ctags-cancel";
-static const char * const applEventCtagsListValidate = "appl-event-ctags-list-validate";
-static const char * const applEventCtagsListSelect = "appl-event-ctags-list-selected";
-static const char * const applEventCtagsListUnSelect = "appl-event-ctags-list-un-selected";
-
-
-
 appl::TagFileSelection::TagFileSelection() :
-  signalSelect(*this, "select"),
-  signalCancel(*this, "cancel") {
+  signalSelect(this, "select", ""),
+  signalCancel(this, "cancel", "") {
 	addObjectType("appl::TagFileSelection");
 }
 

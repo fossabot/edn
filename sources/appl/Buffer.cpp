@@ -115,10 +115,10 @@ appl::Buffer::Iterator appl::Buffer::selectStop() {
 }
 
 appl::Buffer::Buffer() :
-  signalIsModify(*this, "is-modify"),
-  signalIsSave(*this, "is-save"),
-  signalSelectChange(*this, "select-change"),
-  signalChangeName(*this, "change-name"),
+  signalIsModify(this, "is-modify", ""),
+  signalIsSave(this, "is-save", ""),
+  signalSelectChange(this, "select-change", ""),
+  signalChangeName(this, "change-name", ""),
   m_hasFileName(false),
   m_fileName(""),
   m_isModify(false),

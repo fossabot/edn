@@ -15,8 +15,8 @@
 
 
 appl::WorkerSaveFile::WorkerSaveFile() :
-  signalSaveDone(*this, "save-file-done"),
-  signalAbort(*this, "save-file-abort") {
+  signalSaveDone(this, "save-file-done", ""),
+  signalAbort(this, "save-file-abort", "") {
 	addObjectType("appl::WorkerSaveFile");
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();

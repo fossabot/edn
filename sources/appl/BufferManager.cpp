@@ -20,10 +20,10 @@
 #define __class__ "BufferManager"
 
 appl::BufferManager::BufferManager() :
-  signalNewBuffer(*this, "new-buffer"),
-  signalSelectFile(*this, "select-buffer"),
-  signalTextSelectionChange(*this, "text-selection-change"),
-  signalRemoveBuffer(*this, "remove-buffer") {
+  signalNewBuffer(this, "new-buffer", ""),
+  signalSelectFile(this, "select-buffer", ""),
+  signalTextSelectionChange(this, "text-selection-change", ""),
+  signalRemoveBuffer(this, "remove-buffer", "") {
 	addObjectType("appl::BufferManager");
 }
 
