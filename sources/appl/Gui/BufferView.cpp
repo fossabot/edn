@@ -104,8 +104,10 @@ void BufferView::onCallbackNewBuffer(const std::string& _value) {
 	}
 	if (m_list.size() <= 1) {
 		propertyHide.set(true);
+		propertySetOnWidgetNamed("appl-Buffer-viewer-separator", "hide", "true");
 	} else {
 		propertyHide.set(false);
+		propertySetOnWidgetNamed("appl-Buffer-viewer-separator", "hide", "false");
 	}
 	markToRedraw();
 }

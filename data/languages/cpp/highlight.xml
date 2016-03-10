@@ -70,7 +70,7 @@
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<regex>\b(inline|const|class|namespace|virtual|private|public|protected|friend|const|extern|mutable|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum)\b</regex>
+			<regex>\b(inline|const|class|namespace|virtual|private|public|protected|friend|const|extern|mutable|auto|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum|override|final)\b</regex>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>

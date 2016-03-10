@@ -157,6 +157,15 @@ void MainWindows::init() {
 			myBufferView->propertyFill.set(bvec2(true,true));
 			mySizerHori->subWidgetAdd(myBufferView);
 			
+			ewol::widget::SpacerShared mySpacer = ewol::widget::Spacer::create();
+			mySpacer->propertyName.set("appl-Buffer-viewer-separator");
+			mySpacer->propertyColor.set(etk::color::black);
+			mySpacer->propertyMinSize.set(gale::Dimension(vec2(2,2), gale::Dimension::Pixel));
+			mySpacer->propertyExpand.set(bvec2(false,true));
+			mySpacer->propertyFill.set(bvec2(true,true));
+			mySpacer->propertyHide.set(true);
+			mySizerHori->subWidgetAdd(mySpacer);
+			
 			mySizerVert2 = ewol::widget::Sizer::create();
 			mySizerVert2->propertyMode.set(ewol::widget::Sizer::modeVert);
 			mySizerHori->subWidgetAdd(mySizerVert2);
@@ -173,6 +182,15 @@ void MainWindows::init() {
 				myTextView2->propertyFill.set(bvec2(true,true));
 				myTextView2->propertyHide.set(true);
 				mySizerVert2->subWidgetAdd(myTextView2);
+				
+				mySpacer = ewol::widget::Spacer::create();
+				mySpacer->propertyName.set("appl-text-separator");
+				mySpacer->propertyColor.set(etk::color::black);
+				mySpacer->propertyMinSize.set(gale::Dimension(vec2(2,2), gale::Dimension::Pixel));
+				mySpacer->propertyExpand.set(bvec2(true,false));
+				mySpacer->propertyFill.set(bvec2(true,true));
+				mySpacer->propertyHide.set(true);
+				mySizerVert2->subWidgetAdd(mySpacer);
 				
 				myTextView = appl::TextViewer::create("font-size", sizeText);
 				myTextView->propertyName.set("appl-text-viewer1");
@@ -345,12 +363,16 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 		ewol::getContext().forceRedrawAll();
 	} else if (_value == "menu:split:enable") {
 		propertySetOnWidgetNamed("appl-text-viewer2", "hide", "false");
+		propertySetOnWidgetNamed("appl-text-separator", "hide", "false");
 	} else if (_value == "menu:split:disable") {
 		propertySetOnWidgetNamed("appl-text-viewer2", "hide", "true");
+		propertySetOnWidgetNamed("appl-text-separator", "hide", "true");
 	} else if (_value == "menu:split:vert") {
 		propertySetOnWidgetNamed("appl-view-code-sizer", "mode", "vert");
+		propertySetOnWidgetNamed("appl-text-separator", "expand", "true,false");
 	} else if (_value == "menu:split:hori") {
 		propertySetOnWidgetNamed("appl-view-code-sizer", "mode", "hori");
+		propertySetOnWidgetNamed("appl-text-separator", "expand", "false,true");
 	} else {
 		APPL_ERROR("Event from Menu UNKNOW : '" << _value << "'");
 	}
