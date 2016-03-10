@@ -33,14 +33,6 @@ appl::TextViewerPlugin::TextViewerPlugin() :
 	m_pluginManager = appl::textPluginManager::create();
 }
 
-void appl::TextViewerPlugin::init() {
-	ewol::Object::init();
-}
-
-void appl::TextViewerPlugin::init(const std::string& _name) {
-	ewol::Object::init(_name);
-}
-
 appl::TextViewerPlugin::~TextViewerPlugin() {
 	if (m_isEnable == false) {
 		return;

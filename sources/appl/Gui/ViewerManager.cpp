@@ -23,10 +23,6 @@ appl::ViewerManager::ViewerManager() {
 	m_bufferManager = appl::BufferManager::create();
 }
 
-void appl::ViewerManager::init(const std::string& _uniqueName) {
-	ewol::Object::init(_uniqueName);
-}
-
 appl::ViewerManager::~ViewerManager() {
 	
 }

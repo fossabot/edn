@@ -27,10 +27,6 @@ appl::BufferManager::BufferManager() :
 	addObjectType("appl::BufferManager");
 }
 
-void appl::BufferManager::init(const std::string& _uniqueName) {
-	ewol::Object::init(_uniqueName);
-}
-
 appl::BufferManager::~BufferManager() {
 	m_list.clear();
 }

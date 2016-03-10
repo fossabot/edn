@@ -18,9 +18,6 @@ appl::TextPluginMultiLineTab::TextPluginMultiLineTab() {
 	addObjectType("appl::TextPluginMultiLineTab");
 }
 
-void appl::TextPluginMultiLineTab::init() {
-	appl::TextViewerPlugin::init();
-}
 
 bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
                                                 const ewol::event::Entry& _event) {

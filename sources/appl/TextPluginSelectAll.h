@@ -19,7 +19,6 @@ namespace appl {
 	class TextPluginSelectAll : public appl::TextViewerPlugin {
 		protected:
 			TextPluginSelectAll();
-			void init();
 			int32_t m_menuIdTitle;
 			int32_t m_menuIdSelectAll;
 			int32_t m_menuIdSelectNone;

@@ -28,11 +28,10 @@
 	int64_t processTimeLocal = (endTime - startTime); \
 	APPL_DEBUG(comment << (float)((float)processTimeLocal / 1000.0) << "ms");
 
-static const char* const appl_Buffer_eventIsModify = "buffer-is-modify";
-static const char* const appl_Buffer_eventSelectChange = "buffer-select-change";
-
 
 appl::TextViewer::TextViewer() :
+  propertyFontName(this, "font-name", "FreeMono;DejaVuSansMono;FreeSerif", "Name of the font for the displayed text", &appl::TextViewer::onChangePropertyFontName),
+  propertyFontSize(this, "font-size", 12, "Size of the font for the displayed text", &appl::TextViewer::onChangePropertyFontSize),
   m_insertMode(false) {
 	addObjectType("appl::TextViewer");
 	setLimitScrolling(0.2);
@@ -55,10 +54,10 @@ appl::TextViewer::TextViewer() :
 	m_colorNormal = m_paintingProperties->request("normal");
 }
 
-void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
+void appl::TextViewer::init() {
 	ewol::widget::WidgetScrolled::init();
 	propertyCanFocus.set(true);
-	m_displayText.setFont(_fontName, _fontSize);
+	m_displayText.setFont(*propertyFontName, *propertyFontSize);
 	m_pluginManager->connect(*this);
 	// last created has focus ...
 	setCurrentSelect();
@@ -73,6 +72,8 @@ void appl::TextViewer::init(const std::string& _fontName, int32_t _fontSize) {
 	*/
 	if (m_bufferManager != nullptr) {
 		m_bufferManager->signalSelectFile.connect(shared_from_this(), &appl::TextViewer::onCallbackselectNewFile);
+	} else {
+		APPL_CRITICAL("Buffer manager has not been created at the init");
 	}
 }
 
@@ -88,6 +89,7 @@ void appl::TextViewer::onCallbackShortCut(const std::string& _value) {
 
 
 void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
+	APPL_INFO("Select new file: " << _value);
 	if (isSelectedLast() == false) {
 		return;
 	}
@@ -149,10 +151,6 @@ std::string appl::TextViewer::getBufferPath() {
 	return std::string(filename, 0, pos);
 }
 
-void appl::TextViewer::changeZoom(float _range) {
-	m_displayText.setFontSize(m_displayText.getSize() + _range);
-	markToRedraw();
-}
 
 bool appl::TextViewer::calculateMinSize() {
 	m_minSize.setValue(50,50);
@@ -710,13 +708,13 @@ void appl::TextViewer::onLostFocus() {
 	markToRedraw();
 }
 
-void appl::TextViewer::setFontSize(int32_t _size) {
-	m_displayText.setFontSize(_size);
-	setScrollingSize(_size*3.0*1.46); // 1.46 is a magic number ...
+void appl::TextViewer::onChangePropertyFontSize() {
+	m_displayText.setFontSize(*propertyFontSize);
+	setScrollingSize(*propertyFontSize*3.0*1.46); // 1.46 is a magic number ...
 }
 
-void appl::TextViewer::setFontName(const std::string& _fontName) {
-	m_displayText.setFontName(_fontName);
+void appl::TextViewer::onChangePropertyFontName() {
+	m_displayText.setFontName(*propertyFontName);
 }
 
 // TODO : Update process time ==> a little expensive (2->4ms) in end of file

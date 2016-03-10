@@ -16,6 +16,10 @@
 #include <gale/resource/Resource.h>
 
 namespace appl {
+	class BufferManager;
+	using BufferManagerShared = ememory::SharedPtr<appl::BufferManager>;
+	using BufferManagerWeak = ememory::WeakPtr<appl::BufferManager>;
+	// TODO: This is a service ...
 	class BufferManager : public ewol::Object {
 		public:
 			esignal::ISignal<std::string> signalNewBuffer;
@@ -24,7 +28,6 @@ namespace appl {
 			esignal::ISignal<std::shared_ptr<appl::Buffer>> signalRemoveBuffer;
 		protected:
 			BufferManager();
-			void init(const std::string& _uniqueName);
 		public:
 			DECLARE_SINGLE_FACTORY(BufferManager, "???Buffer_Manager???");
 			virtual ~BufferManager();

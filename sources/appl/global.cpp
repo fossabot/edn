@@ -109,7 +109,8 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui() {
 }
 
 void globals::ParameterGlobalsGui::init() {
-	ewol::widget::Sizer::init(ewol::widget::Sizer::modeVert);
+	ewol::widget::Sizer::init();
+	propertyMode.set(ewol::widget::Sizer::modeVert);
 	std::shared_ptr<ewol::widget::CheckBox> myCheckbox;
 	std::shared_ptr<ewol::widget::Spacer> mySpacer;
 	
@@ -120,46 +121,52 @@ void globals::ParameterGlobalsGui::init() {
 		mySpacer->propertyExpand.set(bvec2(true,true));
 		subWidgetAdd(mySpacer);
 	}
-	myCheckbox = ewol::widget::CheckBox::create("Automatic Indentation");
+	myCheckbox = ewol::widget::CheckBox::create();
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
+		//TODO : myCheckbox->propertyLabel.set("Automatic Indentation");
 		myCheckbox->propertyExpand.set(bvec2(true,false));
 		myCheckbox->propertyValue.set(isSetAutoIndent());
 		myCheckbox->signalValue.connect(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackIndentation);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = ewol::widget::CheckBox::create("Display space char (' ')");
+	myCheckbox = ewol::widget::CheckBox::create();
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
+		//TODO : myCheckbox->propertyLabel.set("Display space char (' ')");
 		myCheckbox->propertyExpand.set(bvec2(true,false));
 		myCheckbox->propertyValue.set(isSetDisplaySpaceChar());
 		myCheckbox->signalValue.connect(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackSpace);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = ewol::widget::CheckBox::create("Display tabulation char ('\\t')");
+	myCheckbox = ewol::widget::CheckBox::create();
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
+		//TODO : myCheckbox->propertyLabel.set("Display tabulation char ('\\t')");
+		
 		myCheckbox->propertyExpand.set(bvec2(true,false));
 		myCheckbox->propertyValue.set(isSetDisplayTabChar());
 		myCheckbox->signalValue.connect(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackTabulation);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = ewol::widget::CheckBox::create("Display end of line ('\\n')");
+	myCheckbox = ewol::widget::CheckBox::create();
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
+		//TODO : myCheckbox->propertyLabel.set("Display end of line ('\\n')");
 		myCheckbox->propertyExpand.set(bvec2(true,false));
 		myCheckbox->propertyValue.set(isSetDisplayEndOfLine());
 		myCheckbox->signalValue.connect(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackEndOfLine);
 		subWidgetAdd(myCheckbox);
 	}
-	myCheckbox = ewol::widget::CheckBox::create("switch Rounded/default");
+	myCheckbox = ewol::widget::CheckBox::create();
 	if (nullptr == myCheckbox) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
+		//TODO : myCheckbox->propertyLabel.set("switch Rounded/default");
 		myCheckbox->propertyExpand.set(bvec2(true,false));
 		myCheckbox->propertyValue.set(isSetDisplayEndOfLine());
 		myCheckbox->signalValue.connect(shared_from_this(), &globals::ParameterGlobalsGui::onCallbackRounded);

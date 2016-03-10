@@ -19,17 +19,6 @@
 #undef __class__
 #define __class__ "Search"
 
-const char* const l_eventSearchEntry = "appl-search-entry";
-const char* const l_eventSearchEntryEnter = "appl-search-entry-enter";
-const char* const l_eventReplaceEntry = "appl-replace-entry";
-const char* const l_eventReplaceEntryEnter = "appl-replace-entry-enter";
-const char* const l_eventSearchBt = "appl-search-button";
-const char* const l_eventReplaceBt = "appl-replace-button";
-const char* const l_eventCaseCb = "appl-case-sensitive-CheckBox";
-const char* const l_eventWrapCb = "appl-wrap-CheckBox";
-const char* const l_eventForwardCb = "appl-forward-CheckBox";
-const char* const l_eventHideBt = "appl-hide-button";
-
 appl::widget::Search::Search() :
   m_forward(true),
   m_caseSensitive(false),
@@ -37,7 +26,8 @@ appl::widget::Search::Search() :
 	addObjectType("appl::widget::Search");
 }
 void appl::widget::Search::init() {
-	ewol::widget::Composer::init(ewol::widget::Composer::file, "DATA:GUI-Search.xml");
+	ewol::widget::Composer::init();
+	loadFromFile("DATA:GUI-Search.xml");
 	m_viewerManager = appl::ViewerManager::create();
 	// link event
 	subBind(ewol::widget::Button, "SEARCH:close",         signalPressed, shared_from_this(), &appl::widget::Search::OnCallbackHide);

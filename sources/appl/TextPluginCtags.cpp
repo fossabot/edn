@@ -28,11 +28,6 @@ appl::TextPluginCtags::TextPluginCtags() :
 	addObjectType("appl::TextPluginCtags");
 }
 
-void appl::TextPluginCtags::init() {
-	appl::TextViewerPlugin::init();
-}
-
-
 appl::TextPluginCtags::~TextPluginCtags() {
 	
 }

@@ -17,19 +17,20 @@
 
 namespace appl {
 	class textPluginManager;
+	class TextViewerPlugin;
+	using TextViewerPluginShared = ememory::SharedPtr<TextViewerPlugin>;
+	using TextViewerPluginWeak = ememory::WeakPtr<TextViewerPlugin>;
 	class TextViewerPlugin : public ewol::Object {
 		friend class appl::TextViewer;
 		protected:
 			std::weak_ptr<appl::textPluginManager> m_pluginManager;
 		protected:
 			TextViewerPlugin();
-			void init();
-			void init(const std::string& _name);
 		public:
 			DECLARE_FACTORY(TextViewerPlugin);
 			virtual ~TextViewerPlugin();
 		protected:
-			std::weak_ptr<ewol::widget::Menu> m_menuInterface;
+			ewol::widget::MenuWeak m_menuInterface;
 		private:
 			bool m_isEnable; //!< The plugin is enable or not (for all viewer).
 		public:

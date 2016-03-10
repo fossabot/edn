@@ -116,7 +116,7 @@ void appl::WorkerCloseFile::onCallbackSaveAsValidate() {
 		// nothing to do in this case ==> can do nothing ...
 		return;
 	}
-	m_worker = appl::WorkerSaveFile::create(m_bufferName);
+	m_worker = appl::WorkerSaveFile::create("buffer-name", m_bufferName);
 	if (m_worker != nullptr) {
 		m_worker->signalSaveDone.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackClose);
 		m_worker->signalAbort.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackCancel);

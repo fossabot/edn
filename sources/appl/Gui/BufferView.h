@@ -29,6 +29,9 @@ namespace appl {
 	};
 };
 
+	class BufferView;
+	using BufferViewShared = ememory::SharedPtr<BufferView>;
+	using BufferViewWeak = ememory::WeakPtr<BufferView>;
 class BufferView : public ewol::widget::List {
 	private:
 		std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager

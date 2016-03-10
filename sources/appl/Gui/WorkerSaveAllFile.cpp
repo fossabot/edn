@@ -46,7 +46,7 @@ void appl::WorkerSaveAllFile::init() {
 		return;
 	}
 	// create the worker :
-	m_worker = appl::WorkerSaveFile::create(m_bufferNameList.front());
+	m_worker = appl::WorkerSaveFile::create("buffer-name", m_bufferNameList.front());
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
 	if (m_bufferNameList.size() == 0) {
@@ -70,7 +70,7 @@ void appl::WorkerSaveAllFile::onCallbackSaveAsDone() {
 		return;
 	}
 	// create the worker :
-	m_worker = appl::WorkerSaveFile::create(m_bufferNameList.front());
+	m_worker = appl::WorkerSaveFile::create("buffer-name", m_bufferNameList.front());
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
 	if (m_bufferNameList.size() == 0) {

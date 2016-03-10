@@ -63,7 +63,8 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			addObjectType("appl::ParameterAboutGui");
 		}
 		void init() {
-			ewol::widget::Sizer::init(ewol::widget::Sizer::modeVert);
+			propertyMode.setDirectCheck(ewol::widget::Sizer::modeVert);
+			ewol::widget::Sizer::init();
 			std::shared_ptr<ewol::widget::Spacer> mySpacer;
 			
 			mySpacer = ewol::widget::Spacer::create();
@@ -96,10 +97,11 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			tmpLabel += "    libPng, ogg-tremor, portaudio, libZip<br/>";
 			tmpLabel += "    tinyXml, freetype, agg2.4, etk<br/>";
 			tmpLabel += "</left>";
-			std::shared_ptr<ewol::widget::Label> myLabel = ewol::widget::Label::create(tmpLabel);
+			std::shared_ptr<ewol::widget::Label> myLabel = ewol::widget::Label::create();
 			if (nullptr == myLabel) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
+				myLabel->propertyValue.set(tmpLabel);
 				myLabel->propertyExpand.set(bvec2(true,false));
 				subWidgetAdd(myLabel);
 			}
@@ -129,24 +131,25 @@ MainWindows::MainWindows() {
 void MainWindows::init() {
 	ewol::widget::Windows::init();
 	APPL_DEBUG("CREATE WINDOWS ... ");
-	std::shared_ptr<ewol::widget::Sizer> mySizerVert;
-	std::shared_ptr<ewol::widget::Sizer> mySizerVert2;
-	std::shared_ptr<ewol::widget::Sizer> mySizerHori;
+	ewol::widget::SizerShared mySizerVert;
+	ewol::widget::SizerShared mySizerVert2;
+	ewol::widget::SizerShared mySizerHori;
 	std::shared_ptr<appl::TextViewer> myTextView;
 	std::shared_ptr<appl::TextViewer> myTextView2;
 	std::shared_ptr<BufferView> myBufferView;
-	std::shared_ptr<ewol::widget::Menu> myMenu;
+	ewol::widget::MenuShared myMenu;
 	
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
 	m_viewerManager = appl::ViewerManager::create();
 	
-	mySizerVert = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);
+	mySizerVert = ewol::widget::Sizer::create();
 	mySizerVert->propertyName.set("plop 1111111");
+	mySizerVert->propertyMode.set(ewol::widget::Sizer::modeVert);
 	setSubWidget(mySizerVert);
-	
-		mySizerHori = ewol::widget::Sizer::create(ewol::widget::Sizer::modeHori);
+		mySizerHori = ewol::widget::Sizer::create();
 		mySizerHori->propertyName.set("plop 222222222");
+		mySizerHori->propertyMode.set(ewol::widget::Sizer::modeHori);
 		mySizerVert->subWidgetAdd(mySizerHori);
 			myBufferView = BufferView::create();
 			myBufferView->propertyName.set("plop 3333333");
@@ -154,7 +157,8 @@ void MainWindows::init() {
 			myBufferView->propertyFill.set(bvec2(true,true));
 			mySizerHori->subWidgetAdd(myBufferView);
 			
-			mySizerVert2 = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);
+			mySizerVert2 = ewol::widget::Sizer::create();
+			mySizerVert2->propertyMode.set(ewol::widget::Sizer::modeVert);
 			mySizerHori->subWidgetAdd(mySizerVert2);
 				mySizerVert2->propertyName.set("appl-view-code-sizer");
 				// main buffer Area :
@@ -163,64 +167,66 @@ void MainWindows::init() {
 				#else
 					int32_t sizeText = 11;
 				#endif
-				myTextView2 = appl::TextViewer::create("FreeMono;DejaVuSansMono;FreeSerif", sizeText);
+				myTextView2 = appl::TextViewer::create("font-size", sizeText);
 				myTextView2->propertyName.set("appl-text-viewer2");
 				myTextView2->propertyExpand.set(bvec2(true,true));
 				myTextView2->propertyFill.set(bvec2(true,true));
 				myTextView2->propertyHide.set(true);
 				mySizerVert2->subWidgetAdd(myTextView2);
 				
-				myTextView = appl::TextViewer::create("FreeMono;DejaVuSansMono;FreeSerif", sizeText);
+				myTextView = appl::TextViewer::create("font-size", sizeText);
 				myTextView->propertyName.set("appl-text-viewer1");
 				myTextView->propertyExpand.set(bvec2(true,true));
 				myTextView->propertyFill.set(bvec2(true,true));
 				mySizerVert2->subWidgetAdd(myTextView);
 				
-				// search area : 
+				// search area:
 				m_widgetSearch = appl::widget::Search::create();
 				mySizerVert2->subWidgetAdd(m_widgetSearch);
 			
-		mySizerHori = ewol::widget::Sizer::create(ewol::widget::Sizer::modeHori);
+		mySizerHori = ewol::widget::Sizer::create();
 		mySizerHori->propertyName.set("plop 555555");
+		mySizerHori->propertyMode.set(ewol::widget::Sizer::modeHori);
 		mySizerVert->subWidgetAdd(mySizerHori);
 			
 			myMenu = ewol::widget::Menu::create();
 			myMenu->propertyName.set("appl-menu-interface");
 			mySizerHori->subWidgetAdd(myMenu);
-			int32_t idMenuFile = myMenu->addTitle("File");
-				myMenu->add(idMenuFile, "New",          "", "menu:new");
+			int32_t idMenuFile = myMenu->addTitle("_T{File}");
+				myMenu->add(idMenuFile, "_T{New}",          "", "menu:new");
 				myMenu->addSpacer();
-				myMenu->add(idMenuFile, "Open",         "THEME:GUI:Load.edf", "menu:open");
-				myMenu->add(idMenuFile, "Close",        "THEME:GUI:Close.edf", "menu:close");
-				myMenu->add(idMenuFile, "Close (all)",  "", "menu:close-all");
-				myMenu->add(idMenuFile, "Save",         "THEME:GUI:Save.edf", "menu:save");
-				myMenu->add(idMenuFile, "Save As ...",  "", "menu:save-as");
+				myMenu->add(idMenuFile, "_T{Open}",         "THEME:GUI:Load.edf", "menu:open");
+				myMenu->add(idMenuFile, "_T{Close}",        "THEME:GUI:Close.edf", "menu:close");
+				myMenu->add(idMenuFile, "_T{Close (all)}",  "", "menu:close-all");
+				myMenu->add(idMenuFile, "_T{Save}",         "THEME:GUI:Save.edf", "menu:save");
+				myMenu->add(idMenuFile, "_T{Save As ...}",  "", "menu:save-as");
 				myMenu->addSpacer();
-				myMenu->add(idMenuFile, "Properties",   "THEME:GUI:Parameter.edf", "menu:property");
-			int32_t idMenuEdit = myMenu->addTitle("Edit");
-				myMenu->add(idMenuEdit, "Goto line ...","", "menu:goto-line");
-			int32_t idMenuSearch = myMenu->addTitle("Search");
-				myMenu->add(idMenuSearch, "Search",         "THEME:GUI:Search.edf", "menu:search");
-				myMenu->add(idMenuSearch, "Replace",        "THEME:GUI:Replace.edf", "menu:replace");
+				myMenu->add(idMenuFile, "_T{Properties}",   "THEME:GUI:Parameter.edf", "menu:property");
+			int32_t idMenuEdit = myMenu->addTitle("_T{Edit}");
+				myMenu->add(idMenuEdit, "_T{Goto line ...}","", "menu:goto-line");
+			int32_t idMenuSearch = myMenu->addTitle("_T{Search}");
+				myMenu->add(idMenuSearch, "_T{Search}",         "THEME:GUI:Search.edf", "menu:search");
+				myMenu->add(idMenuSearch, "_T{Replace}",        "THEME:GUI:Replace.edf", "menu:replace");
 				myMenu->addSpacer();
-				myMenu->add(idMenuSearch, "Find (previous)","", "menu:find:previous");
-				myMenu->add(idMenuSearch, "Find (next)",    "", "menu:find:next");
-				myMenu->add(idMenuSearch, "Find (all)",     "", "menu:find:all");
-				myMenu->add(idMenuSearch, "Un-Select",      "", "menu:find:none");
-			int32_t idMenugDisplay = myMenu->addTitle("Display");
-				myMenu->add(idMenugDisplay, "Color Black",          "", "menu:color:color/black/");
-				myMenu->add(idMenugDisplay, "Color White",          "", "menu:color:color/white/");
-				myMenu->add(idMenugDisplay, "Shape square",         "", "menu:shape:shape/square/");
-				myMenu->add(idMenugDisplay, "Shape round",          "", "menu:shape:shape/round/");
+				myMenu->add(idMenuSearch, "_T{Find (previous)}","", "menu:find:previous");
+				myMenu->add(idMenuSearch, "_T{Find (next)}",    "", "menu:find:next");
+				myMenu->add(idMenuSearch, "_T{Find (all)}",     "", "menu:find:all");
+				myMenu->add(idMenuSearch, "_T{Un-Select}",      "", "menu:find:none");
+			int32_t idMenugDisplay = myMenu->addTitle("_T{Display}");
+				myMenu->add(idMenugDisplay, "_T{Color Black}",          "", "menu:color:color/black/");
+				myMenu->add(idMenugDisplay, "_T{Color White}",          "", "menu:color:color/white/");
+				myMenu->add(idMenugDisplay, "_T{Shape square}",         "", "menu:shape:shape/square/");
+				myMenu->add(idMenugDisplay, "_T{Shape round}",          "", "menu:shape:shape/round/");
 				myMenu->addSpacer();
-				myMenu->add(idMenugDisplay, "Reload openGl Shader", "", "menu:reloadShape");
+				myMenu->add(idMenugDisplay, "_T{Reload openGl Shader}", "", "menu:reloadShape");
 				myMenu->addSpacer();
-				myMenu->add(idMenugDisplay, "Split", "", "menu:split:enable");
-				myMenu->add(idMenugDisplay, "Unsplit", "", "menu:split:disable");
-				myMenu->add(idMenugDisplay, "Vertical", "", "menu:split:vert");
-				myMenu->add(idMenugDisplay, "Horizontal", "", "menu:split:hori");
+				myMenu->add(idMenugDisplay, "_T{Split}", "", "menu:split:enable");
+				myMenu->add(idMenugDisplay, "_T{Unsplit}", "", "menu:split:disable");
+				myMenu->add(idMenugDisplay, "_T{Vertical}", "", "menu:split:vert");
+				myMenu->add(idMenugDisplay, "_T{Horizontal}", "", "menu:split:hori");
 			myMenu->signalSelect.connect(shared_from_this(), &MainWindows::onCallbackMenuEvent);
-			m_widgetLabelFileName = ewol::widget::Label::create("FileName");
+			m_widgetLabelFileName = ewol::widget::Label::create();
+			m_widgetLabelFileName->propertyValue.set("FileName");
 			m_widgetLabelFileName->propertyName.set("appl-widget-display-name");
 			m_widgetLabelFileName->propertyExpand.set(bvec2(true,false));
 			m_widgetLabelFileName->propertyFill.set(bvec2(true,false));;
@@ -242,15 +248,13 @@ void MainWindows::init() {
 	shortCutAdd("F12",          "menu:reloade-shader");
 	// TODO : auto-connect on shortcut event ==> maybe do beter later ...
 	signalShortcut.connect(shared_from_this(), &MainWindows::onCallbackShortCut);
-	m_bufferManager->signalSelectFile.connect(shared_from_this(), &MainWindows::onCallbackShortCut);
+	m_bufferManager->signalSelectFile.connect(shared_from_this(), &MainWindows::onCallbackselectNewFile);
 }
 
 
 MainWindows::~MainWindows() {
 	
 }
-
-
 
 void MainWindows::onCallbackShortCut(const std::string& _value) {
 	APPL_WARNING("Event from ShortCut : " << _value);
@@ -404,8 +408,8 @@ void MainWindows::displayOpen() {
 		APPL_ERROR("Can not open File chooser !!! ");
 		return;
 	}
-	tmpWidget->propertyLabelTitle.set("TRANSLATE:Open files ...");
-	tmpWidget->propertyLabelValidate.set("TRANSLATE:Open");
+	tmpWidget->propertyLabelTitle.set("_T{Open files ...}");
+	tmpWidget->propertyLabelValidate.set("_T{Open}");
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
@@ -427,30 +431,31 @@ void MainWindows::displayProperty() {
 	if (nullptr == tmpWidget) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		#ifdef SDGSDFGSDFGSDFGSDFGSTERGDHFGHFDS
-		std::string menuDescription = "<title>Properties</title>\n";
-		menuDescription += "<group title='Editor'>\n";
-		menuDescription += "	<menu title='Editor Interface' short-title='Editor' widget='appl-text-viewer'>\n";
-		menuDescription += "</group>\n";
-		menuDescription += "<group title='Gui'>\n";
-		menuDescription += "	<menu title='Font selection' short-title='Font' widget=''>\n";
-		menuDescription += "	<menu title='Color selection' short-title='Color' widget=''>\n";
-		menuDescription += "	<menu title='Theme selection' short-title='Theme' widget=''>\n";
-		menuDescription += "</group>\n";
-		
-		tmpWidget->setMenu(menuDescription);
+		#if 0
+			std::string menuDescription = "<title>Properties</title>\n";
+			menuDescription += "<group title='_T{Editor}'>\n";
+			menuDescription += "	<menu title='_T{Editor Interface}' short-title='Editor' widget='appl-text-viewer'>\n";
+			menuDescription += "</group>\n";
+			menuDescription += "<group title='_T{Gui}'>\n";
+			menuDescription += "	<menu title='Font selection' short-title='Font' widget=''>\n";
+			menuDescription += "	<menu title='Color selection' short-title='Color' widget=''>\n";
+			menuDescription += "	<menu title='Theme selection' short-title='Theme' widget=''>\n";
+			menuDescription += "</group>\n";
+			
+			tmpWidget->setMenu(menuDescription);
+		#else
+			tmpWidget->propertyLabelTitle.set("_T{Properties}");
+			popUpWidgetPush(tmpWidget);
+			tmpWidget->menuAddGroup("_T{Editor}");
+			std::shared_ptr<ewol::Widget> tmpSubWidget = globals::ParameterGlobalsGui::create();
+			tmpWidget->menuAdd("_T{Editor}",          "", tmpSubWidget);
+			tmpWidget->menuAdd("_T{Font & Color}", "", nullptr);
+			tmpWidget->menuAdd("_T{Highlight}",       "", nullptr);
+			tmpWidget->menuAddGroup("_T{General}");
+			tmpWidget->menuAdd("_T{Display}",       "", nullptr);
+			tmpSubWidget = ParameterAboutGui::create();
+			tmpWidget->menuAdd("_T{About}",           "", tmpSubWidget);
 		#endif
-		tmpWidget->propertyLabelTitle.set("TRANSLATE:Properties");
-		popUpWidgetPush(tmpWidget);
-		tmpWidget->menuAddGroup("Editor");
-		std::shared_ptr<ewol::Widget> tmpSubWidget = globals::ParameterGlobalsGui::create();
-		tmpWidget->menuAdd("Editor",          "", tmpSubWidget);
-		tmpWidget->menuAdd("Font & Color", "", nullptr);
-		tmpWidget->menuAdd("Highlight",       "", nullptr);
-		tmpWidget->menuAddGroup("General");
-		tmpWidget->menuAdd("Display",       "", nullptr);
-		tmpSubWidget = ParameterAboutGui::create();
-		tmpWidget->menuAdd("About",           "", tmpSubWidget);
 	}
 }
 
@@ -460,13 +465,15 @@ void MainWindows::onCallbackselectNewFile(const std::string& _value) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
 	}
-	// TODO : Remove all previous connecting from the old buffer ...
+	m_connectionSave.disconnect();
+	m_connectionModify.disconnect();
+	m_connectionSaveName.disconnect();
 	onCallbackTitleUpdate();
 	std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 	if (tmpp != nullptr) {
-		tmpp->signalIsSave.connect(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
-		tmpp->signalIsModify.connect(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
-		tmpp->signalChangeName.connect(shared_from_this(), &MainWindows::onCallbackTitleUpdate);
+		m_connectionSave = tmpp->signalIsSave.connect(this, &MainWindows::onCallbackTitleUpdate);
+		m_connectionModify = tmpp->signalIsModify.connect(this, &MainWindows::onCallbackTitleUpdate);
+		m_connectionSaveName = tmpp->signalChangeName.connect(this, &MainWindows::onCallbackTitleUpdate);
 	}
 }
 
@@ -503,7 +510,7 @@ void MainWindows::saveAsPopUp(const std::shared_ptr<appl::Buffer>& _buffer) {
 		APPL_ERROR("Call With nullptr input...");
 		return;
 	}
-	std::shared_ptr<appl::WorkerSaveFile> tmpObject = appl::WorkerSaveFile::create(_buffer->getFileName());
+	std::shared_ptr<appl::WorkerSaveFile> tmpObject = appl::WorkerSaveFile::create("buffer-name", _buffer->getFileName());
 }
 
 void MainWindows::closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer) {
@@ -516,28 +523,28 @@ void MainWindows::closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer
 		APPL_ERROR("Can not create a simple pop-up");
 		return;
 	}
-	tmpPopUp->setTitle("<bold>Close un-saved file:</bold>");
-	tmpPopUp->setComment("The file named : <i>\"" + _buffer->getFileName() + "\"</i> is curently modify.   <br/>If you don't saves these modifications,<br/>they will be definitly lost...");
+	tmpPopUp->setTitle("<bold>_T{Close un-saved file:}</bold>");
+	tmpPopUp->setComment("_T{The file named:} <i>\"" + _buffer->getFileName() + "\"</i> _T{is curently modify.}   <br/>_T{If you don't saves these modifications,<br/>they will be definitly lost...}");
 	std::shared_ptr<ewol::widget::Button> bt = nullptr;
 	if (_buffer->hasFileName() == true) {
-		bt = tmpPopUp->addButton("Save", true);
+		bt = tmpPopUp->addButton("_T{Save}", true);
 		if (bt != nullptr) {
 			// TODO : The element is removed before beeing pressed
 			// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestSaveFile, _buffer->getFileName());
 			// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		}
 	}
-	bt = tmpPopUp->addButton("Save As", true);
+	bt = tmpPopUp->addButton("_T{Save As}", true);
 	if (bt != nullptr) {
 		// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestSaveFileAs, _buffer->getFileName());
 		//bt->signalPressed.connect(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		// TODO : Request the close when saved ...
 	}
-	bt = tmpPopUp->addButton("Close", true);
+	bt = tmpPopUp->addButton("_T{Close}", true);
 	if (bt != nullptr) {
 		// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 	}
-	tmpPopUp->addButton("Cancel", true);
+	tmpPopUp->addButton("_T{Cancel}", true);
 	tmpPopUp->propertyCloseOutEvent.set(true);
 	popUpWidgetPush(tmpPopUp);
 }

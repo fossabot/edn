@@ -33,7 +33,7 @@ appl::TagFileSelection::TagFileSelection() :
 
 void appl::TagFileSelection::init() {
 	ewol::widget::PopUp::init();
-	std::shared_ptr<ewol::widget::Sizer> mySizerVert;
+	ewol::widget::SizerShared mySizerVert;
 	#if defined(__TARGET_OS__Android)
 		propertyMinSize.set(gale::Dimension(vec2(90,90), gale::Dimension::Pourcent));
 	#elif defined(__TARGET_OS__Windows)
@@ -42,32 +42,31 @@ void appl::TagFileSelection::init() {
 		propertyMinSize.set(gale::Dimension(vec2(80,80), gale::Dimension::Pourcent));
 	#endif
 	
-	mySizerVert = ewol::widget::Sizer::create(ewol::widget::Sizer::modeVert);
+	mySizerVert = ewol::widget::Sizer::create();
 	if (nullptr == mySizerVert) {
 		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
+		mySizerVert->propertyMode.set(ewol::widget::Sizer::modeVert);
 		mySizerVert->propertyLockExpand.set(bvec2(true,true));
 		mySizerVert->propertyExpand.set(bvec2(true,true));
 		// set it in the pop-up-system : 
 		setSubWidget(mySizerVert);
-		std::shared_ptr<ewol::widget::Composer> compose = ewol::widget::Composer::create(ewol::widget::Composer::String,
-		   "<sizer mode=\"hori\" expand=\"true,false\" lock=\"false,true\">\n"
-		   "	<spacer expand=\"true,false\"/>\n"
-		   "	<button name=\"PLUGIN-CTAGS-jump\" expand=\"false\" fill=\"true\">"
-		   "		<sizer mode=\"hori\">\n"
-		   "			<image src=\"THEME:GUI:Load.svg\" fill=\"true\" size=\"10,10mm\"/>\n"
+		ewol::WidgetShared compose = ewol::widget::composerGenerateString(
+		   "<sizer mode='hori' expand='true,false' lock='false,true'>\n"
+		   "	<spacer expand='true,false'/>\n"
+		   "	<button name='PLUGIN-CTAGS-jump' expand='false' fill='true'>"
+		   "		<sizer mode='hori'>\n"
+		   "			<image src='THEME:GUI:Load.svg' fill='true' size='10,10mm'/>\n"
 		   "			<label>Jump</label>\n"
 		   "		</sizer>\n"
 		   "	</button>\n"
-		   "	<button name=\"PLUGIN-CTAGS-cancel\" expand=\"false\" fill=\"true\">"
-		   "		<sizer mode=\"hori\">\n"
-		   "			<image src=\"THEME:GUI:Remove.svg\" fill=\"true\" size=\"10,10mm\"/>\n"
+		   "	<button name='PLUGIN-CTAGS-cancel' expand='false' fill='true'>"
+		   "		<sizer mode='hori'>\n"
+		   "			<image src='THEME:GUI:Remove.svg' fill='true' size='10,10mm'/>\n"
 		   "			<label>Cancel</label>\n"
 		   "		</sizer>\n"
 		   "	</button>\n"
 		   "</sizer>\n");
-		compose->propertyExpand.set(bvec2(true,false));
-		compose->propertyFill.set(bvec2(true,true));
 		mySizerVert->subWidgetAdd(compose);
 		externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-jump", signalPressed, shared_from_this(), &appl::TagFileSelection::onCallbackCtagsSelection);
 		externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-cancel", signalPressed, shared_from_this(), &appl::TagFileSelection::onCallbackCtagsCancel);
@@ -84,11 +83,11 @@ void appl::TagFileSelection::init() {
 			mySizerVert->subWidgetAdd(m_listTag);
 		}
 		
-		std::shared_ptr<ewol::widget::Label> myWidgetTitle;
-		myWidgetTitle = ewol::widget::Label::create("Ctags Jump Selection ...");
+		ewol::widget::LabelShared myWidgetTitle = ewol::widget::Label::create();
 		if (myWidgetTitle == nullptr) {
 			EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
+			myWidgetTitle->propertyValue.set("Ctags Jump Selection ...");
 			mySizerVert->subWidgetAdd(myWidgetTitle);
 		}
 	}

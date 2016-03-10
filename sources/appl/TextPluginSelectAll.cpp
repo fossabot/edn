@@ -22,9 +22,6 @@ appl::TextPluginSelectAll::TextPluginSelectAll() :
 	addObjectType("appl::TextPluginSelectAll");
 }
 
-void appl::TextPluginSelectAll::init() {
-	appl::TextViewerPlugin::init();
-}
 
 void appl::TextPluginSelectAll::onPluginEnable(appl::TextViewer& _textDrawer) {
 	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();

@@ -25,7 +25,6 @@ namespace appl {
 			int32_t m_menuIdRemove;
 		protected:
 			TextPluginCopy();
-			void init();
 		public:
 			DECLARE_FACTORY(TextPluginCopy);
 			virtual ~TextPluginCopy() {

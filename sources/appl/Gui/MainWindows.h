@@ -20,8 +20,11 @@
 #include <appl/Gui/ViewerManager.h>
 class MainWindows : public ewol::widget::Windows {
 	private:
-		std::shared_ptr<ewol::widget::Label> m_widgetLabelFileName;
-		std::shared_ptr<appl::widget::Search> m_widgetSearch;
+		ewol::widget::LabelShared m_widgetLabelFileName;
+		appl::widget::SearchShared m_widgetSearch;
+		esignal::Connection m_connectionSave;
+		esignal::Connection m_connectionModify;
+		esignal::Connection m_connectionSaveName;
 	protected:
 		// Constructeur
 		MainWindows();

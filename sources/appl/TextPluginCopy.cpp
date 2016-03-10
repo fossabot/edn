@@ -25,10 +25,6 @@ appl::TextPluginCopy::TextPluginCopy() :
 	addObjectType("appl::TextPluginCopy");
 }
 
-void appl::TextPluginCopy::init() {
-	appl::TextViewerPlugin::init();
-}
-
 void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
 	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();

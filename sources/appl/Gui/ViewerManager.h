@@ -17,10 +17,12 @@
 
 namespace appl {
 	class TextViewer;
+	class ViewerManager;
+	using ViewerManagerShared = ememory::SharedPtr<appl::ViewerManager>;
+	using ViewerManagerWeak = ememory::WeakPtr<appl::ViewerManager>;
 	class ViewerManager : public ewol::Object {
 		protected:
 			ViewerManager();
-			void init(const std::string& _uniqueName);
 		public:
 			DECLARE_SINGLE_FACTORY(ViewerManager, "???ViewerManager???");
 			virtual ~ViewerManager();

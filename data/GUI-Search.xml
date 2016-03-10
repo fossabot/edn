@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<composer>
+<composer expand="true,false" fill="true,false">
 	<sizer mode="hori" expand="true,false" fill="true" lock="true">
 		<button name="SEARCH:close">
 			<image src="THEME:GUI:Remove.edf" fill="true" size="7,7mm" distance-field="true"/>
@@ -13,60 +13,16 @@
 			<image src="THEME:GUI:Replace.edf" fill="true" size="7,7mm" distance-field="true"/>
 		</button>
 		<button name="SEARCH:case" toggle="true">
-			<image src="THEME:GUI:CaseSensitive.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
-			<image src="THEME:GUI:CaseSensitive.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
+			<image src="THEME:GUI:CaseSensitive.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
+			<image src="THEME:GUI:CaseSensitive.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
 		</button>
 		<button name="SEARCH:wrap" toggle="true">
-			<image src="THEME:GUI:WrapAround.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
-			<image src="THEME:GUI:WrapAround.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
+			<image src="THEME:GUI:WrapAround.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
+			<image src="THEME:GUI:WrapAround.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
 		</button>
 		<button name="SEARCH:up-down" toggle="true">
-			<image src="THEME:GUI:Up.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
-			<image src="THEME:GUI:Down.edf" fill="true" size="7,7mm" hover="Close search bar" distance-field="true"/>
+			<image src="THEME:GUI:Up.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
+			<image src="THEME:GUI:Down.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
 		</button>
-	<!--
-		<image src="THEME:GUI:Add.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:AtoZ.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Attache.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:CaseSensitive.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Close.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Contact.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Down.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:FavoriteDisable.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:FavoriteEnable.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:FavoriteMiddle.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:File.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Folder.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Forbidden.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Help.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Home.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Info.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:List.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Load.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Lock.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Next.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:OpenMenu.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Parameter.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Undo.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Trash.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Search.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:SDCard.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Save.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Replace.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Remove.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Remove2.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Redo.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Quit.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Previous.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Update.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Up.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Validate.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:VolumeMax.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:VolumeMute.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:Warning.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:WhereAmI.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:WrapAround.svg" fill="true" size="7,7mm"/>
-		<image src="THEME:GUI:ZoomIn.svg" fill="true" size="7,7mm"/>
-	-->
 	</sizer>
 </composer>

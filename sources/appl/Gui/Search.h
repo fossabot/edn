@@ -16,6 +16,9 @@
 #include <appl/Gui/ViewerManager.h>
 namespace appl {
 	namespace widget {
+		class Search;
+		using SearchShared = ememory::SharedPtr<appl::widget::Search>;
+		using SearchWeak = ememory::WeakPtr<appl::widget::Search>;
 		class Search : public ewol::widget::Composer {
 			private:
 				std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager

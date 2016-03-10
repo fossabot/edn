@@ -23,8 +23,14 @@
 
 namespace appl {
 	class textPluginManager;
+	class TextViewer;
+	using TextViewerShared = ememory::SharedPtr<appl::TextViewer>;
+	using TextViewerWeak = ememory::WeakPtr<appl::TextViewer>;
 	class TextViewer : public ewol::widget::WidgetScrolled {
 		private:
+			eproperty::Value<std::string> propertyFontName; //!< name of the font to display text.
+			eproperty::Value<int32_t> propertyFontSize; //!< Size of the font to display text.
+			
 			std::shared_ptr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
 			int32_t m_colorBackground;
 			int32_t m_colorSpace;
@@ -39,7 +45,7 @@ namespace appl {
 			std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
 		protected:
 			TextViewer();
-			void init(const std::string& _fontName="", int32_t _fontSize=-1);
+			void init();
 		public:
 			DECLARE_FACTORY(TextViewer);
 			virtual ~TextViewer();
@@ -58,8 +64,8 @@ namespace appl {
 			ewol::compositing::Drawing m_displayDrawing; //!< Other display requested.
 			std::vector<std::pair<std::weak_ptr<appl::Buffer>, vec2>> m_drawingRemenber;
 		public:
-			void setFontSize(int32_t _size);
-			void setFontName(const std::string& _fontName);
+			virtual void onChangePropertyFontSize();
+			virtual void onChangePropertyFontName();
 		protected: // derived function
 			virtual void onDraw();
 		public:  // Derived function
@@ -70,7 +76,6 @@ namespace appl {
 			virtual void onEventClipboard(enum gale::context::clipBoard::clipboardListe _clipboardID);
 			virtual void onGetFocus();
 			virtual void onLostFocus();
-			virtual void changeZoom(float _range);
 		private:
 			float m_lastOffsetDisplay; //!< Line number ofssed in the display
 		private:

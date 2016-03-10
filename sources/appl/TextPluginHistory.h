@@ -42,7 +42,6 @@ namespace appl {
 			int32_t m_menuIdRedo;
 		protected:
 			TextPluginHistory();
-			void init();
 		public:
 			DECLARE_FACTORY(TextPluginHistory);
 			virtual ~TextPluginHistory() { };

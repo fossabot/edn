@@ -70,7 +70,6 @@ class MainApplication : public ewol::context::Application {
 			APPL_INFO("==> START ... " PROJECT_NAME " (BEGIN)");
 			// init internal global value
 			globals::init();
-			
 			// init ALL Singleton :
 			//()CTagsManager::getInstance();
 			m_bufferManager = appl::BufferManager::create();

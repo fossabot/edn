@@ -20,9 +20,6 @@ appl::TextPluginAutoIndent::TextPluginAutoIndent() {
 	addObjectType("appl::TextPluginAutoIndent");
 }
 
-void appl::TextPluginAutoIndent::init() {
-	appl::TextViewerPlugin::init();
-}
 
 bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
                                               const ewol::event::Entry& _event) {

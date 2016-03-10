@@ -18,14 +18,15 @@ namespace appl {
 		public:
 			esignal::ISignal<> signalSaveDone;
 			esignal::ISignal<> signalAbort;
+			eproperty::Value<std::string> propertyBufferName;
+			eproperty::Value<bool> propertyForceSave;
 		protected:
 			WorkerSaveFile();
-			void init(const std::string& _bufferName, bool _forceSaveAs=true);
+			void init();
 		public:
 			DECLARE_FACTORY(WorkerSaveFile);
 			virtual ~WorkerSaveFile();
 		private:
-			std::string m_bufferName;
 			std::shared_ptr<ewol::widget::FileChooser> m_chooser; //! pop-up element that is open...
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // callback function

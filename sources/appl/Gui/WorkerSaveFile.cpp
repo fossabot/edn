@@ -16,21 +16,22 @@
 
 appl::WorkerSaveFile::WorkerSaveFile() :
   signalSaveDone(this, "save-file-done", ""),
-  signalAbort(this, "save-file-abort", "") {
+  signalAbort(this, "save-file-abort", ""),
+  propertyBufferName(this, "buffer-name", "", ""),
+  propertyForceSave(this, "force-save", false, "request save in all case") {
 	addObjectType("appl::WorkerSaveFile");
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
 }
 
-void appl::WorkerSaveFile::init(const std::string& _bufferName, bool _forceSaveAs) {
+void appl::WorkerSaveFile::init() {
 	ewol::object::Worker::init();
-	m_bufferName = _bufferName;
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		destroy();
 		return;
 	}
-	if (m_bufferName == "") {
+	if (*propertyBufferName == "") {
 		// need to find the curent file ...
 		std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 		if (tmpp == nullptr) {
@@ -38,20 +39,20 @@ void appl::WorkerSaveFile::init(const std::string& _bufferName, bool _forceSaveA
 			destroy();
 			return;
 		}
-		m_bufferName = tmpp->getFileName();
+		propertyBufferName.setDirect(tmpp->getFileName());
 	}
-	if (m_bufferManager->exist(m_bufferName) == false) {
-		APPL_ERROR("Try to save an non-existant file :" << m_bufferName);
+	if (m_bufferManager->exist(*propertyBufferName) == false) {
+		APPL_ERROR("Try to save an non-existant file :" << *propertyBufferName);
 		destroy();
 		return;
 	}
-	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(m_bufferName);
+	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(*propertyBufferName);
 	if (tmpBuffer == nullptr) {
-		APPL_ERROR("Error to get the buffer : " << m_bufferName);
+		APPL_ERROR("Error to get the buffer : " << *propertyBufferName);
 		destroy();
 		return;
 	}
-	if (_forceSaveAs == false) {
+	if (*propertyForceSave == false) {
 		if (tmpBuffer->hasFileName() == true) {
 			tmpBuffer->storeFile();
 			signalSaveDone.emit();
@@ -67,7 +68,7 @@ void appl::WorkerSaveFile::init(const std::string& _bufferName, bool _forceSaveA
 	}
 	m_chooser->propertyLabelTitle.set("Save files As...");
 	m_chooser->propertyLabelValidate.set("Save");
-	etk::FSNode tmpName(m_bufferName);
+	etk::FSNode tmpName(*propertyBufferName);
 	m_chooser->propertyPath.set(tmpName.getNameFolder());
 	m_chooser->propertyFile.set(tmpName.getNameFile());
 	std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
@@ -101,14 +102,14 @@ void appl::WorkerSaveFile::onCallbackSaveAsValidate(const std::string& _value) {
 		destroy();
 		return;
 	}
-	if (m_bufferManager->exist(m_bufferName) == false) {
-		APPL_ERROR("Try to save an non-existant file :" << m_bufferName);
+	if (m_bufferManager->exist(*propertyBufferName) == false) {
+		APPL_ERROR("Try to save an non-existant file :" << *propertyBufferName);
 		destroy();
 		return;
 	}
-	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(m_bufferName);
+	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(*propertyBufferName);
 	if (tmpBuffer == nullptr) {
-		APPL_ERROR("Error to get the buffer : " << m_bufferName);
+		APPL_ERROR("Error to get the buffer : " << *propertyBufferName);
 		destroy();
 		return;
 	}

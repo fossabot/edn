@@ -19,9 +19,6 @@ appl::TextPluginRmLine::TextPluginRmLine() {
 	addObjectType("appl::TextPluginRmLine");
 }
 
-void appl::TextPluginRmLine::init() {
-	appl::TextViewerPlugin::init();
-}
 
 void appl::TextPluginRmLine::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :

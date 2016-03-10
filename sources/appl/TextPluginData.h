@@ -22,12 +22,6 @@ namespace appl {
 				// nothing to do ...
 				addObjectType("appl::TextViewerPluginData");
 			}
-			void init() {
-				appl::TextViewerPlugin::init();
-			}
-			void init(const std::string& _name) {
-				appl::TextViewerPlugin::init(_name);
-			}
 		public:
 			DECLARE_FACTORY(TextViewerPluginData);
 			virtual ~TextViewerPluginData() {

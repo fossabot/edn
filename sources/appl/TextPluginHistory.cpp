@@ -25,10 +25,6 @@ appl::TextPluginHistory::TextPluginHistory() :
 	addObjectType("appl::TextPluginHistory");
 }
 
-void appl::TextPluginHistory::init() {
-	appl::TextViewerPluginData<appl::PluginHistoryData>::init();
-}
-
 
 void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
 	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();

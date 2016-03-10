@@ -292,7 +292,7 @@ void appl::Highlight::parse2(int64_t _start,
 	
 	while (elementStart < elementStop) {
 		if (elementStart == 306) {
-			//etk::log::setLevel(etk::log::logLevelVerbose);
+			//elog::setLevel(elog::logLevelVerbose);
 		}
 		//HL2_DEBUG("Parse element in the buffer pos=" << elementStart << "," << _buffer.size() << ")" );
 		//try to fond the HL in ALL of we have

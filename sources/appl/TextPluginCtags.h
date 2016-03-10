@@ -36,7 +36,6 @@ namespace appl {
 			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		protected:
 			TextPluginCtags();
-			void init();
 		public:
 			DECLARE_FACTORY(TextPluginCtags);
 			virtual ~TextPluginCtags();

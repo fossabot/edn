@@ -26,6 +26,9 @@ namespace appl {
 			int64_t posHLPass1;
 			int64_t posHLPass2;
 	};
+	class Buffer;
+	using BufferShared = ememory::SharedPtr<appl::Buffer>;
+	using BufferWeak = ememory::WeakPtr<appl::Buffer>;
 	class Buffer : public ewol::Object {
 		public:
 			class Iterator {
