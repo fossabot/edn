@@ -70,24 +70,24 @@ void appl::WorkerCloseFile::startAction(const std::string& _bufferName) {
 		destroy();
 		return;
 	}
-	tmpPopUp->setTitle("<bold>Close un-saved file:</bold>");
-	tmpPopUp->setComment("The file named : <i>\"" + m_buffer->getFileName() + "\"</i> is curently modify.   <br/>If you don't saves these modifications,<br/>they will be definitly lost...");
+	tmpPopUp->setTitle("<bold>_T{Close un-saved file:}</bold>");
+	tmpPopUp->setComment("_T{The file named:} <i>'" + m_buffer->getFileName() + "'</i> _T{is curently modify.}<br/>_T{If you don't saves these modifications,}<br/>_T{they will be definitly lost...}");
 	std::shared_ptr<ewol::widget::Button> bt = nullptr;
 	if (m_buffer->hasFileName() == true) {
-		bt = tmpPopUp->addButton("Save", true);
+		bt = tmpPopUp->addButton("_T{Save}", true);
 		if (bt != nullptr) {
 			bt->signalPressed.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackSaveValidate);
 		}
 	}
-	bt = tmpPopUp->addButton("Save As", true);
+	bt = tmpPopUp->addButton("_T{Save As}", true);
 	if (bt != nullptr) {
 		bt->signalPressed.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackSaveAsValidate);
 	}
-	bt = tmpPopUp->addButton("Close", true);
+	bt = tmpPopUp->addButton("_T{Close}", true);
 	if (bt != nullptr) {
 		bt->signalPressed.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackClose);
 	}
-	bt = tmpPopUp->addButton("Cancel", true);
+	bt = tmpPopUp->addButton("_T{Cancel}", true);
 	if (bt != nullptr) {
 		bt->signalPressed.connect(shared_from_this(), &appl::WorkerCloseFile::onCallbackCancel);
 	}

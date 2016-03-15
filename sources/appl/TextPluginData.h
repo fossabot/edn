@@ -28,36 +28,33 @@ namespace appl {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
 					if (m_specificData[iii].second != nullptr) {
 						remove(*m_specificData[iii].second);
-						delete(m_specificData[iii].second);
-						m_specificData[iii].second = nullptr;
 					}
 				}
 				m_specificData.clear();
 			}
 		private:
-			std::vector<std::pair<std::weak_ptr<appl::Buffer> ,TYPE* >> m_specificData;
+			std::vector<std::pair<std::weak_ptr<appl::Buffer> ,std::unique_ptr<TYPE>>> m_specificData;
 		protected:
 			TYPE* getDataRef(appl::TextViewer& _textDrawer) {
 				auto it = m_specificData.begin();
 				while(it != m_specificData.end()) {
 					std::shared_ptr<appl::Buffer> buf = it->first.lock();
 					if (buf == nullptr) {
-						delete(it->second);
-						it->second = nullptr;
 						it = m_specificData.erase(it);
+						continue;
 					}
 					if (buf == _textDrawer.internalGetBuffer()) {
-						return it->second;
+						return it->second.get();
 					}
 					++it;
 				}
-				TYPE* data = new TYPE();
+				std::unique_ptr<TYPE> data(new TYPE());
 				if (data == nullptr) {
 					return nullptr;
 				}
-				m_specificData.push_back(std::make_pair(_textDrawer.internalGetBuffer(), data));
+				m_specificData.push_back(std::make_pair(_textDrawer.internalGetBuffer(), std::move(data)));
 				// create a new one ...
-				return data;
+				return data.get();
 			}
 		protected: // Wrap all element with their internal data: (do not use theses function)
 			bool onReceiveShortCut(appl::TextViewer& _textDrawer,

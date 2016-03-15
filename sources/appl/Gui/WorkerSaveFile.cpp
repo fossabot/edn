@@ -66,8 +66,8 @@ void appl::WorkerSaveFile::init() {
 		destroy();
 		return;
 	}
-	m_chooser->propertyLabelTitle.set("Save files As...");
-	m_chooser->propertyLabelValidate.set("Save");
+	m_chooser->propertyLabelTitle.set("_T{Save files As...}");
+	m_chooser->propertyLabelValidate.set("_T{Save}");
 	etk::FSNode tmpName(*propertyBufferName);
 	m_chooser->propertyPath.set(tmpName.getNameFolder());
 	m_chooser->propertyFile.set(tmpName.getNameFile());
