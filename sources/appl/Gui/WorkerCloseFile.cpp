@@ -10,6 +10,7 @@
 #include <appl/debug.h>
 #include <appl/Gui/WorkerCloseFile.h>
 #include <ewol/widget/meta/StdPopUp.h>
+#include <ewol/tools/message.h>
 
 #undef __class__
 #define __class__ "WorkerCloseFile"
@@ -70,8 +71,8 @@ void appl::WorkerCloseFile::startAction(const std::string& _bufferName) {
 		destroy();
 		return;
 	}
-	tmpPopUp->setTitle("<bold>_T{Close un-saved file:}</bold>");
-	tmpPopUp->setComment("_T{The file named:} <i>'" + m_buffer->getFileName() + "'</i> _T{is curently modify.}<br/>_T{If you don't saves these modifications,}<br/>_T{they will be definitly lost...}");
+	tmpPopUp->propertyTitle.set("<bold>_T{Close un-saved file:}</bold>");
+	tmpPopUp->propertyComment.set("_T{The file named:} <i>'" + m_buffer->getFileName() + "'</i> _T{is curently modify.}<br/>_T{If you don't saves these modifications,}<br/>_T{they will be definitly lost...}");
 	std::shared_ptr<ewol::widget::Button> bt = nullptr;
 	if (m_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("_T{Save}", true);
@@ -137,11 +138,7 @@ void appl::WorkerCloseFile::onCallbackSaveValidate() {
 		return;
 	}
 	if (m_buffer->storeFile() == false) {
-		std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
-		if (tmpWindows == nullptr) {
-			return;
-		}
-		tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + m_buffer->getFileName() + "</i>");
+		ewol::tools::message::displayWarning("We can not save the file : <br/><i>" + m_buffer->getFileName() + "</i>");
 		signalAbort.emit();
 	} else {
 		m_buffer->destroy();

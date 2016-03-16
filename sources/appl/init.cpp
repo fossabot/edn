@@ -28,13 +28,15 @@
 #include <appl/ctags/readtags.h>
 #include <appl/globalMsg.h>
 
+#undef __class__
+#define __class__ "MainApplication"
 
 class MainApplication : public ewol::context::Application {
 	private:
 		std::shared_ptr<appl::BufferManager> m_bufferManager;
 		std::shared_ptr<appl::textPluginManager> m_pluginManager;
 	public:
-		virtual void onCreate(ewol::Context& _context) {
+		virtual void onCreate(ewol::Context& _context) override {
 			APPL_INFO(" == > CREATE ... " << PROJECT_NAME << "  v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ") (BEGIN)");
 			for( int32_t iii=0 ; iii<_context.getCmd().size(); iii++) {
 				std::string tmpppp = _context.getCmd().get(iii);
@@ -66,7 +68,7 @@ class MainApplication : public ewol::context::Application {
 			APPL_INFO("==> CREATE ... " PROJECT_NAME " (END)");
 		}
 		
-		void onStart(ewol::Context& _context) {
+		void onStart(ewol::Context& _context) override {
 			APPL_INFO("==> START ... " PROJECT_NAME " (BEGIN)");
 			// init internal global value
 			globals::init();
@@ -90,7 +92,7 @@ class MainApplication : public ewol::context::Application {
 			
 			if (basicWindows == nullptr) {
 				APPL_ERROR("Can not allocate the basic windows");
-				_context.stop();
+				_context.exit(-1);
 				return;
 			}
 			// create the specific windows
@@ -128,13 +130,22 @@ class MainApplication : public ewol::context::Application {
 			APPL_INFO("==> START ... " PROJECT_NAME " (END)");
 			return;
 		}
-		void onStop(ewol::Context& _context) {
+		void onStop(ewol::Context& _context) override {
 			APPL_INFO("==> STOP ... " PROJECT_NAME " (START)");
 			appl::highlightManager::unInit();
 			//Kill all singleton
 			m_pluginManager.reset();
 			m_bufferManager.reset();
 			APPL_INFO("==> STOP ... " PROJECT_NAME " (END)");
+		}
+		void onKillDemand(ewol::Context& _context) override {
+			APPL_INFO("==> User demand kill ... " PROJECT_NAME " (START)");
+			if (m_bufferManager == nullptr) {
+				_context.exit(0);
+			}
+			APPL_TODO("Implement the check of buffer not saved ...");
+			_context.exit(0);
+			APPL_INFO("==> User demand kill ... " PROJECT_NAME " (END)");
 		}
 };
 

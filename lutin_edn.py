@@ -83,9 +83,6 @@ def create(target, module_name):
 		'sources/appl/HighlightManager.cpp'
 		])
 	my_module.add_module_depend(['ewol', 'date'])
-	my_module.compile_flags('c++', [
-		"-DPROJECT_NAME=\"\\\""+my_module.name+"\\\"\""
-		])
 	my_module.copy_path('data/icon.*','')
 	my_module.copy_path('data/languages/gcov/*.xml','languages/gcov/')
 	my_module.copy_path('data/languages/asm/*.xml','languages/asm/')
@@ -116,6 +113,7 @@ def create(target, module_name):
 	my_module.copy_path("data/Font/freefont/FreeMon*.ttf","fonts/")
 	
 	my_module.compile_flags('c', [
+		"-DPROJECT_NAME=\"\\\""+my_module.name+"\\\"\"",
 		"-DAPPL_VERSION=\"\\\"" + tools.version_to_string(get_version()) + "\\\"\""
 		])
 	versionIDCode = str(get_version_id())

@@ -111,15 +111,7 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			
 		};
 };
-// Local main windows event :
-static const char* mainWindowsRequestSaveFile = "appl-event-main-windows-save-file";
-static const char* mainWindowsRequestSaveFileAs = "appl-event-main-windows-save-file-as";
-static const char* mainWindowsRequestcloseFileNoCheck = "appl-event-main-windows-close-file-no-check";
-static const char* l_MsgNameGuiChangeShape = "appl-event-main-windows-Change-shape";
 
-const char* l_smoothChick = "tmpEvent_smooth";
-const char* l_smoothMin = "tmpEvent_minChange";
-const char* l_smoothMax = "tmpEvent_maxChange";
 
 #undef __class__
 #define __class__ "MainWindows"
@@ -514,13 +506,13 @@ void MainWindows::onCallbackTitleUpdate() {
 	// select a new Buffer ==> change title:
 	std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 	if (tmpp == nullptr) {
-		setTitle("Edn");
+		propertyTitle.set("Edn");
 		if (m_widgetLabelFileName != nullptr) {
 			m_widgetLabelFileName->propertyValue.set("");
 		}
 	} else {
 		std::string nameFileSystem = etk::FSNode(tmpp->getFileName()).getFileSystemName();
-		setTitle(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);
+		propertyTitle.set(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);
 		if (m_widgetLabelFileName != nullptr) {
 			m_widgetLabelFileName->propertyValue.set(nameFileSystem + (tmpp->isModify()==true?" *":""));
 		}
@@ -545,8 +537,8 @@ void MainWindows::closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer
 		APPL_ERROR("Can not create a simple pop-up");
 		return;
 	}
-	tmpPopUp->setTitle("<bold>_T{Close un-saved file:}</bold>");
-	tmpPopUp->setComment("_T{The file named:} <i>\"" + _buffer->getFileName() + "\"</i> _T{is curently modify.}   <br/>_T{If you don't saves these modifications,<br/>they will be definitly lost...}");
+	tmpPopUp->propertyTitle.set("<bold>_T{Close un-saved file:}</bold>");
+	tmpPopUp->propertyComment.set("_T{The file named:} <i>\"" + _buffer->getFileName() + "\"</i> _T{is curently modify.}   <br/>_T{If you don't saves these modifications,<br/>they will be definitly lost...}");
 	std::shared_ptr<ewol::widget::Button> bt = nullptr;
 	if (_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("_T{Save}", true);

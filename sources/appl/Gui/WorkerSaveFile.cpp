@@ -9,6 +9,7 @@
 #include <ewol/context/Context.h>
 #include <appl/debug.h>
 #include <appl/Gui/WorkerSaveFile.h>
+#include <ewol/tools/message.h>
 
 #undef __class__
 #define __class__ "WorkerSaveFile"
@@ -115,12 +116,7 @@ void appl::WorkerSaveFile::onCallbackSaveAsValidate(const std::string& _value) {
 	}
 	tmpBuffer->setFileName(_value);
 	if (tmpBuffer->storeFile() == false) {
-		std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
-		if (tmpWindows == nullptr) {
-			destroy();
-			return;
-		}
-		tmpWindows->displayWarningMessage("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
+		ewol::tools::message::displayWarning("We can not save the file : <br/><i>" + tmpBuffer->getFileName() + "</i>");
 	} else {
 		signalSaveDone.emit();
 	}
