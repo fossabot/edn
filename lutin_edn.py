@@ -82,7 +82,7 @@ def create(target, module_name):
 		'sources/appl/Highlight.cpp',
 		'sources/appl/HighlightManager.cpp'
 		])
-	my_module.add_module_depend(['ewol', 'date'])
+	my_module.add_module_depend(['ewol'])
 	my_module.copy_path('data/icon.*','')
 	my_module.copy_path('data/languages/gcov/*.xml','languages/gcov/')
 	my_module.copy_path('data/languages/asm/*.xml','languages/asm/')

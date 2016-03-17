@@ -30,7 +30,6 @@
 #include <ewol/widget/Manager.h>
 #include <ewol/object/Object.h>
 #include <ewol/context/Context.h>
-#include <date/date.h>
 #include <ewol/widget/meta/StdPopUp.h>
 #include <appl/Gui/WorkerSaveFile.h>
 #include <appl/Gui/WorkerSaveAllFile.h>
@@ -39,13 +38,7 @@
 
 namespace appl {
 	std::string getVersion() {
-		#define FIRST_YEAR (2010)
-		std::string tmpOutput = etk::to_string(date::getYear()-FIRST_YEAR);
-		tmpOutput += ".";
-		tmpOutput += etk::to_string(date::getMonth());
-		tmpOutput += ".";
-		tmpOutput += etk::to_string(date::getDay());
-		return tmpOutput;
+		return APPL_VERSION;
 	}
 	
 }
@@ -77,17 +70,6 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			std::string tmpLabel = "<left>";
 			tmpLabel += "  <b>Editeur De N'ours</b> : v:";
 			tmpLabel += appl::getVersion();
-			tmpLabel += "<br/>";
-			tmpLabel += "  <b>Build Time</b> : ";
-			tmpLabel += date::getYear();
-			tmpLabel += "/";
-			tmpLabel += date::getMonth();
-			tmpLabel += "/";
-			tmpLabel += date::getDay();
-			tmpLabel += " ";
-			tmpLabel += date::getHour();
-			tmpLabel += "h";
-			tmpLabel += date::getMinute();
 			tmpLabel += "<br/>";
 			tmpLabel += "  <b>Website</b> : https://github.com/HeeroYui/edn<br/>";
 			tmpLabel += "  <b>License</b> : GPL v3<br/>";
