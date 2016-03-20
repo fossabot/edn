@@ -148,6 +148,20 @@ bool appl::HighlightPattern::find(int32_t _start,
 	if (_start>0) {
 		flags |= std::regex_constants::match_prev_avail;
 	}
+	if (    _stop < 0
+	     || size_t(_stop) > _buffer.size()) {
+		APPL_ERROR(" error in indexing for regex ... _stop=" << _stop << " >= _buffer.size()=" << _buffer.size());
+		return false;
+	}
+	if (    _start < 0
+	     || size_t(_start) > _buffer.size()) {
+		APPL_ERROR(" error in indexing for regex ... _start=" << _start << " >= _buffer.size()=" << _buffer.size());
+		return false;
+	}
+	if (_start > _stop) {
+		APPL_ERROR(" error in indexing for regex ... _start=" << _start << " > _stop=" << _stop);
+		return false;
+	}
 	std::regex_search(_buffer.begin() + _start, _buffer.begin() + _stop, resultMatch, m_regExp, flags);
 	if (resultMatch.size() > 0) {
 		_resultat.start = std::distance(_buffer.begin(), resultMatch[0].first);
