@@ -5,9 +5,7 @@
  * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __APPL_DEBUG_H__
-#define __APPL_DEBUG_H__
+#pragma once
 
 #include <elog/log.h>
 
@@ -39,4 +37,3 @@ namespace appl {
 		} \
 	} while (0)
 
-#endif

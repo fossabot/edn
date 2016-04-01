@@ -67,7 +67,7 @@
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
-			<regex>\b(NULL|MAX|MIN|__(LINE|DATA|FILE|func|TIME|STDC)__)\b</regex>
+			<regex>\b(NULL|MAX|MIN|__(LINE|DATA|FILE|func|TIME|STDC|PRETTY_FUNCTION|FUNCTION)__)\b</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>

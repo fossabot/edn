@@ -54,7 +54,7 @@ namespace ewol {
 namespace ewol {
 #if 0
 	/**
-	 * @not-in-doc
+	 * @not_in_doc
 	 */
 #endif
 	class DrawProperty{
@@ -91,7 +91,7 @@ namespace ewol {
 	std::ostream& operator <<(std::ostream& _os, const ewol::DrawProperty& _obj);
 	/**
 	 * @brief Gravity of the widget property
-	 * @not-in-doc
+	 * @not_in_doc
 	 */
 	enum gravity {
 		gravityCenter=0x00, //!< gravity is in certer
@@ -108,7 +108,7 @@ namespace ewol {
 	std::string gravityToString(const enum ewol::gravity _obj);
 	enum ewol::gravity stringToGravity(const std::string& _obj);
 	/**
-	 * @not-in-doc
+	 * @not_in_doc
 	 */
 	class EventShortCut {
 		public:
