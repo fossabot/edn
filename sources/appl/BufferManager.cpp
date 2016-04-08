@@ -60,7 +60,7 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileN
 		}
 	}
 	if (_createIfNeeded == true) {
-		if (etk::FSNodeGetType(_fileName) == etk::FSN_FOLDER) {
+		if (etk::FSNodeGetType(_fileName) == etk::typeNode_folder) {
 			APPL_WARNING("try open a folder : " << _fileName);
 			APPL_CRITICAL("plop");
 			return nullptr;

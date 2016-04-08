@@ -119,7 +119,7 @@ class MainApplication : public ewol::context::Application {
 					// nothing to do ...
 				} else {
 					etk::FSNode file(tmpppp);
-					if (file.getNodeType() == etk::FSN_FILE) {
+					if (file.getNodeType() == etk::typeNode_file) {
 						std::string name = file.getName();
 						APPL_INFO("need load file : \"" << name << "\"" );
 						m_bufferManager->open(name);

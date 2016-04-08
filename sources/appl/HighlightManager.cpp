@@ -37,7 +37,7 @@ void appl::highlightManager::init() {
 		if (it == nullptr) {
 			continue;
 		}
-		if (it->getNodeType() != etk::FSN_FOLDER) {
+		if (it->getNodeType() != etk::typeNode_folder) {
 			continue;
 		}
 		std::string filename = it->getName() + "/highlight.xml";
