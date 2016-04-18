@@ -13,7 +13,7 @@
 #undef __class__
 #define __class__ "HighlightPattern"
 
-appl::HighlightPattern::HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting, const std::shared_ptr<const exml::Element>& _child, int32_t _level) :
+appl::HighlightPattern::HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting, const exml::Element& _child, int32_t _level) :
   m_glyphPainting(_glyphPainting),
   m_paternName(""),
   m_hasParsingError(true),
@@ -68,7 +68,7 @@ void appl::HighlightPattern::display() {
 	APPL_INFO("  == > regex '" << m_regexValue << "'");
 }
 
-void appl::HighlightPattern::parseRules(const std::shared_ptr<const exml::Element>& _child, int32_t _level) {
+void appl::HighlightPattern::parseRules(const exml::Element& _child, int32_t _level) {
 	//--------------------------------------------------------------------------------------------
 	/*
 		<rule name="my preprocesseur">
@@ -79,7 +79,7 @@ void appl::HighlightPattern::parseRules(const std::shared_ptr<const exml::Elemen
 	*/
 	//--------------------------------------------------------------------------------------------
 	// process attribute
-	std::string highLightName = _child->getAttribute("name");
+	std::string highLightName = _child.attributes["name"];
 	std::string myEdnDataTmp = "???";
 	if (highLightName.size()!=0) {
 		myEdnDataTmp = highLightName;
@@ -87,25 +87,25 @@ void appl::HighlightPattern::parseRules(const std::shared_ptr<const exml::Elemen
 	setName(myEdnDataTmp);
 	setLevel(_level);
 	
-	std::shared_ptr<const exml::Element> xChild = _child->getNamed("color");
-	if (nullptr != xChild) {
-		std::string myData = xChild->getText();
+	exml::Element xChild = _child.nodes["color"];
+	if (xChild.exist() == true) {
+		std::string myData = xChild.getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			setColorGlyph(myData);
 		}
 	}
-	xChild = _child->getNamed("regex");
-	if (nullptr != xChild) {
-		std::string myData = xChild->getText();
+	xChild = _child.nodes["regex"];
+	if (xChild.exist() == true) {
+		std::string myData = xChild.getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			setPatern(myData);
 		}
 	}
-	xChild = _child->getNamed("sub");
-	if (nullptr != xChild) {
-		std::string myData = xChild->getText();
+	xChild = _child.nodes["sub"];
+	if (xChild.exist() == true) {
+		std::string myData = xChild.getText();
 		if (myData.size() != 0) {
 			//APPL_INFO(PFX"(l %d) node fined : %s=\"%s\"", xChild->Row(), xChild->Value() , myData);
 			setSubPatternName(myData);

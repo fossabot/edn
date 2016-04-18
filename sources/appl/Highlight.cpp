@@ -40,79 +40,79 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 		APPL_ERROR(" can not load file XML : " << _xmlFilename);
 		return;
 	}
-	std::shared_ptr<exml::Element> root = doc.getNamed("EdnLang");
-	if (root ==nullptr) {
-		APPL_ERROR("(l ?) main node not find: \"EdnLang\" ...");
+	exml::Element root = doc.nodes["EdnLang"];
+	if (root.exist() == false) {
+		APPL_ERROR("(l ?) main node not find: 'EdnLang' ...");
 		return;
 	}
-	m_typeName = root->getAttribute("lang");
+	m_typeName = root.attributes["lang"];
 	int32_t level1 = 0;
 	int32_t level2 = 0;
 	// parse all the elements :
-	for(size_t iii = 0; iii < root->size(); ++iii) {
-		std::shared_ptr<exml::Element> child = root->getElement(iii);
-		if (child == nullptr) {
+	for (const auto it : root.nodes) {
+		const exml::Element child = it.toElement();
+		if (child.exist() == false) {
 			// trash here all that is not element ...
 			continue;
 		}
-		if (child->getValue() == "ext") {
-			std::string myData = child->getText();
+		if (child.getValue() == "ext") {
+			std::string myData = child.getText();
 			if (myData.size()!=0) {
 				//HL_DEBUG("(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
 				m_listExtentions.push_back(myData);
 			}
-		} else if (child->getValue() == "pass1") {
+		} else if (child.getValue() == "pass1") {
 			// get sub Nodes ...
-			for(size_t jjj=0; jjj< child->size(); jjj++) {
-				std::shared_ptr<exml::Element> passChild = child->getElement(jjj);
-				if (passChild == nullptr) {
+			for (const auto it2 : child.nodes) {
+				const exml::Element passChild = it2.toElement();
+				if (passChild.exist() == false) {
 					continue;
 				}
-				if (passChild->getValue() != "rule") {
-					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->getValue() << "\" must be [rule]" );
+				if (passChild.getValue() != "rule") {
+					APPL_ERROR("(l "<< passChild.getPos() << ") node not suported : '"<< passChild.getValue() << "' must be [rule]" );
 					continue;
 				}
 				// Create the patern in list
 				m_listHighlightPass1.push_back(HighlightPattern(m_paintingProperties, passChild, level1++));
 			}
-		} else if (child->getValue() == "pass2") {
+		} else if (child.getValue() == "pass2") {
 			// get sub Nodes ...
-			for(size_t jjj=0; jjj< child->size(); jjj++) {
-				std::shared_ptr<exml::Element> passChild = child->getElement(jjj);
-				if (passChild == nullptr) {
+			for (const auto it2 : child.nodes) {
+				const exml::Element passChild = it2.toElement();
+				if (passChild.exist() == false) {
 					continue;
 				}
-				if (passChild->getValue() != "rule") {
-					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->getValue() << "\" must be [rule]" );
+				if (passChild.getValue() != "rule") {
+					APPL_ERROR("(l "<< passChild.getPos() << ") node not suported : '"<< passChild.getValue() << "' must be [rule]" );
 					continue;
 				}
 				// Create the patern in list
 				m_listHighlightPass2.push_back(HighlightPattern(m_paintingProperties, passChild, level2++));
 			}
-		} else if (child->getValue() == "pass") {
-			std::string attributeName = child->getAttribute("name");
+		} else if (child.getValue() == "pass") {
+			std::string attributeName = child.attributes["name"];
 			if (attributeName == "") {
-				APPL_ERROR("Can not parse an element pass with no attribute name ... ligne=" << child->getPos());
+				APPL_ERROR("Can not parse an element pass with no attribute name ... ligne=" << child.getPos());
 				continue;
 			}
 			m_listHighlightNamed.insert(std::pair<std::string, std::vector<HighlightPattern>>(attributeName, std::vector<HighlightPattern>()));
-			auto it = m_listHighlightNamed.find(attributeName);
+			auto it3 = m_listHighlightNamed.find(attributeName);
 			int32_t level3=0;
 			// get sub Nodes ...
-			for(size_t jjj=0; jjj< child->size(); jjj++) {
-				std::shared_ptr<exml::Element> passChild = child->getElement(jjj);
-				if (passChild == nullptr) {
+			for (const auto it2 : child.nodes) {
+				const exml::Element passChild = it2.toElement();
+				if (passChild.exist() == false) {
 					continue;
 				}
-				if (passChild->getValue() != "rule") {
-					APPL_ERROR("(l "<< passChild->getPos() << ") node not suported : \""<< passChild->getValue() << "\" must be [rule]" );
+				if (passChild.getValue() != "rule") {
+					APPL_ERROR("(l "<< passChild.getPos() << ") node not suported : '"<< passChild.getValue() << "' must be [rule]" );
 					continue;
 				}
 				// add element in the list
-				it->second.push_back(HighlightPattern(m_paintingProperties, passChild, level3++));
+				it3->second.push_back(HighlightPattern(m_paintingProperties, passChild, level3++));
 			}
 		} else {
-			APPL_ERROR("(l "<< child->getPos() << ") node not suported : \""<< child->getValue() << "\" must be [ext,pass1,pass2]" );
+			APPL_ERROR("(l "<< child.getPos() << ") node not suported : '"<< child.getValue() << "' must be [ext,pass1,pass2]" );
 		}
 	}
 }
