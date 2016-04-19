@@ -28,9 +28,6 @@
 #include <appl/ctags/readtags.h>
 #include <appl/globalMsg.h>
 
-#undef __class__
-#define __class__ "MainApplication"
-
 class MainApplication : public ewol::context::Application {
 	private:
 		std::shared_ptr<appl::BufferManager> m_bufferManager;

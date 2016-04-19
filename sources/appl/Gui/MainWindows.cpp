@@ -43,10 +43,6 @@ namespace appl {
 	
 }
 
-
-#undef __class__
-#define __class__	"AboutGui"
-
 #include <ewol/widget/Label.h>
 #include <ewol/widget/Spacer.h>
 
@@ -93,10 +89,6 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			
 		};
 };
-
-
-#undef __class__
-#define __class__ "MainWindows"
 
 MainWindows::MainWindows() {
 	addObjectType("appl::MainWindows");
@@ -324,12 +316,14 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 		APPL_TODO("Event from Menu : " << _value);
 	} else if (    _value == "menu:color:color/black/"
 	            || _value == "menu:color:color/white/") {
-		etk::theme::setName("COLOR", std::string(_value, 12));
+		etk::theme::setName("COLOR", std::string(_value, 11));
+		EWOL_ERROR("Select Shape or Color : 'COLOR'='" << std::string(_value, 11) << "'");
 		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();
 	} else if (    _value == "menu:shape:shape/square/"
 	            || _value == "menu:shape:shape/round/") {
-		etk::theme::setName("GUI", std::string(_value, 12));
+		EWOL_ERROR("Select Shape or Color : 'GUI'='" << std::string(_value, 11) << "'");
+		etk::theme::setName("GUI", std::string(_value, 11));
 		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();
 	} else if (_value == "menu:reloadShape") {
@@ -347,6 +341,9 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 	} else if (_value == "menu:split:hori") {
 		propertySetOnWidgetNamed("appl-view-code-sizer", "mode", "hori");
 		propertySetOnWidgetNamed("appl-text-separator", "expand", "false,true");
+	} else if (_value == "menu:reloade-shader") {
+		ewol::getContext().getResourcesManager().reLoadResources();
+		ewol::getContext().forceRedrawAll();
 	} else {
 		APPL_ERROR("Event from Menu UNKNOW : '" << _value << "'");
 	}
