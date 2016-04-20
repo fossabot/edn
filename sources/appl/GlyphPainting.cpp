@@ -13,10 +13,6 @@
 #include <etk/os/FSNode.h>
 #include <gale/resource/Manager.h>
 
-#undef __class__
-#define __class__ "GlyphPainting"
-
-
 
 appl::GlyphPainting::GlyphPainting() {
 	addResourceType("appl::GlyphPainting");
@@ -34,7 +30,7 @@ appl::GlyphPainting::~GlyphPainting() {
 
 void appl::GlyphPainting::reload() {
 	ejson::Document doc;
-	if (false == doc.load(m_name)) {
+	if (doc.load(m_name) == false) {
 		APPL_ERROR("Can not load file : '" << m_name << "' = " << etk::FSNode(m_name).getFileSystemName());
 		return;
 	}
@@ -45,22 +41,22 @@ void appl::GlyphPainting::reload() {
 	doc.generate(tmppppp);
 	APPL_DEBUG(tmppppp);
 	*/
-	std::shared_ptr<ejson::Array> baseArray = doc.getArray("ednColor");
-	if (baseArray == nullptr) {
+	ejson::Array baseArray = doc["ednColor"].toArray();
+	if (baseArray.exist() == false) {
 		APPL_ERROR("Can not get basic array : 'ednColor'");
 		return;
 	}
-	for (size_t iii = 0; iii < baseArray->size(); ++iii) {
-		std::shared_ptr<ejson::Object> tmpObj = baseArray->getObject(iii);
-		if (tmpObj == nullptr) {
-			APPL_DEBUG(" can not get object in 'ednColor' id=" << iii);
+	for (const auto it : baseArray) {
+		ejson::Object tmpObj = it.toObject();
+		if (tmpObj.exist() == false) {
+			APPL_DEBUG(" can not get object in 'ednColor' it=" << it);
 			continue;
 		}
-		std::string name = tmpObj->getStringValue("name", "");
-		std::string background = tmpObj->getStringValue("background", "#FFF0");
-		std::string foreground = tmpObj->getStringValue("foreground", "#000F");
-		bool italic = tmpObj->getBooleanValue("italic", false);
-		bool bold = tmpObj->getBooleanValue("bold", false);
+		std::string name = tmpObj.getStringValue("name", "");
+		std::string background = tmpObj.getStringValue("background", "#FFF0");
+		std::string foreground = tmpObj.getStringValue("foreground", "#000F");
+		bool italic = tmpObj.getBooleanValue("italic", false);
+		bool bold = tmpObj.getBooleanValue("bold", false);
 		APPL_VERBOSE("find new color : '" << name << "' fg='" << foreground << "' bg='" << background << "' italic='" << italic << "' bold='" << bold << "'");
 		bool findElement = false;
 		for (size_t jjj=0; jjj<m_list.size(); ++jjj) {
