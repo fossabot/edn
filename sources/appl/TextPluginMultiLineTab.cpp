@@ -24,11 +24,11 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	if (isEnable() == false) {
 		return false;
 	}
-	if (_event.getType() != gale::key::keyboard_char) {
+	if (_event.getType() != gale::key::keyboard::character) {
 		return false;
 	}
 	//APPL_DEBUG("KB EVENT : \"" << UTF8_data << "\" size=" << strlen(UTF8_data) << "type=" << (int32_t)typeEvent);
-	if (_event.getStatus() != gale::key::status_down) {
+	if (_event.getStatus() != gale::key::status::down) {
 		return false;
 	}
 	char32_t localValue = _event.getChar();

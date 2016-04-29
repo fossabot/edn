@@ -28,10 +28,10 @@ bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
 	}
 	//APPL_DEBUG("KB EVENT : " << _event);
 	// just forward event  == > manage directly in the buffer
-	if (_event.getType() != gale::key::keyboard_char) {
+	if (_event.getType() != gale::key::keyboard::character) {
 		return false;
 	}
-	if (_event.getStatus() != gale::key::status_down) {
+	if (_event.getStatus() != gale::key::status::down) {
 		return false;
 	}
 	if (_event.getChar() != u32char::Return) {

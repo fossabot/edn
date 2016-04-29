@@ -126,7 +126,7 @@ void MainWindows::init() {
 			ewol::widget::SpacerShared mySpacer = ewol::widget::Spacer::create();
 			mySpacer->propertyName.set("appl-Buffer-viewer-separator");
 			mySpacer->propertyColor.set(etk::color::black);
-			mySpacer->propertyMinSize.set(gale::Dimension(vec2(2,2), gale::Dimension::Pixel));
+			mySpacer->propertyMinSize.set(gale::Dimension(vec2(2,2), gale::distance::pixel));
 			mySpacer->propertyExpand.set(bvec2(false,true));
 			mySpacer->propertyFill.set(bvec2(true,true));
 			mySpacer->propertyHide.set(true);
@@ -152,7 +152,7 @@ void MainWindows::init() {
 				mySpacer = ewol::widget::Spacer::create();
 				mySpacer->propertyName.set("appl-text-separator");
 				mySpacer->propertyColor.set(etk::color::black);
-				mySpacer->propertyMinSize.set(gale::Dimension(vec2(2,2), gale::Dimension::Pixel));
+				mySpacer->propertyMinSize.set(gale::Dimension(vec2(2,2), gale::distance::pixel));
 				mySpacer->propertyExpand.set(bvec2(true,false));
 				mySpacer->propertyFill.set(bvec2(true,true));
 				mySpacer->propertyHide.set(true);

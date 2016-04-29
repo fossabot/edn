@@ -213,7 +213,7 @@ bool BufferView::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextT
 }
 
 bool BufferView::onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent,  int32_t _colomn, int32_t _raw, float _x, float _y) {
-	if (1 == _IdInput && _typeEvent == gale::key::status_single) {
+	if (1 == _IdInput && _typeEvent == gale::key::status::pressSingle) {
 		APPL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
 		if(    _raw >= 0
 		    && _raw<(int64_t)m_list.size()) {

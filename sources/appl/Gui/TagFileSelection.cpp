@@ -35,11 +35,11 @@ void appl::TagFileSelection::init() {
 	ewol::widget::PopUp::init();
 	ewol::widget::SizerShared mySizerVert;
 	#if defined(__TARGET_OS__Android)
-		propertyMinSize.set(gale::Dimension(vec2(90,90), gale::Dimension::Pourcent));
+		propertyMinSize.set(gale::Dimension(vec2(90,90), gale::distance::pourcent));
 	#elif defined(__TARGET_OS__Windows)
-		propertyMinSize.set(gale::Dimension(vec2(80,80), gale::Dimension::Pourcent));
+		propertyMinSize.set(gale::Dimension(vec2(80,80), gale::distance::pourcent));
 	#else
-		propertyMinSize.set(gale::Dimension(vec2(80,80), gale::Dimension::Pourcent));
+		propertyMinSize.set(gale::Dimension(vec2(80,80), gale::distance::pourcent));
 	#endif
 	
 	mySizerVert = ewol::widget::Sizer::create();
