@@ -52,11 +52,11 @@ void appl::GlyphPainting::reload() {
 			APPL_DEBUG(" can not get object in 'ednColor' it=" << it);
 			continue;
 		}
-		std::string name = tmpObj.getStringValue("name", "");
-		std::string background = tmpObj.getStringValue("background", "#FFF0");
-		std::string foreground = tmpObj.getStringValue("foreground", "#000F");
-		bool italic = tmpObj.getBooleanValue("italic", false);
-		bool bold = tmpObj.getBooleanValue("bold", false);
+		std::string name = tmpObj["name"].toString().get();
+		std::string background = tmpObj["background"].toString().get("#FFF0");
+		std::string foreground = tmpObj["foreground"].toString().get("#000F");
+		bool italic = tmpObj["italic"].toBoolean().get(false);
+		bool bold = tmpObj["bold"].toBoolean().get(false);
 		APPL_VERBOSE("find new color : '" << name << "' fg='" << foreground << "' bg='" << background << "' italic='" << italic << "' bold='" << bold << "'");
 		bool findElement = false;
 		for (size_t jjj=0; jjj<m_list.size(); ++jjj) {
