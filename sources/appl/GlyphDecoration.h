@@ -1,13 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __GLYPH_DECORATION_H__
-#define __GLYPH_DECORATION_H__
+#pragma once
 
 #include <etk/Color.h>
 #include <etk/types.h>
@@ -118,7 +114,5 @@ namespace appl {
 	};
 	std::ostream& operator <<(std::ostream& _os, const appl::GlyphDecoration& _obj);
 }
-
-#endif
 
 

@@ -1,13 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __BUFFER_VIEW_H__
-#define __BUFFER_VIEW_H__
+#pragma once
 
 #include <appl/debug.h>
 #include <appl/BufferManager.h>
@@ -78,8 +74,4 @@ class BufferView : public ewol::widget::List {
 		void onCallbackselectNewFile(const std::string& _value);
 		void onCallbackBufferRemoved(const std::shared_ptr<appl::Buffer>& _buffer);
 };
-
-
-#endif
-
 

@@ -1,12 +1,8 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-
 #include <appl/TextPluginSelectAll.h>
 #include <appl/Gui/TextViewer.h>
 

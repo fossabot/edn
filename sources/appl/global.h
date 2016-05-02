@@ -1,20 +1,13 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __TOOLS_GLOBALS_H__
-#define __TOOLS_GLOBALS_H__
-
+#pragma once
 #include <appl/debug.h>
 #include <ewol/widget/Sizer.h>
 
-
-namespace globals
-{
+namespace globals {
 	void init();
 	void UnInit();
 	int32_t getNbColoneBorder();
@@ -49,9 +42,6 @@ namespace globals
 			void onCallbackTabulation(const bool& _value);
 			void onCallbackRounded(const bool& _value);
 	};
-
 }
-
-#endif
 
 

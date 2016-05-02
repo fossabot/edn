@@ -1,11 +1,8 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
 #include "appl/global.h"
 #include "appl/Gui/Search.h"
 #include "appl/BufferManager.h"

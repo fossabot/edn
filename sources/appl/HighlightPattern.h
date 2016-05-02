@@ -1,15 +1,10 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
+#pragma once
 #include <appl/Highlight.h>
-
-#ifndef __HIGHLIGHT_PATTERN_H__
-#define __HIGHLIGHT_PATTERN_H__
 
 class HighlightPattern;
 
@@ -89,8 +84,5 @@ namespace appl {
 			
 			void parseRules(const exml::Element& _child, int32_t _level);
 	};
-};
-
-#endif
-
+}
 

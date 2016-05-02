@@ -1,11 +1,8 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
 #include <etk/types.h>
 #include <etk/os/FSNode.h>
 #include <appl/debug.h>

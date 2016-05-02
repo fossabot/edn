@@ -1,13 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __APPL_BUFFER_H__
-#define __APPL_BUFFER_H__
+#pragma once
 
 #include <etk/types.h>
 #include <etk/os/FSNode.h>
@@ -626,7 +622,4 @@ namespace appl {
 			void hightlightGenerateLines(appl::DisplayHLData& _MData, const appl::Buffer::Iterator& _HLStart, int64_t _nbLines);
 			appl::HighlightInfo* getElementColorAtPosition(appl::DisplayHLData& _MData, int64_t _pos);
 	};
-};
-
-
-#endif
+}

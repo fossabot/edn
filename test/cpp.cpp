@@ -1,11 +1,8 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
- * @copyright 2011, Edouard DUPIN, all right reserved
- * 
- * @license BSD v3 (see license file)
+ * @copyright 2010, Edouard DUPIN, all right reserved
+ * @license GPL v3 (see license file)
  */
-
 #ifndef __EWOL_WIDGET_H__
 #define __EWOL_WIDGET_H__
 

@@ -1,14 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __HIGHLIGHT_MANAGER_H__
-#define __HIGHLIGHT_MANAGER_H__
-
+#pragma once
 
 #include <etk/types.h>
 #include <appl/globalMsg.h>
@@ -43,8 +38,5 @@ namespace appl {
 		 */
 		std::vector<std::string> getTypeList();
 	};
-};
-
-
-#endif
+}
 

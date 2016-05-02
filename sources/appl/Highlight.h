@@ -1,14 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __HIGHLIGHT_H__
-#define __HIGHLIGHT_H__
-
+#pragma once
 
 namespace appl {
 	class Highlight;
@@ -21,7 +16,7 @@ namespace appl {
 			bool notEnded;
 			appl::HighlightPattern* patern;
 	};
-};
+}
 
 #include <memory>
 #include <etk/os/FSNode.h>
@@ -78,12 +73,6 @@ namespace appl {
 				return true;
 			};
 	};
-};
-
-
-
-
-
-#endif
+}
 
 

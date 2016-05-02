@@ -1,13 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __BUFFER_MANAGER_H__
-#define __BUFFER_MANAGER_H__
+#pragma once
 
 #include <list>
 #include <appl/Buffer.h>
@@ -96,7 +92,6 @@ namespace appl {
 				return m_list.end();
 			}
 	};
-};
+}
 
-#endif
 

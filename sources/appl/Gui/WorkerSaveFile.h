@@ -1,14 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __WORKER_SAVE_FILE_H__
-#define __WORKER_SAVE_FILE_H__
-
+#pragma once
 #include <ewol/widget/meta/FileChooser.h>
 #include <ewol/object/Worker.h>
 #include <appl/BufferManager.h>
@@ -33,6 +28,5 @@ namespace appl {
 			void onCallbackSaveAsValidate(const std::string& _value);
 			void onCallbackCancel();
 	};
-};
+}
 
-#endif

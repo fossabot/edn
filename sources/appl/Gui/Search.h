@@ -1,14 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __SEARCH_H__
-#define __SEARCH_H__
-
+#pragma once
 #include <appl/debug.h>
 #include <ewol/widget/Composer.h>
 #include <ewol/widget/Entry.h>
@@ -63,7 +58,5 @@ namespace appl {
 				void OnCallbackForward(const bool& _value);
 		};
 	};
-};
-#endif
-
+}
 

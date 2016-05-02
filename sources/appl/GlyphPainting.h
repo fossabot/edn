@@ -1,13 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __APPL_GLYPH_PAINTING_H__
-#define __APPL_GLYPH_PAINTING_H__
+#pragma once
 
 #include <etk/types.h>
 #include <ewol/debug.h>
@@ -52,7 +48,6 @@ namespace appl {
 				return m_list[_pos];
 			}
 	};
-};
+}
 
-#endif
 

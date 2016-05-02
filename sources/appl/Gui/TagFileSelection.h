@@ -1,14 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __APPL_CTAGS_SELECTION_H__
-#define __APPL_CTAGS_SELECTION_H__
-
+#pragma once
 #include <appl/debug.h>
 #include <ewol/widget/PopUp.h>
 #include <appl/Gui/TagFileList.h>
@@ -40,8 +35,5 @@ namespace appl {
 			void onCallbackCtagsListSelect(const std::string& _value);
 			void onCallbackCtagsListUnSelect();
 	};
-};
-
-
-#endif
+}
 

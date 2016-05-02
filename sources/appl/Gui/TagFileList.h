@@ -1,14 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __APPL_CTAGS_LIST_H__
-#define __APPL_CTAGS_LIST_H__
-
+#pragma once
 #include <appl/debug.h>
 #include <ewol/widget/List.h>
 #include <ewol/resource/ColorFile.h>
@@ -62,10 +57,5 @@ namespace appl {
 			 */
 			void add(std::string& _file, int32_t _line);
 	};
-};
-
-
-
-#endif
-
+}
 

@@ -1,14 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __APPL_TEXT_PLUGIN_SELECT_ALL_H__
-#define __APPL_TEXT_PLUGIN_SELECT_ALL_H__
-
+#pragma once
 #include <etk/types.h>
 #include <ewol/object/Object.h>
 #include <appl/Gui/TextViewer.h>
@@ -32,7 +27,5 @@ namespace appl {
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
 			virtual bool onReceiveShortCut(appl::TextViewer& _textDrawer, const std::string& _shortCutName);
 	};
-};
+}
 
-
-#endif

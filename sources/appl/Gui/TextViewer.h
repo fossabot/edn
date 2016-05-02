@@ -1,14 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __APPL_TEXT_VIEWER_H__
-#define __APPL_TEXT_VIEWER_H__
-
+#pragma once
 #include <appl/debug.h>
 #include <appl/Buffer.h>
 #include <appl/globalMsg.h>
@@ -423,7 +418,5 @@ namespace appl {
 			void onCallbackSelectChange();
 			void onCallbackselectNewFile(const std::string& _value);
 	};
-};
-
-#endif
+}
 

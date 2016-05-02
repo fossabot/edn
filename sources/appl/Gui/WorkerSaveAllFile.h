@@ -1,14 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __WORKER_SAVE_ALL_FILE_H__
-#define __WORKER_SAVE_ALL_FILE_H__
-
+#pragma once
 #include <ewol/object/Worker.h>
 #include <appl/BufferManager.h>
 #include <appl/Gui/WorkerSaveFile.h>
@@ -28,6 +23,5 @@ namespace appl {
 		public: // callback function
 			void onCallbackSaveAsDone();
 	};
-};
+}
 
-#endif

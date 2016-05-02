@@ -1,14 +1,9 @@
-/**
+/** @file
  * @author Edouard DUPIN
- * 
  * @copyright 2010, Edouard DUPIN, all right reserved
- * 
  * @license GPL v3 (see license file)
  */
-
-#ifndef __VIEWER_MANAGER_H__
-#define __VIEWER_MANAGER_H__
-
+#pragma once
 #include <appl/Buffer.h>
 #include <appl/globalMsg.h>
 #include <ewol/widget/Widget.h>
@@ -49,7 +44,4 @@ namespace appl {
 			 */
 			bool isLastSelected(const std::shared_ptr<appl::TextViewer>& _viewer);
 	};
-};
-
-#endif
-
+}
