@@ -16,9 +16,6 @@
 #include <esignal/ISignal.h>
 #include <gale/resource/Manager.h>
 
-#undef __class__
-#define __class__ "BufferManager"
-
 appl::BufferManager::BufferManager() :
   signalNewBuffer(this, "new-buffer", ""),
   signalSelectFile(this, "select-buffer", ""),

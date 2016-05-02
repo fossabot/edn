@@ -10,9 +10,6 @@
 #include <appl/debug.h>
 #include <appl/Gui/WorkerCloseAllFile.h>
 
-#undef __class__
-#define __class__ "WorkerCloseAllFile"
-
 appl::WorkerCloseAllFile::WorkerCloseAllFile() {
 	addObjectType("appl::WorkerCloseAllFile");
 	// load buffer manager:

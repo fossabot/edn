@@ -12,9 +12,6 @@
 #include <ewol/widget/meta/StdPopUp.h>
 #include <ewol/tools/message.h>
 
-#undef __class__
-#define __class__ "WorkerCloseFile"
-
 appl::WorkerCloseFile::WorkerCloseFile() :
   signalCloseDone(this, "close-file-done", ""),
   signalAbort(this, "close-file-abort", ""),

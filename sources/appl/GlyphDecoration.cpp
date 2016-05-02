@@ -10,10 +10,6 @@
 #include <appl/global.h>
 #include <appl/GlyphDecoration.h>
 
-#undef __class__
-#define __class__ "GlyphDecoration"
-
-
 appl::GlyphDecoration::GlyphDecoration(const std::string &_newColorName) :
 	m_colorName(_newColorName),
 	m_colorFG(etk::color::black),

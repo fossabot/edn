@@ -14,9 +14,6 @@
 #include <appl/Gui/MainWindows.h>
 #include <ewol/object/Object.h>
 
-#undef __class__
-#define __class__ "BufferView"
-
 // TODO : write it better
 static void SortElementList(std::vector<appl::dataBufferStruct>& _list) {
 	std::vector<appl::dataBufferStruct> tmpList = _list;

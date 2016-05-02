@@ -13,10 +13,6 @@
 #include <ewol/ewol.h>
 #include <gale/resource/Manager.h>
 
-
-#undef __class__
-#define __class__ "Highlight"
-
 // first pass
 //#define HL_DEBUG APPL_INFO
 #define HL_DEBUG APPL_VERBOSE

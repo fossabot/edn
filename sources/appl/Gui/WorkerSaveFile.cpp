@@ -11,10 +11,6 @@
 #include <appl/Gui/WorkerSaveFile.h>
 #include <ewol/tools/message.h>
 
-#undef __class__
-#define __class__ "WorkerSaveFile"
-
-
 appl::WorkerSaveFile::WorkerSaveFile() :
   signalSaveDone(this, "save-file-done", ""),
   signalAbort(this, "save-file-abort", ""),

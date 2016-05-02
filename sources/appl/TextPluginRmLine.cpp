@@ -10,10 +10,6 @@
 #include <appl/TextPluginRmLine.h>
 #include <appl/Gui/TextViewer.h>
 
-#undef __class__
-#define __class__ "TextPluginRmLine"
-
-
 appl::TextPluginRmLine::TextPluginRmLine() {
 	m_activateOnReceiveShortCut = true;
 	addObjectType("appl::TextPluginRmLine");

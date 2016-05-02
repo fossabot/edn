@@ -11,10 +11,6 @@
 #include <gale/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
-#undef __class__
-#define __class__ "TextPluginCopy"
-
-
 appl::TextPluginCopy::TextPluginCopy() :
   m_menuIdTitle(-1),
   m_menuIdCopy(-1),

@@ -10,9 +10,6 @@
 #include <appl/TextPluginMultiLineTab.h>
 #include <appl/Gui/TextViewer.h>
 
-#undef __class__
-#define __class__ "TextPluginMultiLineTab"
-
 appl::TextPluginMultiLineTab::TextPluginMultiLineTab() {
 	m_activateOnEventEntry = true;
 	addObjectType("appl::TextPluginMultiLineTab");

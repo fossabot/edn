@@ -11,10 +11,6 @@
 #include <gale/context/clipBoard.h>
 #include <appl/Gui/TextViewer.h>
 
-#undef __class__
-#define __class__ "TextPluginAutoIndent"
-
-
 appl::TextPluginAutoIndent::TextPluginAutoIndent() {
 	m_activateOnEventEntry = true;
 	addObjectType("appl::TextPluginAutoIndent");

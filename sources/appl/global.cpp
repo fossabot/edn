@@ -13,9 +13,6 @@
 #include <gale/resource/Manager.h>
 #include <etk/os/FSNode.h>
 
-#undef __class__
-#define __class__ "globals"
-
 class myParamGlobal : public ewol::Object {
 	public:
 		eproperty::Value<bool> m_displayEOL;

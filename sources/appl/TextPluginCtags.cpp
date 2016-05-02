@@ -14,10 +14,6 @@
 #include <ewol/context/Context.h>
 #include <appl/Gui/TagFileSelection.h>
 
-#undef __class__
-#define __class__ "TextPluginCtags"
-
-
 appl::TextPluginCtags::TextPluginCtags() :
   m_tagFolderBase(""),
   m_tagFilename(""),

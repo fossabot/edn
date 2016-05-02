@@ -10,10 +10,6 @@
 #include <appl/TextPluginSelectAll.h>
 #include <appl/Gui/TextViewer.h>
 
-#undef __class__
-#define __class__ "TextPluginSelectAll"
-
-
 appl::TextPluginSelectAll::TextPluginSelectAll() :
   m_menuIdTitle(-1),
   m_menuIdSelectAll(-1),

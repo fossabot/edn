@@ -14,9 +14,6 @@
 #include <gale/context/clipBoard.h>
 #include <appl/HighlightManager.h>
 
-#undef __class__
-#define __class__ "Buffer"
-
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 	m_value = u32char::Null;
 	if (m_current < 0) {

@@ -12,8 +12,6 @@
 #include <ewol/object/Object.h>
 #include <ewol/object/Manager.h>
 
-#undef __class__
-#define __class__ "highlightManager"
 
 // TODO : Review this in a generic unique resource ...
 

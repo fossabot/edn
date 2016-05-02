@@ -15,10 +15,6 @@
 #include <ewol/widget/Button.h>
 #include <ewol/widget/Entry.h>
 
-
-#undef __class__
-#define __class__ "Search"
-
 appl::widget::Search::Search() :
   m_forward(true),
   m_caseSensitive(false),

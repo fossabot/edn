@@ -16,9 +16,6 @@
 #include <appl/TextPluginSelectAll.h>
 #include <appl/TextPluginCtags.h>
 
-#undef __class__
-#define __class__ "textPluginManager"
-
 appl::textPluginManager::textPluginManager() {
 	
 }

@@ -17,9 +17,6 @@
 #include <ewol/object/Object.h>
 #include <appl/TextPluginManager.h>
 
-#undef __class__
-#define __class__ "TextViewer"
-
 #define tic() \
 	int64_t startTime = ewol::getTime();
 

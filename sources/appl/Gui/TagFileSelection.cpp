@@ -20,11 +20,6 @@
 
 #include <ewol/ewol.h>
 
-
-
-#undef __class__
-#define __class__ "TagFileSelection"
-
 appl::TagFileSelection::TagFileSelection() :
   signalSelect(this, "select", ""),
   signalCancel(this, "cancel", "") {

@@ -10,9 +10,6 @@
 #include <appl/debug.h>
 #include <appl/Gui/WorkerSaveAllFile.h>
 
-#undef __class__
-#define __class__ "WorkerSaveAllFile"
-
 appl::WorkerSaveAllFile::WorkerSaveAllFile() {
 	addObjectType("appl::WorkerSaveAllFile");
 	// load buffer manager:

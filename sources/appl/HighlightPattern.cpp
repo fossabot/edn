@@ -10,9 +10,6 @@
 #include <appl/global.h>
 #include <appl/HighlightPattern.h>
 
-#undef __class__
-#define __class__ "HighlightPattern"
-
 appl::HighlightPattern::HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting, const exml::Element& _child, int32_t _level) :
   m_glyphPainting(_glyphPainting),
   m_paternName(""),

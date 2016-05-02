@@ -14,9 +14,6 @@
 #include <ewol/object/Manager.h>
 #include <gale/resource/Manager.h>
 
-#undef __class__
-#define __class__ "ViewerManager"
-
 appl::ViewerManager::ViewerManager() {
 	addObjectType("appl::ViewerManager");
 	// load buffer manager:

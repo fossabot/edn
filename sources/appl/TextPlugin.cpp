@@ -11,10 +11,6 @@
 #include <appl/TextPluginManager.h>
 #include <appl/debug.h>
 
-#undef __class__
-#define __class__ "TextViewerPlugin"
-
-
 appl::TextViewerPlugin::TextViewerPlugin() :
   m_isEnable(true),
   m_activateOnEventEntry(false),

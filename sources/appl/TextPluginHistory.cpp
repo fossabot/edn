@@ -11,9 +11,6 @@
 #include <appl/Gui/TextViewer.h>
 #include <appl/TextPluginManager.h>
 
-#undef __class__
-#define __class__ "TextPluginHistory"
-
 appl::TextPluginHistory::TextPluginHistory() :
   m_menuIdTitle(-1),
   m_menuIdUndo(-1),

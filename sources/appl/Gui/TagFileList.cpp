@@ -9,9 +9,6 @@
 #include <etk/tool.h>
 #include <appl/Gui/TagFileList.h>
 
-#undef __class__
-#define __class__ "TagFileList"
-
 appl::TagFileList::TagFileList() :
   signalSelect(this, "select", ""),
   signalValidate(this, "validate", ""),
