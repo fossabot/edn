@@ -59,8 +59,8 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 	
 	if (tagsFindNext (m_ctagFile, &entry) == TagSuccess) {
 		APPL_INFO("Multiple file destination ...");
-		std::shared_ptr<appl::TagFileSelection> tmpWidget = appl::TagFileSelection::create();
-		if (nullptr == tmpWidget) {
+		ememory::SharedPtr<appl::TagFileSelection> tmpWidget = appl::TagFileSelection::create();
+		if (tmpWidget == nullptr) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 		} else {
 			tmpWidget->addCtagsNewItem(myfile.getFileSystemName(), lineID);
@@ -72,7 +72,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 				tmpWidget->addCtagsNewItem(myfile.getFileSystemName(), lineID);
 			} while (tagsFindNext (m_ctagFile, &entry) == TagSuccess);
 			ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-			tmpWidget->signalSelect.connect(shared_from_this(), &appl::TextPluginCtags::onCallbackOpenCtagsSelectReturn);
+			tmpWidget->signalSelect.connect(sharedFromThis(), &appl::TextPluginCtags::onCallbackOpenCtagsSelectReturn);
 		}
 	} else {
 		jumpFile(myfile.getName(), lineID - 1);
@@ -156,8 +156,8 @@ bool appl::TextPluginCtags::onReceiveShortCut(appl::TextViewer& _textDrawer,
 	}
 	if (_shortCutName == "appl::TextPluginCtags::OpenCtagsFile") {
 		APPL_INFO("Request opening ctag file");
-		std::shared_ptr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
-		if (nullptr == tmpWidget) {
+		ememory::SharedPtr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
+		if (tmpWidget == nullptr) {
 			APPL_ERROR("Can not allocate widget  == > display might be in error");
 			return true;
 		}
@@ -170,7 +170,7 @@ bool appl::TextPluginCtags::onReceiveShortCut(appl::TextViewer& _textDrawer,
 			tmpWidget->propertyPath.set(path);
 		}
 		ewol::getContext().getWindows()->popUpWidgetPush(tmpWidget);
-		tmpWidget->signalValidate.connect(shared_from_this(), &appl::TextPluginCtags::onCallbackOpenCtagsOpenFileReturn);
+		tmpWidget->signalValidate.connect(sharedFromThis(), &appl::TextPluginCtags::onCallbackOpenCtagsOpenFileReturn);
 		return true;
 	} else if (_shortCutName == "appl::TextPluginCtags::JumpDestination") {
 		if (_textDrawer.hasBuffer() == false) {

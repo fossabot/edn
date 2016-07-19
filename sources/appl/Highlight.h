@@ -18,7 +18,7 @@ namespace appl {
 	};
 }
 
-#include <memory>
+#include <ememory/memory.h>
 #include <etk/os/FSNode.h>
 #include <appl/HighlightPattern.h>
 #include <appl/GlyphPainting.h>
@@ -27,7 +27,7 @@ namespace appl {
 namespace appl {
 	class Highlight : public gale::Resource {
 		private:
-			std::shared_ptr<appl::GlyphPainting> m_paintingProperties;
+			ememory::SharedPtr<appl::GlyphPainting> m_paintingProperties;
 		public:
 			// Constructeur
 			Highlight();

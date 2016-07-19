@@ -50,9 +50,9 @@ void BufferView::init() {
 	propertyHide.set(true);
 	propertyCanFocus.set(true);
 	if (m_bufferManager != nullptr) {
-		m_bufferManager->signalNewBuffer.connect(shared_from_this(), &BufferView::onCallbackNewBuffer);
-		m_bufferManager->signalSelectFile.connect(shared_from_this(), &BufferView::onCallbackselectNewFile);
-		m_bufferManager->signalRemoveBuffer.connect(shared_from_this(), &BufferView::onCallbackBufferRemoved);
+		m_bufferManager->signalNewBuffer.connect(sharedFromThis(), &BufferView::onCallbackNewBuffer);
+		m_bufferManager->signalSelectFile.connect(sharedFromThis(), &BufferView::onCallbackselectNewFile);
+		m_bufferManager->signalRemoveBuffer.connect(sharedFromThis(), &BufferView::onCallbackBufferRemoved);
 	}
 }
 
@@ -82,14 +82,14 @@ void BufferView::insertAlphabetic(const appl::dataBufferStruct& _dataStruct, boo
 }
 
 void BufferView::onCallbackNewBuffer(const std::string& _value) {
-	std::shared_ptr<appl::Buffer> buffer = m_bufferManager->get(_value);
+	ememory::SharedPtr<appl::Buffer> buffer = m_bufferManager->get(_value);
 	if (buffer == nullptr) {
 		APPL_ERROR("event on element nor exist : " << _value);
 		return;
 	}
-	buffer->signalIsSave.connect(shared_from_this(), &BufferView::onCallbackIsSave);
-	buffer->signalIsModify.connect(shared_from_this(), &BufferView::onCallbackIsModify);
-	buffer->signalChangeName.connect(shared_from_this(), &BufferView::onCallbackChangeName);
+	buffer->signalIsSave.connect(sharedFromThis(), &BufferView::onCallbackIsSave);
+	buffer->signalIsModify.connect(sharedFromThis(), &BufferView::onCallbackIsModify);
+	buffer->signalChangeName.connect(sharedFromThis(), &BufferView::onCallbackChangeName);
 	appl::dataBufferStruct tmp(_value, buffer);
 	if (m_openOrderMode == true) {
 		m_list.push_back(tmp);
@@ -138,7 +138,7 @@ void BufferView::onCallbackChangeName() {
 	markToRedraw();
 }
 
-void BufferView::onCallbackBufferRemoved(const std::shared_ptr<appl::Buffer>& _buffer) {
+void BufferView::onCallbackBufferRemoved(const ememory::SharedPtr<appl::Buffer>& _buffer) {
 	APPL_ERROR("request remove buffer:");
 	auto it = m_list.begin();
 	while (it != m_list.end()) {

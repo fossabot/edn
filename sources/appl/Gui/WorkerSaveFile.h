@@ -22,8 +22,8 @@ namespace appl {
 			DECLARE_FACTORY(WorkerSaveFile);
 			virtual ~WorkerSaveFile();
 		private:
-			std::shared_ptr<ewol::widget::FileChooser> m_chooser; //! pop-up element that is open...
-			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			ememory::SharedPtr<ewol::widget::FileChooser> m_chooser; //! pop-up element that is open...
+			ememory::SharedPtr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // callback function
 			void onCallbackSaveAsValidate(const std::string& _value);
 			void onCallbackCancel();

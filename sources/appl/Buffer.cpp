@@ -871,7 +871,7 @@ void appl::Buffer::findMainHighLightPosition(int64_t _startPos,
 }
 
 void appl::Buffer::generateHighLightAt(int64_t _pos, int64_t _endPos, int64_t _addingPos) {
-	if (nullptr == m_highlight) {
+	if (m_highlight == nullptr) {
 		return;
 	}
 	//APPL_DEBUG("area : ("<<pos<<","<<endPos<<") insert at : " << addingPos);
@@ -903,7 +903,7 @@ appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int64_t _pos, int64
 void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const appl::Buffer::Iterator& _HLStart, int64_t _nbLines) {
 	_MData.posHLPass1 = 0;
 	_MData.posHLPass2 = 0;
-	if (nullptr == m_highlight) {
+	if (m_highlight == nullptr) {
 		return;
 	}
 	//int64_t timeStart = ewol::getTime();
@@ -1008,24 +1008,24 @@ uint32_t appl::Buffer::getCursorLinesId() {
 }
 
 namespace etk {
-	template<> std::string to_string<std::shared_ptr<appl::Buffer>>(const std::shared_ptr<appl::Buffer>& _obj) {
+	template<> std::string to_string<ememory::SharedPtr<appl::Buffer>>(const ememory::SharedPtr<appl::Buffer>& _obj) {
 		if (_obj != nullptr) {
 			return _obj->getFileName();
 		}
 		return "";
 	}
-	template<> std::u32string to_u32string<std::shared_ptr<appl::Buffer>>(const std::shared_ptr<appl::Buffer>& _obj) {
+	template<> std::u32string to_u32string<ememory::SharedPtr<appl::Buffer>>(const ememory::SharedPtr<appl::Buffer>& _obj) {
 		return etk::to_u32string(etk::to_string(_obj));
 	}
 	
-	template<> bool from_string<std::shared_ptr<appl::Buffer>>(std::shared_ptr<appl::Buffer>& _variableRet, const std::string& _value) {
+	template<> bool from_string<ememory::SharedPtr<appl::Buffer>>(ememory::SharedPtr<appl::Buffer>& _variableRet, const std::string& _value) {
 		if (_variableRet != nullptr) {
 			_variableRet->loadFile(_value);
 			return true;
 		}
 		return false;
 	}
-	template<> bool from_string<std::shared_ptr<appl::Buffer>>(std::shared_ptr<appl::Buffer>& _variableRet, const std::u32string& _value) {
+	template<> bool from_string<ememory::SharedPtr<appl::Buffer>>(ememory::SharedPtr<appl::Buffer>& _variableRet, const std::u32string& _value) {
 		return from_string(_variableRet, etk::to_string(_value));
 	}
 	template<> std::string to_string<appl::Buffer>(const appl::Buffer& _obj) {
@@ -1046,7 +1046,7 @@ namespace etk {
 
 #include <esignal/details/ISignal.hxx>
 // declare for signal event
-template class esignal::Signal<std::shared_ptr<appl::Buffer>>;
-template class esignal::ISignal<std::shared_ptr<appl::Buffer>>;
+template class esignal::Signal<ememory::SharedPtr<appl::Buffer>>;
+template class esignal::ISignal<ememory::SharedPtr<appl::Buffer>>;
 
 

@@ -35,54 +35,54 @@ void appl::TagFileSelection::init() {
 	#endif
 	
 	mySizerVert = ewol::widget::Sizer::create();
-	if (nullptr == mySizerVert) {
+	if (mySizerVert == nullptr) {
+		EWOL_ERROR("Can not allocate widget  == > display might be in error");
+		return;
+	}
+	mySizerVert->propertyMode.set(ewol::widget::Sizer::modeVert);
+	mySizerVert->propertyLockExpand.set(bvec2(true,true));
+	mySizerVert->propertyExpand.set(bvec2(true,true));
+	// set it in the pop-up-system : 
+	setSubWidget(mySizerVert);
+	ewol::WidgetShared compose = ewol::widget::composerGenerateString(
+	   "<sizer mode='hori' expand='true,false' lock='false,true'>\n"
+	   "	<spacer expand='true,false'/>\n"
+	   "	<button name='PLUGIN-CTAGS-jump' expand='false' fill='true'>"
+	   "		<sizer mode='hori'>\n"
+	   "			<image src='THEME:GUI:Load.svg' fill='true' size='10,10mm'/>\n"
+	   "			<label>Jump</label>\n"
+	   "		</sizer>\n"
+	   "	</button>\n"
+	   "	<button name='PLUGIN-CTAGS-cancel' expand='false' fill='true'>"
+	   "		<sizer mode='hori'>\n"
+	   "			<image src='THEME:GUI:Remove.svg' fill='true' size='10,10mm'/>\n"
+	   "			<label>Cancel</label>\n"
+	   "		</sizer>\n"
+	   "	</button>\n"
+	   "</sizer>\n");
+	mySizerVert->subWidgetAdd(compose);
+	externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-jump", signalPressed, sharedFromThis(), &appl::TagFileSelection::onCallbackCtagsSelection);
+	externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-cancel", signalPressed, sharedFromThis(), &appl::TagFileSelection::onCallbackCtagsCancel);
+	
+	m_listTag = appl::TagFileList::create();
+	if (m_listTag == nullptr) {
 		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
-		mySizerVert->propertyMode.set(ewol::widget::Sizer::modeVert);
-		mySizerVert->propertyLockExpand.set(bvec2(true,true));
-		mySizerVert->propertyExpand.set(bvec2(true,true));
-		// set it in the pop-up-system : 
-		setSubWidget(mySizerVert);
-		ewol::WidgetShared compose = ewol::widget::composerGenerateString(
-		   "<sizer mode='hori' expand='true,false' lock='false,true'>\n"
-		   "	<spacer expand='true,false'/>\n"
-		   "	<button name='PLUGIN-CTAGS-jump' expand='false' fill='true'>"
-		   "		<sizer mode='hori'>\n"
-		   "			<image src='THEME:GUI:Load.svg' fill='true' size='10,10mm'/>\n"
-		   "			<label>Jump</label>\n"
-		   "		</sizer>\n"
-		   "	</button>\n"
-		   "	<button name='PLUGIN-CTAGS-cancel' expand='false' fill='true'>"
-		   "		<sizer mode='hori'>\n"
-		   "			<image src='THEME:GUI:Remove.svg' fill='true' size='10,10mm'/>\n"
-		   "			<label>Cancel</label>\n"
-		   "		</sizer>\n"
-		   "	</button>\n"
-		   "</sizer>\n");
-		mySizerVert->subWidgetAdd(compose);
-		externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-jump", signalPressed, shared_from_this(), &appl::TagFileSelection::onCallbackCtagsSelection);
-		externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-cancel", signalPressed, shared_from_this(), &appl::TagFileSelection::onCallbackCtagsCancel);
-		
-		m_listTag = appl::TagFileList::create();
-		if (m_listTag == nullptr) {
-			EWOL_ERROR("Can not allocate widget  == > display might be in error");
-		} else {
-			m_listTag->signalValidate.connect(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListValidate);
-			m_listTag->signalSelect.connect(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListSelect);
-			m_listTag->signalUnSelect.connect(shared_from_this(), &appl::TagFileSelection::onCallbackCtagsListUnSelect);
-			m_listTag->propertyExpand.set(bvec2(true,true));
-			m_listTag->propertyFill.set(bvec2(true,true));
-			mySizerVert->subWidgetAdd(m_listTag);
-		}
-		
-		ewol::widget::LabelShared myWidgetTitle = ewol::widget::Label::create();
-		if (myWidgetTitle == nullptr) {
-			EWOL_ERROR("Can not allocate widget  == > display might be in error");
-		} else {
-			myWidgetTitle->propertyValue.set("Ctags Jump Selection ...");
-			mySizerVert->subWidgetAdd(myWidgetTitle);
-		}
+		m_listTag->signalValidate.connect(sharedFromThis(), &appl::TagFileSelection::onCallbackCtagsListValidate);
+		m_listTag->signalSelect.connect(sharedFromThis(), &appl::TagFileSelection::onCallbackCtagsListSelect);
+		m_listTag->signalUnSelect.connect(sharedFromThis(), &appl::TagFileSelection::onCallbackCtagsListUnSelect);
+		m_listTag->propertyExpand.set(bvec2(true,true));
+		m_listTag->propertyFill.set(bvec2(true,true));
+		mySizerVert->subWidgetAdd(m_listTag);
 	}
+	
+	ewol::widget::LabelShared myWidgetTitle = ewol::widget::Label::create();
+	if (myWidgetTitle == nullptr) {
+		EWOL_ERROR("Can not allocate widget  == > display might be in error");
+		return;
+	}
+	myWidgetTitle->propertyValue.set("Ctags Jump Selection ...");
+	mySizerVert->subWidgetAdd(myWidgetTitle);
 }
 
 

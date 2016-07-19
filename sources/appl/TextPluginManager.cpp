@@ -30,7 +30,7 @@ void appl::textPluginManager::addDefaultPlugin() {
 	appl::textPluginManager::addPlugin(appl::TextPluginCtags::create());
 }
 
-void appl::textPluginManager::addPlugin(const std::shared_ptr<appl::TextViewerPlugin>& _plugin) {
+void appl::textPluginManager::addPlugin(ememory::SharedPtr<appl::TextViewerPlugin> _plugin) {
 	if (_plugin == nullptr) {
 		return;
 	}
@@ -57,14 +57,14 @@ void appl::textPluginManager::addPlugin(const std::shared_ptr<appl::TextViewerPl
 	if (_plugin->isAvaillableOnCursorMove() == true) {
 		m_listOnCursorMove.push_back(_plugin);
 	}
-	std::shared_ptr<appl::TextViewer> viewer = m_currentViewer.lock();
+	ememory::SharedPtr<appl::TextViewer> viewer = m_currentViewer.lock();
 	if (viewer != nullptr) {
 		_plugin->onPluginEnable(*viewer);
 	}
 }
 
 void appl::textPluginManager::connect(appl::TextViewer& _widget) {
-	m_currentViewer = std::dynamic_pointer_cast<appl::TextViewer>(_widget.shared_from_this());
+	m_currentViewer = ememory::dynamicPointerCast<appl::TextViewer>(_widget.sharedFromThis());
 	for (auto &it : m_list) {
 		if (it == nullptr) {
 			continue;

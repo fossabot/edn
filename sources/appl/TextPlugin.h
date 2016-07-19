@@ -18,7 +18,7 @@ namespace appl {
 	class TextViewerPlugin : public ewol::Object {
 		friend class appl::TextViewer;
 		protected:
-			std::weak_ptr<appl::textPluginManager> m_pluginManager;
+			ememory::WeakPtr<appl::textPluginManager> m_pluginManager;
 		protected:
 			TextViewerPlugin();
 		public:

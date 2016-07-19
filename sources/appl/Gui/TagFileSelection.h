@@ -14,7 +14,7 @@ namespace appl {
 			esignal::ISignal<std::string> signalSelect;
 			esignal::ISignal<> signalCancel;
 		private:
-			std::shared_ptr<appl::TagFileList> m_listTag;
+			ememory::SharedPtr<appl::TagFileList> m_listTag;
 			std::string m_eventNamed;
 		public:
 			TagFileSelection();

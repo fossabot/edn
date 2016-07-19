@@ -12,14 +12,14 @@
 
 // TODO : Review this in a generic unique resource ...
 
-static std::vector<std::shared_ptr<appl::Highlight>>& s_list() {
-	static std::vector<std::shared_ptr<appl::Highlight>> list;
+static std::vector<ememory::SharedPtr<appl::Highlight>>& s_list() {
+	static std::vector<ememory::SharedPtr<appl::Highlight>> list;
 	return list;
 }
 
 
 void appl::highlightManager::init() {
-	std::vector<std::shared_ptr<appl::Highlight>>& hlList = s_list();
+	std::vector<ememory::SharedPtr<appl::Highlight>>& hlList = s_list();
 	if (hlList.size() != 0) {
 		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
 		hlList.clear();
@@ -37,7 +37,7 @@ void appl::highlightManager::init() {
 		}
 		std::string filename = it->getName() + "/highlight.xml";
 		APPL_DEBUG("Load xml name : " << filename);
-		std::shared_ptr<appl::Highlight> myHightLine = appl::Highlight::create(filename);
+		ememory::SharedPtr<appl::Highlight> myHightLine = appl::Highlight::create(filename);
 		if (myHightLine != nullptr) {
 			// Check if the language name already exist
 			for (auto &it2 : hlList) {
@@ -63,7 +63,7 @@ void appl::highlightManager::init() {
 }
 
 void appl::highlightManager::unInit() {
-	std::vector<std::shared_ptr<Highlight>>& hlList = s_list();
+	std::vector<ememory::SharedPtr<Highlight>>& hlList = s_list();
 	if (hlList.size() == 0) {
 		APPL_DEBUG("HighlightManager  ==> no highlight");
 		hlList.clear();
@@ -77,7 +77,7 @@ std::string appl::highlightManager::getTypeFile(const std::string& _fileName) {
 		return "";
 	}
 	APPL_DEBUG("Try to find type for extention : '" << _fileName << "' in " << s_list().size() << " types");
-	std::vector<std::shared_ptr<Highlight>>& hlList = s_list();
+	std::vector<ememory::SharedPtr<Highlight>>& hlList = s_list();
 	for (auto &it : hlList) {
 		if (it == nullptr) {
 			continue;

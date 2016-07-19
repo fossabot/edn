@@ -26,13 +26,13 @@ appl::BufferManager::~BufferManager() {
 }
 
 
-std::shared_ptr<appl::Buffer> appl::BufferManager::createNewBuffer() {
-	std::shared_ptr<appl::Buffer> tmp = appl::Buffer::create();
+ememory::SharedPtr<appl::Buffer> appl::BufferManager::createNewBuffer() {
+	ememory::SharedPtr<appl::Buffer> tmp = appl::Buffer::create();
 	if (tmp == nullptr) {
 		APPL_ERROR("Can not allocate the Buffer (empty).");
 		return nullptr;
 	}
-	tmp->setParent(ewol::Object::shared_from_this());
+	tmp->setParent(ewol::Object::sharedFromThis());
 	m_list.push_back(tmp);
 	APPL_INFO("Create a new Buffer");
 	signalNewBuffer.emit(tmp->getFileName());
@@ -43,7 +43,7 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::createNewBuffer() {
 	return tmp;
 }
 
-std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
+ememory::SharedPtr<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
 	APPL_INFO("get('" << _fileName << "'," << _createIfNeeded << ")");
 	for (auto &it : m_list) {
 		if (it == nullptr) {
@@ -59,12 +59,12 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileN
 			APPL_CRITICAL("plop");
 			return nullptr;
 		}
-		std::shared_ptr<appl::Buffer> tmp = appl::Buffer::create();
+		ememory::SharedPtr<appl::Buffer> tmp = appl::Buffer::create();
 		if (tmp == nullptr) {
 			APPL_ERROR("Can not allocate the Buffer class : " << _fileName);
 			return nullptr;
 		}
-		tmp->setParent(ewol::Object::shared_from_this());
+		tmp->setParent(ewol::Object::sharedFromThis());
 		tmp->loadFile(_fileName);
 		m_list.push_back(tmp);
 		APPL_INFO("Creata a open Buffer");
@@ -75,7 +75,7 @@ std::shared_ptr<appl::Buffer> appl::BufferManager::get(const std::string& _fileN
 	return nullptr;
 }
 
-void appl::BufferManager::setBufferSelected(std::shared_ptr<appl::Buffer> _bufferSelected) {
+void appl::BufferManager::setBufferSelected(ememory::SharedPtr<appl::Buffer> _bufferSelected) {
 	m_bufferSelected = _bufferSelected;
 	if (m_bufferSelected == nullptr) {
 		APPL_ERROR("select a NULL buffer ...");
@@ -88,7 +88,7 @@ void appl::BufferManager::setBufferSelected(std::shared_ptr<appl::Buffer> _buffe
 	APPL_INFO("Set buffer selected (done)");
 }
 
-std::shared_ptr<appl::Buffer> appl::BufferManager::get(int32_t _id) {
+ememory::SharedPtr<appl::Buffer> appl::BufferManager::get(int32_t _id) {
 	int32_t id = 0;
 	for (auto &it : m_list) {
 		if (id == _id) {
@@ -126,7 +126,7 @@ void appl::BufferManager::open(const std::string& _fileName) {
 	propertySetOnWidgetNamed("appl-widget-display-name", "value", etk::FSNodeGetRealName(_fileName));
 }
 
-void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>& _child) {
+void appl::BufferManager::requestDestroyFromChild(const ememory::SharedPtr<Object>& _child) {
 	APPL_WARNING("Buffer request a close...");
 	bool find = false;
 	int32_t newValue = -1;
@@ -145,7 +145,7 @@ void appl::BufferManager::requestDestroyFromChild(const std::shared_ptr<Object>&
 		++it;
 	}
 	if (find == true) {
-		signalRemoveBuffer.emit(std::dynamic_pointer_cast<appl::Buffer>(_child));
+		signalRemoveBuffer.emit(ememory::dynamicPointerCast<appl::Buffer>(_child));
 	}
 	if (m_bufferSelected == _child) {
 		if (    it != m_list.end()

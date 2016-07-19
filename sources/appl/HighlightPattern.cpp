@@ -7,7 +7,7 @@
 #include <appl/global.h>
 #include <appl/HighlightPattern.h>
 
-appl::HighlightPattern::HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting, const exml::Element& _child, int32_t _level) :
+appl::HighlightPattern::HighlightPattern(const ememory::SharedPtr<appl::GlyphPainting>& _glyphPainting, const exml::Element& _child, int32_t _level) :
   m_glyphPainting(_glyphPainting),
   m_paternName(""),
   m_hasParsingError(true),

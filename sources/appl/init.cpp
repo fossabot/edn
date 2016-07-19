@@ -27,8 +27,8 @@
 
 class MainApplication : public ewol::context::Application {
 	private:
-		std::shared_ptr<appl::BufferManager> m_bufferManager;
-		std::shared_ptr<appl::textPluginManager> m_pluginManager;
+		ememory::SharedPtr<appl::BufferManager> m_bufferManager;
+		ememory::SharedPtr<appl::textPluginManager> m_pluginManager;
 	public:
 		virtual void onCreate(ewol::Context& _context) override {
 			APPL_INFO(" == > CREATE ... " << PROJECT_NAME << "  v" << APPL_VERSION << " (START) [" << ewol::getBoardType() << "] (" << ewol::getCompilationMode() << ") (BEGIN)");
@@ -82,7 +82,7 @@ class MainApplication : public ewol::context::Application {
 			cCurrentPath[FILENAME_MAX - 1] = '\0';
 			//APPL_INFO("The current working directory is " << cCurrentPath);
 			
-			std::shared_ptr<MainWindows> basicWindows = MainWindows::create();
+			ememory::SharedPtr<MainWindows> basicWindows = MainWindows::create();
 			
 			if (basicWindows == nullptr) {
 				APPL_ERROR("Can not allocate the basic windows");

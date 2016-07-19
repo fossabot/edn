@@ -55,7 +55,7 @@ void appl::TextViewer::init() {
 	m_pluginManager->connect(*this);
 	// last created has focus ...
 	setCurrentSelect();
-	signalShortcut.connect(shared_from_this(), &appl::TextViewer::onCallbackShortCut);
+	signalShortcut.connect(sharedFromThis(), &appl::TextViewer::onCallbackShortCut);
 	
 	/*
 	registerMultiCast(ednMsgBufferId);
@@ -65,7 +65,7 @@ void appl::TextViewer::init() {
 	registerMultiCast(appl::MsgSelectGotoLineSelect);
 	*/
 	if (m_bufferManager != nullptr) {
-		m_bufferManager->signalSelectFile.connect(shared_from_this(), &appl::TextViewer::onCallbackselectNewFile);
+		m_bufferManager->signalSelectFile.connect(sharedFromThis(), &appl::TextViewer::onCallbackselectNewFile);
 	} else {
 		APPL_CRITICAL("Buffer manager has not been created at the init");
 	}
@@ -90,11 +90,11 @@ void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
 	
 	// reset scroll:
 	if (m_buffer != nullptr) {
-		m_buffer->signals.disconnect(shared_from_this());
+		m_buffer->signals.disconnect(sharedFromThis());
 		bool needAdd = true;
 		auto it = m_drawingRemenber.begin();
 		while (it != m_drawingRemenber.end()) {
-			std::shared_ptr<appl::Buffer> tmpBuff = it->first.lock();
+			ememory::SharedPtr<appl::Buffer> tmpBuff = it->first.lock();
 			if (tmpBuff == nullptr) {
 				it = m_drawingRemenber.erase(it);
 				continue;
@@ -108,7 +108,7 @@ void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
 			++it;
 		}
 		if (needAdd == true) {
-			m_drawingRemenber.push_back(std::make_pair(std::weak_ptr<appl::Buffer>(m_buffer), m_originScrooled));
+			m_drawingRemenber.push_back(std::make_pair(ememory::WeakPtr<appl::Buffer>(m_buffer), m_originScrooled));
 			APPL_VERBOSE("Push origin : " << m_originScrooled);
 		}
 	}
@@ -117,8 +117,8 @@ void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
 		m_buffer = m_bufferManager->get(_value);
 		m_bufferManager->setBufferSelected(m_buffer);
 		if (m_buffer != nullptr) {
-			m_buffer->signalIsModify.connect(shared_from_this(), &appl::TextViewer::onCallbackIsModify);
-			m_buffer->signalSelectChange.connect(shared_from_this(), &appl::TextViewer::onCallbackSelectChange);
+			m_buffer->signalIsModify.connect(sharedFromThis(), &appl::TextViewer::onCallbackIsModify);
+			m_buffer->signalSelectChange.connect(sharedFromThis(), &appl::TextViewer::onCallbackSelectChange);
 			for (auto element : m_drawingRemenber) {
 				if (element.first.lock() == m_buffer) {
 					m_originScrooled = element.second;
@@ -979,13 +979,13 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 
 void appl::TextViewer::setCurrentSelect() {
 	if (m_viewerManager != nullptr) {
-		m_viewerManager->setViewerSelected(std::dynamic_pointer_cast<appl::TextViewer>(shared_from_this()), m_buffer);
+		m_viewerManager->setViewerSelected(ememory::dynamicPointerCast<appl::TextViewer>(sharedFromThis()), m_buffer);
 	}
 }
 
 bool appl::TextViewer::isSelectedLast() {
 	if (m_viewerManager != nullptr) {
-		return m_viewerManager->isLastSelected(std::dynamic_pointer_cast<appl::TextViewer>(shared_from_this()));
+		return m_viewerManager->isLastSelected(ememory::dynamicPointerCast<appl::TextViewer>(sharedFromThis()));
 	}
 	return false;
 }

@@ -22,26 +22,24 @@ namespace appl {
 			DECLARE_SINGLE_FACTORY(ViewerManager, "???ViewerManager???");
 			virtual ~ViewerManager();
 		private:
-			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-			std::weak_ptr<appl::TextViewer> m_viewer;
+			ememory::SharedPtr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			ememory::WeakPtr<appl::TextViewer> m_viewer;
 		public:
 			/**
 			 * @brief Set the current buffer selected
 			 * @param[in] _viewer Pointer on the viewer selected
 			 */
-			void setViewerSelected(const std::shared_ptr<appl::TextViewer>& _viewer, const std::shared_ptr<appl::Buffer>& _buffer);
+			void setViewerSelected(const ememory::SharedPtr<appl::TextViewer>& _viewer, const ememory::SharedPtr<appl::Buffer>& _buffer);
 			/**
 			 * @brief Get the current buffer selected
 			 * @return Pointer on the buffer selected
 			 */
-			std::shared_ptr<appl::TextViewer> getViewerSelected() {
-				return m_viewer.lock();
-			};
+			ememory::SharedPtr<appl::TextViewer> getViewerSelected();
 			/**
 			 * @breif Check if the element is the last request selection
 			 * @param[in] _viewer element selected.
 			 * @return true if the element is selected
 			 */
-			bool isLastSelected(const std::shared_ptr<appl::TextViewer>& _viewer);
+			bool isLastSelected(const ememory::SharedPtr<appl::TextViewer>& _viewer);
 	};
 }

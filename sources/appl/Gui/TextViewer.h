@@ -26,7 +26,7 @@ namespace appl {
 			eproperty::Value<std::string> propertyFontName; //!< name of the font to display text.
 			eproperty::Value<int32_t> propertyFontSize; //!< Size of the font to display text.
 			
-			std::shared_ptr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
+			ememory::SharedPtr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
 			int32_t m_colorBackground;
 			int32_t m_colorSpace;
 			int32_t m_colorTabulation;
@@ -35,9 +35,9 @@ namespace appl {
 			int32_t m_colorSelection;
 			int32_t m_colorNormal;
 		private:
-			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-			std::shared_ptr<appl::textPluginManager> m_pluginManager; //!< Plugin manager interface
-			std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
+			ememory::SharedPtr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			ememory::SharedPtr<appl::textPluginManager> m_pluginManager; //!< Plugin manager interface
+			ememory::SharedPtr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
 		protected:
 			TextViewer();
 			void init();
@@ -45,19 +45,19 @@ namespace appl {
 			DECLARE_FACTORY(TextViewer);
 			virtual ~TextViewer();
 		private:
-			std::shared_ptr<appl::Buffer> m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
+			ememory::SharedPtr<appl::Buffer> m_buffer; //!< pointer on the current buffer to display (can be null if the buffer is remover or in state of changing buffer)
 		public:
 			/**
 			 * @brief Get the buffer property (only for the class : template <typename TYPE> class TextViewerPluginData)
 			 * @return pointer on buffer
 			 */
-			std::shared_ptr<appl::Buffer> internalGetBuffer() {
+			ememory::SharedPtr<appl::Buffer> internalGetBuffer() {
 				return m_buffer;
 			}
 		private:
 			ewol::compositing::Text m_displayText; //!< Text display properties.
 			ewol::compositing::Drawing m_displayDrawing; //!< Other display requested.
-			std::vector<std::pair<std::weak_ptr<appl::Buffer>, vec2>> m_drawingRemenber;
+			std::vector<std::pair<ememory::WeakPtr<appl::Buffer>, vec2>> m_drawingRemenber;
 		public:
 			virtual void onChangePropertyFontSize();
 			virtual void onChangePropertyFontName();

@@ -16,12 +16,12 @@ namespace appl {
 		using SearchWeak = ememory::WeakPtr<appl::widget::Search>;
 		class Search : public ewol::widget::Composer {
 			private:
-				std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
+				ememory::SharedPtr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
 				bool m_forward;
 				bool m_caseSensitive;
 				bool m_wrap;
-				std::shared_ptr<ewol::widget::Entry> m_searchEntry;
-				std::shared_ptr<ewol::widget::Entry> m_replaceEntry;
+				ememory::SharedPtr<ewol::widget::Entry> m_searchEntry;
+				ememory::SharedPtr<ewol::widget::Entry> m_replaceEntry;
 				std::u32string m_searchData;
 				std::u32string m_replaceData;
 			protected:

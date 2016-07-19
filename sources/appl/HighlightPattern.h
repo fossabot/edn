@@ -16,11 +16,11 @@ class HighlightPattern;
 namespace appl {
 	class HighlightPattern {
 		private:
-			std::shared_ptr<appl::GlyphPainting> m_glyphPainting;
+			ememory::SharedPtr<appl::GlyphPainting> m_glyphPainting;
 		public:
 			// Constructeur
 			HighlightPattern();
-			HighlightPattern(const std::shared_ptr<appl::GlyphPainting>& _glyphPainting, const exml::Element& _child, int32_t _level);
+			HighlightPattern(const ememory::SharedPtr<appl::GlyphPainting>& _glyphPainting, const exml::Element& _child, int32_t _level);
 			virtual ~HighlightPattern();
 		private:
 			std::string m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")

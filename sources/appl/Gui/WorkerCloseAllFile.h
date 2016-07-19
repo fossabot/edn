@@ -18,8 +18,8 @@ namespace appl {
 			virtual ~WorkerCloseAllFile();
 		private:
 			std::vector<std::string> m_bufferNameList;
-			std::shared_ptr<appl::WorkerCloseFile> m_worker; //! pop-up element that is open...
-			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			ememory::SharedPtr<appl::WorkerCloseFile> m_worker; //! pop-up element that is open...
+			ememory::SharedPtr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // callback function
 			void onCallbackCloseDone();
 	};

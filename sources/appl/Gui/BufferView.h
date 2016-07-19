@@ -15,8 +15,8 @@ namespace appl {
 	class dataBufferStruct {
 		public:
 			etk::FSNode m_bufferName;
-			std::shared_ptr<appl::Buffer> m_buffer;
-			dataBufferStruct(const std::string& _bufferName, const std::shared_ptr<appl::Buffer>& _buffer) :
+			ememory::SharedPtr<appl::Buffer> m_buffer;
+			dataBufferStruct(const std::string& _bufferName, const ememory::SharedPtr<appl::Buffer>& _buffer) :
 			  m_bufferName(_bufferName),
 			  m_buffer(_buffer) {
 				
@@ -30,9 +30,9 @@ namespace appl {
 	using BufferViewWeak = ememory::WeakPtr<BufferView>;
 class BufferView : public ewol::widget::List {
 	private:
-		std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+		ememory::SharedPtr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 	private:
-		std::shared_ptr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
+		ememory::SharedPtr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
 		int32_t m_colorBackground1;
 		int32_t m_colorBackground2;
 		int32_t m_colorBackgroundSelect;
@@ -72,6 +72,6 @@ class BufferView : public ewol::widget::List {
 		void onCallbackIsModify();
 		void onCallbackNewBuffer(const std::string& _value);
 		void onCallbackselectNewFile(const std::string& _value);
-		void onCallbackBufferRemoved(const std::shared_ptr<appl::Buffer>& _buffer);
+		void onCallbackBufferRemoved(const ememory::SharedPtr<appl::Buffer>& _buffer);
 };
 

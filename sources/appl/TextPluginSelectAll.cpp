@@ -16,7 +16,7 @@ appl::TextPluginSelectAll::TextPluginSelectAll() :
 
 
 void appl::TextPluginSelectAll::onPluginEnable(appl::TextViewer& _textDrawer) {
-	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	ememory::SharedPtr<ewol::widget::Menu> menu = m_menuInterface.lock();
 	if (menu != nullptr) {
 		m_menuIdTitle = menu->addTitle("Edit");
 		if (m_menuIdTitle != -1) {
@@ -32,7 +32,7 @@ void appl::TextPluginSelectAll::onPluginEnable(appl::TextViewer& _textDrawer) {
 void appl::TextPluginSelectAll::onPluginDisable(appl::TextViewer& _textDrawer) {
 	_textDrawer.ext_shortCutRm("appl::TextPluginSelectAll::All");
 	_textDrawer.ext_shortCutRm("appl::TextPluginSelectAll::None");
-	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	ememory::SharedPtr<ewol::widget::Menu> menu = m_menuInterface.lock();
 	if (menu != nullptr) {
 		menu->remove(m_menuIdSelectNone);
 		menu->remove(m_menuIdSelectAll);

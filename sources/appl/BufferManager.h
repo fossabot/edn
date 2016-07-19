@@ -21,14 +21,14 @@ namespace appl {
 			esignal::ISignal<std::string> signalNewBuffer;
 			esignal::ISignal<std::string> signalSelectFile;
 			esignal::ISignal<> signalTextSelectionChange;
-			esignal::ISignal<std::shared_ptr<appl::Buffer>> signalRemoveBuffer;
+			esignal::ISignal<ememory::SharedPtr<appl::Buffer>> signalRemoveBuffer;
 		protected:
 			BufferManager();
 		public:
 			DECLARE_SINGLE_FACTORY(BufferManager, "???Buffer_Manager???");
 			virtual ~BufferManager();
 		private:
-			std::list<std::shared_ptr<appl::Buffer>> m_list; // list of all buffer curently open
+			std::list<ememory::SharedPtr<appl::Buffer>> m_list; // list of all buffer curently open
 		public:
 			/**
 			 * @brief Get a specific buffer with his name (can create a new buffer).
@@ -36,7 +36,7 @@ namespace appl {
 			 * @param[in] _createIfNeeded Create the buffer if not existed.
 			 * @return a pointer on the buffer
 			 */
-			std::shared_ptr<appl::Buffer> get(const std::string& _fileName, bool _createIfNeeded=false);
+			ememory::SharedPtr<appl::Buffer> get(const std::string& _fileName, bool _createIfNeeded=false);
 			/**
 			 * @brief Load a specific file, event if it not existed:
 			 * @param[in] _fileName Name of the file to open or create.
@@ -60,35 +60,41 @@ namespace appl {
 			 * @param[in] _id Number of buffer
 			 * @return pointer on the buffer
 			 */
-			std::shared_ptr<appl::Buffer> get(int32_t _id);
+			ememory::SharedPtr<appl::Buffer> get(int32_t _id);
 			/**
 			 * @brief Create a new buffer empty.
 			 * @return Created buffer or nullptr.
 			 */
-			std::shared_ptr<appl::Buffer> createNewBuffer();
+			ememory::SharedPtr<appl::Buffer> createNewBuffer();
 		private:
-			std::shared_ptr<appl::Buffer> m_bufferSelected;
+			ememory::SharedPtr<appl::Buffer> m_bufferSelected;
 		public:
 			/**
 			 * @brief Set the current buffer selected
 			 * @param[in] _bufferSelected Pointer on the buffer selected
 			 */
-			void setBufferSelected(std::shared_ptr<appl::Buffer> _bufferSelected);
+			void setBufferSelected(ememory::SharedPtr<appl::Buffer> _bufferSelected);
 			/**
 			 * @brief Get the current buffer selected
 			 * @return Pointer on the buffer selected
 			 */
-			std::shared_ptr<appl::Buffer> getBufferSelected() {
+			ememory::SharedPtr<appl::Buffer> getBufferSelected() {
 				return m_bufferSelected;
 			};
 		private:
-			void requestDestroyFromChild(const std::shared_ptr<Object>& _child);
+			void requestDestroyFromChild(const ememory::SharedPtr<Object>& _child);
 		public:
 			// generic iterators:
-			std::list<std::shared_ptr<appl::Buffer>>::const_iterator begin() const {
+			std::list<ememory::SharedPtr<appl::Buffer>>::const_iterator begin() const {
 				return m_list.begin();
 			}
-			std::list<std::shared_ptr<appl::Buffer>>::const_iterator end() const {
+			std::list<ememory::SharedPtr<appl::Buffer>>::const_iterator end() const {
+				return m_list.end();
+			}
+			std::list<ememory::SharedPtr<appl::Buffer>>::iterator begin() {
+				return m_list.begin();
+			}
+			std::list<ememory::SharedPtr<appl::Buffer>>::iterator end() {
 				return m_list.end();
 			}
 	};

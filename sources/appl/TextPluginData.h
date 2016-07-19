@@ -28,12 +28,12 @@ namespace appl {
 				m_specificData.clear();
 			}
 		private:
-			std::vector<std::pair<std::weak_ptr<appl::Buffer> ,std::unique_ptr<TYPE>>> m_specificData;
+			std::vector<std::pair<ememory::WeakPtr<appl::Buffer> ,std::unique_ptr<TYPE>>> m_specificData;
 		protected:
 			TYPE* getDataRef(appl::TextViewer& _textDrawer) {
 				auto it = m_specificData.begin();
 				while(it != m_specificData.end()) {
-					std::shared_ptr<appl::Buffer> buf = it->first.lock();
+					ememory::SharedPtr<appl::Buffer> buf = it->first.lock();
 					if (buf == nullptr) {
 						it = m_specificData.erase(it);
 						continue;

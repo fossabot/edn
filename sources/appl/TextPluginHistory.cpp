@@ -20,7 +20,7 @@ appl::TextPluginHistory::TextPluginHistory() :
 
 
 void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
-	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	ememory::SharedPtr<ewol::widget::Menu> menu = m_menuInterface.lock();
 	if (menu != nullptr) {
 		m_menuIdTitle = menu->addTitle("Edit");
 		if (m_menuIdTitle != -1) {
@@ -36,7 +36,7 @@ void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
 void appl::TextPluginHistory::onPluginDisable(appl::TextViewer& _textDrawer) {
 	_textDrawer.ext_shortCutRm("appl::TextPluginHistory::Undo");
 	_textDrawer.ext_shortCutRm("appl::TextPluginHistory::Redo");
-	std::shared_ptr<ewol::widget::Menu> menu = m_menuInterface.lock();
+	ememory::SharedPtr<ewol::widget::Menu> menu = m_menuInterface.lock();
 	if (menu != nullptr) {
 		menu->remove(m_menuIdRedo);
 		menu->remove(m_menuIdUndo);
@@ -137,7 +137,7 @@ bool appl::TextPluginHistory::onDataWrite(appl::TextViewer& _textDrawer,
 		clearRedo(_data);
 		_data.m_undo.push_back(tmpElement);
 	}
-	std::shared_ptr<appl::textPluginManager> mng = m_pluginManager.lock();
+	ememory::SharedPtr<appl::textPluginManager> mng = m_pluginManager.lock();
 	if (mng!=nullptr) {
 		mng->onCursorMove(_textDrawer, _textDrawer.cursor());
 	}
@@ -165,7 +165,7 @@ bool appl::TextPluginHistory::onDataReplace(appl::TextViewer& _textDrawer,
 		clearRedo(_data);
 		_data.m_undo.push_back(tmpElement);
 	}
-	std::shared_ptr<appl::textPluginManager> mng = m_pluginManager.lock();
+	ememory::SharedPtr<appl::textPluginManager> mng = m_pluginManager.lock();
 	if (mng!=nullptr) {
 		mng->onCursorMove(_textDrawer, _textDrawer.cursor());
 	}
@@ -190,7 +190,7 @@ bool appl::TextPluginHistory::onDataRemove(appl::TextViewer& _textDrawer,
 		_data.m_undo.push_back(tmpElement);
 	}
 	_textDrawer.removeDirect();
-	std::shared_ptr<appl::textPluginManager> mng = m_pluginManager.lock();
+	ememory::SharedPtr<appl::textPluginManager> mng = m_pluginManager.lock();
 	if (mng!=nullptr) {
 		mng->onCursorMove(_textDrawer, _textDrawer.cursor());
 	}

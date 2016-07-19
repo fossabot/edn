@@ -50,10 +50,10 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 		void init() {
 			propertyMode.setDirectCheck(ewol::widget::Sizer::modeVert);
 			ewol::widget::Sizer::init();
-			std::shared_ptr<ewol::widget::Spacer> mySpacer;
+			ememory::SharedPtr<ewol::widget::Spacer> mySpacer;
 			
 			mySpacer = ewol::widget::Spacer::create();
-			if (nullptr == mySpacer) {
+			if (mySpacer == nullptr) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
 				mySpacer->propertyExpand.set(bvec2(true,true));
@@ -71,8 +71,8 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			tmpLabel += "    libPng, ogg-tremor, portaudio, libZip<br/>";
 			tmpLabel += "    tinyXml, freetype, agg2.4, etk<br/>";
 			tmpLabel += "</left>";
-			std::shared_ptr<ewol::widget::Label> myLabel = ewol::widget::Label::create();
-			if (nullptr == myLabel) {
+			ememory::SharedPtr<ewol::widget::Label> myLabel = ewol::widget::Label::create();
+			if (myLabel == nullptr) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
 				myLabel->propertyValue.set(tmpLabel);
@@ -96,9 +96,9 @@ void MainWindows::init() {
 	ewol::widget::SizerShared mySizerVert;
 	ewol::widget::SizerShared mySizerVert2;
 	ewol::widget::SizerShared mySizerHori;
-	std::shared_ptr<appl::TextViewer> myTextView;
-	std::shared_ptr<appl::TextViewer> myTextView2;
-	std::shared_ptr<BufferView> myBufferView;
+	ememory::SharedPtr<appl::TextViewer> myTextView;
+	ememory::SharedPtr<appl::TextViewer> myTextView2;
+	ememory::SharedPtr<BufferView> myBufferView;
 	ewol::widget::MenuShared myMenu;
 	
 	// load buffer manager:
@@ -204,7 +204,7 @@ void MainWindows::init() {
 				myMenu->add(idMenugDisplay, "_T{Unsplit}", "", "menu:split:disable");
 				myMenu->add(idMenugDisplay, "_T{Vertical}", "", "menu:split:vert");
 				myMenu->add(idMenugDisplay, "_T{Horizontal}", "", "menu:split:hori");
-			myMenu->signalSelect.connect(shared_from_this(), &MainWindows::onCallbackMenuEvent);
+			myMenu->signalSelect.connect(sharedFromThis(), &MainWindows::onCallbackMenuEvent);
 			m_widgetLabelFileName = ewol::widget::Label::create();
 			m_widgetLabelFileName->propertyValue.set("FileName");
 			m_widgetLabelFileName->propertyName.set("appl-widget-display-name");
@@ -227,8 +227,8 @@ void MainWindows::init() {
 	shortCutAdd("ctrl+f",       "menu:search");
 	shortCutAdd("F12",          "menu:reloade-shader");
 	// TODO : auto-connect on shortcut event ==> maybe do beter later ...
-	signalShortcut.connect(shared_from_this(), &MainWindows::onCallbackShortCut);
-	m_bufferManager->signalSelectFile.connect(shared_from_this(), &MainWindows::onCallbackselectNewFile);
+	signalShortcut.connect(sharedFromThis(), &MainWindows::onCallbackShortCut);
+	m_bufferManager->signalSelectFile.connect(sharedFromThis(), &MainWindows::onCallbackselectNewFile);
 }
 
 
@@ -250,7 +250,7 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 	} else if (_value == "menu:open") {
 		displayOpen();
 	} else if (_value == "menu:close") {
-		std::shared_ptr<appl::WorkerCloseFile> worker = appl::WorkerCloseFile::create();
+		ememory::SharedPtr<appl::WorkerCloseFile> worker = appl::WorkerCloseFile::create();
 		worker->startAction("");
 	} else if (_value == "menu:close-all") {
 		appl::WorkerCloseAllFile::create();
@@ -273,7 +273,7 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 			if (m_widgetSearch->isSelectSearch()) {
 				m_widgetSearch->propertyHide.set(true);
 				if (m_viewerManager != nullptr) {
-					std::shared_ptr<appl::TextViewer> tmp = m_viewerManager->getViewerSelected();
+					ememory::SharedPtr<appl::TextViewer> tmp = m_viewerManager->getViewerSelected();
 					if (tmp != nullptr) {
 						tmp->keepFocus();
 					}
@@ -293,7 +293,7 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 			if (m_widgetSearch->isSelectReplace()) {
 				m_widgetSearch->propertyHide.set(true);
 				if (m_viewerManager != nullptr) {
-					std::shared_ptr<appl::TextViewer> tmp = m_viewerManager->getViewerSelected();
+					ememory::SharedPtr<appl::TextViewer> tmp = m_viewerManager->getViewerSelected();
 					if (tmp != nullptr) {
 						tmp->keepFocus();
 					}
@@ -350,7 +350,7 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
 		}
-		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
+		ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
 		if (tmpBuffer == nullptr) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
@@ -369,7 +369,7 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
 		}
-		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
+		ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
 		if (tmpBuffer == nullptr) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
@@ -380,7 +380,7 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 			APPL_ERROR("Try to save an non-existant file :" << _msg.getData());
 			return;
 		}
-		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
+		ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
 		if (tmpBuffer == nullptr) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
@@ -392,7 +392,7 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 */
 
 void MainWindows::displayOpen() {
-	std::shared_ptr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
+	ememory::SharedPtr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
 	if (tmpWidget == nullptr) {
 		APPL_ERROR("Can not open File chooser !!! ");
 		return;
@@ -404,48 +404,48 @@ void MainWindows::displayOpen() {
 		return;
 	}
 	// Get a ref on the buffer selected (if null, no buffer was selected ...)
-	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->getBufferSelected();
+	ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->getBufferSelected();
 	if (tmpBuffer != nullptr) {
 		etk::FSNode tmpFile = tmpBuffer->getFileName();
 		tmpWidget->propertyPath.set(tmpFile.getNameFolder());
 	}
 	// apply widget pop-up ...
 	popUpWidgetPush(tmpWidget);
-	tmpWidget->signalValidate.connect(shared_from_this(), &MainWindows::onCallbackPopUpFileSelected);
+	tmpWidget->signalValidate.connect(sharedFromThis(), &MainWindows::onCallbackPopUpFileSelected);
 }
 
 void MainWindows::displayProperty() {
 	// Request the parameter GUI
-	std::shared_ptr<ewol::widget::Parameter> tmpWidget = ewol::widget::Parameter::create();
-	if (nullptr == tmpWidget) {
+	ememory::SharedPtr<ewol::widget::Parameter> tmpWidget = ewol::widget::Parameter::create();
+	if (tmpWidget == nullptr) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
-	} else {
-		#if 0
-			std::string menuDescription = "<title>Properties</title>\n";
-			menuDescription += "<group title='_T{Editor}'>\n";
-			menuDescription += "	<menu title='_T{Editor Interface}' short-title='Editor' widget='appl-text-viewer'>\n";
-			menuDescription += "</group>\n";
-			menuDescription += "<group title='_T{Gui}'>\n";
-			menuDescription += "	<menu title='Font selection' short-title='Font' widget=''>\n";
-			menuDescription += "	<menu title='Color selection' short-title='Color' widget=''>\n";
-			menuDescription += "	<menu title='Theme selection' short-title='Theme' widget=''>\n";
-			menuDescription += "</group>\n";
-			
-			tmpWidget->setMenu(menuDescription);
-		#else
-			tmpWidget->propertyLabelTitle.set("_T{Properties}");
-			popUpWidgetPush(tmpWidget);
-			tmpWidget->menuAddGroup("_T{Editor}");
-			std::shared_ptr<ewol::Widget> tmpSubWidget = globals::ParameterGlobalsGui::create();
-			tmpWidget->menuAdd("_T{Editor}",          "", tmpSubWidget);
-			tmpWidget->menuAdd("_T{Font & Color}", "", nullptr);
-			tmpWidget->menuAdd("_T{Highlight}",       "", nullptr);
-			tmpWidget->menuAddGroup("_T{General}");
-			tmpWidget->menuAdd("_T{Display}",       "", nullptr);
-			tmpSubWidget = ParameterAboutGui::create();
-			tmpWidget->menuAdd("_T{About}",           "", tmpSubWidget);
-		#endif
+		return;
 	}
+	#if 0
+		std::string menuDescription = "<title>Properties</title>\n";
+		menuDescription += "<group title='_T{Editor}'>\n";
+		menuDescription += "	<menu title='_T{Editor Interface}' short-title='Editor' widget='appl-text-viewer'>\n";
+		menuDescription += "</group>\n";
+		menuDescription += "<group title='_T{Gui}'>\n";
+		menuDescription += "	<menu title='Font selection' short-title='Font' widget=''>\n";
+		menuDescription += "	<menu title='Color selection' short-title='Color' widget=''>\n";
+		menuDescription += "	<menu title='Theme selection' short-title='Theme' widget=''>\n";
+		menuDescription += "</group>\n";
+		
+		tmpWidget->setMenu(menuDescription);
+	#else
+		tmpWidget->propertyLabelTitle.set("_T{Properties}");
+		popUpWidgetPush(tmpWidget);
+		tmpWidget->menuAddGroup("_T{Editor}");
+		ememory::SharedPtr<ewol::Widget> tmpSubWidget = globals::ParameterGlobalsGui::create();
+		tmpWidget->menuAdd("_T{Editor}",          "", tmpSubWidget);
+		tmpWidget->menuAdd("_T{Font & Color}", "", nullptr);
+		tmpWidget->menuAdd("_T{Highlight}",       "", nullptr);
+		tmpWidget->menuAddGroup("_T{General}");
+		tmpWidget->menuAdd("_T{Display}",       "", nullptr);
+		tmpSubWidget = ParameterAboutGui::create();
+		tmpWidget->menuAdd("_T{About}",           "", tmpSubWidget);
+	#endif
 }
 
 void MainWindows::onCallbackselectNewFile(const std::string& _value) {
@@ -458,7 +458,7 @@ void MainWindows::onCallbackselectNewFile(const std::string& _value) {
 	m_connectionModify.disconnect();
 	m_connectionSaveName.disconnect();
 	onCallbackTitleUpdate();
-	std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
+	ememory::SharedPtr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 	if (tmpp != nullptr) {
 		m_connectionSave = tmpp->signalIsSave.connect(this, &MainWindows::onCallbackTitleUpdate);
 		m_connectionModify = tmpp->signalIsModify.connect(this, &MainWindows::onCallbackTitleUpdate);
@@ -479,7 +479,7 @@ void MainWindows::onCallbackTitleUpdate() {
 		return;
 	}
 	// select a new Buffer ==> change title:
-	std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
+	ememory::SharedPtr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 	if (tmpp == nullptr) {
 		propertyTitle.set("Edn");
 		if (m_widgetLabelFileName != nullptr) {
@@ -494,44 +494,44 @@ void MainWindows::onCallbackTitleUpdate() {
 	}
 }
 
-void MainWindows::saveAsPopUp(const std::shared_ptr<appl::Buffer>& _buffer) {
+void MainWindows::saveAsPopUp(const ememory::SharedPtr<appl::Buffer>& _buffer) {
 	if (_buffer == nullptr) {
 		APPL_ERROR("Call With nullptr input...");
 		return;
 	}
-	std::shared_ptr<appl::WorkerSaveFile> tmpObject = appl::WorkerSaveFile::create("buffer-name", _buffer->getFileName());
+	ememory::SharedPtr<appl::WorkerSaveFile> tmpObject = appl::WorkerSaveFile::create("buffer-name", _buffer->getFileName());
 }
 
-void MainWindows::closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer) {
+void MainWindows::closeNotSavedFile(const ememory::SharedPtr<appl::Buffer>& _buffer) {
 	if (_buffer == nullptr) {
 		APPL_ERROR("Call With nullptr input...");
 		return;
 	}
-	std::shared_ptr<ewol::widget::StdPopUp> tmpPopUp = ewol::widget::StdPopUp::create();
+	ememory::SharedPtr<ewol::widget::StdPopUp> tmpPopUp = ewol::widget::StdPopUp::create();
 	if (tmpPopUp == nullptr) {
 		APPL_ERROR("Can not create a simple pop-up");
 		return;
 	}
 	tmpPopUp->propertyTitle.set("<bold>_T{Close un-saved file:}</bold>");
 	tmpPopUp->propertyComment.set("_T{The file named:} <i>\"" + _buffer->getFileName() + "\"</i> _T{is curently modify.}   <br/>_T{If you don't saves these modifications,<br/>they will be definitly lost...}");
-	std::shared_ptr<ewol::widget::Button> bt = nullptr;
+	ememory::SharedPtr<ewol::widget::Button> bt = nullptr;
 	if (_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("_T{Save}", true);
 		if (bt != nullptr) {
 			// TODO : The element is removed before beeing pressed
-			// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestSaveFile, _buffer->getFileName());
-			// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+			// TODO : bt->signalPressed.connect(sharedFromThis(), mainWindowsRequestSaveFile, _buffer->getFileName());
+			// TODO : bt->signalPressed.connect(sharedFromThis(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		}
 	}
 	bt = tmpPopUp->addButton("_T{Save As}", true);
 	if (bt != nullptr) {
-		// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestSaveFileAs, _buffer->getFileName());
-		//bt->signalPressed.connect(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		// TODO : bt->signalPressed.connect(sharedFromThis(), mainWindowsRequestSaveFileAs, _buffer->getFileName());
+		//bt->signalPressed.connect(sharedFromThis(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		// TODO : Request the close when saved ...
 	}
 	bt = tmpPopUp->addButton("_T{Close}", true);
 	if (bt != nullptr) {
-		// TODO : bt->signalPressed.connect(shared_from_this(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
+		// TODO : bt->signalPressed.connect(sharedFromThis(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 	}
 	tmpPopUp->addButton("_T{Cancel}", true);
 	tmpPopUp->propertyCloseOutEvent.set(true);

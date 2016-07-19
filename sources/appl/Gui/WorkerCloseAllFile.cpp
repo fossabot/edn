@@ -22,7 +22,7 @@ void appl::WorkerCloseAllFile::init() {
 	}
 	// List all current open file :
 	for (int64_t iii=m_bufferManager->size()-1; iii>=0; --iii) {
-		std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
+		ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
 		if (tmpBuffer == nullptr) {
 			continue;
 		}
@@ -40,7 +40,7 @@ void appl::WorkerCloseAllFile::init() {
 	}
 	// create the worker :
 	m_worker = appl::WorkerCloseFile::create();
-	m_worker->signalCloseDone.connect(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
+	m_worker->signalCloseDone.connect(sharedFromThis(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
 	m_worker->startAction(m_bufferNameList.front());
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());
@@ -65,7 +65,7 @@ void appl::WorkerCloseAllFile::onCallbackCloseDone() {
 	}
 	// create the worker :
 	m_worker = appl::WorkerCloseFile::create();
-	m_worker->signalCloseDone.connect(shared_from_this(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
+	m_worker->signalCloseDone.connect(sharedFromThis(), &appl::WorkerCloseAllFile::onCallbackCloseDone);
 	m_worker->startAction(m_bufferNameList.front());
 	// remove first element :
 	m_bufferNameList.erase(m_bufferNameList.begin());

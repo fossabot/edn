@@ -337,7 +337,7 @@ namespace appl {
 			 * @breif get the status of file modification.
 			 * @return true if file is modify.
 			 */
-			bool isModify() {
+			bool isModify() const {
 				return m_isModify;
 			}
 			/**
@@ -590,7 +590,7 @@ namespace appl {
 		protected:
 			std::string m_highlightType; //!< Name of the highlight type
 			
-			std::shared_ptr<appl::Highlight> m_highlight; //!< internal link with the Highlight system
+			ememory::SharedPtr<appl::Highlight> m_highlight; //!< internal link with the Highlight system
 			std::vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
 		public:
 			/**

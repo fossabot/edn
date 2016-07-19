@@ -21,11 +21,15 @@ appl::ViewerManager::~ViewerManager() {
 	
 }
 
-bool appl::ViewerManager::isLastSelected(const std::shared_ptr<appl::TextViewer>& _viewer) {
+ememory::SharedPtr<appl::TextViewer> appl::ViewerManager::getViewerSelected() {
+	return m_viewer.lock();
+}
+
+bool appl::ViewerManager::isLastSelected(const ememory::SharedPtr<appl::TextViewer>& _viewer) {
 	return m_viewer.lock() == _viewer;
 }
 
-void appl::ViewerManager::setViewerSelected(const std::shared_ptr<appl::TextViewer>& _viewer, const std::shared_ptr<appl::Buffer>& _buffer) {
+void appl::ViewerManager::setViewerSelected(const ememory::SharedPtr<appl::TextViewer>& _viewer, const ememory::SharedPtr<appl::Buffer>& _buffer) {
 	if (m_viewer.lock() == _viewer) {
 		return;
 	}

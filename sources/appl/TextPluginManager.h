@@ -13,15 +13,15 @@
 namespace appl {
 	class textPluginManager : public gale::Resource {
 		private:
-			std::weak_ptr<appl::TextViewer> m_currentViewer;
-			std::list<std::shared_ptr<appl::TextViewerPlugin>> m_list;
-			std::vector<std::shared_ptr<appl::TextViewerPlugin>> m_listOnEventEntry;
-			std::vector<std::shared_ptr<appl::TextViewerPlugin>> m_listOnEventInput;
-			std::vector<std::shared_ptr<appl::TextViewerPlugin>> m_listOnWrite;
-			std::vector<std::shared_ptr<appl::TextViewerPlugin>> m_listOnReplace;
-			std::vector<std::shared_ptr<appl::TextViewerPlugin>> m_listOnRemove;
-			std::vector<std::shared_ptr<appl::TextViewerPlugin>> m_listOnReceiveShortCutViewer;
-			std::vector<std::shared_ptr<appl::TextViewerPlugin>> m_listOnCursorMove;
+			ememory::WeakPtr<appl::TextViewer> m_currentViewer;
+			std::list<ememory::SharedPtr<appl::TextViewerPlugin>> m_list;
+			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnEventEntry;
+			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnEventInput;
+			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnWrite;
+			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnReplace;
+			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnRemove;
+			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnReceiveShortCutViewer;
+			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnCursorMove;
 		protected:
 			textPluginManager();
 			void init(const std::string& _name);
@@ -36,7 +36,7 @@ namespace appl {
 			 * @brief Add a plugin.
 			 * @param[in] _plugin Plugin pointer to add.
 			 */
-			void addPlugin(const std::shared_ptr<appl::TextViewerPlugin>& _plugin);
+			void addPlugin(ememory::SharedPtr<appl::TextViewerPlugin> _plugin);
 			/**
 			 * @brief connect a new widget to the plugin.
 			 * @param[in] _widget Reference on the widget caller.

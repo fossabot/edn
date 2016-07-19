@@ -29,18 +29,18 @@ class MainWindows : public ewol::widget::Windows {
 		DECLARE_FACTORY(MainWindows);
 		virtual ~MainWindows();
 	private:
-		std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
-		std::shared_ptr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
+		ememory::SharedPtr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+		ememory::SharedPtr<appl::ViewerManager> m_viewerManager; //!< handle on the buffer manager
 		/**
 		 * @brief Display a pop-up to the select the name of the file.
 		 * @param[in] _buffer Buffer that might be saved with a new name.
 		 */
-		void saveAsPopUp(const std::shared_ptr<appl::Buffer>& _buffer);
+		void saveAsPopUp(const ememory::SharedPtr<appl::Buffer>& _buffer);
 		/**
 		 * @brief Display a pop-up to the user to confirm wat he want to do when he close a file not saved.
 		 * @param[in] _buffer Buffer that might be close.
 		 */
-		void closeNotSavedFile(const std::shared_ptr<appl::Buffer>& _buffer);
+		void closeNotSavedFile(const ememory::SharedPtr<appl::Buffer>& _buffer);
 		void displayOpen();
 		void displayProperty();
 	private:

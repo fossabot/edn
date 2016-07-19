@@ -27,7 +27,7 @@ void appl::WorkerSaveFile::init() {
 	}
 	if (*propertyBufferName == "") {
 		// need to find the curent file ...
-		std::shared_ptr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
+		ememory::SharedPtr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
 		if (tmpp == nullptr) {
 			APPL_ERROR("No selected buffer now ...");
 			destroy();
@@ -40,7 +40,7 @@ void appl::WorkerSaveFile::init() {
 		destroy();
 		return;
 	}
-	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(*propertyBufferName);
+	ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(*propertyBufferName);
 	if (tmpBuffer == nullptr) {
 		APPL_ERROR("Error to get the buffer : " << *propertyBufferName);
 		destroy();
@@ -55,7 +55,7 @@ void appl::WorkerSaveFile::init() {
 		}
 	}
 	m_chooser = ewol::widget::FileChooser::create();
-	if (nullptr == m_chooser) {
+	if (m_chooser == nullptr) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 		destroy();
 		return;
@@ -65,15 +65,15 @@ void appl::WorkerSaveFile::init() {
 	etk::FSNode tmpName(*propertyBufferName);
 	m_chooser->propertyPath.set(tmpName.getNameFolder());
 	m_chooser->propertyFile.set(tmpName.getNameFile());
-	std::shared_ptr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
+	ememory::SharedPtr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
 	if (tmpWindows == nullptr) {
 		APPL_ERROR("Error to get the windows.");
 		destroy();
 		return;
 	}
 	tmpWindows->popUpWidgetPush(m_chooser);
-	m_chooser->signalValidate.connect(shared_from_this(), &appl::WorkerSaveFile::onCallbackSaveAsValidate);
-	m_chooser->signalCancel.connect(shared_from_this(), &appl::WorkerSaveFile::onCallbackCancel);
+	m_chooser->signalValidate.connect(sharedFromThis(), &appl::WorkerSaveFile::onCallbackSaveAsValidate);
+	m_chooser->signalCancel.connect(sharedFromThis(), &appl::WorkerSaveFile::onCallbackCancel);
 }
 
 appl::WorkerSaveFile::~WorkerSaveFile() {
@@ -101,7 +101,7 @@ void appl::WorkerSaveFile::onCallbackSaveAsValidate(const std::string& _value) {
 		destroy();
 		return;
 	}
-	std::shared_ptr<appl::Buffer> tmpBuffer = m_bufferManager->get(*propertyBufferName);
+	ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(*propertyBufferName);
 	if (tmpBuffer == nullptr) {
 		APPL_ERROR("Error to get the buffer : " << *propertyBufferName);
 		destroy();

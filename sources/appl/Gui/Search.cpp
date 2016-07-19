@@ -23,23 +23,23 @@ void appl::widget::Search::init() {
 	loadFromFile("DATA:GUI-Search.xml");
 	m_viewerManager = appl::ViewerManager::create();
 	// link event
-	subBind(ewol::widget::Button, "SEARCH:close",         signalPressed, shared_from_this(), &appl::widget::Search::OnCallbackHide);
-	subBind(ewol::widget::Entry,  "SEARCH:search-entry",  signalModify,  shared_from_this(), &appl::widget::Search::OnCallbackSearchValue);
-	subBind(ewol::widget::Entry,  "SEARCH:search-entry",  signalEnter,   shared_from_this(), &appl::widget::Search::OnCallbackSearchEntryValidate);
-	subBind(ewol::widget::Button, "SEARCH:search",        signalPressed, shared_from_this(), &appl::widget::Search::OnCallbackSearch);
-	subBind(ewol::widget::Entry,  "SEARCH:replace-entry", signalModify,  shared_from_this(), &appl::widget::Search::OnCallbackReplaceValue);
-	subBind(ewol::widget::Entry,  "SEARCH:replace-entry", signalEnter,   shared_from_this(), &appl::widget::Search::OnCallbackReplaceEntryValidate);
-	subBind(ewol::widget::Button, "SEARCH:replace",       signalPressed, shared_from_this(), &appl::widget::Search::OnCallbackReplace);
-	subBind(ewol::widget::Button, "SEARCH:case",          signalValue,   shared_from_this(), &appl::widget::Search::OnCallbackCase);
-	subBind(ewol::widget::Button, "SEARCH:wrap",          signalValue,   shared_from_this(), &appl::widget::Search::OnCallbackWrap);
-	subBind(ewol::widget::Button, "SEARCH:up-down",       signalValue,   shared_from_this(), &appl::widget::Search::OnCallbackForward);
+	subBind(ewol::widget::Button, "SEARCH:close",         signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackHide);
+	subBind(ewol::widget::Entry,  "SEARCH:search-entry",  signalModify,  sharedFromThis(), &appl::widget::Search::OnCallbackSearchValue);
+	subBind(ewol::widget::Entry,  "SEARCH:search-entry",  signalEnter,   sharedFromThis(), &appl::widget::Search::OnCallbackSearchEntryValidate);
+	subBind(ewol::widget::Button, "SEARCH:search",        signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackSearch);
+	subBind(ewol::widget::Entry,  "SEARCH:replace-entry", signalModify,  sharedFromThis(), &appl::widget::Search::OnCallbackReplaceValue);
+	subBind(ewol::widget::Entry,  "SEARCH:replace-entry", signalEnter,   sharedFromThis(), &appl::widget::Search::OnCallbackReplaceEntryValidate);
+	subBind(ewol::widget::Button, "SEARCH:replace",       signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackReplace);
+	subBind(ewol::widget::Button, "SEARCH:case",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackCase);
+	subBind(ewol::widget::Button, "SEARCH:wrap",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackWrap);
+	subBind(ewol::widget::Button, "SEARCH:up-down",       signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackForward);
 	// set default properties
 	propertySetOnWidgetNamed("SEARCH:case", "value", etk::to_string(m_caseSensitive));
 	propertySetOnWidgetNamed("SEARCH:wrap", "value", etk::to_string(m_wrap));
 	propertySetOnWidgetNamed("SEARCH:up-down", "value", etk::to_string(m_forward));
 	// get widget
-	m_searchEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:search-entry"));
-	m_replaceEntry = std::dynamic_pointer_cast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:replace-entry"));
+	m_searchEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:search-entry"));
+	m_replaceEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:replace-entry"));
 	// basicly hiden ...
 	propertyHide.set(true);
 }
@@ -53,7 +53,7 @@ void appl::widget::Search::find() {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
 	}
-	std::shared_ptr<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
+	ememory::SharedPtr<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
 	if (viewer == nullptr) {
 		APPL_INFO("No viewer selected!!!");
 		return;
@@ -89,7 +89,7 @@ void appl::widget::Search::replace() {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
 	}
-	std::shared_ptr<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
+	ememory::SharedPtr<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
 	if (viewer == nullptr) {
 		APPL_INFO("No viewer selected!!!");
 		return;

@@ -28,7 +28,7 @@ namespace appl {
 			void printTag(const tagEntry *_entry);
 			void jumpTo(const std::string& _name);
 			void jumpFile(const std::string& _filename, int64_t _lineId);
-			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			ememory::SharedPtr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		protected:
 			TextPluginCtags();
 		public:

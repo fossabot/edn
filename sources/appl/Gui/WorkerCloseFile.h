@@ -28,9 +28,9 @@ namespace appl {
 			void startAction(const std::string& _bufferName);
 		private:
 			std::string m_bufferName;
-			std::shared_ptr<appl::Buffer> m_buffer; //!< reference on the buffer (when rename, we have no more reference on the buffer
-			std::shared_ptr<appl::WorkerSaveFile> m_worker; //! sub-worker element...
-			std::shared_ptr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
+			ememory::SharedPtr<appl::Buffer> m_buffer; //!< reference on the buffer (when rename, we have no more reference on the buffer
+			ememory::SharedPtr<appl::WorkerSaveFile> m_worker; //! sub-worker element...
+			ememory::SharedPtr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // callback Functions
 			void onCallbackSaveAsValidate();
 			void onCallbackSaveValidate();
