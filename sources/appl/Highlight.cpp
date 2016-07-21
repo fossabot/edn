@@ -223,7 +223,7 @@ void appl::Highlight::parse(int64_t _start,
 			if (ret == true) {
 				int64_t currentTimeEnd = ewol::getTime();
 				int64_t deltaTime = currentTimeEnd - currentTime;
-				HL_DEBUG("Find Pattern in the Buffer : time=" << (float)deltaTime/1000.0f << " ms (" << resultat.start << "," << resultat.stop << ") startPos=" << elementStart << " for=" << m_listHighlightPass1[jjj].getPaternString());
+				HL_DEBUG("Find Pattern in the Buffer : time=" << (float)deltaTime/1000.0f << " ms (" << resultat.start << "," << resultat.stop << ") startPos=" << elementStart << " for=" << m_listHighlightPass1[jjj].getPaternString().first << " " << m_listHighlightPass1[jjj].getPaternString().second);
 				// remove element in the current List where the current Element have a end inside the next...
 				int64_t kkk=_addingPos;
 				while(kkk < (int64_t)_metaData.size() ) {
@@ -292,7 +292,7 @@ void appl::Highlight::parse2(int64_t _start,
 		for (int64_t jjj=0; jjj<int64_t(m_listHighlightPass2.size()); jjj++){
 			HL2_DEBUG("Parse HL id=" << jjj << " position search: (" <<
 			         elementStart << "," << elementStop << ") in='"
-			         << /*_buffer[elementStart]*/ std::string(_buffer.begin()+elementStart,_buffer.begin()+elementStop) << "' " << m_listHighlightPass2[jjj].getPaternString());
+			         << /*_buffer[elementStart]*/ std::string(_buffer.begin()+elementStart,_buffer.begin()+elementStop) << "' " << m_listHighlightPass2[jjj].getPaternString().first << " " << m_listHighlightPass1[jjj].getPaternString().second);
 			// Stop the search to the end (to get the end of the pattern)
 			bool ret = m_listHighlightPass2[jjj].find(elementStart, elementStop, resultat, _buffer);
 			if (ret == true) {
@@ -336,7 +336,7 @@ void appl::Highlight::parseSubElement(const appl::HighlightInfo& _upper,
 	while (elementStart < elementStop) {
 		//try to fond the HL in ALL of we have
 		for (auto &it : itHL->second){
-			HL2_DEBUG("Parse HL position search: (" << elementStart << "," << elementStop << ") in='" << _buffer[elementStart] << "' " << it.getPaternString());
+			HL2_DEBUG("Parse HL position search: (" << elementStart << "," << elementStop << ") in='" << _buffer[elementStart] << "' " << it.getPaternString().first << " " << it.getPaternString().second);
 			// Stop the search to the end (to get the end of the pattern)
 			bool ret = it.find(elementStart, elementStop, resultat, _buffer);
 			if (ret == true) {

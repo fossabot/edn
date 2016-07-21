@@ -42,11 +42,12 @@ namespace appl {
 			};
 		private:
 			bool m_hasParsingError;
-			std::string m_regexValue;
-			std::regex m_regExp; //!< Start of Regular expression
+			std::string m_regexValue[2];
+			bool m_hasEndRegEx;
+			std::regex m_regExp[2]; //!< Start of Regular expression
 		public:
-			void setPatern(const std::string& _regExp);
-			std::string getPaternString();
+			void setPatern(const std::string& _regExp, const std::string& _regExpStop="", bool _hasEndRegEx=false);
+			std::pair<std::string,std::string> getPaternString();
 		private:
 			std::string m_colorName; //!< Current color name
 			int32_t m_colorId; //!< Id of the the glyph painting
