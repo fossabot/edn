@@ -4,26 +4,34 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="doxygen multiline">
 			<color>commentDoxygen</color>
-			<regex>/\*(\*|!)(.|\r|\n)*?\*/</regex>
+			<regex>
+				<start>/\*(\*|!)</start>
+				<stop>\*/</stop>
+			</regex>
 			<sub>doxyparse</sub>
 		</rule>
 		<rule name="comment multiline">
 			<color>comment</color>
-			<regex>/\*(.|\r|\n)*?(\*/|\0)</regex>
+			<regex>
+				<start>/\*</start>
+				<stop>\*/</stop>
+			</regex>
 			<sub>TODO</sub>
 		</rule>
 		<rule name="comment multiline ERROR">
 			<color>SYNTAX_ERROR</color>
-			<regex>/\*(.|\r|\n)*</regex>
+			<regex>
+				<start>/\*(\*|!)</start>
+			</regex>
 		</rule>
 		<rule name="inline doxygen">
 			<color>commentDoxygen</color>
-			<regex>//!.*</regex>
+			<regex>//!.*$</regex>
 			<sub>doxyparse</sub>
 		</rule>
 		<rule name="inline comment">
 			<color>comment</color>
-			<regex>//.*</regex>
+			<regex>//.*$</regex>
 			<sub>TODO</sub>
 		</rule>
 		<rule name="double quote text">

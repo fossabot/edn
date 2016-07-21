@@ -4,7 +4,10 @@
 	<pass1>
 		<rule name="Comment multiline">
 			<color>comment</color>
-			<regex>\-\-\[\[.*?\-\-\]\]</regex>
+			<regex>
+				<start>\-\-\[\[</start>
+				<stop>\-\-\]\]</stop>
+			</regex>
 		</rule>
 		<rule name="my todo comment">
 			<color>SYNTAX_ERROR</color>

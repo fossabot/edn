@@ -4,15 +4,24 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline doxygen">
 			<color>commentDoxygen</color>
-			<regex>/\*\*.*?\*/</regex>
+			<regex>
+				<start>/\*(\*|!)</start>
+				<stop>\*/</stop>
+			</regex>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>/\*.*?\*/</regex>
+			<regex>
+				<start>/\*</start>
+				<stop>\*/</stop>
+			</regex>
 		</rule>
 		<rule name="my if 0">
 			<color>preprocesseur</color>
-			<regex>#[ \t]*if 0.*?#(regexif|else)</regex>
+			<regex>
+				<start>#[ \t]*if 0</start>
+				<stop>#(endif|else)</stop>
+			</regex>
 		</rule>
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>

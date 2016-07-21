@@ -4,15 +4,23 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>&quot;&quot;&quot;(.|\r|\n)*?&quot;&quot;&quot;</regex>
+			<regex>
+				<start>&quot;&quot;&quot;</start>
+				<stop>&quot;&quot;&quot;</stop>
+			</regex>
 		</rule>
 		<rule name="my comment multiline">
 			<color>comment</color>
-			<regex>'''(.|\r|\n)*?'''</regex>
+			<regex>
+				<start>'''</start>
+				<stop>'''</stop>
+			</regex>
 		</rule>
 		<rule name="comment multiline Error">
 			<color>SYNTAX_ERROR</color>
-			<regex>(&quot;&quot;&quot;|''')(.|\n|\r)*</regex>
+			<regex>
+				<start>(&quot;&quot;&quot;|''')</start>
+			</regex>
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>

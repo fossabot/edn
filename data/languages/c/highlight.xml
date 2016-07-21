@@ -5,25 +5,38 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="doxygen multiline">
 			<color>commentDoxygen</color>
-			<regex>/\*(\*|!)(.|\r|\n)*?\*/</regex>
+			<regex>
+				<start>/\*(\*|!)</start>
+				<stop>\*/</stop>
+			</regex>
 			<sub>doxyparse</sub>
 		</rule>
 		<rule name="comment multiline">
 			<color>comment</color>
-			<regex>/\*(.|\r|\n)*?(\*/|\0)</regex>
+			<regex>
+				<start>/\*</start>
+				<stop>\*/</stop>
+			</regex>
 			<sub>TODO</sub>
 		</rule>
 		<rule name="comment multiline ERROR">
 			<color>SYNTAX_ERROR</color>
-			<regex>/\*(.|\r|\n)*</regex>
+			<regex>
+				<start>/\*</start>
+			</regex>
 		</rule>
 		<rule name="#if 0">
 			<color>preprocesseur</color>
-			<regex>#[ \t]*if 0(.|\r|\n)*?#(endif|else)</regex>
+			<regex>
+				<start>#[ \t]*if 0</start>
+				<stop>#(endif|else)</stop>
+			</regex>
 		</rule>
 		<rule name="#if 0 ERROR">
 			<color>SYNTAX_ERROR</color>
-			<regex>#[ \t]*if 0(.|\r|\n)*</regex>
+			<regex>
+				<start>#[ \t]*if 0</start>
+			</regex>
 		</rule>
 		<rule name="#preproc">
 			<color>preprocesseur</color>

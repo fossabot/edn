@@ -4,35 +4,41 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="Comment">
 			<color>comment</color>
-			<!--<regex><![CDATA[<!\-\-(.|\r|\n)*?\-\->]]></regex>-->
-			-<regex>&lt;!\-\-(.|\r|\n)*?\-\-&gt;</regex>
+			<regex>
+				<start>&lt;!\-\-</start>
+				<stop>\-\-&gt;</stop>
+			</regex>
 		</rule>
 		<rule name="CDATA">
 			<color>macro</color>
-			<!--<regex><![CDATA[<!\[CDATA\[(.|\r|\n)*?\]\]>]]></regex>-->
-			<regex>&lt;!\[CDATA\[(.|\r|\n)*?\]\]&gt;</regex>
+			<regex>
+				<start>&lt;!\[CDATA\[</start>
+				<stop>\]\]&gt;</stop>
+			</regex>
 		</rule>
 		<rule name="stop balise">
 			<color>functionName</color>
-			<!--<regex><![CDATA[</[ \t]*\w+?[ \t]*>]]></regex>-->
 			<regex>&lt;/[ \t]*\w+?[ \t]*&gt;</regex>
 		</rule>
 		<rule name="stop balise">
 			<color>SYNTAX_ERROR</color>
-			<!--<regex><![CDATA[</(.|\n|\r)*?>]]></regex>-->
-			<regex>&lt;/(.|\n|\r)*?&gt;</regex>
+			<regex>
+				<start>&lt;/</start>
+				<stop>&gt;</stop>
+			</regex>
 		</rule>
 		<rule name="start balise">
 			<color>normal</color>
-			<!--<regex><![CDATA[<(.|\n|\r)*?>]]></regex>-->
-			<regex>&lt;(.|\n|\r)*?&gt;</regex>
+			<regex>
+				<start>&lt;</start>
+				<stop>&gt;</stop>
+			</regex>
 			<sub>parseInsideBalise</sub>
 		</rule>
 	</pass1>
 	<pass2>
 		<rule name="start balise">
 			<color>commonDefine</color>
-			<!--<regex><![CDATA[&(gt|lt|amp|apos|quot);]]></regex>-->
 			<regex>&amp;(gt|lt|amp|apos|quot);</regex>
 		</rule>
 		<rule name="start balise">
@@ -43,17 +49,14 @@
 	<pass name="parseInsideBalise">
 		<rule name="special Balise">
 			<color>error</color>
-			<!--<regex><![CDATA[<\?\w*|\?>]]></regex>-->
 			<regex>&lt;\?\w*|\?&gt;</regex>
 		</rule>
 		<rule name="open balise">
 			<color>functionName</color>
-			<!--<regex><![CDATA[<[ \t]*[0-9a-zA-Z_]+]]></regex>-->
 			<regex>&lt;[ \t]*[0-9a-zA-Z_]+</regex>
 		</rule>
 		<rule name="close balise">
 			<color>functionName</color>
-			<!--<regex><![CDATA[/?>]]></regex>-->
 			<regex>/?&gt;</regex>
 		</rule>
 		<rule name="doubleQuteText">
