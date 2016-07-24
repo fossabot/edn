@@ -13,6 +13,7 @@
 #include <appl/Gui/ViewerManager.h>
 #include <ewol/object/Object.h>
 #include <appl/TextPluginManager.h>
+#include <etk/stdTools.h>
 
 #define tic() \
 	int64_t startTime = ewol::getTime();
@@ -159,7 +160,7 @@ void appl::TextViewer::onDraw() {
 }
 
 void appl::TextViewer::onRegenerateDisplay() {
-	if (false == needRedraw()) {
+	if (needRedraw() == false) {
 		return;
 	}
 	//tic();
@@ -175,7 +176,8 @@ void appl::TextViewer::onRegenerateDisplay() {
 	if (m_buffer == nullptr) {
 		m_maxSize.setX(256);
 		m_maxSize.setY(256);
-		m_displayText.setTextAlignement(10, m_size.x()-20, ewol::compositing::alignLeft);
+		float textEndAlignament = std::max(11.0f, m_size.x()-20.0f);
+		m_displayText.setTextAlignement(10, textEndAlignament, ewol::compositing::alignLeft);
 		m_displayText.setRelPos(vec3(10, 0, 0));
 		std::string tmpString("<br/>\n"
 		                       "<font color=\"red\">\n"
