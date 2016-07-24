@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="C">
-	<ext>.*\.(c|m)</ext>
+	<ext>.*\.(c|C|m|M)</ext>
 	<!--might be : <ext>.*\.(c|h|m)</ext>-->
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="doxygen multiline">

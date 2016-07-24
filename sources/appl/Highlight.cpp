@@ -121,7 +121,7 @@ appl::Highlight::~Highlight() {
 
 bool appl::Highlight::isCompatible(const std::string& _name) {
 	for (auto &it : m_listExtentions) {
-		APPL_VERBOSE("        check : " << it << "=?=" << _name);
+		APPL_DEBUG("        check : " << it << "=?=" << _name);
 		std::regex expression;
 		try {
 			expression.assign(it, std::regex_constants::optimize | std::regex_constants::ECMAScript);
@@ -134,6 +134,7 @@ bool appl::Highlight::isCompatible(const std::string& _name) {
 		if (resultMatch.size() <= 0) {
 			continue;
 		}
+		APPL_VERBOSE("    - begin=" << std::distance(_name.begin(), resultMatch[0].first) << "  end=" << std::distance(_name.begin(), resultMatch[0].second));
 		if (resultMatch[0].first != _name.begin()) {
 			continue;
 		}
