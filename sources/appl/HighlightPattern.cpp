@@ -39,7 +39,7 @@ void appl::HighlightPattern::setPatern(const std::string& _regExp, const std::st
 	m_regexValue[0] = _regExp;
 	m_regexValue[1] = _regExpStop;
 	m_hasEndRegEx = _hasEndRegEx;
-	APPL_INFO("parse regex='" << _regExp << "' -> '" << _regExpStop << "'");
+	APPL_DEBUG("parse regex='" << _regExp << "' -> '" << _regExpStop << "'");
 	m_hasParsingError = false;
 	if (_regExp != "") {
 		try {
@@ -72,8 +72,7 @@ void appl::HighlightPattern::setColorGlyph(const std::string& _colorName) {
 void appl::HighlightPattern::display() {
 	APPL_INFO("patern : '" << m_paternName << "' level=" << m_level );
 	APPL_INFO("  == > colorName '" << m_colorName << "'");
-	//APPL_INFO("  == > regExp '" << m_regExp.getRegExp() << "'");
-	APPL_INFO("  == > regex '" << m_regexValue << "'");
+	APPL_INFO("  == > regex '" << m_regexValue[0] << "' ==> '" << m_regexValue[1] << "'");
 }
 
 void appl::HighlightPattern::parseRules(const exml::Element& _child, int32_t _level) {

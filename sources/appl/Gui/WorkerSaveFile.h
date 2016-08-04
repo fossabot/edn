@@ -11,8 +11,8 @@
 namespace appl {
 	class WorkerSaveFile : public ewol::object::Worker {
 		public:
-			esignal::ISignal<> signalSaveDone;
-			esignal::ISignal<> signalAbort;
+			esignal::Signal<> signalSaveDone;
+			esignal::Signal<> signalAbort;
 			eproperty::Value<std::string> propertyBufferName;
 			eproperty::Value<bool> propertyForceSave;
 		protected:

@@ -10,7 +10,7 @@
 #include <appl/BufferManager.h>
 #include <ewol/object/Object.h>
 #include <ewol/object/Manager.h>
-#include <esignal/ISignal.h>
+#include <esignal/Signal.h>
 #include <gale/resource/Manager.h>
 
 appl::BufferManager::BufferManager() :

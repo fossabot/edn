@@ -12,7 +12,7 @@
 #include <ewol/widget/Widget.h>
 #include <ewol/compositing/Text.h>
 #include <appl/Highlight.h>
-#include <esignal/ISignal.h>
+#include <esignal/Signal.h>
 
 namespace appl {
 
@@ -287,10 +287,10 @@ namespace appl {
 					friend class Buffer;
 			};
 		public:
-			esignal::ISignal<> signalIsModify;
-			esignal::ISignal<> signalIsSave;
-			esignal::ISignal<> signalSelectChange;
-			esignal::ISignal<> signalChangeName;
+			esignal::Signal<> signalIsModify;
+			esignal::Signal<> signalIsSave;
+			esignal::Signal<> signalSelectChange;
+			esignal::Signal<> signalChangeName;
 		protected:
 			Buffer();
 			void init();

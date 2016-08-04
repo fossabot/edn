@@ -1044,9 +1044,8 @@ namespace etk {
 	}
 };
 
-#include <esignal/details/ISignal.hxx>
+#include <esignal/details/Signal.hxx>
 // declare for signal event
-template class esignal::Signal<ememory::SharedPtr<appl::Buffer>>;
-template class esignal::ISignal<ememory::SharedPtr<appl::Buffer>>;
+ESIGNAL_DECLARE_SIGNAL(ememory::SharedPtr<appl::Buffer>);
 
 
