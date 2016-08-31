@@ -26,7 +26,7 @@ def get_maintainer():
 	return ["Mr DUPIN Edouard <yui.heero@gmail.com>"]
 
 def get_version():
-	return [1,3,0]
+	return [1,3,"dev"]
 
 def get_version_id():
 	return 6
