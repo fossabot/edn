@@ -56,9 +56,11 @@ Compile software:
 	lutin -C -P -m debug edn
 	# or
 	lutin -C -P -c clang -m debug edn
+	# full compile and run:
+	lutin -C -P -m debug edn?build?run:--elog-level=5
 
 
-(release) Compile software & install & run:
+(release) Compile software & install:
 
 	# generate binary, tree, package and install it ...
 	lutin -C -P edn?install
@@ -79,7 +81,7 @@ Compile software:
 	lutin -C -P -t Android edn?log
 
 
-(Windows) Compile software & install
+(Windows) Compile software
 
 	lutin -C -P -t Windows -m debug edn
 
