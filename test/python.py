@@ -26,9 +26,9 @@ def create(target):
 	# myModule.copy_folder('data/ParticuleMesh.*','')
 	
 	# name of the dependency
-	myModule.add_module_depend(['etk', 'ewol', 'bullet'])
+	myModule.add_depend(['etk', 'ewol', 'bullet'])
 	
-	myModule.compile_flags_CC([
+	myModule.add_flag_CC([
 		'-Wno-write-strings',
 		'-Wall'])
 	

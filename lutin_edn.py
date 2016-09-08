@@ -33,7 +33,7 @@ def get_version_id():
 
 def create(target, module_name):
 	my_module = module.Module(__file__, module_name, get_type())
-	my_module.add_extra_compile_flags()
+	my_module.add_extra_flags()
 	my_module.add_src_file([
 		'sources/appl/ctags/readtags.cpp'
 		])
@@ -82,7 +82,7 @@ def create(target, module_name):
 		'sources/appl/Highlight.cpp',
 		'sources/appl/HighlightManager.cpp'
 		])
-	my_module.add_module_depend(['ewol'])
+	my_module.add_depend(['ewol'])
 	my_module.copy_path('data/icon.*','')
 	my_module.copy_path('data/languages/gcov/*.xml','languages/gcov/')
 	my_module.copy_path('data/languages/asm/*.xml','languages/asm/')
@@ -112,23 +112,23 @@ def create(target, module_name):
 	my_module.copy_file("data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")
 	my_module.copy_path("data/Font/freefont/FreeMon*.ttf","fonts/")
 	
-	my_module.compile_flags('c', [
-		"-DPROJECT_NAME=\"\\\""+my_module.name+"\\\"\"",
+	my_module.add_flag('c', [
+		"-DPROJECT_NAME=\"\\\""+my_module.get_name()+"\\\"\"",
 		"-DAPPL_VERSION=\"\\\"" + tools.version_to_string(get_version()) + "\\\"\""
 		])
 	versionIDCode = str(get_version_id())
 	
 	# set the package properties:
-	my_module.pkg_set("VERSION_CODE", versionIDCode)
-	if target.name=="MacOs":
-		my_module.pkg_set("ICON", os.path.join(tools.get_current_path(__file__), "data/icon.icns"))
+	my_module.set_pkg("VERSION_CODE", versionIDCode)
+	if "MacOs" in target.get_type():
+		my_module.set_pkg("ICON", os.path.join(tools.get_current_path(__file__), "data/icon.icns"))
 	else:
-		my_module.pkg_set("ICON", os.path.join(tools.get_current_path(__file__), "data/icon.png"))
+		my_module.set_pkg("ICON", os.path.join(tools.get_current_path(__file__), "data/icon.png"))
 	
-	my_module.pkg_set("SECTION", ["Development", "Editors"])
-	my_module.pkg_set("PRIORITY", "optional")
-	my_module.pkg_add("RIGHT", "WRITE_EXTERNAL_STORAGE")
-	my_module.pkg_add("RIGHT", "SET_ORIENTATION")
+	my_module.set_pkg("SECTION", ["Development", "Editors"])
+	my_module.set_pkg("PRIORITY", "optional")
+	my_module.add_pkg("RIGHT", "WRITE_EXTERNAL_STORAGE")
+	my_module.add_pkg("RIGHT", "SET_ORIENTATION")
 	
 	return my_module
 
