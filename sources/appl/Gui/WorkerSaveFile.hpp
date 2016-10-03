@@ -4,9 +4,9 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <ewol/widget/meta/FileChooser.h>
-#include <ewol/object/Worker.h>
-#include <appl/BufferManager.h>
+#include <ewol/widget/meta/FileChooser.hpp>
+#include <ewol/object/Worker.hpp>
+#include <appl/BufferManager.hpp>
 
 namespace appl {
 	class WorkerSaveFile : public ewol::object::Worker {

@@ -3,12 +3,12 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <etk/types.h>
-#include <etk/stdTools.h>
-#include <appl/Buffer.h>
-#include <appl/debug.h>
-#include <gale/context/clipBoard.h>
-#include <appl/HighlightManager.h>
+#include <etk/types.hpp>
+#include <etk/stdTools.hpp>
+#include <appl/Buffer.hpp>
+#include <appl/debug.hpp>
+#include <gale/context/clipBoard.hpp>
+#include <appl/HighlightManager.hpp>
 
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 	m_value = u32char::Null;

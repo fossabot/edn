@@ -4,11 +4,11 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <etk/types.h>
-#include <ewol/object/Object.h>
-#include <appl/Gui/TextViewer.h>
-#include <ewol/compositing/Text.h>
-#include <ewol/widget/Menu.h>
+#include <etk/types.hpp>
+#include <ewol/object/Object.hpp>
+#include <appl/Gui/TextViewer.hpp>
+#include <ewol/compositing/Text.hpp>
+#include <ewol/widget/Menu.hpp>
 
 namespace appl {
 	class textPluginManager;

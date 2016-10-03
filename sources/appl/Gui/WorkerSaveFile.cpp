@@ -3,10 +3,10 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <ewol/context/Context.h>
-#include <appl/debug.h>
-#include <appl/Gui/WorkerSaveFile.h>
-#include <ewol/tools/message.h>
+#include <ewol/context/Context.hpp>
+#include <appl/debug.hpp>
+#include <appl/Gui/WorkerSaveFile.hpp>
+#include <ewol/tools/message.hpp>
 
 appl::WorkerSaveFile::WorkerSaveFile() :
   signalSaveDone(this, "save-file-done", ""),

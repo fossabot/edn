@@ -3,12 +3,12 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/global.h>
-#include <appl/globalMsg.h>
-#include <ewol/object/Object.h>
-#include <ewol/context/Context.h>
-#include <gale/resource/Manager.h>
-#include <etk/os/FSNode.h>
+#include <appl/global.hpp>
+#include <appl/globalMsg.hpp>
+#include <ewol/object/Object.hpp>
+#include <ewol/context/Context.hpp>
+#include <gale/resource/Manager.hpp>
+#include <etk/os/FSNode.hpp>
 
 class myParamGlobal : public ewol::Object {
 	public:
@@ -95,8 +95,8 @@ int32_t globals::getNbLineBorder() {
 }
 
 
-#include <ewol/widget/CheckBox.h>
-#include <ewol/widget/Spacer.h>
+#include <ewol/widget/CheckBox.hpp>
+#include <ewol/widget/Spacer.hpp>
 
 globals::ParameterGlobalsGui::ParameterGlobalsGui() {
 	addObjectType("globals::ParameterGlobalsGui");

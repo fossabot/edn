@@ -3,9 +3,9 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <ewol/context/Context.h>
-#include <appl/debug.h>
-#include <appl/Gui/WorkerCloseAllFile.h>
+#include <ewol/context/Context.hpp>
+#include <appl/debug.hpp>
+#include <appl/Gui/WorkerCloseAllFile.hpp>
 
 appl::WorkerCloseAllFile::WorkerCloseAllFile() {
 	addObjectType("appl::WorkerCloseAllFile");

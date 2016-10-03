@@ -3,8 +3,8 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <etk/tool.h>
-#include <appl/Gui/TagFileList.h>
+#include <etk/tool.hpp>
+#include <appl/Gui/TagFileList.hpp>
 
 appl::TagFileList::TagFileList() :
   signalSelect(this, "select", ""),

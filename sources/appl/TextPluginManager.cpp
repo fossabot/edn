@@ -3,15 +3,15 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/TextPluginManager.h>
-#include <appl/debug.h>
-#include <appl/TextPluginCopy.h>
-#include <appl/TextPluginMultiLineTab.h>
-#include <appl/TextPluginAutoIndent.h>
-#include <appl/TextPluginHistory.h>
-#include <appl/TextPluginRmLine.h>
-#include <appl/TextPluginSelectAll.h>
-#include <appl/TextPluginCtags.h>
+#include <appl/TextPluginManager.hpp>
+#include <appl/debug.hpp>
+#include <appl/TextPluginCopy.hpp>
+#include <appl/TextPluginMultiLineTab.hpp>
+#include <appl/TextPluginAutoIndent.hpp>
+#include <appl/TextPluginHistory.hpp>
+#include <appl/TextPluginRmLine.hpp>
+#include <appl/TextPluginSelectAll.hpp>
+#include <appl/TextPluginCtags.hpp>
 
 appl::textPluginManager::textPluginManager() {
 	

@@ -3,9 +3,9 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <appl/GlyphDecoration.h>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <appl/GlyphDecoration.hpp>
 
 appl::GlyphDecoration::GlyphDecoration(const std::string &_newColorName) :
   m_colorName(_newColorName),

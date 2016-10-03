@@ -3,13 +3,13 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <appl/Gui/BufferView.h>
-#include <appl/BufferManager.h>
-//#include <ColorizeManager.h>
-#include <appl/Gui/MainWindows.h>
-#include <ewol/object/Object.h>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <appl/Gui/BufferView.hpp>
+#include <appl/BufferManager.hpp>
+//#include <ColorizeManager.hpp>
+#include <appl/Gui/MainWindows.hpp>
+#include <ewol/object/Object.hpp>
 
 // TODO : write it better
 static void SortElementList(std::vector<appl::dataBufferStruct>& _list) {

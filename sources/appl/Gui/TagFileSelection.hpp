@@ -4,9 +4,9 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <appl/debug.h>
-#include <ewol/widget/PopUp.h>
-#include <appl/Gui/TagFileList.h>
+#include <appl/debug.hpp>
+#include <ewol/widget/PopUp.hpp>
+#include <appl/Gui/TagFileList.hpp>
 
 namespace appl {
 	class TagFileSelection : public ewol::widget::PopUp {

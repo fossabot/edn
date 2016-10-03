@@ -4,8 +4,8 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <appl/debug.h>
-#include <ewol/widget/Sizer.h>
+#include <appl/debug.hpp>
+#include <ewol/widget/Sizer.hpp>
 
 namespace globals {
 	void init();

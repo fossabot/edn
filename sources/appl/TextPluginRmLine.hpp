@@ -4,22 +4,19 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <etk/types.h>
-#include <ewol/object/Object.h>
-#include <appl/Gui/TextViewer.h>
-#include <ewol/compositing/Text.h>
-#include <appl/TextPlugin.h>
+#include <etk/types.hpp>
+#include <ewol/object/Object.hpp>
+#include <appl/Gui/TextViewer.hpp>
+#include <ewol/compositing/Text.hpp>
+#include <appl/TextPlugin.hpp>
 
 namespace appl {
-	class TextPluginSelectAll : public appl::TextViewerPlugin {
+	class TextPluginRmLine : public appl::TextViewerPlugin {
 		protected:
-			TextPluginSelectAll();
-			int32_t m_menuIdTitle;
-			int32_t m_menuIdSelectAll;
-			int32_t m_menuIdSelectNone;
+			TextPluginRmLine();
 		public:
-			DECLARE_FACTORY(TextPluginSelectAll);
-			virtual ~TextPluginSelectAll() {
+			DECLARE_FACTORY(TextPluginRmLine);
+			virtual ~TextPluginRmLine() {
 				// nothing to do ...
 			};
 		public:

@@ -3,17 +3,17 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <appl/Gui/TextViewer.h>
-#include <appl/BufferManager.h>
-#include <gale/context/clipBoard.h>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <appl/Gui/TextViewer.hpp>
+#include <appl/BufferManager.hpp>
+#include <gale/context/clipBoard.hpp>
 
-#include <ewol/widget/Manager.h>
-#include <appl/Gui/ViewerManager.h>
-#include <ewol/object/Object.h>
-#include <appl/TextPluginManager.h>
-#include <etk/stdTools.h>
+#include <ewol/widget/Manager.hpp>
+#include <appl/Gui/ViewerManager.hpp>
+#include <ewol/object/Object.hpp>
+#include <appl/TextPluginManager.hpp>
+#include <etk/stdTools.hpp>
 
 #define tic() \
 	int64_t startTime = ewol::getTime();

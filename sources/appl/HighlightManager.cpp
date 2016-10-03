@@ -3,11 +3,11 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <appl/HighlightManager.h>
-#include <ewol/object/Object.h>
-#include <ewol/object/Manager.h>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <appl/HighlightManager.hpp>
+#include <ewol/object/Object.hpp>
+#include <ewol/object/Manager.hpp>
 
 
 // TODO : Review this in a generic unique resource ...

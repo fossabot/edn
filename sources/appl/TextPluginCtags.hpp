@@ -4,12 +4,12 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <etk/types.h>
-#include <ewol/object/Object.h>
-#include <appl/Gui/TextViewer.h>
-#include <ewol/compositing/Text.h>
-#include <appl/TextPlugin.h>
-#include <appl/ctags/readtags.h>
+#include <etk/types.hpp>
+#include <ewol/object/Object.hpp>
+#include <appl/Gui/TextViewer.hpp>
+#include <ewol/compositing/Text.hpp>
+#include <appl/TextPlugin.hpp>
+#include <appl/ctags/readtags.hpp>
 
 // create ctags file : "ctags-exuberant --fields=n -R"
 // --fields=n add the line number needed for this software version ..

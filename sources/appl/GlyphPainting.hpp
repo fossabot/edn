@@ -5,10 +5,10 @@
  */
 #pragma once
 
-#include <etk/types.h>
-#include <ewol/debug.h>
-#include <gale/resource/Resource.h>
-#include <appl/GlyphDecoration.h>
+#include <etk/types.hpp>
+#include <ewol/debug.hpp>
+#include <gale/resource/Resource.hpp>
+#include <appl/GlyphDecoration.hpp>
 
 namespace appl {
 	class GlyphPainting : public gale::Resource {

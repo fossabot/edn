@@ -3,12 +3,12 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/TextPluginCtags.h>
-#include <gale/context/clipBoard.h>
-#include <appl/Gui/TextViewer.h>
-#include <ewol/widget/meta/FileChooser.h>
-#include <ewol/context/Context.h>
-#include <appl/Gui/TagFileSelection.h>
+#include <appl/TextPluginCtags.hpp>
+#include <gale/context/clipBoard.hpp>
+#include <appl/Gui/TextViewer.hpp>
+#include <ewol/widget/meta/FileChooser.hpp>
+#include <ewol/context/Context.hpp>
+#include <appl/Gui/TagFileSelection.hpp>
 
 appl::TextPluginCtags::TextPluginCtags() :
   m_tagFolderBase(""),

@@ -3,14 +3,14 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include "appl/global.h"
-#include "appl/Gui/Search.h"
-#include "appl/BufferManager.h"
-#include "appl/Gui/TextViewer.h"
-#include "appl/Gui/MainWindows.h"
-#include "appl/globalMsg.h"
-#include <ewol/widget/Button.h>
-#include <ewol/widget/Entry.h>
+#include "appl/global.hpp"
+#include "appl/Gui/Search.hpp"
+#include "appl/BufferManager.hpp"
+#include "appl/Gui/TextViewer.hpp"
+#include "appl/Gui/MainWindows.hpp"
+#include "appl/globalMsg.hpp"
+#include <ewol/widget/Button.hpp>
+#include <ewol/widget/Entry.hpp>
 
 appl::widget::Search::Search() :
   m_forward(true),

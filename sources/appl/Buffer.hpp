@@ -5,14 +5,14 @@
  */
 #pragma once
 
-#include <etk/types.h>
-#include <etk/os/FSNode.h>
-#include <ewol/ewol.h>
-#include <ewol/object/Object.h>
-#include <ewol/widget/Widget.h>
-#include <ewol/compositing/Text.h>
-#include <appl/Highlight.h>
-#include <esignal/Signal.h>
+#include <etk/types.hpp>
+#include <etk/os/FSNode.hpp>
+#include <ewol/ewol.hpp>
+#include <ewol/object/Object.hpp>
+#include <ewol/widget/Widget.hpp>
+#include <ewol/compositing/Text.hpp>
+#include <appl/Highlight.hpp>
+#include <esignal/Signal.hpp>
 
 namespace appl {
 

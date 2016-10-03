@@ -5,8 +5,8 @@
  */
 #pragma once
 
-#include <etk/Color.h>
-#include <etk/types.h>
+#include <etk/Color.hpp>
+#include <etk/types.hpp>
 
 namespace appl {
 	class GlyphDecoration {

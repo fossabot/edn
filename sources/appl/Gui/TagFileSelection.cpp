@@ -3,19 +3,19 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/Gui/TagFileSelection.h>
-#include <ewol/widget/Sizer.h>
-#include <ewol/widget/List.h>
-#include <ewol/widget/Spacer.h>
-#include <ewol/widget/Image.h>
-#include <ewol/widget/Manager.h>
+#include <appl/Gui/TagFileSelection.hpp>
+#include <ewol/widget/Sizer.hpp>
+#include <ewol/widget/List.hpp>
+#include <ewol/widget/Spacer.hpp>
+#include <ewol/widget/Image.hpp>
+#include <ewol/widget/Manager.hpp>
 #include <vector>
-#include <etk/tool.h>
-#include <ewol/widget/Button.h>
-#include <ewol/widget/Label.h>
-#include <ewol/widget/Composer.h>
+#include <etk/tool.hpp>
+#include <ewol/widget/Button.hpp>
+#include <ewol/widget/Label.hpp>
+#include <ewol/widget/Composer.hpp>
 
-#include <ewol/ewol.h>
+#include <ewol/ewol.hpp>
 
 appl::TagFileSelection::TagFileSelection() :
   signalSelect(this, "select", ""),

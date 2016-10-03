@@ -3,15 +3,15 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <etk/types.h>
-#include <etk/os/FSNode.h>
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <appl/BufferManager.h>
-#include <ewol/object/Object.h>
-#include <ewol/object/Manager.h>
-#include <esignal/Signal.h>
-#include <gale/resource/Manager.h>
+#include <etk/types.hpp>
+#include <etk/os/FSNode.hpp>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <appl/BufferManager.hpp>
+#include <ewol/object/Object.hpp>
+#include <ewol/object/Manager.hpp>
+#include <esignal/Signal.hpp>
+#include <gale/resource/Manager.hpp>
 
 appl::BufferManager::BufferManager() :
   signalNewBuffer(this, "new-buffer", ""),

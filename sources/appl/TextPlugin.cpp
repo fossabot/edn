@@ -3,9 +3,9 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/TextPlugin.h>
-#include <appl/TextPluginManager.h>
-#include <appl/debug.h>
+#include <appl/TextPlugin.hpp>
+#include <appl/TextPluginManager.hpp>
+#include <appl/debug.hpp>
 
 appl::TextViewerPlugin::TextViewerPlugin() :
   m_isEnable(true),

@@ -3,9 +3,9 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/TextPluginAutoIndent.h>
-#include <gale/context/clipBoard.h>
-#include <appl/Gui/TextViewer.h>
+#include <appl/TextPluginAutoIndent.hpp>
+#include <gale/context/clipBoard.hpp>
+#include <appl/Gui/TextViewer.hpp>
 
 appl::TextPluginAutoIndent::TextPluginAutoIndent() {
 	m_activateOnEventEntry = true;

@@ -5,15 +5,15 @@
  */
 #pragma once
 
-#include <appl/debug.h>
-#include <appl/globalMsg.h>
+#include <appl/debug.hpp>
+#include <appl/globalMsg.hpp>
 
-#include <appl/Gui/BufferView.h>
-#include <appl/BufferManager.h>
-#include <ewol/widget/Label.h>
-#include <appl/BufferManager.h>
-#include <appl/Gui/Search.h>
-#include <appl/Gui/ViewerManager.h>
+#include <appl/Gui/BufferView.hpp>
+#include <appl/BufferManager.hpp>
+#include <ewol/widget/Label.hpp>
+#include <appl/BufferManager.hpp>
+#include <appl/Gui/Search.hpp>
+#include <appl/Gui/ViewerManager.hpp>
 class MainWindows : public ewol::widget::Windows {
 	private:
 		ewol::widget::LabelShared m_widgetLabelFileName;

@@ -3,8 +3,8 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/TextPluginSelectAll.h>
-#include <appl/Gui/TextViewer.h>
+#include <appl/TextPluginSelectAll.hpp>
+#include <appl/Gui/TextViewer.hpp>
 
 appl::TextPluginSelectAll::TextPluginSelectAll() :
   m_menuIdTitle(-1),

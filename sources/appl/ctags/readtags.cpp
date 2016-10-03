@@ -18,7 +18,7 @@
 #include <errno.h>
 #include <sys/types.h>  /* to declare off_t */
 
-#include <appl/ctags/readtags.h>
+#include <appl/ctags/readtags.hpp>
 
 /*
 *   MACROS

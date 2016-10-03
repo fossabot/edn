@@ -5,10 +5,10 @@
  */
 #pragma once
 
-#include <etk/types.h>
-#include <appl/globalMsg.h>
-#include <appl/Highlight.h>
-#include <ewol/widget/Widget.h>
+#include <etk/types.hpp>
+#include <appl/globalMsg.hpp>
+#include <appl/Highlight.hpp>
+#include <ewol/widget/Widget.hpp>
 
 namespace appl {
 	namespace highlightManager {

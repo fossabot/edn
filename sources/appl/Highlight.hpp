@@ -18,11 +18,11 @@ namespace appl {
 	};
 }
 
-#include <ememory/memory.h>
-#include <etk/os/FSNode.h>
-#include <appl/HighlightPattern.h>
-#include <appl/GlyphPainting.h>
-#include <exml/exml.h>
+#include <ememory/memory.hpp>
+#include <etk/os/FSNode.hpp>
+#include <appl/HighlightPattern.hpp>
+#include <appl/GlyphPainting.hpp>
+#include <exml/exml.hpp>
 
 namespace appl {
 	class Highlight : public gale::Resource {

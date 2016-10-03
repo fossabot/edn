@@ -4,9 +4,9 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <appl/debug.h>
-#include <ewol/widget/List.h>
-#include <ewol/resource/ColorFile.h>
+#include <appl/debug.hpp>
+#include <ewol/widget/List.hpp>
+#include <ewol/resource/ColorFile.hpp>
 
 namespace appl {
 	class TagListElement {

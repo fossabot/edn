@@ -4,23 +4,24 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <ewol/object/Worker.h>
-#include <appl/BufferManager.h>
-#include <appl/Gui/WorkerCloseFile.h>
+#include <ewol/object/Worker.hpp>
+#include <appl/BufferManager.hpp>
+#include <appl/Gui/WorkerSaveFile.hpp>
 
 namespace appl {
-	class WorkerCloseAllFile : public ewol::object::Worker {
+	class WorkerSaveAllFile : public ewol::object::Worker {
 		protected:
-			WorkerCloseAllFile();
+			WorkerSaveAllFile();
 			void init();
 		public:
-			DECLARE_FACTORY(WorkerCloseAllFile);
-			virtual ~WorkerCloseAllFile();
+			DECLARE_FACTORY(WorkerSaveAllFile);
+			virtual ~WorkerSaveAllFile();
 		private:
 			std::vector<std::string> m_bufferNameList;
-			ememory::SharedPtr<appl::WorkerCloseFile> m_worker; //! pop-up element that is open...
+			ememory::SharedPtr<appl::WorkerSaveFile> m_worker; //! pop-up element that is open...
 			ememory::SharedPtr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // callback function
-			void onCallbackCloseDone();
+			void onCallbackSaveAsDone();
 	};
 }
+

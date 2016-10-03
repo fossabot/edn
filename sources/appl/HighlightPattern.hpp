@@ -4,14 +4,14 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <appl/Highlight.h>
+#include <appl/Highlight.hpp>
 
 class HighlightPattern;
 
-#include <appl/GlyphPainting.h>
+#include <appl/GlyphPainting.hpp>
 #include <vector>
 #include <regex>
-#include <exml/exml.h>
+#include <exml/exml.hpp>
 
 namespace appl {
 	class HighlightPattern {

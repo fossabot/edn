@@ -3,27 +3,27 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <etk/types.h>
-#include <ewol/ewol.h>
-#include <ewol/object/Object.h>
-#include <ewol/widget/Manager.h>
+#include <etk/types.hpp>
+#include <ewol/ewol.hpp>
+#include <ewol/object/Object.hpp>
+#include <ewol/widget/Manager.hpp>
 
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <etk/os/FSNode.h>
-#include <etk/tool.h>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <etk/os/FSNode.hpp>
+#include <etk/tool.hpp>
 #include <unistd.h>
-//#include <ewol/config.h>
-#include <gale/context/commandLine.h>
-//#include <ewol/UserConfig.h>
-#include <ewol/context/Context.h>
-#include <appl/TextPluginManager.h>
-#include <appl/BufferManager.h>
-#include <appl/HighlightManager.h>
-#include <appl/Gui/MainWindows.h>
-#include <appl/Gui/Search.h>
-#include <appl/ctags/readtags.h>
-#include <appl/globalMsg.h>
+//#include <ewol/config.hpp>
+#include <gale/context/commandLine.hpp>
+//#include <ewol/UserConfig.hpp>
+#include <ewol/context/Context.hpp>
+#include <appl/TextPluginManager.hpp>
+#include <appl/BufferManager.hpp>
+#include <appl/HighlightManager.hpp>
+#include <appl/Gui/MainWindows.hpp>
+#include <appl/Gui/Search.hpp>
+#include <appl/ctags/readtags.hpp>
+#include <appl/globalMsg.hpp>
 
 class MainApplication : public ewol::context::Application {
 	private:

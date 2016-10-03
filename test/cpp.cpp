@@ -6,8 +6,8 @@
 #ifndef __EWOL_WIDGET_H__
 #define __EWOL_WIDGET_H__
 
-#include <ewol/object/Object.h>
-#include <ewol/Dimension.h>
+#include <ewol/object/Object.hpp>
+#include <ewol/Dimension.hpp>
 'dfgd\'fg'
 'e' sdfsdf '\e'
 
@@ -35,16 +35,16 @@ namespace ewol {
 		class Windows;
 	};
 };
-#include <etk/types.h>
+#include <etk/types.hpp>
 #include <vector>
-#include <etk/math/Vector2D.h>
-#include <ewol/debug.h>
-#include <ewol/context/clipBoard.h>
-#include <ewol/key/key.h>
-#include <ewol/context/cursor.h>
-#include <ewol/event/Input.h>
-#include <ewol/event/Entry.h>
-#include <ewol/event/Time.h>
+#include <etk/math/Vector2D.hpp>
+#include <ewol/debug.hpp>
+#include <ewol/context/clipBoard.hpp>
+#include <ewol/key/key.hpp>
+#include <ewol/context/cursor.hpp>
+#include <ewol/event/Input.hpp>
+#include <ewol/event/Entry.hpp>
+#include <ewol/event/Time.hpp>
 
 #define ULTIMATE_MAX_SIZE  (99999999)
 

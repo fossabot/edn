@@ -3,9 +3,9 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <appl/HighlightPattern.h>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <appl/HighlightPattern.hpp>
 
 appl::HighlightPattern::HighlightPattern(const ememory::SharedPtr<appl::GlyphPainting>& _glyphPainting, const exml::Element& _child, int32_t _level) :
   m_glyphPainting(_glyphPainting),

@@ -4,11 +4,11 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <appl/Buffer.h>
-#include <appl/globalMsg.h>
-#include <ewol/widget/Widget.h>
-#include <gale/resource/Resource.h>
-#include <appl/BufferManager.h>
+#include <appl/Buffer.hpp>
+#include <appl/globalMsg.hpp>
+#include <ewol/widget/Widget.hpp>
+#include <gale/resource/Resource.hpp>
+#include <appl/BufferManager.hpp>
 
 namespace appl {
 	class TextViewer;

@@ -3,34 +3,34 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <appl/Gui/MainWindows.h>
-#include <appl/Gui/BufferView.h>
-#include <appl/Gui/TextViewer.h>
-#include <appl/Gui/Search.h>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <appl/Gui/MainWindows.hpp>
+#include <appl/Gui/BufferView.hpp>
+#include <appl/Gui/TextViewer.hpp>
+#include <appl/Gui/Search.hpp>
 
-#include <ewol/widget/Button.h>
-#include <ewol/widget/CheckBox.h>
-#include <ewol/widget/Sizer.h>
-#include <ewol/widget/Label.h>
-#include <ewol/widget/Entry.h>
-#include <ewol/widget/List.h>
-#include <ewol/widget/ContextMenu.h>
-#include <ewol/widget/PopUp.h>
-#include <ewol/widget/Spacer.h>
-#include <ewol/widget/Slider.h>
-#include <ewol/widget/Menu.h>
-#include <ewol/widget/meta/FileChooser.h>
-#include <ewol/widget/meta/Parameter.h>
-#include <ewol/widget/Manager.h>
-#include <ewol/object/Object.h>
-#include <ewol/context/Context.h>
-#include <ewol/widget/meta/StdPopUp.h>
-#include <appl/Gui/WorkerSaveFile.h>
-#include <appl/Gui/WorkerSaveAllFile.h>
-#include <appl/Gui/WorkerCloseFile.h>
-#include <appl/Gui/WorkerCloseAllFile.h>
+#include <ewol/widget/Button.hpp>
+#include <ewol/widget/CheckBox.hpp>
+#include <ewol/widget/Sizer.hpp>
+#include <ewol/widget/Label.hpp>
+#include <ewol/widget/Entry.hpp>
+#include <ewol/widget/List.hpp>
+#include <ewol/widget/ContextMenu.hpp>
+#include <ewol/widget/PopUp.hpp>
+#include <ewol/widget/Spacer.hpp>
+#include <ewol/widget/Slider.hpp>
+#include <ewol/widget/Menu.hpp>
+#include <ewol/widget/meta/FileChooser.hpp>
+#include <ewol/widget/meta/Parameter.hpp>
+#include <ewol/widget/Manager.hpp>
+#include <ewol/object/Object.hpp>
+#include <ewol/context/Context.hpp>
+#include <ewol/widget/meta/StdPopUp.hpp>
+#include <appl/Gui/WorkerSaveFile.hpp>
+#include <appl/Gui/WorkerSaveAllFile.hpp>
+#include <appl/Gui/WorkerCloseFile.hpp>
+#include <appl/Gui/WorkerCloseAllFile.hpp>
 
 namespace appl {
 	std::string getVersion() {
@@ -39,8 +39,8 @@ namespace appl {
 	
 }
 
-#include <ewol/widget/Label.h>
-#include <ewol/widget/Spacer.h>
+#include <ewol/widget/Label.hpp>
+#include <ewol/widget/Spacer.hpp>
 
 class ParameterAboutGui : public ewol::widget::Sizer {
 	public :

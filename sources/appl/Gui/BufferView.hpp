@@ -5,11 +5,11 @@
  */
 #pragma once
 
-#include <appl/debug.h>
-#include <appl/BufferManager.h>
-#include <appl/globalMsg.h>
-#include <ewol/widget/List.h>
-#include <ewol/widget/Windows.h>
+#include <appl/debug.hpp>
+#include <appl/BufferManager.hpp>
+#include <appl/globalMsg.hpp>
+#include <ewol/widget/List.hpp>
+#include <ewol/widget/Windows.hpp>
 
 namespace appl {
 	class dataBufferStruct {

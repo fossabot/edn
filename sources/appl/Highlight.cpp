@@ -3,12 +3,12 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <appl/Highlight.h>
-#include <exml/exml.h>
-#include <ewol/ewol.h>
-#include <gale/resource/Manager.h>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <appl/Highlight.hpp>
+#include <exml/exml.hpp>
+#include <ewol/ewol.hpp>
+#include <gale/resource/Manager.hpp>
 
 // first pass
 //#define HL_DEBUG APPL_INFO

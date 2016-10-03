@@ -3,12 +3,12 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <appl/GlyphPainting.h>
-#include <ejson/ejson.h>
-#include <etk/os/FSNode.h>
-#include <gale/resource/Manager.h>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <appl/GlyphPainting.hpp>
+#include <ejson/ejson.hpp>
+#include <etk/os/FSNode.hpp>
+#include <gale/resource/Manager.hpp>
 
 
 appl::GlyphPainting::GlyphPainting() {

@@ -4,10 +4,10 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <ewol/object/Worker.h>
-#include <ewol/widget/meta/FileChooser.h>
-#include <appl/BufferManager.h>
-#include <appl/Gui/WorkerSaveFile.h>
+#include <ewol/object/Worker.hpp>
+#include <ewol/widget/meta/FileChooser.hpp>
+#include <appl/BufferManager.hpp>
+#include <appl/Gui/WorkerSaveFile.hpp>
 
 namespace appl {
 	class WorkerCloseFile : public ewol::object::Worker {

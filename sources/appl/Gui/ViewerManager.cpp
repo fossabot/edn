@@ -3,13 +3,13 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/debug.h>
-#include <appl/global.h>
-#include <appl/Gui/ViewerManager.h>
-#include <appl/Gui/TextViewer.h>
-#include <ewol/object/Object.h>
-#include <ewol/object/Manager.h>
-#include <gale/resource/Manager.h>
+#include <appl/debug.hpp>
+#include <appl/global.hpp>
+#include <appl/Gui/ViewerManager.hpp>
+#include <appl/Gui/TextViewer.hpp>
+#include <ewol/object/Object.hpp>
+#include <ewol/object/Manager.hpp>
+#include <gale/resource/Manager.hpp>
 
 appl::ViewerManager::ViewerManager() {
 	addObjectType("appl::ViewerManager");

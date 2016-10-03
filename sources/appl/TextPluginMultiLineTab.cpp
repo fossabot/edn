@@ -3,8 +3,8 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/TextPluginMultiLineTab.h>
-#include <appl/Gui/TextViewer.h>
+#include <appl/TextPluginMultiLineTab.hpp>
+#include <appl/Gui/TextViewer.hpp>
 
 appl::TextPluginMultiLineTab::TextPluginMultiLineTab() {
 	m_activateOnEventEntry = true;

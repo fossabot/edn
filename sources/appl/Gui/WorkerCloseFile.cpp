@@ -3,11 +3,11 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <ewol/context/Context.h>
-#include <appl/debug.h>
-#include <appl/Gui/WorkerCloseFile.h>
-#include <ewol/widget/meta/StdPopUp.h>
-#include <ewol/tools/message.h>
+#include <ewol/context/Context.hpp>
+#include <appl/debug.hpp>
+#include <appl/Gui/WorkerCloseFile.hpp>
+#include <ewol/widget/meta/StdPopUp.hpp>
+#include <ewol/tools/message.hpp>
 
 appl::WorkerCloseFile::WorkerCloseFile() :
   signalCloseDone(this, "close-file-done", ""),

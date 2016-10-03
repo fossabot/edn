@@ -3,9 +3,9 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/TextPluginHistory.h>
-#include <appl/Gui/TextViewer.h>
-#include <appl/TextPluginManager.h>
+#include <appl/TextPluginHistory.hpp>
+#include <appl/Gui/TextViewer.hpp>
+#include <appl/TextPluginManager.hpp>
 
 appl::TextPluginHistory::TextPluginHistory() :
   m_menuIdTitle(-1),

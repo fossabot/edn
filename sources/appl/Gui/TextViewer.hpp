@@ -4,16 +4,16 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <appl/debug.h>
-#include <appl/Buffer.h>
-#include <appl/globalMsg.h>
+#include <appl/debug.hpp>
+#include <appl/Buffer.hpp>
+#include <appl/globalMsg.hpp>
 
-#include <ewol/widget/WidgetScrolled.h>
-#include <ewol/compositing/Text.h>
-#include <ewol/compositing/TextDF.h>
-#include <ewol/compositing/Drawing.h>
-#include <appl/BufferManager.h>
-#include <appl/Gui/ViewerManager.h>
+#include <ewol/widget/WidgetScrolled.hpp>
+#include <ewol/compositing/Text.hpp>
+#include <ewol/compositing/TextDF.hpp>
+#include <ewol/compositing/Drawing.hpp>
+#include <appl/BufferManager.hpp>
+#include <appl/Gui/ViewerManager.hpp>
 #include <utility>
 
 namespace appl {

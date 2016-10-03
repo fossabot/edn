@@ -3,8 +3,8 @@
  * @copyright 2010, Edouard DUPIN, all right reserved
  * @license GPL v3 (see license file)
  */
-#include <appl/TextPluginRmLine.h>
-#include <appl/Gui/TextViewer.h>
+#include <appl/TextPluginRmLine.hpp>
+#include <appl/Gui/TextViewer.hpp>
 
 appl::TextPluginRmLine::TextPluginRmLine() {
 	m_activateOnReceiveShortCut = true;

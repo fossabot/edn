@@ -4,9 +4,9 @@
  * @license GPL v3 (see license file)
  */
 
-#include <appl/TextPluginCopy.h>
-#include <gale/context/clipBoard.h>
-#include <appl/Gui/TextViewer.h>
+#include <appl/TextPluginCopy.hpp>
+#include <gale/context/clipBoard.hpp>
+#include <appl/Gui/TextViewer.hpp>
 
 appl::TextPluginCopy::TextPluginCopy() :
   m_menuIdTitle(-1),

@@ -4,11 +4,11 @@
  * @license GPL v3 (see license file)
  */
 #pragma once
-#include <appl/debug.h>
-#include <ewol/widget/Composer.h>
-#include <ewol/widget/Entry.h>
-#include <appl/Buffer.h>
-#include <appl/Gui/ViewerManager.h>
+#include <appl/debug.hpp>
+#include <ewol/widget/Composer.hpp>
+#include <ewol/widget/Entry.hpp>
+#include <appl/Buffer.hpp>
+#include <appl/Gui/ViewerManager.hpp>
 namespace appl {
 	namespace widget {
 		class Search;
