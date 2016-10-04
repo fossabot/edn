@@ -31,8 +31,7 @@ def get_version():
 def get_version_id():
 	return 6
 
-def create(target, module_name):
-	my_module = module.Module(__file__, module_name, get_type())
+def configure(target, my_module):
 	my_module.add_extra_flags()
 	my_module.add_src_file([
 		'sources/appl/ctags/readtags.cpp'
@@ -107,7 +106,7 @@ def create(target, module_name):
 	my_module.copy_path('data/theme/colorBlack/*.json','theme/color/black/')
 	my_module.copy_path('data/GUI-Search.xml','')
 	
-	my_module.add_path(os.path.join(tools.get_current_path(__file__), "sources"))
+	my_module.add_path("sources")
 	
 	my_module.copy_file("data/Font/freefont/FreeSerif.ttf","fonts/FreeSerif.ttf")
 	my_module.copy_path("data/Font/freefont/FreeMon*.ttf","fonts/")
@@ -121,14 +120,14 @@ def create(target, module_name):
 	# set the package properties:
 	my_module.set_pkg("VERSION_CODE", versionIDCode)
 	if "MacOs" in target.get_type():
-		my_module.set_pkg("ICON", os.path.join(tools.get_current_path(__file__), "data/icon.icns"))
+		my_module.set_pkg("ICON", "data/icon.icns")
 	else:
-		my_module.set_pkg("ICON", os.path.join(tools.get_current_path(__file__), "data/icon.png"))
+		my_module.set_pkg("ICON", "data/icon.png")
 	
 	my_module.set_pkg("SECTION", ["Development", "Editors"])
 	my_module.set_pkg("PRIORITY", "optional")
 	my_module.add_pkg("RIGHT", "WRITE_EXTERNAL_STORAGE")
 	my_module.add_pkg("RIGHT", "SET_ORIENTATION")
 	
-	return my_module
+	return True
 
