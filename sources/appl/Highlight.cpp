@@ -8,6 +8,7 @@
 #include <appl/Highlight.hpp>
 #include <exml/exml.hpp>
 #include <ewol/ewol.hpp>
+#include <echrono/Steady.hpp>
 #include <gale/resource/Manager.hpp>
 
 // first pass
@@ -205,10 +206,10 @@ void appl::Highlight::parse(int64_t _start,
 	int64_t elementStart = _start;
 	int64_t elementStop = _stop;
 	appl::HighlightInfo resultat;
-	int64_t startTime = ewol::getTime();
+	echrono::Steady startTime = echrono::Steady::now();
 	while (elementStart <= elementStop) {
 		//HL_DEBUG("Parse element in the buffer pos=" << elementStart);
-		int64_t currentTime = ewol::getTime();
+		echrono::Steady currentTime = echrono::Steady::now();;
 		//try to fond the HL in ALL of we have
 		for (int64_t jjj=0; jjj<(int64_t)m_listHighlightPass1.size(); jjj++){
 			bool ret = true;
@@ -222,9 +223,9 @@ void appl::Highlight::parse(int64_t _start,
 			// Stop the search to the end (to get the end of the pattern)
 			ret = m_listHighlightPass1[jjj].find(elementStart, _buffer.size(), resultat, _buffer);
 			if (ret == true) {
-				int64_t currentTimeEnd = ewol::getTime();
-				int64_t deltaTime = currentTimeEnd - currentTime;
-				HL_DEBUG("Find Pattern in the Buffer : time=" << (float)deltaTime/1000.0f << " ms (" << resultat.start << "," << resultat.stop << ") startPos=" << elementStart << " for=" << m_listHighlightPass1[jjj].getPaternString().first << " " << m_listHighlightPass1[jjj].getPaternString().second);
+				echrono::Steady currentTimeEnd = echrono::Steady::now();;
+				echrono::Duration deltaTime = currentTimeEnd - currentTime;
+				HL_DEBUG("Find Pattern in the Buffer : time=" << deltaTime << " (" << resultat.start << "," << resultat.stop << ") startPos=" << elementStart << " for=" << m_listHighlightPass1[jjj].getPaternString().first << " " << m_listHighlightPass1[jjj].getPaternString().second);
 				// remove element in the current List where the current Element have a end inside the next...
 				int64_t kkk=_addingPos;
 				while(kkk < (int64_t)_metaData.size() ) {
@@ -259,9 +260,9 @@ void appl::Highlight::parse(int64_t _start,
 		// Go to the next element (and search again ...).
 		elementStart++;
 	}
-	int64_t stopTime = ewol::getTime();
-	int64_t deltaTimeGlobal = stopTime - startTime;
-	APPL_DEBUG("parse in time=" << (float)deltaTimeGlobal/1000.0f << " ms ");
+	echrono::Steady stopTime = echrono::Steady::now();
+	echrono::Duration deltaTimeGlobal = stopTime - startTime;
+	APPL_DEBUG("parse in time=" << deltaTimeGlobal);
 	
 	
 }
