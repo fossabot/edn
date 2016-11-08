@@ -189,7 +189,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 		                       "<br/>\n"
 		                       "<font color=\"indigo\">\n"
 		                       "	<i>\n"
-		                       "		No Buffer Availlable to display\n"
+		                       "		No Buffer Availlable to display\n" + etk::to_string(m_size) + 
 		                       "	</i>\n"
 		                       "</font>\n");
 		m_displayText.setPos(vec3(0.0f, m_size.y(), 0.0f) );
