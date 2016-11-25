@@ -100,6 +100,7 @@ def configure(target, my_module):
 	my_module.copy_path('data/languages/php/*.xml','languages/php/')
 	my_module.copy_path('data/languages/xml/*.xml','languages/xml/')
 	my_module.copy_path('data/languages/python/*.xml','languages/python/')
+	my_module.copy_path('data/languages/zeus.idl/*.xml','languages/zeus.idl/')
 	my_module.copy_path('data/theme/default/*.svg','theme/shape/square/')
 	my_module.copy_path('data/theme/default/*.edf','theme/shape/square/')
 	my_module.copy_path('data/theme/colorWhite/*.json','theme/color/white/')
