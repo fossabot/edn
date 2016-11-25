@@ -30,7 +30,7 @@
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my type">
 			<color>type</color>
-			<regex>\b(void|bool|string|int(8|16|32|64)|uint(8|16|32|64)|float(32|64)|vector\:(bool|string|int(8|16|32|64)|uint(8|16|32|64)|float(32|64)))\b</regex>
+			<regex>\b(void|bool|string|int(8|16|32|64)|uint(8|16|32|64)|float(32|64)|vector\:(bool|string|int(8|16|32|64)|uint(8|16|32|64)|float(32|64))|time|duration|file|stream)\b</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
