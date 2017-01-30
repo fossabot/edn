@@ -182,6 +182,8 @@ void MainWindows::init() {
 				myMenu->add(idMenuFile, "_T{Save As ...}",  "", "menu:save-as");
 				myMenu->addSpacer();
 				myMenu->add(idMenuFile, "_T{Properties}",   "THEME:GUI:Parameter.edf", "menu:property");
+				myMenu->addSpacer();
+				myMenu->add(idMenuFile, "_T{Exit}",   "", "menu:exit");
 			int32_t idMenuEdit = myMenu->addTitle("_T{Edit}");
 				myMenu->add(idMenuEdit, "_T{Goto line ...}","", "menu:goto-line");
 			int32_t idMenuSearch = myMenu->addTitle("_T{Search}");
@@ -226,6 +228,7 @@ void MainWindows::init() {
 	
 	shortCutAdd("ctrl+f",       "menu:search");
 	shortCutAdd("F12",          "menu:reloade-shader");
+	shortCutAdd("alt+F4",       "menu:exit");
 	// TODO : auto-connect on shortcut event ==> maybe do beter later ...
 	signalShortcut.connect(sharedFromThis(), &MainWindows::onCallbackShortCut);
 	m_bufferManager->signalSelectFile.connect(sharedFromThis(), &MainWindows::onCallbackselectNewFile);
@@ -247,6 +250,8 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 		if (m_bufferManager != nullptr) {
 			m_bufferManager->createNewBuffer();
 		}
+	} else if (_value == "menu:exit") {
+		gale::getContext().stop();
 	} else if (_value == "menu:open") {
 		displayOpen();
 	} else if (_value == "menu:close") {
