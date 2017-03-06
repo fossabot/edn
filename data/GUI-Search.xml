@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<composer expand="true,false" fill="true,false">
-	<sizer mode="hori" expand="true,false" fill="true" lock="true">
-		<button name="SEARCH:close">
-			<image src="THEME:GUI:Remove.edf" fill="true" size="7,7mm" distance-field="true"/>
-		</button>
-		<entry name="SEARCH:search-entry" expand="true" fill="true"/>
-		<button name="SEARCH:search">
-			<image src="THEME:GUI:Search.edf" fill="true" size="7,7mm" distance-field="true"/>
-		</button>
-		<entry name="SEARCH:replace-entry" expand="true" fill="true"/>
-		<button name="SEARCH:replace">
-			<image src="THEME:GUI:Replace.edf" fill="true" size="7,7mm" distance-field="true"/>
-		</button>
-		<button name="SEARCH:case" toggle="true">
-			<image src="THEME:GUI:CaseSensitive.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
-			<image src="THEME:GUI:CaseSensitive.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
-		</button>
-		<button name="SEARCH:wrap" toggle="true">
-			<image src="THEME:GUI:WrapAround.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
-			<image src="THEME:GUI:WrapAround.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
-		</button>
-		<button name="SEARCH:up-down" toggle="true">
-			<image src="THEME:GUI:Up.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
-			<image src="THEME:GUI:Down.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
-		</button>
-	</sizer>
-</composer>
+<sizer mode="hori" expand="true,false" fill="true" lock="true">
+	<button name="SEARCH:close">
+		<image src="THEME:GUI:Remove.edf" fill="true" size="7,7mm" distance-field="true"/>
+	</button>
+	<entry name="SEARCH:search-entry" expand="true" fill="true"/>
+	<button name="SEARCH:search">
+		<image src="THEME:GUI:Search.edf" fill="true" size="7,7mm" distance-field="true"/>
+	</button>
+	<entry name="SEARCH:replace-entry" expand="true" fill="true"/>
+	<button name="SEARCH:replace">
+		<image src="THEME:GUI:Replace.edf" fill="true" size="7,7mm" distance-field="true"/>
+	</button>
+	<button name="SEARCH:case" toggle="true">
+		<image src="THEME:GUI:CaseSensitive.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
+		<image src="THEME:GUI:CaseSensitive.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
+	</button>
+	<button name="SEARCH:wrap" toggle="true">
+		<image src="THEME:GUI:WrapAround.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
+		<image src="THEME:GUI:WrapAround.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
+	</button>
+	<button name="SEARCH:up-down" toggle="true">
+		<image src="THEME:GUI:Up.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
+		<image src="THEME:GUI:Down.edf" fill="true" size="7,7mm" hover="_T(Close search bar)" distance-field="true"/>
+	</button>
+</sizer>

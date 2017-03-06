@@ -162,6 +162,8 @@ void MainWindows::init() {
 				
 				// search area:
 				m_widgetSearch = appl::widget::Search::create();
+				m_widgetSearch->propertyExpand.set(bvec2(true,false));
+				m_widgetSearch->propertyFill.set(bvec2(true,true));
 				mySizerVert2->subWidgetAdd(m_widgetSearch);
 			
 		mySizerHori = ewol::widget::Sizer::create();
@@ -174,22 +176,23 @@ void MainWindows::init() {
 			mySizerHori->subWidgetAdd(myMenu);
 			int32_t idMenuFile = myMenu->addTitle("_T{File}");
 				myMenu->add(idMenuFile, "_T{New}",          "", "menu:new");
-				myMenu->addSpacer();
+				myMenu->addSpacer(idMenuFile);
 				myMenu->add(idMenuFile, "_T{Open}",         "THEME:GUI:Load.edf", "menu:open");
 				myMenu->add(idMenuFile, "_T{Close}",        "THEME:GUI:Close.edf", "menu:close");
 				myMenu->add(idMenuFile, "_T{Close (all)}",  "", "menu:close-all");
 				myMenu->add(idMenuFile, "_T{Save}",         "THEME:GUI:Save.edf", "menu:save");
 				myMenu->add(idMenuFile, "_T{Save As ...}",  "", "menu:save-as");
-				myMenu->addSpacer();
+				myMenu->addSpacer(idMenuFile);
 				myMenu->add(idMenuFile, "_T{Properties}",   "THEME:GUI:Parameter.edf", "menu:property");
-				myMenu->addSpacer();
+				myMenu->addSpacer(idMenuFile);
 				myMenu->add(idMenuFile, "_T{Exit}",   "", "menu:exit");
 			int32_t idMenuEdit = myMenu->addTitle("_T{Edit}");
 				myMenu->add(idMenuEdit, "_T{Goto line ...}","", "menu:goto-line");
+			myMenu->addSpacer();
 			int32_t idMenuSearch = myMenu->addTitle("_T{Search}");
 				myMenu->add(idMenuSearch, "_T{Search}",         "THEME:GUI:Search.edf", "menu:search");
 				myMenu->add(idMenuSearch, "_T{Replace}",        "THEME:GUI:Replace.edf", "menu:replace");
-				myMenu->addSpacer();
+				myMenu->addSpacer(idMenuSearch);
 				myMenu->add(idMenuSearch, "_T{Find (previous)}","", "menu:find:previous");
 				myMenu->add(idMenuSearch, "_T{Find (next)}",    "", "menu:find:next");
 				myMenu->add(idMenuSearch, "_T{Find (all)}",     "", "menu:find:all");
@@ -199,9 +202,9 @@ void MainWindows::init() {
 				myMenu->add(idMenugDisplay, "_T{Color White}",          "", "menu:color:color/white/");
 				myMenu->add(idMenugDisplay, "_T{Shape square}",         "", "menu:shape:shape/square/");
 				myMenu->add(idMenugDisplay, "_T{Shape round}",          "", "menu:shape:shape/round/");
-				myMenu->addSpacer();
+				myMenu->addSpacer(idMenugDisplay);
 				myMenu->add(idMenugDisplay, "_T{Reload openGl Shader}", "", "menu:reloadShape");
-				myMenu->addSpacer();
+				myMenu->addSpacer(idMenugDisplay);
 				myMenu->add(idMenugDisplay, "_T{Split}", "", "menu:split:enable");
 				myMenu->add(idMenugDisplay, "_T{Unsplit}", "", "menu:split:disable");
 				myMenu->add(idMenugDisplay, "_T{Vertical}", "", "menu:split:vert");
