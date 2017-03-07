@@ -270,7 +270,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 	m_buffer->hightlightGenerateLines(displayLocalSyntax, startingIt, (m_size.y()/tmpLetterSize.y()) + 5);
 	float maxSizeX = 0;
 	appl::HighlightInfo * HLColor = nullptr;
-	bool DisplayCursorAndSelection = isSelectedLast();
+	bool displayCursorAndSelection = isSelectedLast();
 	appl::Buffer::Iterator it;
 	for (it = startingIt;
 	     (bool)it == true;
@@ -287,13 +287,14 @@ void appl::TextViewer::onRegenerateDisplay() {
 			countColomn = 0;
 			maxSizeX = std::max(m_displayText.getPos().x(), maxSizeX);
 			// Display the end line position only if we have the focus ...
-			if (DisplayCursorAndSelection == true) {
-				if (it >= selectPosStart && it < selectPosStop) {
-					ewol::compositing::Drawing& draw = m_displayText.getDrawing();
-					draw.setColor(etk::Color<>(0xFF, 0x00, 0x00, 0xFF));
-					draw.setPos(m_displayText.getPos() + tmpLetterSize/4.0f);
-					draw.rectangle(m_displayText.getPos() + tmpLetterSize*3.0f/4.0f);
-				}
+			if (   (    displayCursorAndSelection == true
+			         && it >= selectPosStart
+			         && it < selectPosStop)
+			    || globals::isSetDisplayEndOfLine() == true) {
+				ewol::compositing::Drawing& draw = m_displayText.getDrawing();
+				draw.setColor(etk::Color<>(0xFF, 0x00, 0x00, 0xFF));
+				draw.setPos(m_displayText.getPos() + tmpLetterSize/4.0f);
+				draw.rectangle(m_displayText.getPos() + tmpLetterSize*3.0f/4.0f);
 			}
 			if (tmpCursorLenght == 0.0f) {
 				tmpCursorLenght = tmpLetterSize.x();
@@ -321,15 +322,17 @@ void appl::TextViewer::onRegenerateDisplay() {
 			m_displayText.setColor((*m_paintingProperties)[m_colorNormal].getForeground());
 		}
 		if (haveBackground == false) {
-			if (*it == u32char::Space) {
+			if (    *it == u32char::Space
+			     && globals::isSetDisplaySpaceChar() == true) {
 				m_displayText.setColorBg((*m_paintingProperties)[m_colorSpace].getForeground());
-			} else if (*it == u32char::Tabulation) {
+			} else if (    *it == u32char::Tabulation
+			            && globals::isSetDisplayTabChar() == true) {
 				m_displayText.setColorBg((*m_paintingProperties)[m_colorTabulation].getForeground());
 			}
 		}
 		m_buffer->expand(countColomn, *it, stringToDisplay);
 		// Display selection only if we have the focus ...
-		if (DisplayCursorAndSelection == true) {
+		if (displayCursorAndSelection == true) {
 			if (it >= selectPosStart && it < selectPosStop) {
 				m_displayText.setColor((*m_paintingProperties)[m_colorSelection].getForeground());
 				m_displayText.setColorBg((*m_paintingProperties)[m_colorSelection].getBackground());
@@ -394,7 +397,7 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 		}
 		char32_t localValue = _event.getChar();
 		if (localValue == u32char::Return) {
-			if (true == _event.getSpecialKey().getShift()) {
+			if (_event.getSpecialKey().getShift() == true) {
 				localValue = u32char::CarrierReturn;
 			}
 		} else if (localValue == u32char::Suppress ) {
@@ -431,7 +434,7 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 			appl::Buffer::Iterator posEnd = pos;
 			++posEnd;
 			replace(output, pos, posEnd);
-			//TODO : choisce UTF  ... replace(localValue, pos, posEnd);
+			//TODO : choice UTF  ... replace(localValue, pos, posEnd);
 		} else {
 			std::string myString = output;
 			write(myString);

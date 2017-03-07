@@ -20,26 +20,26 @@ appl::widget::Search::Search() :
 }
 void appl::widget::Search::init() {
 	ewol::widget::Composer::init();
-	loadFromFile("DATA:GUI-Search.xml");
+	loadFromFile("DATA:GUI-Search.xml", getId());
 	m_viewerManager = appl::ViewerManager::create();
 	// link event
-	subBind(ewol::widget::Button, "SEARCH:close",         signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackHide);
-	subBind(ewol::widget::Entry,  "SEARCH:search-entry",  signalModify,  sharedFromThis(), &appl::widget::Search::OnCallbackSearchValue);
-	subBind(ewol::widget::Entry,  "SEARCH:search-entry",  signalEnter,   sharedFromThis(), &appl::widget::Search::OnCallbackSearchEntryValidate);
-	subBind(ewol::widget::Button, "SEARCH:search",        signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackSearch);
-	subBind(ewol::widget::Entry,  "SEARCH:replace-entry", signalModify,  sharedFromThis(), &appl::widget::Search::OnCallbackReplaceValue);
-	subBind(ewol::widget::Entry,  "SEARCH:replace-entry", signalEnter,   sharedFromThis(), &appl::widget::Search::OnCallbackReplaceEntryValidate);
-	subBind(ewol::widget::Button, "SEARCH:replace",       signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackReplace);
-	subBind(ewol::widget::Button, "SEARCH:case",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackCase);
-	subBind(ewol::widget::Button, "SEARCH:wrap",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackWrap);
-	subBind(ewol::widget::Button, "SEARCH:up-down",       signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackForward);
+	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:close",         signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackHide);
+	subBind(ewol::widget::Entry,  "[" + etk::to_string(getId()) + "]SEARCH:search-entry",  signalModify,  sharedFromThis(), &appl::widget::Search::OnCallbackSearchValue);
+	subBind(ewol::widget::Entry,  "[" + etk::to_string(getId()) + "]SEARCH:search-entry",  signalEnter,   sharedFromThis(), &appl::widget::Search::OnCallbackSearchEntryValidate);
+	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:search",        signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackSearch);
+	subBind(ewol::widget::Entry,  "[" + etk::to_string(getId()) + "]SEARCH:replace-entry", signalModify,  sharedFromThis(), &appl::widget::Search::OnCallbackReplaceValue);
+	subBind(ewol::widget::Entry,  "[" + etk::to_string(getId()) + "]SEARCH:replace-entry", signalEnter,   sharedFromThis(), &appl::widget::Search::OnCallbackReplaceEntryValidate);
+	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:replace",       signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackReplace);
+	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:case",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackCase);
+	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:wrap",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackWrap);
+	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:up-down",       signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackForward);
 	// set default properties
-	propertySetOnWidgetNamed("SEARCH:case", "value", etk::to_string(m_caseSensitive));
-	propertySetOnWidgetNamed("SEARCH:wrap", "value", etk::to_string(m_wrap));
-	propertySetOnWidgetNamed("SEARCH:up-down", "value", etk::to_string(m_forward));
+	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]SEARCH:case", "value", etk::to_string(m_caseSensitive));
+	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]SEARCH:wrap", "value", etk::to_string(m_wrap));
+	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]SEARCH:up-down", "value", etk::to_string(m_forward));
 	// get widget
-	m_searchEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:search-entry"));
-	m_replaceEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("SEARCH:replace-entry"));
+	m_searchEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("[" + etk::to_string(getId()) + "]SEARCH:search-entry"));
+	m_replaceEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("[" + etk::to_string(getId()) + "]SEARCH:replace-entry"));
 	// basicly hiden ...
 	propertyHide.set(true);
 }

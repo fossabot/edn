@@ -5,11 +5,14 @@
  */
 #pragma once
 #include <appl/debug.hpp>
-#include <ewol/widget/Sizer.hpp>
+#include <ewol/widget/Composer.hpp>
 
 namespace globals {
 	void init();
 	void UnInit();
+	
+	void store();
+	
 	int32_t getNbColoneBorder();
 	int32_t getNbLineBorder();
 
@@ -29,7 +32,7 @@ namespace globals {
 	
 	bool OrderTheBufferList();
 	
-	class ParameterGlobalsGui : public ewol::widget::Sizer {
+	class ParameterGlobalsGui : public ewol::widget::Composer {
 		protected:
 			ParameterGlobalsGui();
 			void init();

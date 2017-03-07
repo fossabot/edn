@@ -24,8 +24,8 @@ void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
 	if (menu != nullptr) {
 		m_menuIdTitle = menu->addTitle("Edit");
 		if (m_menuIdTitle != -1) {
-			m_menuIdUndo = menu->add(m_menuIdTitle, "Undo", "THEME:GUI:Undo.edf", "appl::TextPluginHistory::menu:undo");
-			m_menuIdRedo = menu->add(m_menuIdTitle, "Redo", "THEME:GUI:Redo.edf", "appl::TextPluginHistory::menu:redo");
+			m_menuIdUndo = menu->add(m_menuIdTitle, "Undo", "THEME:GUI:Undo.svg", "appl::TextPluginHistory::menu:undo");
+			m_menuIdRedo = menu->add(m_menuIdTitle, "Redo", "THEME:GUI:Redo.svg", "appl::TextPluginHistory::menu:redo");
 		}
 	}
 	// add event :

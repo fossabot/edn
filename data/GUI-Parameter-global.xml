@@ -1,0 +1,18 @@
+<sizer mode="vert" fill="true" expand="true">
+	<spacer fill="true" expand="true"/>
+	<checkbox name="[{ID}]appl-param:auto-indent" fill="true" expand="true,false">
+		<label>_T{Automatic Indentation}</label>
+	</checkbox>
+	<checkbox name="[{ID}]appl-param:display-space-char" fill="true" expand="true,false">
+		<label>_T{Display space char (' ')}</label>
+	</checkbox>
+	<checkbox name="[{ID}]appl-param:display-tab" fill="true" expand="true,false">
+		<label>_T{Display tabulation char ('\\t')}</label>
+	</checkbox>
+	<checkbox name="[{ID}]appl-param:display-eol" fill="true" expand="true,false">
+		<label>_T{Display end of line ('\\n')}</label>
+	</checkbox>
+	<checkbox name="[{ID}]appl-param:display-shape" fill="true" expand="true,false">
+		<label>_T{switch Rounded/default}</label>
+	</checkbox>
+</sizer>

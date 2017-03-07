@@ -6,6 +6,7 @@
 #include <appl/TextPluginAutoIndent.hpp>
 #include <gale/context/clipBoard.hpp>
 #include <appl/Gui/TextViewer.hpp>
+#include <appl/global.hpp>
 
 appl::TextPluginAutoIndent::TextPluginAutoIndent() {
 	m_activateOnEventEntry = true;
@@ -16,6 +17,10 @@ appl::TextPluginAutoIndent::TextPluginAutoIndent() {
 bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
                                               const ewol::event::Entry& _event) {
 	if (isEnable() == false) {
+		return false;
+	}
+	// The user disable with global parameter
+	if (globals::isSetAutoIndent() == false) {
 		return false;
 	}
 	//APPL_DEBUG("KB EVENT : " << _event);

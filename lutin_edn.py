@@ -101,11 +101,9 @@ def configure(target, my_module):
 	my_module.copy_path('data/languages/xml/*.xml','languages/xml/')
 	my_module.copy_path('data/languages/python/*.xml','languages/python/')
 	my_module.copy_path('data/languages/zeus.idl/*.xml','languages/zeus.idl/')
-	my_module.copy_path('data/theme/default/*.svg','theme/shape/square/')
-	my_module.copy_path('data/theme/default/*.edf','theme/shape/square/')
 	my_module.copy_path('data/theme/colorWhite/*.json','theme/color/white/')
 	my_module.copy_path('data/theme/colorBlack/*.json','theme/color/black/')
-	my_module.copy_path('data/GUI-Search.xml','')
+	my_module.copy_path('data/GUI-*.xml')
 	
 	my_module.add_path("sources")
 	

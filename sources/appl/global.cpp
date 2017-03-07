@@ -9,6 +9,10 @@
 #include <ewol/context/Context.hpp>
 #include <gale/resource/Manager.hpp>
 #include <etk/os/FSNode.hpp>
+#include <ejson/ejson.hpp>
+
+static std::string g_baseDBName = "USERDATA:genericConfig.json";
+
 
 class myParamGlobal : public ewol::Object {
 	public:
@@ -24,6 +28,29 @@ class myParamGlobal : public ewol::Object {
 		  m_displaySpaceChar(this, "display-space", true, "Display the space char") {
 			m_static = true; // Note : set the object static notification( Must be set or assert at the end of process)
 			propertyName.set("edn_global_param");
+			load();
+		}
+		void load() {
+			ejson::Document database;
+			bool ret = database.load(g_baseDBName);
+			if (ret == false) {
+				return;
+			}
+			ejson::Object obj = database["globals"].toObject();
+			m_displayEOL.set(obj["display-eol"].toBoolean().get());
+			m_AutoIndent.set(obj["auto-indent"].toBoolean().get());
+			m_displayTabChar.set(obj["display-tab-char"].toBoolean().get());
+			m_displaySpaceChar.set(obj["display-space-char"].toBoolean().get());
+		}
+		void store() {
+			ejson::Document database;
+			ejson::Object obj;
+			database.add("globals", obj);
+			obj.add("display-eol", ejson::Boolean(m_displayEOL.get()));
+			obj.add("auto-indent", ejson::Boolean(m_AutoIndent.get()));
+			obj.add("display-tab-char", ejson::Boolean(m_displayTabChar.get()));
+			obj.add("display-space-char", ejson::Boolean(m_displaySpaceChar.get()));
+			bool retGenerate = database.storeSafe(g_baseDBName);
 		}
 };
 
@@ -34,12 +61,18 @@ static myParamGlobal& l_obj() {
 }
 
 void globals::init() {
-	//ewol::userConfig::addUserConfig(&l_obj());
+	myParamGlobal& tmpVal = l_obj();
+	// nothing to do ...
+	(void)tmpVal;
 }
 
 void globals::UnInit() {
 	// nothing to do ...
-	//ewol::userConfig::RmUserConfig(&l_obj());
+}
+
+
+void globals::store() {
+	l_obj().store();
 }
 
 // -----------------------------------------------------------
@@ -49,7 +82,7 @@ bool globals::isSetDisplayEndOfLine() {
 
 void globals::setDisplayEndOfLine(bool newVal) {
 	l_obj().m_displayEOL.set(newVal);
-	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
+	ewol::getContext().forceRedrawAll();
 }
 
 // -----------------------------------------------------------
@@ -59,7 +92,7 @@ bool globals::isSetDisplaySpaceChar() {
 
 void globals::setDisplaySpaceChar(bool _newVal) {
 	l_obj().m_displaySpaceChar.set(_newVal);
-	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
+	ewol::getContext().forceRedrawAll();
 }
 // -----------------------------------------------------------
 bool globals::isSetDisplayTabChar() {
@@ -68,7 +101,7 @@ bool globals::isSetDisplayTabChar() {
 
 void globals::setDisplayTabChar(bool _newVal) {
 	l_obj().m_displayTabChar.set(_newVal);
-	//ewol::widgetMessageMultiCast::Send(-1, ednMsgUserDisplayChange);
+	ewol::getContext().forceRedrawAll();
 }
 
 // -----------------------------------------------------------
@@ -103,69 +136,20 @@ globals::ParameterGlobalsGui::ParameterGlobalsGui() {
 }
 
 void globals::ParameterGlobalsGui::init() {
-	ewol::widget::Sizer::init();
-	propertyMode.set(ewol::widget::Sizer::modeVert);
-	ememory::SharedPtr<ewol::widget::CheckBox> myCheckbox;
-	ememory::SharedPtr<ewol::widget::Spacer> mySpacer;
+	ewol::widget::Composer::init();
+	loadFromFile("DATA:GUI-Parameter-global.xml", getId());
 	
-	mySpacer = ewol::widget::Spacer::create();
-	if (mySpacer == nullptr) {
-		APPL_ERROR("Can not allocate widget  == > display might be in error");
-	} else {
-		mySpacer->propertyExpand.set(bvec2(true,true));
-		subWidgetAdd(mySpacer);
-	}
-	myCheckbox = ewol::widget::CheckBox::create();
-	if (myCheckbox == nullptr) {
-		APPL_ERROR("Can not allocate widget  == > display might be in error");
-	} else {
-		//TODO : myCheckbox->propertyLabel.set("Automatic Indentation");
-		myCheckbox->propertyExpand.set(bvec2(true,false));
-		myCheckbox->propertyValue.set(isSetAutoIndent());
-		myCheckbox->signalValue.connect(sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackIndentation);
-		subWidgetAdd(myCheckbox);
-	}
-	myCheckbox = ewol::widget::CheckBox::create();
-	if (myCheckbox == nullptr) {
-		APPL_ERROR("Can not allocate widget  == > display might be in error");
-	} else {
-		//TODO : myCheckbox->propertyLabel.set("Display space char (' ')");
-		myCheckbox->propertyExpand.set(bvec2(true,false));
-		myCheckbox->propertyValue.set(isSetDisplaySpaceChar());
-		myCheckbox->signalValue.connect(sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackSpace);
-		subWidgetAdd(myCheckbox);
-	}
-	myCheckbox = ewol::widget::CheckBox::create();
-	if (myCheckbox == nullptr) {
-		APPL_ERROR("Can not allocate widget  == > display might be in error");
-	} else {
-		//TODO : myCheckbox->propertyLabel.set("Display tabulation char ('\\t')");
-		
-		myCheckbox->propertyExpand.set(bvec2(true,false));
-		myCheckbox->propertyValue.set(isSetDisplayTabChar());
-		myCheckbox->signalValue.connect(sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackTabulation);
-		subWidgetAdd(myCheckbox);
-	}
-	myCheckbox = ewol::widget::CheckBox::create();
-	if (myCheckbox == nullptr) {
-		APPL_ERROR("Can not allocate widget  == > display might be in error");
-	} else {
-		//TODO : myCheckbox->propertyLabel.set("Display end of line ('\\n')");
-		myCheckbox->propertyExpand.set(bvec2(true,false));
-		myCheckbox->propertyValue.set(isSetDisplayEndOfLine());
-		myCheckbox->signalValue.connect(sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackEndOfLine);
-		subWidgetAdd(myCheckbox);
-	}
-	myCheckbox = ewol::widget::CheckBox::create();
-	if (myCheckbox == nullptr) {
-		APPL_ERROR("Can not allocate widget  == > display might be in error");
-	} else {
-		//TODO : myCheckbox->propertyLabel.set("switch Rounded/default");
-		myCheckbox->propertyExpand.set(bvec2(true,false));
-		myCheckbox->propertyValue.set(isSetDisplayEndOfLine());
-		myCheckbox->signalValue.connect(sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackRounded);
-		subWidgetAdd(myCheckbox);
-	}
+	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]appl-param:auto-indent", "value", etk::to_string(isSetAutoIndent()));
+	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]appl-param:display-space-char", "value", etk::to_string(isSetDisplaySpaceChar()));
+	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]appl-param:display-tab", "value", etk::to_string(isSetDisplayTabChar()));
+	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]appl-param:display-eol", "value", etk::to_string(isSetDisplayEndOfLine()));
+	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]appl-param:display-shape", "value", etk::to_string(isSetDisplayEndOfLine()));
+	
+	subBind(ewol::widget::CheckBox, "[" + etk::to_string(getId()) + "]appl-param:auto-indent",       signalValue,   sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackIndentation);
+	subBind(ewol::widget::CheckBox, "[" + etk::to_string(getId()) + "]appl-param:display-space-char",       signalValue,   sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackSpace);
+	subBind(ewol::widget::CheckBox, "[" + etk::to_string(getId()) + "]appl-param:display-tab",       signalValue,   sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackTabulation);
+	subBind(ewol::widget::CheckBox, "[" + etk::to_string(getId()) + "]appl-param:display-eol",       signalValue,   sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackEndOfLine);
+	subBind(ewol::widget::CheckBox, "[" + etk::to_string(getId()) + "]appl-param:display-shape",       signalValue,   sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackRounded);
 }
 
 globals::ParameterGlobalsGui::~ParameterGlobalsGui() {
@@ -174,20 +158,25 @@ globals::ParameterGlobalsGui::~ParameterGlobalsGui() {
 
 
 void globals::ParameterGlobalsGui::onCallbackEndOfLine(const bool& _value) {
+	APPL_INFO("property change 'EOL' : " << _value);
 	setDisplayEndOfLine(_value);
 }
 
 void globals::ParameterGlobalsGui::onCallbackIndentation(const bool& _value) {
+	APPL_INFO("property change 'display indent' : " << _value);
 	setAutoIndent(_value);
 }
 
 void globals::ParameterGlobalsGui::onCallbackSpace(const bool& _value) {
+	APPL_INFO("property change 'display space' : " << _value);
 	setDisplaySpaceChar(_value);
 }
 void globals::ParameterGlobalsGui::onCallbackTabulation(const bool& _value) {
+	APPL_INFO("property change 'display-tab' : " << _value);
 	setDisplayTabChar(_value);
 }
 void globals::ParameterGlobalsGui::onCallbackRounded(const bool& _value) {
+	APPL_INFO("property change 'shape mode' : " << _value);
 	if (_value == true) {
 		etk::theme::setName("GUI", "rounded");;
 	} else {
