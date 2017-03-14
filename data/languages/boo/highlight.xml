@@ -4,23 +4,23 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="comment ##">
 			<color>SYNTAX_ERROR</color>
-			<regex>##.*?$</regex>
+			<regex>##.*$</regex>
 		</rule>
 		<rule name="comment #">
 			<color>comment</color>
-			<regex>#.*?$</regex>
+			<regex>#.*$</regex>
 		</rule>
 		<rule name="notes ... ">
 			<color>preprocesseur</color>
-			<regex>(NOTE|TODO) : .*?$</regex>
+			<regex>(NOTE|TODO) : .*$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>&quot;(.|\\[\\&quot;])*?$</regex>
+			<regex>&quot;(.|\\[\\&quot;])*$</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>\b&apos;(.|\\[\\&apos;])*?$</regex>
+			<regex>\@&apos;(.|\\[\\&apos;])*$</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->

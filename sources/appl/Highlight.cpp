@@ -123,6 +123,7 @@ appl::Highlight::~Highlight() {
 bool appl::Highlight::isCompatible(const std::string& _name) {
 	for (auto &it : m_listExtentions) {
 		APPL_DEBUG("        check : " << it << "=?=" << _name);
+		// TODO: Remove dependency with the std::regex ...
 		std::regex expression;
 		try {
 			expression.assign(it, std::regex_constants::optimize | std::regex_constants::ECMAScript);
@@ -135,7 +136,7 @@ bool appl::Highlight::isCompatible(const std::string& _name) {
 		if (resultMatch.size() <= 0) {
 			continue;
 		}
-		APPL_VERBOSE("    - begin=" << std::distance(_name.begin(), resultMatch[0].first) << "  end=" << std::distance(_name.begin(), resultMatch[0].second));
+		APPL_DEBUG("    - begin=" << std::distance(_name.begin(), resultMatch[0].first) << "  end=" << std::distance(_name.begin(), resultMatch[0].second));
 		if (resultMatch[0].first != _name.begin()) {
 			continue;
 		}
@@ -198,7 +199,7 @@ void appl::Highlight::parse(int64_t _start,
                             int64_t _stop,
                             std::vector<appl::HighlightInfo> & _metaData,
                             int64_t _addingPos,
-                            std::string& _buffer) {
+                            etk::Buffer& _buffer) {
 	if (0 > _addingPos) {
 		_addingPos = 0;
 	}
@@ -278,7 +279,7 @@ void appl::Highlight::parse(int64_t _start,
 void appl::Highlight::parse2(int64_t _start,
                              int64_t _stop,
                              std::vector<appl::HighlightInfo>& _metaData,
-                             std::string& _buffer) {
+                             etk::Buffer& _buffer) {
 	HL2_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() <<
 	          "  == > position search: (" << _start << "," << _stop << ")" );
 	int64_t elementStart = _start;
@@ -286,21 +287,20 @@ void appl::Highlight::parse2(int64_t _start,
 	appl::HighlightInfo resultat;
 	
 	while (elementStart < elementStop) {
-		if (elementStart == 306) {
-			//elog::setLevel(elog::logLevelVerbose);
-		}
-		//HL2_DEBUG("Parse element in the buffer pos=" << elementStart << "," << _buffer.size() << ")" );
+		HL2_DEBUG("Parse element in the buffer pos=" << elementStart << "," << _buffer.size() << ")" );
 		//try to fond the HL in ALL of we have
 		for (int64_t jjj=0; jjj<int64_t(m_listHighlightPass2.size()); jjj++){
+			/*
 			HL2_DEBUG("Parse HL id=" << jjj << " position search: (" <<
 			         elementStart << "," << elementStop << ") in='"
-			         << /*_buffer[elementStart]*/ std::string(_buffer.begin()+elementStart,_buffer.begin()+elementStop) << "' " << m_listHighlightPass2[jjj].getPaternString().first << " " << m_listHighlightPass1[jjj].getPaternString().second);
+			         << std::string(_buffer.begin()+elementStart,_buffer.begin()+elementStop) << "' " << m_listHighlightPass2[jjj].getPaternString().first << " " << m_listHighlightPass1[jjj].getPaternString().second);
+			*/
 			// Stop the search to the end (to get the end of the pattern)
 			bool ret = m_listHighlightPass2[jjj].find(elementStart, elementStop, resultat, _buffer);
 			if (ret == true) {
 				// find an element:
 				_metaData.push_back(resultat);
-				HL2_DEBUG("data='" << std::string(_buffer.begin()+elementStart,_buffer.begin()+resultat.stop) << "'");
+				//HL2_DEBUG("data='" << std::string(_buffer.begin()+elementStart,_buffer.begin()+resultat.stop) << "'");
 				elementStart = resultat.stop-1;
 				break;
 			}
@@ -317,8 +317,8 @@ void appl::Highlight::parse2(int64_t _start,
  * @param[in] _buffer buffer where we need to search data
  */
 void appl::Highlight::parseSubElement(const appl::HighlightInfo& _upper,
-                                      std::vector<appl::HighlightInfo> &_metaData,
-                                      std::string &_buffer) {
+                                      std::vector<appl::HighlightInfo>& _metaData,
+                                      etk::Buffer& _buffer) {
 	if (_upper.patern->getSubPatternName().size() == 0) {
 		return;
 	}

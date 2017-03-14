@@ -145,20 +145,13 @@ bool appl::Buffer::loadFile(const std::string& _name) {
 	m_cursorPos = 0;
 	setHighlightType("");
 	m_nbLines = 0;
-	if (file.exist() == false) {
-		APPL_ERROR("File : '" << m_fileName << "' does not exist...");
-		return false;
+	if (m_data.dumpFrom(m_fileName) == true ) {
+		countNumberofLine();
+		tryFindHighlightType();
+		m_isModify = false;
+		return true;
 	}
-	if (file.fileOpenRead() == false) {
-		APPL_ERROR("File : '" << m_fileName << "' Fail to open in read mode");
-		return false;
-	}
-	m_data = file.fileReadAllString();
-	file.fileClose();
-	countNumberofLine();
-	tryFindHighlightType();
-	m_isModify = false;
-	return true;
+	return false;
 }
 
 void appl::Buffer::setFileName(const std::string& _name) {
@@ -175,16 +168,12 @@ void appl::Buffer::setFileName(const std::string& _name) {
 }
 
 bool appl::Buffer::storeFile() {
-	etk::FSNode file(m_fileName);
-	if (file.fileOpenWrite() == false) {
-		APPL_ERROR("File : '" << m_fileName << "' Fail to open in write mode");
-		return false;
+	if (m_data.dumpIn(m_fileName) == true) {
+		APPL_INFO("saving file : " << m_fileName);
+		setModification(false);
+		return true;
 	}
-	file.fileWriteAll(m_data);
-	file.fileClose();
-	APPL_INFO("saving file : " << m_fileName);
-	setModification(false);
-	return true;
+	return false;
 }
 
 void appl::Buffer::setModification(bool _status) {
@@ -642,7 +631,7 @@ bool appl::Buffer::write(const std::string& _data, const appl::Buffer::Iterator&
 		position = 0;
 	}
 	APPL_VERBOSE("write at pos: " << (int64_t)_pos << " ==> " << position << " data : " << _data);
-	m_data.insert((size_t)position, _data);
+	m_data.insert(position, (int8_t*)(_data.c_str()), _data.size());
 	if (m_cursorPos < 0) {
 		m_cursorPos = 0;
 	}
@@ -659,7 +648,7 @@ bool appl::Buffer::replace(const std::string& _data, const appl::Buffer::Iterato
 	if (position < 0){
 		position = 0;
 	}
-	m_data.replace(m_data.begin() + position, m_data.begin() + (int64_t)_posEnd, _data.begin(), _data.end());
+	m_data.replace(position, (int64_t)_posEnd-(int64_t)_pos, (int8_t*)(_data.c_str()), _data.size());
 	regenerateHighLightAt(position, (int64_t)_posEnd-(int64_t)_pos, _data.size());
 	m_selectMode = false;
 	moveCursor(position+_data.size());
@@ -674,7 +663,7 @@ void appl::Buffer::removeSelection() {
 	}
 	int64_t startPos = getStartSelectionPos();
 	int64_t endPos = getStopSelectionPos();
-	m_data.erase(startPos, endPos-startPos);
+	m_data.remove(startPos, endPos-startPos);
 	regenerateHighLightAt(startPos, endPos-startPos, 0);
 	m_selectMode = false;
 	moveCursor(startPos);

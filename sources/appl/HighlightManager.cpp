@@ -84,8 +84,7 @@ std::string appl::highlightManager::getTypeFile(const std::string& _fileName) {
 		}
 		APPL_DEBUG("    check : " << it->getTypeName());
 		if (it->isCompatible(_fileName) == true) {
-			APPL_DEBUG("Find type for extention : " << _fileName
-			             << " type : " << it->getTypeName());
+			APPL_DEBUG("Find type for extention : " << _fileName << " type : " << it->getTypeName());
 			return it->getTypeName();
 		}
 	}

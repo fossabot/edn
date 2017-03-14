@@ -19,12 +19,12 @@ mediump vec4
 mediump mat2
 mediump mat3
 mediump mat4
-mediump ivect2
-mediump ivect3
-mediump ivect4
-mediump bvect2
-mediump bvect3
-mediump bvect4
+mediump ivec2
+mediump ivec3
+mediump ivec4
+mediump bvec2
+mediump bvec3
+mediump bvec4
 
 //! inline doxygen comment
 void emptyFunction() {

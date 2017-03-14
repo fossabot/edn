@@ -34,11 +34,11 @@
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>&quot;(.|\\[\\&quot;])*?&quot;</regex>
+			<regex>&quot;(.|\\[\\&quot;])*&quot;</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>&apos;((\\[\\&apos;])|.)*?&apos;</regex>
+			<regex>&apos;((\\[\\&apos;])|.)*&apos;</regex>
 		</rule>
 		<rule name="internalParameter">
 			<color>normal</color>
@@ -47,48 +47,48 @@
 		</rule>
 		<rule name="Function name private">
 			<color>functionNamePrivate</color>
-			<regex>\b_(\w|_)+[ \t]*\(</regex>
+			<regex>\@_(\w|_)+[ \t]*\(</regex>
 			<sub>checkCamelCaseError</sub>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>
-			<regex>\b(\w|_)+[ \t]*\(</regex>
+			<regex>\@(\w|_)+[ \t]*\(</regex>
 			<sub>checkCamelCaseError</sub>
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
-			<regex>\b_(\w|_)+\b</regex>
+			<regex>\@_(\w|_)+\@</regex>
 			<sub>checkCamelCaseError</sub>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>\b(if|else|elif|break|pass|continue|while|do|for|in|return)\b</regex>
+			<regex>\@if|else|elif|break|pass|continue|while|do|for|in|return\@</regex>
 		</rule>
 		<rule name="my function keyword">
 			<color>systemFunction</color>
-			<regex>\b(print|len|range|del|__init__|self|os\.|sys\.|path\.)\b</regex>
+			<regex>\@print|len|range|del|__init__|self|os\.|sys\.|path\.\@</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<regex>\b(bool|BOOL|char|double|float)\b</regex>
+			<regex>\@bool|BOOL|char|double|float\@</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<regex>\b(def|class|import|from|as|try|except)\b</regex>
+			<regex>\@def|class|import|from|as|try|except\@</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<regex>\b(((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?)\b</regex>
+			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<regex>\b(True|False)\b</regex>
+			<regex>\@True|False\@</regex>
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>
-			<regex>\b([A-Z_][A-Z_0-9]{3,500})\b</regex>
+			<regex>\@[A-Z_][A-Z_0-9]{3,500}\@</regex>
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>
@@ -102,11 +102,11 @@
 	<pass name="doxyparse">
 		<rule name="knownkey">
 			<color>doxygen-key-known</color>
-			<regex>(@|\\)[\t ]*(addindex|addtogroup|anchor|arg|attention|author|authors|a|brief|bug|b|callgraph|category|cite|class|code|cond|copybrief|copydetails|copydoc|copyright|date|def|defgroup|deprecated|details|diafile|dir|docbookonly|dontinclude|dot|dotfile|else|elseif|em|endcode|endcond|enddocbookonly|enddot|endhtmlonly|endif|endinternal|endlatexonly|endlink|endmanonly|endmsc|endparblock|endrtfonly|endsecreflist|endverbatim|enduml|endxmlonly|enum|example|exception|extends|e|file|fn|headerfile|hidecallergraph|hidecallgraph|hideinitializer|htmlinclude|htmlonly|idlexcept|ifnot|if|image|implements|includelineno|include|ingroup|internal|invariant|interface|latexinclude|latexonly|line|link|license|li|mainpage|manonly|memberof|msc|mscfile|name|namespace|nosubgrouping|note|n|overload|package|page|paragraph|param|parblock|par|post|pre|private|privatesection|property|protected|protectedsection|protocol|public|publicsection|pure|p|refitem|ref|related|relates|relatedalso|relatesalso|remark|remarks|result|return|returns|retval|rtfonly|sa|secreflist|section|see|short|showinitializer|since|skip|skipline|snippet|startuml|struct|subpage|subsection|subsubsection|tableofcontents|test|throw|throws|todo|tparam|typedef|union|until|var|verbatim|verbinclude|version|vhdlflow|warning|weakgroup|xmlonly|xrefitem)</regex>
+			<regex>(\@|\\)[\t ]*(addindex|addtogroup|anchor|arg|attention|author|authors|a|brief|bug|b|callgraph|category|cite|class|code|cond|copybrief|copydetails|copydoc|copyright|date|def|defgroup|deprecated|details|diafile|dir|docbookonly|dontinclude|dot|dotfile|else|elseif|em|endcode|endcond|enddocbookonly|enddot|endhtmlonly|endif|endinternal|endlatexonly|endlink|endmanonly|endmsc|endparblock|endrtfonly|endsecreflist|endverbatim|enduml|endxmlonly|enum|example|exception|extends|e|file|fn|headerfile|hidecallergraph|hidecallgraph|hideinitializer|htmlinclude|htmlonly|idlexcept|ifnot|if|image|implements|includelineno|include|ingroup|internal|invariant|interface|latexinclude|latexonly|line|link|license|li|mainpage|manonly|memberof|msc|mscfile|name|namespace|nosubgrouping|note|n|overload|package|page|paragraph|param|parblock|par|post|pre|private|privatesection|property|protected|protectedsection|protocol|public|publicsection|pure|p|refitem|ref|related|relates|relatedalso|relatesalso|remark|remarks|result|return|returns|retval|rtfonly|sa|secreflist|section|see|short|showinitializer|since|skip|skipline|snippet|startuml|struct|subpage|subsection|subsubsection|tableofcontents|test|throw|throws|todo|tparam|typedef|union|until|var|verbatim|verbinclude|version|vhdlflow|warning|weakgroup|xmlonly|xrefitem)</regex>
 		</rule>
 		<rule name="key">
 			<color>doxygen-key</color>
-			<regex>(@|\\)[\t ]*\w+</regex>
+			<regex>(\@|\\)[\t ]*\w+</regex>
 		</rule>
 		<rule name="in-out">
 			<color>doxygen-in-out</color>
@@ -114,7 +114,7 @@
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
-			<regex>\b_\w+\b</regex>
+			<regex>\@_\w+\@</regex>
 		</rule>
 	</pass>
 	<pass name="TODO">

@@ -11,6 +11,8 @@ class HighlightPattern;
 #include <appl/GlyphPainting.hpp>
 #include <vector>
 #include <regex>
+#include <etk/RegExp.hpp>
+#include <etk/Buffer.hpp>
 #include <exml/exml.hpp>
 
 namespace appl {
@@ -44,7 +46,7 @@ namespace appl {
 			bool m_hasParsingError;
 			std::string m_regexValue[2];
 			bool m_hasEndRegEx;
-			std::regex m_regExp[2]; //!< Start of Regular expression
+			etk::RegExp<etk::Buffer> m_regExp[2]; //!< Start of Regular expression
 		public:
 			void setPatern(const std::string& _regExp, const std::string& _regExpStop="", bool _hasEndRegEx=false);
 			std::pair<std::string,std::string> getPaternString();
@@ -81,7 +83,7 @@ namespace appl {
 			bool find(int32_t _start,
 			          int32_t _stop,
 			          appl::HighlightInfo& _resultat,
-			          const std::string& _buffer);
+			          const etk::Buffer& _buffer);
 			
 			void parseRules(const exml::Element& _child, int32_t _level);
 	};

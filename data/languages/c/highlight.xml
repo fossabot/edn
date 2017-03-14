@@ -64,43 +64,43 @@
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>\b(return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof)\b</regex>
+			<regex>\@return|goto|if|else|case|default|switch|break|continue|while|do|for|sizeof\@</regex>
 		</rule>
 		<rule name="my function keyword">
 			<color>systemFunction</color>
-			<regex>\b(memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf|calloc|malloc|realloc)\b</regex>
+			<regex>\@memset|fopen|fread|fwrite|fgets|fclose|printf|(f|s|diag_)printf|calloc|malloc|realloc\@</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<regex>\b(bool|char(16_t|32_t)?|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128))\b</regex>
+			<regex>\@bool|char(16_t|32_t)?|double|float|u?int(8|16|32|64|128)?(_t)?|long|short|signed|size_t|unsigned|void|(I|U)(8|16|32|64|128)\@</regex>
 		</rule>
 		<rule name="my storage keyword">
 			<color>storageKeyword</color>
-			<regex>\b(inline|const|const|extern|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum)\b</regex>
+			<regex>\@inline|const|const|extern|register|static|unsigned|signed|volatile|char|double|float|int|long|short|void|typedef|struct|union|enum\@</regex>
 		</rule>
 		<rule name="my common Define">
 			<color>commonDefine</color>
-			<regex>\b(NULL|MAX|MIN|__(LINE|DATA|FILE|func|TIME|STDC|PRETTY_FUNCTION|FUNCTION)__)\b</regex>
+			<regex>\@NULL|MAX|MIN|__(LINE|DATA|FILE|func|TIME|STDC|PRETTY_FUNCTION|FUNCTION)__\@</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<regex>\b(((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?)\b</regex>
+			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<regex>\b(TRUE|FALSE)\b</regex>
+			<regex>\@TRUE|FALSE\@</regex>
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>
-			<regex>\b([A-Z_][A-Z_0-9]{3,500})\b</regex>
+			<regex>\@([A-Z_][A-Z_0-9]{3,500})\@</regex>
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
-			<regex>\b_\w+\b</regex>
+			<regex>\@_\w+\@</regex>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>
-			<regex>\b((\w|_)+[ \t]*\()</regex>
+			<regex>\@((\w|_)+[ \t]*\()</regex>
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>
@@ -122,7 +122,7 @@
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
-			<regex>\b_\w+\b</regex>
+			<regex>\@_\w+\@</regex>
 		</rule>
 	</pass>
 	<pass name="TODO">

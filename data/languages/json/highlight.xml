@@ -22,15 +22,15 @@
 		</rule>
 		<rule name="names">
 			<color>functionName</color>
-			<regex>([a-zA-Z0-9]|-|_)+</regex>
+			<regex>[a-zA-Z0-9\-_]+</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<regex>\b(((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?)\b</regex>
+			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
 		</rule>
 		<rule name="my boolean">
 			<color>boolean</color>
-			<regex>\b(true|false)\b</regex>
+			<regex>\@true|false\@</regex>
 		</rule>
 	</pass2>
 </EdnLang>

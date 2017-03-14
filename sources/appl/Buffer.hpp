@@ -8,6 +8,7 @@
 #include <etk/types.hpp>
 #include <etk/os/FSNode.hpp>
 #include <ewol/ewol.hpp>
+#include <etk/Buffer.hpp>
 #include <ewol/object/Object.hpp>
 #include <ewol/widget/Widget.hpp>
 #include <ewol/compositing/Text.hpp>
@@ -346,9 +347,9 @@ namespace appl {
 			 */
 			void setModification(bool _status);
 		protected:
-			std::string m_data; //!< copy of the file buffer
+			etk::Buffer m_data; //!< copy of the file buffer
 		public:
-			std::string& getData() {
+			etk::Buffer& getData() {
 				return m_data;
 			};
 		protected:

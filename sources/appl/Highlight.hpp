@@ -22,6 +22,7 @@ namespace appl {
 #include <etk/os/FSNode.hpp>
 #include <appl/HighlightPattern.hpp>
 #include <appl/GlyphPainting.hpp>
+#include <etk/Buffer.hpp>
 #include <exml/exml.hpp>
 
 namespace appl {
@@ -53,19 +54,20 @@ namespace appl {
 			           int64_t _stop,
 			           std::vector<appl::HighlightInfo>& _metaData,
 			           int64_t _addingPos,
-			           std::string& _buffer);
+			           etk::Buffer& _buffer);
 			void parse2(int64_t _start,
 			            int64_t _stop,
 			            std::vector<appl::HighlightInfo>& _metaData,
-			            std::string& _buffer);
+			            etk::Buffer& _buffer);
 			void parseSubElement(const appl::HighlightInfo& _upper,
 			                     std::vector<appl::HighlightInfo>& _metaData,
-			                     std::string &_buffer);
+			                     etk::Buffer& _buffer);
 		private:
 			std::string m_styleName; //!< curent style name (like "c++" or "c" or "script Bash")
 			std::vector<std::string> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
 			std::vector<HighlightPattern> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
 			std::vector<HighlightPattern> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
+			// TODO : This is bad ==> the patern ar unordered ...
 			std::map<std::string, std::vector<HighlightPattern>> m_listHighlightNamed; //!< list of all sub partern to parse...
 		public: // herited function :
 			virtual bool updateContext() {

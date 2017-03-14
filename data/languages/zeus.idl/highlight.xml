@@ -30,25 +30,25 @@
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my type">
 			<color>type</color>
-			<regex>\b(import|void|bool|string|int(8|16|32|64)|uint(8|16|32|64)|float(32|64)|vector\:(bool|string|int(8|16|32|64)|uint(8|16|32|64)|float(32|64))|time|duration|file|stream)\b</regex>
+			<regex>\@import|void|bool|string|int(8|16|32|64)|uint(8|16|32|64)|float(32|64)|vector:(bool|string|int(8|16|32|64)|uint(8|16|32|64)|float(32|64))|time|duration|file|stream\@</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<regex>\b(((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?)\b</regex>
+			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>
-			<regex>\b((\w|_)+[ \t]*\()</regex>
+			<regex>\@((\w|_)+[ \t]*\()</regex>
 		</rule>
 	</pass2>
 	<pass name="docparse">
 		<rule name="knownkey">
 			<color>doxygen-key-known</color>
-			<regex>(srv-brief|srv-version|srv-type|srv-author|brief|param|return|note):</regex>
+			<regex>(srv\-brief|srv\-version|srv\-type|srv\-author|brief|param|return|note):</regex>
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
-			<regex>\b\w+\:\b</regex>
+			<regex>\@\w+:\@</regex>
 		</rule>
 	</pass>
 	<pass name="TODO">

@@ -43,16 +43,16 @@ void appl::HighlightPattern::setPatern(const std::string& _regExp, const std::st
 	m_hasParsingError = false;
 	if (_regExp != "") {
 		try {
-			m_regExp[0].assign(_regExp, std::regex_constants::optimize | std::regex_constants::ECMAScript);
-		} catch (std::regex_error e) {
+			m_regExp[0].compile(_regExp);
+		} catch (std::runtime_error e) {
 			m_hasParsingError = true;
 			APPL_ERROR("can not parse regex : '" << e.what() << "' for : " << _regExp);
 		}
 	}
 	if (_regExpStop != "") {
 		try {
-			m_regExp[1].assign(_regExpStop, std::regex_constants::optimize | std::regex_constants::ECMAScript);
-		} catch (std::regex_error e) {
+			m_regExp[1].compile(_regExpStop);
+		} catch (std::runtime_error e) {
 			m_hasParsingError = true;
 			APPL_ERROR("can not parse regex : '" << e.what() << "' for : " << _regExpStop);
 		}
@@ -138,72 +138,10 @@ void appl::HighlightPattern::parseRules(const exml::Element& _child, int32_t _le
 	}
 }
 
-
-static std::pair<int64_t,int64_t> findRegex(int32_t _start,
-                                            int32_t _stop,
-                                            std::regex& _regex,
-                                            const std::string& _buffer) {
-	std::smatch resultMatch;
-	std::regex_constants::match_flag_type flags = std::regex_constants::match_continuous; // check only the match at the first character.
-	//APPL_DEBUG("find data at : start=" << _start << " stop=" << _stop << " regex='" << m_regexValue << "'");
-	if ((int64_t)_stop <= (int64_t)_buffer.size()) {
-		char val = _buffer[_stop];
-		if (    val != '\n'
-		     && val != '\r') {
-			//after last char ==> not end of line ($ would not work))
-			flags |= std::regex_constants::match_not_eol;
-		}
-		/*
-		if (!(    ('a' <= val && val <= 'z')
-		       || ('A' <= val && val <= 'Z')
-		       || ('0' <= val && val <= '9')
-		       || val == '_')) {
-			flags |= std::regex_constants::match_not_eow;
-		}
-		*/
-	}
-	if (_start>0) {
-		flags |= std::regex_constants::match_prev_avail;
-	}
-	if (    _stop < 0
-	     || size_t(_stop) > _buffer.size()) {
-		APPL_ERROR(" error in indexing for regex ... _stop=" << _stop << " >= _buffer.size()=" << _buffer.size());
-		return std::pair<int64_t,int64_t>(-1,0);
-	}
-	if (    _start < 0
-	     || size_t(_start) > _buffer.size()) {
-		APPL_ERROR(" error in indexing for regex ... _start=" << _start << " >= _buffer.size()=" << _buffer.size());
-		return std::pair<int64_t,int64_t>(-1,0);
-	}
-	if (_start > _stop) {
-		APPL_ERROR(" error in indexing for regex ... _start=" << _start << " > _stop=" << _stop);
-		return std::pair<int64_t,int64_t>(-1,0);
-	}
-	std::regex_search(_buffer.begin() + _start, _buffer.begin() + _stop, resultMatch, _regex, flags);
-	if (resultMatch.size() > 0) {
-		int64_t start = std::distance(_buffer.begin(), resultMatch[0].first);
-		int64_t stop = std::distance(_buffer.begin(), resultMatch[0].second);
-		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop << " data='" <<std::string(_buffer, _resultat.start, _resultat.stop-_resultat.start) << "'" );
-		/*
-		if (true){
-			//TK_DEBUG("in line : '" << etk::to_string(_buffer) << "'");
-			APPL_DEBUG("    Find " << resultMatch.size() << " elements");
-			for (size_t iii=0; iii<resultMatch.size(); ++iii) {
-				int32_t posStart = std::distance(_buffer.begin(), resultMatch[iii].first);
-				int32_t posStop = std::distance(_buffer.begin(), resultMatch[iii].second);
-				APPL_DEBUG("          [" << iii << "] " << posStart << " to " << posStop);
-			}
-		}
-		*/
-		return std::pair<int64_t,int64_t>(start,stop);
-	}
-	return std::pair<int64_t,int64_t>(-1,0);
-}
-
 bool appl::HighlightPattern::find(int32_t _start,
                                   int32_t _stop,
                                   appl::HighlightInfo& _resultat,
-                                  const std::string& _buffer) {
+                                  const etk::Buffer& _buffer) {
 	//APPL_DEBUG(" try to find the element");
 	_resultat.start = -1;
 	_resultat.stop = -1;
@@ -216,12 +154,12 @@ bool appl::HighlightPattern::find(int32_t _start,
 	if (m_regexValue[0].size() == 0) {
 		return false;
 	}
-	std::pair<int64_t,int64_t> ret0 = findRegex(_start, _stop, m_regExp[0], _buffer);
-	if (ret0.first >= 0) {
-		_resultat.start = ret0.first;
-		_resultat.stop = ret0.second;
+	// when we have only one element:
+	if (m_regExp[0].processOneElement(_buffer, _start, _stop) == true) {
+		_resultat.start = m_regExp[0].start();
+		_resultat.stop  = m_regExp[0].stop();
 		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop << " data='" <<std::string(_buffer, _resultat.start, _resultat.stop-_resultat.start) << "'" );
-		// second step : Complex searching ...
+		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop );
 		if (m_hasEndRegEx == true) {
 			// when no regex specify ==> get all the buffer ...
 			if (m_regexValue[1].size() == 0) {
@@ -230,9 +168,8 @@ bool appl::HighlightPattern::find(int32_t _start,
 			}
 			_start = _resultat.stop;
 			while (_start < _stop) {
-				std::pair<int64_t,int64_t> ret1 = findRegex(_start, _stop, m_regExp[1], _buffer);
-				if (ret1.first >= 0) {
-					_resultat.stop = ret1.second;
+				if (m_regExp[1].processOneElement(_buffer, _start, _stop) == true) {
+					_resultat.stop = m_regExp[1].stop();
 					return true;
 				}
 				_start++;

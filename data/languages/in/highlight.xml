@@ -4,33 +4,33 @@
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="my preprocesseur">
 			<color>preprocesseur</color>
-			<regex>#(.|\\[\\\n])*?$</regex>
+			<regex>#(.|\\[\\\n])*$</regex>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>&quot;(.|\\[\\&quot;])*?$</regex>
+			<regex>&quot;(.|\\[\\&quot;])*$</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>&apos;(.|\\[\\&apos;])*?$</regex>
+			<regex>&apos;(.|\\[\\&apos;])*$</regex>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>\b(menu|endmenu|comment|if|endif|help|default|choice|endchoice|prompt|depends on|config)\b</regex>
+			<regex>\@menu|endmenu|comment|if|endif|help|default|choice|endchoice|prompt|depends on|config\@</regex>
 		</rule>
 		<rule name="my type">
 			<color>type</color>
-			<regex>\b(int|hex|bool|string)\b</regex>
+			<regex>\@int|hex|bool|string\@</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>
-			<regex>\b(((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?)\b</regex>
+			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>
-			<regex>\b([A-Z_][A-Z_0-9]{3,500})\b</regex>
+			<regex>\@[A-Z_][A-Z_0-9]{3,500}\@</regex>
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>

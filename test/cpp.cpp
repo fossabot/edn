@@ -8,17 +8,35 @@
 
 #include <ewol/object/Object.hpp>
 #include <ewol/Dimension.hpp>
+// some are wrong :
 'dfgd\'fg'
 'e' sdfsdf '\e'
+// default value that work:
+aa 'z' aa '\n' aa '\t' aa '\v' aa '\b' aa '\r' aa '\f' aa '\a' aa '\\' aa '\?' aa '\'' aa '\0'
+// conplex numbers:
+aa '\u4855' aa '\U78965412' aa '\x0F' aa '\o45'
+
+aa "z" aa "\n" aa "\t" aa "\v" aa "\b" aa "\r" aa "\f" aa "\a" aa "\\" aa "\?" aa "\"" aa "\0"
+// conplex numbers:
+aa "\u4855" aa "\U78965412" aa "\x0F" aa "\o45"
+
 
 "dqf\"gsdfg" // \\ \n "
 // TODO : sqdkfjsdldkqfj
 
+std::string
+
+std::thread::sleep
+
+/*
+ * TODO: Todo in a multipleLine interface
+ *
+ */
 
 example_param
 
 =_param
-
+// simple oneLine comment
 _
 _s
 _3RTDRsdfqsd

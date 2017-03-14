@@ -18,7 +18,7 @@
 		</rule>
 		<rule name="stop balise">
 			<color>functionName</color>
-			<regex>&lt;/[ \t]*\w+?[ \t]*&gt;</regex>
+			<regex>&lt;/[ \t]*\w+[ \t]*&gt;</regex>
 		</rule>
 		<rule name="stop balise">
 			<color>SYNTAX_ERROR</color>
@@ -53,7 +53,7 @@
 		</rule>
 		<rule name="open balise">
 			<color>functionName</color>
-			<regex>&lt;[ \t]*[0-9a-zA-Z_]+</regex>
+			<regex>&lt;[ \t]*[0-9a-zA-Z_]+\@</regex>
 		</rule>
 		<rule name="close balise">
 			<color>functionName</color>
@@ -61,11 +61,11 @@
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>&quot;(.|\r|\n|\\\\|\\&quot;)*?&quot;</regex>
+			<regex>&quot;(\r|\n|\\\\|\\&quot;|.)*&quot;</regex>
 		</rule>
 		<rule name="simpleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>\b&apos;(.|\r|\n)*?(&apos;|\n)</regex>
+			<regex>\@&apos;(\r|\n)*?(&apos;|\n|.)</regex>
 		</rule>
 		<rule name="condition">
 			<color>boolean</color>

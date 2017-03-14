@@ -102,7 +102,7 @@ class MainApplication : public ewol::context::Application {
 				std::string tmpppp = _context.getCmd().get(iii);
 				if (tmpppp == "-t") {
 					ctagDetected = true;
-				} else if (true == ctagDetected) {
+				} else if (ctagDetected == true) {
 					etk::FSNode file(tmpppp);
 					std::string name = file.getName();
 					APPL_INFO("Load ctag file : \"" << name << "\"" );
@@ -117,8 +117,18 @@ class MainApplication : public ewol::context::Application {
 						std::string name = file.getName();
 						APPL_INFO("need load file : \"" << name << "\"" );
 						m_bufferManager->open(name);
+					} else if (file.getNodeType() == etk::typeNode_folder) {
+						std::vector<std::string> listOfFiles = file.folderGetSub(false, true, ".*");
+						for (auto &it: listOfFiles) {
+							etk::FSNode file2(it);
+							if (file2.getNodeType() == etk::typeNode_file) {
+								std::string name = file2.getName();
+								APPL_INFO("need load file : \"" << name << "\"" );
+								m_bufferManager->open(name);
+							}
+						}
 					}
-				} 
+				}
 			}
 			
 			APPL_INFO("==> START ... " PROJECT_NAME " (END)");
