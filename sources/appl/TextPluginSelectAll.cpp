@@ -18,10 +18,10 @@ appl::TextPluginSelectAll::TextPluginSelectAll() :
 void appl::TextPluginSelectAll::onPluginEnable(appl::TextViewer& _textDrawer) {
 	ememory::SharedPtr<ewol::widget::Menu> menu = m_menuInterface.lock();
 	if (menu != nullptr) {
-		m_menuIdTitle = menu->addTitle("Edit");
+		m_menuIdTitle = menu->addTitle("_T{Edit}");
 		if (m_menuIdTitle != -1) {
-			m_menuIdSelectAll = menu->add(m_menuIdTitle, "Select All","", "appl::TextPluginSelectAll::menu:select-all");
-			m_menuIdSelectNone = menu->add(m_menuIdTitle, "Un-Select","", "appl::TextPluginSelectAll::menu:select-none");
+			m_menuIdSelectAll = menu->add(m_menuIdTitle, "_T{Select All}", "", "appl::TextPluginSelectAll::menu:select-all");
+			m_menuIdSelectNone = menu->add(m_menuIdTitle, "_T{Un-Select}", "", "appl::TextPluginSelectAll::menu:select-none");
 		}
 	}
 	// add event :

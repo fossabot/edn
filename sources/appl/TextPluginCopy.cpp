@@ -22,12 +22,12 @@ void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
 	ememory::SharedPtr<ewol::widget::Menu> menu = m_menuInterface.lock();
 	if (menu != nullptr) {
-		m_menuIdTitle = menu->addTitle("Edit");
+		m_menuIdTitle = menu->addTitle("_T{Edit}");
 		if (m_menuIdTitle != -1) {
-			m_menuIdCopy = menu->add(m_menuIdTitle, "Copy",   "", "appl::TextPluginCopy::menu:copy");
-			m_menuIdCut = menu->add(m_menuIdTitle, "Cut",    "", "appl::TextPluginCopy::menu:cut");
-			m_menuIdPast = menu->add(m_menuIdTitle, "Paste",  "", "appl::TextPluginCopy::menu:past");
-			m_menuIdRemove = menu->add(m_menuIdTitle, "Remove", "", "appl::TextPluginCopy::menu:remove");
+			m_menuIdCopy = menu->add(m_menuIdTitle, "_T{Copy}",     "", "appl::TextPluginCopy::menu:copy");
+			m_menuIdCut = menu->add(m_menuIdTitle, "_T{Cut}",       "", "appl::TextPluginCopy::menu:cut");
+			m_menuIdPast = menu->add(m_menuIdTitle, "_T{Paste}",    "", "appl::TextPluginCopy::menu:past");
+			m_menuIdRemove = menu->add(m_menuIdTitle, "_T{Remove}", "", "appl::TextPluginCopy::menu:remove");
 		}
 	}
 	_textDrawer.ext_shortCutAdd("ctrl+x", "appl::TextPluginCopy::cut");

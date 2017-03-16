@@ -22,10 +22,10 @@ appl::TextPluginHistory::TextPluginHistory() :
 void appl::TextPluginHistory::onPluginEnable(appl::TextViewer& _textDrawer) {
 	ememory::SharedPtr<ewol::widget::Menu> menu = m_menuInterface.lock();
 	if (menu != nullptr) {
-		m_menuIdTitle = menu->addTitle("Edit");
+		m_menuIdTitle = menu->addTitle("_T{Edit}");
 		if (m_menuIdTitle != -1) {
-			m_menuIdUndo = menu->add(m_menuIdTitle, "Undo", "THEME:GUI:Undo.svg", "appl::TextPluginHistory::menu:undo");
-			m_menuIdRedo = menu->add(m_menuIdTitle, "Redo", "THEME:GUI:Redo.svg", "appl::TextPluginHistory::menu:redo");
+			m_menuIdUndo = menu->add(m_menuIdTitle, "_T{Undo}", "THEME:GUI:Undo.svg", "appl::TextPluginHistory::menu:undo");
+			m_menuIdRedo = menu->add(m_menuIdTitle, "_T{Redo}", "THEME:GUI:Redo.svg", "appl::TextPluginHistory::menu:redo");
 		}
 	}
 	// add event :
@@ -130,6 +130,8 @@ bool appl::TextPluginHistory::onDataWrite(appl::TextViewer& _textDrawer,
 		tmpElement->m_addedText = _strData;
 		tmpElement->m_posAdded = (int64_t)_pos;
 		tmpElement->m_endPosRemoved = (int64_t)_pos;
+	} else {
+		APPL_ERROR("History allocation error");
 	}
 	_textDrawer.writeDirect(_strData, _pos);
 	if (tmpElement != nullptr) {
