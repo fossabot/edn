@@ -45,11 +45,13 @@ namespace appl {
 				}
 				std::unique_ptr<TYPE> data(new TYPE());
 				if (data == nullptr) {
+					APPL_ERROR("ALLOCATION plugin data error");
 					return nullptr;
 				}
+				TYPE* copyPocalPointer = data.get();
 				m_specificData.push_back(std::make_pair(_textDrawer.internalGetBuffer(), std::move(data)));
 				// create a new one ...
-				return data.get();
+				return copyPocalPointer;
 			}
 		protected: // Wrap all element with their internal data: (do not use theses function)
 			bool onReceiveShortCut(appl::TextViewer& _textDrawer,
