@@ -24,12 +24,12 @@
 		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
-			<regex>##.*</regex>
+			<regex>##.*$</regex>
 			<sub>doxyparse</sub>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
-			<regex>#.*</regex>
+			<regex>#.*$</regex>
 			<sub>TODO</sub>
 		</rule>
 		<rule name="doubleQuteText">
@@ -42,7 +42,7 @@
 		</rule>
 		<rule name="internalParameter">
 			<color>normal</color>
-			<regex>self\.\w*</regex>
+			<regex>self\.\w*\@</regex>
 			<sub>parameter_internal</sub>
 		</rule>
 		<rule name="Function name private">
