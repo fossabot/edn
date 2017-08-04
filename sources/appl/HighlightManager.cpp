@@ -52,14 +52,12 @@ void appl::highlightManager::init() {
 		}
 	}
 	// display :
-	/*
 	for (auto &it : hlList) {
 		if (it == nullptr) {
 			continue;
 		}
 		it->display();
 	}
-	*/
 }
 
 void appl::highlightManager::unInit() {
@@ -76,15 +74,15 @@ std::string appl::highlightManager::getTypeFile(const std::string& _fileName) {
 	if (_fileName.size() == 0) {
 		return "";
 	}
-	APPL_DEBUG("Try to find type for extention : '" << _fileName << "' in " << s_list().size() << " types");
+	APPL_WARNING("Try to find type for extention : '" << _fileName << "' in " << s_list().size() << " types");
 	std::vector<ememory::SharedPtr<Highlight>>& hlList = s_list();
 	for (auto &it : hlList) {
 		if (it == nullptr) {
 			continue;
 		}
-		APPL_DEBUG("    check : " << it->getTypeName());
+		APPL_WARNING("    check : " << it->getTypeName());
 		if (it->isCompatible(_fileName) == true) {
-			APPL_DEBUG("Find type for extention : " << _fileName << " type : " << it->getTypeName());
+			APPL_WARNING("Find type for extention : " << _fileName << " type : " << it->getTypeName());
 			return it->getTypeName();
 		}
 	}

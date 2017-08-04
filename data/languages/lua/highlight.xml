@@ -29,7 +29,7 @@
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
 		<rule name="my keyword">
 			<color>keyword</color>
-			<regex>\@and|break|do|else|elseif|end|for|function|if|in|local|nil|not|or|repeat|return|then|until|while\@</regex>
+			<regex>\@and|break|do|elseif|else|end|for|function|if|in|local|nil|not|or|repeat|return|then|until|while|require\@</regex>
 		</rule>
 		<rule name="numeric constant">
 			<color>number</color>

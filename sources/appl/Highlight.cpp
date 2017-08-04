@@ -122,7 +122,7 @@ appl::Highlight::~Highlight() {
 
 bool appl::Highlight::isCompatible(const std::string& _name) {
 	for (auto &it : m_listExtentions) {
-		APPL_DEBUG("        check : " << it << "=?=" << _name);
+		APPL_WARNING("        check : " << it << "=?=" << _name);
 		// TODO: Remove dependency with the std::regex ...
 		std::regex expression;
 		try {
@@ -136,7 +136,7 @@ bool appl::Highlight::isCompatible(const std::string& _name) {
 		if (resultMatch.size() <= 0) {
 			continue;
 		}
-		APPL_DEBUG("    - begin=" << std::distance(_name.begin(), resultMatch[0].first) << "  end=" << std::distance(_name.begin(), resultMatch[0].second));
+		APPL_WARNING("    - begin=" << std::distance(_name.begin(), resultMatch[0].first) << "  end=" << std::distance(_name.begin(), resultMatch[0].second));
 		if (resultMatch[0].first != _name.begin()) {
 			continue;
 		}

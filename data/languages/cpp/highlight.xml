@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="C++">
-	<ext>.*\.(cpp|CPP|cxx|CXX|cc|CC|hpp|HPP|hxx|HXX|h|H|mm|MM|c++|C++|m++|M++|mpp|MPP)</ext>
+	<ext>.*\.(cpp|CPP|cxx|CXX|cc|CC|hpp|HPP|hxx|HXX|hh|h|H|mm|MM|c\+\+|C\+\+|m\+\+|M\+\+|mpp|MPP)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="doxygen multiline">
 			<color>commentDoxygen</color>
@@ -104,6 +104,10 @@
 		<rule name="CPP member">
 			<color>memberClass</color>
 			<regex>\@((m|s|p|s|g)_|property|signal)\w+\@</regex>
+		</rule>
+		<rule name="CPP member (bad version)">
+			<color>memberClass</color>
+			<regex>\@\w+_\@</regex>
 		</rule>
 		<rule name="function input">
 			<color>inputFunction</color>
