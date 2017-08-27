@@ -12,8 +12,8 @@
 #include <ewol/object/Object.hpp>
 
 // TODO : write it better
-static void SortElementList(std::vector<appl::dataBufferStruct>& _list) {
-	std::vector<appl::dataBufferStruct> tmpList = _list;
+static void SortElementList(etk::Vector<appl::dataBufferStruct>& _list) {
+	etk::Vector<appl::dataBufferStruct> tmpList = _list;
 	_list.clear();
 	for(size_t iii=0; iii<tmpList.size(); iii++) {
 		size_t findPos = 0;
@@ -75,13 +75,13 @@ void BufferView::insertAlphabetic(const appl::dataBufferStruct& _dataStruct, boo
 			return;
 		}
 	}
-	m_list.push_back(_dataStruct);
+	m_list.pushBack(_dataStruct);
 	if (_selectNewPosition == true) {
 		m_selectedID = m_list.size()-1;
 	}
 }
 
-void BufferView::onCallbackNewBuffer(const std::string& _value) {
+void BufferView::onCallbackNewBuffer(const etk::String& _value) {
 	ememory::SharedPtr<appl::Buffer> buffer = m_bufferManager->get(_value);
 	if (buffer == nullptr) {
 		APPL_ERROR("event on element nor exist : " << _value);
@@ -92,7 +92,7 @@ void BufferView::onCallbackNewBuffer(const std::string& _value) {
 	buffer->signalChangeName.connect(sharedFromThis(), &BufferView::onCallbackChangeName);
 	appl::dataBufferStruct tmp(_value, buffer);
 	if (m_openOrderMode == true) {
-		m_list.push_back(tmp);
+		m_list.pushBack(tmp);
 	} else {
 		insertAlphabetic(tmp);
 	}
@@ -107,7 +107,7 @@ void BufferView::onCallbackNewBuffer(const std::string& _value) {
 }
 
 // TODO : Review this callback with the real shared_ptr on the buffer ...
-void BufferView::onCallbackselectNewFile(const std::string& _value) {
+void BufferView::onCallbackselectNewFile(const etk::String& _value) {
 	m_selectedID = -1;
 	for (size_t iii=0; iii<m_list.size(); iii++) {
 		if (m_list[iii].m_buffer == nullptr) {
@@ -171,7 +171,7 @@ uint32_t BufferView::getNuberOfColomn() {
 	return 1;
 }
 
-bool BufferView::getTitle(int32_t _colomn, std::string &_myTitle, etk::Color<> &_fg, etk::Color<> &_bg) {
+bool BufferView::getTitle(int32_t _colomn, etk::String &_myTitle, etk::Color<> &_fg, etk::Color<> &_bg) {
 	_myTitle = "Buffers : ";
 	return true;
 }
@@ -180,7 +180,7 @@ uint32_t BufferView::getNuberOfRaw() {
 	return m_list.size();
 }
 
-bool BufferView::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
+bool BufferView::getElement(int32_t _colomn, int32_t _raw, etk::String& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
 	if(    _raw >= 0
 	    && _raw<(int64_t)m_list.size() ) {
 		_myTextToWrite = m_list[_raw].m_bufferName.getNameFile();

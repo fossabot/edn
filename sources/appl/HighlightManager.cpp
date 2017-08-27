@@ -12,14 +12,14 @@
 
 // TODO : Review this in a generic unique resource ...
 
-static std::vector<ememory::SharedPtr<appl::Highlight>>& s_list() {
-	static std::vector<ememory::SharedPtr<appl::Highlight>> list;
+static etk::Vector<ememory::SharedPtr<appl::Highlight>>& s_list() {
+	static etk::Vector<ememory::SharedPtr<appl::Highlight>> list;
 	return list;
 }
 
 
 void appl::highlightManager::init() {
-	std::vector<ememory::SharedPtr<appl::Highlight>>& hlList = s_list();
+	etk::Vector<ememory::SharedPtr<appl::Highlight>>& hlList = s_list();
 	if (hlList.size() != 0) {
 		APPL_ERROR("HighlightManager  == > already exist, just unlink the previous ...");
 		hlList.clear();
@@ -27,7 +27,7 @@ void appl::highlightManager::init() {
 	APPL_DEBUG("HighlightManager  == > INIT");
 	etk::FSNode myFile("DATA:languages/");
 	// get the subfolder list :
-	std::vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
+	etk::Vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
 	for (auto &it : list) {
 		if (it == nullptr) {
 			continue;
@@ -35,7 +35,7 @@ void appl::highlightManager::init() {
 		if (it->getNodeType() != etk::typeNode_folder) {
 			continue;
 		}
-		std::string filename = it->getName() + "/highlight.xml";
+		etk::String filename = it->getName() + "/highlight.xml";
 		APPL_DEBUG("Load xml name : " << filename);
 		ememory::SharedPtr<appl::Highlight> myHightLine = appl::Highlight::create(filename);
 		if (myHightLine != nullptr) {
@@ -46,7 +46,7 @@ void appl::highlightManager::init() {
 					APPL_WARNING("LANGUAGE : replace pattern name: '" << myHightLine->getTypeName() << "' with file '" << filename << "' replace: " << it2->getName());
 				}
 			}
-			hlList.push_back(myHightLine);
+			hlList.pushBack(myHightLine);
 		} else {
 			APPL_ERROR("Can not allocate HighLight");
 		}
@@ -61,7 +61,7 @@ void appl::highlightManager::init() {
 }
 
 void appl::highlightManager::unInit() {
-	std::vector<ememory::SharedPtr<Highlight>>& hlList = s_list();
+	etk::Vector<ememory::SharedPtr<Highlight>>& hlList = s_list();
 	if (hlList.size() == 0) {
 		APPL_DEBUG("HighlightManager  ==> no highlight");
 		hlList.clear();
@@ -70,12 +70,12 @@ void appl::highlightManager::unInit() {
 	hlList.clear();
 }
 
-std::string appl::highlightManager::getTypeFile(const std::string& _fileName) {
+etk::String appl::highlightManager::getTypeFile(const etk::String& _fileName) {
 	if (_fileName.size() == 0) {
 		return "";
 	}
 	APPL_WARNING("Try to find type for extention : '" << _fileName << "' in " << s_list().size() << " types");
-	std::vector<ememory::SharedPtr<Highlight>>& hlList = s_list();
+	etk::Vector<ememory::SharedPtr<Highlight>>& hlList = s_list();
 	for (auto &it : hlList) {
 		if (it == nullptr) {
 			continue;
@@ -89,7 +89,7 @@ std::string appl::highlightManager::getTypeFile(const std::string& _fileName) {
 	return "";
 }
 
-std::string appl::highlightManager::getFileWithTypeType(const std::string& _type) {
+etk::String appl::highlightManager::getFileWithTypeType(const etk::String& _type) {
 	if (_type.size() == 0) {
 		return "";
 	}
@@ -104,8 +104,8 @@ std::string appl::highlightManager::getFileWithTypeType(const std::string& _type
 	return "";
 }
 
-std::vector<std::string> appl::highlightManager::getTypeList() {
-	std::vector<std::string> ret;
+etk::Vector<etk::String> appl::highlightManager::getTypeList() {
+	etk::Vector<etk::String> ret;
 	return ret;
 }
 

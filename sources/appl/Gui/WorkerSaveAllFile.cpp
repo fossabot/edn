@@ -29,7 +29,7 @@ void appl::WorkerSaveAllFile::init() {
 			continue;
 		}
 		if (it->hasFileName() == false) {
-			m_bufferNameList.push_back(it->getFileName());
+			m_bufferNameList.pushBack(it->getFileName());
 		} else {
 			it->storeFile();
 		}

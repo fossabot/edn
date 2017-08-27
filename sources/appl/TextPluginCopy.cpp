@@ -55,14 +55,14 @@ void appl::TextPluginCopy::onPluginDisable(appl::TextViewer& _textDrawer) {
 }
 
 bool appl::TextPluginCopy::onReceiveShortCut(appl::TextViewer& _textDrawer,
-                                             const std::string& _shortCutName) {
+                                             const etk::String& _shortCutName) {
 	if (isEnable() == false) {
 		return false;
 	}
 	if (    _shortCutName == "appl::TextPluginCopy::copy"
 	     || _shortCutName == "appl::TextPluginCopy::cut") {
 		if (_textDrawer.hasBuffer() == true) {
-			std::string value;
+			etk::String value;
 			_textDrawer.copy(value);
 			if (value.size() != 0) {
 				gale::context::clipBoard::set(gale::context::clipBoard::clipboardStd, value);

@@ -16,7 +16,7 @@ namespace appl {
 		public:
 			etk::FSNode m_bufferName;
 			ememory::SharedPtr<appl::Buffer> m_buffer;
-			dataBufferStruct(const std::string& _bufferName, const ememory::SharedPtr<appl::Buffer>& _buffer) :
+			dataBufferStruct(const etk::String& _bufferName, const ememory::SharedPtr<appl::Buffer>& _buffer) :
 			  m_bufferName(_bufferName),
 			  m_buffer(_buffer) {
 				
@@ -41,7 +41,7 @@ class BufferView : public ewol::widget::List {
 	private:
 		int32_t m_selectedIdRequested;
 		int32_t m_selectedID;
-		std::vector<appl::dataBufferStruct> m_list;
+		etk::Vector<appl::dataBufferStruct> m_list;
 		/**
 		 * @brief Insert the element in the alphabetic order.
 		 * @param[in] _dataStruct element to add.
@@ -62,16 +62,16 @@ class BufferView : public ewol::widget::List {
 		void removeAllElement();
 		// Derived function
 		virtual uint32_t getNuberOfColomn();
-		virtual bool getTitle(int32_t _colomn, std::string& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
+		virtual bool getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
 		virtual uint32_t getNuberOfRaw();
-		virtual bool getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
+		virtual bool getElement(int32_t _colomn, int32_t _raw, etk::String& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
 		virtual bool onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
 	private: //callback function:
 		void onCallbackChangeName();
 		void onCallbackIsSave();
 		void onCallbackIsModify();
-		void onCallbackNewBuffer(const std::string& _value);
-		void onCallbackselectNewFile(const std::string& _value);
+		void onCallbackNewBuffer(const etk::String& _value);
+		void onCallbackselectNewFile(const etk::String& _value);
 		void onCallbackBufferRemoved(const ememory::SharedPtr<appl::Buffer>& _buffer);
 };
 

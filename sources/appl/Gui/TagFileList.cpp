@@ -41,7 +41,7 @@ uint32_t appl::TagFileList::getNuberOfColomn() {
 	return 2;
 }
 
-bool appl::TagFileList::getTitle(int32_t _colomn, std::string& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg) {
+bool appl::TagFileList::getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg) {
 	_myTitle = "title";
 	return true;
 }
@@ -50,10 +50,10 @@ uint32_t appl::TagFileList::getNuberOfRaw() {
 	return m_list.size();
 }
 
-bool appl::TagFileList::getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
+bool appl::TagFileList::getElement(int32_t _colomn, int32_t _raw, etk::String& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
 	if (_raw >= 0 && (size_t)_raw < m_list.size() && nullptr != m_list[_raw]) {
 		if (0 == _colomn) {
-			_myTextToWrite = etk::to_string(m_list[_raw]->fileLine);
+			_myTextToWrite = etk::toString(m_list[_raw]->fileLine);
 		} else {
 			_myTextToWrite = m_list[_raw]->filename;
 		}
@@ -87,9 +87,9 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum gale::key::status _ty
 			    && m_selectedLine < (int64_t)m_list.size()
 			    && nullptr != m_list[m_selectedLine] ) {
 				if (previousRaw != m_selectedLine) {
-					signalSelect.emit(etk::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+					signalSelect.emit(etk::toString(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
 				} else {
-					signalValidate.emit(etk::to_string(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+					signalValidate.emit(etk::toString(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
 				}
 			} else {
 				signalUnSelect.emit();
@@ -108,10 +108,10 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum gale::key::status _ty
  * @param[in] file Compleate file name
  * @param[in] jump line id
  */
-void appl::TagFileList::add(std::string& _file, int32_t _line) {
+void appl::TagFileList::add(etk::String& _file, int32_t _line) {
 	appl::TagListElement *tmpFile = new appl::TagListElement(_file, _line);
 	if (nullptr != tmpFile) {
-		m_list.push_back(tmpFile);
+		m_list.pushBack(tmpFile);
 	}
 	markToRedraw();
 }

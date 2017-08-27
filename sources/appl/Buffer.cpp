@@ -122,7 +122,7 @@ appl::Buffer::Buffer() :
   m_highlight(nullptr) {
 	addObjectType("appl::Buffer");
 	static int32_t bufferBaseId = 0;
-	m_fileName = "No Name " + etk::to_string(bufferBaseId);
+	m_fileName = "No Name " + etk::toString(bufferBaseId);
 	bufferBaseId++;
 }
 
@@ -134,10 +134,10 @@ appl::Buffer::~Buffer() {
 	APPL_ERROR("REAL remove buffer : '" << propertyName << "'");
 }
 
-bool appl::Buffer::loadFile(const std::string& _name) {
+bool appl::Buffer::loadFile(const etk::String& _name) {
 	APPL_DEBUG("Convert filename :'" << _name << "'");
 	etk::FSNode file(_name);
-	std::string name = file.getName();
+	etk::String name = file.getName();
 	APPL_INFO("Load file : '" << name << "'");
 	m_fileName = name;
 	m_hasFileName = true;
@@ -154,10 +154,10 @@ bool appl::Buffer::loadFile(const std::string& _name) {
 	return false;
 }
 
-void appl::Buffer::setFileName(const std::string& _name) {
+void appl::Buffer::setFileName(const etk::String& _name) {
 	APPL_DEBUG("Convert filename :'" << _name << "'");
 	etk::FSNode file(_name);
-	std::string name = file.getName();
+	etk::String name = file.getName();
 	if (m_fileName == name) {
 		return;
 	}
@@ -251,7 +251,7 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos, const char32_t
 }
 
 bool appl::Buffer::search(const appl::Buffer::Iterator& _pos,
-                          const std::u32string& _search,
+                          const etk::UString& _search,
                           appl::Buffer::Iterator& _result,
                           bool _caseSensitive) {
 	if (_search.size() <= 0 ) {
@@ -320,7 +320,7 @@ bool appl::Buffer::search(const appl::Buffer::Iterator& _pos,
 }
 
 bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos,
-                              const std::u32string& _search,
+                              const etk::UString& _search,
                               appl::Buffer::Iterator& _result,
                               bool _caseSensitive) {
 	if (_search.size() <= 0 ) {
@@ -518,7 +518,7 @@ static const char *ControlCodeTable[32] = {
 	 "NUL", "soh", "stx", "etx", "eot", "enq", "ack", "bel", "bs",  "ht", "nl",  "vt",  "np", "cr", "so", "si",
 	 "dle", "dc1", "dc2", "dc3", "dc4", "nak", "syn", "etb", "can", "em", "sub", "esc", "fs", "gs", "rs", "us"};
 
-void appl::Buffer::expand(int32_t& _indent, const char32_t& _value, std::u32string& _out) const {
+void appl::Buffer::expand(int32_t& _indent, const char32_t& _value, etk::UString& _out) const {
 	_out.clear();
 	int32_t tabDist = 4;
 	if (_value == u32char::Tabulation) {
@@ -599,7 +599,7 @@ appl::Buffer::Iterator appl::Buffer::countBackwardNLines(const appl::Buffer::Ite
 
 
 
-bool appl::Buffer::copy(std::string& _data) {
+bool appl::Buffer::copy(etk::String& _data) {
 	_data.clear();
 	if (hasTextSelected() == true) {
 		int32_t startPos = getStartSelectionPos();
@@ -615,7 +615,7 @@ bool appl::Buffer::copy(std::string& _data) {
 	return false;
 }
 
-void appl::Buffer::copy(std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+void appl::Buffer::copy(etk::String& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
 	_data.clear();
 	for (Iterator it = _pos;
 	     it != _posEnd &&
@@ -625,7 +625,7 @@ void appl::Buffer::copy(std::string& _data, const appl::Buffer::Iterator& _pos, 
 	}
 }
 
-bool appl::Buffer::write(const std::string& _data, const appl::Buffer::Iterator& _pos) {
+bool appl::Buffer::write(const etk::String& _data, const appl::Buffer::Iterator& _pos) {
 	int64_t position = (int64_t)_pos;
 	if (position < 0){
 		position = 0;
@@ -643,7 +643,7 @@ bool appl::Buffer::write(const std::string& _data, const appl::Buffer::Iterator&
 	return true;
 }
 
-bool appl::Buffer::replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+bool appl::Buffer::replace(const etk::String& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
 	int64_t position = (int64_t)_pos;
 	if (position < 0){
 		position = 0;
@@ -673,7 +673,7 @@ void appl::Buffer::removeSelection() {
 
 void appl::Buffer::tryFindHighlightType() {
 	etk::FSNode file(m_fileName);
-	std::string type = appl::highlightManager::getTypeFile(file.getNameFile());
+	etk::String type = appl::highlightManager::getTypeFile(file.getNameFile());
 	if (type.size() == 0) {
 		return;
 	}
@@ -681,11 +681,11 @@ void appl::Buffer::tryFindHighlightType() {
 	setHighlightType(type);
 }
 
-void appl::Buffer::setHighlightType(const std::string& _type) {
+void appl::Buffer::setHighlightType(const etk::String& _type) {
 	m_highlightType = "";
 	cleanHighLight();
 	m_highlight.reset();
-	std::string resourceName = appl::highlightManager::getFileWithTypeType(_type);
+	etk::String resourceName = appl::highlightManager::getFileWithTypeType(_type);
 	if (resourceName == "") {
 		return;
 	}
@@ -874,7 +874,7 @@ void appl::Buffer::cleanHighLight() {
 
 
 appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int64_t _pos, int64_t &_starPos) {
-	int32_t start = std::max((int64_t)0, _starPos-1);
+	int32_t start = etk::max((int64_t)0, _starPos-1);
 	for (size_t iii = start; iii < m_HLDataPass1.size(); ++iii) {
 		_starPos = iii;
 		if (    m_HLDataPass1[iii].start <= _pos
@@ -912,7 +912,7 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 		endSearch = m_HLDataPass1.size();
 	}
 	int64_t kkk;
-	for (kkk = std::max(startId, (int64_t)0); kkk < endSearch; ++kkk) {
+	for (kkk = etk::max(startId, (int64_t)0); kkk < endSearch; ++kkk) {
 		// empty section :
 		if (kkk == 0) {
 			if (HLStartPos < m_HLDataPass1[kkk].start) {
@@ -966,7 +966,7 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 
 
 appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(appl::DisplayHLData& _MData, int64_t _pos) {
-	int64_t start = std::max((int64_t)0, _MData.posHLPass2-1);
+	int64_t start = etk::max((int64_t)0, _MData.posHLPass2-1);
 	for (int64_t iii=start; iii<(int32_t)_MData.HLData.size(); iii++) {
 		_MData.posHLPass2 = iii;
 		if(		_MData.HLData[iii].start <= _pos
@@ -997,39 +997,39 @@ uint32_t appl::Buffer::getCursorLinesId() {
 }
 
 namespace etk {
-	template<> std::string to_string<ememory::SharedPtr<appl::Buffer>>(const ememory::SharedPtr<appl::Buffer>& _obj) {
+	template<> etk::String toString<ememory::SharedPtr<appl::Buffer>>(const ememory::SharedPtr<appl::Buffer>& _obj) {
 		if (_obj != nullptr) {
 			return _obj->getFileName();
 		}
 		return "";
 	}
-	template<> std::u32string to_u32string<ememory::SharedPtr<appl::Buffer>>(const ememory::SharedPtr<appl::Buffer>& _obj) {
-		return etk::to_u32string(etk::to_string(_obj));
+	template<> etk::UString toUString<ememory::SharedPtr<appl::Buffer>>(const ememory::SharedPtr<appl::Buffer>& _obj) {
+		return etk::toUString(etk::toString(_obj));
 	}
 	
-	template<> bool from_string<ememory::SharedPtr<appl::Buffer>>(ememory::SharedPtr<appl::Buffer>& _variableRet, const std::string& _value) {
+	template<> bool from_string<ememory::SharedPtr<appl::Buffer>>(ememory::SharedPtr<appl::Buffer>& _variableRet, const etk::String& _value) {
 		if (_variableRet != nullptr) {
 			_variableRet->loadFile(_value);
 			return true;
 		}
 		return false;
 	}
-	template<> bool from_string<ememory::SharedPtr<appl::Buffer>>(ememory::SharedPtr<appl::Buffer>& _variableRet, const std::u32string& _value) {
-		return from_string(_variableRet, etk::to_string(_value));
+	template<> bool from_string<ememory::SharedPtr<appl::Buffer>>(ememory::SharedPtr<appl::Buffer>& _variableRet, const etk::UString& _value) {
+		return from_string(_variableRet, etk::toString(_value));
 	}
-	template<> std::string to_string<appl::Buffer>(const appl::Buffer& _obj) {
+	template<> etk::String toString<appl::Buffer>(const appl::Buffer& _obj) {
 		return _obj.getFileName();
 	}
-	template<> std::u32string to_u32string<appl::Buffer>(const appl::Buffer& _obj) {
-		return etk::to_u32string(etk::to_string(_obj));
+	template<> etk::UString toUString<appl::Buffer>(const appl::Buffer& _obj) {
+		return etk::toUString(etk::toString(_obj));
 	}
 	
-	template<> bool from_string<appl::Buffer>(appl::Buffer& _variableRet, const std::string& _value) {
+	template<> bool from_string<appl::Buffer>(appl::Buffer& _variableRet, const etk::String& _value) {
 		_variableRet.loadFile(_value);
 		return true;
 	}
-	template<> bool from_string<appl::Buffer>(appl::Buffer& _variableRet, const std::u32string& _value) {
-		return from_string(_variableRet, etk::to_string(_value));
+	template<> bool from_string<appl::Buffer>(appl::Buffer& _variableRet, const etk::UString& _value) {
+		return from_string(_variableRet, etk::toString(_value));
 	}
 };
 

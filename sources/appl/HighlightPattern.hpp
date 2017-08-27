@@ -9,7 +9,7 @@
 class HighlightPattern;
 
 #include <appl/GlyphPainting.hpp>
-#include <vector>
+#include <etk/Vector.hpp>
 #include <regex>
 #include <etk/RegExp.hpp>
 #include <etk/Buffer.hpp>
@@ -25,36 +25,36 @@ namespace appl {
 			HighlightPattern(const ememory::SharedPtr<appl::GlyphPainting>& _glyphPainting, const exml::Element& _child, int32_t _level);
 			virtual ~HighlightPattern();
 		private:
-			std::string m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")
+			etk::String m_paternName; //!< Current style name (like "c++" or "c" or "script Bash")
 		public:
-			void setName(const std::string& _name) {
+			void setName(const etk::String& _name) {
 				m_paternName = _name;
 			};
-			const std::string& getName() {
+			const etk::String& getName() {
 				return m_paternName;
 			};
 		private:
-			std::string m_paternSubName; //!< Sub patern name if needed
+			etk::String m_paternSubName; //!< Sub patern name if needed
 		public:
-			void setSubPatternName(const std::string& _name) {
+			void setSubPatternName(const etk::String& _name) {
 				m_paternSubName = _name;
 			};
-			const std::string& getSubPatternName() {
+			const etk::String& getSubPatternName() {
 				return m_paternSubName;
 			};
 		private:
 			bool m_hasParsingError;
-			std::string m_regexValue[2];
+			etk::String m_regexValue[2];
 			bool m_hasEndRegEx;
 			etk::RegExp<etk::Buffer> m_regExp[2]; //!< Start of Regular expression
 		public:
-			void setPatern(const std::string& _regExp, const std::string& _regExpStop="", bool _hasEndRegEx=false);
-			std::pair<std::string,std::string> getPaternString();
+			void setPatern(const etk::String& _regExp, const etk::String& _regExpStop="", bool _hasEndRegEx=false);
+			etk::Pair<etk::String,etk::String> getPaternString();
 		private:
-			std::string m_colorName; //!< Current color name
+			etk::String m_colorName; //!< Current color name
 			int32_t m_colorId; //!< Id of the the glyph painting
 		public:
-			void setColorGlyph(const std::string& _colorName);
+			void setColorGlyph(const etk::String& _colorName);
 			const appl::GlyphDecoration& getColorGlyph() {
 				return (*m_glyphPainting)[m_colorId];
 			};

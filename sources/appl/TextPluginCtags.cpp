@@ -37,7 +37,7 @@ void appl::TextPluginCtags::onPluginDisable(appl::TextViewer& _textDrawer) {
 	_textDrawer.ext_shortCutRm("appl::TextPluginCtags::OpenCtagsFile");
 }
 
-void appl::TextPluginCtags::jumpTo(const std::string& _name) {
+void appl::TextPluginCtags::jumpTo(const etk::String& _name) {
 	if (m_ctagFile == nullptr) {
 		APPL_WARNING("No ctags file open");
 		return;
@@ -52,7 +52,7 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 	int32_t numberOfTags = 0;
 	
 	// For all tags : Save in an internal Structure :
-	std::string tmpFile(m_tagFolderBase + "/" + entry.file);
+	etk::String tmpFile(m_tagFolderBase + "/" + entry.file);
 	etk::FSNode myfile(tmpFile);
 	int32_t lineID = entry.address.lineNumber;
 	printTag(&entry);
@@ -79,13 +79,13 @@ void appl::TextPluginCtags::jumpTo(const std::string& _name) {
 	}
 }
 
-void appl::TextPluginCtags::jumpFile(const std::string& _filename, int64_t _lineId) {
+void appl::TextPluginCtags::jumpFile(const etk::String& _filename, int64_t _lineId) {
 	// save the current file in the history
 	// TODO : registerHistory();
 	if (m_bufferManager != nullptr) {
 		m_bufferManager->open(_filename);
 	}
-	//sendMultiCast(appl::MsgSelectGotoLineSelect, etk::to_string(_lineId));
+	//sendMultiCast(appl::MsgSelectGotoLineSelect, etk::toString(_lineId));
 	APPL_TODO("request jup at line ...");
 }
 
@@ -131,7 +131,7 @@ void appl::TextPluginCtags::printTag(const tagEntry *_entry) {
 	#endif
 }
 
-void appl::TextPluginCtags::onCallbackOpenCtagsOpenFileReturn(const std::string& _value) {
+void appl::TextPluginCtags::onCallbackOpenCtagsOpenFileReturn(const etk::String& _value) {
 	// open the new one :
 	etk::FSNode tmpFilename = _value;
 	m_tagFilename = tmpFilename.getNameFile();
@@ -140,7 +140,7 @@ void appl::TextPluginCtags::onCallbackOpenCtagsOpenFileReturn(const std::string&
 	loadTagFile();
 }
 
-void appl::TextPluginCtags::onCallbackOpenCtagsSelectReturn(const std::string& _value) {
+void appl::TextPluginCtags::onCallbackOpenCtagsSelectReturn(const etk::String& _value) {
 	// parse the input data
 	char tmp[4096];
 	int32_t lineID;
@@ -150,7 +150,7 @@ void appl::TextPluginCtags::onCallbackOpenCtagsSelectReturn(const std::string& _
 }
 
 bool appl::TextPluginCtags::onReceiveShortCut(appl::TextViewer& _textDrawer,
-                                              const std::string& _shortCutName) {
+                                              const etk::String& _shortCutName) {
 	if (isEnable() == false) {
 		return false;
 	}
@@ -164,7 +164,7 @@ bool appl::TextPluginCtags::onReceiveShortCut(appl::TextViewer& _textDrawer,
 		tmpWidget->propertyLabelTitle.set("Open Exuberant Ctags file");
 		tmpWidget->propertyLabelValidate.set("Open");
 		// try to get the current folder :
-		std::string path = _textDrawer.getBufferPath();
+		etk::String path = _textDrawer.getBufferPath();
 		APPL_ERROR("get path : '" << path << "'");
 		if (path != "") {
 			tmpWidget->propertyPath.set(path);
@@ -176,7 +176,7 @@ bool appl::TextPluginCtags::onReceiveShortCut(appl::TextViewer& _textDrawer,
 		if (_textDrawer.hasBuffer() == false) {
 			return false;
 		}
-		std::string textToSearch;
+		etk::String textToSearch;
 		if (_textDrawer.hasTextSelected() == true) {
 			_textDrawer.copy(textToSearch, _textDrawer.selectStart(), _textDrawer.selectStop() );
 		} else {

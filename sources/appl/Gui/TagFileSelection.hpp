@@ -11,11 +11,11 @@
 namespace appl {
 	class TagFileSelection : public ewol::widget::PopUp {
 		public:
-			esignal::Signal<std::string> signalSelect;
+			esignal::Signal<etk::String> signalSelect;
 			esignal::Signal<> signalCancel;
 		private:
 			ememory::SharedPtr<appl::TagFileList> m_listTag;
-			std::string m_eventNamed;
+			etk::String m_eventNamed;
 		public:
 			TagFileSelection();
 			void init();
@@ -27,12 +27,12 @@ namespace appl {
 			 * @param[in] file Compleate file name
 			 * @param[in] jump line id
 			 */
-			void addCtagsNewItem(std::string file, int32_t line);
+			void addCtagsNewItem(etk::String file, int32_t line);
 		public: // callback function
 			void onCallbackCtagsSelection();
 			void onCallbackCtagsCancel();
-			void onCallbackCtagsListValidate(const std::string& _value);
-			void onCallbackCtagsListSelect(const std::string& _value);
+			void onCallbackCtagsListValidate(const etk::String& _value);
+			void onCallbackCtagsListSelect(const etk::String& _value);
 			void onCallbackCtagsListUnSelect();
 	};
 }

@@ -127,7 +127,7 @@ namespace appl {
 			 */
 			virtual bool onWrite(appl::TextViewer& _textDrawer,
 			                     const appl::Buffer::Iterator& _pos,
-			                     const std::string& _data) {
+			                     const etk::String& _data) {
 				return false;
 			};
 		protected:
@@ -150,7 +150,7 @@ namespace appl {
 			 */
 			virtual bool onReplace(appl::TextViewer& _textDrawer,
 			                       const appl::Buffer::Iterator& _pos,
-			                       const std::string& _data,
+			                       const etk::String& _data,
 			                       const appl::Buffer::Iterator& _posEnd) {
 				return false;
 			};
@@ -192,7 +192,7 @@ namespace appl {
 			 * @param[in] _shortCutName Generic message requested.
 			 * @return true if the event might not propagate anymore
 			 */
-			virtual bool onReceiveShortCut(appl::TextViewer& _textDrawer, const std::string& _shortCutName) {
+			virtual bool onReceiveShortCut(appl::TextViewer& _textDrawer, const etk::String& _shortCutName) {
 				return false;
 			}
 		protected:

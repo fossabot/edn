@@ -18,8 +18,8 @@ namespace appl {
 	// TODO: This is a service ...
 	class BufferManager : public ewol::Object {
 		public:
-			esignal::Signal<std::string> signalNewBuffer;
-			esignal::Signal<std::string> signalSelectFile;
+			esignal::Signal<etk::String> signalNewBuffer;
+			esignal::Signal<etk::String> signalSelectFile;
 			esignal::Signal<> signalTextSelectionChange;
 			esignal::Signal<ememory::SharedPtr<appl::Buffer>> signalRemoveBuffer;
 		protected:
@@ -36,18 +36,18 @@ namespace appl {
 			 * @param[in] _createIfNeeded Create the buffer if not existed.
 			 * @return a pointer on the buffer
 			 */
-			ememory::SharedPtr<appl::Buffer> get(const std::string& _fileName, bool _createIfNeeded=false);
+			ememory::SharedPtr<appl::Buffer> get(const etk::String& _fileName, bool _createIfNeeded=false);
 			/**
 			 * @brief Load a specific file, event if it not existed:
 			 * @param[in] _fileName Name of the file to open or create.
 			 */
-			void open(const std::string& _fileName);
+			void open(const etk::String& _fileName);
 			/**
 			 * @brief Check if a buffer is already open.
 			 * @param[in] _fileName name of the file.
 			 * @return true if the buffer is already open.
 			 */
-			bool exist(const std::string& _fileName);
+			bool exist(const etk::String& _fileName);
 			/**
 			 * @brief Get count of all buffer availlable.
 			 * @return Number of buffer

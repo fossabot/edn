@@ -17,7 +17,7 @@ namespace appl {
 			DECLARE_FACTORY(WorkerCloseAllFile);
 			virtual ~WorkerCloseAllFile();
 		private:
-			std::vector<std::string> m_bufferNameList;
+			etk::Vector<etk::String> m_bufferNameList;
 			ememory::SharedPtr<appl::WorkerCloseFile> m_worker; //! pop-up element that is open...
 			ememory::SharedPtr<appl::BufferManager> m_bufferManager; //!< handle on the buffer manager
 		public: // callback function

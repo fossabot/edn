@@ -15,16 +15,16 @@ namespace appl {
 		private:
 			ememory::WeakPtr<appl::TextViewer> m_currentViewer;
 			std::list<ememory::SharedPtr<appl::TextViewerPlugin>> m_list;
-			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnEventEntry;
-			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnEventInput;
-			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnWrite;
-			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnReplace;
-			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnRemove;
-			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnReceiveShortCutViewer;
-			std::vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnCursorMove;
+			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnEventEntry;
+			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnEventInput;
+			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnWrite;
+			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnReplace;
+			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnRemove;
+			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnReceiveShortCutViewer;
+			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnCursorMove;
 		protected:
 			textPluginManager();
-			void init(const std::string& _name);
+			void init(const etk::String& _name);
 		public:
 			DECLARE_RESOURCE_SINGLE_FACTORY(textPluginManager, "plugin-Manager");
 			virtual ~textPluginManager() {};
@@ -72,7 +72,7 @@ namespace appl {
 			 */
 			bool onWrite(appl::TextViewer& _textDrawer,
 			             const appl::Buffer::Iterator& _pos,
-			             const std::string& _data);
+			             const etk::String& _data);
 			/**
 			 * @brief Called when data is written in the buffer, and some are removed.
 			 * @param[in] _widget Reference on the widget caller.
@@ -83,7 +83,7 @@ namespace appl {
 			 */
 			bool onReplace(appl::TextViewer& _textDrawer,
 			               const appl::Buffer::Iterator& _pos,
-			               const std::string& _data,
+			               const etk::String& _data,
 			               const appl::Buffer::Iterator& _posEnd);
 			/**
 			 * @brief Called when data is removed.
@@ -102,7 +102,7 @@ namespace appl {
 			 * @return true if the event might not propagate anymore
 			 */
 			bool onReceiveShortCut(appl::TextViewer& _textDrawer,
-			                       const std::string& _shortCutName);
+			                       const etk::String& _shortCutName);
 			/**
 			 * @brief Called when Cursor move of position.
 			 * @param[in] _widget Reference on the widget caller.

@@ -13,10 +13,10 @@
 namespace appl {
 	class GlyphPainting : public gale::Resource {
 		private:
-			std::vector<appl::GlyphDecoration> m_list;
+			etk::Vector<appl::GlyphDecoration> m_list;
 		protected:
 			GlyphPainting();
-			void init(const std::string& _filename);
+			void init(const etk::String& _filename);
 		public:
 			DECLARE_RESOURCE_NAMED_FACTORY(GlyphPainting);
 			virtual ~GlyphPainting();
@@ -30,7 +30,7 @@ namespace appl {
 			 * @param[in] _name Name of the deco.
 			 * @return id of the deco.
 			 */
-			int32_t request(const std::string& _name);
+			int32_t request(const etk::String& _name);
 			/**
 			 * @brief Get Decoration handle.
 			 * @param[in] _id Id of the decoration.

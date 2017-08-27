@@ -24,7 +24,7 @@ void appl::WorkerCloseFile::init() {
 	ewol::object::Worker::init();
 }
 
-void appl::WorkerCloseFile::startAction(const std::string& _bufferName) {
+void appl::WorkerCloseFile::startAction(const etk::String& _bufferName) {
 	m_bufferName = _bufferName;
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");

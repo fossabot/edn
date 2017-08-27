@@ -15,7 +15,7 @@ appl::GlyphPainting::GlyphPainting() {
 	addResourceType("appl::GlyphPainting");
 }
 
-void appl::GlyphPainting::init(const std::string& _filename) {
+void appl::GlyphPainting::init(const etk::String& _filename) {
 	gale::Resource::init(_filename);
 	APPL_DEBUG("SFP : load \"" << _filename << "\"");
 	reload();
@@ -34,7 +34,7 @@ void appl::GlyphPainting::reload() {
 	// for debug only :
 	/*
 	APPL_WARNING("Load file : '" << m_name << "' = " << etk::FSNode(m_name).getFileSystemName());
-	std::string tmppppp;
+	etk::String tmppppp;
 	doc.generate(tmppppp);
 	APPL_DEBUG(tmppppp);
 	*/
@@ -49,9 +49,9 @@ void appl::GlyphPainting::reload() {
 			APPL_DEBUG(" can not get object in 'ednColor' it=" << it);
 			continue;
 		}
-		std::string name = tmpObj["name"].toString().get();
-		std::string background = tmpObj["background"].toString().get("#FFF0");
-		std::string foreground = tmpObj["foreground"].toString().get("#000F");
+		etk::String name = tmpObj["name"].toString().get();
+		etk::String background = tmpObj["background"].toString().get("#FFF0");
+		etk::String foreground = tmpObj["foreground"].toString().get("#000F");
 		bool italic = tmpObj["italic"].toBoolean().get(false);
 		bool bold = tmpObj["bold"].toBoolean().get(false);
 		APPL_VERBOSE("find new color : '" << name << "' fg='" << foreground << "' bg='" << background << "' italic='" << italic << "' bold='" << bold << "'");
@@ -74,12 +74,12 @@ void appl::GlyphPainting::reload() {
 		tmpDeco.setBackground(background);
 		tmpDeco.setItalic(italic);
 		tmpDeco.setBold(bold);
-		m_list.push_back(tmpDeco);
+		m_list.pushBack(tmpDeco);
 	}
 }
 
 
-int32_t appl::GlyphPainting::request(const std::string& _name) {
+int32_t appl::GlyphPainting::request(const etk::String& _name) {
 	for (size_t iii=0; iii<m_list.size(); ++iii) {
 		if (m_list[iii].getName() == _name) {
 			return iii;
@@ -87,6 +87,6 @@ int32_t appl::GlyphPainting::request(const std::string& _name) {
 	}
 	// create an empty deco ...
 	appl::GlyphDecoration tmpDeco(_name);
-	m_list.push_back(tmpDeco);
+	m_list.pushBack(tmpDeco);
 	return m_list.size()-1;
 }

@@ -12,25 +12,25 @@ namespace appl {
 	class GlyphDecoration {
 		public:
 			// Constructeur
-			GlyphDecoration(const std::string& _newColorName = "no_name");
+			GlyphDecoration(const etk::String& _newColorName = "no_name");
 			virtual ~GlyphDecoration() {
 				// nothing to do ...
 			};
 		private:
-			std::string m_colorName; //!< curent color Name
+			etk::String m_colorName; //!< curent color Name
 		public:
 			/**
 			 * @brief Set color name of the element.
 			 * @param[in] _newColorName new color name.
 			 */
-			void setName(const std::string& _newColorName) {
+			void setName(const etk::String& _newColorName) {
 				m_colorName = _newColorName;
 			};
 			/**
 			 * @brief Get the color name.
 			 * @return The name of the color.
 			 */
-			const std::string& getName() const {
+			const etk::String& getName() const {
 				return m_colorName;
 			};
 		private:
@@ -40,7 +40,7 @@ namespace appl {
 			 * @brief Set foreground color.
 			 * @param[in] _myColor new color description.
 			 */
-			void setForeground(const std::string& _myColor) {
+			void setForeground(const etk::String& _myColor) {
 				m_colorFG = _myColor;
 			};
 			/**
@@ -64,7 +64,7 @@ namespace appl {
 			 * @brief Set background color.
 			 * @param[in] _myColor new color description.
 			 */
-			void setBackground(const std::string& _myColor) {
+			void setBackground(const etk::String& _myColor) {
 				m_colorBG = _myColor;
 			};
 			/**
@@ -112,7 +112,7 @@ namespace appl {
 				return m_bold;
 			};
 	};
-	std::ostream& operator <<(std::ostream& _os, const appl::GlyphDecoration& _obj);
+	etk::Stream& operator <<(etk::Stream& _os, const appl::GlyphDecoration& _obj);
 }
 
 

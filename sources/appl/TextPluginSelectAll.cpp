@@ -45,7 +45,7 @@ void appl::TextPluginSelectAll::onPluginDisable(appl::TextViewer& _textDrawer) {
 
 
 bool appl::TextPluginSelectAll::onReceiveShortCut(appl::TextViewer& _textDrawer,
-                                                  const std::string& _shortCutName) {
+                                                  const etk::String& _shortCutName) {
 	if (isEnable() == false) {
 		return false;
 	}

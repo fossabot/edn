@@ -37,7 +37,7 @@ bool appl::TextPluginMultiLineTab::onEventEntry(appl::TextViewer& _textDrawer,
 	itStart = _textDrawer.getStartLine(itStart);
 	itStop = _textDrawer.getEndLine(itStop);
 	// copy the curent data in a classicle string:
-	std::string data;
+	etk::String data;
 	_textDrawer.copy(data, itStart, itStop);
 	// TODO : Change this ...
 	bool m_useTabs = true;

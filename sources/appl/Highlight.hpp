@@ -32,43 +32,43 @@ namespace appl {
 		public:
 			// Constructeur
 			Highlight();
-			void init(const std::string& _xmlFilename, const std::string& _colorFile = "THEME:COLOR:textViewer.json");
+			void init(const etk::String& _xmlFilename, const etk::String& _colorFile = "THEME:COLOR:textViewer.json");
 		public:
 			DECLARE_RESOURCE_NAMED_FACTORY(Highlight);
 			virtual ~Highlight();
 		private:
-			std::string m_typeName; //!< descriptive string type like "C/C++"
+			etk::String m_typeName; //!< descriptive string type like "C/C++"
 		public:
 			/**
 			 * @brief Get the Type of the Hightlight like c++/Bash/...
 			 * @return descriptive string
 			 */
-			const std::string& getTypeName() {
+			const etk::String& getTypeName() {
 				return m_typeName;
 			}
 		public:
-			bool isCompatible(const std::string& _name);
-			bool fileNameCompatible(const std::string& _fileName);
+			bool isCompatible(const etk::String& _name);
+			bool fileNameCompatible(const etk::String& _fileName);
 			void display();
 			void parse(int64_t _start,
 			           int64_t _stop,
-			           std::vector<appl::HighlightInfo>& _metaData,
+			           etk::Vector<appl::HighlightInfo>& _metaData,
 			           int64_t _addingPos,
 			           etk::Buffer& _buffer);
 			void parse2(int64_t _start,
 			            int64_t _stop,
-			            std::vector<appl::HighlightInfo>& _metaData,
+			            etk::Vector<appl::HighlightInfo>& _metaData,
 			            etk::Buffer& _buffer);
 			void parseSubElement(const appl::HighlightInfo& _upper,
-			                     std::vector<appl::HighlightInfo>& _metaData,
+			                     etk::Vector<appl::HighlightInfo>& _metaData,
 			                     etk::Buffer& _buffer);
 		private:
-			std::string m_styleName; //!< curent style name (like "c++" or "c" or "script Bash")
-			std::vector<std::string> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
-			std::vector<HighlightPattern> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
-			std::vector<HighlightPattern> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
+			etk::String m_styleName; //!< curent style name (like "c++" or "c" or "script Bash")
+			etk::Vector<etk::String> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
+			etk::Vector<HighlightPattern> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
+			etk::Vector<HighlightPattern> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
 			// TODO : This is bad ==> the patern ar unordered ...
-			std::map<std::string, std::vector<HighlightPattern>> m_listHighlightNamed; //!< list of all sub partern to parse...
+			etk::Map<etk::String, etk::Vector<HighlightPattern>> m_listHighlightNamed; //!< list of all sub partern to parse...
 		public: // herited function :
 			virtual bool updateContext() {
 				// no upfate to do ...

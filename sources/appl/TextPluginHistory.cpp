@@ -48,7 +48,7 @@ void appl::TextPluginHistory::onPluginDisable(appl::TextViewer& _textDrawer) {
 }
 
 bool appl::TextPluginHistory::onDataReceiveShortCut(appl::TextViewer& _textDrawer,
-                                                    const std::string& _shortCutName,
+                                                    const etk::String& _shortCutName,
                                                     appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
@@ -58,12 +58,12 @@ bool appl::TextPluginHistory::onDataReceiveShortCut(appl::TextViewer& _textDrawe
 			return true;
 		}
 		if (_data.m_redo[_data.m_redo.size()-1] == nullptr) {
-			_data.m_redo.pop_back();
+			_data.m_redo.popBack();
 			return true;
 		}
 		appl::History *tmpElement = _data.m_redo[_data.m_redo.size()-1];
-		_data.m_redo.pop_back();
-		_data.m_undo.push_back(tmpElement);
+		_data.m_redo.popBack();
+		_data.m_undo.pushBack(tmpElement);
 		_textDrawer.replaceDirect(tmpElement->m_addedText,
 		                          _textDrawer.position(tmpElement->m_posAdded),
 		                          _textDrawer.position(tmpElement->m_endPosRemoved) );
@@ -74,12 +74,12 @@ bool appl::TextPluginHistory::onDataReceiveShortCut(appl::TextViewer& _textDrawe
 			return true;
 		}
 		if (_data.m_undo[_data.m_undo.size()-1] == nullptr) {
-			_data.m_undo.pop_back();
+			_data.m_undo.popBack();
 			return true;
 		}
 		appl::History *tmpElement = _data.m_undo[_data.m_undo.size()-1];
-		_data.m_undo.pop_back();
-		_data.m_redo.push_back(tmpElement);
+		_data.m_undo.popBack();
+		_data.m_redo.pushBack(tmpElement);
 		_textDrawer.replaceDirect(tmpElement->m_removedText,
 		                          _textDrawer.position(tmpElement->m_posAdded),
 		                          _textDrawer.position(tmpElement->m_endPosAdded) );
@@ -120,7 +120,7 @@ void appl::TextPluginHistory::clearUndo(appl::PluginHistoryData& _data) {
 
 bool appl::TextPluginHistory::onDataWrite(appl::TextViewer& _textDrawer,
                                           const appl::Buffer::Iterator& _pos,
-                                          const std::string& _strData,
+                                          const etk::String& _strData,
                                           appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
 		return false;
@@ -137,7 +137,7 @@ bool appl::TextPluginHistory::onDataWrite(appl::TextViewer& _textDrawer,
 	if (tmpElement != nullptr) {
 		tmpElement->m_endPosAdded = (int64_t)_textDrawer.cursor();
 		clearRedo(_data);
-		_data.m_undo.push_back(tmpElement);
+		_data.m_undo.pushBack(tmpElement);
 	}
 	ememory::SharedPtr<appl::textPluginManager> mng = m_pluginManager.lock();
 	if (mng!=nullptr) {
@@ -148,7 +148,7 @@ bool appl::TextPluginHistory::onDataWrite(appl::TextViewer& _textDrawer,
 
 bool appl::TextPluginHistory::onDataReplace(appl::TextViewer& _textDrawer,
                                             const appl::Buffer::Iterator& _pos,
-                                            const std::string& _strData,
+                                            const etk::String& _strData,
                                             const appl::Buffer::Iterator& _posEnd,
                                             appl::PluginHistoryData& _data) {
 	if (isEnable() == false) {
@@ -165,7 +165,7 @@ bool appl::TextPluginHistory::onDataReplace(appl::TextViewer& _textDrawer,
 	if (tmpElement != nullptr) {
 		tmpElement->m_endPosAdded = (int64_t)_textDrawer.cursor();
 		clearRedo(_data);
-		_data.m_undo.push_back(tmpElement);
+		_data.m_undo.pushBack(tmpElement);
 	}
 	ememory::SharedPtr<appl::textPluginManager> mng = m_pluginManager.lock();
 	if (mng!=nullptr) {
@@ -189,7 +189,7 @@ bool appl::TextPluginHistory::onDataRemove(appl::TextViewer& _textDrawer,
 		tmpElement->m_endPosRemoved = (int64_t)_posEnd;
 		_textDrawer.copy(tmpElement->m_removedText, _pos, _posEnd);
 		clearRedo(_data);
-		_data.m_undo.push_back(tmpElement);
+		_data.m_undo.pushBack(tmpElement);
 	}
 	_textDrawer.removeDirect();
 	ememory::SharedPtr<appl::textPluginManager> mng = m_pluginManager.lock();

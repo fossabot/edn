@@ -42,7 +42,7 @@ bool appl::TextPluginAutoIndent::onEventEntry(appl::TextViewer& _textDrawer,
 		startLine = _textDrawer.selectStart();
 	}
 	startLine = _textDrawer.getStartLine(startLine);
-	std::string data = "\n";
+	etk::String data = "\n";
 	
 	
 	for (appl::Buffer::Iterator it = startLine;

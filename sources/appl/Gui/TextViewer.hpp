@@ -23,7 +23,7 @@ namespace appl {
 	using TextViewerWeak = ememory::WeakPtr<appl::TextViewer>;
 	class TextViewer : public ewol::widget::WidgetScrolled {
 		private:
-			eproperty::Value<std::string> propertyFontName; //!< name of the font to display text.
+			eproperty::Value<etk::String> propertyFontName; //!< name of the font to display text.
 			eproperty::Value<int32_t> propertyFontSize; //!< Size of the font to display text.
 			
 			ememory::SharedPtr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
@@ -57,7 +57,7 @@ namespace appl {
 		private:
 			ewol::compositing::Text m_displayText; //!< Text display properties.
 			ewol::compositing::Drawing m_displayDrawing; //!< Other display requested.
-			std::vector<std::pair<ememory::WeakPtr<appl::Buffer>, vec2>> m_drawingRemenber;
+			etk::Vector<etk::Pair<ememory::WeakPtr<appl::Buffer>, vec2>> m_drawingRemenber;
 		public:
 			virtual void onChangePropertyFontSize();
 			virtual void onChangePropertyFontName();
@@ -83,12 +83,12 @@ namespace appl {
 			void updateScrolling();
 			// TODO : Doc : write data on buffer
 			bool moveCursor(const appl::Buffer::Iterator& _pos);
-			bool write(const std::string& _data);
-			bool write(const std::string& _data, const appl::Buffer::Iterator& _pos);
-			bool replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
-			bool replace(const std::string& _data);
-			bool replace(const std::u32string& _data) {
-				return replace(etk::to_string(_data));
+			bool write(const etk::String& _data);
+			bool write(const etk::String& _data, const appl::Buffer::Iterator& _pos);
+			bool replace(const etk::String& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
+			bool replace(const etk::String& _data);
+			bool replace(const etk::UString& _data) {
+				return replace(etk::toString(_data));
 			}
 			/**
 			 * @brief Remove selected data ...
@@ -110,7 +110,7 @@ namespace appl {
 			 * @param[out] _data Output stream to copy.
 			 * @return true of no error occured.
 			 */
-			bool copy(std::string& _data) {
+			bool copy(etk::String& _data) {
 				if (m_buffer==nullptr) {
 					return false;
 				}
@@ -122,7 +122,7 @@ namespace appl {
 			 * @param[in] _pos Position to add the data.
 			 * @param[in] _posEnd End position to end replace the data.
 			 */
-			void copy(std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+			void copy(etk::String& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
 				if (m_buffer==nullptr) {
 					return;
 				}
@@ -134,7 +134,7 @@ namespace appl {
 			 * @param[in] _pos Position to add the data.
 			 * @return true if the write is done corectly
 			 */
-			bool writeDirect(const std::string& _data, const appl::Buffer::Iterator& _pos) {
+			bool writeDirect(const etk::String& _data, const appl::Buffer::Iterator& _pos) {
 				if (m_buffer==nullptr) {
 					return false;
 				}
@@ -149,7 +149,7 @@ namespace appl {
 			 * @param[in] _posEnd End position to end replace the data.
 			 * @return true if the write is done corectly
 			 */
-			bool replaceDirect(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+			bool replaceDirect(const etk::String& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
 				if (m_buffer==nullptr) {
 					return false;
 				}
@@ -205,7 +205,7 @@ namespace appl {
 			 * @brief get the path of the current buffer
 			 * @return Path of the buffer (remove the ended name)
 			 */
-			virtual std::string getBufferPath();
+			virtual etk::String getBufferPath();
 			/**
 			 * @brief Check if the buffer is availlable
 			 * @return true if a display buffer is present, false otherwise.
@@ -254,7 +254,7 @@ namespace appl {
 			 * @return true if pos if fined.
 			 */
 			virtual bool find(const appl::Buffer::Iterator& _pos,
-			                  const std::u32string& _search,
+			                  const etk::UString& _search,
 			                  appl::Buffer::Iterator& _resultStart,
 			                  appl::Buffer::Iterator& _resultStop,
 			                  bool _caseSensitive = true) {
@@ -277,7 +277,7 @@ namespace appl {
 			 * @return true if pos if fined.
 			 */
 			virtual bool rfind(const appl::Buffer::Iterator& _pos,
-			                   const std::u32string& _search,
+			                   const etk::UString& _search,
 			                   appl::Buffer::Iterator& _resultStart,
 			                   appl::Buffer::Iterator& _resultStop,
 			                   bool _caseSensitive = true) {
@@ -401,22 +401,22 @@ namespace appl {
 			 * @param[in] _descriptiveString Description string of the shortcut
 			 * @param[in] _generateEventName Event generic of the element
 			 */
-			virtual void ext_shortCutAdd(const std::string& _descriptiveString,
-			                             const std::string& _generateEventName) {
+			virtual void ext_shortCutAdd(const etk::String& _descriptiveString,
+			                             const etk::String& _generateEventName) {
 				shortCutAdd(_descriptiveString, _generateEventName);
 			}
 			/**
 			 * @brief Remove a specific shortcut with his event name
 			 * @param[in] _generateEventName Event of the element shortcut
 			 */
-			virtual void ext_shortCutRm(const std::string& _generateEventName) {
+			virtual void ext_shortCutRm(const etk::String& _generateEventName) {
 				shortCutRemove(_generateEventName);
 			}
 		private: // callback fundtions
 			void onCallbackIsModify();
-			void onCallbackShortCut(const std::string& _value);
+			void onCallbackShortCut(const etk::String& _value);
 			void onCallbackSelectChange();
-			void onCallbackselectNewFile(const std::string& _value);
+			void onCallbackselectNewFile(const etk::String& _value);
 	};
 }
 

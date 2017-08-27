@@ -85,7 +85,7 @@ void appl::WorkerSaveFile::onCallbackCancel() {
 	destroy();
 }
 
-void appl::WorkerSaveFile::onCallbackSaveAsValidate(const std::string& _value) {
+void appl::WorkerSaveFile::onCallbackSaveAsValidate(const etk::String& _value) {
 	if (m_bufferManager == nullptr) {
 		// nothing to do in this case ==> can do nothing ...
 		destroy();

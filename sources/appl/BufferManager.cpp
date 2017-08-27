@@ -33,7 +33,7 @@ ememory::SharedPtr<appl::Buffer> appl::BufferManager::createNewBuffer() {
 		return nullptr;
 	}
 	tmp->setParent(ewol::Object::sharedFromThis());
-	m_list.push_back(tmp);
+	m_list.pushBack(tmp);
 	APPL_INFO("Create a new Buffer");
 	signalNewBuffer.emit(tmp->getFileName());
 	APPL_INFO("Create a new Buffer (done)");
@@ -43,7 +43,7 @@ ememory::SharedPtr<appl::Buffer> appl::BufferManager::createNewBuffer() {
 	return tmp;
 }
 
-ememory::SharedPtr<appl::Buffer> appl::BufferManager::get(const std::string& _fileName, bool _createIfNeeded) {
+ememory::SharedPtr<appl::Buffer> appl::BufferManager::get(const etk::String& _fileName, bool _createIfNeeded) {
 	APPL_INFO("get('" << _fileName << "'," << _createIfNeeded << ")");
 	for (auto &it : m_list) {
 		if (it == nullptr) {
@@ -66,7 +66,7 @@ ememory::SharedPtr<appl::Buffer> appl::BufferManager::get(const std::string& _fi
 		}
 		tmp->setParent(ewol::Object::sharedFromThis());
 		tmp->loadFile(_fileName);
-		m_list.push_back(tmp);
+		m_list.pushBack(tmp);
 		APPL_INFO("Creata a open Buffer");
 		signalNewBuffer.emit(tmp->getFileName());
 		APPL_INFO("Creata a open Buffer (done)");
@@ -99,7 +99,7 @@ ememory::SharedPtr<appl::Buffer> appl::BufferManager::get(int32_t _id) {
 	return m_list.back();
 }
 
-bool appl::BufferManager::exist(const std::string& _fileName) {
+bool appl::BufferManager::exist(const etk::String& _fileName) {
 	for (auto &it : m_list) {
 		if (it == nullptr) {
 			continue;
@@ -111,7 +111,7 @@ bool appl::BufferManager::exist(const std::string& _fileName) {
 	return false;
 }
 
-void appl::BufferManager::open(const std::string& _fileName) {
+void appl::BufferManager::open(const etk::String& _fileName) {
 	if (exist(_fileName) == true) {
 		APPL_WARNING(" the element '" << _fileName << "' already exist ... just reselect it ...");
 		signalSelectFile.emit(_fileName);

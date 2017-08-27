@@ -76,14 +76,14 @@ appl::TextViewer::~TextViewer() {
 	m_pluginManager->disconnect(*this);
 }
 
-void appl::TextViewer::onCallbackShortCut(const std::string& _value) {
+void appl::TextViewer::onCallbackShortCut(const etk::String& _value) {
 	if (m_pluginManager->onReceiveShortCut(*this, _value) == true) {
 		return;
 	}
 }
 
 
-void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
+void appl::TextViewer::onCallbackselectNewFile(const etk::String& _value) {
 	APPL_INFO("Select new file: " << _value);
 	if (isSelectedLast() == false) {
 		return;
@@ -109,7 +109,7 @@ void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
 			++it;
 		}
 		if (needAdd == true) {
-			m_drawingRemenber.push_back(std::make_pair(ememory::WeakPtr<appl::Buffer>(m_buffer), m_originScrooled));
+			m_drawingRemenber.pushBack(etk::makePair(ememory::WeakPtr<appl::Buffer>(m_buffer), m_originScrooled));
 			APPL_VERBOSE("Push origin : " << m_originScrooled);
 		}
 	}
@@ -134,16 +134,16 @@ void appl::TextViewer::onCallbackselectNewFile(const std::string& _value) {
 	return;
 }
 
-std::string appl::TextViewer::getBufferPath() {
+etk::String appl::TextViewer::getBufferPath() {
 	if (m_buffer == nullptr) {
 		return "";
 	}
-	std::string filename = m_buffer->getFileName();
+	etk::String filename = m_buffer->getFileName();
 	size_t pos = filename.rfind('/');
-	if (pos == std::string::npos) {
+	if (pos == etk::String::npos) {
 		return "";
 	}
-	return std::string(filename, 0, pos);
+	return etk::String(filename, 0, pos);
 }
 
 
@@ -176,10 +176,10 @@ void appl::TextViewer::onRegenerateDisplay() {
 	if (m_buffer == nullptr) {
 		m_maxSize.setX(256);
 		m_maxSize.setY(256);
-		float textEndAlignament = std::max(11.0f, m_size.x()-20.0f);
+		float textEndAlignament = etk::max(11.0f, m_size.x()-20.0f);
 		m_displayText.setTextAlignement(10, textEndAlignament, ewol::compositing::alignLeft);
 		m_displayText.setRelPos(vec3(10, 0, 0));
-		std::string tmpString("<br/>\n"
+		etk::String tmpString("<br/>\n"
 		                       "<font color=\"red\">\n"
 		                       "	<b>\n"
 		                       "		edn - Editeur De N'ours\n"
@@ -189,7 +189,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 		                       "<br/>\n"
 		                       "<font color=\"indigo\">\n"
 		                       "	<i>\n"
-		                       "		No Buffer Availlable to display\n" + etk::to_string(m_size) + 
+		                       "		No Buffer Availlable to display\n" + etk::toString(m_size) + 
 		                       "	</i>\n"
 		                       "</font>\n");
 		m_displayText.setPos(vec3(0.0f, m_size.y(), 0.0f) );
@@ -207,7 +207,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 	float countNbLine = 1;
 	int32_t countColomn = 0;
 	// the siplay string :
-	std::u32string stringToDisplay;
+	etk::UString stringToDisplay;
 	appl::Buffer::Iterator selectPosStart = m_buffer->begin();
 	appl::Buffer::Iterator selectPosStop = m_buffer->begin();
 	if (m_buffer->hasTextSelected() == true) {
@@ -285,7 +285,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 		if (*it == u32char::Return) {
 			countNbLine += 1;
 			countColomn = 0;
-			maxSizeX = std::max(m_displayText.getPos().x(), maxSizeX);
+			maxSizeX = etk::max(m_displayText.getPos().x(), maxSizeX);
 			// Display the end line position only if we have the focus ...
 			if (   (    displayCursorAndSelection == true
 			         && it >= selectPosStart
@@ -349,7 +349,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 		tmpCursorPosition = m_displayText.getPos();
 		tmpCursorLenght = 5;
 	}
-	maxSizeX = std::max(m_displayText.getPos().x(), maxSizeX);
+	maxSizeX = etk::max(m_displayText.getPos().x(), maxSizeX);
 	// Display cursor only if we have the focus ...
 	if (    tmpCursorPosition.z() != -1
 	     && getFocus() == true) {
@@ -436,7 +436,7 @@ bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
 			replace(output, pos, posEnd);
 			//TODO : choice UTF  ... replace(localValue, pos, posEnd);
 		} else {
-			std::string myString = output;
+			etk::String myString = output;
 			write(myString);
 		}
 		return true;
@@ -545,7 +545,7 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 				moveCursor(newPos);
 				m_buffer->setSelectMode(false);
 				// Copy selection :
-				std::string value;
+				etk::String value;
 				m_buffer->copy(value);
 				if (value.size() != 0) {
 					gale::context::clipBoard::set(gale::context::clipBoard::clipboardSelection, value);
@@ -565,7 +565,7 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 		} else if (_event.getStatus() == gale::key::status::pressDouble) {
 			mouseEventDouble();
 			// Copy selection :
-			std::string value;
+			etk::String value;
 			m_buffer->copy(value);
 			if (value.size() != 0) {
 				gale::context::clipBoard::set(gale::context::clipBoard::clipboardSelection, value);
@@ -575,7 +575,7 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 		} else if (_event.getStatus() == gale::key::status::pressTriple) {
 			mouseEventTriple();
 			// Copy selection :
-			std::string value;
+			etk::String value;
 			m_buffer->copy(value);
 			if (value.size() != 0) {
 				gale::context::clipBoard::set(gale::context::clipBoard::clipboardSelection, value);
@@ -633,7 +633,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 	vec3 positionCurentDisplay(0,0,0);
 	vec3 tmpLetterSize = m_displayText.calculateSize((char32_t)'A');
 	int32_t countColomn = 0;
-	std::u32string stringToDisplay;
+	etk::UString stringToDisplay;
 	m_displayText.clear();
 	m_displayText.forceLineReturn();
 	positionCurentDisplay = m_displayText.getPos();
@@ -680,7 +680,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 
 void appl::TextViewer::onEventClipboard(enum gale::context::clipBoard::clipboardListe _clipboardID) {
 	if (m_buffer != nullptr) {
-		std::string data = gale::context::clipBoard::get(_clipboardID);
+		etk::String data = gale::context::clipBoard::get(_clipboardID);
 		write(data);
 	}
 	markToRedraw();
@@ -760,7 +760,7 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 	return true;
 }
 
-bool appl::TextViewer::write(const std::string& _data) {
+bool appl::TextViewer::write(const etk::String& _data) {
 	if (m_buffer == nullptr) {
 		return false;
 	}
@@ -770,7 +770,7 @@ bool appl::TextViewer::write(const std::string& _data) {
 	return write(_data, m_buffer->cursor());
 }
 
-bool appl::TextViewer::write(const std::string& _data, const appl::Buffer::Iterator& _pos) {
+bool appl::TextViewer::write(const etk::String& _data, const appl::Buffer::Iterator& _pos) {
 	if (m_buffer == nullptr) {
 		return false;
 	}
@@ -786,7 +786,7 @@ bool appl::TextViewer::write(const std::string& _data, const appl::Buffer::Itera
 	return ret;
 }
 
-bool appl::TextViewer::replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
+bool appl::TextViewer::replace(const etk::String& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
 	if (m_buffer == nullptr) {
 		return false;
 	}
@@ -802,7 +802,7 @@ bool appl::TextViewer::replace(const std::string& _data, const appl::Buffer::Ite
 	return ret;
 }
 
-bool appl::TextViewer::replace(const std::string& _data) {
+bool appl::TextViewer::replace(const etk::String& _data) {
 	if (m_buffer == nullptr) {
 		return false;
 	}
@@ -932,7 +932,7 @@ void appl::TextViewer::moveCursorDown(uint32_t _nbLine) {
 appl::Buffer::Iterator appl::TextViewer::getPosSize(const appl::Buffer::Iterator& _startLinePos, float _distance) {
 	char32_t currentValue;
 	int32_t countColomn = 0;
-	std::u32string stringToDisplay;
+	etk::UString stringToDisplay;
 	m_displayText.clear();
 	m_displayText.forceLineReturn();
 	for (appl::Buffer::Iterator it = _startLinePos;
@@ -960,7 +960,7 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 	float ret = 0;
 	char32_t currentValue;
 	int32_t countColomn = 0;
-	std::u32string stringToDisplay;
+	etk::UString stringToDisplay;
 	m_displayText.clear();
 	
 	for (appl::Buffer::Iterator it = _startLinePos;

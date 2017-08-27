@@ -35,7 +35,7 @@ appl::HighlightPattern::~HighlightPattern() {
 	
 }
 
-void appl::HighlightPattern::setPatern(const std::string& _regExp, const std::string& _regExpStop, bool _hasEndRegEx) {
+void appl::HighlightPattern::setPatern(const etk::String& _regExp, const etk::String& _regExpStop, bool _hasEndRegEx) {
 	m_regexValue[0] = _regExp;
 	m_regexValue[1] = _regExpStop;
 	m_hasEndRegEx = _hasEndRegEx;
@@ -59,11 +59,11 @@ void appl::HighlightPattern::setPatern(const std::string& _regExp, const std::st
 	}
 }
 
-std::pair<std::string,std::string> appl::HighlightPattern::getPaternString() {
-	return std::make_pair(m_regexValue[0], m_regexValue[1]);
+etk::Pair<etk::String,etk::String> appl::HighlightPattern::getPaternString() {
+	return etk::makePair(m_regexValue[0], m_regexValue[1]);
 }
 
-void appl::HighlightPattern::setColorGlyph(const std::string& _colorName) {
+void appl::HighlightPattern::setColorGlyph(const etk::String& _colorName) {
 	m_colorName = _colorName;
 	m_colorId = m_glyphPainting->request(m_colorName);
 	APPL_VERBOSE("Resuest color name '" << m_colorName << "' => id=" << m_colorId);
@@ -86,8 +86,8 @@ void appl::HighlightPattern::parseRules(const exml::Element& _child, int32_t _le
 	*/
 	//--------------------------------------------------------------------------------------------
 	// process attribute
-	std::string highLightName = _child.attributes["name"];
-	std::string myEdnDataTmp = "???";
+	etk::String highLightName = _child.attributes["name"];
+	etk::String myEdnDataTmp = "???";
 	if (highLightName.size()!=0) {
 		myEdnDataTmp = highLightName;
 	}
@@ -96,17 +96,17 @@ void appl::HighlightPattern::parseRules(const exml::Element& _child, int32_t _le
 	
 	exml::Element xChild = _child.nodes["color"];
 	if (xChild.exist() == true) {
-		std::string myData = xChild.getText();
+		etk::String myData = xChild.getText();
 		if (myData.size() != 0) {
 			setColorGlyph(myData);
 		}
 	}
-	std::string paterStart;
-	std::string paterStop;
+	etk::String paterStart;
+	etk::String paterStop;
 	xChild = _child.nodes["regex"];
 	if (xChild.exist() == true) {
 		if (xChild.nodes.size() == 1 && xChild.nodes[0].getType() == exml::nodeType::text) {
-			std::string myData = xChild.getText();
+			etk::String myData = xChild.getText();
 			if (myData.size() != 0) {
 				paterStart = myData;
 			}
@@ -114,14 +114,14 @@ void appl::HighlightPattern::parseRules(const exml::Element& _child, int32_t _le
 		} else {
 			exml::Element xxChild = xChild.nodes["start"];
 			if (xxChild.exist() == true) {
-				std::string myData = xxChild.getText();
+				etk::String myData = xxChild.getText();
 				if (myData.size() != 0) {
 					paterStart = myData;
 				}
 			}
 			xxChild = xChild.nodes["stop"];
 			if (xxChild.exist() == true) {
-				std::string myData = xxChild.getText();
+				etk::String myData = xxChild.getText();
 				if (myData.size() != 0) {
 					paterStop = myData;
 				}
@@ -131,7 +131,7 @@ void appl::HighlightPattern::parseRules(const exml::Element& _child, int32_t _le
 	}
 	xChild = _child.nodes["sub"];
 	if (xChild.exist() == true) {
-		std::string myData = xChild.getText();
+		etk::String myData = xChild.getText();
 		if (myData.size() != 0) {
 			setSubPatternName(myData);
 		}
@@ -158,7 +158,7 @@ bool appl::HighlightPattern::find(int32_t _start,
 	if (m_regExp[0].processOneElement(_buffer, _start, _stop) == true) {
 		_resultat.start = m_regExp[0].start();
 		_resultat.stop  = m_regExp[0].stop();
-		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop << " data='" <<std::string(_buffer, _resultat.start, _resultat.stop-_resultat.start) << "'" );
+		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop << " data='" <<etk::String(_buffer, _resultat.start, _resultat.stop-_resultat.start) << "'" );
 		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop );
 		if (m_hasEndRegEx == true) {
 			// when no regex specify ==> get all the buffer ...

@@ -44,11 +44,11 @@ class MainWindows : public ewol::widget::Windows {
 		void displayOpen();
 		void displayProperty();
 	private:
-		void onCallbackPopUpFileSelected(const std::string& _value);
+		void onCallbackPopUpFileSelected(const etk::String& _value);
 		void onCallbackTitleUpdate();
-		void onCallbackMenuEvent(const std::string& _value);
-		void onCallbackShortCut(const std::string& _value);
-		void onCallbackselectNewFile(const std::string& _value);
+		void onCallbackMenuEvent(const etk::String& _value);
+		void onCallbackShortCut(const etk::String& _value);
+		void onCallbackselectNewFile(const etk::String& _value);
 };
 
 

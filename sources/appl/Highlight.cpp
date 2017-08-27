@@ -23,7 +23,7 @@ appl::Highlight::Highlight() {
 	addResourceType("appl::Highlight");
 }
 
-void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _colorFile) {
+void appl::Highlight::init(const etk::String& _xmlFilename, const etk::String& _colorFile) {
 	gale::Resource::init(_xmlFilename);
 	
 	// keep color propertiy file :
@@ -50,10 +50,10 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 			continue;
 		}
 		if (child.getValue() == "ext") {
-			std::string myData = child.getText();
+			etk::String myData = child.getText();
 			if (myData.size()!=0) {
 				//HL_DEBUG("(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
-				m_listExtentions.push_back(myData);
+				m_listExtentions.pushBack(myData);
 			}
 		} else if (child.getValue() == "pass1") {
 			// get sub Nodes ...
@@ -67,7 +67,7 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 					continue;
 				}
 				// Create the patern in list
-				m_listHighlightPass1.push_back(HighlightPattern(m_paintingProperties, passChild, level1++));
+				m_listHighlightPass1.pushBack(HighlightPattern(m_paintingProperties, passChild, level1++));
 			}
 		} else if (child.getValue() == "pass2") {
 			// get sub Nodes ...
@@ -81,15 +81,15 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 					continue;
 				}
 				// Create the patern in list
-				m_listHighlightPass2.push_back(HighlightPattern(m_paintingProperties, passChild, level2++));
+				m_listHighlightPass2.pushBack(HighlightPattern(m_paintingProperties, passChild, level2++));
 			}
 		} else if (child.getValue() == "pass") {
-			std::string attributeName = child.attributes["name"];
+			etk::String attributeName = child.attributes["name"];
 			if (attributeName == "") {
 				APPL_ERROR("Can not parse an element pass with no attribute name ... ligne=" << child.getPos());
 				continue;
 			}
-			m_listHighlightNamed.insert(std::pair<std::string, std::vector<HighlightPattern>>(attributeName, std::vector<HighlightPattern>()));
+			m_listHighlightNamed.insert(etk::Pair<etk::String, etk::Vector<HighlightPattern>>(attributeName, etk::Vector<HighlightPattern>()));
 			auto it3 = m_listHighlightNamed.find(attributeName);
 			int32_t level3=0;
 			// get sub Nodes ...
@@ -103,7 +103,7 @@ void appl::Highlight::init(const std::string& _xmlFilename, const std::string& _
 					continue;
 				}
 				// add element in the list
-				it3->second.push_back(HighlightPattern(m_paintingProperties, passChild, level3++));
+				it3->second.pushBack(HighlightPattern(m_paintingProperties, passChild, level3++));
 			}
 		} else {
 			APPL_ERROR("(l "<< child.getPos() << ") node not suported : '"<< child.getValue() << "' must be [ext,pass1,pass2]" );
@@ -120,7 +120,7 @@ appl::Highlight::~Highlight() {
 	m_listExtentions.clear();
 }
 
-bool appl::Highlight::isCompatible(const std::string& _name) {
+bool appl::Highlight::isCompatible(const etk::String& _name) {
 	for (auto &it : m_listExtentions) {
 		APPL_WARNING("        check : " << it << "=?=" << _name);
 		// TODO: Remove dependency with the std::regex ...
@@ -148,8 +148,8 @@ bool appl::Highlight::isCompatible(const std::string& _name) {
 	return false;
 }
 
-bool appl::Highlight::fileNameCompatible(const std::string& _fileName) {
-	std::string extention;
+bool appl::Highlight::fileNameCompatible(const etk::String& _fileName) {
+	etk::String extention;
 	etk::FSNode file(_fileName);
 	if (true == file.fileHasExtention() ) {
 		extention = "*.";
@@ -197,7 +197,7 @@ void appl::Highlight::display() {
  */
 void appl::Highlight::parse(int64_t _start,
                             int64_t _stop,
-                            std::vector<appl::HighlightInfo> & _metaData,
+                            etk::Vector<appl::HighlightInfo> & _metaData,
                             int64_t _addingPos,
                             etk::Buffer& _buffer) {
 	if (0 > _addingPos) {
@@ -278,7 +278,7 @@ void appl::Highlight::parse(int64_t _start,
  */
 void appl::Highlight::parse2(int64_t _start,
                              int64_t _stop,
-                             std::vector<appl::HighlightInfo>& _metaData,
+                             etk::Vector<appl::HighlightInfo>& _metaData,
                              etk::Buffer& _buffer) {
 	HL2_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() <<
 	          "  == > position search: (" << _start << "," << _stop << ")" );
@@ -293,14 +293,14 @@ void appl::Highlight::parse2(int64_t _start,
 			/*
 			HL2_DEBUG("Parse HL id=" << jjj << " position search: (" <<
 			         elementStart << "," << elementStop << ") in='"
-			         << std::string(_buffer.begin()+elementStart,_buffer.begin()+elementStop) << "' " << m_listHighlightPass2[jjj].getPaternString().first << " " << m_listHighlightPass1[jjj].getPaternString().second);
+			         << etk::String(_buffer.begin()+elementStart,_buffer.begin()+elementStop) << "' " << m_listHighlightPass2[jjj].getPaternString().first << " " << m_listHighlightPass1[jjj].getPaternString().second);
 			*/
 			// Stop the search to the end (to get the end of the pattern)
 			bool ret = m_listHighlightPass2[jjj].find(elementStart, elementStop, resultat, _buffer);
 			if (ret == true) {
 				// find an element:
-				_metaData.push_back(resultat);
-				//HL2_DEBUG("data='" << std::string(_buffer.begin()+elementStart,_buffer.begin()+resultat.stop) << "'");
+				_metaData.pushBack(resultat);
+				//HL2_DEBUG("data='" << etk::String(_buffer.begin()+elementStart,_buffer.begin()+resultat.stop) << "'");
 				elementStart = resultat.stop-1;
 				break;
 			}
@@ -317,7 +317,7 @@ void appl::Highlight::parse2(int64_t _start,
  * @param[in] _buffer buffer where we need to search data
  */
 void appl::Highlight::parseSubElement(const appl::HighlightInfo& _upper,
-                                      std::vector<appl::HighlightInfo>& _metaData,
+                                      etk::Vector<appl::HighlightInfo>& _metaData,
                                       etk::Buffer& _buffer) {
 	if (_upper.patern->getSubPatternName().size() == 0) {
 		return;
@@ -342,7 +342,7 @@ void appl::Highlight::parseSubElement(const appl::HighlightInfo& _upper,
 			// Stop the search to the end (to get the end of the pattern)
 			bool ret = it.find(elementStart, elementStop, resultat, _buffer);
 			if (ret == true) {
-				_metaData.push_back(resultat);
+				_metaData.pushBack(resultat);
 				elementStart = resultat.stop-1;
 				break;
 			}

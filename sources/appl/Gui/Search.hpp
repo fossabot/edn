@@ -22,8 +22,8 @@ namespace appl {
 				bool m_wrap;
 				ememory::SharedPtr<ewol::widget::Entry> m_searchEntry;
 				ememory::SharedPtr<ewol::widget::Entry> m_replaceEntry;
-				std::u32string m_searchData;
-				std::u32string m_replaceData;
+				etk::UString m_searchData;
+				etk::UString m_replaceData;
 			protected:
 				// Constructeur
 				Search();
@@ -47,12 +47,12 @@ namespace appl {
 				bool isSelectReplace();
 			private: // callback functions
 				void OnCallbackHide();
-				void OnCallbackSearchValue(const std::string& _value);
+				void OnCallbackSearchValue(const etk::String& _value);
 				void OnCallbackSearch();
-				void OnCallbackSearchEntryValidate(const std::string& _value);
-				void OnCallbackReplaceValue(const std::string& _value);
+				void OnCallbackSearchEntryValidate(const etk::String& _value);
+				void OnCallbackReplaceValue(const etk::String& _value);
 				void OnCallbackReplace();
-				void OnCallbackReplaceEntryValidate(const std::string& _value);
+				void OnCallbackReplaceEntryValidate(const etk::String& _value);
 				void OnCallbackCase(const bool& _value);
 				void OnCallbackWrap(const bool& _value);
 				void OnCallbackForward(const bool& _value);

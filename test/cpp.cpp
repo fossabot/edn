@@ -24,7 +24,7 @@ aa "\u4855" aa "\U78965412" aa "\x0F" aa "\o45"
 "dqf\"gsdfg" // \\ \n "
 // TODO : sqdkfjsdldkqfj
 
-std::string
+etk::String
 
 std::thread::sleep
 
@@ -54,7 +54,7 @@ namespace ewol {
 	};
 };
 #include <etk/types.hpp>
-#include <vector>
+#include <etk/Vector.hpp>
 #include <etk/math/Vector2D.hpp>
 #include <ewol/debug.hpp>
 #include <ewol/context/clipBoard.hpp>
@@ -103,7 +103,7 @@ namespace ewol {
 			ivec2 m_size; //!< Windows clipping upper widget (can not be <0 and >m_windowsSize)
 			void limit(const vec2& _origin, const vec2& _size);
 	};
-	std::ostream& operator <<(std::ostream& _os, const ewol::DrawProperty& _obj);
+	etk::Stream& operator <<(etk::Stream& _os, const ewol::DrawProperty& _obj);
 	/**
 	 * @brief Gravity of the widget property
 	 * @not_in_doc
@@ -119,9 +119,9 @@ namespace ewol {
 		gravityButtomLeft=0x0C,
 		gravityLeft=0x08,
 	};
-	std::ostream& operator <<(std::ostream& _os, const enum ewol::gravity _obj);
-	std::string gravityToString(const enum ewol::gravity _obj);
-	enum ewol::gravity stringToGravity(const std::string& _obj);
+	etk::Stream& operator <<(etk::Stream& _os, const enum ewol::gravity _obj);
+	etk::String gravityToString(const enum ewol::gravity _obj);
+	enum ewol::gravity stringToGravity(const etk::String& _obj);
 	/**
 	 * @not_in_doc
 	 */
@@ -129,7 +129,7 @@ namespace ewol {
 		public:
 			bool broadcastEvent; //!< if it is true, then the message is sent to all the system
 			const char* generateEventId; //!< Local generated event
-			std::string eventData; //!< data link with the event
+			etk::String eventData; //!< data link with the event
 			ewol::key::Special specialKey; //!< special board key
 			char32_t unicodeValue; //!< 0 if not used
 			enum ewol::key::keyboard keyboardMoveValue; //!< ewol::EVENT_KB_MOVE_TYPE_NONE if not used

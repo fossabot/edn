@@ -25,18 +25,18 @@ namespace appl {
 		 * @param[in] _fileName name of the file
 		 * @return type of highlight
 		 */
-		std::string getTypeFile(const std::string& _fileName);
+		etk::String getTypeFile(const etk::String& _fileName);
 		/**
 		 * @brief Get filename with type.
 		 * @param[in] _type Type name of the highlight.
 		 * @return filename of the highlight.
 		 */
-		std::string getFileWithTypeType(const std::string& _type);
+		etk::String getFileWithTypeType(const etk::String& _type);
 		/**
 		 * @brief Get the list of extention type
 		 * @return the requested list.
 		 */
-		std::vector<std::string> getTypeList();
+		etk::Vector<etk::String> getTypeList();
 	};
 }
 

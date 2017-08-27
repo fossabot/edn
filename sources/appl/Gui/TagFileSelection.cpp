@@ -9,7 +9,7 @@
 #include <ewol/widget/Spacer.hpp>
 #include <ewol/widget/Image.hpp>
 #include <ewol/widget/Manager.hpp>
-#include <vector>
+#include <etk/Vector.hpp>
 #include <etk/tool.hpp>
 #include <ewol/widget/Button.hpp>
 #include <ewol/widget/Label.hpp>
@@ -104,13 +104,13 @@ void appl::TagFileSelection::onCallbackCtagsCancel() {
 	autoDestroy();
 }
 
-void appl::TagFileSelection::onCallbackCtagsListValidate(const std::string& _value) {
+void appl::TagFileSelection::onCallbackCtagsListValidate(const etk::String& _value) {
 	signalSelect.emit(_value);
 	// == > Auto remove ...
 	autoDestroy();
 }
 
-void appl::TagFileSelection::onCallbackCtagsListSelect(const std::string& _value) {
+void appl::TagFileSelection::onCallbackCtagsListSelect(const etk::String& _value) {
 	m_eventNamed = _value;
 }
 
@@ -125,7 +125,7 @@ void appl::TagFileSelection::onCallbackCtagsListUnSelect() {
  * @param[in] file Compleate file name
  * @param[in] jump line id
  */
-void appl::TagFileSelection::addCtagsNewItem(std::string _file, int32_t _line) {
+void appl::TagFileSelection::addCtagsNewItem(etk::String _file, int32_t _line) {
 	if (m_listTag != nullptr) {
 		m_listTag->add(_file, _line);
 	}

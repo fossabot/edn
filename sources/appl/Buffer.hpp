@@ -19,7 +19,7 @@ namespace appl {
 
 	class DisplayHLData {
 		public:
-			std::vector<appl::HighlightInfo> HLData;
+			etk::Vector<appl::HighlightInfo> HLData;
 			int64_t posHLPass1;
 			int64_t posHLPass2;
 	};
@@ -300,12 +300,12 @@ namespace appl {
 			virtual ~Buffer();
 		private:
 			bool m_hasFileName; //!< when new file, the buffer has no name ==> but it might be reference with a single name ...
-			std::string m_fileName; //!< name of the file (with his path)
+			etk::String m_fileName; //!< name of the file (with his path)
 		public:
 			/**
 			 * @brief get the curent filename of the Buffer
 			 */
-			const std::string& getFileName() const {
+			const etk::String& getFileName() const {
 				return m_fileName;
 			}
 			/**
@@ -320,12 +320,12 @@ namespace appl {
 			 * @param[in] _name name of the file.
 			 * @return true if file corectly opened.
 			 */
-			bool loadFile(const std::string& _name);
+			bool loadFile(const etk::String& _name);
 			/**
 			 * @brief Set a file name at this buffer (no saving ...)
 			 * @param[in] _name name of the file.
 			 */
-			void setFileName(const std::string& _name);
+			void setFileName(const etk::String& _name);
 			/**
 			 * @brief save the file in the specify path.
 			 * @return true is saving well done
@@ -384,14 +384,14 @@ namespace appl {
 			 * @return position of the start selection.
 			 */
 			int64_t getStartSelectionPos() {
-				return std::min(m_cursorPos, m_cursorSelectPos);
+				return etk::min(m_cursorPos, m_cursorSelectPos);
 			}
 			/**
 			 * @brief Get the Stop position of the selection.
 			 * @return position of the stop selection.
 			 */
 			int64_t getStopSelectionPos() {
-				return std::max(m_cursorPos, m_cursorSelectPos);
+				return etk::max(m_cursorPos, m_cursorSelectPos);
 			}
 		protected:
 			float m_cursorPreferredCol; //!< position of the cursor when up and down is done.
@@ -442,7 +442,7 @@ namespace appl {
 			 * @param[in] _value Current value to transform
 			 * @param[out] _out String that represent the curent value to display
 			 */
-			void expand(int32_t& _indent, const char32_t& _value, std::u32string& _out) const;
+			void expand(int32_t& _indent, const char32_t& _value, etk::UString& _out) const;
 			/**
 			 * @brief get the start of a line with the position in the buffer.
 			 * @param[in] _pos position in the buffer.
@@ -482,7 +482,7 @@ namespace appl {
 			 * @return true if pos if fined.
 			 */
 			// TODO : rename find
-			bool search(const Iterator& _pos, const std::u32string& _search, Iterator& _result, bool _caseSensitive = true);
+			bool search(const Iterator& _pos, const etk::UString& _search, Iterator& _result, bool _caseSensitive = true);
 			/**
 			 * @brief Search a string in the buffer in back mode.
 			 * @param[in] _pos Position to start the search of the element.
@@ -492,7 +492,7 @@ namespace appl {
 			 * @return true if pos if fined.
 			 */
 			// TODO : rename rfind
-			bool searchBack(const Iterator& _pos, const std::u32string& _search, Iterator& _result, bool _caseSensitive = true);
+			bool searchBack(const Iterator& _pos, const etk::UString& _search, Iterator& _result, bool _caseSensitive = true);
 			/**
 			 * @brief find the first character of the line "nLines" forward
 			 * @param[in] _startPos Start position.
@@ -513,21 +513,21 @@ namespace appl {
 			 * @param[out] _data Output stream to copy.
 			 * @return true of no error occured.
 			 */
-			bool copy(std::string& _data);
+			bool copy(etk::String& _data);
 			/**
 			 * @brief copy data in the _data ref value.
 			 * @param[out] _data Output stream to copy.
 			 * @param[in] _pos Position to add the data.
 			 * @param[in] _posEnd End position to end replace the data.
 			 */
-			void copy(std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
+			void copy(etk::String& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
 			/**
 			 * @brief Write data at a specific position
 			 * @param[in] _data Data to insert in the buffer
 			 * @param[in] _pos Position to add the data.
 			 * @return true if the write is done corectly
 			 */
-			bool write(const std::string& _data, const appl::Buffer::Iterator& _pos);
+			bool write(const etk::String& _data, const appl::Buffer::Iterator& _pos);
 			/**
 			 * @brief Write data at a specific position
 			 * @param[in] _data Data to insert in the buffer
@@ -535,7 +535,7 @@ namespace appl {
 			 * @param[in] _posEnd End position to end replace the data.
 			 * @return true if the write is done corectly
 			 */
-			bool replace(const std::string& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
+			bool replace(const etk::String& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd);
 		public: // iterator section :
 			/**
 			 * @brief Get an iterator an an specific position
@@ -589,10 +589,10 @@ namespace appl {
 			 */
 			void countNumberofLine();
 		protected:
-			std::string m_highlightType; //!< Name of the highlight type
+			etk::String m_highlightType; //!< Name of the highlight type
 			
 			ememory::SharedPtr<appl::Highlight> m_highlight; //!< internal link with the Highlight system
-			std::vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
+			etk::Vector<appl::HighlightInfo> m_HLDataPass1; //!< colorisation position in the current buffer pass 1
 		public:
 			/**
 			 * @brief Find the Highligh capability
@@ -602,12 +602,12 @@ namespace appl {
 			 * @brief Set type of highlight
 			 * @param[in] _type type of the highlight
 			 */
-			void setHighlightType(const std::string& _type);
+			void setHighlightType(const etk::String& _type);
 			/**
 			 * @brief Get type of highlight
 			 * @return Type of the highlight
 			 */
-			const std::string& setHighlightType() {
+			const etk::String& setHighlightType() {
 				return m_highlightType;
 			};
 			

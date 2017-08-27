@@ -23,23 +23,23 @@ void appl::widget::Search::init() {
 	loadFromFile("DATA:GUI-Search.xml", getId());
 	m_viewerManager = appl::ViewerManager::create();
 	// link event
-	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:close",         signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackHide);
-	subBind(ewol::widget::Entry,  "[" + etk::to_string(getId()) + "]SEARCH:search-entry",  signalModify,  sharedFromThis(), &appl::widget::Search::OnCallbackSearchValue);
-	subBind(ewol::widget::Entry,  "[" + etk::to_string(getId()) + "]SEARCH:search-entry",  signalEnter,   sharedFromThis(), &appl::widget::Search::OnCallbackSearchEntryValidate);
-	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:search",        signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackSearch);
-	subBind(ewol::widget::Entry,  "[" + etk::to_string(getId()) + "]SEARCH:replace-entry", signalModify,  sharedFromThis(), &appl::widget::Search::OnCallbackReplaceValue);
-	subBind(ewol::widget::Entry,  "[" + etk::to_string(getId()) + "]SEARCH:replace-entry", signalEnter,   sharedFromThis(), &appl::widget::Search::OnCallbackReplaceEntryValidate);
-	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:replace",       signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackReplace);
-	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:case",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackCase);
-	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:wrap",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackWrap);
-	subBind(ewol::widget::Button, "[" + etk::to_string(getId()) + "]SEARCH:up-down",       signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackForward);
+	subBind(ewol::widget::Button, "[" + etk::toString(getId()) + "]SEARCH:close",         signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackHide);
+	subBind(ewol::widget::Entry,  "[" + etk::toString(getId()) + "]SEARCH:search-entry",  signalModify,  sharedFromThis(), &appl::widget::Search::OnCallbackSearchValue);
+	subBind(ewol::widget::Entry,  "[" + etk::toString(getId()) + "]SEARCH:search-entry",  signalEnter,   sharedFromThis(), &appl::widget::Search::OnCallbackSearchEntryValidate);
+	subBind(ewol::widget::Button, "[" + etk::toString(getId()) + "]SEARCH:search",        signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackSearch);
+	subBind(ewol::widget::Entry,  "[" + etk::toString(getId()) + "]SEARCH:replace-entry", signalModify,  sharedFromThis(), &appl::widget::Search::OnCallbackReplaceValue);
+	subBind(ewol::widget::Entry,  "[" + etk::toString(getId()) + "]SEARCH:replace-entry", signalEnter,   sharedFromThis(), &appl::widget::Search::OnCallbackReplaceEntryValidate);
+	subBind(ewol::widget::Button, "[" + etk::toString(getId()) + "]SEARCH:replace",       signalPressed, sharedFromThis(), &appl::widget::Search::OnCallbackReplace);
+	subBind(ewol::widget::Button, "[" + etk::toString(getId()) + "]SEARCH:case",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackCase);
+	subBind(ewol::widget::Button, "[" + etk::toString(getId()) + "]SEARCH:wrap",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackWrap);
+	subBind(ewol::widget::Button, "[" + etk::toString(getId()) + "]SEARCH:up-down",       signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackForward);
 	// set default properties
-	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]SEARCH:case", "value", etk::to_string(m_caseSensitive));
-	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]SEARCH:wrap", "value", etk::to_string(m_wrap));
-	propertySetOnWidgetNamed("[" + etk::to_string(getId()) + "]SEARCH:up-down", "value", etk::to_string(m_forward));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]SEARCH:case", "value", etk::to_string(m_caseSensitive));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]SEARCH:wrap", "value", etk::to_string(m_wrap));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]SEARCH:up-down", "value", etk::to_string(m_forward));
 	// get widget
-	m_searchEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("[" + etk::to_string(getId()) + "]SEARCH:search-entry"));
-	m_replaceEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("[" + etk::to_string(getId()) + "]SEARCH:replace-entry"));
+	m_searchEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("[" + etk::toString(getId()) + "]SEARCH:search-entry"));
+	m_replaceEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("[" + etk::toString(getId()) + "]SEARCH:replace-entry"));
 	// basicly hiden ...
 	propertyHide.set(true);
 }
@@ -104,25 +104,25 @@ void appl::widget::Search::replace() {
 void appl::widget::Search::OnCallbackHide() {
 	propertyHide.set(true);
 }
-void appl::widget::Search::OnCallbackSearchValue(const std::string& _value) {
-	m_searchData = etk::to_u32string(_value);
+void appl::widget::Search::OnCallbackSearchValue(const etk::String& _value) {
+	m_searchData = etk::toUString(_value);
 }
 void appl::widget::Search::OnCallbackSearch() {
 	find();
 }
-void appl::widget::Search::OnCallbackSearchEntryValidate(const std::string& _value) {
-	m_searchData = etk::to_u32string(_value);
+void appl::widget::Search::OnCallbackSearchEntryValidate(const etk::String& _value) {
+	m_searchData = etk::toUString(_value);
 	find();
 }
-void appl::widget::Search::OnCallbackReplaceValue(const std::string& _value) {
-	m_replaceData = etk::to_u32string(_value);
+void appl::widget::Search::OnCallbackReplaceValue(const etk::String& _value) {
+	m_replaceData = etk::toUString(_value);
 }
 void appl::widget::Search::OnCallbackReplace() {
 	replace();
 	find();
 }
-void appl::widget::Search::OnCallbackReplaceEntryValidate(const std::string& _value) {
-	m_replaceData = etk::to_u32string(_value);
+void appl::widget::Search::OnCallbackReplaceEntryValidate(const etk::String& _value) {
+	m_replaceData = etk::toUString(_value);
 	replace();
 	find();
 }

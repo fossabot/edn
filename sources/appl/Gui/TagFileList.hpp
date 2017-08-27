@@ -11,9 +11,9 @@
 namespace appl {
 	class TagListElement {
 		public:
-			std::string filename;
+			etk::String filename;
 			int32_t      fileLine;
-			TagListElement(std::string& _file, int32_t _line) :
+			TagListElement(etk::String& _file, int32_t _line) :
 			  filename(_file),
 			  fileLine(_line) {
 				
@@ -24,12 +24,12 @@ namespace appl {
 	};
 	class TagFileList : public ewol::widget::List {
 		public:
-			esignal::Signal<std::string> signalSelect;
-			esignal::Signal<std::string> signalValidate;
+			esignal::Signal<etk::String> signalSelect;
+			esignal::Signal<etk::String> signalValidate;
 			esignal::Signal<> signalUnSelect;
 		private:
 			int32_t m_selectedLine;
-			std::vector<appl::TagListElement*> m_list;
+			etk::Vector<appl::TagListElement*> m_list;
 		protected:
 			ememory::SharedPtr<ewol::resource::ColorFile> m_colorProperty; //!< theme color property.
 			int32_t m_colorIdText; //!< Color of the text.
@@ -45,9 +45,9 @@ namespace appl {
 			// display API :
 			virtual etk::Color<> getBasicBG();
 			uint32_t getNuberOfColomn();
-			bool getTitle(int32_t _colomn, std::string& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
+			bool getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
 			uint32_t getNuberOfRaw();
-			bool getElement(int32_t _colomn, int32_t _raw, std::string& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
+			bool getElement(int32_t _colomn, int32_t _raw, etk::String& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
 			bool onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
 		public:
 			/**
@@ -55,7 +55,7 @@ namespace appl {
 			 * @param[in] file Compleate file name
 			 * @param[in] jump line id
 			 */
-			void add(std::string& _file, int32_t _line);
+			void add(etk::String& _file, int32_t _line);
 	};
 }
 

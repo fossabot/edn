@@ -31,7 +31,7 @@ void appl::WorkerCloseAllFile::init() {
 			tmpBuffer->destroy();
 			continue;
 		}
-		m_bufferNameList.push_back(tmpBuffer->getFileName());
+		m_bufferNameList.pushBack(tmpBuffer->getFileName());
 	}
 	// checkif an element has something to do in the queue
 	if (m_bufferNameList.size() == 0) {

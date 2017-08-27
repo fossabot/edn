@@ -33,7 +33,7 @@
 #include <appl/Gui/WorkerCloseAllFile.hpp>
 
 namespace appl {
-	std::string getVersion() {
+	etk::String getVersion() {
 		return APPL_VERSION;
 	}
 	
@@ -59,7 +59,7 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 				mySpacer->propertyExpand.set(bvec2(true,true));
 				subWidgetAdd(mySpacer);
 			}
-			std::string tmpLabel = "<left>";
+			etk::String tmpLabel = "<left>";
 			tmpLabel += "  <b>Editeur De N'ours</b> : v:";
 			tmpLabel += appl::getVersion();
 			tmpLabel += "<br/>";
@@ -242,12 +242,12 @@ MainWindows::~MainWindows() {
 	
 }
 
-void MainWindows::onCallbackShortCut(const std::string& _value) {
+void MainWindows::onCallbackShortCut(const etk::String& _value) {
 	APPL_WARNING("Event from ShortCut : " << _value);
 	onCallbackMenuEvent(_value);
 }
 
-void MainWindows::onCallbackMenuEvent(const std::string& _value) {
+void MainWindows::onCallbackMenuEvent(const etk::String& _value) {
 	APPL_WARNING("Event from Menu : " << _value);
 	if (_value == "menu:new") {
 		if (m_bufferManager != nullptr) {
@@ -320,14 +320,14 @@ void MainWindows::onCallbackMenuEvent(const std::string& _value) {
 		APPL_TODO("Event from Menu : " << _value);
 	} else if (    _value == "menu:color:color/black/"
 	            || _value == "menu:color:color/white/") {
-		etk::theme::setName("COLOR", std::string(_value, 11));
-		EWOL_ERROR("Select Shape or Color : 'COLOR'='" << std::string(_value, 11) << "'");
+		etk::theme::setName("COLOR", etk::String(_value, 11));
+		EWOL_ERROR("Select Shape or Color : 'COLOR'='" << etk::String(_value, 11) << "'");
 		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();
 	} else if (    _value == "menu:shape:shape/square/"
 	            || _value == "menu:shape:shape/round/") {
-		EWOL_ERROR("Select Shape or Color : 'GUI'='" << std::string(_value, 11) << "'");
-		etk::theme::setName("GUI", std::string(_value, 11));
+		EWOL_ERROR("Select Shape or Color : 'GUI'='" << etk::String(_value, 11) << "'");
+		etk::theme::setName("GUI", etk::String(_value, 11));
 		ewol::getContext().getResourcesManager().reLoadResources();
 		ewol::getContext().forceRedrawAll();
 	} else if (_value == "menu:reloadShape") {
@@ -430,7 +430,7 @@ void MainWindows::displayProperty() {
 		return;
 	}
 	#if 0
-		std::string menuDescription = "<title>Properties</title>\n";
+		etk::String menuDescription = "<title>Properties</title>\n";
 		menuDescription += "<group title='_T{Editor}'>\n";
 		menuDescription += "	<menu title='_T{Editor Interface}' short-title='Editor' widget='appl-text-viewer'>\n";
 		menuDescription += "</group>\n";
@@ -456,7 +456,7 @@ void MainWindows::displayProperty() {
 	#endif
 }
 
-void MainWindows::onCallbackselectNewFile(const std::string& _value) {
+void MainWindows::onCallbackselectNewFile(const etk::String& _value) {
 	APPL_INFO("onCallbackselectNewFile(" << _value << ")");
 	if (m_bufferManager == nullptr) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
@@ -474,7 +474,7 @@ void MainWindows::onCallbackselectNewFile(const std::string& _value) {
 	}
 }
 
-void MainWindows::onCallbackPopUpFileSelected(const std::string& _value) {
+void MainWindows::onCallbackPopUpFileSelected(const etk::String& _value) {
 	APPL_INFO("onCallbackPopUpFileSelected(" << _value << ")");
 	APPL_DEBUG("Request opening the file : " << _value);
 	m_bufferManager->open(_value);
@@ -494,8 +494,8 @@ void MainWindows::onCallbackTitleUpdate() {
 			m_widgetLabelFileName->propertyValue.set("");
 		}
 	} else {
-		std::string nameFileSystem = etk::FSNode(tmpp->getFileName()).getFileSystemName();
-		propertyTitle.set(std::string("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);
+		etk::String nameFileSystem = etk::FSNode(tmpp->getFileName()).getFileSystemName();
+		propertyTitle.set(etk::String("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);
 		if (m_widgetLabelFileName != nullptr) {
 			m_widgetLabelFileName->propertyValue.set(nameFileSystem + (tmpp->isModify()==true?" *":""));
 		}

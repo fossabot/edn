@@ -33,7 +33,7 @@ class MainApplication : public ewol::context::Application {
 		virtual void onCreate(ewol::Context& _context) override {
 			APPL_INFO(" == > CREATE ... " << PROJECT_NAME << "  v" << APPL_VERSION << " (START) [" << gale::getBoardType() << "] (" << gale::getCompilationMode() << ") (BEGIN)");
 			for( int32_t iii=0 ; iii<_context.getCmd().size(); iii++) {
-				std::string tmpppp = _context.getCmd().get(iii);
+				etk::String tmpppp = _context.getCmd().get(iii);
 				if (    tmpppp == "-h"
 				     || tmpppp == "--help") {
 					APPL_INFO("  -t c-flags-file-name" );
@@ -99,12 +99,12 @@ class MainApplication : public ewol::context::Application {
 			APPL_INFO("show list of files : ");
 			bool ctagDetected = false;
 			for( int32_t iii=0 ; iii<_context.getCmd().size(); iii++) {
-				std::string tmpppp = _context.getCmd().get(iii);
+				etk::String tmpppp = _context.getCmd().get(iii);
 				if (tmpppp == "-t") {
 					ctagDetected = true;
 				} else if (ctagDetected == true) {
 					etk::FSNode file(tmpppp);
-					std::string name = file.getName();
+					etk::String name = file.getName();
 					APPL_INFO("Load ctag file : \"" << name << "\"" );
 					ctagDetected = false;
 					//_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, name);
@@ -114,15 +114,15 @@ class MainApplication : public ewol::context::Application {
 				} else {
 					etk::FSNode file(tmpppp);
 					if (file.getNodeType() == etk::typeNode_file) {
-						std::string name = file.getName();
+						etk::String name = file.getName();
 						APPL_INFO("need load file : \"" << name << "\"" );
 						m_bufferManager->open(name);
 					} else if (file.getNodeType() == etk::typeNode_folder) {
-						std::vector<std::string> listOfFiles = file.folderGetSub(false, true, ".*");
+						etk::Vector<etk::String> listOfFiles = file.folderGetSub(false, true, ".*");
 						for (auto &it: listOfFiles) {
 							etk::FSNode file2(it);
 							if (file2.getNodeType() == etk::typeNode_file) {
-								std::string name = file2.getName();
+								etk::String name = file2.getName();
 								APPL_INFO("need load file : \"" << name << "\"" );
 								m_bufferManager->open(name);
 							}
@@ -163,7 +163,7 @@ class MainApplication : public ewol::context::Application {
 int main(int _argc, const char *_argv[]) {
 	/*
 	APPL_ERROR(" base signature = " << typeid(&MainApplication::init).name());
-	APPL_ERROR(" base signature = " << typeid(std::string).name());
+	APPL_ERROR(" base signature = " << typeid(etk::String).name());
 	APPL_CRITICAL(" END ");
 	*/
 	// second possibility

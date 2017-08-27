@@ -22,7 +22,7 @@ namespace appl {
 		public:
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
-			virtual bool onReceiveShortCut(appl::TextViewer& _textDrawer, const std::string& _shortCutName);
+			virtual bool onReceiveShortCut(appl::TextViewer& _textDrawer, const etk::String& _shortCutName);
 	};
 }
 

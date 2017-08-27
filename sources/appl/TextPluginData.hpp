@@ -28,7 +28,7 @@ namespace appl {
 				m_specificData.clear();
 			}
 		private:
-			std::vector<std::pair<ememory::WeakPtr<appl::Buffer> ,std::unique_ptr<TYPE>>> m_specificData;
+			etk::Vector<etk::Pair<ememory::WeakPtr<appl::Buffer> ,std::unique_ptr<TYPE>>> m_specificData;
 		protected:
 			TYPE* getDataRef(appl::TextViewer& _textDrawer) {
 				auto it = m_specificData.begin();
@@ -49,13 +49,13 @@ namespace appl {
 					return nullptr;
 				}
 				TYPE* copyPocalPointer = data.get();
-				m_specificData.push_back(std::make_pair(_textDrawer.internalGetBuffer(), std::move(data)));
+				m_specificData.pushBack(etk::makePair(_textDrawer.internalGetBuffer(), etk::move(data)));
 				// create a new one ...
 				return copyPocalPointer;
 			}
 		protected: // Wrap all element with their internal data: (do not use theses function)
 			bool onReceiveShortCut(appl::TextViewer& _textDrawer,
-			                       const std::string& _shortCutName) {
+			                       const etk::String& _shortCutName) {
 				TYPE* data = getDataRef(_textDrawer);
 				if (data == nullptr) {
 					return false;
@@ -64,7 +64,7 @@ namespace appl {
 			}
 			bool onWrite(appl::TextViewer& _textDrawer,
 			             const appl::Buffer::Iterator& _pos,
-			             const std::string& _data) {
+			             const etk::String& _data) {
 				TYPE* data = getDataRef(_textDrawer);
 				if (data == nullptr) {
 					return false;
@@ -73,7 +73,7 @@ namespace appl {
 			}
 			bool onReplace(appl::TextViewer& _textDrawer,
 			               const appl::Buffer::Iterator& _pos,
-			               const std::string& _data,
+			               const etk::String& _data,
 			               const appl::Buffer::Iterator& _posEnd) {
 				TYPE* data = getDataRef(_textDrawer);
 				if (data == nullptr) {
@@ -93,19 +93,19 @@ namespace appl {
 			
 		public:
 			virtual bool onDataReceiveShortCut(appl::TextViewer& _textDrawer,
-			                                   const std::string& _shortCutName,
+			                                   const etk::String& _shortCutName,
 			                                   TYPE& _data) {
 				return false;
 			}
 			virtual bool onDataWrite(appl::TextViewer& _textDrawer,
 			                         const appl::Buffer::Iterator& _pos,
-			                         const std::string& _strData,
+			                         const etk::String& _strData,
 			                         TYPE& _data) {
 				return false;
 			}
 			virtual bool onDataReplace(appl::TextViewer& _textDrawer,
 			                           const appl::Buffer::Iterator& _pos,
-			                           const std::string& _strData,
+			                           const etk::String& _strData,
 			                           const appl::Buffer::Iterator& _posEnd,
 			                           TYPE& _data) {
 				return false;

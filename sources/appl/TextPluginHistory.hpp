@@ -19,16 +19,16 @@ namespace appl {
 			  m_endPosRemoved(0) {
 				
 			};
-			std::string m_addedText;
-			std::string m_removedText;
+			etk::String m_addedText;
+			etk::String m_removedText;
 			int64_t m_posAdded;
 			int64_t m_endPosAdded;
 			int64_t m_endPosRemoved;
 	};
 	class PluginHistoryData {
 		public:
-			std::vector<History*> m_undo; //!< History storing data
-			std::vector<History*> m_redo; //!< History storing data
+			etk::Vector<History*> m_undo; //!< History storing data
+			etk::Vector<History*> m_redo; //!< History storing data
 	};
 	class TextPluginHistory : public appl::TextViewerPluginData<appl::PluginHistoryData> {
 		private:
@@ -45,15 +45,15 @@ namespace appl {
 			virtual void onPluginEnable(appl::TextViewer& _textDrawer);
 			virtual void onPluginDisable(appl::TextViewer& _textDrawer);
 			virtual bool onDataReceiveShortCut(appl::TextViewer& _textDrawer,
-			                                   const std::string& _shortCutName,
+			                                   const etk::String& _shortCutName,
 			                                   appl::PluginHistoryData& _data);
 			virtual bool onDataWrite(appl::TextViewer& _textDrawer,
 			                         const appl::Buffer::Iterator& _pos,
-			                         const std::string& _strData,
+			                         const etk::String& _strData,
 			                         appl::PluginHistoryData& _data);
 			virtual bool onDataReplace(appl::TextViewer& _textDrawer,
 			                           const appl::Buffer::Iterator& _pos,
-			                           const std::string& _strData,
+			                           const etk::String& _strData,
 			                           const appl::Buffer::Iterator& _posEnd,
 			                           appl::PluginHistoryData& _data);
 			virtual bool onDataRemove(appl::TextViewer& _textDrawer,

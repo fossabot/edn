@@ -7,7 +7,7 @@
 #include <appl/global.hpp>
 #include <appl/GlyphDecoration.hpp>
 
-appl::GlyphDecoration::GlyphDecoration(const std::string &_newColorName) :
+appl::GlyphDecoration::GlyphDecoration(const etk::String &_newColorName) :
   m_colorName(_newColorName),
   m_colorFG(etk::color::black),
   m_colorBG(etk::color::none),
@@ -34,7 +34,7 @@ void appl::GlyphDecoration::setBold(bool _enable) {
 	}
 }
 
-std::ostream& appl::operator <<(std::ostream& _os, const appl::GlyphDecoration& _obj) {
+etk::Stream& appl::operator <<(etk::Stream& _os, const appl::GlyphDecoration& _obj) {
 	_os << "{fg=" << _obj.getForeground();
 	_os << ",bg=" << _obj.getBackground();
 	_os << ",italic=" << _obj.getItalic();

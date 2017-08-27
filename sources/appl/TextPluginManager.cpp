@@ -16,7 +16,7 @@
 appl::textPluginManager::textPluginManager() {
 	
 }
-void appl::textPluginManager::init(const std::string& _name) {
+void appl::textPluginManager::init(const etk::String& _name) {
 	gale::Resource::init(_name);
 }
 
@@ -35,27 +35,27 @@ void appl::textPluginManager::addPlugin(ememory::SharedPtr<appl::TextViewerPlugi
 		return;
 	}
 	APPL_DEBUG("Add plugin : " << _plugin->getObjectType());
-	m_list.push_back(_plugin);
+	m_list.pushBack(_plugin);
 	if (_plugin->isAvaillableOnEventEntry() == true) {
-		m_listOnEventEntry.push_back(_plugin);
+		m_listOnEventEntry.pushBack(_plugin);
 	}
 	if (_plugin->isAvaillableOnEventInput() == true) {
-		m_listOnEventInput.push_back(_plugin);
+		m_listOnEventInput.pushBack(_plugin);
 	}
 	if (_plugin->isAvaillableOnWrite() == true) {
-		m_listOnWrite.push_back(_plugin);
+		m_listOnWrite.pushBack(_plugin);
 	}
 	if (_plugin->isAvaillableOnReplace() == true) {
-		m_listOnReplace.push_back(_plugin);
+		m_listOnReplace.pushBack(_plugin);
 	}
 	if (_plugin->isAvaillableOnRemove() == true) {
-		m_listOnRemove.push_back(_plugin);
+		m_listOnRemove.pushBack(_plugin);
 	}
 	if (_plugin->isAvaillableOnReceiveShortCut() == true) {
-		m_listOnReceiveShortCutViewer.push_back(_plugin);
+		m_listOnReceiveShortCutViewer.pushBack(_plugin);
 	}
 	if (_plugin->isAvaillableOnCursorMove() == true) {
-		m_listOnCursorMove.push_back(_plugin);
+		m_listOnCursorMove.pushBack(_plugin);
 	}
 	ememory::SharedPtr<appl::TextViewer> viewer = m_currentViewer.lock();
 	if (viewer != nullptr) {
@@ -111,7 +111,7 @@ bool appl::textPluginManager::onEventInput(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onWrite(appl::TextViewer& _textDrawer,
                                       const appl::Buffer::Iterator& _pos,
-                                      const std::string& _data) {
+                                      const etk::String& _data) {
 	for (auto &it : m_listOnWrite) {
 		if (it == nullptr) {
 			continue;
@@ -125,7 +125,7 @@ bool appl::textPluginManager::onWrite(appl::TextViewer& _textDrawer,
 
 bool appl::textPluginManager::onReplace(appl::TextViewer& _textDrawer,
                                         const appl::Buffer::Iterator& _pos,
-                                        const std::string& _data,
+                                        const etk::String& _data,
                                         const appl::Buffer::Iterator& _posEnd) {
 	for (auto &it : m_listOnReplace) {
 		if (it == nullptr) {
@@ -153,7 +153,7 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
 }
 
 bool appl::textPluginManager::onReceiveShortCut(appl::TextViewer& _textDrawer,
-                                                const std::string& _shortCutName) {
+                                                const etk::String& _shortCutName) {
 	for (auto &it : m_listOnReceiveShortCutViewer) {
 		if (it == nullptr) {
 			continue;
