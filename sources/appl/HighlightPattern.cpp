@@ -13,7 +13,7 @@ appl::HighlightPattern::HighlightPattern(const ememory::SharedPtr<appl::GlyphPai
   m_hasParsingError(true),
   m_regexValue(),
   m_hasEndRegEx(false),
-  m_regExp(),
+  m_regex(),
   m_colorName(""),
   m_level(0) {
 	parseRules(_child, _level);
@@ -25,7 +25,7 @@ appl::HighlightPattern::HighlightPattern() :
   m_hasParsingError(true),
   m_regexValue(),
   m_hasEndRegEx(false),
-  m_regExp(),
+  m_regex(),
   m_colorName(""),
   m_level(0) {
 	
@@ -35,24 +35,24 @@ appl::HighlightPattern::~HighlightPattern() {
 	
 }
 
-void appl::HighlightPattern::setPatern(const etk::String& _regExp, const etk::String& _regExpStop, bool _hasEndRegEx) {
-	m_regexValue[0] = _regExp;
-	m_regexValue[1] = _regExpStop;
+void appl::HighlightPattern::setPatern(const etk::String& _regex, const etk::String& _regexStop, bool _hasEndRegEx) {
+	m_regexValue[0] = _regex;
+	m_regexValue[1] = _regexStop;
 	m_hasEndRegEx = _hasEndRegEx;
-	APPL_DEBUG("parse regex='" << _regExp << "' -> '" << _regExpStop << "'");
+	APPL_DEBUG("parse regex='" << _regex << "' -> '" << _regexStop << "'");
 	m_hasParsingError = false;
-	if (_regExp != "") {
-		m_regExp[0].compile(_regExp);
-		if (m_regExp[0].getStatus() == false) {
+	if (_regex != "") {
+		m_regex[0].compile(_regex);
+		if (m_regex[0].getStatus() == false) {
 			m_hasParsingError = true;
-			APPL_ERROR("can not parse regex for : " << _regExp);
+			APPL_ERROR("can not parse regex for : " << _regex);
 		}
 	}
-	if (_regExpStop != "") {
-		m_regExp[1].compile(_regExpStop);
-		if (m_regExp[1].getStatus() == false) {
+	if (_regexStop != "") {
+		m_regex[1].compile(_regexStop);
+		if (m_regex[1].getStatus() == false) {
 			m_hasParsingError = true;
-			APPL_ERROR("can not parse regex for : " << _regExpStop);
+			APPL_ERROR("can not parse regex for : " << _regexStop);
 		}
 	}
 }
@@ -153,9 +153,9 @@ bool appl::HighlightPattern::find(int32_t _start,
 		return false;
 	}
 	// when we have only one element:
-	if (m_regExp[0].processOneElement(_buffer, _start, _stop) == true) {
-		_resultat.start = m_regExp[0].start();
-		_resultat.stop = m_regExp[0].stop();
+	if (m_regex[0].processOneElement(_buffer, _start, _stop) == true) {
+		_resultat.start = m_regex[0].start();
+		_resultat.stop = m_regex[0].stop();
 		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop << " data='" <<etk::String(_buffer, _resultat.start, _resultat.stop-_resultat.start) << "'" );
 		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop );
 		if (m_hasEndRegEx == true) {
@@ -166,8 +166,8 @@ bool appl::HighlightPattern::find(int32_t _start,
 			}
 			_start = _resultat.stop;
 			while (_start < _stop) {
-				if (m_regExp[1].processOneElement(_buffer, _start, _stop) == true) {
-					_resultat.stop = m_regExp[1].stop();
+				if (m_regex[1].processOneElement(_buffer, _start, _stop) == true) {
+					_resultat.stop = m_regex[1].stop();
 					return true;
 				}
 				_start++;

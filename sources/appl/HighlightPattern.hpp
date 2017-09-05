@@ -45,9 +45,9 @@ namespace appl {
 			bool m_hasParsingError;
 			etk::String m_regexValue[2];
 			bool m_hasEndRegEx;
-			etk::RegEx<etk::Buffer> m_regExp[2]; //!< Start of Regular expression
+			etk::RegEx<etk::Buffer> m_regex[2]; //!< Start of Regular expression
 		public:
-			void setPatern(const etk::String& _regExp, const etk::String& _regExpStop="", bool _hasEndRegEx=false);
+			void setPatern(const etk::String& _regex, const etk::String& _regexStop="", bool _hasEndRegEx=false);
 			etk::Pair<etk::String,etk::String> getPaternString();
 		private:
 			etk::String m_colorName; //!< Current color name

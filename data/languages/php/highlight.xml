@@ -50,7 +50,7 @@
 		</rule>
 		<rule name="my keyword">
 			<color>inputFunction</color>
-			<regex>\$_[a-zA-Z_][a-zA-Z0-9_]*\b</regex>
+			<regex>\$_[a-zA-Z_][a-zA-Z0-9_]*\@</regex>
 		</rule>
 		<rule name="my keyword">
 			<color>keyword</color>
@@ -78,7 +78,7 @@
 		</rule>
 		<rule name="BIG LETTER">
 			<color>macro</color>
-			<regex>\b([A-Z_][A-Z_0-9]{3,500})\b</regex>
+			<regex>\@([A-Z_][A-Z_0-9]{3,500})\@</regex>
 		</rule>
 		<rule name="Function name">
 			<color>functionName</color>

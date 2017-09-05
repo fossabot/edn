@@ -24,6 +24,7 @@
 #include <appl/Gui/Search.hpp>
 #include <appl/ctags/readtags.hpp>
 #include <appl/globalMsg.hpp>
+#include <appl/TextPluginCtags.hpp>
 
 class MainApplication : public ewol::context::Application {
 	private:
@@ -36,7 +37,7 @@ class MainApplication : public ewol::context::Application {
 				etk::String tmpppp = _context.getCmd().get(iii);
 				if (    tmpppp == "-h"
 				     || tmpppp == "--help") {
-					APPL_INFO("  -t c-flags-file-name" );
+					APPL_INFO("  --ctags=xxx c-flags-file-name" );
 					APPL_INFO("  -h/--help display this help" );
 					exit(0);
 				} 
@@ -97,17 +98,13 @@ class MainApplication : public ewol::context::Application {
 			
 			// add files
 			APPL_INFO("show list of files : ");
-			bool ctagDetected = false;
 			for( int32_t iii=0 ; iii<_context.getCmd().size(); iii++) {
 				etk::String tmpppp = _context.getCmd().get(iii);
-				if (tmpppp == "-t") {
-					ctagDetected = true;
-				} else if (ctagDetected == true) {
+				if (tmpppp.startWith("--ctags=") == true) {
 					etk::FSNode file(tmpppp);
-					etk::String name = file.getName();
+					etk::String name = tmpppp.extract(8);
 					APPL_INFO("Load ctag file : \"" << name << "\"" );
-					ctagDetected = false;
-					//_context.getEObjectManager().multiCast().anonymousSend(ednMsgCtagsLoadFile, name);
+					appl::setCtagsFileName(name);
 				} else if (    tmpppp == "-h"
 				            || tmpppp == "--help") {
 					// nothing to do ...
@@ -166,6 +163,18 @@ int main(int _argc, const char *_argv[]) {
 	APPL_ERROR(" base signature = " << typeid(etk::String).name());
 	APPL_CRITICAL(" END ");
 	*/
+	// this is really bad ...
+	for( int32_t iii=0 ; iii<_argc; iii++) {
+		etk::String tmpppp = _argv[iii];
+		if (tmpppp.startWith("--ctags=") == true) {
+			etk::FSNode file(tmpppp);
+			etk::String name = tmpppp.extract(8);
+			APPL_INFO("Load ctag file : \"" << name << "\"" );
+			appl::setCtagsFileName(name);
+		}
+	}
+	
+	
 	// second possibility
 	return ewol::run(ETK_NEW(MainApplication), _argc, _argv);
 }

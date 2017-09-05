@@ -13,8 +13,10 @@
 
 // create ctags file : "ctags-exuberant --fields=n -R"
 // --fields=n add the line number needed for this software version ..
+// ctags --recurse -f tags --fields=n -h ".h.hpp" --tag-relative=yes framework/atria-soft/
 
 namespace appl {
+	void setCtagsFileName(const etk::String& _file);
 	class TextPluginCtags : public appl::TextViewerPlugin {
 		private:
 			// Global plugin data (not specific on buffer :

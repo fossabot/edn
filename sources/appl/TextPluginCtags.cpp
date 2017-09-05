@@ -10,6 +10,12 @@
 #include <ewol/context/Context.hpp>
 #include <appl/Gui/TagFileSelection.hpp>
 
+static etk::String g_staticCtagsFileName;
+
+void appl::setCtagsFileName(const etk::String& _file) {
+	g_staticCtagsFileName = _file;
+}
+
 appl::TextPluginCtags::TextPluginCtags() :
   m_tagFolderBase(""),
   m_tagFilename(""),
@@ -18,6 +24,10 @@ appl::TextPluginCtags::TextPluginCtags() :
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
 	addObjectType("appl::TextPluginCtags");
+	if (g_staticCtagsFileName != "") {
+		m_tagFilename = g_staticCtagsFileName;
+		loadTagFile();
+	}
 }
 
 appl::TextPluginCtags::~TextPluginCtags() {
@@ -25,7 +35,6 @@ appl::TextPluginCtags::~TextPluginCtags() {
 }
 
 void appl::TextPluginCtags::onPluginEnable(appl::TextViewer& _textDrawer) {
-	// add event :
 	_textDrawer.ext_shortCutAdd("ctrl+d", "appl::TextPluginCtags::JumpDestination");
 	_textDrawer.ext_shortCutAdd("ctrl+shift+d", "appl::TextPluginCtags::JumpBack");
 	_textDrawer.ext_shortCutAdd("ctrl+alt+d", "appl::TextPluginCtags::OpenCtagsFile");
@@ -83,7 +92,11 @@ void appl::TextPluginCtags::jumpFile(const etk::String& _filename, int64_t _line
 	// save the current file in the history
 	// TODO : registerHistory();
 	if (m_bufferManager != nullptr) {
-		m_bufferManager->open(_filename);
+		etk::String plop = _filename;
+		while (plop[0] == '/') {
+			plop.erase(0);
+		}
+		m_bufferManager->open(plop);
 	}
 	//sendMultiCast(appl::MsgSelectGotoLineSelect, etk::toString(_lineId));
 	APPL_TODO("request jup at line ...");
