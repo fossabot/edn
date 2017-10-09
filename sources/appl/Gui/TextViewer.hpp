@@ -14,7 +14,6 @@
 #include <ewol/compositing/Drawing.hpp>
 #include <appl/BufferManager.hpp>
 #include <appl/Gui/ViewerManager.hpp>
-#include <utility>
 
 namespace appl {
 	class textPluginManager;

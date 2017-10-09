@@ -28,7 +28,7 @@ namespace appl {
 				m_specificData.clear();
 			}
 		private:
-			etk::Vector<etk::Pair<ememory::WeakPtr<appl::Buffer> ,std::unique_ptr<TYPE>>> m_specificData;
+			etk::Vector<etk::Pair<ememory::WeakPtr<appl::Buffer> ,ememory::UniquePtr<TYPE>>> m_specificData;
 		protected:
 			TYPE* getDataRef(appl::TextViewer& _textDrawer) {
 				auto it = m_specificData.begin();
@@ -43,13 +43,14 @@ namespace appl {
 					}
 					++it;
 				}
-				std::unique_ptr<TYPE> data(new TYPE());
+				ememory::UniquePtr<TYPE> data(new TYPE());
 				if (data == nullptr) {
 					APPL_ERROR("ALLOCATION plugin data error");
 					return nullptr;
 				}
 				TYPE* copyPocalPointer = data.get();
-				m_specificData.pushBack(etk::makePair(_textDrawer.internalGetBuffer(), etk::move(data)));
+				ememory::WeakPtr<appl::Buffer> tmpBuffer = _textDrawer.internalGetBuffer();
+				m_specificData.pushBack(etk::makePair(tmpBuffer, etk::move(data)));
 				// create a new one ...
 				return copyPocalPointer;
 			}

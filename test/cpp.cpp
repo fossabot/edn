@@ -26,7 +26,7 @@ aa "\u4855" aa "\U78965412" aa "\x0F" aa "\o45"
 
 etk::String
 
-std::thread::sleep
+ethread::Thread::sleep
 
 /*
  * TODO: Todo in a multipleLine interface

@@ -139,11 +139,11 @@ void globals::ParameterGlobalsGui::init() {
 	ewol::widget::Composer::init();
 	loadFromFile("DATA:GUI-Parameter-global.xml", getId());
 	
-	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]appl-param:auto-indent", "value", etk::to_string(isSetAutoIndent()));
-	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]appl-param:display-space-char", "value", etk::to_string(isSetDisplaySpaceChar()));
-	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]appl-param:display-tab", "value", etk::to_string(isSetDisplayTabChar()));
-	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]appl-param:display-eol", "value", etk::to_string(isSetDisplayEndOfLine()));
-	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]appl-param:display-shape", "value", etk::to_string(isSetDisplayEndOfLine()));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]appl-param:auto-indent", "value", etk::toString(isSetAutoIndent()));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]appl-param:display-space-char", "value", etk::toString(isSetDisplaySpaceChar()));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]appl-param:display-tab", "value", etk::toString(isSetDisplayTabChar()));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]appl-param:display-eol", "value", etk::toString(isSetDisplayEndOfLine()));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]appl-param:display-shape", "value", etk::toString(isSetDisplayEndOfLine()));
 	
 	subBind(ewol::widget::CheckBox, "[" + etk::toString(getId()) + "]appl-param:auto-indent",       signalValue,   sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackIndentation);
 	subBind(ewol::widget::CheckBox, "[" + etk::toString(getId()) + "]appl-param:display-space-char",       signalValue,   sharedFromThis(), &globals::ParameterGlobalsGui::onCallbackSpace);

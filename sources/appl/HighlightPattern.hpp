@@ -10,8 +10,7 @@ class HighlightPattern;
 
 #include <appl/GlyphPainting.hpp>
 #include <etk/Vector.hpp>
-#include <regex>
-#include <etk/RegExp.hpp>
+#include <etk/RegEx.hpp>
 #include <etk/Buffer.hpp>
 #include <exml/exml.hpp>
 
@@ -46,7 +45,7 @@ namespace appl {
 			bool m_hasParsingError;
 			etk::String m_regexValue[2];
 			bool m_hasEndRegEx;
-			etk::RegExp<etk::Buffer> m_regExp[2]; //!< Start of Regular expression
+			etk::RegEx<etk::Buffer> m_regExp[2]; //!< Start of Regular expression
 		public:
 			void setPatern(const etk::String& _regExp, const etk::String& _regExpStop="", bool _hasEndRegEx=false);
 			etk::Pair<etk::String,etk::String> getPaternString();

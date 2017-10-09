@@ -16,6 +16,9 @@ namespace appl {
 		public:
 			etk::FSNode m_bufferName;
 			ememory::SharedPtr<appl::Buffer> m_buffer;
+			dataBufferStruct() {
+				
+			};
 			dataBufferStruct(const etk::String& _bufferName, const ememory::SharedPtr<appl::Buffer>& _buffer) :
 			  m_bufferName(_bufferName),
 			  m_buffer(_buffer) {

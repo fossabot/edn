@@ -67,7 +67,7 @@ void BufferView::removeAllElement() {
 void BufferView::insertAlphabetic(const appl::dataBufferStruct& _dataStruct, bool _selectNewPosition) {
 	// alphabetical order:
 	for (size_t iii = 0; iii < m_list.size(); ++iii) {
-		if (etk::tolower(m_list[iii].m_bufferName.getNameFile()) > etk::tolower(_dataStruct.m_bufferName.getNameFile())) {
+		if (m_list[iii].m_bufferName.getNameFile().toLower() > _dataStruct.m_bufferName.getNameFile().toLower()) {
 			m_list.insert(m_list.begin() + iii, _dataStruct);
 			if (_selectNewPosition == true) {
 				m_selectedID = iii;

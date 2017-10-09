@@ -34,9 +34,9 @@ void appl::widget::Search::init() {
 	subBind(ewol::widget::Button, "[" + etk::toString(getId()) + "]SEARCH:wrap",          signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackWrap);
 	subBind(ewol::widget::Button, "[" + etk::toString(getId()) + "]SEARCH:up-down",       signalValue,   sharedFromThis(), &appl::widget::Search::OnCallbackForward);
 	// set default properties
-	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]SEARCH:case", "value", etk::to_string(m_caseSensitive));
-	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]SEARCH:wrap", "value", etk::to_string(m_wrap));
-	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]SEARCH:up-down", "value", etk::to_string(m_forward));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]SEARCH:case", "value", etk::toString(m_caseSensitive));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]SEARCH:wrap", "value", etk::toString(m_wrap));
+	propertySetOnWidgetNamed("[" + etk::toString(getId()) + "]SEARCH:up-down", "value", etk::toString(m_forward));
 	// get widget
 	m_searchEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("[" + etk::toString(getId()) + "]SEARCH:search-entry"));
 	m_replaceEntry = ememory::dynamicPointerCast<ewol::widget::Entry>(getSubObjectNamed("[" + etk::toString(getId()) + "]SEARCH:replace-entry"));

@@ -89,7 +89,7 @@ void appl::Highlight::init(const etk::String& _xmlFilename, const etk::String& _
 				APPL_ERROR("Can not parse an element pass with no attribute name ... ligne=" << child.getPos());
 				continue;
 			}
-			m_listHighlightNamed.insert(etk::Pair<etk::String, etk::Vector<HighlightPattern>>(attributeName, etk::Vector<HighlightPattern>()));
+			m_listHighlightNamed.add(attributeName, etk::Vector<HighlightPattern>());
 			auto it3 = m_listHighlightNamed.find(attributeName);
 			int32_t level3=0;
 			// get sub Nodes ...
@@ -123,24 +123,20 @@ appl::Highlight::~Highlight() {
 bool appl::Highlight::isCompatible(const etk::String& _name) {
 	for (auto &it : m_listExtentions) {
 		APPL_WARNING("        check : " << it << "=?=" << _name);
-		// TODO: Remove dependency with the std::regex ...
-		std::regex expression;
-		try {
-			expression.assign(it, std::regex_constants::optimize | std::regex_constants::ECMAScript);
-		} catch (std::regex_error e) {
-			APPL_ERROR("can not parse regex : '" << e.what() << "' for : " << it);
+		etk::RegEx<etk::String> regex;
+		regex.compile(it);
+		if (regex.getStatus() == false) {
+			APPL_ERROR("can not parse regex: " << it);
 			continue;
 		}
-		std::smatch resultMatch;
-		std::regex_search(_name.begin(), _name.end(), resultMatch, expression, std::regex_constants::match_continuous);
-		if (resultMatch.size() <= 0) {
+		if (regex.parse(_name, 0, _name.size()) == false) {
 			continue;
 		}
-		APPL_WARNING("    - begin=" << std::distance(_name.begin(), resultMatch[0].first) << "  end=" << std::distance(_name.begin(), resultMatch[0].second));
-		if (resultMatch[0].first != _name.begin()) {
+		APPL_WARNING("    - begin=" << regex.start() << "  end=" << regex.stop());
+		if (regex.start() != 0) {
 			continue;
 		}
-		if (resultMatch[0].second != _name.end()) {
+		if (regex.stop() != _name.size()) {
 			continue;
 		}
 		return true;

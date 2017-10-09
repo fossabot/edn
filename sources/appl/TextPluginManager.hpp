@@ -14,7 +14,7 @@ namespace appl {
 	class textPluginManager : public gale::Resource {
 		private:
 			ememory::WeakPtr<appl::TextViewer> m_currentViewer;
-			std::list<ememory::SharedPtr<appl::TextViewerPlugin>> m_list;
+			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_list;
 			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnEventEntry;
 			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnEventInput;
 			etk::Vector<ememory::SharedPtr<appl::TextViewerPlugin>> m_listOnWrite;

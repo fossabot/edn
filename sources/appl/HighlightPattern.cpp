@@ -42,19 +42,17 @@ void appl::HighlightPattern::setPatern(const etk::String& _regExp, const etk::St
 	APPL_DEBUG("parse regex='" << _regExp << "' -> '" << _regExpStop << "'");
 	m_hasParsingError = false;
 	if (_regExp != "") {
-		try {
-			m_regExp[0].compile(_regExp);
-		} catch (std::runtime_error e) {
+		m_regExp[0].compile(_regExp);
+		if (m_regExp[0].getStatus() == false) {
 			m_hasParsingError = true;
-			APPL_ERROR("can not parse regex : '" << e.what() << "' for : " << _regExp);
+			APPL_ERROR("can not parse regex for : " << _regExp);
 		}
 	}
 	if (_regExpStop != "") {
-		try {
-			m_regExp[1].compile(_regExpStop);
-		} catch (std::runtime_error e) {
+		m_regExp[1].compile(_regExpStop);
+		if (m_regExp[1].getStatus() == false) {
 			m_hasParsingError = true;
-			APPL_ERROR("can not parse regex : '" << e.what() << "' for : " << _regExpStop);
+			APPL_ERROR("can not parse regex for : " << _regExpStop);
 		}
 	}
 }
@@ -157,7 +155,7 @@ bool appl::HighlightPattern::find(int32_t _start,
 	// when we have only one element:
 	if (m_regExp[0].processOneElement(_buffer, _start, _stop) == true) {
 		_resultat.start = m_regExp[0].start();
-		_resultat.stop  = m_regExp[0].stop();
+		_resultat.stop = m_regExp[0].stop();
 		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop << " data='" <<etk::String(_buffer, _resultat.start, _resultat.stop-_resultat.start) << "'" );
 		//APPL_DEBUG("find data at : start=" << _resultat.start << " stop=" << _resultat.stop );
 		if (m_hasEndRegEx == true) {

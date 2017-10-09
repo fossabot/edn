@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include <list>
 #include <appl/Buffer.hpp>
 #include <appl/globalMsg.hpp>
 #include <ewol/widget/Widget.hpp>
@@ -28,7 +27,7 @@ namespace appl {
 			DECLARE_SINGLE_FACTORY(BufferManager, "???Buffer_Manager???");
 			virtual ~BufferManager();
 		private:
-			std::list<ememory::SharedPtr<appl::Buffer>> m_list; // list of all buffer curently open
+			etk::Vector<ememory::SharedPtr<appl::Buffer>> m_list; // list of all buffer curently open
 		public:
 			/**
 			 * @brief Get a specific buffer with his name (can create a new buffer).
@@ -85,16 +84,16 @@ namespace appl {
 			void requestDestroyFromChild(const ememory::SharedPtr<Object>& _child);
 		public:
 			// generic iterators:
-			std::list<ememory::SharedPtr<appl::Buffer>>::const_iterator begin() const {
+			const etk::Vector<ememory::SharedPtr<appl::Buffer>>::Iterator begin() const {
 				return m_list.begin();
 			}
-			std::list<ememory::SharedPtr<appl::Buffer>>::const_iterator end() const {
+			const etk::Vector<ememory::SharedPtr<appl::Buffer>>::Iterator end() const {
 				return m_list.end();
 			}
-			std::list<ememory::SharedPtr<appl::Buffer>>::iterator begin() {
+			etk::Vector<ememory::SharedPtr<appl::Buffer>>::Iterator begin() {
 				return m_list.begin();
 			}
-			std::list<ememory::SharedPtr<appl::Buffer>>::iterator end() {
+			etk::Vector<ememory::SharedPtr<appl::Buffer>>::Iterator end() {
 				return m_list.end();
 			}
 	};

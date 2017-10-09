@@ -18,7 +18,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 	}
 	if (m_data != nullptr) {
 		if (m_current < (int64_t)m_data->m_data.size() ) {
-			int8_t nbChar = utf8::theoricLen(m_data->m_data[m_current]);
+			int8_t nbChar = utf8::length(m_data->m_data[m_current]);
 			if (nbChar != 0) {
 				m_current+=nbChar;
 			} else {
@@ -37,7 +37,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- () {
 	if (m_data != nullptr) {
 		if (m_current > 0) {
 			int32_t iii = -1;
-			while(    utf8::theoricFirst(m_data->m_data[m_current+iii]) == false
+			while(    utf8::first(m_data->m_data[m_current+iii]) == false
 			       && iii >= -6
 			       && m_current-iii>0) {
 				--iii;
@@ -69,7 +69,7 @@ char32_t appl::Buffer::Iterator::operator* () {
 	char tmpVal[5];
 	memset(tmpVal, 0, sizeof(tmpVal));
 	tmpVal[0] = m_data->m_data[m_current];
-	int8_t nbChar = utf8::theoricLen(tmpVal[0]);
+	int8_t nbChar = utf8::length(tmpVal[0]);
 	for (int32_t iii=1; iii<nbChar && m_current+iii<(int64_t)m_data->m_data.size(); ++iii) {
 		tmpVal[iii] = m_data->m_data[m_current+iii];
 	}
@@ -286,17 +286,17 @@ bool appl::Buffer::search(const appl::Buffer::Iterator& _pos,
 			}
 		}
 	} else {
-		char32_t firstElement = tolower(_search[0]);
+		char32_t firstElement = u32char::toLower(_search[0]);
 		// move in the string
 		for (Iterator it = _pos;
 		     (bool)it == true;
 		     ++it) {
-			if ((char32_t)tolower(*it) == firstElement) {
+			if ((char32_t)u32char::toLower(*it) == firstElement) {
 				// find the first char ==> check next...
 				bool find = true;
 				Iterator tmp = it;
 				for (size_t iii=0; iii<_search.size(); ++iii) {
-					if (tolower(*tmp) != tolower(_search[iii])) {
+					if (u32char::toLower(*tmp) != u32char::toLower(_search[iii])) {
 						find = false;
 						break;
 					}
@@ -357,18 +357,18 @@ bool appl::Buffer::searchBack(const appl::Buffer::Iterator& _pos,
 			}
 		}
 	} else {
-		lastElement = tolower(lastElement);
+		lastElement = u32char::toLower(lastElement);
 		// move in the string
 		for (Iterator it = _pos - 1;
 		     (bool)it == true;
 		     --it) {
 			//APPL_DEBUG("compare : " << *it << " ?= " << _search);
-			if ((char32_t)tolower(*it) == lastElement) {
+			if ((char32_t)u32char::toLower(*it) == lastElement) {
 				// find the last char ==> check previous...
 				bool find = true;
 				_result = it;
 				for (int64_t iii=_search.size()-1; iii>=0; --iii) {
-					if (tolower(*_result) != tolower(_search[iii])) {
+					if (u32char::toLower(*_result) != u32char::toLower(_search[iii])) {
 						find = false;
 						break;
 					}
