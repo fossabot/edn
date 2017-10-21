@@ -28,7 +28,7 @@ void appl::TagFileList::init() {
 
 appl::TagFileList::~TagFileList() {
 	for (auto &it : m_list) {
-		delete(it);
+		ETK_DELETE(appl::TagListElement, it);
 		it = nullptr;
 	}
 }
@@ -109,7 +109,7 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum gale::key::status _ty
  * @param[in] jump line id
  */
 void appl::TagFileList::add(etk::String& _file, int32_t _line) {
-	appl::TagListElement *tmpFile = new appl::TagListElement(_file, _line);
+	appl::TagListElement *tmpFile = ETK_NEW(appl::TagListElement, _file, _line);
 	if (nullptr != tmpFile) {
 		m_list.pushBack(tmpFile);
 	}

@@ -43,7 +43,7 @@ namespace appl {
 					}
 					++it;
 				}
-				ememory::UniquePtr<TYPE> data(new TYPE());
+				ememory::UniquePtr<TYPE> data(ETK_NEW(TYPE));
 				if (data == nullptr) {
 					APPL_ERROR("ALLOCATION plugin data error");
 					return nullptr;

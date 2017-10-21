@@ -97,7 +97,7 @@ void appl::TextPluginHistory::clearRedo(appl::PluginHistoryData& _data) {
 		if (_data.m_redo[iii] == nullptr) {
 			continue;
 		}
-		delete(_data.m_redo[iii]);
+		ETK_DELETE(appl::History, _data.m_redo[iii]);
 		_data.m_redo[iii] = nullptr;
 	}
 	_data.m_redo.clear();
@@ -111,7 +111,7 @@ void appl::TextPluginHistory::clearUndo(appl::PluginHistoryData& _data) {
 		if (_data.m_undo[iii] == nullptr) {
 			continue;
 		}
-		delete(_data.m_undo[iii]);
+		ETK_DELETE(appl::History, _data.m_undo[iii]);
 		_data.m_undo[iii] = nullptr;
 	}
 	_data.m_undo.clear();
@@ -125,7 +125,7 @@ bool appl::TextPluginHistory::onDataWrite(appl::TextViewer& _textDrawer,
 	if (isEnable() == false) {
 		return false;
 	}
-	appl::History *tmpElement = new appl::History();
+	appl::History *tmpElement = ETK_NEW(appl::History);
 	if (tmpElement != nullptr) {
 		tmpElement->m_addedText = _strData;
 		tmpElement->m_posAdded = (int64_t)_pos;
@@ -154,7 +154,7 @@ bool appl::TextPluginHistory::onDataReplace(appl::TextViewer& _textDrawer,
 	if (isEnable() == false) {
 		return false;
 	}
-	appl::History *tmpElement = new appl::History();
+	appl::History *tmpElement = ETK_NEW(appl::History);
 	if (tmpElement != nullptr) {
 		tmpElement->m_posAdded = (int64_t)_pos;
 		tmpElement->m_addedText = _strData;
@@ -181,7 +181,7 @@ bool appl::TextPluginHistory::onDataRemove(appl::TextViewer& _textDrawer,
 	if (isEnable() == false) {
 		return false;
 	}
-	appl::History *tmpElement = new appl::History();
+	appl::History *tmpElement = ETK_NEW(appl::History);
 	if (tmpElement != nullptr) {
 		tmpElement->m_addedText = "";
 		tmpElement->m_posAdded = (int64_t)_pos;
