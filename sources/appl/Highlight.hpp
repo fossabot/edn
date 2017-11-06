@@ -65,6 +65,7 @@ namespace appl {
 		private:
 			etk::String m_styleName; //!< curent style name (like "c++" or "c" or "script Bash")
 			etk::Vector<etk::String> m_listExtentions; //!< List of possible extention for this high-light, like : ".c", ".cpp", ".h"
+			etk::Vector<etk::String> m_listFiles; //!< List of possible filename
 			etk::Vector<HighlightPattern> m_listHighlightPass1; //!< List of ALL hightlight modules (pass 1  == > when we load and wride data on the buffer)
 			etk::Vector<HighlightPattern> m_listHighlightPass2; //!< List of ALL hightlight modules (pass 2  == > When we display the buffer( only the display area (100 lines)) )
 			// TODO : This is bad ==> the patern ar unordered ...

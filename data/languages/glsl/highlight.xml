@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="Glsl">
-	<ext>.*\.(glsl|vert|frag|prog)</ext>
+	<ext>(glsl|vert|frag|prog)</ext>
 	<pass1>
 		<rule name="my comment multiline doxygen">
 			<color>commentDoxygen</color>

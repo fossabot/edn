@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.1" lang="cmake">
-	<ext>CMakeLists.txt</ext>
-	<ext>CMakeCache.txt</ext>
+	<file>CMakeLists.txt</file>
+	<file>CMakeCache.txt</file>
 	<pass1>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>

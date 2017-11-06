@@ -173,7 +173,7 @@ bool appl::HighlightPattern::find(int32_t _start,
 				_start++;
 			}
 			_resultat.stop = _stop;
-			_resultat.notEnded = true; // TODO : Manege back the not ended ...
+			_resultat.notEnded = true; // TODO : Manage back the not ended ...
 			return false;
 		}
 		return true;

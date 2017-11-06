@@ -55,6 +55,11 @@ void appl::Highlight::init(const etk::String& _xmlFilename, const etk::String& _
 				//HL_DEBUG("(l %d) node fined : %s=\"%s\"", child->Row(), child->Value() , myData);
 				m_listExtentions.pushBack(myData);
 			}
+		} else if (child.getValue() == "file") {
+			etk::String myData = child.getText();
+			if (myData.size()!=0) {
+				m_listFiles.pushBack(myData);
+			}
 		} else if (child.getValue() == "pass1") {
 			// get sub Nodes ...
 			for (const auto it2 : child.nodes) {
@@ -112,34 +117,38 @@ void appl::Highlight::init(const etk::String& _xmlFilename, const etk::String& _
 }
 
 appl::Highlight::~Highlight() {
-	// clear the compleate list
 	m_listHighlightPass1.clear();
-	// clear the compleate list
 	m_listHighlightPass2.clear();
-	// clear the compleate list
 	m_listExtentions.clear();
+	m_listFiles.clear();
 }
 
 bool appl::Highlight::isCompatible(const etk::String& _name) {
+	etk::String extention = _name.extract(_name.rfind('.')+1);
 	for (auto &it : m_listExtentions) {
-		APPL_WARNING("        check : " << it << "=?=" << _name);
+		APPL_WARNING("        check : " << it << "=?=" << extention);
 		etk::RegEx<etk::String> regex;
 		regex.compile(it);
 		if (regex.getStatus() == false) {
 			APPL_ERROR("can not parse regex: " << it);
 			continue;
 		}
-		if (regex.parse(_name, 0, _name.size()) == false) {
+		if (regex.parse(extention, 0, extention.size()) == false) {
 			continue;
 		}
 		APPL_WARNING("    - begin=" << regex.start() << "  end=" << regex.stop());
 		if (regex.start() != 0) {
 			continue;
 		}
-		if (regex.stop() != _name.size()) {
+		if (regex.stop() != extention.size()) {
 			continue;
 		}
 		return true;
+	}
+	for (auto &it : m_listFiles) {
+		if (_name == it) {
+			return true;
+		}
 	}
 	return false;
 }
@@ -168,6 +177,9 @@ void appl::Highlight::display() {
 	APPL_INFO("List of ALL Highlight : ");
 	for (auto &it : m_listExtentions) {
 		APPL_INFO("        Extention : " << it );
+	}
+	for (auto &it : m_listFiles) {
+		APPL_INFO("        File : " << it );
 	}
 	// display all elements
 	for (auto &it : m_listHighlightPass1) {
