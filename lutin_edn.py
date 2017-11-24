@@ -94,6 +94,7 @@ def configure(target, my_module):
 	my_module.copy_path('data/languages/in/*.xml','languages/in/')
 	my_module.copy_path('data/languages/java/*.xml','languages/java/')
 	my_module.copy_path('data/languages/js/*.xml','languages/js/')
+	my_module.copy_path('data/languages/qml/*.xml','languages/qml/')
 	my_module.copy_path('data/languages/json/*.xml','languages/json/')
 	my_module.copy_path('data/languages/lua/*.xml','languages/lua/')
 	my_module.copy_path('data/languages/makefile/*.xml','languages/makefile/')

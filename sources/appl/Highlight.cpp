@@ -288,8 +288,8 @@ void appl::Highlight::parse2(int64_t _start,
                              int64_t _stop,
                              etk::Vector<appl::HighlightInfo>& _metaData,
                              etk::Buffer& _buffer) {
-	HL2_DEBUG("Parse element 0 => " << m_listHighlightPass2.size() <<
-	          "  == > position search: (" << _start << "," << _stop << ")" );
+	HL2_DEBUG("Parse RegEx (sub) 0 => " << m_listHighlightPass2.size() <<
+	          "  == > position search: (" << _start << "," << _stop << ")    metaDataSize=" << _metaData.size() << "  bufferSize=" << _buffer.size());
 	int64_t elementStart = _start;
 	int64_t elementStop = _stop;
 	appl::HighlightInfo resultat;

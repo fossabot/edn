@@ -635,6 +635,7 @@ bool appl::Buffer::write(const etk::String& _data, const appl::Buffer::Iterator&
 	if (m_cursorPos < 0) {
 		m_cursorPos = 0;
 	}
+	//APPL_VERBOSE("*******  Regenerate after write");
 	regenerateHighLightAt(position, 0, _data.size());
 	m_selectMode = false;
 	moveCursor(position+_data.size());
@@ -649,6 +650,7 @@ bool appl::Buffer::replace(const etk::String& _data, const appl::Buffer::Iterato
 		position = 0;
 	}
 	m_data.replace(position, (int64_t)_posEnd-(int64_t)_pos, (int8_t*)(_data.c_str()), _data.size());
+	//APPL_VERBOSE("*******  Regenerate after replace  pos=" << position << "  size remove=" << (int64_t)_posEnd-(int64_t)_pos << "  size add=" << _data.size());
 	regenerateHighLightAt(position, (int64_t)_posEnd-(int64_t)_pos, _data.size());
 	m_selectMode = false;
 	moveCursor(position+_data.size());
@@ -664,6 +666,7 @@ void appl::Buffer::removeSelection() {
 	int64_t startPos = getStartSelectionPos();
 	int64_t endPos = getStopSelectionPos();
 	m_data.remove(startPos, endPos-startPos);
+	//APPL_VERBOSE("*******  Regenerate after remove");
 	regenerateHighLightAt(startPos, endPos-startPos, 0);
 	m_selectMode = false;
 	moveCursor(startPos);
@@ -691,6 +694,7 @@ void appl::Buffer::setHighlightType(const etk::String& _type) {
 	}
 	m_highlightType = _type;
 	m_highlight = appl::Highlight::create(resourceName);
+	//APPL_VERBOSE("*******  Regenerate after set type HL");
 	generateHighLightAt(0, m_data.size());
 }
 
@@ -708,8 +712,8 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 	APPL_VERBOSE("(_pos="<<_pos<<", _nbDeleted="<<_nbDeleted<<", _nbAdded=" << _nbAdded << "\");");
 	int64_t posEnd = _pos + _nbDeleted;
 	// search position of the old element to reparse IT...
-	int64_t startId;
-	int64_t stopId;
+	int64_t startId = -1;
+	int64_t stopId = -1;
 	// clean data if needed
 	if (m_HLDataPass1.size() == 0) {
 		// Parse the new element ...
@@ -753,11 +757,21 @@ void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64
 		}
 	}
 	APPL_VERBOSE(" list afterRemove:");
-	for (auto &elem : m_HLDataPass1) {
-		APPL_VERBOSE("    " << elem.start << "=>" << elem.stop);
+	if (m_HLDataPass1.size() != 0) {
+		for (auto &elem : m_HLDataPass1) {
+			APPL_VERBOSE("    " << elem.start << "=>" << elem.stop);
+		}
+	} else {
+		APPL_VERBOSE("    EMPTY");
 	}
-	
-	// update position after the range position : 
+	// Check Range guard
+	if (startId >= m_HLDataPass1.size()) {
+		startId = int64_t(m_HLDataPass1.size())-1;
+	}
+	if (stopId >= m_HLDataPass1.size()) {
+		stopId = -1;
+	}
+	// update position after the range position:
 	int64_t elemStart;
 	if (startId <= -1) {
 		elemStart = 0;
@@ -863,7 +877,7 @@ void appl::Buffer::generateHighLightAt(int64_t _pos, int64_t _endPos, int64_t _a
 	if (m_highlight == nullptr) {
 		return;
 	}
-	//APPL_DEBUG("area : ("<<pos<<","<<endPos<<") insert at : " << addingPos);
+	//APPL_DEBUG("area : (" << _pos << "," << _endPos << ") insert at : " << _addingPos);
 	m_highlight->parse(_pos, _endPos, m_HLDataPass1, _addingPos, m_data);
 }
 
@@ -906,7 +920,7 @@ void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const ap
 	// find element previous
 	findMainHighLightPosition(_HLStart, HLStop, startId, stopId, true);
 
-	//APPL_DEBUG("List of section between : "<< startId << " & " << stopId);
+	//APPL_DEBUG("List of section between : "<< startId << " & " << stopId << "       pass1 store size=" << m_HLDataPass1.size());
 	int64_t endSearch = stopId+1;
 	if (stopId == -1) {
 		endSearch = m_HLDataPass1.size();
