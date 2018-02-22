@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EdnLang version="0.1" lang="perl">
+	<ext>pl</ext>
+	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
+		<rule name="comment multiline">
+			<color>comment</color>
+			<regex>
+				<start>=begin</start>
+				<stop>=cut</stop>
+			</regex>
+			<sub>TODO</sub>
+		</rule>
+		<rule name="main declaration of executable">
+			<color>DECLARE_EXECUTABLE</color>
+			<regex>#!.*$</regex>
+		</rule>
+		<rule name="inline doxygen">
+			<color>commentDoxygen</color>
+			<regex>##.*$</regex>
+			<sub>doxyparse</sub>
+		</rule>
+		<rule name="inline comment">
+			<color>comment</color>
+			<regex>#.*$</regex>
+			<sub>TODO</sub>
+		</rule>
+		<rule name="doubleQuteText">
+			<color>doubleQuoteText</color>
+			<regex>&quot;(.|\\[\\&quot;])*&quot;</regex>
+		</rule>
+		<rule name="simpleQuteText">
+			<color>doubleQuoteText</color>
+			<regex>&apos;(.|\\[\\&apos;])*&apos;</regex>
+		</rule>
+	</pass1>
+	<pass2>
+		<rule name="my keyword">
+			<color>inputFunction</color>
+			<regex>(\$|%|@)_[a-zA-Z_][a-zA-Z0-9_]*\@</regex>
+		</rule>
+		<rule name="my keyword">
+			<color>keyword</color>
+			<regex>(\$|%|@)[a-zA-Z_][a-zA-Z0-9_]*\@</regex>
+		</rule>
+		<!--
+		<rule name="my type">
+			<color>type</color>
+			<regex>\@array|bool|boolean|double|float|int|integer|numeric|object|resource|string|unset\@</regex>
+		</rule>
+		-->
+		<rule name="my storage keyword">
+			<color>storageKeyword</color>
+			<regex>\@if|else|elseif|unless|switch|case|while|until|foreach|for|do|next|last|continue|redo|goto|scalar|sub|my|locale|return|use\@</regex>
+		</rule>
+		<rule name="SYSTEM function">
+			<color>systemFunction</color>
+			<regex>\@print|push|pop|shift|unshift|splice|split|join|sort|keys|values|exists|delete\@</regex>
+		</rule>
+		<rule name="my common Define">
+			<color>commonDefine</color>
+			<regex>\@__FILE__|__LINE__|__PACKAGE__\@</regex>
+		</rule>
+		<rule name="numeric constant">
+			<color>number</color>
+			<regex>\@((0(x|X)[0-9a-fA-F]*)|(\d+\.?\d*|\.\d+)((e|E)(\+|\-)?\d+)?)(L|l|UL|ul|u|U|F|f)?\@</regex>
+		</rule>
+		<rule name="my boolean">
+			<color>boolean</color>
+			<regex>\@true|false\@</regex>
+		</rule>
+		<rule name="BIG LETTER">
+			<color>macro</color>
+			<regex>\@([A-Z_][A-Z_0-9]{3,500})\@</regex>
+		</rule>
+		<rule name="condition">
+			<color>boolean</color>
+			<regex>&lt;=&gt;|==|&lt;=|&gt;=|!=|&lt;|&gt;|&amp;&amp;|\{|\}</regex>
+		</rule>
+		<rule name="condition2">
+			<color>boolean</color>
+			<regex>\@gt|lt|le|ge|eq|ne|cmp\@</regex>
+		</rule>
+		<rule name="simpleQuteTextError">
+			<color>SYNTAX_ERROR</color>
+			<regex>&apos;|&quot;</regex>
+		</rule>
+		<rule name="Function name">
+			<color>functionName</color>
+			<regex>\@((\w|_)+[ \t]*\()</regex>
+		</rule>
+	</pass2>
+	<pass name="doxyparse">
+		<rule name="knownkey">
+			<color>doxygen-key-known</color>
+			<regex>(@|\\)[\t ]*(addindex|addtogroup|anchor|arg|attention|author|authors|a|brief|bug|b|callgraph|category|cite|class|code|cond|copybrief|copydetails|copydoc|copyright|date|def|defgroup|deprecated|details|diafile|dir|docbookonly|dontinclude|dot|dotfile|else|elseif|em|endcode|endcond|enddocbookonly|enddot|endhtmlonly|endif|endinternal|endlatexonly|endlink|endmanonly|endmsc|endparblock|endrtfonly|endsecreflist|endverbatim|enduml|endxmlonly|enum|example|exception|extends|e|file|fn|headerfile|hidecallergraph|hidecallgraph|hideinitializer|htmlinclude|htmlonly|idlexcept|ifnot|if|image|implements|includelineno|include|ingroup|internal|invariant|interface|latexinclude|latexonly|line|link|license|li|mainpage|manonly|memberof|msc|mscfile|name|namespace|nosubgrouping|note|n|overload|package|page|paragraph|param|parblock|par|post|pre|private|privatesection|property|protected|protectedsection|protocol|public|publicsection|pure|p|refitem|ref|related|relates|relatedalso|relatesalso|remark|remarks|result|return|returns|retval|rtfonly|sa|secreflist|section|see|short|showinitializer|since|skip|skipline|snippet|startuml|struct|subpage|subsection|subsubsection|tableofcontents|test|throw|throws|todo|tparam|typedef|union|until|var|verbatim|verbinclude|version|vhdlflow|warning|weakgroup|xmlonly|xrefitem)</regex>
+		</rule>
+		<rule name="key">
+			<color>doxygen-key</color>
+			<regex>(@|\\)[\t ]*\w+</regex>
+		</rule>
+		<rule name="in-out">
+			<color>doxygen-in-out</color>
+			<regex>\[(in|in,out|out)\]</regex>
+		</rule>
+		<rule name="function input">
+			<color>inputFunction</color>
+			<regex>\@_\w+\@</regex>
+		</rule>
+	</pass>
+	<pass name="TODO">
+		<rule name="function input">
+			<color>SYNTAX_ERROR</color>
+			<regex>TODO[ \t]*:.*</regex>
+		</rule>
+	</pass>
+</EdnLang>

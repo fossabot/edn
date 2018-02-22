@@ -22,6 +22,10 @@
 				<start>(&quot;&quot;&quot;|''')</start>
 			</regex>
 		</rule>
+		<rule name="main declaration of executable">
+			<color>DECLARE_EXECUTABLE</color>
+			<regex>#!.*$</regex>
+		</rule>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
 			<regex>##.*$</regex>

@@ -25,6 +25,7 @@
 		{ name:"keyword", foreground:"#5c8fed", bold:true},
 		{ name:"macro", foreground:"#6c09c8", bold:true},
 		{ name:"SYNTAX_ERROR", foreground:"#000000", background:"#FF0000", bold:true},
+		{ name:"DECLARE_EXECUTABLE", foreground:"#000000", background:"#ef4d00", bold:true},
 		{ name:"functionName", foreground:"#24d1e0", bold:true},
 		{ name:"functionNamePrivate", foreground:"#24d190", bold:true},
 		{ name:"TestResultOK", foreground:"#000000", background:"#00FF00", bold:true},

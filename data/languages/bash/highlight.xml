@@ -2,9 +2,9 @@
 <EdnLang version="0.1" lang="Bash script">
 	<ext>(sh|bash|zsh)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
-		<rule name="first line">
-			<color>commentDoxygen</color>
-			<regex>#!(\\[\\\n]|.)*$</regex>
+		<rule name="main declaration of executable">
+			<color>DECLARE_EXECUTABLE</color>
+			<regex>#!.*$</regex>
 		</rule>
 		<rule name="comment line">
 			<color>comment</color>

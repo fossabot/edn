@@ -151,7 +151,6 @@ class MainApplication : public ewol::context::Application {
 };
 
 
-
 /**
  * @brief Main of the program (This can be set in every case, but it is not used in Andoid...).
  * @param std IO

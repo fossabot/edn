@@ -103,6 +103,7 @@ def configure(target, my_module):
 	my_module.copy_path('data/languages/xml/*.xml','languages/xml/')
 	my_module.copy_path('data/languages/python/*.xml','languages/python/')
 	my_module.copy_path('data/languages/zeus.idl/*.xml','languages/zeus.idl/')
+	my_module.copy_path('data/languages/perl/*.xml','languages/perl/')
 	my_module.copy_path('data/theme/colorWhite/*.json','theme/color/white/')
 	my_module.copy_path('data/theme/colorBlack/*.json','theme/color/black/')
 	my_module.copy_path('data/GUI-*.xml')
@@ -117,6 +118,8 @@ def configure(target, my_module):
 		"-DAPPL_VERSION=\"\\\"" + tools.version_to_string(get_version()) + "\\\"\""
 		])
 	versionIDCode = str(get_version_id())
+	
+	my_module.compile_version("c++", 2014)
 	
 	# set the package properties:
 	my_module.set_pkg("VERSION_CODE", versionIDCode)
