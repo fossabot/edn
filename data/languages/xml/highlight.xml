@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EdnLang version="0.2" lang="XML">
-	<ext>(xml|XML|svg|SVG|html|HTML|htm|HTM|tpl|TPL)</ext>
+	<ext>(xml|XML|svg|SVG|html|HTML|htm|HTM|tpl|TPL|xhtml)</ext>
 	<pass1><!-- multiline section & parse all file (now) and when modification retrive previous modification -->
 		<rule name="Comment">
 			<color>comment</color>
