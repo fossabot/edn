@@ -117,6 +117,7 @@ void MainWindows::init() {
 			myBufferView->propertyName.set("plop 3333333");
 			myBufferView->propertyExpand.set(bvec2(false,true));
 			myBufferView->propertyFill.set(bvec2(true,true));
+			//myBufferView->propertyMinSize.set(gale::Dimension(vec2(300,2), gale::distance::pixel));
 			mySizerHori->subWidgetAdd(myBufferView);
 			
 			ewol::widget::SpacerShared mySpacer = ewol::widget::Spacer::create();

@@ -76,5 +76,6 @@ class BufferView : public ewol::widget::List {
 		void onCallbackNewBuffer(const etk::String& _value);
 		void onCallbackselectNewFile(const etk::String& _value);
 		void onCallbackBufferRemoved(const ememory::SharedPtr<appl::Buffer>& _buffer);
+		void calculateMinMaxSize();
 };
 

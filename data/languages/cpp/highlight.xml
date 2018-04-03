@@ -43,7 +43,7 @@
 		</rule>
 		<rule name="inline doxygen">
 			<color>commentDoxygen</color>
-			<regex>//!.*$</regex>
+			<regex>//(!|/).*$</regex>
 			<sub>doxyparse</sub>
 		</rule>
 		<rule name="inline comment">

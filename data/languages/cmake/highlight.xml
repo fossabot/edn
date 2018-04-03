@@ -2,22 +2,22 @@
 <EdnLang version="0.1" lang="cmake">
 	<file>CMakeLists.txt</file>
 	<file>CMakeCache.txt</file>
+	<ext>(cmake)</ext>
 	<pass1>
 		<rule name="my comment doxygen">
 			<color>commentDoxygen</color>
 			<regex>##.*$</regex>
-		</rule>
-		<rule name="my todo comment">
-			<color>SYNTAX_ERROR</color>
-			<regex>#[ \t]TODO[ \t]*:(.|\\[\\\n])*$</regex>
+			<sub>doxyparse</sub>
 		</rule>
 		<rule name="my comment">
 			<color>comment</color>
 			<regex>#(.|\\[\\\n])*$</regex>
+			<sub>TODO</sub>
 		</rule>
 		<rule name="doubleQuteText">
 			<color>doubleQuoteText</color>
-			<regex>&quot;(.|\\[\\&quot;])*?&quot;$</regex>
+			<regex>&quot;(.|\\[\\&quot;])*&quot;</regex>
+			<sub>parameters</sub>
 		</rule>
 	</pass1>
 	<pass2> <!-- Parse on display data ==> nor regenerate every display but every time modification apear -->
@@ -50,4 +50,34 @@
 			<regex>\@(\w|_)+[ \t]*\(</regex>
 		</rule>
 	</pass2>
+	<pass name="doxyparse">
+		<rule name="knownkey">
+			<color>doxygen-key-known</color>
+			<regex>(\@|\\)[\t ]*(addindex|addtogroup|anchor|arg|attention|author|authors|a|brief|bug|b|callgraph|category|cite|class|code|cond|copybrief|copydetails|copydoc|copyright|date|def|defgroup|deprecated|details|diafile|dir|docbookonly|dontinclude|dot|dotfile|else|elseif|em|endcode|endcond|enddocbookonly|enddot|endhtmlonly|endif|endinternal|endlatexonly|endlink|endmanonly|endmsc|endparblock|endrtfonly|endsecreflist|endverbatim|enduml|endxmlonly|enum|example|exception|extends|e|file|fn|headerfile|hidecallergraph|hidecallgraph|hideinitializer|htmlinclude|htmlonly|idlexcept|ifnot|if|image|implements|includelineno|include|ingroup|internal|invariant|interface|latexinclude|latexonly|line|link|license|li|mainpage|manonly|memberof|msc|mscfile|name|namespace|nosubgrouping|note|n|overload|package|page|paragraph|param|parblock|par|post|pre|private|privatesection|property|protected|protectedsection|protocol|public|publicsection|pure|p|refitem|ref|related|relates|relatedalso|relatesalso|remark|remarks|result|return|returns|retval|rtfonly|sa|secreflist|section|see|short|showinitializer|since|skip|skipline|snippet|startuml|struct|subpage|subsection|subsubsection|tableofcontents|test|throw|throws|todo|tparam|typedef|union|until|var|verbatim|verbinclude|version|vhdlflow|warning|weakgroup|xmlonly|xrefitem)</regex>
+		</rule>
+		<rule name="key">
+			<color>doxygen-key</color>
+			<regex>(\@|\\)[\t ]*\w+</regex>
+		</rule>
+		<rule name="in-out">
+			<color>doxygen-in-out</color>
+			<regex>\[(in|in,out|out)\]</regex>
+		</rule>
+		<rule name="function input">
+			<color>inputFunction</color>
+			<regex>\@_\w+\@</regex>
+		</rule>
+	</pass>
+	<pass name="TODO">
+		<rule name="function input">
+			<color>SYNTAX_ERROR</color>
+			<regex>TODO[ \t]*:.*$</regex>
+		</rule>
+	</pass>
+	<pass name="parameters">
+		<rule name="Variable">
+			<color>inputFunction</color>
+			<regex>\$\{.*\}</regex>
+		</rule>
+	</pass>
 </EdnLang>

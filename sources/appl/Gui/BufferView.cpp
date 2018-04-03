@@ -60,6 +60,17 @@ BufferView::~BufferView() {
 	removeAllElement();
 }
 
+
+void BufferView::calculateMinMaxSize() {
+	/*int32_t fontId = getDefaultFontId();
+	int32_t minWidth = ewol::getWidth(fontId, m_label);
+	int32_t minHeight = ewol::getHeight(fontId);
+	m_minSize.x = 3+minWidth;
+	m_minSize.y = 3+minHeight;
+	*/
+	m_minSize.setValue(300, 150);
+}
+
 void BufferView::removeAllElement() {
 	m_list.clear();
 }
