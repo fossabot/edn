@@ -105,6 +105,7 @@ def configure(target, my_module):
 	my_module.copy_path('data/languages/zeus.idl/*.xml','languages/zeus.idl/')
 	my_module.copy_path('data/languages/perl/*.xml','languages/perl/')
 	my_module.copy_path('data/languages/TypeScript/*.xml','languages/TypeScript/')
+	my_module.copy_path('data/languages/css/*.xml','languages/css/')
 	my_module.copy_path('data/theme/colorWhite/*.json','theme/color/white/')
 	my_module.copy_path('data/theme/colorBlack/*.json','theme/color/black/')
 	my_module.copy_path('data/GUI-*.xml')
