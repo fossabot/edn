@@ -18,6 +18,13 @@
 			</regex>
 			<sub>TODO</sub>
 		</rule>
+		<rule name="RawText">
+			<color>doubleQuoteText</color>
+			<regex>
+				<start>R&quot;#\(</start>
+				<stop>\)#&quot;</stop>
+			</regex>
+		</rule>
 		<rule name="comment multiline ERROR">
 			<color>SYNTAX_ERROR</color>
 			<regex>
