@@ -15,14 +15,14 @@ appl::WorkerSaveAllFile::WorkerSaveAllFile() {
 
 void appl::WorkerSaveAllFile::init() {
 	ewol::object::Worker::init();
-	if (m_bufferManager == nullptr) {
+	if (m_bufferManager == null) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		destroy();
 		return;
 	}
 	// List all current open file :
 	for (auto &it : *m_bufferManager) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		if (it->isModify() == false) {
@@ -55,7 +55,7 @@ appl::WorkerSaveAllFile::~WorkerSaveAllFile() {
 }
 
 void appl::WorkerSaveAllFile::onCallbackSaveAsDone() {
-	if (m_bufferManager == nullptr) {
+	if (m_bufferManager == null) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
 	}

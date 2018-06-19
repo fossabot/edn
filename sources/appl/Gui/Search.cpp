@@ -49,12 +49,12 @@ appl::widget::Search::~Search() {
 }
 
 void appl::widget::Search::find() {
-	if (m_viewerManager == nullptr) {
+	if (m_viewerManager == null) {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
 	}
 	ememory::SharedPtr<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
-	if (viewer == nullptr) {
+	if (viewer == null) {
 		APPL_INFO("No viewer selected!!!");
 		return;
 	}
@@ -85,12 +85,12 @@ void appl::widget::Search::find() {
 }
 
 void appl::widget::Search::replace() {
-	if (m_viewerManager == nullptr) {
+	if (m_viewerManager == null) {
 		APPL_WARNING("No viewer manager selected!!!");
 		return;
 	}
 	ememory::SharedPtr<appl::TextViewer> viewer = m_viewerManager->getViewerSelected();
-	if (viewer == nullptr) {
+	if (viewer == null) {
 		APPL_INFO("No viewer selected!!!");
 		return;
 	}
@@ -137,26 +137,26 @@ void appl::widget::Search::OnCallbackForward(const bool& _value) {
 }
 
 void appl::widget::Search::selectSearch() {
-	if (m_searchEntry != nullptr) {
+	if (m_searchEntry != null) {
 		m_searchEntry->keepFocus();
 	}
 }
 
 bool appl::widget::Search::isSelectSearch() {
-	if (m_searchEntry != nullptr) {
+	if (m_searchEntry != null) {
 		return m_searchEntry->getFocus();
 	}
 	return false;
 }
 
 void appl::widget::Search::selectReplace() {
-	if (m_replaceEntry != nullptr) {
+	if (m_replaceEntry != null) {
 		m_replaceEntry->keepFocus();
 	}
 }
 
 bool appl::widget::Search::isSelectReplace() {
-	if (m_replaceEntry != nullptr) {
+	if (m_replaceEntry != null) {
 		return m_replaceEntry->getFocus();
 	}
 	return false;

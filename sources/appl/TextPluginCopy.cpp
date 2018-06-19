@@ -21,7 +21,7 @@ appl::TextPluginCopy::TextPluginCopy() :
 void appl::TextPluginCopy::onPluginEnable(appl::TextViewer& _textDrawer) {
 	// add event :
 	ememory::SharedPtr<ewol::widget::Menu> menu = m_menuInterface.lock();
-	if (menu != nullptr) {
+	if (menu != null) {
 		m_menuIdTitle = menu->addTitle("_T{Edit}");
 		if (m_menuIdTitle != -1) {
 			m_menuIdCopy = menu->add(m_menuIdTitle, "_T{Copy}",     "", "appl::TextPluginCopy::menu:copy");
@@ -40,7 +40,7 @@ void appl::TextPluginCopy::onPluginDisable(appl::TextViewer& _textDrawer) {
 	_textDrawer.ext_shortCutRm("appl::TextPluginCopy::copy");
 	_textDrawer.ext_shortCutRm("appl::TextPluginCopy::Paste");
 	ememory::SharedPtr<ewol::widget::Menu> menu = m_menuInterface.lock();
-	if (menu != nullptr) {
+	if (menu != null) {
 		menu->remove(m_menuIdRemove);
 		menu->remove(m_menuIdPast);
 		menu->remove(m_menuIdCut);

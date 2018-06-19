@@ -65,7 +65,7 @@ void appl::TextViewer::init() {
 	registerMultiCast(appl::MsgSelectGotoLine);
 	registerMultiCast(appl::MsgSelectGotoLineSelect);
 	*/
-	if (m_bufferManager != nullptr) {
+	if (m_bufferManager != null) {
 		m_bufferManager->signalSelectFile.connect(sharedFromThis(), &appl::TextViewer::onCallbackselectNewFile);
 	} else {
 		APPL_CRITICAL("Buffer manager has not been created at the init");
@@ -90,13 +90,13 @@ void appl::TextViewer::onCallbackselectNewFile(const etk::String& _value) {
 	}
 	
 	// reset scroll:
-	if (m_buffer != nullptr) {
+	if (m_buffer != null) {
 		m_buffer->signals.disconnect(sharedFromThis());
 		bool needAdd = true;
 		auto it = m_drawingRemenber.begin();
 		while (it != m_drawingRemenber.end()) {
 			ememory::SharedPtr<appl::Buffer> tmpBuff = it->first.lock();
-			if (tmpBuff == nullptr) {
+			if (tmpBuff == null) {
 				it = m_drawingRemenber.erase(it);
 				continue;
 			}
@@ -114,10 +114,10 @@ void appl::TextViewer::onCallbackselectNewFile(const etk::String& _value) {
 		}
 	}
 	m_originScrooled = vec2(0,0);
-	if (m_bufferManager != nullptr) {
+	if (m_bufferManager != null) {
 		m_buffer = m_bufferManager->get(_value);
 		m_bufferManager->setBufferSelected(m_buffer);
-		if (m_buffer != nullptr) {
+		if (m_buffer != null) {
 			m_buffer->signalIsModify.connect(sharedFromThis(), &appl::TextViewer::onCallbackIsModify);
 			m_buffer->signalSelectChange.connect(sharedFromThis(), &appl::TextViewer::onCallbackSelectChange);
 			for (auto element : m_drawingRemenber) {
@@ -135,7 +135,7 @@ void appl::TextViewer::onCallbackselectNewFile(const etk::String& _value) {
 }
 
 etk::String appl::TextViewer::getBufferPath() {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return "";
 	}
 	etk::String filename = m_buffer->getFileName();
@@ -173,7 +173,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 	m_displayDrawing.setColor((*m_paintingProperties)[m_colorBackground].getForeground());
 	m_displayDrawing.rectangleWidth(m_size);
 	
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		m_maxSize.setX(256);
 		m_maxSize.setY(256);
 		float textEndAlignament = etk::max(11.0f, m_size.x()-20.0f);
@@ -269,7 +269,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 	appl::DisplayHLData displayLocalSyntax;
 	m_buffer->hightlightGenerateLines(displayLocalSyntax, startingIt, (m_size.y()/tmpLetterSize.y()) + 5);
 	float maxSizeX = 0;
-	appl::HighlightInfo * HLColor = nullptr;
+	appl::HighlightInfo * HLColor = null;
 	bool displayCursorAndSelection = isSelectedLast();
 	appl::Buffer::Iterator it;
 	for (it = startingIt;
@@ -308,8 +308,8 @@ void appl::TextViewer::onRegenerateDisplay() {
 		}
 		HLColor = m_buffer->getElementColorAtPosition(displayLocalSyntax, (int64_t)it);
 		bool haveBackground = false;
-		if (    HLColor != nullptr
-		     && HLColor->patern != nullptr) {
+		if (    HLColor != null
+		     && HLColor->patern != null) {
 			m_displayText.setColor(HLColor->patern->getColorGlyph().getForeground());
 			m_displayText.setColorBg(HLColor->patern->getColorGlyph().getBackground());
 			haveBackground = HLColor->patern->getColorGlyph().haveBackground();
@@ -381,7 +381,7 @@ void appl::TextViewer::onRegenerateDisplay() {
 }
 
 bool appl::TextViewer::onEventEntry(const ewol::event::Entry& _event) {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return false;
 	}
 	// First call plugin
@@ -497,7 +497,7 @@ bool appl::TextViewer::onEventInput(const ewol::event::Input& _event) {
 		keepFocus();
 	}
 	//tic();
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return false;
 	}
 	// First call the scrolling widget :
@@ -679,7 +679,7 @@ appl::Buffer::Iterator appl::TextViewer::getMousePosition(const vec2& _relativeP
 }
 
 void appl::TextViewer::onEventClipboard(enum gale::context::clipBoard::clipboardListe _clipboardID) {
-	if (m_buffer != nullptr) {
+	if (m_buffer != null) {
 		etk::String data = gale::context::clipBoard::get(_clipboardID);
 		write(data);
 	}
@@ -718,7 +718,7 @@ void appl::TextViewer::onChangePropertyFontName() {
 
 // TODO : Update process time ==> a little expensive (2->4ms) in end of file
 void appl::TextViewer::updateScrolling() {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return;
 	}
 	vec2 realCursorPosition(0,0);
@@ -747,7 +747,7 @@ void appl::TextViewer::updateScrolling() {
 }
 
 bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return false;
 	}
 	markToRedraw();
@@ -761,7 +761,7 @@ bool appl::TextViewer::moveCursor(const appl::Buffer::Iterator& _pos) {
 }
 
 bool appl::TextViewer::write(const etk::String& _data) {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return false;
 	}
 	if (m_buffer->hasTextSelected() == true) {
@@ -771,7 +771,7 @@ bool appl::TextViewer::write(const etk::String& _data) {
 }
 
 bool appl::TextViewer::write(const etk::String& _data, const appl::Buffer::Iterator& _pos) {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return false;
 	}
 	markToRedraw();
@@ -787,7 +787,7 @@ bool appl::TextViewer::write(const etk::String& _data, const appl::Buffer::Itera
 }
 
 bool appl::TextViewer::replace(const etk::String& _data, const appl::Buffer::Iterator& _pos, const appl::Buffer::Iterator& _posEnd) {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return false;
 	}
 	markToRedraw();
@@ -803,7 +803,7 @@ bool appl::TextViewer::replace(const etk::String& _data, const appl::Buffer::Ite
 }
 
 bool appl::TextViewer::replace(const etk::String& _data) {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return false;
 	}
 	if (m_buffer->hasTextSelected() == false) {
@@ -813,7 +813,7 @@ bool appl::TextViewer::replace(const etk::String& _data) {
 }
 
 void appl::TextViewer::remove() {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return;
 	}
 	if (m_buffer->hasTextSelected() == false) {
@@ -831,7 +831,7 @@ void appl::TextViewer::remove() {
 
 
 void appl::TextViewer::moveCursorRight(appl::TextViewer::moveMode _mode) {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return;
 	}
 	markToRedraw();
@@ -854,7 +854,7 @@ void appl::TextViewer::moveCursorRight(appl::TextViewer::moveMode _mode) {
 }
 
 void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return;
 	}
 	markToRedraw();
@@ -877,7 +877,7 @@ void appl::TextViewer::moveCursorLeft(appl::TextViewer::moveMode _mode) {
 }
 
 void appl::TextViewer::moveCursorUp(uint32_t _nbLine) {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return;
 	}
 	markToRedraw();
@@ -903,7 +903,7 @@ void appl::TextViewer::moveCursorUp(uint32_t _nbLine) {
 }
 
 void appl::TextViewer::moveCursorDown(uint32_t _nbLine) {
-	if (m_buffer == nullptr) {
+	if (m_buffer == null) {
 		return;
 	}
 	markToRedraw();
@@ -983,13 +983,13 @@ float appl::TextViewer::getScreenSize(const appl::Buffer::Iterator& _startLinePo
 }
 
 void appl::TextViewer::setCurrentSelect() {
-	if (m_viewerManager != nullptr) {
+	if (m_viewerManager != null) {
 		m_viewerManager->setViewerSelected(ememory::dynamicPointerCast<appl::TextViewer>(sharedFromThis()), m_buffer);
 	}
 }
 
 bool appl::TextViewer::isSelectedLast() {
-	if (m_viewerManager != nullptr) {
+	if (m_viewerManager != null) {
 		return m_viewerManager->isLastSelected(ememory::dynamicPointerCast<appl::TextViewer>(sharedFromThis()));
 	}
 	return false;

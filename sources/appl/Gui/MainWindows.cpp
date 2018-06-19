@@ -53,7 +53,7 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			ememory::SharedPtr<ewol::widget::Spacer> mySpacer;
 			
 			mySpacer = ewol::widget::Spacer::create();
-			if (mySpacer == nullptr) {
+			if (mySpacer == null) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
 				mySpacer->propertyExpand.set(bvec2(true,true));
@@ -72,7 +72,7 @@ class ParameterAboutGui : public ewol::widget::Sizer {
 			tmpLabel += "    tinyXml, freetype, agg2.4, etk<br/>";
 			tmpLabel += "</left>";
 			ememory::SharedPtr<ewol::widget::Label> myLabel = ewol::widget::Label::create();
-			if (myLabel == nullptr) {
+			if (myLabel == null) {
 				APPL_ERROR("Can not allocate widget  == > display might be in error");
 			} else {
 				myLabel->propertyValue.set(tmpLabel);
@@ -251,7 +251,7 @@ void MainWindows::onCallbackShortCut(const etk::String& _value) {
 void MainWindows::onCallbackMenuEvent(const etk::String& _value) {
 	APPL_WARNING("Event from Menu : " << _value);
 	if (_value == "menu:new") {
-		if (m_bufferManager != nullptr) {
+		if (m_bufferManager != null) {
 			m_bufferManager->createNewBuffer();
 		}
 	} else if (_value == "menu:exit") {
@@ -272,7 +272,7 @@ void MainWindows::onCallbackMenuEvent(const etk::String& _value) {
 	} else if (_value == "menu:property") {
 		displayProperty();
 	} else if (_value == "menu:search") {
-		if (m_widgetSearch == nullptr) {
+		if (m_widgetSearch == null) {
 			return;
 		}
 		if (m_widgetSearch->propertyHide.get() == true) {
@@ -281,9 +281,9 @@ void MainWindows::onCallbackMenuEvent(const etk::String& _value) {
 		} else {
 			if (m_widgetSearch->isSelectSearch()) {
 				m_widgetSearch->propertyHide.set(true);
-				if (m_viewerManager != nullptr) {
+				if (m_viewerManager != null) {
 					ememory::SharedPtr<appl::TextViewer> tmp = m_viewerManager->getViewerSelected();
-					if (tmp != nullptr) {
+					if (tmp != null) {
 						tmp->keepFocus();
 					}
 				}
@@ -292,7 +292,7 @@ void MainWindows::onCallbackMenuEvent(const etk::String& _value) {
 			}
 		}
 	} else if (_value == "menu:replace") {
-		if (m_widgetSearch == nullptr) {
+		if (m_widgetSearch == null) {
 			return;
 		}
 		if (m_widgetSearch->propertyHide.get() == true) {
@@ -301,9 +301,9 @@ void MainWindows::onCallbackMenuEvent(const etk::String& _value) {
 		} else {
 			if (m_widgetSearch->isSelectReplace()) {
 				m_widgetSearch->propertyHide.set(true);
-				if (m_viewerManager != nullptr) {
+				if (m_viewerManager != null) {
 					ememory::SharedPtr<appl::TextViewer> tmp = m_viewerManager->getViewerSelected();
-					if (tmp != nullptr) {
+					if (tmp != null) {
 						tmp->keepFocus();
 					}
 				}
@@ -360,7 +360,7 @@ void MainWindows::onCallbackMenuEvent(const etk::String& _value) {
 			return;
 		}
 		ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
-		if (tmpBuffer == nullptr) {
+		if (tmpBuffer == null) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
 		}
@@ -379,7 +379,7 @@ void MainWindows::onCallbackMenuEvent(const etk::String& _value) {
 			return;
 		}
 		ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
-		if (tmpBuffer == nullptr) {
+		if (tmpBuffer == null) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
 		}
@@ -390,7 +390,7 @@ void MainWindows::onCallbackMenuEvent(const etk::String& _value) {
 			return;
 		}
 		ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(_msg.getData());
-		if (tmpBuffer == nullptr) {
+		if (tmpBuffer == null) {
 			APPL_ERROR("Error to get the buffer : " << _msg.getData());
 			return;
 		}
@@ -402,19 +402,19 @@ void MainWindows::onCallbackMenuEvent(const etk::String& _value) {
 
 void MainWindows::displayOpen() {
 	ememory::SharedPtr<ewol::widget::FileChooser> tmpWidget = ewol::widget::FileChooser::create();
-	if (tmpWidget == nullptr) {
+	if (tmpWidget == null) {
 		APPL_ERROR("Can not open File chooser !!! ");
 		return;
 	}
 	tmpWidget->propertyLabelTitle.set("_T{Open files ...}");
 	tmpWidget->propertyLabelValidate.set("_T{Open}");
-	if (m_bufferManager == nullptr) {
+	if (m_bufferManager == null) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
 	}
 	// Get a ref on the buffer selected (if null, no buffer was selected ...)
 	ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->getBufferSelected();
-	if (tmpBuffer != nullptr) {
+	if (tmpBuffer != null) {
 		etk::FSNode tmpFile = tmpBuffer->getFileName();
 		tmpWidget->propertyPath.set(tmpFile.getNameFolder());
 	}
@@ -426,7 +426,7 @@ void MainWindows::displayOpen() {
 void MainWindows::displayProperty() {
 	// Request the parameter GUI
 	ememory::SharedPtr<ewol::widget::Parameter> tmpWidget = ewol::widget::Parameter::create();
-	if (tmpWidget == nullptr) {
+	if (tmpWidget == null) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 		return;
 	}
@@ -448,10 +448,10 @@ void MainWindows::displayProperty() {
 		tmpWidget->menuAddGroup("_T{Editor}");
 		ememory::SharedPtr<ewol::Widget> tmpSubWidget = globals::ParameterGlobalsGui::create();
 		tmpWidget->menuAdd("_T{Editor}",          "", tmpSubWidget);
-		tmpWidget->menuAdd("_T{Font & Color}", "", nullptr);
-		tmpWidget->menuAdd("_T{Highlight}",       "", nullptr);
+		tmpWidget->menuAdd("_T{Font & Color}", "", null);
+		tmpWidget->menuAdd("_T{Highlight}",       "", null);
 		tmpWidget->menuAddGroup("_T{General}");
-		tmpWidget->menuAdd("_T{Display}",       "", nullptr);
+		tmpWidget->menuAdd("_T{Display}",       "", null);
 		tmpSubWidget = ParameterAboutGui::create();
 		tmpWidget->menuAdd("_T{About}",           "", tmpSubWidget);
 	#endif
@@ -459,7 +459,7 @@ void MainWindows::displayProperty() {
 
 void MainWindows::onCallbackselectNewFile(const etk::String& _value) {
 	APPL_INFO("onCallbackselectNewFile(" << _value << ")");
-	if (m_bufferManager == nullptr) {
+	if (m_bufferManager == null) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
 	}
@@ -468,7 +468,7 @@ void MainWindows::onCallbackselectNewFile(const etk::String& _value) {
 	m_connectionSaveName.disconnect();
 	onCallbackTitleUpdate();
 	ememory::SharedPtr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
-	if (tmpp != nullptr) {
+	if (tmpp != null) {
 		m_connectionSave = tmpp->signalIsSave.connect(this, &MainWindows::onCallbackTitleUpdate);
 		m_connectionModify = tmpp->signalIsModify.connect(this, &MainWindows::onCallbackTitleUpdate);
 		m_connectionSaveName = tmpp->signalChangeName.connect(this, &MainWindows::onCallbackTitleUpdate);
@@ -483,63 +483,63 @@ void MainWindows::onCallbackPopUpFileSelected(const etk::String& _value) {
 
 void MainWindows::onCallbackTitleUpdate() {
 	APPL_INFO("onCallbackTitleUpdate()");
-	if (m_bufferManager == nullptr) {
+	if (m_bufferManager == null) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		return;
 	}
 	// select a new Buffer ==> change title:
 	ememory::SharedPtr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
-	if (tmpp == nullptr) {
+	if (tmpp == null) {
 		propertyTitle.set("Edn");
-		if (m_widgetLabelFileName != nullptr) {
+		if (m_widgetLabelFileName != null) {
 			m_widgetLabelFileName->propertyValue.set("");
 		}
 	} else {
 		etk::String nameFileSystem = etk::FSNode(tmpp->getFileName()).getFileSystemName();
 		propertyTitle.set(etk::String("Edn : ") + (tmpp->isModify()==true?" *":"") + nameFileSystem);
-		if (m_widgetLabelFileName != nullptr) {
+		if (m_widgetLabelFileName != null) {
 			m_widgetLabelFileName->propertyValue.set(nameFileSystem + (tmpp->isModify()==true?" *":""));
 		}
 	}
 }
 
 void MainWindows::saveAsPopUp(const ememory::SharedPtr<appl::Buffer>& _buffer) {
-	if (_buffer == nullptr) {
-		APPL_ERROR("Call With nullptr input...");
+	if (_buffer == null) {
+		APPL_ERROR("Call With null input...");
 		return;
 	}
 	ememory::SharedPtr<appl::WorkerSaveFile> tmpObject = appl::WorkerSaveFile::create("buffer-name", _buffer->getFileName());
 }
 
 void MainWindows::closeNotSavedFile(const ememory::SharedPtr<appl::Buffer>& _buffer) {
-	if (_buffer == nullptr) {
-		APPL_ERROR("Call With nullptr input...");
+	if (_buffer == null) {
+		APPL_ERROR("Call With null input...");
 		return;
 	}
 	ememory::SharedPtr<ewol::widget::StdPopUp> tmpPopUp = ewol::widget::StdPopUp::create();
-	if (tmpPopUp == nullptr) {
+	if (tmpPopUp == null) {
 		APPL_ERROR("Can not create a simple pop-up");
 		return;
 	}
 	tmpPopUp->propertyTitle.set("<bold>_T{Close un-saved file:}</bold>");
 	tmpPopUp->propertyComment.set("_T{The file named:} <i>\"" + _buffer->getFileName() + "\"</i> _T{is curently modify.}   <br/>_T{If you don't saves these modifications,<br/>they will be definitly lost...}");
-	ememory::SharedPtr<ewol::widget::Button> bt = nullptr;
+	ememory::SharedPtr<ewol::widget::Button> bt = null;
 	if (_buffer->hasFileName() == true) {
 		bt = tmpPopUp->addButton("_T{Save}", true);
-		if (bt != nullptr) {
+		if (bt != null) {
 			// TODO : The element is removed before beeing pressed
 			// TODO : bt->signalPressed.connect(sharedFromThis(), mainWindowsRequestSaveFile, _buffer->getFileName());
 			// TODO : bt->signalPressed.connect(sharedFromThis(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		}
 	}
 	bt = tmpPopUp->addButton("_T{Save As}", true);
-	if (bt != nullptr) {
+	if (bt != null) {
 		// TODO : bt->signalPressed.connect(sharedFromThis(), mainWindowsRequestSaveFileAs, _buffer->getFileName());
 		//bt->signalPressed.connect(sharedFromThis(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 		// TODO : Request the close when saved ...
 	}
 	bt = tmpPopUp->addButton("_T{Close}", true);
-	if (bt != nullptr) {
+	if (bt != null) {
 		// TODO : bt->signalPressed.connect(sharedFromThis(), mainWindowsRequestcloseFileNoCheck, _buffer->getFileName());
 	}
 	tmpPopUp->addButton("_T{Cancel}", true);

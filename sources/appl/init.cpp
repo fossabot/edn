@@ -85,7 +85,7 @@ class MainApplication : public ewol::context::Application {
 			
 			ememory::SharedPtr<MainWindows> basicWindows = MainWindows::create();
 			
-			if (basicWindows == nullptr) {
+			if (basicWindows == null) {
 				APPL_ERROR("Can not allocate the basic windows");
 				_context.exit(-1);
 				return;
@@ -141,7 +141,7 @@ class MainApplication : public ewol::context::Application {
 		}
 		void onKillDemand(ewol::Context& _context) override {
 			APPL_INFO("==> User demand kill ... " PROJECT_NAME " (START)");
-			if (m_bufferManager == nullptr) {
+			if (m_bufferManager == null) {
 				_context.exit(0);
 			}
 			APPL_TODO("Implement the check of buffer not saved ...");

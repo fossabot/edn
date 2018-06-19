@@ -15,7 +15,7 @@ appl::WorkerCloseAllFile::WorkerCloseAllFile() {
 
 void appl::WorkerCloseAllFile::init() {
 	ewol::object::Worker::init();
-	if (m_bufferManager == nullptr) {
+	if (m_bufferManager == null) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		destroy();
 		return;
@@ -23,7 +23,7 @@ void appl::WorkerCloseAllFile::init() {
 	// List all current open file :
 	for (int64_t iii=m_bufferManager->size()-1; iii>=0; --iii) {
 		ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(iii);
-		if (tmpBuffer == nullptr) {
+		if (tmpBuffer == null) {
 			continue;
 		}
 		if (tmpBuffer->isModify() == false) {
@@ -55,7 +55,7 @@ appl::WorkerCloseAllFile::~WorkerCloseAllFile() {
 }
 
 void appl::WorkerCloseAllFile::onCallbackCloseDone() {
-	if (m_bufferManager == nullptr) {
+	if (m_bufferManager == null) {
 		// nothing to do in this case ==> can do nothing ...
 		return;
 	}

@@ -16,7 +16,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 		m_current = 0;
 		return *this;
 	}
-	if (m_data != nullptr) {
+	if (m_data != null) {
 		if (m_current < (int64_t)m_data->m_data.size() ) {
 			int8_t nbChar = utf8::length(m_data->m_data[m_current]);
 			if (nbChar != 0) {
@@ -34,7 +34,7 @@ appl::Buffer::Iterator& appl::Buffer::Iterator::operator++ () {
 
 appl::Buffer::Iterator& appl::Buffer::Iterator::operator-- () {
 	m_value = u32char::Null;
-	if (m_data != nullptr) {
+	if (m_data != null) {
 		if (m_current > 0) {
 			int32_t iii = -1;
 			while(    utf8::first(m_data->m_data[m_current+iii]) == false
@@ -57,7 +57,7 @@ char32_t appl::Buffer::Iterator::operator* () {
 	if (m_value != u32char::Null) {
 		return m_value;
 	}
-	if (m_data == nullptr) {
+	if (m_data == null) {
 		APPL_ERROR("request an element that iterator not link");
 		return m_value;
 	}
@@ -119,7 +119,7 @@ appl::Buffer::Buffer() :
   m_cursorSelectPos(-1),
   m_cursorPreferredCol(-1),
   m_nbLines(1),
-  m_highlight(nullptr) {
+  m_highlight(null) {
 	addObjectType("appl::Buffer");
 	static int32_t bufferBaseId = 0;
 	m_fileName = "No Name " + etk::toString(bufferBaseId);
@@ -700,7 +700,7 @@ void appl::Buffer::setHighlightType(const etk::String& _type) {
 
 void appl::Buffer::regenerateHighLightAt(int64_t _pos, int64_t _nbDeleted, int64_t _nbAdded) {
 	// prevent ERROR...
-	if (m_highlight == nullptr) {
+	if (m_highlight == null) {
 		return;
 	}
 	// prevent No data Call
@@ -874,7 +874,7 @@ void appl::Buffer::findMainHighLightPosition(int64_t _startPos,
 }
 
 void appl::Buffer::generateHighLightAt(int64_t _pos, int64_t _endPos, int64_t _addingPos) {
-	if (m_highlight == nullptr) {
+	if (m_highlight == null) {
 		return;
 	}
 	//APPL_DEBUG("area : (" << _pos << "," << _endPos << ") insert at : " << _addingPos);
@@ -896,17 +896,17 @@ appl::HighlightInfo* appl::Buffer::getElementColorAtPosition(int64_t _pos, int64
 			return &m_HLDataPass1[iii];
 		}
 		if(m_HLDataPass1[iii].start > _pos) {
-			return nullptr;
+			return null;
 		}
 	}
-	return nullptr;
+	return null;
 }
 
 
 void appl::Buffer::hightlightGenerateLines(appl::DisplayHLData& _MData, const appl::Buffer::Iterator& _HLStart, int64_t _nbLines) {
 	_MData.posHLPass1 = 0;
 	_MData.posHLPass2 = 0;
-	if (m_highlight == nullptr) {
+	if (m_highlight == null) {
 		return;
 	}
 	//int64_t timeStart = ewol::getTime();
@@ -1012,7 +1012,7 @@ uint32_t appl::Buffer::getCursorLinesId() {
 
 namespace etk {
 	template<> etk::String toString<ememory::SharedPtr<appl::Buffer>>(const ememory::SharedPtr<appl::Buffer>& _obj) {
-		if (_obj != nullptr) {
+		if (_obj != null) {
 			return _obj->getFileName();
 		}
 		return "";
@@ -1022,7 +1022,7 @@ namespace etk {
 	}
 	
 	template<> bool from_string<ememory::SharedPtr<appl::Buffer>>(ememory::SharedPtr<appl::Buffer>& _variableRet, const etk::String& _value) {
-		if (_variableRet != nullptr) {
+		if (_variableRet != null) {
 			_variableRet->loadFile(_value);
 			return true;
 		}

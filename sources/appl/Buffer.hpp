@@ -40,7 +40,7 @@ namespace appl {
 					 */
 					Iterator():
 					  m_current(0),
-					  m_data(nullptr),
+					  m_data(null),
 					  m_value(u32char::Null) {
 						// nothing to do ...
 					};
@@ -70,7 +70,7 @@ namespace appl {
 					 */
 					virtual ~Iterator() {
 						m_current = 0;
-						m_data = nullptr;
+						m_data = null;
 						m_value = u32char::Null;
 					};
 					/**
@@ -78,7 +78,7 @@ namespace appl {
 					 * @return true if the element is present in buffer
 					 */
 					operator bool () const {
-						if (m_data == nullptr) {
+						if (m_data == null) {
 							return false;
 						}
 						if (m_current >= (int64_t)m_data->m_data.size()) {
@@ -94,7 +94,7 @@ namespace appl {
 					 * @return true if the element is present in buffer
 					 */
 					operator int64_t () const {
-						if (m_data == nullptr) {
+						if (m_data == null) {
 							return 0;
 						}
 						if (m_current < 0) {
@@ -217,7 +217,7 @@ namespace appl {
 					 * @return The requested position.
 					 */
 					int64_t getPos() const {
-						if (m_data == nullptr) {
+						if (m_data == null) {
 							return 0;
 						}
 						if (m_current < 0) {

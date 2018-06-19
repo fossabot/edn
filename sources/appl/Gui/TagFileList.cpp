@@ -15,7 +15,7 @@ appl::TagFileList::TagFileList() :
 	setMouseLimit(1);
 	// Load color properties: (use file list to be generic ...)
 	m_colorProperty = ewol::resource::ColorFile::create("THEME:COLOR:ListFileSystem.json");
-	if (m_colorProperty != nullptr) {
+	if (m_colorProperty != null) {
 		m_colorIdText = m_colorProperty->request("text");
 		m_colorIdBackground1 = m_colorProperty->request("background1");
 		m_colorIdBackground2 = m_colorProperty->request("background2");
@@ -29,7 +29,7 @@ void appl::TagFileList::init() {
 appl::TagFileList::~TagFileList() {
 	for (auto &it : m_list) {
 		ETK_DELETE(appl::TagListElement, it);
-		it = nullptr;
+		it = null;
 	}
 }
 
@@ -51,7 +51,7 @@ uint32_t appl::TagFileList::getNuberOfRaw() {
 }
 
 bool appl::TagFileList::getElement(int32_t _colomn, int32_t _raw, etk::String& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
-	if (_raw >= 0 && (size_t)_raw < m_list.size() && nullptr != m_list[_raw]) {
+	if (_raw >= 0 && (size_t)_raw < m_list.size() && null != m_list[_raw]) {
 		if (0 == _colomn) {
 			_myTextToWrite = etk::toString(m_list[_raw]->fileLine);
 		} else {
@@ -85,7 +85,7 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum gale::key::status _ty
 			}
 			if(    m_selectedLine  >= 0
 			    && m_selectedLine < (int64_t)m_list.size()
-			    && nullptr != m_list[m_selectedLine] ) {
+			    && null != m_list[m_selectedLine] ) {
 				if (previousRaw != m_selectedLine) {
 					signalSelect.emit(etk::toString(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
 				} else {
@@ -110,7 +110,7 @@ bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum gale::key::status _ty
  */
 void appl::TagFileList::add(etk::String& _file, int32_t _line) {
 	appl::TagListElement *tmpFile = ETK_NEW(appl::TagListElement, _file, _line);
-	if (nullptr != tmpFile) {
+	if (null != tmpFile) {
 		m_list.pushBack(tmpFile);
 	}
 	markToRedraw();

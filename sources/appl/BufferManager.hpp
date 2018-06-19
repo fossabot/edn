@@ -62,7 +62,7 @@ namespace appl {
 			ememory::SharedPtr<appl::Buffer> get(int32_t _id);
 			/**
 			 * @brief Create a new buffer empty.
-			 * @return Created buffer or nullptr.
+			 * @return Created buffer or null.
 			 */
 			ememory::SharedPtr<appl::Buffer> createNewBuffer();
 		private:
