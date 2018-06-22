@@ -31,7 +31,7 @@ void appl::textPluginManager::addDefaultPlugin() {
 }
 
 void appl::textPluginManager::addPlugin(ememory::SharedPtr<appl::TextViewerPlugin> _plugin) {
-	if (_plugin == nullptr) {
+	if (_plugin == null) {
 		return;
 	}
 	APPL_DEBUG("Add plugin : " << _plugin->getObjectType());
@@ -58,7 +58,7 @@ void appl::textPluginManager::addPlugin(ememory::SharedPtr<appl::TextViewerPlugi
 		m_listOnCursorMove.pushBack(_plugin);
 	}
 	ememory::SharedPtr<appl::TextViewer> viewer = m_currentViewer.lock();
-	if (viewer != nullptr) {
+	if (viewer != null) {
 		_plugin->onPluginEnable(*viewer);
 	}
 }
@@ -66,7 +66,7 @@ void appl::textPluginManager::addPlugin(ememory::SharedPtr<appl::TextViewerPlugi
 void appl::textPluginManager::connect(appl::TextViewer& _widget) {
 	m_currentViewer = ememory::dynamicPointerCast<appl::TextViewer>(_widget.sharedFromThis());
 	for (auto &it : m_list) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		it->onPluginEnable(_widget);
@@ -76,7 +76,7 @@ void appl::textPluginManager::connect(appl::TextViewer& _widget) {
 void appl::textPluginManager::disconnect(appl::TextViewer& _widget) {
 	m_currentViewer.reset();
 	for (auto &it : m_list) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		it->onPluginDisable(_widget);
@@ -86,7 +86,7 @@ void appl::textPluginManager::disconnect(appl::TextViewer& _widget) {
 bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
                                            const ewol::event::Entry& _event) {
 	for (auto &it : m_listOnEventEntry) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		if (it->onEventEntry(_textDrawer, _event) == true ) {
@@ -99,7 +99,7 @@ bool appl::textPluginManager::onEventEntry(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onEventInput(appl::TextViewer& _textDrawer,
                                            const ewol::event::Input& _event) {
 	for (auto &it : m_listOnEventInput) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		if (it->onEventInput(_textDrawer, _event) == true ) {
@@ -113,7 +113,7 @@ bool appl::textPluginManager::onWrite(appl::TextViewer& _textDrawer,
                                       const appl::Buffer::Iterator& _pos,
                                       const etk::String& _data) {
 	for (auto &it : m_listOnWrite) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		if (it->onWrite(_textDrawer, _pos, _data) == true ) {
@@ -128,7 +128,7 @@ bool appl::textPluginManager::onReplace(appl::TextViewer& _textDrawer,
                                         const etk::String& _data,
                                         const appl::Buffer::Iterator& _posEnd) {
 	for (auto &it : m_listOnReplace) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		if (it->onReplace(_textDrawer, _pos, _data, _posEnd) == true ) {
@@ -142,7 +142,7 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
                                        const appl::Buffer::Iterator& _pos,
                                        const appl::Buffer::Iterator& _posEnd) {
 	for (auto &it : m_listOnRemove) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		if (it->onRemove(_textDrawer, _pos, _posEnd) == true ) {
@@ -155,7 +155,7 @@ bool appl::textPluginManager::onRemove(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onReceiveShortCut(appl::TextViewer& _textDrawer,
                                                 const etk::String& _shortCutName) {
 	for (auto &it : m_listOnReceiveShortCutViewer) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		if (it->onReceiveShortCut(_textDrawer, _shortCutName) == true ) {
@@ -168,7 +168,7 @@ bool appl::textPluginManager::onReceiveShortCut(appl::TextViewer& _textDrawer,
 bool appl::textPluginManager::onCursorMove(appl::TextViewer& _textDrawer,
                                            const appl::Buffer::Iterator& _pos) {
 	for (auto &it : m_listOnCursorMove) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		if (it->onCursorMove(_textDrawer, _pos) == true ) {

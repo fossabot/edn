@@ -34,7 +34,7 @@ void appl::ViewerManager::setViewerSelected(const ememory::SharedPtr<appl::TextV
 		return;
 	}
 	m_viewer = _viewer;
-	if (m_bufferManager != nullptr) {
+	if (m_bufferManager != null) {
 		//m_bufferManager->setBufferSelected(_buffer);
 	}
 }

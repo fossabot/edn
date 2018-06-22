@@ -35,7 +35,7 @@ void appl::TagFileSelection::init() {
 	#endif
 	
 	mySizerVert = ewol::widget::Sizer::create();
-	if (mySizerVert == nullptr) {
+	if (mySizerVert == null) {
 		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		return;
 	}
@@ -65,7 +65,7 @@ void appl::TagFileSelection::init() {
 	externSubBind(compose, ewol::widget::Button, "PLUGIN-CTAGS-cancel", signalPressed, sharedFromThis(), &appl::TagFileSelection::onCallbackCtagsCancel);
 	
 	m_listTag = appl::TagFileList::create();
-	if (m_listTag == nullptr) {
+	if (m_listTag == null) {
 		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 	} else {
 		m_listTag->signalValidate.connect(sharedFromThis(), &appl::TagFileSelection::onCallbackCtagsListValidate);
@@ -77,7 +77,7 @@ void appl::TagFileSelection::init() {
 	}
 	
 	ewol::widget::LabelShared myWidgetTitle = ewol::widget::Label::create();
-	if (myWidgetTitle == nullptr) {
+	if (myWidgetTitle == null) {
 		EWOL_ERROR("Can not allocate widget  == > display might be in error");
 		return;
 	}
@@ -126,7 +126,7 @@ void appl::TagFileSelection::onCallbackCtagsListUnSelect() {
  * @param[in] jump line id
  */
 void appl::TagFileSelection::addCtagsNewItem(etk::String _file, int32_t _line) {
-	if (m_listTag != nullptr) {
+	if (m_listTag != null) {
 		m_listTag->add(_file, _line);
 	}
 }

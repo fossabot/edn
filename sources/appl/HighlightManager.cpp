@@ -29,7 +29,7 @@ void appl::highlightManager::init() {
 	// get the subfolder list :
 	etk::Vector<etk::FSNode *> list = myFile.folderGetSubList(false, true, false,false);
 	for (auto &it : list) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		if (it->getNodeType() != etk::typeNode_folder) {
@@ -38,10 +38,10 @@ void appl::highlightManager::init() {
 		etk::String filename = it->getName() + "/highlight.xml";
 		APPL_DEBUG("Load xml name : " << filename);
 		ememory::SharedPtr<appl::Highlight> myHightLine = appl::Highlight::create(filename);
-		if (myHightLine != nullptr) {
+		if (myHightLine != null) {
 			// Check if the language name already exist
 			for (auto &it2 : hlList) {
-				if (    it2 != nullptr
+				if (    it2 != null
 				     && it2->getTypeName() == myHightLine->getTypeName() ) {
 					APPL_WARNING("LANGUAGE : replace pattern name: '" << myHightLine->getTypeName() << "' with file '" << filename << "' replace: " << it2->getName());
 				}
@@ -53,7 +53,7 @@ void appl::highlightManager::init() {
 	}
 	// display :
 	for (auto &it : hlList) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		it->display();
@@ -77,7 +77,7 @@ etk::String appl::highlightManager::getTypeFile(const etk::String& _fileName) {
 	APPL_WARNING("Try to find type for extention : '" << _fileName << "' in " << s_list().size() << " types");
 	etk::Vector<ememory::SharedPtr<Highlight>>& hlList = s_list();
 	for (auto &it : hlList) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		APPL_WARNING("    check : " << it->getTypeName());
@@ -94,7 +94,7 @@ etk::String appl::highlightManager::getFileWithTypeType(const etk::String& _type
 		return "";
 	}
 	for (auto &it : s_list()) {
-		if (it == nullptr) {
+		if (it == null) {
 			continue;
 		}
 		if (it->getTypeName() == _type) {

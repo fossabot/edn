@@ -21,7 +21,7 @@ namespace appl {
 			DECLARE_FACTORY(TextViewerPluginData);
 			virtual ~TextViewerPluginData() {
 				for (size_t iii = 0; iii < m_specificData.size() ; ++iii) {
-					if (m_specificData[iii].second != nullptr) {
+					if (m_specificData[iii].second != null) {
 						remove(*m_specificData[iii].second);
 					}
 				}
@@ -34,7 +34,7 @@ namespace appl {
 				auto it = m_specificData.begin();
 				while(it != m_specificData.end()) {
 					ememory::SharedPtr<appl::Buffer> buf = it->first.lock();
-					if (buf == nullptr) {
+					if (buf == null) {
 						it = m_specificData.erase(it);
 						continue;
 					}
@@ -44,9 +44,9 @@ namespace appl {
 					++it;
 				}
 				ememory::UniquePtr<TYPE> data(ETK_NEW(TYPE));
-				if (data == nullptr) {
+				if (data == null) {
 					APPL_ERROR("ALLOCATION plugin data error");
-					return nullptr;
+					return null;
 				}
 				TYPE* copyPocalPointer = data.get();
 				ememory::WeakPtr<appl::Buffer> tmpBuffer = _textDrawer.internalGetBuffer();
@@ -58,7 +58,7 @@ namespace appl {
 			bool onReceiveShortCut(appl::TextViewer& _textDrawer,
 			                       const etk::String& _shortCutName) {
 				TYPE* data = getDataRef(_textDrawer);
-				if (data == nullptr) {
+				if (data == null) {
 					return false;
 				}
 				return onDataReceiveShortCut(_textDrawer, _shortCutName, *data);
@@ -67,7 +67,7 @@ namespace appl {
 			             const appl::Buffer::Iterator& _pos,
 			             const etk::String& _data) {
 				TYPE* data = getDataRef(_textDrawer);
-				if (data == nullptr) {
+				if (data == null) {
 					return false;
 				}
 				return onDataWrite(_textDrawer, _pos, _data, *data);
@@ -77,7 +77,7 @@ namespace appl {
 			               const etk::String& _data,
 			               const appl::Buffer::Iterator& _posEnd) {
 				TYPE* data = getDataRef(_textDrawer);
-				if (data == nullptr) {
+				if (data == null) {
 					return false;
 				}
 				return onDataReplace(_textDrawer, _pos, _data, _posEnd, *data);
@@ -86,7 +86,7 @@ namespace appl {
 			              const appl::Buffer::Iterator& _pos,
 			              const appl::Buffer::Iterator& _posEnd) {
 				TYPE* data = getDataRef(_textDrawer);
-				if (data == nullptr) {
+				if (data == null) {
 					return false;
 				}
 				return onDataRemove(_textDrawer, _pos, _posEnd, *data);

@@ -20,7 +20,7 @@ appl::WorkerSaveFile::WorkerSaveFile() :
 
 void appl::WorkerSaveFile::init() {
 	ewol::object::Worker::init();
-	if (m_bufferManager == nullptr) {
+	if (m_bufferManager == null) {
 		APPL_ERROR("can not call unexistant buffer manager ... ");
 		destroy();
 		return;
@@ -28,7 +28,7 @@ void appl::WorkerSaveFile::init() {
 	if (*propertyBufferName == "") {
 		// need to find the curent file ...
 		ememory::SharedPtr<appl::Buffer> tmpp = m_bufferManager->getBufferSelected();
-		if (tmpp == nullptr) {
+		if (tmpp == null) {
 			APPL_ERROR("No selected buffer now ...");
 			destroy();
 			return;
@@ -41,7 +41,7 @@ void appl::WorkerSaveFile::init() {
 		return;
 	}
 	ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(*propertyBufferName);
-	if (tmpBuffer == nullptr) {
+	if (tmpBuffer == null) {
 		APPL_ERROR("Error to get the buffer : " << *propertyBufferName);
 		destroy();
 		return;
@@ -55,7 +55,7 @@ void appl::WorkerSaveFile::init() {
 		}
 	}
 	m_chooser = ewol::widget::FileChooser::create();
-	if (m_chooser == nullptr) {
+	if (m_chooser == null) {
 		APPL_ERROR("Can not allocate widget  == > display might be in error");
 		destroy();
 		return;
@@ -66,7 +66,7 @@ void appl::WorkerSaveFile::init() {
 	m_chooser->propertyPath.set(tmpName.getNameFolder());
 	m_chooser->propertyFile.set(tmpName.getNameFile());
 	ememory::SharedPtr<ewol::widget::Windows> tmpWindows = ewol::getContext().getWindows();
-	if (tmpWindows == nullptr) {
+	if (tmpWindows == null) {
 		APPL_ERROR("Error to get the windows.");
 		destroy();
 		return;
@@ -86,7 +86,7 @@ void appl::WorkerSaveFile::onCallbackCancel() {
 }
 
 void appl::WorkerSaveFile::onCallbackSaveAsValidate(const etk::String& _value) {
-	if (m_bufferManager == nullptr) {
+	if (m_bufferManager == null) {
 		// nothing to do in this case ==> can do nothing ...
 		destroy();
 		return;
@@ -102,7 +102,7 @@ void appl::WorkerSaveFile::onCallbackSaveAsValidate(const etk::String& _value) {
 		return;
 	}
 	ememory::SharedPtr<appl::Buffer> tmpBuffer = m_bufferManager->get(*propertyBufferName);
-	if (tmpBuffer == nullptr) {
+	if (tmpBuffer == null) {
 		APPL_ERROR("Error to get the buffer : " << *propertyBufferName);
 		destroy();
 		return;

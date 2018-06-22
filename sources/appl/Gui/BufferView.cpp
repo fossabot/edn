@@ -49,7 +49,7 @@ void BufferView::init() {
 	ewol::widget::List::init();
 	propertyHide.set(true);
 	propertyCanFocus.set(true);
-	if (m_bufferManager != nullptr) {
+	if (m_bufferManager != null) {
 		m_bufferManager->signalNewBuffer.connect(sharedFromThis(), &BufferView::onCallbackNewBuffer);
 		m_bufferManager->signalSelectFile.connect(sharedFromThis(), &BufferView::onCallbackselectNewFile);
 		m_bufferManager->signalRemoveBuffer.connect(sharedFromThis(), &BufferView::onCallbackBufferRemoved);
@@ -94,7 +94,7 @@ void BufferView::insertAlphabetic(const appl::dataBufferStruct& _dataStruct, boo
 
 void BufferView::onCallbackNewBuffer(const etk::String& _value) {
 	ememory::SharedPtr<appl::Buffer> buffer = m_bufferManager->get(_value);
-	if (buffer == nullptr) {
+	if (buffer == null) {
 		APPL_ERROR("event on element nor exist : " << _value);
 		return;
 	}
@@ -121,7 +121,7 @@ void BufferView::onCallbackNewBuffer(const etk::String& _value) {
 void BufferView::onCallbackselectNewFile(const etk::String& _value) {
 	m_selectedID = -1;
 	for (size_t iii=0; iii<m_list.size(); iii++) {
-		if (m_list[iii].m_buffer == nullptr) {
+		if (m_list[iii].m_buffer == null) {
 			continue;
 		}
 		if (m_list[iii].m_buffer->getFileName() != _value) {
@@ -196,7 +196,7 @@ bool BufferView::getElement(int32_t _colomn, int32_t _raw, etk::String& _myTextT
 	    && _raw<(int64_t)m_list.size() ) {
 		_myTextToWrite = m_list[_raw].m_bufferName.getNameFile();
 		
-		if (    m_list[_raw].m_buffer != nullptr
+		if (    m_list[_raw].m_buffer != null
 		     && m_list[_raw].m_buffer->isModify() == false) {
 			_fg = (*m_paintingProperties)[m_colorTextNormal].getForeground();
 		} else {
@@ -222,8 +222,8 @@ bool BufferView::onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent
 		APPL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
 		if(    _raw >= 0
 		    && _raw<(int64_t)m_list.size()) {
-			if (m_list[_raw].m_buffer != nullptr) {
-				if (m_bufferManager != nullptr) {
+			if (m_list[_raw].m_buffer != null) {
+				if (m_bufferManager != null) {
 					APPL_INFO("Select file :" << m_list[_raw].m_buffer->getFileName() << " in list");
 					m_bufferManager->open(m_list[_raw].m_buffer->getFileName());
 				}
