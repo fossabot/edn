@@ -53,7 +53,7 @@ class BufferView : public ewol::widget::List {
 	protected:
 		// Constructeur
 		BufferView();
-		void init();
+		void init() override;
 	public:
 		DECLARE_FACTORY(BufferView);
 		virtual ~BufferView();
@@ -61,14 +61,14 @@ class BufferView : public ewol::widget::List {
 		bool m_openOrderMode; //!< true if the order is the opening order mode, otherwise, Alphabetic order
 	protected:
 		// function call to display the list :
-		virtual etk::Color<> getBasicBG();
+		etk::Color<> getBasicBG() override;
 		void removeAllElement();
 		// Derived function
-		virtual uint32_t getNuberOfColomn();
-		virtual bool getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
-		virtual uint32_t getNuberOfRaw();
-		virtual bool getElement(int32_t _colomn, int32_t _raw, etk::String& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
-		virtual bool onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
+		uint32_t getNuberOfColomn() override;
+		bool getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg) override;
+		uint32_t getNuberOfRaw() override;
+		fluorine::Variant getData(int32_t _role, const ivec2& _pos) override;
+		bool onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, const ivec2& _pos, const vec2& _mousePosition) override;
 	private: //callback function:
 		void onCallbackChangeName();
 		void onCallbackIsSave();

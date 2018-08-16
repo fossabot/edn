@@ -38,17 +38,17 @@ namespace appl {
 			int32_t m_colorIdBackgroundSelected; //!< Color of line selected.
 		protected:
 			TagFileList();
-			void init();
+			void init() override;
 		public:
 			DECLARE_FACTORY(TagFileList);
 			virtual ~TagFileList();
 			// display API :
-			virtual etk::Color<> getBasicBG();
-			uint32_t getNuberOfColomn();
-			bool getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg);
-			uint32_t getNuberOfRaw();
-			bool getElement(int32_t _colomn, int32_t _raw, etk::String& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg);
-			bool onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y);
+			etk::Color<> getBasicBG() override;
+			uint32_t getNuberOfColomn() override;
+			bool getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg) override;
+			uint32_t getNuberOfRaw() override;
+			fluorine::Variant getData(int32_t _role, const ivec2& _pos) override;
+			bool onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, const ivec2& _pos, const vec2& _mousePosition) override;
 		public:
 			/**
 			 * @brief add a Ctags item on the curent list

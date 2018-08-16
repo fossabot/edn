@@ -50,46 +50,50 @@ uint32_t appl::TagFileList::getNuberOfRaw() {
 	return m_list.size();
 }
 
-bool appl::TagFileList::getElement(int32_t _colomn, int32_t _raw, etk::String& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
-	if (_raw >= 0 && (size_t)_raw < m_list.size() && null != m_list[_raw]) {
-		if (0 == _colomn) {
-			_myTextToWrite = etk::toString(m_list[_raw]->fileLine);
-		} else {
-			_myTextToWrite = m_list[_raw]->filename;
-		}
-	} else {
-		_myTextToWrite = "ERROR";
+fluorine::Variant appl::TagFileList::getData(int32_t _role, const ivec2& _pos) {
+	switch (_role) {
+		case ewol::widget::ListRole::Text:
+			if (    _pos.y() >= 0
+			     && (size_t)_pos.y() < m_list.size()
+			     && null != m_list[_pos.y()]) {
+				if (0 == _pos.x()) {
+					return etk::toString(m_list[_pos.y()]->fileLine);
+				}
+				return m_list[_pos.y()]->filename;
+			}
+			return "ERROR";
+		case ewol::widget::ListRole::FgColor:
+			return m_colorProperty->get(m_colorIdText);
+		case ewol::widget::ListRole::BgColor:
+			if (m_selectedLine == _pos.y()) {
+				return m_colorProperty->get(m_colorIdBackgroundSelected);
+			}
+			if (_pos.y() % 2) {
+				return m_colorProperty->get(m_colorIdBackground1);
+			}
+			return m_colorProperty->get(m_colorIdBackground2);
 	}
-	_fg = m_colorProperty->get(m_colorIdText);
-	if (_raw % 2) {
-		_bg = m_colorProperty->get(m_colorIdBackground1);
-	} else {
-		_bg = m_colorProperty->get(m_colorIdBackground2);
-	}
-	if (m_selectedLine == _raw) {
-		_bg = m_colorProperty->get(m_colorIdBackgroundSelected);
-	}
-	return true;
-};
+	return fluorine::Variant();
+}
 
 
-bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, int32_t _colomn, int32_t _raw, float _x, float _y) {
+bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, const ivec2& _pos, const vec2& _mousePosition) {
 	if (_typeEvent == gale::key::status::pressSingle) {
-		EWOL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
+		EWOL_INFO("Event on List : IdInput=" << _IdInput << " pos=" << _pos );
 		if (_IdInput == 1) {
 			int32_t previousRaw = m_selectedLine;
-			if (_raw > (int64_t)m_list.size() ) {
+			if (_pos.y() > (int64_t)m_list.size() ) {
 				m_selectedLine = -1;
 			} else {
-				m_selectedLine = _raw;
+				m_selectedLine = _pos.y();
 			}
 			if(    m_selectedLine  >= 0
 			    && m_selectedLine < (int64_t)m_list.size()
 			    && null != m_list[m_selectedLine] ) {
 				if (previousRaw != m_selectedLine) {
-					signalSelect.emit(etk::toString(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+					signalSelect.emit(etk::toString(m_list[_pos.y()]->fileLine)+":"+m_list[m_selectedLine]->filename);
 				} else {
-					signalValidate.emit(etk::toString(m_list[_raw]->fileLine)+":"+m_list[m_selectedLine]->filename);
+					signalValidate.emit(etk::toString(m_list[_pos.y()]->fileLine)+":"+m_list[m_selectedLine]->filename);
 				}
 			} else {
 				signalUnSelect.emit();

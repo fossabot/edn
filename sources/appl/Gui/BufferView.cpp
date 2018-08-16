@@ -191,41 +191,39 @@ uint32_t BufferView::getNuberOfRaw() {
 	return m_list.size();
 }
 
-bool BufferView::getElement(int32_t _colomn, int32_t _raw, etk::String& _myTextToWrite, etk::Color<>& _fg, etk::Color<>& _bg) {
-	if(    _raw >= 0
-	    && _raw<(int64_t)m_list.size() ) {
-		_myTextToWrite = m_list[_raw].m_bufferName.getNameFile();
-		
-		if (    m_list[_raw].m_buffer != null
-		     && m_list[_raw].m_buffer->isModify() == false) {
-			_fg = (*m_paintingProperties)[m_colorTextNormal].getForeground();
-		} else {
-			_fg = (*m_paintingProperties)[m_colorTextModify].getForeground();
-		}
-		if (_raw%2 == 0) {
-			_bg = (*m_paintingProperties)[m_colorBackground1].getForeground();
-		} else {
-			_bg = (*m_paintingProperties)[m_colorBackground2].getForeground();
-		}
-		// the buffer change of selection ...
-		if (m_selectedID == _raw) {
-			_bg = (*m_paintingProperties)[m_colorBackgroundSelect].getForeground();
-		}
-	} else {
-		_myTextToWrite = "ERROR";
+fluorine::Variant BufferView::getData(int32_t _role, const ivec2& _pos) {
+	switch (_role) {
+		case ewol::widget::ListRole::Text:
+			return m_list[_pos.y()].m_bufferName.getNameFile();;
+		case ewol::widget::ListRole::FgColor:
+			if (    m_list[_pos.y()].m_buffer != null
+			     && m_list[_pos.y()].m_buffer->isModify() == false) {
+				return (*m_paintingProperties)[m_colorTextNormal].getForeground();
+			} else {
+				return (*m_paintingProperties)[m_colorTextModify].getForeground();
+			}
+		case ewol::widget::ListRole::BgColor:
+			if (m_selectedID == _pos.y()) {
+				return (*m_paintingProperties)[m_colorBackgroundSelect].getForeground();
+			}
+			if (_pos.y() % 2) {
+				return (*m_paintingProperties)[m_colorBackground1].getForeground();
+			}
+			return (*m_paintingProperties)[m_colorBackground2].getForeground();
 	}
-	return true;
+	return fluorine::Variant();
 }
 
-bool BufferView::onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent,  int32_t _colomn, int32_t _raw, float _x, float _y) {
+
+bool BufferView::onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, const ivec2& _pos, const vec2& _mousePosition) {
 	if (1 == _IdInput && _typeEvent == gale::key::status::pressSingle) {
-		APPL_INFO("Event on List : IdInput=" << _IdInput << " colomn=" << _colomn << " raw=" << _raw );
-		if(    _raw >= 0
-		    && _raw<(int64_t)m_list.size()) {
+		APPL_INFO("Event on List : IdInput=" << _IdInput << " pos=" << _pos );
+		if(    _pos.y() >= 0
+		    && _pos.y() < (int64_t)m_list.size()) {
 			if (m_list[_raw].m_buffer != null) {
 				if (m_bufferManager != null) {
-					APPL_INFO("Select file :" << m_list[_raw].m_buffer->getFileName() << " in list");
-					m_bufferManager->open(m_list[_raw].m_buffer->getFileName());
+					APPL_INFO("Select file :" << m_list[_pos.y()].m_buffer->getFileName() << " in list");
+					m_bufferManager->open(m_list[_pos.y()].m_buffer->getFileName());
 				}
 				return true;
 			}

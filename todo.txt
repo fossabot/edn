@@ -1,4 +1,12 @@
-List of  all thing to do to have a corect text editor :
+
+Truc urgent:
+==> pop-up quand le fichier a changer depuis le dernière enregistrement
+==> action sur close ==> automatic run clang-format
+==> treeview/listView sur la gauche
+
+
+
+List of  all thing to do to have a correct text editor:
 	edn :
 		- Correct the pb on highlight
 		- Ctags back event
