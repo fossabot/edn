@@ -178,17 +178,13 @@ etk::Color<> BufferView::getBasicBG() {
 	return (*m_paintingProperties)[m_colorBackground1].getForeground();
 }
 
-uint32_t BufferView::getNuberOfColomn() {
-	return 1;
-}
-
 bool BufferView::getTitle(int32_t _colomn, etk::String &_myTitle, etk::Color<> &_fg, etk::Color<> &_bg) {
 	_myTitle = "Buffers : ";
 	return true;
 }
 
-uint32_t BufferView::getNuberOfRaw() {
-	return m_list.size();
+ivec2 BufferView::getMatrixSize() const {
+	return ivec2(1,m_list.size());
 }
 
 fluorine::Variant BufferView::getData(int32_t _role, const ivec2& _pos) {
@@ -220,7 +216,7 @@ bool BufferView::onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent
 		APPL_INFO("Event on List : IdInput=" << _IdInput << " pos=" << _pos );
 		if(    _pos.y() >= 0
 		    && _pos.y() < (int64_t)m_list.size()) {
-			if (m_list[_raw].m_buffer != null) {
+			if (m_list[_pos.y()].m_buffer != null) {
 				if (m_bufferManager != null) {
 					APPL_INFO("Select file :" << m_list[_pos.y()].m_buffer->getFileName() << " in list");
 					m_bufferManager->open(m_list[_pos.y()].m_buffer->getFileName());

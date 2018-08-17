@@ -37,17 +37,13 @@ etk::Color<> appl::TagFileList::getBasicBG() {
 	return 0x00000010;
 }
 
-uint32_t appl::TagFileList::getNuberOfColomn() {
-	return 2;
-}
-
 bool appl::TagFileList::getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg) {
 	_myTitle = "title";
 	return true;
 }
 
-uint32_t appl::TagFileList::getNuberOfRaw() {
-	return m_list.size();
+ivec2 appl::TagFileList::getMatrixSize() const {
+	return ivec2(2,m_list.size());
 }
 
 fluorine::Variant appl::TagFileList::getData(int32_t _role, const ivec2& _pos) {

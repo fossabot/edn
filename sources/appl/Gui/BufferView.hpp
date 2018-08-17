@@ -64,9 +64,8 @@ class BufferView : public ewol::widget::List {
 		etk::Color<> getBasicBG() override;
 		void removeAllElement();
 		// Derived function
-		uint32_t getNuberOfColomn() override;
 		bool getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg) override;
-		uint32_t getNuberOfRaw() override;
+		ivec2 getMatrixSize() const override;
 		fluorine::Variant getData(int32_t _role, const ivec2& _pos) override;
 		bool onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, const ivec2& _pos, const vec2& _mousePosition) override;
 	private: //callback function:
@@ -76,6 +75,6 @@ class BufferView : public ewol::widget::List {
 		void onCallbackNewBuffer(const etk::String& _value);
 		void onCallbackselectNewFile(const etk::String& _value);
 		void onCallbackBufferRemoved(const ememory::SharedPtr<appl::Buffer>& _buffer);
-		void calculateMinMaxSize();
+		void calculateMinMaxSize() override;
 };
 
