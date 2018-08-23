@@ -44,10 +44,9 @@ namespace appl {
 			virtual ~TagFileList();
 			// display API :
 			etk::Color<> getBasicBG() override;
-			bool getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg) override;
 			ivec2 getMatrixSize() const override;
 			fluorine::Variant getData(int32_t _role, const ivec2& _pos) override;
-			bool onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, const ivec2& _pos, const vec2& _mousePosition) override;
+			bool onItemEvent(const ewol::event::Input& _event, const ivec2& _pos, const vec2& _mousePosition) override;
 		public:
 			/**
 			 * @brief add a Ctags item on the curent list

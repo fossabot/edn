@@ -37,11 +37,6 @@ etk::Color<> appl::TagFileList::getBasicBG() {
 	return 0x00000010;
 }
 
-bool appl::TagFileList::getTitle(int32_t _colomn, etk::String& _myTitle, etk::Color<>& _fg, etk::Color<>& _bg) {
-	_myTitle = "title";
-	return true;
-}
-
 ivec2 appl::TagFileList::getMatrixSize() const {
 	return ivec2(2,m_list.size());
 }
@@ -73,10 +68,10 @@ fluorine::Variant appl::TagFileList::getData(int32_t _role, const ivec2& _pos) {
 }
 
 
-bool appl::TagFileList::onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, const ivec2& _pos, const vec2& _mousePosition) {
-	if (_typeEvent == gale::key::status::pressSingle) {
-		EWOL_INFO("Event on List : IdInput=" << _IdInput << " pos=" << _pos );
-		if (_IdInput == 1) {
+bool appl::TagFileList::onItemEvent(const ewol::event::Input& _event, const ivec2& _pos, const vec2& _mousePosition) {
+	if (_event.getStatus() == gale::key::status::pressSingle) {
+		EWOL_INFO("Event on List: " << _event << " pos=" << _pos );
+		if (_event.getId() == 1) {
 			int32_t previousRaw = m_selectedLine;
 			if (_pos.y() > (int64_t)m_list.size() ) {
 				m_selectedLine = -1;

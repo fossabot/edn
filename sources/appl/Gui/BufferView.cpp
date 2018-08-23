@@ -178,11 +178,6 @@ etk::Color<> BufferView::getBasicBG() {
 	return (*m_paintingProperties)[m_colorBackground1].getForeground();
 }
 
-bool BufferView::getTitle(int32_t _colomn, etk::String &_myTitle, etk::Color<> &_fg, etk::Color<> &_bg) {
-	_myTitle = "Buffers : ";
-	return true;
-}
-
 ivec2 BufferView::getMatrixSize() const {
 	return ivec2(1,m_list.size());
 }
@@ -211,9 +206,10 @@ fluorine::Variant BufferView::getData(int32_t _role, const ivec2& _pos) {
 }
 
 
-bool BufferView::onItemEvent(int32_t _IdInput, enum gale::key::status _typeEvent, const ivec2& _pos, const vec2& _mousePosition) {
-	if (1 == _IdInput && _typeEvent == gale::key::status::pressSingle) {
-		APPL_INFO("Event on List : IdInput=" << _IdInput << " pos=" << _pos );
+bool BufferView::onItemEvent(const ewol::event::Input& _event, const ivec2& _pos, const vec2& _mousePosition) {
+	if (    _event.getId() == 1
+	     && _event.getStatus() == gale::key::status::pressSingle) {
+		APPL_INFO("Event on List: " << _event << " pos=" << _pos );
 		if(    _pos.y() >= 0
 		    && _pos.y() < (int64_t)m_list.size()) {
 			if (m_list[_pos.y()].m_buffer != null) {
