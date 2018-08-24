@@ -44,7 +44,8 @@ def configure(target, my_module):
 		])
 	# Gui:
 	my_module.add_src_file([
-		'sources/appl/Gui/BufferView.cpp',
+		'sources/appl/widget/BufferList.cpp',
+		'sources/appl/widget/BufferTree.cpp',
 		'sources/appl/Gui/TextViewer.cpp',
 		'sources/appl/Gui/ViewerManager.cpp',
 		'sources/appl/Gui/MainWindows.cpp',

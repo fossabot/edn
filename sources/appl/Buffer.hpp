@@ -287,7 +287,7 @@ namespace appl {
 					};
 					friend class Buffer;
 			};
-		public:
+		public: // signals
 			esignal::Signal<> signalIsModify;
 			esignal::Signal<> signalIsSave;
 			esignal::Signal<> signalSelectChange;
@@ -299,7 +299,7 @@ namespace appl {
 			DECLARE_FACTORY(Buffer);
 			virtual ~Buffer();
 		private:
-			bool m_hasFileName; //!< when new file, the buffer has no name ==> but it might be reference with a single name ...
+			bool m_hasFileName; //!< When new file, the buffer has no name ==> but it might be reference with a single name ...
 			etk::String m_fileName; //!< name of the file (with his path)
 		public:
 			/**

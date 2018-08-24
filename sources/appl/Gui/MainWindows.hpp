@@ -8,7 +8,7 @@
 #include <appl/debug.hpp>
 #include <appl/globalMsg.hpp>
 
-#include <appl/Gui/BufferView.hpp>
+#include <appl/widget/BufferList.hpp>
 #include <appl/BufferManager.hpp>
 #include <ewol/widget/Label.hpp>
 #include <appl/BufferManager.hpp>

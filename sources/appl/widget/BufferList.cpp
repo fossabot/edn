@@ -5,7 +5,7 @@
  */
 #include <appl/debug.hpp>
 #include <appl/global.hpp>
-#include <appl/Gui/BufferView.hpp>
+#include <appl/widget/BufferList.hpp>
 #include <appl/BufferManager.hpp>
 //#include <ColorizeManager.hpp>
 #include <appl/Gui/MainWindows.hpp>
@@ -28,9 +28,9 @@ static void SortElementList(etk::Vector<appl::dataBufferStruct>& _list) {
 	}
 }
 
-BufferView::BufferView() :
+appl::widget::BufferList::BufferList() :
   m_openOrderMode(false) {
-	addObjectType("appl::BufferView");
+	addObjectType("appl::BufferList");
 	m_selectedID = -1;
 	m_selectedIdRequested = -1;
 	// load buffer manager:
@@ -45,23 +45,23 @@ BufferView::BufferView() :
 	m_colorTextModify = m_paintingProperties->request("textModify");
 }
 
-void BufferView::init() {
+void appl::widget::BufferList::init() {
 	ewol::widget::List::init();
 	propertyHide.set(true);
 	propertyCanFocus.set(true);
 	if (m_bufferManager != null) {
-		m_bufferManager->signalNewBuffer.connect(sharedFromThis(), &BufferView::onCallbackNewBuffer);
-		m_bufferManager->signalSelectFile.connect(sharedFromThis(), &BufferView::onCallbackselectNewFile);
-		m_bufferManager->signalRemoveBuffer.connect(sharedFromThis(), &BufferView::onCallbackBufferRemoved);
+		m_bufferManager->signalNewBuffer.connect(sharedFromThis(), &appl::widget::BufferList::onCallbackNewBuffer);
+		m_bufferManager->signalSelectFile.connect(sharedFromThis(), &appl::widget::BufferList::onCallbackselectNewFile);
+		m_bufferManager->signalRemoveBuffer.connect(sharedFromThis(), &appl::widget::BufferList::onCallbackBufferRemoved);
 	}
 }
 
-BufferView::~BufferView() {
+appl::widget::BufferList::~BufferList() {
 	removeAllElement();
 }
 
 
-void BufferView::calculateMinMaxSize() {
+void appl::widget::BufferList::calculateMinMaxSize() {
 	/*int32_t fontId = getDefaultFontId();
 	int32_t minWidth = ewol::getWidth(fontId, m_label);
 	int32_t minHeight = ewol::getHeight(fontId);
@@ -71,11 +71,11 @@ void BufferView::calculateMinMaxSize() {
 	m_minSize.setValue(300, 150);
 }
 
-void BufferView::removeAllElement() {
+void appl::widget::BufferList::removeAllElement() {
 	m_list.clear();
 }
 
-void BufferView::insertAlphabetic(const appl::dataBufferStruct& _dataStruct, bool _selectNewPosition) {
+void appl::widget::BufferList::insertAlphabetic(const appl::dataBufferStruct& _dataStruct, bool _selectNewPosition) {
 	// alphabetical order:
 	for (size_t iii = 0; iii < m_list.size(); ++iii) {
 		if (m_list[iii].m_bufferName.getNameFile().toLower() > _dataStruct.m_bufferName.getNameFile().toLower()) {
@@ -92,15 +92,15 @@ void BufferView::insertAlphabetic(const appl::dataBufferStruct& _dataStruct, boo
 	}
 }
 
-void BufferView::onCallbackNewBuffer(const etk::String& _value) {
+void appl::widget::BufferList::onCallbackNewBuffer(const etk::String& _value) {
 	ememory::SharedPtr<appl::Buffer> buffer = m_bufferManager->get(_value);
 	if (buffer == null) {
 		APPL_ERROR("event on element nor exist : " << _value);
 		return;
 	}
-	buffer->signalIsSave.connect(sharedFromThis(), &BufferView::onCallbackIsSave);
-	buffer->signalIsModify.connect(sharedFromThis(), &BufferView::onCallbackIsModify);
-	buffer->signalChangeName.connect(sharedFromThis(), &BufferView::onCallbackChangeName);
+	buffer->signalIsSave.connect(sharedFromThis(), &BufferList::onCallbackIsSave);
+	buffer->signalIsModify.connect(sharedFromThis(), &BufferList::onCallbackIsModify);
+	buffer->signalChangeName.connect(sharedFromThis(), &BufferList::onCallbackChangeName);
 	appl::dataBufferStruct tmp(_value, buffer);
 	if (m_openOrderMode == true) {
 		m_list.pushBack(tmp);
@@ -118,7 +118,7 @@ void BufferView::onCallbackNewBuffer(const etk::String& _value) {
 }
 
 // TODO : Review this callback with the real shared_ptr on the buffer ...
-void BufferView::onCallbackselectNewFile(const etk::String& _value) {
+void appl::widget::BufferList::onCallbackselectNewFile(const etk::String& _value) {
 	m_selectedID = -1;
 	for (size_t iii=0; iii<m_list.size(); iii++) {
 		if (m_list[iii].m_buffer == null) {
@@ -133,7 +133,7 @@ void BufferView::onCallbackselectNewFile(const etk::String& _value) {
 	markToRedraw();
 }
 
-void BufferView::onCallbackChangeName() {
+void appl::widget::BufferList::onCallbackChangeName() {
 	for (size_t iii = 0; iii < m_list.size(); ++iii) {
 		if (m_list[iii].m_bufferName != m_list[iii].m_buffer->getFileName()) {
 			m_list[iii].m_bufferName = m_list[iii].m_buffer->getFileName();
@@ -149,7 +149,7 @@ void BufferView::onCallbackChangeName() {
 	markToRedraw();
 }
 
-void BufferView::onCallbackBufferRemoved(const ememory::SharedPtr<appl::Buffer>& _buffer) {
+void appl::widget::BufferList::onCallbackBufferRemoved(const ememory::SharedPtr<appl::Buffer>& _buffer) {
 	APPL_ERROR("request remove buffer:");
 	auto it = m_list.begin();
 	while (it != m_list.end()) {
@@ -167,22 +167,22 @@ void BufferView::onCallbackBufferRemoved(const ememory::SharedPtr<appl::Buffer>&
 	}
 	markToRedraw();
 }
-void BufferView::onCallbackIsSave() {
+void appl::widget::BufferList::onCallbackIsSave() {
 	markToRedraw();
 }
-void BufferView::onCallbackIsModify() {
+void appl::widget::BufferList::onCallbackIsModify() {
 	markToRedraw();
 }
 
-etk::Color<> BufferView::getBasicBG() {
+etk::Color<> appl::widget::BufferList::getBasicBG() {
 	return (*m_paintingProperties)[m_colorBackground1].getForeground();
 }
 
-ivec2 BufferView::getMatrixSize() const {
+ivec2 appl::widget::BufferList::getMatrixSize() const {
 	return ivec2(1,m_list.size());
 }
 
-fluorine::Variant BufferView::getData(int32_t _role, const ivec2& _pos) {
+fluorine::Variant appl::widget::BufferList::getData(int32_t _role, const ivec2& _pos) {
 	switch (_role) {
 		case ewol::widget::ListRole::Text:
 			return m_list[_pos.y()].m_bufferName.getNameFile();;
@@ -201,12 +201,14 @@ fluorine::Variant BufferView::getData(int32_t _role, const ivec2& _pos) {
 				return (*m_paintingProperties)[m_colorBackground1].getForeground();
 			}
 			return (*m_paintingProperties)[m_colorBackground2].getForeground();
+		case ewol::widget::ListRole::IsSelected:
+			return m_selectedID == _pos.y();
 	}
 	return fluorine::Variant();
 }
 
 
-bool BufferView::onItemEvent(const ewol::event::Input& _event, const ivec2& _pos, const vec2& _mousePosition) {
+bool appl::widget::BufferList::onItemEvent(const ewol::event::Input& _event, const ivec2& _pos, const vec2& _mousePosition) {
 	if (    _event.getId() == 1
 	     && _event.getStatus() == gale::key::status::pressSingle) {
 		APPL_INFO("Event on List: " << _event << " pos=" << _pos );
@@ -214,7 +216,7 @@ bool BufferView::onItemEvent(const ewol::event::Input& _event, const ivec2& _pos
 		    && _pos.y() < (int64_t)m_list.size()) {
 			if (m_list[_pos.y()].m_buffer != null) {
 				if (m_bufferManager != null) {
-					APPL_INFO("Select file :" << m_list[_pos.y()].m_buffer->getFileName() << " in list");
+					APPL_INFO("Select file: '" << m_list[_pos.y()].m_buffer->getFileName() << "' in list");
 					m_bufferManager->open(m_list[_pos.y()].m_buffer->getFileName());
 				}
 				return true;

@@ -16,15 +16,17 @@ namespace appl {
 	using BufferManagerWeak = ememory::WeakPtr<appl::BufferManager>;
 	// TODO: This is a service ...
 	class BufferManager : public ewol::Object {
-		public:
+		public: // signals:
 			esignal::Signal<etk::String> signalNewBuffer;
 			esignal::Signal<etk::String> signalSelectFile;
 			esignal::Signal<> signalTextSelectionChange;
 			esignal::Signal<ememory::SharedPtr<appl::Buffer>> signalRemoveBuffer;
+			esignal::Signal<ememory::SharedPtr<appl::Buffer>> signalSelectBuffer;
+			esignal::Signal<ememory::SharedPtr<appl::Buffer>> signalNewBuffer2;
 		protected:
 			BufferManager();
 		public:
-			DECLARE_SINGLE_FACTORY(BufferManager, "???Buffer_Manager???");
+			DECLARE_SINGLE_FACTORY(BufferManager, "???BufferManager???");
 			virtual ~BufferManager();
 		private:
 			etk::Vector<ememory::SharedPtr<appl::Buffer>> m_list; // list of all buffer curently open

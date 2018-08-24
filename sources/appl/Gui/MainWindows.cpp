@@ -6,7 +6,8 @@
 #include <appl/debug.hpp>
 #include <appl/global.hpp>
 #include <appl/Gui/MainWindows.hpp>
-#include <appl/Gui/BufferView.hpp>
+#include <appl/widget/BufferList.hpp>
+#include <appl/widget/BufferTree.hpp>
 #include <appl/Gui/TextViewer.hpp>
 #include <appl/Gui/Search.hpp>
 
@@ -98,7 +99,8 @@ void MainWindows::init() {
 	ewol::widget::SizerShared mySizerHori;
 	ememory::SharedPtr<appl::TextViewer> myTextView;
 	ememory::SharedPtr<appl::TextViewer> myTextView2;
-	ememory::SharedPtr<BufferView> myBufferView;
+	appl::widget::BufferListShared myBufferList;
+	appl::widget::BufferTreeShared myBufferTree;
 	ewol::widget::MenuShared myMenu;
 	
 	// load buffer manager:
@@ -113,13 +115,21 @@ void MainWindows::init() {
 		mySizerHori->propertyName.set("plop 222222222");
 		mySizerHori->propertyMode.set(ewol::widget::Sizer::modeHori);
 		mySizerVert->subWidgetAdd(mySizerHori);
-			myBufferView = BufferView::create();
-			myBufferView->propertyName.set("plop 3333333");
-			myBufferView->propertyExpand.set(bvec2(false,true));
-			myBufferView->propertyFill.set(bvec2(true,true));
-			//myBufferView->propertyMinSize.set(gale::Dimension(vec2(300,2), gale::distance::pixel));
-			mySizerHori->subWidgetAdd(myBufferView);
-			
+			if (false) {
+				myBufferList = appl::widget::BufferList::create();
+				myBufferList->propertyName.set("plop 3333333");
+				myBufferList->propertyExpand.set(bvec2(false,true));
+				myBufferList->propertyFill.set(bvec2(true,true));
+				//myBufferList->propertyMinSize.set(gale::Dimension(vec2(300,2), gale::distance::pixel));
+				mySizerHori->subWidgetAdd(myBufferList);
+			} else {
+				myBufferTree = appl::widget::BufferTree::create();
+				myBufferTree->propertyName.set("plop 3333333");
+				myBufferTree->propertyExpand.set(bvec2(false,true));
+				myBufferTree->propertyFill.set(bvec2(true,true));
+				myBufferTree->propertyMinSize.set(gale::Dimension(vec2(300,2), gale::distance::pixel));
+				mySizerHori->subWidgetAdd(myBufferTree);
+			}
 			ewol::widget::SpacerShared mySpacer = ewol::widget::Spacer::create();
 			mySpacer->propertyName.set("appl-Buffer-viewer-separator");
 			mySpacer->propertyColor.set(etk::color::black);
