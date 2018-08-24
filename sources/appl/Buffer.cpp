@@ -122,7 +122,7 @@ appl::Buffer::Buffer() :
   m_highlight(null) {
 	addObjectType("appl::Buffer");
 	static int32_t bufferBaseId = 0;
-	m_fileName = "No Name " + etk::toString(bufferBaseId);
+	m_fileName = "REL:No Name " + etk::toString(bufferBaseId);
 	bufferBaseId++;
 }
 
