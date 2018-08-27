@@ -2,6 +2,7 @@
 	"ednColor": [
 		{ name:"backgroung1", foreground:"#d9d7d7"},
 		{ name:"backgroung2", foreground:"#b7b6b6"},
+		{ name:"backgroundhide", foreground:"#606060" },
 		{ name:"backgroungSelected", foreground:"#3da3f9"},
 		{ name:"textNormal", foreground:"#000000"},
 		{ name:"textModify", foreground:"#FF0000"}

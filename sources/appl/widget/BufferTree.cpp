@@ -36,10 +36,11 @@ appl::widget::BufferTree::BufferTree() :
 	// load buffer manager:
 	m_bufferManager = appl::BufferManager::create();
 	// load color properties
-	m_paintingProperties = appl::GlyphPainting::create("THEME:COLOR:BufferList.json");
+	m_paintingProperties = appl::GlyphPainting::create("THEME:COLOR:bufferList.json");
 	// get all id properties ...
 	m_colorBackground1 = m_paintingProperties->request("backgroung1");
 	m_colorBackground2 = m_paintingProperties->request("backgroung2");
+	m_colorBackgroundHide = m_paintingProperties->request("backgroundhide");
 	m_colorBackgroundSelect = m_paintingProperties->request("backgroungSelected");
 	m_colorTextNormal = m_paintingProperties->request("textNormal");
 	m_colorTextModify = m_paintingProperties->request("textModify");
@@ -91,7 +92,7 @@ void appl::widget::BufferTree::updateFlatTree() {
 	}
 	// Now we have the root path...
 	// Need to feed all elements needed
-	etk::FSNode nodeRoot = upperParent;
+	etk::FSNode nodeRoot = etk::FSNode(upperParent).getFileName();
 	m_tree = etk::TreeNode<appl::TreeElement>::create(TreeElement(upperParent, true, true));
 	etk::Vector<etk::FSNode*> child = nodeRoot.folderGetSubList(false, true, true, false);
 	for (auto& it: child) {
@@ -242,14 +243,17 @@ fluorine::Variant appl::widget::BufferTree::getData(int32_t _role, const ivec2& 
 		case ewol::widget::ListRole::Text:
 			return value.m_nodeName;
 		case ewol::widget::ListRole::FgColor:
-			/*if (    m_list[_pos.y()].m_buffer != null
-			     && m_list[_pos.y()].m_buffer->isModify() == false) {
-				return (*m_paintingProperties)[m_colorTextNormal].getForeground();
-			} else {*/
+			if (value.m_buffer == null) {
+				//APPL_ERROR( m_colorBackgroundHide << " => " << (*m_paintingProperties)[m_colorBackgroundHide].getForeground());
 				return (*m_paintingProperties)[m_colorTextModify].getForeground();
-			//}
+			}
+			if (value.m_buffer->isModify() == false) {
+				return (*m_paintingProperties)[m_colorTextNormal].getForeground();
+			}
+			return (*m_paintingProperties)[m_colorTextModify].getForeground();
 		case ewol::widget::ListRole::BgColor:
-			return fluorine::Variant();
+			//return fluorine::Variant();
+			//APPL_ERROR( m_colorBackground1 << " => " << (*m_paintingProperties)[m_colorBackground1].getForeground());
 			if (_pos.y() % 2) {
 				return (*m_paintingProperties)[m_colorBackground1].getForeground();
 			}

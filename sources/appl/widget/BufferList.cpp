@@ -194,6 +194,7 @@ fluorine::Variant appl::widget::BufferList::getData(int32_t _role, const ivec2& 
 				return (*m_paintingProperties)[m_colorTextModify].getForeground();
 			}
 		case ewol::widget::ListRole::BgColor:
+			APPL_ERROR( m_colorBackground1 << " => " << (*m_paintingProperties)[m_colorBackground1].getForeground());
 			if (m_selectedID == _pos.y()) {
 				return (*m_paintingProperties)[m_colorBackgroundSelect].getForeground();
 			}

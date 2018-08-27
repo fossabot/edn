@@ -42,6 +42,7 @@ namespace appl {
 				ememory::SharedPtr<appl::GlyphPainting> m_paintingProperties; //!< element painting property
 				int32_t m_colorBackground1;
 				int32_t m_colorBackground2;
+				int32_t m_colorBackgroundHide;
 				int32_t m_colorBackgroundSelect;
 				int32_t m_colorTextNormal;
 				int32_t m_colorTextModify;
