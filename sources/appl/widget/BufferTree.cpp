@@ -322,6 +322,11 @@ bool appl::widget::BufferTree::onItemEvent(const ewol::event::Input& _event, con
 		if (_event.getStatus() == gale::key::status::pressDouble) {
 			if (value.m_isFolder == true) {
 				populateNodeIfNeeded(m_flatTree[_pos.y()]);
+				if (value.m_isExpand == true) {
+					value.m_isExpand = false;
+				} else {
+					value.m_isExpand = true;
+				}
 				return true;
 			} else if (value.m_buffer == null) {
 				// TODO: Open the file...
