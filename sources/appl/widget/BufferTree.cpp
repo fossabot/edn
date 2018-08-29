@@ -98,21 +98,37 @@ void appl::widget::BufferTree::generateFlatTree() {
 	// Now we have the root path...
 	// Need to feed all elements needed.
 	etk::FSNode nodeRoot = upperParent;
-	m_tree = etk::TreeNode<appl::TreeElement>::create(TreeElement(etk::FSNode(upperParent).getFileName(), true, true));
-	etk::Vector<etk::FSNode*> child = nodeRoot.folderGetSubList(false, true, true, false);
+	m_tree = etk::TreeNode<appl::TreeElement>::create(TreeElement(upperParent, etk::FSNode(upperParent).getFileName(), true, true));
+	populateNodeIfNeeded(m_tree);
+	updateFlatTree();
+}
+
+void appl::widget::BufferTree::populateNodeIfNeeded(ememory::SharedPtr<etk::TreeNode<appl::TreeElement>> _node) {
+	if (_node == null) {
+		return;
+	}
+	appl::TreeElement& value = _node->getData();
+	if (value.m_isFolder == false) {
+		// nothing to expand...
+		return;
+	}
+	if (_node->haveChild() == true) {
+		// already populated...
+		return;
+	}
+	etk::Vector<etk::FSNode*> child = etk::FSNode(value.m_path).folderGetSubList(false, true, true, false);
 	APPL_ERROR("    nbChilds: " << child.size());
 	for (auto& it: child) {
 		APPL_ERROR("add element: " << *it);
 		if (it->getNodeType() == etk::typeNode_folder) {
-			auto elem = etk::TreeNode<appl::TreeElement>::create(TreeElement(it->getNameFile(), true, false));
+			auto elem = etk::TreeNode<appl::TreeElement>::create(TreeElement(it->getFileSystemName(), it->getNameFile(), true, false));
 			m_tree->addChild(elem);
 		} else {
-			auto elem = etk::TreeNode<appl::TreeElement>::create(TreeElement(it->getNameFile(), false, false));
+			auto elem = etk::TreeNode<appl::TreeElement>::create(TreeElement(it->getFileSystemName(), it->getNameFile(), false, false));
 			m_tree->addChild(elem);
 		}
 		// TODO: ETK_FREE(etk::FSNode, it);
 	}
-	updateFlatTree();
 }
 
 void appl::widget::BufferTree::updateFlatTree() {
@@ -300,9 +316,24 @@ bool appl::widget::BufferTree::onItemEvent(const ewol::event::Input& _event, con
 	if (ewol::widget::TreeView::onItemEvent(_event, _pos, _mousePosition) == true) {
 		return true;
 	}
-	if (    _event.getId() == 1
-	     && _event.getStatus() == gale::key::status::pressSingle) {
-		APPL_INFO("Event on List: " << _event << " pos=" << _pos );
+	auto elem = m_flatTree[_pos.y()];
+	appl::TreeElement& value = elem->getData();
+	if (_event.getId() == 1) {
+		if (_event.getStatus() == gale::key::status::pressDouble) {
+			if (value.m_isFolder == true) {
+				populateNodeIfNeeded(m_flatTree[_pos.y()]);
+				return true;
+			} else if (value.m_buffer == null) {
+				// TODO: Open the file...
+				return true
+			}
+		}
+		if (_event.getStatus() == gale::key::status::pressSingle) {
+			APPL_INFO("Event on List: " << _event << " pos=" << _pos );
+			if (value.m_buffer != null) {
+				// TODO: Display the current buffer...
+				return true
+			}
 		/*
 		if(    _pos.y() >= 0
 		    && _pos.y() < (int64_t)m_list.size()) {

@@ -15,7 +15,8 @@
 namespace appl {
 	class TreeElement {
 		public:
-			TreeElement(const etk::String& _nodeName, bool _isFolder = false, bool _isExpand=false):
+			TreeElement(const etk::String& _path,const etk::String& _nodeName, bool _isFolder = false, bool _isExpand=false):
+			  m_path(_path),
 			  m_nodeName(_nodeName),
 			  m_isFolder(_isFolder),
 			  m_buffer(null),
@@ -23,6 +24,7 @@ namespace appl {
 			  m_isExpand(_isExpand) {
 				
 			}
+			etk::String m_path;
 			etk::String m_nodeName; // must be here ==> the buffer is optionnal..
 			bool m_isFolder;
 			ememory::SharedPtr<appl::Buffer> m_buffer;
