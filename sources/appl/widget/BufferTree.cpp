@@ -44,12 +44,14 @@ appl::widget::BufferTree::BufferTree() :
 	m_colorBackgroundSelect = m_paintingProperties->request("backgroungSelected");
 	m_colorTextNormal = m_paintingProperties->request("textNormal");
 	m_colorTextModify = m_paintingProperties->request("textModify");
+	m_colorTextNotOpen = m_paintingProperties->request("textNotOpen");
 }
 
 void appl::widget::BufferTree::init() {
 	ewol::widget::TreeView::init();
 	//propertyHide.set(true);
 	propertyCanFocus.set(true);
+	propertyTextIsDecorated.set(false);
 	if (m_bufferManager != null) {
 		m_bufferManager->signalNewBuffer2.connect(sharedFromThis(), &appl::widget::BufferTree::onNewBuffer);
 		m_bufferManager->signalSelectBuffer.connect(sharedFromThis(), &appl::widget::BufferTree::onSelectBuffer);
@@ -69,7 +71,9 @@ static etk::String getCommonPathPart(const etk::String& _left, const etk::String
 	return out;
 }
 
-void appl::widget::BufferTree::updateFlatTree() {
+
+
+void appl::widget::BufferTree::generateFlatTree() {
 	// Brut Force Mode...
 	etk::String upperParent = "";
 	etk::Vector<appl::BufferShared> tmpNewBuffer;
@@ -90,13 +94,15 @@ void appl::widget::BufferTree::updateFlatTree() {
 		upperParent = getCommonPathPart(upperParent, nodeName.getNameFolder());
 		APPL_ERROR("Update: " << nodeName.getFileSystemName() << "   " << nodeName.getNameFolder() << "    root=" << upperParent);
 	}
+	APPL_ERROR("update tree: " << upperParent);
 	// Now we have the root path...
-	// Need to feed all elements needed
-	etk::FSNode nodeRoot = etk::FSNode(upperParent).getFileName();
-	m_tree = etk::TreeNode<appl::TreeElement>::create(TreeElement(upperParent, true, true));
+	// Need to feed all elements needed.
+	etk::FSNode nodeRoot = upperParent;
+	m_tree = etk::TreeNode<appl::TreeElement>::create(TreeElement(etk::FSNode(upperParent).getFileName(), true, true));
 	etk::Vector<etk::FSNode*> child = nodeRoot.folderGetSubList(false, true, true, false);
+	APPL_ERROR("    nbChilds: " << child.size());
 	for (auto& it: child) {
-		APPL_WARNING("add element: " << *it);
+		APPL_ERROR("add element: " << *it);
 		if (it->getNodeType() == etk::typeNode_folder) {
 			auto elem = etk::TreeNode<appl::TreeElement>::create(TreeElement(it->getNameFile(), true, false));
 			m_tree->addChild(elem);
@@ -106,7 +112,10 @@ void appl::widget::BufferTree::updateFlatTree() {
 		}
 		// TODO: ETK_FREE(etk::FSNode, it);
 	}
-	
+	updateFlatTree();
+}
+
+void appl::widget::BufferTree::updateFlatTree() {
 	m_flatTree.setRoot(m_tree,
 	    [&](const TreeElement& _value){
 	    	return true;
@@ -114,7 +123,6 @@ void appl::widget::BufferTree::updateFlatTree() {
 	    [&](const TreeElement& _value){
 	    	return _value.m_isExpand;
 	    });
-	
 	markToRedraw();
 }
 
@@ -140,7 +148,7 @@ void appl::widget::BufferTree::removeAllElement() {
 }
 
 void appl::widget::BufferTree::onNewBuffer(const ememory::SharedPtr<appl::Buffer>& _buffer) {
-	updateFlatTree();
+	generateFlatTree();
 	/*
 	ememory::SharedPtr<appl::Buffer> buffer = m_bufferManager->get(_value);
 	if (buffer == null) {
@@ -228,12 +236,17 @@ void appl::widget::BufferTree::onCallbackIsModify() {
 }
 
 etk::Color<> appl::widget::BufferTree::getBasicBG() {
-	return etk::Color<>(0xAF,0xAF,0xAF,0xFF);
 	return (*m_paintingProperties)[m_colorBackground1].getForeground();
 }
 
 ivec2 appl::widget::BufferTree::getMatrixSize() const {
 	return ivec2(1, m_flatTree.size());
+}
+
+void appl::widget::BufferTree::onItemExpandEvent(const ivec2& _pos) {
+	APPL_WARNING("Event on expand on " << _pos);
+	m_flatTree[_pos.y()]->getData().m_isExpand = m_flatTree[_pos.y()]->getData().m_isExpand?false:true;
+	updateFlatTree();
 }
 
 fluorine::Variant appl::widget::BufferTree::getData(int32_t _role, const ivec2& _pos) {
@@ -245,7 +258,7 @@ fluorine::Variant appl::widget::BufferTree::getData(int32_t _role, const ivec2& 
 		case ewol::widget::ListRole::FgColor:
 			if (value.m_buffer == null) {
 				//APPL_ERROR( m_colorBackgroundHide << " => " << (*m_paintingProperties)[m_colorBackgroundHide].getForeground());
-				return (*m_paintingProperties)[m_colorTextModify].getForeground();
+				return (*m_paintingProperties)[m_colorTextNotOpen].getForeground();
 			}
 			if (value.m_buffer->isModify() == false) {
 				return (*m_paintingProperties)[m_colorTextNormal].getForeground();

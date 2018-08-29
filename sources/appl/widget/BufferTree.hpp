@@ -46,10 +46,12 @@ namespace appl {
 				int32_t m_colorBackgroundSelect;
 				int32_t m_colorTextNormal;
 				int32_t m_colorTextModify;
+				int32_t m_colorTextNotOpen;
 			private:
 				int32_t m_selectedIdRequested;
 				int32_t m_selectedID;
 				void updateFlatTree();
+				void generateFlatTree();
 				ememory::SharedPtr<etk::TreeNode<TreeElement>> m_tree;
 				etk::FlatTree<TreeElement> m_flatTree;
 				ememory::SharedPtr<appl::Buffer> m_selection;
@@ -70,6 +72,7 @@ namespace appl {
 				ivec2 getMatrixSize() const override;
 				fluorine::Variant getData(int32_t _role, const ivec2& _pos) override;
 				bool onItemEvent(const ewol::event::Input& _event, const ivec2& _pos, const vec2& _mousePosition) override;
+				void onItemExpandEvent(const ivec2& _pos) override;
 			private: //callback function:
 				void onCallbackChangeName();
 				void onCallbackIsSave();

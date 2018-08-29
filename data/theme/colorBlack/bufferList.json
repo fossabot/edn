@@ -6,5 +6,6 @@
 		{ name:"backgroungSelected", foreground:"#2f0ba4" },
 		{ name:"textNormal", foreground:"#EEEEEE" },
 		{ name:"textModify", foreground:"#FF0000" },
+		{ name:"textNotOpen", foreground:"#808080"},
 	]
 }
