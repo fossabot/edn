@@ -122,7 +122,7 @@ appl::Buffer::Buffer() :
   m_highlight(null) {
 	addObjectType("appl::Buffer");
 	static int32_t bufferBaseId = 0;
-	m_fileName = "REL:No Name " + etk::toString(bufferBaseId);
+	m_fileName = etk::FSNode("REL:No Name " + etk::toString(bufferBaseId)).getFileSystemName();
 	bufferBaseId++;
 }
 
@@ -139,7 +139,7 @@ bool appl::Buffer::loadFile(const etk::String& _name) {
 	etk::FSNode file(_name);
 	etk::String name = file.getName();
 	APPL_INFO("Load file : '" << name << "'");
-	m_fileName = name;
+	m_fileName = file.getFileSystemName();
 	m_hasFileName = true;
 	m_isModify = true;
 	m_cursorPos = 0;
@@ -158,10 +158,10 @@ void appl::Buffer::setFileName(const etk::String& _name) {
 	APPL_DEBUG("Convert filename :'" << _name << "'");
 	etk::FSNode file(_name);
 	etk::String name = file.getName();
-	if (m_fileName == name) {
+	if (m_fileName == file.getFileSystemName()) {
 		return;
 	}
-	m_fileName = name;
+	m_fileName = file.getFileSystemName();
 	m_hasFileName = true;
 	signalChangeName.emit();
 	setModification(true);

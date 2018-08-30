@@ -15,10 +15,10 @@
 namespace appl {
 	class TreeElement {
 		public:
-			TreeElement(const etk::String& _path,const etk::String& _nodeName, bool _isFolder = false, bool _isExpand=false):
-			  m_path(_path),
-			  m_nodeName(_nodeName),
-			  m_isFolder(_isFolder),
+			TreeElement(const etk::FSNode& _node, bool _isExpand=false):
+			  m_path(_node.getFileSystemName()),
+			  m_nodeName(_node.getNameFile()),
+			  m_isFolder(_node.getNodeType() == etk::typeNode_folder),
 			  m_buffer(null),
 			  m_isSelected(false),
 			  m_isExpand(_isExpand) {
@@ -54,6 +54,9 @@ namespace appl {
 				int32_t m_selectedID;
 				void updateFlatTree();
 				void generateFlatTree();
+				etk::String getRootPath();
+				void populateNodeIfNeeded(ememory::SharedPtr<etk::TreeNode<appl::TreeElement>> _node);
+				void goUpper();
 				ememory::SharedPtr<etk::TreeNode<TreeElement>> m_tree;
 				etk::FlatTree<TreeElement> m_flatTree;
 				ememory::SharedPtr<appl::Buffer> m_selection;
