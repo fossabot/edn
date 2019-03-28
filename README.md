@@ -7,6 +7,7 @@ This software is distributed in the hope that it will be useful, but WITHOUT ANY
 
 
 [![Build Status](https://travis-ci.org/HeeroYui/edn.svg?branch=dev)](https://travis-ci.org/HeeroYui/edn)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHeeroYui%2Fedn.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FHeeroYui%2Fedn?ref=badge_shield)
 
 Instructions
 ============
@@ -143,3 +144,7 @@ License (GPLv3)
 Annexe
 ==================
 	sudo cp data/edn.desktop /usr/share/applications/
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHeeroYui%2Fedn.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FHeeroYui%2Fedn?ref=badge_large)
